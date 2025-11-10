@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+	<Description>代理商服务</Description>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\</OutputPath>
+		<DocumentationFile>..\..\App\XML\CRMService.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\AuthService\AuthService.csproj" />
+		<ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
+		<ProjectReference Include="..\DictService\DictService.csproj" />
+		<ProjectReference Include="..\DiscussService\DiscussService.csproj" />
+		<ProjectReference Include="..\MonitorService\MonitorService.csproj" />
+		<ProjectReference Include="..\ProducerService\ProducerService.csproj" />
+	</ItemGroup>
+</Project>

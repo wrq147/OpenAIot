@@ -1,0 +1,2939 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ChannelUtility</name>
+    </assembly>
+    <members>
+        <member name="F:ChannelUtility.Buffers.FastBufferHelper.CrcTable">
+            <summary>
+            Define the look-up table for calculating the CRC16 algorithm
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.CalcCRC16(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Calculate the CRC16 over a byte-array segment
+            </summary>
+            <param name="buffer">The source byte-array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <param name="count">The number of the bytes to be considered</param>
+            <returns>The resulting CRC16 value</returns>
+            <remarks>
+            Ported from plain-C source found here: http://www.modbustools.com/modbus_crc16.htm
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ToArray(System.Byte[])">
+            <summary>
+            Create a copy of the given byte array
+            </summary>
+            <param name="source">The source byte-array</param>
+            <returns>The resulting copy</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ToArray(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Create a new byte array starting from the defined
+            segment of the given one
+            </summary>
+            <param name="source">The source byte-array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <param name="count">The number of the bytes to be considered</param>
+            <returns>The resulting byte-array</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.CalcLRC(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Calculate the LRC of the given byte array
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <param name="count">The number of the bytes to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ReadInt16LE(System.Byte[],System.Int32)">
+            <summary>
+            Read an <see cref="T:System.Int16"/> from the given byte array
+            starting from the specified offset, 
+            and composed as the Little-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.WriteInt16LE(System.Byte[],System.Int32,System.Int16)">
+            <summary>
+            Write an <see cref="T:System.Int16"/> to the given byte array
+            starting from the specified offset, 
+            and composed as the Little-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ReadInt16BE(System.Byte[],System.Int32)">
+            <summary>
+            Read an <see cref="T:System.Int16"/> from the given byte array
+            starting from the specified offset, 
+            and composed as the Big-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.WriteInt16BE(System.Byte[],System.Int32,System.Int16)">
+            <summary>
+            Write an <see cref="T:System.Int16"/> to the given byte array
+            starting from the specified offset, 
+            and composed as the Big-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ReadUInt16LE(System.Byte[],System.Int32)">
+            <summary>
+            Read an <see cref="T:System.UInt16"/> from the given byte array
+            starting from the specified offset, 
+            and composed as the Little-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.WriteUInt16LE(System.Byte[],System.Int32,System.UInt16)">
+            <summary>
+            Write an <see cref="T:System.UInt16"/> to the given byte array
+            starting from the specified offset, 
+            and composed as the Little-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ReadUInt16BE(System.Byte[],System.Int32)">
+            <summary>
+            Read an <see cref="T:System.UInt16"/> from the given byte array
+            starting from the specified offset, 
+            and composed as the Big-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.WriteUInt16BE(System.Byte[],System.Int32,System.UInt16)">
+            <summary>
+            Write an <see cref="T:System.UInt16"/> to the given byte array
+            starting from the specified offset, 
+            and composed as the Big-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ReadInt32LE(System.Byte[],System.Int32)">
+            <summary>
+            Read an <see cref="T:System.Int32"/> from the given byte array
+            starting from the specified offset, 
+            and composed as the Little-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.WriteInt32LE(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Write an <see cref="T:System.Int32"/> to the given byte array
+            starting from the specified offset, 
+            and composed as the Little-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ReadInt32BE(System.Byte[],System.Int32)">
+            <summary>
+            Read an <see cref="T:System.Int32"/> from the given byte array
+            starting from the specified offset, 
+            and composed as the Big-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.WriteInt32BE(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Write an <see cref="T:System.Int32"/> to the given byte array
+            starting from the specified offset, 
+            and composed as the Big-endian format
+            </summary>
+            <param name="buffer">The source byte array</param>
+            <param name="offset">The index of the first byte to be considered</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ModbusMatch2Bytes(System.String,ChannelUtility.Tsl.ModbusMatch,System.Int32)">
+            <summary>
+            将modbus匹配规则转成字节
+            </summary>
+            <param name="mode"></param>
+            <param name="mm"></param>
+            <param name="i"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.ByteToHexStr(System.Byte[],System.Boolean)">
+            <summary>
+            将字节数组转换成hex字符串
+            </summary>
+            <param name="bytes"></param>
+            <param name="space"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastBufferHelper.StrToToHex(System.String)">
+            <summary> 
+            字符串转16进制字节数组 
+            </summary> 
+            <param name="hexString"></param> 
+            <returns></returns> 
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.MergeRead">
+            <summary>
+            标识为数据未完整
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.#ctor(System.Byte[])">
+            <summary>
+            Create the instance from a byte array source
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Create the instance from the specified part of the byte array source
+            </summary>
+            <param name="source"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.Reset">
+            <summary>
+            Allow to reset the reader pointer
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ToArray">
+            <summary>
+            Convert the reader content to a normal byte array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ChannelUtility.Buffers.FastReader.EndOfBuffer">
+            <summary>
+            Indicate whether the pointer has reached the end of the internal buffer
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Buffers.FastReader.Data">
+            <summary>
+            Facility for data exchange
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.CanRead(System.Int32)">
+            <summary>
+            Tell whether the specified amount of bytes could be read from the reader
+            </summary>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.Peek">
+            <summary>
+            Read the current pointed byte, but without moving the pointer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadByte">
+            <summary>
+            Read the current byte and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.TryReadByte(System.Byte@)">
+            <summary>
+            Try to read a byte, if available, and return true if succeeded
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadBytes(System.Int32)">
+            <summary>
+            Read the specified amount of bytes, 
+            and move the pointer accordingly
+            </summary>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadToEnd">
+            <summary>
+            Read the remaining bytes up to the end, 
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadInt16LE">
+            <summary>
+            Read an <see cref="T:System.Int16"/> (Little-endian),
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadInt16BE">
+            <summary>
+            Read an <see cref="T:System.Int16"/> (Big-endian),
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadUInt16LE">
+            <summary>
+            Read an <see cref="T:System.UInt16"/> (Little-endian),
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadUInt16BE">
+            <summary>
+            Read an <see cref="T:System.UInt16"/> (Big-endian),
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadInt32LE">
+            <summary>
+            Read an <see cref="T:System.Int32"/> (Little-endian),
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastReader.ReadInt32BE">
+            <summary>
+            Read an <see cref="T:System.Int32"/> (Big-endian),
+            and move the pointer accordingly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.#ctor">
+            <summary>
+            Crea an empty instance
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.#ctor(System.Byte[])">
+            <summary>
+            Create an instance using the specified content,
+            and sealing it as immutable
+            </summary>
+            <param name="initial"></param>
+        </member>
+        <member name="P:ChannelUtility.Buffers.FastWriter.Length">
+            <summary>
+            Indicate the current length of the written data
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Buffers.FastWriter.ChannelUtility#Buffers#IByteArray#Data">
+            <summary>
+            Facility for data exchange
+            </summary>
+            <remarks>
+            Avoid to use this member unless strictly necessary
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.Reset">
+            <summary>
+            Provide a way to reset the writer
+            </summary>
+            <remarks>
+            This functionaly is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.ToReader">
+            <summary>
+            Create a <see cref="!:ByteArrayReader"/> using the current writer as source
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.ToArray">
+            <summary>
+            Create a byte-array using the current writer as source
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteByte(System.Byte)">
+            <summary>
+            Add a byte to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Add a series of bytes to the writer, from a byte array
+            by specifying the starting index and the number involved
+            </summary>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteBytes(System.Byte[])">
+            <summary>
+            Add a series of bytes to the writer
+            </summary>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteUTF8String(System.String)">
+            <summary>
+            utf-8编码写入字符串
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteBytes(ChannelUtility.Buffers.FastReader)">
+            <summary>
+            Add the content of the given reader to the writer
+            </summary>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteBytes(ChannelUtility.Buffers.FastWriter)">
+            <summary>
+            Add the content of another writer to the writer
+            </summary>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteInt16LE(System.Int16)">
+            <summary>
+            Add an <see cref="T:System.Int16"/> (Little-endian) to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteInt16BE(System.Int16)">
+            <summary>
+            Add an <see cref="T:System.Int16"/> (Big-endian) to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteUInt16LE(System.UInt16)">
+            <summary>
+            Add an <see cref="T:System.UInt16"/> (Little-endian) to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteUInt16BE(System.UInt16)">
+            <summary>
+            Add an <see cref="T:System.UInt16"/> (Big-endian) to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteInt32LE(System.Int32)">
+            <summary>
+            Add an <see cref="T:System.Int32"/> (Little-endian) to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.WriteInt32BE(System.Int32)">
+            <summary>
+            Add an <see cref="T:System.Int32"/> (Big-endian) to the writer
+            </summary>
+            <param name="value"></param>
+            <remarks>
+            This functionality is not allowed when the writer has been sealed
+            </remarks>
+        </member>
+        <member name="M:ChannelUtility.Buffers.FastWriter.Allocate(System.Int32)">
+            <summary>
+            Allocate the specified number of bytes in the underlying
+            buffer. Get the buffer longer when needed
+            </summary>
+            <param name="count"></param>
+        </member>
+        <member name="P:ChannelUtility.ChannelOption.EventConn">
+            <summary>
+            rabbitmq连接字符串
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.ChannelOption.RedisConn">
+            <summary>
+            Redis连接字符串
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.ChannelOption.config">
+            <summary>
+            通道物模型的扩展配置
+            </summary>
+        </member>
+        <member name="F:ChannelUtility.ChannelRegister._lastReaderDict">
+            <summary>
+            拆包、拼包用
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.ChannelRegister.BytesToReader(System.Byte[],System.String)">
+            <summary>
+            将原二进制转FastReader
+            </summary>
+            <param name="input"></param>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ChannelRegister.SaveFastReader(System.String,ChannelUtility.Buffers.FastReader)">
+            <summary>
+            保存剩余
+            </summary>
+            <param name="deviceId"></param>
+            <param name="lastReader"></param>
+        </member>
+        <member name="T:ChannelUtility.ClientBusProxy">
+            <summary>
+            客户端用事件总线代理
+            </summary>
+        </member>
+        <member name="E:ChannelUtility.ClientBusProxy.OnSubProductMessage">
+            <summary>
+            监听订阅的指定产品的消息
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.PublicMessage(ChannelUtility.Message.RequestMessage,ChannelUtility.TslReturn)">
+            <summary>
+            直接调用下发消息
+            </summary>
+            <param name="msg"></param>
+            <param name="ret"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.Print(System.String,System.String,System.Object)">
+            <summary>
+            向设备控制台打印消息
+            </summary>
+            <param name="devId"></param>
+            <param name="tip"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.FunCmd(System.String,System.String)">
+            <summary>
+            向前端发送功能命令
+            </summary>
+            <param name="devId"></param>
+            <param name="cmd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.GetProps(System.String)">
+            <summary>
+            获取指定设备的当前所有属性
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.GetPropOfCode(System.String,System.String)">
+            <summary>
+            获取指定设备的指定属性
+            </summary>
+            <param name="deviceId"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.GetTsl(System.String,System.String,System.Boolean)">
+            <summary>
+            获取指定产品的物模型
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.PushReply(System.String,System.String,System.String)">
+            <summary>
+            写入回复数据
+            </summary>
+            <param name="deviceId"></param>
+            <param name="value"></param>
+            <param name="msgId">如果msgId为null,则自动取系统保存的第一条msgId</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.PublicWait(System.String,System.String,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            获取设备指定类型的返回值
+            </summary>
+            <param name="deviceId"></param>
+            <param name="msgId"></param>
+            <param name="ac"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ParseCustom(ChannelUtility.Message.RequestMessage,ChannelUtility.Tsl.TslModel,System.String)">
+            <summary>
+            解释自定义数据包
+            </summary>
+            <param name="msg"></param>
+            <param name="model"></param>
+            <param name="script"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ParseFunc(System.String,ChannelUtility.Message.FunctionInvokeMessage,ChannelUtility.Tsl.TslModel,System.String)">
+            <summary>
+            解释功能脚本
+            </summary>
+            <param name="funcScript"></param>
+            <param name="msg"></param>
+            <param name="model"></param>
+            <param name="funprefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.PushCustom(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},ChannelUtility.Buffers.FastReader,System.String,ChannelUtility.Tsl.TslModel,System.String)">
+            <summary>
+            发送自定义数据包
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="properties"></param>
+            <param name="input"></param>
+            <param name="script"></param>
+            <param name="model"></param>
+            <param name="codeprefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.Connected(System.String,System.String)">
+            <summary>
+            发送设备在线给事件总线
+            </summary>
+            <param name="deviceId"></param>
+            <param name="ip"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.Disconnect(System.String)">
+            <summary>
+            发送设备离线给事件总线
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ConfirmFuncReply(System.String,System.String,System.Boolean,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.String)">
+            <summary>
+            发送设备功能回复给事件总线
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="isSuccess"></param>
+            <param name="outputs"></param>
+            <param name="errInfo"></param>
+            <param name="msgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ConfirmBindReply(System.String,System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            发送设备绑定回复
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="isSuccess"></param>
+            <param name="msgId"></param>
+            <param name="reason"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.PublishICCIDReply(System.String,System.String,System.String)">
+            <summary>
+            发送ICCID回复包
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="iccid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.PublishEvent(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            上报事件
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="eventId"></param>
+            <param name="outputs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ConfirmReply(System.String,ChannelUtility.Message.BaseUpDeviceMessage)">
+            <summary>
+            发送确认回复包（同步）
+            </summary>
+            <param name="msgId"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ConfirmReplyAsync(System.String,ChannelUtility.Message.BaseUpDeviceMessage)">
+            <summary>
+            发送确认回复包（异步）
+            </summary>
+            <param name="msgId"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.ClientBusProxy.ResetSilenceTime(System.String,System.String)">
+            <summary>
+            重置事件周期
+            </summary>
+            <param name="deviceId"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.Name">
+            <summary>
+            通道名
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.Code">
+            <summary>
+            通道代码
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.ImageUrl">
+            <summary>
+            通道显示图片
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.Remark">
+            <summary>
+            通道备注
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.CanScript">
+            <summary>
+            是否可以自定义脚本解释
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.CanModbus">
+            <summary>
+            是否启用Modbus规则匹配
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.CanBind">
+            <summary>
+            发布时是否发送绑定数据包
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.CanDebug">
+            <summary>
+            是否启用在线调试
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.CanModify">
+            <summary>
+            是否允许动态修改通道参数
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Config.ChannelConfig.SendInterval">
+            <summary>
+            报文间隔(如果redis中有值，则使用redis的)
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.DeviceProperty">
+            <summary>
+            设备属性（显示用）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.Name">
+            <summary>
+            属性中文名
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.Code">
+            <summary>
+            属性代码
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.Value">
+            <summary>
+            属性值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.Unit">
+            <summary>
+            显示单位
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.OptionType">
+            <summary>
+            属性值类型
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.DeviceProperty.Description">
+            <summary>
+            属性备注
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.FuncLGraph">
+            <summary>
+            功能图形
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.FuncOutNode">
+            <summary>
+            功能回复
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.RefreshNode">
+            <summary>
+            刷新功能页面
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.MsgOutNode">
+            <summary>
+            展示文字
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.SilenceTimeNode">
+            <summary>
+            重置指定事件的沉默周期
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.GoUrlNode">
+            <summary>
+            跳转到指定网址
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.FuncParamsNode">
+            <summary>
+            功能的输入参数
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.ExecuteFuncNode">
+            <summary>
+            执行指定设备的功能
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.GraphScript.PublicWaitNode">
+            <summary>
+            下发消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ListString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ByteArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Double">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.DoubleArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Int64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableInt64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Boolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableBoolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Byte">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableByte">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.UInt16">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableUInt16">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableInt32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Single">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableSingle">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.NullableDouble">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.HashSetInt64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.IDictionaryStringObject">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.DeviceEventMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.DeviceOfflineMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.DeviceOnlineMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.FunctionInvokeMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.FunctionInvokeMessageReply">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ReadPropertyMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ReadPropertyMessageReply">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ExecuteRuleMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ModbusMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.DeviceBindMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.DeviceBindMessageReply">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.RawDataMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.TempProductMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.QueryICCIDMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.QueryICCIDMessageReply">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.ChangeProductMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.StartReadAllMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.BaseUpDeviceMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.RequestMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.BaseDeviceMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.JsonMessageSerializerContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.JsonMessageSerializerContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:ChannelUtility.JsonMessageSerializerContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ChannelUtility.JsonMessageSerializerContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.CodePrefix">
+            <summary>
+            上报的扩展信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.ReplyMessage">
+            <summary>
+            返回当前的回复消息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.GetTslProps(System.String)">
+            <summary>
+            获取指定属性定义
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.GetPropsCache(System.String)">
+            <summary>
+            获取在缓存里的当前设备的指定属性信息
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.GetProps">
+            <summary>
+            获取当前设备的所有属性信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.CreatePropertyMessage">
+            <summary>
+            创建读属性回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.CreateICCIDReply">
+            <summary>
+            创建ICCID回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.CreateEventMessage">
+            <summary>
+            创建设备事件包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.CreateEmptyMessage">
+            <summary>
+            创建空回复
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.ReplyMsgId(System.String,System.String)">
+            <summary>
+            回复消息Id
+            </summary>
+            <param name="msgId">可为null,为null时自动从系统缓存里取</param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.Public(System.Byte[])">
+            <summary>
+            直接推送数据
+            </summary>
+            <param name="bytes"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.PublicStr(System.String,System.Boolean)">
+            <summary>
+            推送字符串数据
+            </summary>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+        </member>
+        <member name="M:ChannelUtility.Js.DataContext.UploadFile(System.String,System.String,System.Byte[],System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            向指定站点上传文件并返回文件的url
+            </summary>
+            <param name="url"></param>
+            <param name="filename"></param>
+            <param name="bytes"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ChannelUtility.Js.FuncMessageContext">
+            <summary>
+            功能函数脚本用
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.FuncMessage">
+            <summary>
+            获取请求的功能消息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.Refresh">
+            <summary>
+            刷新前端功能列表
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.ResetSilenceTime(System.String)">
+            <summary>
+            重置事件周期
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.GoUrl(System.String)">
+            <summary>
+            通知前端跳转到指定url
+            </summary>
+            <param name="url">要跳转的url</param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.ShowMsg(System.String)">
+            <summary>
+            通知前端展示信息
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.ChangeProduct(System.String)">
+            <summary>
+            变更所属产品
+            </summary>
+            <param name="targetId">产品编号</param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.ConfirmSuccess(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            功能执行成功
+            </summary>
+            <param name="outputs"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.ConfirmError(System.String)">
+            <summary>
+            功能执行失败
+            </summary>
+            <param name="error"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.SetTimeout(System.Action,System.Int32)">
+            <summary>
+            定时执行
+            </summary>
+            <param name="ac"></param>
+            <param name="millisecond"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.Execute(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行设备的其它功能
+            </summary>
+            <param name="funId">功能代码</param>
+            <param name="inputs">参数</param>
+        </member>
+        <member name="M:ChannelUtility.Js.FuncMessageContext.ExecuteOther(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行其它设备的功能
+            </summary>
+            <param name="deviceId"></param>
+            <param name="funId"></param>
+            <param name="inputs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.ToJson(System.Object)">
+            <summary>
+            对象转JSON字符串
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.GetProps">
+            <summary>
+            获取当前设备的所有属性信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.GetPropsCache(System.String)">
+            <summary>
+            获取在缓存里的当前设备的指定属性信息
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.CreateBindReply">
+            <summary>
+            创建绑定回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.CreateFuncReply">
+            <summary>
+            创建功能回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.CreateICCIDReply">
+            <summary>
+            创建ICCID回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.CreateEventMessage">
+            <summary>
+            创建设备事件包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.CreatePropertyReply">
+            <summary>
+            创建属性回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.CreateModbusHex(System.Boolean)">
+            <summary>
+            创建ModbusHex数组
+            </summary>
+            <param name="space"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.GetModbusInfo">
+            <summary>
+            获取Modbus信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.GetTslProps(System.String)">
+            <summary>
+            获取指定属性定义
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.GetFirmwareNewest(System.String)">
+            <summary>
+            获取最新固件路径
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.GetFirmware(System.String,System.String)">
+            <summary>
+            获取指定名称和标签的固件
+            </summary>
+            <param name="name"></param>
+            <param name="tag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.Wait(System.String)">
+            <summary>
+            等待回复消息（不发送）
+            </summary>
+            <param name="msgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.PublicWait(System.String,System.Byte[])">
+            <summary>
+            直接推送数据并返回复的消息
+            </summary>
+            <param name="msgId">消息标识</param>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.Public(System.Byte[])">
+            <summary>
+            直接推送数据
+            </summary>
+            <param name="bytes"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.PublicStrWait(System.String,System.String,System.Boolean)">
+            <summary>
+            推送字符串数据并返回复的消息
+            </summary>
+            <param name="msgId"></param>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.PublicStr(System.String,System.Boolean)">
+            <summary>
+            推送字符串数据
+            </summary>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.ConfirmReply(System.String,ChannelUtility.Message.BaseUpDeviceMessage)">
+            <summary>
+            发送确认回复包
+            </summary>
+            <param name="msgId"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:ChannelUtility.Js.MessageContext.SetChannelInfo(System.String)">
+            <summary>
+            修改通道信息（需要通道允许修改）
+            </summary>
+            <param name="info"></param>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseDeviceMessage.MsgType">
+            <summary>
+            消息类型
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseDeviceMessage.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseDeviceMessage.DeviceId">
+            <summary>
+            设备dtuId
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseUpDeviceMessage.Timestamp">
+            <summary>
+            设备向事件总线发送消息的时间戳
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseUpDeviceMessage.RedirectFromProductId">
+            <summary>
+            如果是转发的消息将转入源ProductId
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseUpDeviceMessage.RedirecDtuId">
+            <summary>
+            如果是转发的消息将转入源DtuId
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.BaseUpDeviceMessage.RuleIds">
+            <summary>
+            触发的规则Id链
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.ChangeProductMessage">
+            <summary>
+            更改设备的所属产品
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ChangeProductMessage.TargetProductId">
+            <summary>
+            变更后的产品Id
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.DeviceBindMessage">
+            <summary>
+            设备绑定产品消息
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.DeviceBindMessageReply">
+            <summary>
+            设备绑定产品消息回复
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.DeviceBindMessageReply.IsSuccess">
+            <summary>
+            是否成功
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.DeviceBindMessageReply.Reason">
+            <summary>
+            失败原因
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.DeviceEventMessage">
+            <summary>
+            设备事件消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.DeviceEventMessage.EventId">
+            <summary>
+            事件标识,在元数据中定义
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.DeviceEventMessage.Outputs">
+            <summary>
+            事件数据
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.DeviceOfflineMessage">
+            <summary>
+            设备离线消息
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.DeviceOnlineMessage">
+            <summary>
+            设备上线消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.DeviceOnlineMessage.IpAddress">
+            <summary>
+            客户端Ip地址
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.EmptyMessageReply">
+            <summary>
+            空消息回复，系统总线不处理的消息
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.ExecuteRuleMessage">
+            <summary>
+            执行规则引擎的消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ExecuteRuleMessage.Inputs">
+            <summary>
+            其它自定义参数
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ExecuteRuleMessage.TriggerWay">
+            <summary>
+            触发方式
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.FunctionInvokeMessage">
+            <summary>
+            调用设备功能的消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.FunctionInvokeMessage.SourceFunction">
+            <summary>
+            通过其它功能执行时，会传入源功能
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.FunctionInvokeMessageReply">
+            <summary>
+            调用设备功能的消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.FunctionInvokeMessageReply.IsSuccess">
+            <summary>
+            是否成功
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.FunctionInvokeMessageReply.Error">
+            <summary>
+            错误原因
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ModbusMessage.MatchName">
+            <summary>
+            Modbus匹配规则名称
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.QueryICCIDMessage">
+            <summary>
+            下发请求查询ICCID
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.QueryICCIDMessageReply">
+            <summary>
+            查询ICCID的回复消息
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.RawDataMessage">
+            <summary>
+            原数据下发
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.RawDataMessage.prefix">
+            <summary>
+            边缘设备的下属设备
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.ReadPropertyMessage">
+            <summary>
+            读取设备属性
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ReadPropertyMessage.Properties">
+            <summary>
+            可读取多个属性
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.ReadPropertyMessageReply">
+            <summary>
+            设备属性上报消息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ReadPropertyMessageReply.Properties">
+            <summary>
+            属性键值对
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Message.ReadPropertyMessageReply.IsTagSync">
+            <summary>
+            是否为标签同步到属性的消息
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Message.TempProductMessage">
+            <summary>
+            生成临时设备与产品关联缓存
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Redis.RedisConnectionManager">
+            <summary>
+            Redis 连接管理器，提供线程安全的 Redis 连接管理
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.GetInstance(System.String)">
+            <summary>
+            获取指定连接字符串的 Redis 连接管理器实例
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.#ctor(System.String)">
+            <summary>
+            私有构造函数，确保单例模式
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.Connect">
+            <summary>
+            初始化 Redis 连接
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.GetConnection">
+            <summary>
+            获取基础 Redis 连接实例
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.GetDatabase(System.Int32)">
+            <summary>
+            获取 Redis 数据库实例
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.GetServer(System.String,System.Int32)">
+            <summary>
+            获取 Redis 服务器实例
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.GetEndPoints">
+            <summary>
+            获取所有连接端点
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.ForceReconnect">
+            <summary>
+            强制重新连接 Redis（线程安全）
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.ConnectInternal">
+            <summary>
+            初始化 Redis 连接（内部实现）
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.RegisterConnectionEvents">
+            <summary>
+            注册 Redis 连接事件处理程序
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.DisposeConnection">
+            <summary>
+            安全释放 Redis 连接
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.LogConnectionError(System.Exception,System.String)">
+            <summary>
+            记录连接错误日志
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.Dispose">
+            <summary>
+            释放 Redis 连接管理器占用的资源
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.Dispose(System.Boolean)">
+            <summary>
+            释放 Redis 连接管理器占用的资源
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisConnectionManager.Finalize">
+            <summary>
+            Redis 连接管理器析构函数
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Redis.RedisHelper">
+            <summary>
+            Redis操作
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.GetConnectRedis">
+            <summary>
+            连接 Redis 数据库
+            </summary>
+            <returns>Redis 数据库连接实例</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.LockToDo(System.String,System.Action{StackExchange.Redis.IDatabase})">
+            <summary>
+            加锁处理
+            </summary>
+            <param name="lockkey"></param>
+            <param name="ac"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.LockTake(System.String)">
+            <summary>
+            加锁
+            </summary>
+            <param name="lockkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.WaitLockTake(System.String)">
+            <summary>
+            等待加锁
+            </summary>
+            <param name="lockkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.LockRelease(System.String)">
+            <summary>
+            释放锁
+            </summary>
+            <param name="lockkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.LockToDoAsync(System.String,System.Action{StackExchange.Redis.IDatabase})">
+            <summary>
+            加锁处理
+            </summary>
+            <param name="lockkey"></param>
+            <param name="ac"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.LockTakeAsync(System.String)">
+            <summary>
+            加锁
+            </summary>
+            <param name="lockkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.WaitLockTakeAsync(System.String)">
+            <summary>
+            异步等待加锁
+            </summary>
+            <param name="lockkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.LockReleaseAsync(System.String)">
+            <summary>
+            释放锁
+            </summary>
+            <param name="lockkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringSet(System.String,System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            保存单个key value
+            </summary>
+            <param name="key">Redis Key</param>
+            <param name="value">保存的值</param>
+            <param name="expiry">过期时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringSet(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue}})">
+            <summary>
+            保存多个key value
+            </summary>
+            <param name="keyValues">键值对</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringSet``1(System.String,``0,System.Nullable{System.TimeSpan})">
+            <summary>
+            保存一个对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="obj"></param>
+            <param name="expiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringGet(System.String)">
+            <summary>
+            获取单个key的值
+            </summary>
+            <param name="key">Redis Key</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringGet(System.Collections.Generic.List{System.String})">
+            <summary>
+            获取多个Key
+            </summary>
+            <param name="listKey">Redis Key集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringGet``1(System.String)">
+            <summary>
+            获取一个key的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringIncrement(System.String,System.Double)">
+            <summary>
+            为数字增长val
+            </summary>
+            <param name="key"></param>
+            <param name="val">可以为负</param>
+            <returns>增长后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringDecrement(System.String,System.Double)">
+            <summary>
+            为数字减少val
+            </summary>
+            <param name="key"></param>
+            <param name="val">可以为负</param>
+            <returns>减少后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringSetAsync(System.String,System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            保存单个key value
+            </summary>
+            <param name="key">Redis Key</param>
+            <param name="value">保存的值</param>
+            <param name="expiry">过期时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringSetAsync(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue}})">
+            <summary>
+            保存多个key value
+            </summary>
+            <param name="keyValues">键值对</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringSetAsync``1(System.String,``0,System.Nullable{System.TimeSpan})">
+            <summary>
+            保存一个对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="obj"></param>
+            <param name="expiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringGetAsync(System.String)">
+            <summary>
+            获取单个key的值
+            </summary>
+            <param name="key">Redis Key</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringGetAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            获取多个Key
+            </summary>
+            <param name="listKey">Redis Key集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringGetAsync``1(System.String)">
+            <summary>
+            获取一个key的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringIncrementAsync(System.String,System.Double)">
+            <summary>
+            为数字增长val
+            </summary>
+            <param name="key"></param>
+            <param name="val">可以为负</param>
+            <returns>增长后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.StringDecrementAsync(System.String,System.Double)">
+            <summary>
+            为数字减少val
+            </summary>
+            <param name="key"></param>
+            <param name="val">可以为负</param>
+            <returns>减少后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashExists(System.String,System.String)">
+            <summary>
+            判断某个数据是否已经被缓存
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashSet``1(System.String,System.String,``0)">
+            <summary>
+            存储数据到hash表
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashDelete(System.String,System.String)">
+            <summary>
+            移除hash中的某值
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashDelete(System.String,System.String[])">
+            <summary>
+            移除hash中的多个值
+            </summary>
+            <param name="key"></param>
+            <param name="dataKeys"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashGet``1(System.String,System.String)">
+            <summary>
+            从hash表获取数据
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashIncrement(System.String,System.String,System.Double)">
+            <summary>
+            为数字增长val
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <param name="val">可以为负</param>
+            <returns>增长后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashDecrement(System.String,System.String,System.Double)">
+            <summary>
+            为数字减少val
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <param name="val">可以为负</param>
+            <returns>减少后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashKeys``1(System.String)">
+            <summary>
+            获取hashkey所有Redis key
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashValues(System.String)">
+            <summary>
+            获取hashkey所有值
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashExistsAsync(System.String,System.String)">
+            <summary>
+            判断某个数据是否已经被缓存
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashSetAsync``1(System.String,System.String,``0)">
+            <summary>
+            存储数据到hash表
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashDeleteAsync(System.String,System.String)">
+            <summary>
+            移除hash中的某值
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashDeleteAsync(System.String,System.String[])">
+            <summary>
+            移除hash中的多个值
+            </summary>
+            <param name="key"></param>
+            <param name="dataKeys"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashGetAsync``1(System.String,System.String)">
+            <summary>
+            从hash表获取数据
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashGetListAsync``1(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            从hash批量获取数据
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashGetAllAsync``1(System.String)">
+            <summary>
+            从hash表中获取所有数据
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashIncrementAsync(System.String,System.String,System.Double)">
+            <summary>
+            为数字增长val
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <param name="val">可以为负</param>
+            <returns>增长后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashDecrementAsync(System.String,System.String,System.Double)">
+            <summary>
+            为数字减少val
+            </summary>
+            <param name="key"></param>
+            <param name="dataKey"></param>
+            <param name="val">可以为负</param>
+            <returns>减少后的值</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.HashKeysAsync``1(System.String)">
+            <summary>
+            获取hashkey所有Redis key
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRemove``1(System.String,``0)">
+            <summary>
+            移除指定ListId的内部List的值
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRange``1(System.String)">
+            <summary>
+            获取指定key的List
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRightPush``1(System.String,``0)">
+            <summary>
+            入队
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRightPop``1(System.String)">
+            <summary>
+            出队
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListLeftPush``1(System.String,``0)">
+            <summary>
+            入栈
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListLeftPop``1(System.String)">
+            <summary>
+            出栈
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListLength(System.String)">
+            <summary>
+            获取集合中的数量
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRemoveAsync``1(System.String,``0)">
+            <summary>
+            移除指定ListId的内部List的值
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListTrimAsync(System.String,System.Int64,System.Int64)">
+            <summary>
+            移除指定范围数据
+            </summary>
+            <param name="key"></param>
+            <param name="start"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRangeAsync``1(System.String)">
+            <summary>
+            获取指定key的List
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRightPushAsync``1(System.String,``0)">
+            <summary>
+            入队
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListRightPopAsync``1(System.String)">
+            <summary>
+            出队
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListLeftPushAsync``1(System.String,``0)">
+            <summary>
+            入栈
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListLeftPopAsync``1(System.String)">
+            <summary>
+            出栈
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.ListLengthAsync(System.String)">
+            <summary>
+            获取集合中的数量
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetAdd``1(System.String,``0,System.Double)">
+            <summary>
+            添加
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="score"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetRemove``1(System.String,``0)">
+            <summary>
+            删除
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetRangeByRank``1(System.String)">
+            <summary>
+            获取全部
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetLength(System.String)">
+            <summary>
+            获取集合中的数量
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetAddAsync``1(System.String,``0,System.Double)">
+            <summary>
+            添加
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="score"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetRemoveAsync``1(System.String,``0)">
+            <summary>
+            删除
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetRangeByRankAsync``1(System.String)">
+            <summary>
+            获取全部
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SortedSetLengthAsync(System.String)">
+            <summary>
+            获取集合中的数量
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.KeyDelete(System.String)">
+            <summary>
+            删除单个key
+            </summary>
+            <param name="key">redis key</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.KeyDelete(System.Collections.Generic.List{System.String})">
+            <summary>
+            删除多个key
+            </summary>
+            <param name="keys">rediskey</param>
+            <returns>成功删除的个数</returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.KeyExists(System.String)">
+            <summary>
+            判断key是否存储
+            </summary>
+            <param name="key">redis key</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.KeyRename(System.String,System.String)">
+            <summary>
+            重新命名key
+            </summary>
+            <param name="key">就的redis key</param>
+            <param name="newKey">新的redis key</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.KeyExpire(System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            设置Key的时间
+            </summary>
+            <param name="key">redis key</param>
+            <param name="expiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.KeyExpireAsync(System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            设置Key的时间（异步）
+            </summary>
+            <param name="key"></param>
+            <param name="expiry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.Subscribe(System.String,System.Action{StackExchange.Redis.RedisChannel,StackExchange.Redis.RedisValue})">
+            <summary>
+            Redis发布订阅  订阅
+            </summary>
+            <param name="subChannel"></param>
+            <param name="handler"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.Publish``1(System.String,``0)">
+            <summary>
+            Redis发布订阅  发布
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="channel"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.Unsubscribe(System.String)">
+            <summary>
+            Redis发布订阅  取消订阅
+            </summary>
+            <param name="channel"></param>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.UnsubscribeAll">
+            <summary>
+            Redis发布订阅  取消全部订阅
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Redis.RedisHelper.SetPrefixKey(System.String)">
+            <summary>
+            设置前缀
+            </summary>
+            <param name="customKey"></param>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseAll.name">
+            <summary>
+            功能名称（必填项）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseAll.code">
+            <summary>
+            标识符（必填项）
+            支持大小写字母、数字和下划线
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseAll.isfixed">
+            <summary>
+            是否为固定模板
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseEvent.description">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseEvent.CondType">
+            <summary>
+            条件类型：1为在线触发，2为离线触发，3为属性触发。0则只能规则触发，否则根据条件触发
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseEvent.PropConditions">
+            <summary>
+            属性条件
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ChannelUtility.Tsl.BaseEvent.GroupTxt" -->
+        <member name="P:ChannelUtility.Tsl.BaseEvent.Level">
+            <summary>
+            报警级别：-1忽略、0普通、1告警、2紧急
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseEvent.Targets">
+            <summary>
+            告警目标
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseEvent.SilenceTime">
+            <summary>
+            事件沉默周期，单位秒（默认表示86400S，最小60秒）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EventPropCondition.code">
+            <summary>
+             属性代码
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EventPropCondition.valtype">
+            <summary>
+            条件值类型:Long、Double、String、Bool、Date
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EventPropCondition.compare">
+            <summary>
+            比较
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EventPropCondition.val">
+            <summary>
+            条件值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.prefixcode">
+            <summary>
+            前缀标识符
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.description">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.showway">
+            <summary>
+            显示方式：null表示全部显示，空为都不显示，org为来源组织显示，own拥有者组织显示，use使用者组织显示，person个人使用者显示，多个用逗号分隔
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.conditions">
+            <summary>
+            启用条件
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ChannelUtility.Tsl.BaseFunc.GroupTxt" -->
+        <member name="P:ChannelUtility.Tsl.BaseFunc.actionway">
+            <summary>
+            屏蔽方式：0为隐藏，1为禁用
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.downway">
+            <summary>
+            下发方式：0为数据解释下发，1为modbus下发，2为modbus读属性下发（不等待），3为直接读属性下发（等待），4为图形编程
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.waitreturn">
+            <summary>
+            下发方式为1时设置是否等待返回
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.downdata">
+            <summary>
+            下发的数据，modbus时为json格式
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseFunc.inputs">
+            <summary>
+            输入参数
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Tsl.BaseFunc.GetModbusBytes(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            功能转modbus字节
+            </summary>
+            <param name="mode"></param>
+            <param name="inputData"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EnableCondition.code">
+            <summary>
+             属性代码
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EnableCondition.valtype">
+            <summary>
+            条件值类型:Long、Double、String、Bool、Date
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EnableCondition.compare">
+            <summary>
+            比较
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EnableCondition.val">
+            <summary>
+            条件值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseInputValue.type">
+            <summary>
+            数据类型
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseInputValue.defval">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseInputValue.readOnly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseInputValue.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseInputValue.elements">
+            <summary>
+            枚举类型使用的枚举元素
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseInputValue.multi">
+            <summary>
+            判断枚举是否多选
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseProperty.prefixcode">
+            <summary>
+            前缀标识符
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseProperty.description">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseProperty.showway">
+            <summary>
+            显示方式：null表示全部显示，空为都不显示，org为来源组织显示，own拥有者组织显示，use使用者组织显示，person个人使用者显示，多个用逗号分隔
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Tsl.BaseTagInfo">
+            <summary>
+            设备标签信息
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseTagInfo.description">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseTagInfo.value">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseTagInfo.mapcode">
+            <summary>
+            绑定的属性标识
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseTagInfo.enable">
+            <summary>
+            是否启用
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseTagInfo.option">
+            <summary>
+            类型选项
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseValueOption.type">
+            <summary>
+            数据类型（必填项）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BaseValueOption.express">
+            <summary>
+            预处理表达式（格式：data>0?1:0）
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Tsl.BaseValueOption.RawTo(System.Object,System.Func{System.String,System.Object})">
+            <summary>
+            原数据转换成显示数据
+            </summary>
+            <param name="input"></param>
+            <param name="getProp"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BooleanOption.trueText">
+            <summary>
+            true显示值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.BooleanOption.falseText">
+            <summary>
+            false显示值
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.DateOption.format">
+            <summary>
+            格式化字符串
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.EnumOption.elements">
+            <summary>
+            枚举元素
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.FileOption.bodyType">
+            <summary>
+            url,base64,binary
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.FirmwareInfo.name">
+            <summary>
+            固件标识，可以用版本号标识
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.FirmwareInfo.tag">
+            <summary>
+            固件标签，表示固件类型
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.FirmwareInfo.url">
+            <summary>
+            固件下载路径
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.FloatOption.decimals">
+            <summary>
+            小数点位数
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Tsl.GeoOption">
+            <summary>
+            Geo地理位置类型
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.GeoOption.usingGCJTo">
+            <summary>
+            是否开启火星坐标系转换
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.BaudRate">
+            <summary>
+            波特率
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.DataBits">
+            <summary>
+            数据位
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.Parity">
+            <summary>
+            奇偶校验
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.StopBits">
+            <summary>
+            停止位
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.Mode">
+            <summary>
+            Mode
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.PollTime">
+            <summary>
+            轮询周期时间（单位ms）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusInfo.Matches">
+            <summary>
+            匹配规则
+            </summary>
+        </member>
+        <member name="T:ChannelUtility.Tsl.ModbusMatch">
+            <summary>
+            Modbus匹配规则
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatch.Name">
+            <summary>
+            规则名称（唯一）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatch.SlaveId">
+            <summary>
+            从机地址
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatch.FuncCode">
+            <summary>
+            功能码
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatch.StartAddress">
+            <summary>
+            起始地址
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Tsl.ModbusMatch.GetDataLength">
+            <summary>
+            计算长度
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatchItem.ByteOrder">
+            <summary>
+            字节序：H大端、L小端、C字节
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatchItem.NumRegister">
+            <summary>
+            数据长度
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.ModbusMatchItem.PropertyCode">
+            <summary>
+            对应的标识符
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.StringOption.maxLen">
+            <summary>
+            最大长度(1-255)
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Boolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.NullableBoolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Byte">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.NullableByte">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.UInt16">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.NullableUInt16">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.NullableInt32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Single">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.NullableSingle">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Double">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.NullableDouble">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.DictionaryStringString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseAll">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.EventPropCondition">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.EventPropConditionArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseEvent">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.EnableCondition">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.EnableConditionArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseInputValue">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListBaseInputValue">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ModbusMatchItem">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListModbusMatchItem">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ModbusMatch">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseFunc">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseValueOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseProperty">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BaseTagInfo">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.BooleanOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.DateOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.EnumOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.FileOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.FirmwareInfo">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.FloatOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.GeoOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.IntOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListModbusMatch">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ModbusInfo">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.StringOption">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListBaseProperty">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListBaseFunc">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListBaseEvent">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListBaseTagInfo">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.ListFirmwareInfo">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.TslModel">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslJsonSerializerContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Tsl.TslJsonSerializerContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:ChannelUtility.Tsl.TslJsonSerializerContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ChannelUtility.Tsl.TslJsonSerializerContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ChannelUtility.Tsl.TslModel">
+            <summary>
+            物模型
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslModel.properties">
+            <summary>
+            属性列表
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslModel.functions">
+            <summary>
+            功能列表
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslModel.events">
+            <summary>
+            事件列表
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslModel.tags">
+            <summary>
+            标签列表（默认包含position标签，表示位置）
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslModel.modbus">
+            <summary>
+            modbus配置
+            </summary>
+        </member>
+        <member name="P:ChannelUtility.Tsl.TslModel.firmwares">
+            <summary>
+            固件列表,最新的放前面
+            </summary>
+        </member>
+        <member name="M:ChannelUtility.Tsl.TslModel.RawToProp(System.Collections.Generic.IDictionary{System.String,System.Object},System.Func{System.String,System.Object})">
+            <summary>
+            原数据转换成显示数据
+            </summary>
+            <param name="input"></param>
+            <param name="getProp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.Tsl.TslModel.PropertyList(System.Collections.Generic.Dictionary{System.String,ChannelUtility.DevicePropertyValue},System.Func{ChannelUtility.Tsl.BaseProperty,System.Threading.Tasks.Task{System.Boolean}})">
+            <summary>
+            获取显示用设备属性
+            </summary>
+            <param name="input"></param>
+            <param name="validate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ChannelUtility.UtilityTool.SHA1(System.String,System.Text.Encoding)">
+            <summary>
+            SHA1 加密，返回大写字符串
+            </summary>
+            <param name="content">需要加密字符串</param>
+            <param name="encode">指定加密编码</param>
+            <returns>返回40位大写字符串</returns>
+        </member>
+        <member name="M:ChannelUtility.UtilityTool.SHA256(System.String,System.Text.Encoding)">
+            <summary>
+            SHA256 加密，返回大写字符串
+            </summary>
+            <param name="content"></param>
+            <param name="encode"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

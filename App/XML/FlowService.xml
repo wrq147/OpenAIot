@@ -1,0 +1,2474 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FlowService</name>
+    </assembly>
+    <members>
+        <member name="M:FlowService.Business.OrgBLL.GetTree(FlowService.Model.In_OrgList)">
+            <summary>
+            获取当前级别的组织数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Business.TaskBLL.DeleteFlow(System.Int64)">
+            <summary>
+            删除我的流程
+            </summary>
+            <param name="flowId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Business.TaskBLL.CancelFlow(System.Int64)">
+            <summary>
+            取消流程
+            </summary>
+            <param name="flowId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Business.TaskBLL.ScheduleDelay(System.Int64)">
+            <summary>
+            延时执行指定流程
+            </summary>
+            <param name="nodeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Business.TaskBLL.ScheduleExcute(System.Int64,System.String)">
+            <summary>
+            自动执行指定流程
+            </summary>
+            <param name="nodeId"></param>
+            <param name="actionName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Business.TaskBLL.ExcuteFlow(FlowService.Model.In_TaskExcute,Common.Share.IUserInfo)">
+            <summary>
+            执行指定流程
+            </summary>
+            <param name="data"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Business.TaskBLL.CreateFlow(System.Int64,System.Collections.Generic.Dictionary{System.String,System.Object},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FlowService.Model.Out_UserItem}},System.Int32,System.Boolean,System.Int64,System.Int64)">
+            <summary>
+            使用指定工作流模板创建工作流实例
+            </summary>
+            <param name="templateId"></param>
+            <param name="model"></param>
+            <param name="assign"></param>
+            <param name="state">0表示预生成,1表示保存，2表示提交</param>
+            <param name="isEmbed">是否为嵌入式流程</param>
+            <param name="uid">发起人</param>
+            <param name="flowId">流程Id</param>
+            <returns></returns>
+        </member>
+        <member name="T:FlowService.Controller.Flow">
+            <summary>
+            流程模板接口
+            </summary>
+        </member>
+        <member name="M:FlowService.Controller.Flow.GenerateId">
+             <summary>
+            生成唯一Id
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Flow.Info(System.Int64)">
+            <summary>
+            获取指定流程模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Flow.SaveFlowDetail(FlowService.Model.MZ_FlowTemplate)">
+            <summary>
+            发布流程模板
+            </summary>
+            <param name="template"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Flow.Remove(System.Int64)">
+            <summary>
+            删除流程模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Flow.GetFlowRecord(FlowService.Model.In_FlowRecord)">
+            <summary>
+            获取流程记录
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Flow.DataList">
+            <summary>
+            获取可变动数据列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Flow.ExportRecord(FlowService.Model.In_FlowRecord)">
+            <summary>
+            导出指定模板的流程记录
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FlowService.Controller.FlowReport">
+            <summary>
+            流程报表接口
+            </summary>
+        </member>
+        <member name="M:FlowService.Controller.FlowReport.StatisticsInfo">
+            <summary>
+            首页工作台统计信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.HttpSync.FlowRecords(FlowService.Model.In_FlowRecord)">
+            <summary>
+            流程记录接口（开发者用）
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FlowService.Controller.Org">
+            <summary>
+            获取流程设计所需的组织数据
+            </summary>
+        </member>
+        <member name="T:FlowService.Controller.Task">
+            <summary>
+            流程实例接口
+            </summary>
+        </member>
+        <member name="M:FlowService.Controller.Task.GenerateNumber">
+            <summary>
+            生成流程单号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.FinishedList(FlowService.Model.In_FinishedList)">
+            <summary>
+            查询已办任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.CSList(FlowService.Model.In_CSList)">
+            <summary>
+            查询抄送我的列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.DefinitionList(FlowService.Model.In_DefinitionList)">
+            <summary>
+            获取流程定义列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.Add(FlowService.Model.In_TaskAdd)">
+            <summary>
+            发起流程
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.MyProcess(FlowService.Model.In_MyProcess)">
+            <summary>
+            我的发起的流程
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.Cancel(System.Int64)">
+            <summary>
+            取消流程
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.Remove(System.Int64)">
+            <summary>
+            删除我的流程
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.TodoList(FlowService.Model.In_TodoList)">
+            <summary>
+            查询待办任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.Excute(FlowService.Model.In_TaskExcute)">
+            <summary>
+            执行流程
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.GetUserActionForm(System.Int64)">
+            <summary>
+            获取指定节点的操作表单信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.GetUserRootForm(System.Int64)">
+            <summary>
+            获取根节点的操作表单信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.Controller.Task.GetQuery(FlowService.Model.In_FlowQuery)">
+            <summary>
+            获取流程的输入参数
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.InsertFlowAsync(FlowService.Model.MZ_Flow)">
+            <summary>
+            添加工作流实例
+            </summary>
+            <param name="flow"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.Select(System.Int64)">
+            <summary>
+            获取指定工作流实例
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.DeleteFlowAsync(System.Int64)">
+            <summary>
+            标记删除指定流程
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.GetTodoTaskListByIds(System.Collections.Generic.List{System.Int64},Common.Share.IUserInfo)">
+            <summary>
+            根据流程Id获取待处理任务
+            </summary>
+            <param name="flowIds"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.GetTodoTaskList(FlowService.Model.In_TodoList,Common.Share.IUserInfo)">
+            <summary>
+            获取待处理任务
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.GetMyProcessList(FlowService.Model.In_MyProcess,Common.Share.IUserInfo)">
+            <summary>
+            获取我发起的流程
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.GetFinishedList(FlowService.Model.In_FinishedList,Common.Share.IUserInfo)">
+            <summary>
+            查询已办任务列表
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowDAL.GetCSList(FlowService.Model.In_CSList,Common.Share.IUserInfo)">
+            <summary>
+            查询抄送列表
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowTemplateDAL.UpdateFlowTemplateAsync(FlowService.Model.MZ_FlowTemplate,Common.Share.IUserInfo)">
+            <summary>
+            更新工作流模板
+            </summary>
+            <param name="template"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowTemplateDAL.InsertFlowTemplateAsync(FlowService.Model.MZ_FlowTemplate,Common.Share.IUserInfo)">
+            <summary>
+            新增工作流模板
+            </summary>
+            <param name="template"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowTemplateDAL.DeleteFlowTemplateAsync(System.Int64)">
+            <summary>
+            删除工作流模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowTemplateDAL.GetFlowRecord(FlowService.Model.In_FlowRecord,System.Collections.Generic.Dictionary{System.String,FlowService.FlowNode.FormFields.FormField})">
+            <summary>
+            获取流程记录
+            </summary>
+            <param name="query"></param>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FlowTemplateLinkDAL.SetFlowTemplateLinks(System.Int64,FlowService.FlowNode.ObjData[])">
+            <summary>
+            更新流程模板的提交
+            </summary>
+            <param name="id"></param>
+            <param name="depts"></param>
+        </member>
+        <member name="M:FlowService.DAL.FormDAL.SelecFormById(System.Int64)">
+            <summary>
+            获取表单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FormDAL.InsertFormAsync(FlowService.Model.MZ_Form)">
+            <summary>
+            添加表单
+            </summary>
+            <param name="form"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DAL.FormDAL.UpdateFormAsync(FlowService.Model.MZ_Form)">
+            <summary>
+            更新表单
+            </summary>
+            <param name="template"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FlowService.DAL.FormDataDAL">
+            <summary>
+            表单实例操作
+            </summary>
+        </member>
+        <member name="M:FlowService.DAL.GroupDAL.SortIncrease(System.Int64,System.Int32)">
+            <summary>
+            分组指定序号自动排序
+            </summary>
+            <param name="orgId"></param>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DeviceBusProxy.SendEvent(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            发送服务端事件
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="eventId"></param>
+            <param name="outputs"></param>
+            <param name="redirectFromProductId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.DeviceBusProxy.DownFunction(FlowService.Model.Out_FlowDevice,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行指定功能
+            </summary>
+            <param name="context"></param>
+            <param name="device"></param>
+            <param name="functionId"></param>
+            <param name="inputs"></param>
+            <returns></returns>
+        </member>
+        <member name="P:FlowService.FlowNode.ActionOfData.DataAction.TargetField">
+            <summary>
+            目标字段
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ActionOfData.DataAction.ValueType">
+            <summary>
+            触发表的值类型：Form、Const
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ActionOfData.DataAction.Value">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ActionOfData.DataCondition.TargetField">
+            <summary>
+            过滤目标字段
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ActionOfData.DataCondition.ValueType">
+            <summary>
+            比较值类型：Form、Const
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ActionOfData.DataCondition.Value">
+            <summary>
+            比较值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.BuilderContext.UserDeptList">
+            <summary>
+            所需部门
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.BuilderContext.FormItems">
+            <summary>
+            表单值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.BuilderContext.InputParams">
+            <summary>
+            输入参数
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.BuilderContext.Creator">
+            <summary>
+            创建者
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.BuilderContext.Executor">
+            <summary>
+            执行者
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.ExecutorBuilder">
+            <summary>
+            流程定义构建工厂
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.ExecutorBuilder.BuildApproval``1(System.Collections.Generic.LinkedList{FlowService.FlowNode.Builder.NodeLinkItem},FlowService.FlowNode.SPNode,FlowService.FlowNode.Builder.StepBuilder{``0},System.Int32)">
+            <summary>
+            创建审批节点
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="levelnodes"></param>
+            <param name="node"></param>
+            <param name="stepBuilder"></param>
+            <param name="state"></param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.ExecutorBuilder.BuildCondition``1(System.Collections.Generic.LinkedList{FlowService.FlowNode.Builder.NodeLinkItem},FlowService.FlowNode.ConditionNode[],System.Int32,FlowService.FlowNode.Builder.StepBuilder{``0},System.Int32)">
+            <summary>
+            创建条件节点
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="levelnodes"></param>
+            <param name="nodes"></param>
+            <param name="i"></param>
+            <param name="stepBuilder"></param>
+            <param name="state"></param>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.StepExecutionContext.ExcuteIndex">
+            <summary>
+            当前执行的索引位置
+            </summary>
+        </member>
+        <member name="F:FlowService.FlowNode.Builder.StepExecutionContext.JobList">
+            <summary>
+            执行后新增加的调试任务
+            </summary>
+        </member>
+        <member name="F:FlowService.FlowNode.Builder.StepExecutionContext.NoticeList">
+            <summary>
+            执行后新增加的消息通知
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.StepJsonConverter">
+            <summary>
+            节点json转换
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ApprovalTask.mode">
+            <summary>
+            多人审批时审批方式
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ApprovalTask.timeLimit">
+            <summary>
+            审批时限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ApprovalTask.AssignedPrincipal">
+            <summary>
+            审批人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ApprovalTask.CanAdd">
+            <summary>
+            是否可自选
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ApprovalTask.formUser">
+            <summary>
+            表单内联系人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ApprovalTask.Sign">
+            <summary>
+            是否需要签名
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.ApprovedStep">
+            <summary>
+            审批同意
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.CSStep">
+            <summary>
+            抄送
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.CSStep.ShouldAdd">
+            <summary>
+            是否发起人可添加
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.CSStep.AssignedPrincipal">
+            <summary>
+            抄送的目标用户
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.CSStep.FormPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.DataStep">
+            <summary>
+            执行添加、修改、删除指定数据库表的记录
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.DelayStep">
+            <summary>
+            延时
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.EndStep">
+            <summary>
+            终结流程
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.FuncStep">
+            <summary>
+            执行功能
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.GotoStep.TargetId">
+            <summary>
+            跳转的目标StepId
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.IfStep.IsLastCondition">
+            <summary>
+            是否为最后的条件
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.IfStep.ConditionName">
+            <summary>
+            参数名
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.IfStep.ConditionBody">
+            <summary>
+            表达式
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.NextStep">
+            <summary>
+            什么都不做
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.OperatorStep">
+            <summary>
+            办理人执行
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.OperatorTask">
+            <summary>
+            办理人节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.OperatorTask.timeLimit">
+            <summary>
+            办理时限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.OperatorTask.refuseTxt">
+            <summary>
+            驳回文本
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.OperatorTask.AssignedPrincipal">
+            <summary>
+            办理人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.OperatorTask.formUser">
+            <summary>
+            表单内联系人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.OperatorTask.formDevice">
+            <summary>
+            表单内设备责任人
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.ParallelEnd">
+            <summary>
+            并行结束
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.ParallelStep">
+            <summary>
+            并行节点
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.RejectedStep">
+            <summary>
+            拒绝节点
+            </summary>
+        </member>
+        <member name="F:FlowService.FlowNode.Builder.Step.RejectedStep.ToEnd">
+            <summary>
+            判断是否直接结束
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.StartStep.FormPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.Builder.Step.TriggerStep">
+            <summary>
+            触发器
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.WhenStep.ExpectedOutcome">
+            <summary>
+            期望的值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.WorkflowStep.Level">
+            <summary>
+            层级
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.WorkflowStep.PersistenceNode">
+            <summary>
+            节点是否支持持久化
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.Step.WorkflowStep.Index">
+            <summary>
+            节点所在索引
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.UserTask.Options">
+            <summary>
+            操作选项列表
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.UserTask.FormPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.UserTask.optionInit">
+            <summary>
+            选项初始化
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.UserTask.UpdateActionUser(FlowService.FlowNode.Builder.StepExecutionContext)">
+            <summary>
+            更新执行的用户列表
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.TAServiceExtension.AddWorkflow(TemplateAction.Core.IServiceCollection)">
+            <summary>
+            注册工作流
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ActionUser.ActionName">
+            <summary>
+            处理的动作
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ActionUser.SignImg">
+            <summary>
+            签名图
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ActionUser.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Builder.ActionUser.ActionDate">
+            <summary>
+            执行时间
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.GenerateUserNodes(FlowService.Model.MZ_FormData)">
+            <summary>
+            生成审批与抄送流程节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.StartWorkflow(FlowService.Model.MZ_FormData,System.Boolean)">
+            <summary>
+            执行创建流程
+            </summary>
+            <param name="formdata"></param>
+            <param name="excute">是否立即执行</param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.DeleteWorkflow(System.Int64)">
+            <summary>
+            删除流程
+            </summary>
+            <param name="flowId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.TerminateWorkflow(System.Int64)">
+            <summary>
+            取消流程
+            </summary>
+            <param name="flowId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.GetUserActionForm(FlowService.Model.MZ_Flow_Node)">
+            <summary>
+            获取指定节点的操作表单信息
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.GetUserActionForm(System.Int64)">
+            <summary>
+            获取指定节点的操作表单信息
+            </summary>
+            <param name="nodeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.ExcuteAction(System.Int64,System.String,FlowService.FlowNode.Builder.UserAction)">
+            <summary>
+            执行事件
+            </summary>
+            <param name="flowId"></param>
+            <param name="eventKey"></param>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.WorkflowExecutor.ExcuteStep(FlowService.FlowNode.Builder.StepExecutionContext)">
+            <summary>
+            执行完成就返回true
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FlowService.FlowNode.ConcurrentGroupNode">
+            <summary>
+            并行节点
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.ConditionGroupNode">
+            <summary>
+            条件组节点
+            包含多个条件节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ConditionsProps.groupsType">
+            <summary>
+            条件组逻辑关系 OR、AND
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ConditionsProps.expression">
+            <summary>
+            自定义表达式，灵活构建逻辑关系
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ConditionGroup.groupType">
+            <summary>
+            条件逻辑关系 OR、AND
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Conditions.BaseCondition.id">
+            <summary>
+            表单字段Id或RootNode的Id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Conditions.BaseCondition.valueType">
+            <summary>
+             User 人员选择、 Dept 部门选择、 Number 数字、Date 日期、 String 字符串
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.Conditions.UserCondition.UserInUser(System.Int64,System.String)">
+            <summary>
+            判断用户是否是指定字符串里的
+            </summary>
+            <param name="userId"></param>
+            <param name="userlist"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.Conditions.UserCondition.UserInDept(FlowService.FlowNode.Builder.BuilderContext,System.Int64,System.String)">
+            <summary>
+            判断用户是否是指定部门里的
+            </summary>
+            <param name="context"></param>
+            <param name="userId"></param>
+            <param name="deptlist"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FlowService.FlowNode.CSNode">
+            <summary>
+            抄送节点
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.CSUserProps">
+            <summary>
+            抄送节点的属性
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.CSUserProps.shouldAdd">
+            <summary>
+            是否发起人可选择
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.CSUserProps.assignedUser">
+            <summary>
+            目标对象人员
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.CSUserProps.formPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.DataNode">
+            <summary>
+            执行修改、删除指定数据库表的记录
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.DataProps.targetform">
+            <summary>
+            目标表单
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.DataProps.action">
+            <summary>
+            Update、Delete
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.DataProps.conditions">
+            <summary>
+            过滤条件
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.DataProps.fields">
+            <summary>
+            执行插入或更新的字段
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.DelayNode">
+            <summary>
+            延时节点
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.EmptyNode">
+            <summary>
+            空节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.id">
+            <summary>
+            节点id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.parentId">
+            <summary>
+            父节点id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.type">
+            <summary>
+            节点类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.name">
+            <summary>
+            节点名称
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.desc">
+            <summary>
+            节点描述
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.pid">
+            <summary>
+            父节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FlowBaseNode.children">
+            <summary>
+            下一个节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.BaseProps.required">
+            <summary>
+            判断是否必需
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.BaseProps.enablePrint">
+            <summary>
+            是否允许打印
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.FormFields.BaseProps.FieldRelated(FlowService.FlowNode.FormFields.FormField,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            关联值处理
+            </summary>
+            <param name="field"></param>
+            <param name="model"></param>
+        </member>
+        <member name="T:FlowService.FlowNode.FormFields.DateTimeProps">
+            <summary>
+            日期控件属性
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.FormFields.DateTimeRangeProps">
+            <summary>
+            日期范围控件属性
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.DeviceProps.limit">
+            <summary>
+            限制选择个数
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.DeviceProps.limit_product">
+            <summary>
+            限制的产品
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.DeviceProps.synclist">
+            <summary>
+            同步控制列表
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.SelectSyncItem.code">
+            <summary>
+            产品物模型的属性标识
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.SelectSyncItem.field_id">
+            <summary>
+            表单字段ID
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.FormField.id">
+            <summary>
+            表单字段ID
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.FormField.title">
+            <summary>
+            表单字段标题
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.FormField.name">
+            <summary>
+            表单字段类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.FormField.icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.FormField.valueType">
+            <summary>
+            值类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.FormField.props">
+            <summary>
+            属性
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.FormFields.FormField.ToSaveItems(System.Int64,System.Object,TemplateAction.Core.ITAServiceProvider)">
+            <summary>
+            转换为存储值
+            </summary>
+            <param name="flowId"></param>
+            <param name="val"></param>
+            <param name="globalServiceProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlowService.FlowNode.FormFields.FormField.FromSave(FlowService.Model.MZ_FormDataItem)">
+            <summary>
+            转换为显示值
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.InputProps.placeholder">
+            <summary>
+            占位符
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.InputProps.defaultValue">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.FormFields.JsonFieldConvert">
+            <summary>
+            表单字段转换
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.NumberInputProps.min">
+            <summary>
+            最小值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.NumberInputProps.max">
+            <summary>
+            最大值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.NumberInputProps.precision">
+            <summary>
+            数值精度
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.ParamInputProps.formType">
+            <summary>
+            关联的表单类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.ParamInputProps.formId">
+            <summary>
+            关联的表单Id值
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.showBorder">
+            <summary>
+            展示边框
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.maxSize">
+            <summary>
+            最大行数
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.rowLayout">
+            <summary>
+            布局方式:true按表格,false按表单
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.IdxColName">
+            <summary>
+            索引字段
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.showSummary">
+            <summary>
+            是否展示合计
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.deductid">
+            <summary>
+            关联合计字段
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.summaryColumns">
+            <summary>
+            合计字段
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormFields.TableListProps.summaryUnit">
+            <summary>
+            合计单位
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.FormPermsItem">
+            <summary>
+            表单权限项
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FormPermsItem.perm">
+            <summary>
+            R只读.E可编辑,H隐藏
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.FuncNode">
+            <summary>
+            功能节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FuncProps.FieldId">
+            <summary>
+            设备表单项
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FuncExeItem.ProductId">
+            <summary>
+            匹配的产品Id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FuncExeItem.ProductName">
+            <summary>
+            匹配的产品名称
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FuncExeItem.FunctionId">
+            <summary>
+            功能标识
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FuncExeItem.FunctionName">
+            <summary>
+            功能名称
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.FuncExeItem.InputData">
+            <summary>
+            执行功能传的值
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.JsonFlowConditionConverter">
+            <summary>
+            条件转换
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.JsonFlowNodeConverter">
+            <summary>
+            工作流节点转换
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ObjData.type">
+            <summary>
+            dept表示部门，user表示用户
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.DeviceData.type">
+            <summary>
+            device表示设备
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.DeviceData.deviceNumber">
+            <summary>
+            设备第三方编号
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.OperatorNode">
+            <summary>
+            办理人节点
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.BNProps">
+            <summary>
+            办理人节点的属性
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.assignedType">
+            <summary>
+            办理人选项类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.assignedUser">
+            <summary>
+            目标对象 人员/部门
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.role">
+            <summary>
+            角色
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.formUser">
+            <summary>
+            表单内联系人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.formDevice">
+            <summary>
+            表单内设备
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.enableChange">
+            <summary>
+            是否可变更办理人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.exeTxt">
+            <summary>
+            执行文本
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.refuseTxt">
+            <summary>
+            驳回文本
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.optionInit">
+            <summary>
+            选项初始化
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.timeLimit">
+            <summary>
+            办理时限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.formPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.BNProps.refuse">
+            <summary>
+            驳回设置
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.OperatorTimeLimit">
+            <summary>
+            时间限制
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorTimeLimit.timeout">
+            <summary>
+            超时时间设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorTimeLimit.handler">
+            <summary>
+            超时处理设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorTimeout.unit">
+            <summary>
+            H表示小时、D表示天
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorTimeout.value">
+            <summary>
+            时长
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorHandler.type">
+            <summary>
+            处理方式：REFUSE自动驳回，NOTIFY发送提醒
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorHandler.notify">
+            <summary>
+            提醒设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorHandlerNotify.once">
+            <summary>
+            是否只提醒一次
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorHandlerNotify.hour">
+            <summary>
+            间隔几小时提醒
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorRefuseRes.type">
+            <summary>
+            TO_END直接结束流程,TO_BEFORE驳回到上级审批节点,TO_NODE驳回到指定节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OperatorRefuseRes.target">
+            <summary>
+            TO_NODE时指定的节点id
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.OperStatus">
+            <summary>
+            操作状态
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OptionInitItem.optionName">
+            <summary>
+            选项名称
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OptionInitItem.fieldid">
+            <summary>
+            表单Id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.OptionInitItem.InitValue">
+            <summary>
+            表单值
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.RootNode">
+            <summary>
+            根节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.RootProps.formPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.SPNode">
+            <summary>
+            审批节点
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.UserProps">
+            <summary>
+            审批节点的属性
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.assignedType">
+            <summary>
+            审批人选项类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.mode">
+            <summary>
+            审批模式 会签/或签
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.sign">
+            <summary>
+            是否需要签字
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.optionInit">
+            <summary>
+            选项初始化
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.timeLimit">
+            <summary>
+            审批时限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.assignedUser">
+            <summary>
+            目标对象 人员/部门
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.formPerms">
+            <summary>
+            表单权限
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.selfSelect">
+            <summary>
+            自选
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.leaderTop">
+            <summary>
+            连续多级主管
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.leader">
+            <summary>
+            主管
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.role">
+            <summary>
+            角色
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.refuse">
+            <summary>
+            驳回设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.formUser">
+            <summary>
+            表单内联系人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserProps.nobody">
+            <summary>
+            未填审批人时的处理方式
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.RefuseRes.type">
+            <summary>
+            TO_END直接结束流程,TO_BEFORE驳回到上级审批节点,TO_NODE驳回到指定节点
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.RefuseRes.target">
+            <summary>
+            TO_NODE时指定的节点id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.SelfSelect.multiple">
+            <summary>
+            true自选多个人,false自选一个人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.LeaderTop.endCondition">
+            <summary>
+            TOP直到最上层主管,LEAVE不超过发起人的
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.LeaderTop.endLevel">
+            <summary>
+            LEAVE第几级主管
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.Leader.level">
+            <summary>
+            第几级主管
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.ExamineTimeLimit">
+            <summary>
+            时间限制
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineTimeLimit.timeout">
+            <summary>
+            超时时间设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineTimeLimit.handler">
+            <summary>
+            超时处理设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineTimeout.unit">
+            <summary>
+            H表示小时、D表示天
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineTimeout.value">
+            <summary>
+            时长
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineHandler.type">
+            <summary>
+            处理方式：PASS自动通过，REFUSE自动驳回，NOTIFY发送提醒
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineHandler.notify">
+            <summary>
+            提醒设置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineHandlerNotify.once">
+            <summary>
+            是否只提醒一次
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.ExamineHandlerNotify.hour">
+            <summary>
+            间隔几小时提醒
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.TriggerProps.type">
+            <summary>
+            默认为WEBHOOK,也可以是EMAIL、NEWFLOW
+            </summary>
+        </member>
+        <member name="T:FlowService.FlowNode.NewFlowProps">
+            <summary>
+            流程触发的属性配置
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowProps.templateId">
+            <summary>
+            流程模板Id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowProps.creator">
+            <summary>
+            目标流程发起人：为空则为当前流程的发起人，传入人员表单id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowProps.assign">
+            <summary>
+            目标流程自选人
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowProps.items">
+            <summary>
+            目标流程表单初始化
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowProps.flowas">
+            <summary>
+            返回目标流程编码
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewAssignUser.NodeId">
+            <summary>
+            节点Id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewAssignUser.NodeName">
+            <summary>
+            自选节点名称
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewAssignUser.fieldid">
+            <summary>
+            映射的人员表单id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowItem.id">
+            <summary>
+            目标表单id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowItem.title">
+            <summary>
+            目标表单名
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowItem.eltype">
+            <summary>
+            目标表单类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.NewFlowItem.fieldid">
+            <summary>
+            值映射的表单id
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.TriggerHttpProps.method">
+            <summary>
+            请求方法 支持GET/POST
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.TriggerHttpProps.url">
+            <summary>
+            URL地址，可以直接带参数
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.TriggerHttpProps.contentType">
+            <summary>
+            请求参数类型
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.TriggerHttpProps.handlerByScript">
+            <summary>
+            是否自定义脚本
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.TriggerDataItem.value">
+            <summary>
+            支持表达式 ${xxx} xxx为表单字段名称
+            </summary>
+        </member>
+        <member name="P:FlowService.FlowNode.UserActionForm.NodeList">
+            <summary>
+            经过的流程结点列表
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.In_DefinitionList">
+            <summary>
+            流程定义列表过滤
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_DefinitionList.name">
+            <summary>
+            流程定义名称
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_DefinitionList.groupId">
+            <summary>
+            所属分组
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_DefinitionList.orgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_DefinitionList.IsEmbed">
+            <summary>
+            是否过滤掉嵌入式流程
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowQuery.FlowId">
+            <summary>
+            过滤流程Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowQuery.TemplateId">
+            <summary>
+            过滤模板Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowQuery.Name">
+            <summary>
+            过滤参数名称
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowQuery.Value">
+            <summary>
+            过滤参数值
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.StartFinish">
+            <summary>
+            完成时间段开始
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.EndFinish">
+            <summary>
+            完成时间段结束
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.Status">
+            <summary>
+            过滤状态
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.Depts">
+            <summary>
+            过滤部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.Users">
+            <summary>
+            过滤创建人
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.Id">
+            <summary>
+            过滤审批编号
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.TemplateId">
+            <summary>
+            模板Id必填项
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_FlowRecord.Items">
+            <summary>
+            过滤字段
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.LimitFieldItem.FieldId">
+            <summary>
+            要过滤的字段Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.LimitFieldItem.Value">
+            <summary>
+            比较字符串
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.LimitFieldItem.ValueArray">
+            <summary>
+            设备Id数组，人员Id数组
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.LimitFieldItem.Min">
+            <summary>
+            大于等于最小值
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.LimitFieldItem.Max">
+            <summary>
+            小于等于最大值
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_GroupList.withItems">
+            <summary>
+            是否包含Item信息
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_GroupList.orgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_MyProcess.name">
+            <summary>
+            流程名称过滤
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_MyProcess.status">
+            <summary>
+            过滤流程状态
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_MyProcess.templateId">
+            <summary>
+            模板Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_OrgList.orgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_OrgList.deptId">
+            <summary>
+            当前部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_OrgList.type">
+            <summary>
+            获取组织数据：user=人和部门  dept=只能选部门
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.In_TaskAdd">
+            <summary>
+            发起流程的参数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.assign">
+            <summary>
+            自选审核人节点数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.state">
+            <summary>
+            0表示预生成,1表示保存，2表示提交
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskAdd.isEmbed">
+            <summary>
+            是否为嵌入式流程
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.In_TaskExcute">
+            <summary>
+            执行流程的参数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskExcute.flowId">
+            <summary>
+            流程ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskExcute.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskExcute.key">
+            <summary>
+            执行的操作key
+            通常情况为节点Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.In_TaskExcute.action">
+            <summary>
+            执行的操作
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.MZ_Flow">
+            <summary>
+            流程实例
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.FlowNumber">
+            <summary>
+            流程第三方编号或关联工单
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.GroupId">
+            <summary>
+            所属分组
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.GroupName">
+            <summary>
+            分组名
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.FlowName">
+            <summary>
+            流程实例名称
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.Description">
+            <summary>
+            流程描述
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.PersistenceData">
+            <summary>
+            流程实例持久化
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.FormFields">
+            <summary>
+            流程表单持久化
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.Assign">
+            <summary>
+            保存自选审核人节点数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.FinishTime">
+            <summary>
+            完成或取消时间
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.Status">
+            <summary>
+            流程状态
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.notify">
+            <summary>
+            消息通知方式(json内容)
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.IsEmbed">
+            <summary>
+            是否为嵌入式流程
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.ExecutionNodes">
+            <summary>
+            关联的执行节点
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.FlowStatus.Runnable">
+            <summary>
+            运行
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.FlowStatus.Suspended">
+            <summary>
+            保存中
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.FlowStatus.Complete">
+            <summary>
+            完成
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.FlowStatus.Terminated">
+            <summary>
+            取消
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.MZ_FlowGroup">
+            <summary>
+            流程模板的分组信息
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowGroup.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowGroup.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowGroup.Name">
+            <summary>
+            分组名
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowGroup.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowGroup.Items">
+            <summary>
+            流程模板
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowQuery.Name">
+            <summary>
+            请求参数名
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowQuery.Value">
+            <summary>
+            请求参数值
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowQuery.TemplateId">
+            <summary>
+            流程模板
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.GroupId">
+            <summary>
+            所属分组
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Name">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.GroupName">
+            <summary>
+            分组名
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Sort">
+            <summary>
+            排序用，值越小越前面
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Status">
+            <summary>
+            状态（0正常 1暂停）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.FormId">
+            <summary>
+            对应表单类型
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.FlowJson">
+            <summary>
+            流程内容
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.notify">
+            <summary>
+            消息通知方式(json内容)
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.sign">
+            <summary>
+            审批同意时是否需要签字
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.sublimit">
+            <summary>
+            审批可提交次数，为0不限制
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.startlimit">
+            <summary>
+            是否禁止直接发起
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplate.Form">
+            <summary>
+            对应的表单
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.FlowTemplateNotice">
+            <summary>
+            消息通知实体
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTemplateLink.LinkType">
+            <summary>
+            U为用户，D为部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FlowTrilog.TemplateIdSet">
+            <summary>
+            子流程创建记录
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.MZ_Flow_ExtensionAttribute">
+            <summary>
+            节点扩展信息
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow_ExtensionAttribute.ExecutionNodeId">
+            <summary>
+            对应的节点Id
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.MZ_Flow_Node">
+            <summary>
+            表示用户节点
+            目前只有根节点与审批节点
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow_Node.FlowId">
+            <summary>
+            流程实例Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow_Node.Outcome">
+            <summary>
+            结果
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow_Node.Status">
+            <summary>
+            节点状态
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Flow_Node.ExtensionAttributes">
+            <summary>
+            扩展属性
+            </summary>
+        </member>
+        <member name="M:FlowService.Model.MZ_Flow_Node.UpdateAttribute(System.String,System.String)">
+            <summary>
+            添加或修改属性
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:FlowService.Model.NodeStatus">
+            <summary>
+            节点状态
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.NodeStatus.Failed">
+            <summary>
+            失败
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.NodeStatus.Pending">
+            <summary>
+            暂停
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.NodeStatus.Running">
+            <summary>
+            运行中
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.NodeStatus.Complete">
+            <summary>
+            已完成
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.NodeStatus.Cancelled">
+            <summary>
+            取消
+            </summary>
+        </member>
+        <member name="F:FlowService.Model.NodeStatus.WaitingForEvent">
+            <summary>
+            等待事件
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.MZ_Form">
+            <summary>
+            流程对应的表单类型
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Form.FormName">
+            <summary>
+            表单名称
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_Form.FormFields">
+            <summary>
+            表单的字段，json格式存储
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.flowId">
+            <summary>
+            流程已创建则传
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.FlowNumber">
+            <summary>
+            第三方编码
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.Model">
+            <summary>
+            表单值列表
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.CreateUserId">
+            <summary>
+            创建用户ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.FormFields">
+            <summary>
+            流程表单数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.isEmbed">
+            <summary>
+            是否为嵌入式流程
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.inputParams">
+            <summary>
+            流程参数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.Assign">
+            <summary>
+            自选用户
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.UserDeptList">
+            <summary>
+            可使用用户部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormData.Template">
+            <summary>
+            模板
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.MZ_FormDataItem">
+            <summary>
+            流程表单数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormDataItem.FieldId">
+            <summary>
+            表单项唯一标识
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormDataItem.Value">
+            <summary>
+            json类型（该表单项的值）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormDataItem.LongValue">
+            <summary>
+            保存长数据
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.MZ_FormDataItem.NumberValue">
+            <summary>
+            数值类型（该表单项的值）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_CSItem.startRealName">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_CSItem.startDeptName">
+            <summary>
+            发起人部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_CSItem.StartTime">
+            <summary>
+            接收时间
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_CSItem.createId">
+            <summary>
+            创建人Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_CSItem.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_CSItem.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_DeviceInfo.OrgId">
+            <summary>
+            来源组织ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_DeviceInfo.OwnerOrgId">
+            <summary>
+            拥有者组织ID
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_DeviceInfo.UseOrgId">
+            <summary>
+            使用者组织ID（使用者为组织）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_DeviceInfo.UseUserId">
+            <summary>
+            当前使用者（使用者为个人）
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.startRealName">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.startDeptName">
+            <summary>
+            发起人部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.StartTime">
+            <summary>
+            接收时间
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.EndTime">
+            <summary>
+            处理时间
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.createId">
+            <summary>
+            创建人Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FinishedItem.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowDevice.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowDevice.DeviceNumber">
+            <summary>
+            设备唯一编号
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowDevice.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowDevice.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowForm.FlowId">
+            <summary>
+            流程Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowRecord.FinishTime">
+            <summary>
+            完成或取消时间
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowRecord.Status">
+            <summary>
+            流程状态
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.Out_FlowStatistics">
+            <summary>
+            工作台简报
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.MyFlowCount">
+            <summary>
+            我创建的流程数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.MyWaitCount">
+            <summary>
+            我创建的未开始数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.MyDoingCount">
+            <summary>
+            我创建的进行中数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.MyFinishCount">
+            <summary>
+            我创建的已完成数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.MyCancelCount">
+            <summary>
+            我创建的已取消数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.PendingCount">
+            <summary>
+            待我处理的数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.CopyCount">
+            <summary>
+            抄送我的数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowStatistics.FinishCount">
+            <summary>
+            我处理完的数
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowTodoItem.startRealName">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowTodoItem.startDeptName">
+            <summary>
+            发起人部门
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowTodoItem.createId">
+            <summary>
+            创建人Id
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowTodoItem.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_FlowTodoItem.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_Flow_Node.ActionUsers">
+            <summary>
+            执行处理的用户列表
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_Flow_Node.WaitUsers">
+            <summary>
+            待执行用户列表
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_Flow_Node.Children">
+            <summary>
+            子元素
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_PickerItem.type">
+            <summary>
+            user为用户，dept为部门，role为角色，device为设备
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_PickerItem.avatar">
+            <summary>
+            图片
+            </summary>
+        </member>
+        <member name="T:FlowService.Model.Out_UserNode">
+            <summary>
+            用户选择节点
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_UserNode.Tip">
+            <summary>
+            或签，会签
+            </summary>
+        </member>
+        <member name="P:FlowService.Model.Out_UserNode.Type">
+            <summary>
+            Approval为审批，CS为抄送
+            </summary>
+        </member>
+    </members>
+</doc>

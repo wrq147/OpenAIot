@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="500" Height="320"
+		xmlns:lang="clr-namespace:AirJointUI.Utils"
+        x:Class="AirJointUI.Component.MessageBox"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaTitleBarHeightHint="-1"
+		WindowStartupLocation="CenterOwner"
+		CanResize="False"
+        Title="{lang:Resx MessageBoxTitle}">
+	<Border BorderBrush="#999" BorderThickness="1" CornerRadius="20">
+		<StackPanel Margin="20 20">
+			<Image Height="65" Name="MsgIcon"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
+			<RelativePanel  Margin="0 5 0 15" Height="130">
+				<TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" TextWrapping="Wrap" Name="MsgTxt" FontSize="40"></TextBlock>
+			</RelativePanel>
+			<Button Margin="0 0 0 15" HorizontalAlignment="Center" CornerRadius="20" Width="200" Height="50" Click="HandleOkClick" Name="OkButton" FontSize="28" Content="{lang:Resx Confirm}" />
+		</StackPanel>
+	</Border>
+
+</Window>

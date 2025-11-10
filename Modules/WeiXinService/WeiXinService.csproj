@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\</OutputPath>
+		<DocumentationFile>..\..\App\XML\WeiXinService.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Ext.SmsJmp.my" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Ext\SmsJmp.my" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="SKIT.FlurlHttpClient.Wechat.Api" Version="2.22.0" />
+	  <PackageReference Include="SKIT.FlurlHttpClient.Wechat.Work" Version="2.14.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AuthService\AuthService.csproj" />
+		<ProjectReference Include="..\MonitorService\MonitorService.csproj" />
+	</ItemGroup>
+</Project>

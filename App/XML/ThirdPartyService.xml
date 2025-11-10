@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ThirdPartyService</name>
+    </assembly>
+    <members>
+        <member name="T:ThirdPartyService.Controller.Weather">
+            <summary>
+            第三方天气接口
+            </summary>
+        </member>
+        <member name="M:ThirdPartyService.Controller.Weather.Info(System.String)">
+            <summary>
+            根据城市代码获取天气信息
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.province">
+            <summary>
+            省名称
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.city">
+            <summary>
+            市名称
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.weather">
+            <summary>
+            天气现象
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.temperature">
+            <summary>
+            实时气温，单位：摄氏度
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.winddirection">
+            <summary>
+            风向描述
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.windpower">
+            <summary>
+            风力级别，单位：级
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.humidity">
+            <summary>
+            空气湿度
+            </summary>
+        </member>
+        <member name="P:ThirdPartyService.Model.WeatherInfo_V.reporttime">
+            <summary>
+            数据发布的时间
+            </summary>
+        </member>
+    </members>
+</doc>

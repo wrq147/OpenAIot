@@ -1,0 +1,6 @@
+编辑appsettings.json文件里的
+    "minio_server": "",
+    "minio_access": "",
+    "minio_secret": "",
+    "minio_bucket": "",
+    "minio_url": "",

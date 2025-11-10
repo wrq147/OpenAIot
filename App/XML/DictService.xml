@@ -1,0 +1,452 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DictService</name>
+    </assembly>
+    <members>
+        <member name="M:DictService.Business.DictDataBLL.SelectDictDataList(DictService.Model.In_DictDataList)">
+            <summary>
+            根据条件查询字典数据
+            </summary>
+            <param name="dictData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictDataBLL.SelectDictLabel(System.String,System.String)">
+            <summary>
+            根据字典类型和字典键值查询字典数据信息
+            </summary>
+            <param name="dictType"></param>
+            <param name="dictValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictDataBLL.SelectDictDataById(System.Int64)">
+            <summary>
+            根据字典数据ID查询信息
+            </summary>
+            <param name="dictCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictDataBLL.DeleteDictDataByIds(System.Int64[])">
+            <summary>
+            批量删除字典数据信息
+            </summary>
+            <param name="dictCodes"></param>
+        </member>
+        <member name="M:DictService.Business.DictDataBLL.InsertDictData(DictService.Model.MZ_DictData)">
+            <summary>
+            新增保存字典数据信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictDataBLL.UpdateDictData(DictService.Model.MZ_DictData)">
+            <summary>
+            修改保存字典数据信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL._LoadingDictCache">
+            <summary>
+            缓存字典数据
+            </summary>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.SelectDictTypeList(AuthService.In_DictTypeList)">
+            <summary>
+            根据条件查询字典类型
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.SelectDictTypeAll">
+            <summary>
+            根据所有字典类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.SelectDictDataByType(System.String)">
+            <summary>
+            根据字典类型查询字典数据
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.SelectDictConverter(System.String)">
+            <summary>
+            根据字典类型获取字典转换
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.SelectDictTypeById(System.Int64)">
+            <summary>
+            根据字典类型ID查询信息
+            </summary>
+            <param name="dictId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.SelectDictTypeByType(System.String)">
+            <summary>
+            根据字典类型查询信息
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.DeleteDictTypeByIds(System.Int64[])">
+            <summary>
+            批量删除字典类型信息
+            </summary>
+            <param name="dictIds"></param>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL._ClearDictCache">
+            <summary>
+            清空字典缓存数据
+            </summary>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.ResetDictCache">
+            <summary>
+            重置字典缓存数据
+            </summary>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.InsertDictType(DictService.Model.MZ_DictType)">
+            <summary>
+            新增保存字典类型信息
+            </summary>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.UpdateDictType(DictService.Model.MZ_DictType)">
+            <summary>
+            修改保存字典类型信息
+            </summary>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Business.DictTypeBLL.CheckDictTypeUnique(DictService.Model.MZ_DictType)">
+            <summary>
+            校验字典类型称是否唯一
+            </summary>
+            <param name="dict"></param>
+            <returns>true表示唯一</returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.List(DictService.Model.In_DictDataList)">
+            <summary>
+            查询列表
+            </summary>
+            <param name="dictData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.Info(System.Int64)">
+            <summary>
+            查询字典数据详细
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.DictType(System.String)">
+            <summary>
+            根据字典类型查询字典数据信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.Add(DictService.Model.MZ_DictData)">
+            <summary>
+            新增字典类型
+            </summary>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.Edit(DictService.Model.MZ_DictData)">
+            <summary>
+            修改保存字典类型
+            </summary>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.Default(System.Int64)">
+            <summary>
+            设置为默认
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictData.Remove(System.Int64[])">
+            <summary>
+            删除字典类型
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictInfo.List(System.String)">
+            <summary>
+            根据字典类型查询字典数据信息（无需登录）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictType.Info(System.Int64)">
+            <summary>
+            查询字典类型详细
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictType.Add(DictService.Model.MZ_DictType)">
+            <summary>
+            新增字典类型
+            </summary>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictType.Edit(DictService.Model.MZ_DictType)">
+            <summary>
+            修改字典类型
+            </summary>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictType.Remove(System.Int64[])">
+            <summary>
+            删除字典类型
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictType.RefreshCache">
+            <summary>
+            刷新字典缓存
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.Controller.DictType.OptionSelect">
+            <summary>
+            获取字典选择框列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.SelectDictDataList(DictService.Model.In_DictDataList)">
+            <summary>
+            根据条件分页查询字典数据
+            </summary>
+            <param name="dictData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.SelectDictDataByType(System.String)">
+            <summary>
+            根据字典类型查询字典数据
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.SelectDictLabel(System.String,System.String)">
+            <summary>
+            根据字典类型和字典键值查询字典数据信息
+            </summary>
+            <param name=""></param>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.SelectDictDataById(System.Int64)">
+            <summary>
+            根据字典数据ID查询信息
+            </summary>
+            <param name="dictCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.CountDictDataByType(System.String)">
+            <summary>
+            查询字典数据
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.DeleteDictDataById(System.Int64)">
+            <summary>
+            通过字典ID删除字典数据信息
+            </summary>
+            <param name="dictCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.DeleteDictDataByIds(System.Int64[])">
+            <summary>
+            批量删除字典数据信息
+            </summary>
+            <param name="dictCodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.InsertDictData(DictService.Model.MZ_DictData)">
+            <summary>
+            新增字典数据信息
+            </summary>
+            <param name="dictData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.UpdateDictData(DictService.Model.MZ_DictData)">
+            <summary>
+            修改字典数据信息
+            </summary>
+            <param name="dictData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.UpdateDictDataType(System.String,System.String)">
+            <summary>
+            同步修改字典类型
+            </summary>
+            <param name=""></param>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictDataDAL.ClearDefault(System.String)">
+            <summary>
+            清除默认值
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.SelectDictTypeList(AuthService.In_DictTypeList)">
+            <summary>
+            根据条件分页查询字典类型
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.SelectDictTypeAll">
+            <summary>
+            根据所有字典类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.SelectDictTypeById(System.Int64)">
+            <summary>
+            根据字典类型ID查询信息
+            </summary>
+            <param name="dictId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.SelectDictTypeByType(System.String)">
+            <summary>
+            根据字典类型查询信息
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.DeleteDictTypeById(System.Int64)">
+            <summary>
+            通过字典ID删除字典信息
+            </summary>
+            <param name="dictId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.DeleteDictTypeByIds(System.Int64[])">
+            <summary>
+            批量删除字典类型信息
+            </summary>
+            <param name="dictIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.InsertDictType(DictService.Model.MZ_DictType)">
+            <summary>
+            新增字典类型信息
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.UpdateDictType(DictService.Model.MZ_DictType)">
+            <summary>
+            修改字典类型信息
+            </summary>
+            <param name="dictType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DictService.DAL.DictTypeDAL.CheckDictTypeUnique(System.String,System.Int64)">
+            <summary>
+            校验字典类型称是否唯一
+            </summary>
+            <param name="dictType"></param>
+            <returns>true表示唯一</returns>
+        </member>
+        <member name="M:DictService.DictConverter.ToName(System.String)">
+            <summary>
+            字典值转名称
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.dict_code">
+            <summary>
+            字典编码
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.dict_sort">
+            <summary>
+            字典排序
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.dict_label">
+            <summary>
+            字典标签
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.dict_value">
+            <summary>
+            字典键值
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.dict_type">
+            <summary>
+            字典类型
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.css_class">
+            <summary>
+            样式属性（其他样式扩展）
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.list_class">
+            <summary>
+            表格字典样式
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.is_default">
+            <summary>
+            是否默认（Y是 N否）
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.status">
+            <summary>
+            状态（0正常 1停用）
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictData.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictType.dict_id">
+            <summary>
+            字典主键
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictType.dict_name">
+            <summary>
+            字典名称
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictType.dict_type">
+            <summary>
+            字典类型
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictType.status">
+            <summary>
+            状态（0正常 1停用）
+            </summary>
+        </member>
+        <member name="P:DictService.Model.MZ_DictType.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+    </members>
+</doc>

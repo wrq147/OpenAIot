@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AirJointUI.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="AirJointUI.Views.SetView"
+			 xmlns:lang="clr-namespace:AirJointUI.Utils"
+			 x:DataType="vm:SetViewModel">
+	<DockPanel Margin="40 0 40 40" Background="#FFF">
+		<StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Height="90">
+			<StackPanel Width="1600" Orientation="Horizontal" VerticalAlignment="Center">
+				<Button Background="Transparent" Opacity="1" BorderThickness="0" Click="HandleBackClick">
+					<StackPanel Background="White" Orientation="Horizontal">
+						<Image Height="24" Source="avares://AirJointUI/Assets/Images/return.png"/>
+						<TextBlock Foreground="rgba(51, 51, 51, 1)" Margin="5 0 0 0" FontSize="24" Text="{lang:Resx Back}"></TextBlock>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+			<RelativePanel Width="240" VerticalAlignment="Center">
+				<Image IsVisible="{Binding Top.HasNet}" RelativePanel.AlignLeftWithPanel="True" x:Name="sigImg" Height="18"  Source="avares://AirJointUI/Assets/Images/signal.png"/>
+				<TextBlock RelativePanel.AlignRightWithPanel="True" x:Name="timeTxt" FontSize="18" Foreground="rgba(51, 51, 51, 1)" xml:space="preserve" Text="{Binding Top.UITime}" />
+			</RelativePanel>
+		</StackPanel>
+		<Border Width="430" DockPanel.Dock="Left" Background="#F7F8FA" CornerRadius="20">
+			<StackPanel>
+				<TabControl SelectedIndex="{Binding InitTabIndex}" SelectionChanged="HandleSelectionChanged" Margin="40 20 0 20" TabStripPlacement="Left">
+					<TabControl.Styles>
+						<Style Selector="TabItem#tab1 Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/net01.png" />
+						</Style>
+						<Style Selector="TabItem#tab1:selected Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/net02.png" />
+						</Style>
+						<Style Selector="TabItem#tab2 Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/protocol01.png" />
+						</Style>
+						<Style Selector="TabItem#tab2:selected Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/protocol02.png" />
+						</Style>
+						<Style Selector="TabItem#tab3 Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/rule01.png" />
+						</Style>
+						<Style Selector="TabItem#tab3:selected Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/rule02.png" />
+						</Style>
+						<Style Selector="TabItem#tab4 Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/ser01.png" />
+						</Style>
+						<Style Selector="TabItem#tab4:selected Image">
+							<Setter Property="Source" Value="avares://AirJointUI/Assets/Images/ser02.png" />
+						</Style>
+						<Style Selector="TabItem TextBlock">
+							<Setter Property="Foreground" Value="#666" />
+						</Style>
+						<Style Selector="TabItem:selected TextBlock">
+							<Setter Property="Foreground" Value="#FFF" />
+						</Style>
+						<Style Selector="TabItem">
+							<Setter Property="Background" Value="#F7F8FA" />
+						</Style>
+						<Style Selector="TabItem:selected  /template/ ContentPresenter">
+							<Setter Property="Background" Value="#2371FF" />
+						</Style>
+					</TabControl.Styles>
+					<TabItem Name="tab1" Margin="0 20 0 0" CornerRadius="40" Width="350" Height="80" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+						<TabItem.Header>
+							<StackPanel Orientation="Horizontal">
+								<Image VerticalAlignment="Center" Width="24" Height="24" />
+								<TextBlock VerticalAlignment="Center" Text="{lang:Resx NetSetTag}" FontSize="24" Margin="16 0 0 0" />
+							</StackPanel>
+						</TabItem.Header>
+					</TabItem>
+					<TabItem Name="tab2" Margin="0 20 0 0" CornerRadius="40" Width="350" Height="80" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+						<TabItem.Header>
+							<StackPanel Orientation="Horizontal">
+								<Image VerticalAlignment="Center" Width="24" Height="24" />
+								<TextBlock VerticalAlignment="Center" Text="{lang:Resx DeviceSetTag}" FontSize="24" Margin="16 0 0 0" />
+							</StackPanel>
+						</TabItem.Header>
+					</TabItem>
+					<TabItem Name="tab3" Margin="0 20 0 0" CornerRadius="40" Width="350" Height="80" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+						<TabItem.Header>
+							<StackPanel Orientation="Horizontal">
+								<Image VerticalAlignment="Center" Width="24" Height="24" />
+								<TextBlock VerticalAlignment="Center" Text="{lang:Resx RuleSetTag}" FontSize="24" Margin="16 0 0 0" />
+							</StackPanel>
+						</TabItem.Header>
+					</TabItem>
+					<TabItem Name="tab4" Margin="0 20 0 0" CornerRadius="40" Width="350" Height="80" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+						<TabItem.Header>
+							<StackPanel Orientation="Horizontal">
+								<Image VerticalAlignment="Center" Width="24" Height="24" />
+								<TextBlock VerticalAlignment="Center" Text="{lang:Resx SerialSet}" FontSize="24" Margin="16 0 0 0" />
+							</StackPanel>
+						</TabItem.Header>
+					</TabItem>
+				</TabControl>
+			</StackPanel>
+		</Border>
+		<Border Width="1370" DockPanel.Dock="Right" HorizontalAlignment="Right" Background="#F7F8FA" CornerRadius="20">
+			<Panel Background="White">
+				<UserControl IsVisible="{Binding IsShowConent}" Name="vSetContent" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding TabViewModel}"></UserControl>
+				<TextBlock  IsVisible="{Binding !IsShowConent}" Text="{lang:Resx Doing}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">
+				</TextBlock>
+			</Panel>
+		</Border>
+	</DockPanel>
+</UserControl>

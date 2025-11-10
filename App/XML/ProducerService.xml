@@ -1,0 +1,1916 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProducerService</name>
+    </assembly>
+    <members>
+        <member name="M:ProducerService.Business.AgentBLL.JoinByInvitLink(ProducerService.Model.In_JoinInvite)">
+            <summary>
+            通过邀请链接加入
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Business.FactoryBLL.SelectList(ProducerService.Model.In_FactoryList)">
+            <summary>
+            查询工厂列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Business.GradeBLL.SelectList">
+            <summary>
+            查询等级列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.Agent">
+            <summary>
+            代理API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.AllList(ProducerService.Model.In_AgentList)">
+            <summary>
+            所有代理商
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.List(ProducerService.Model.In_AgentList)">
+            <summary>
+            查询下级代理商（代理商用）
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.Info(System.String)">
+            <summary>
+            获取代理商信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.AuthList">
+            <summary>
+            我的授权（代理商用）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.AddAllInvite(ProducerService.Model.In_AllInvite)">
+            <summary>
+            生成邀请（生产商用）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.JoinInvite(ProducerService.Model.In_JoinInvite)">
+            <summary>
+            加入邀请
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.CancelProxy(System.String,System.Boolean)">
+            <summary>
+            取消下级代理的权限
+            </summary>
+            <param name="id"></param>
+            <param name="cancelDown">是否同时取消下级代理</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.CertInfo(System.String)">
+            <summary>
+            获取代理商的打印数据源信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.List(ProducerService.Model.In_AgentFlowList)">
+            <summary>
+            查询邀请记录
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Agent.SendYqSms(ProducerService.Model.In_SendYqSms)">
+            <summary>
+            发送邀请短信
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.AgentInvite.Info(System.String)">
+            <summary>
+            获取邀请码信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.AgentInvite.Reg(ProducerService.Model.In_RegTelYqData)">
+            <summary>
+            手机邀请码注册用户
+            </summary>
+            <param name="data"></param>
+            <returns>返回登录的信息</returns>
+        </member>
+        <member name="M:ProducerService.Controller.AgentInvite.Login(ProducerService.Model.In_YqLogin)">
+            <summary>
+            手机邀请登录
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.Factory">
+            <summary>
+            工厂API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.Factory.List(ProducerService.Model.In_FactoryList)">
+            <summary>
+            工厂列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Factory.Add(ProducerService.Model.MZ_Factory)">
+            <summary>
+            添加新的工厂
+            </summary>
+            <param name="factory"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Factory.Set(ProducerService.Model.MZ_Factory)">
+            <summary>
+            生产商配置专用
+            </summary>
+            <param name="factory"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Factory.Info(System.Int64)">
+            <summary>
+            获取工厂信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Factory.Remove(System.Int64)">
+            <summary>
+            删除工厂
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.Grade">
+            <summary>
+            代理级别API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.Grade.List">
+            <summary>
+            级别列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Grade.Sort(System.Collections.Generic.List{System.String})">
+            <summary>
+            级别排序
+            </summary>
+            <param name="ids">排序Id列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Grade.Add(ProducerService.Model.MZ_Grade)">
+            <summary>
+            新增级别
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Grade.Edit(ProducerService.Model.MZ_Grade)">
+            <summary>
+            编辑级别
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Grade.Remove(System.String)">
+            <summary>
+            删除级别
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.HttpSync">
+            <summary>
+            开发者用接口
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.Product">
+            <summary>
+            产品API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.Product.List(ProducerService.Model.In_ProductList)">
+            <summary>
+            产品列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Product.AgentList(ProducerService.Model.In_ProductList)">
+            <summary>
+            代理商可见产品列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Product.Add(ProducerService.Model.MZ_Product)">
+            <summary>
+            添加产品
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Product.Edit(ProducerService.Model.MZ_Product)">
+            <summary>
+            修改产品
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Product.Remove(System.String)">
+            <summary>
+            删除产品
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Product.Info(System.String)">
+            <summary>
+            获取产品
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Product.GenerateNumber">
+            <summary>
+            生成产品sku编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.List(ProducerService.Model.In_ProductBatchList)">
+            <summary>
+            获取产品批次列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.Add(ProducerService.Model.MZ_ProductBatch)">
+            <summary>
+            添加产品批次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.AddList(ProducerService.Model.In_AddBatchList)">
+            <summary>
+            从设备列表中批量导入
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.SyncFromDevice">
+            <summary>
+            从设备列表中同步设备
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.DevicePage(ProducerService.Model.In_NoExistDevParam)">
+            <summary>
+            获取导入用设备列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.Edit(ProducerService.Model.MZ_ProductBatch)">
+            <summary>
+            编辑产品批次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.Remove(System.String)">
+            <summary>
+            删除产品批次
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.RemoveList(System.String[])">
+            <summary>
+            批量删除产品批次
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductBatch.GenerateNumber">
+            <summary>
+            生成批次编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.ProductType">
+            <summary>
+            产品分组API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.ProductType.List">
+            <summary>
+            获取产品分组列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductType.Info(System.String)">
+            <summary>
+            获取指定产品分组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductType.Sort(System.Collections.Generic.List{System.String})">
+            <summary>
+            产品分组排序
+            </summary>
+            <param name="ids">排序Id列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductType.Add(ProducerService.Model.MZ_ProductType)">
+            <summary>
+            添加产品分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductType.Edit(ProducerService.Model.MZ_ProductType)">
+            <summary>
+            编辑产品分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.ProductType.Remove(System.String)">
+            <summary>
+            删除产品分组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.Supplier">
+            <summary>
+            供应商API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.Supplier.List(ProducerService.Model.In_SupplierList)">
+            <summary>
+            供应商列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Supplier.Add(ProducerService.Model.MZ_Supplier)">
+            <summary>
+            添加供应商
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Supplier.Edit(ProducerService.Model.MZ_Supplier)">
+            <summary>
+            修改供应商
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Supplier.Remove(System.String)">
+            <summary>
+            删除供应商
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Supplier.Info(System.String)">
+            <summary>
+            获取供应商
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProducerService.Controller.Unit">
+            <summary>
+            单位API
+            </summary>
+        </member>
+        <member name="M:ProducerService.Controller.Unit.List(ProducerService.Model.In_UnitList)">
+            <summary>
+            单位列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Unit.Add(ProducerService.Model.MZ_Unit)">
+            <summary>
+            添加单位
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Unit.Edit(ProducerService.Model.MZ_Unit)">
+            <summary>
+            修改单位
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Unit.Remove(System.String)">
+            <summary>
+            删除单位
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProducerService.Controller.Unit.Info(System.String)">
+            <summary>
+            获取单位
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ProducerService.Model.In_AddBatchList.Ids">
+            <summary>
+            设备id（数组）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AddBatchList.ProductId">
+            <summary>
+            批次所属产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AgentFlowList.YQFrom">
+            <summary>
+            邀请来源：0不过滤，1为生产商的代理邀请，2为CRM的邀请客户
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AgentList.OrgName">
+            <summary>
+            过滤代理商
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AgentList.ParentOrgId">
+            <summary>
+            上级企业Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.GradeId">
+            <summary>
+            代理级别（手动代理需要传）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.FactoryId">
+            <summary>
+            代理的工厂（下级代理发出邀请时，需要传）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Regions">
+            <summary>
+            代理的区域代码，多个用,分隔
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.ContactName">
+            <summary>
+            联系人
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Tel">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Logo">
+            <summary>
+            组织Logo
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Industry">
+            <summary>
+            行业类型
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Size">
+            <summary>
+            员工规模
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AllInvite.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_BindIOT.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_BindIOT.IOTProductId">
+            <summary>
+            物联网产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_FactoryList.FactoryName">
+            <summary>
+            过滤生产商名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_JoinInvite.Id">
+            <summary>
+            邀请Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_JoinInvite.OrgId">
+            <summary>
+            要加入的组织Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_NoExistDevParam.Key">
+            <summary>
+            搜索key
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_PartsList.Key">
+            <summary>
+            搜索耗材名称或耗材编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductBatch.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductBatch.Num">
+            <summary>
+            生成批号数量
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductBatchList.Key">
+            <summary>
+            批次搜索关键词：唯一编号、产品编号、产品名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.Key">
+            <summary>
+            搜索的关键词
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.TypeId">
+            <summary>
+            过滤类型
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.Prop">
+            <summary>
+            过滤属性
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.NoId">
+            <summary>
+            过滤指定产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.IsRoute">
+            <summary>
+            是否过滤包含工艺路线的产品
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.Items">
+            <summary>
+            过滤扩展字段
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_RegTelYqData.MobileCode">
+            <summary>
+            手机邀请验证码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_RegTelYqData.YqCode">
+            <summary>
+            手机邀请码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SendYqSms.tel">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SendYqSms.url">
+            <summary>
+            邀请链接（无需参数）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SendYqSms.code">
+            <summary>
+            邀请码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SupplierList.Key">
+            <summary>
+            搜索的关键词（搜索供应商编号、供应商名称、供应商全称）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SupplierList.ContactName">
+            <summary>
+            过滤联系人
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SupplierList.Tel">
+            <summary>
+            过滤联系电话
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SupplierList.Status">
+            <summary>
+            状态：0为停用，1为正常
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_SupplierList.Items">
+            <summary>
+            过滤扩展字段
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_YqLogin.MobileCode">
+            <summary>
+            手机邀请验证码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_YqLogin.YqCode">
+            <summary>
+            手机邀请码
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_Agent">
+            <summary>
+            企业代理信息表
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.ParentOrgId">
+            <summary>
+            上级企业Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.OrgId">
+            <summary>
+            企业Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.GradeId">
+            <summary>
+            代理级别
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.LevelPath">
+            <summary>
+            代理商层级信息，每一层,号分隔
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.FactoryId">
+            <summary>
+            生产商Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Agent.Regions">
+            <summary>
+            代理区域代码（多个,号分隔）
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_AgentFlow">
+            <summary>
+            代理邀请、申请、升级流程
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.ParentOrgId">
+            <summary>
+            上级代理Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.BelowOrgId">
+            <summary>
+            下级企业Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.GradeId">
+            <summary>
+            代理级别，当为邀请时，空则为直销
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.FactoryId">
+            <summary>
+            生产商Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Regions">
+            <summary>
+            代理区域代码（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.FromType">
+            <summary>
+            I为邀请，A为申请，U为升级
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.BindCustomerId">
+            <summary>
+            绑定的客户Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.PhoneCode">
+            <summary>
+            短信验证码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Status">
+            <summary>
+            状态：0为待处理，1为同意，2为拒绝
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.OverTime">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.ContactName">
+            <summary>
+            联系人
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Tel">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Logo">
+            <summary>
+            组织Logo
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Industry">
+            <summary>
+            行业类型
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Size">
+            <summary>
+            员工规模
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_AgentFlow.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_Factory">
+            <summary>
+            生产商配置
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Factory.Id">
+            <summary>
+            生产商Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Factory.GradeWay">
+            <summary>
+            代理方式：auto表示逐级自动分配代理级别，manual表示符合代理条件后手动升级
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Factory.CertTemplateId">
+            <summary>
+            授权证书打印模板Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Factory.PHNumPrefix">
+            <summary>
+            自定义批次前缀
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_Grade">
+            <summary>
+            代理级别
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Grade.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Grade.GradeName">
+            <summary>
+            代理级别
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Grade.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Grade.IsSystem">
+            <summary>
+            0为普通，1为系统
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Grade.FactoryId">
+            <summary>
+            生产商Id
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_Product">
+            <summary>
+            产品表（半成品、成品）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.SkuNumber">
+            <summary>
+            产品编号(sku编码)
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.IOTProductId">
+            <summary>
+            关联的物联产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.IOTProductName">
+            <summary>
+            关联的物联产品名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.ProductLabel">
+            <summary>
+            产品标签：U半成品，F成品
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.TypeId">
+            <summary>
+            产品分组Id，为空所属全部
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Prop">
+            <summary>
+            产品分组对应的产品属性，可为空
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.ProductFrom">
+            <summary>
+            生产来源：自制，外购，委外
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Unit">
+            <summary>
+            包装单位
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Specs">
+            <summary>
+            产品规格
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Total">
+            <summary>
+            总计量
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.MinUnit">
+            <summary>
+            最小计量单位
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Price">
+            <summary>
+            成本单价
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.SalesPrice">
+            <summary>
+            销售单价
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Route">
+            <summary>
+            工艺路线Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.RouteName">
+            <summary>
+            工艺路线名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Supplier">
+            <summary>
+            供应商Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.SupplierName">
+            <summary>
+            供应商名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt1">
+            <summary>
+            扩展字符串字段1
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt2">
+            <summary>
+            扩展字符串字段2
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt3">
+            <summary>
+            扩展字符串字段3
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt4">
+            <summary>
+            扩展字符串字段4
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt5">
+            <summary>
+            扩展字符串字段5
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt6">
+            <summary>
+            扩展字符串字段6
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt7">
+            <summary>
+            扩展字符串字段7
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt8">
+            <summary>
+            扩展字符串字段8
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt9">
+            <summary>
+            扩展字符串字段9
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt10">
+            <summary>
+            扩展字符串字段10
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt11">
+            <summary>
+            扩展字符串字段11
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt12">
+            <summary>
+            扩展字符串字段12
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt13">
+            <summary>
+            扩展字符串字段13
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt14">
+            <summary>
+            扩展字符串字段14
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt15">
+            <summary>
+            扩展字符串字段15
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt16">
+            <summary>
+            扩展字符串字段16
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt17">
+            <summary>
+            扩展字符串字段17
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt18">
+            <summary>
+            扩展字符串字段18
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt19">
+            <summary>
+            扩展字符串字段19
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt20">
+            <summary>
+            扩展字符串字段20
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt21">
+            <summary>
+            扩展字符串字段21
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt22">
+            <summary>
+            扩展字符串字段22
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt23">
+            <summary>
+            扩展字符串字段23
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt24">
+            <summary>
+            扩展字符串字段24
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt25">
+            <summary>
+            扩展字符串字段25
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt26">
+            <summary>
+            扩展字符串字段26
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt27">
+            <summary>
+            扩展字符串字段27
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt28">
+            <summary>
+            扩展字符串字段28
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt29">
+            <summary>
+            扩展字符串字段29
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.StrExt30">
+            <summary>
+            扩展字符串字段30
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt1">
+            <summary>
+            扩展数字字段1
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt2">
+            <summary>
+            扩展数字字段2
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt3">
+            <summary>
+            扩展数字字段3
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt4">
+            <summary>
+            扩展数字字段4
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt5">
+            <summary>
+            扩展数字字段5
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt6">
+            <summary>
+            扩展数字字段6
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt7">
+            <summary>
+            扩展数字字段7
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt8">
+            <summary>
+            扩展数字字段8
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt9">
+            <summary>
+            扩展数字字段9
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.NumExt10">
+            <summary>
+            扩展数字字段10
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.TypeName">
+            <summary>
+            产品分组名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Product.ExtObjects">
+            <summary>
+            扩展的关联对象
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_ProductBatch">
+            <summary>
+            产品批次表（代表半成品批次、成品设备）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.BatchName">
+            <summary>
+            批次名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.Number">
+            <summary>
+            唯一编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.LNumber">
+            <summary>
+            通讯编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductBatch.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_ProductType">
+            <summary>
+            产品分组表
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.Name">
+            <summary>
+            类型名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.PropList">
+            <summary>
+            属性列表，多个用','分隔
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.ConditionJson">
+            <summary>
+            过滤条件的json
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_ProductType.ListFieldsJson">
+            <summary>
+            列表字段的json
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_Supplier">
+            <summary>
+            供应商
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Number">
+            <summary>
+            供应商编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.SupplierName">
+            <summary>
+            供应商名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.FullName">
+            <summary>
+            供应商全称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.PayTerm">
+            <summary>
+            付款期限,单位天
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.ContactName">
+            <summary>
+            联系人
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Tel">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Geo">
+            <summary>
+            经纬度的geo编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.Status">
+            <summary>
+            状态：0为停用，1为正常
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StatusName">
+            <summary>
+            状态名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt1">
+            <summary>
+            扩展字符串字段1
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt2">
+            <summary>
+            扩展字符串字段2
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt3">
+            <summary>
+            扩展字符串字段3
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt4">
+            <summary>
+            扩展字符串字段4
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt5">
+            <summary>
+            扩展字符串字段5
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt6">
+            <summary>
+            扩展字符串字段6
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt7">
+            <summary>
+            扩展字符串字段7
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt8">
+            <summary>
+            扩展字符串字段8
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt9">
+            <summary>
+            扩展字符串字段9
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt10">
+            <summary>
+            扩展字符串字段10
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt11">
+            <summary>
+            扩展字符串字段11
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt12">
+            <summary>
+            扩展字符串字段12
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt13">
+            <summary>
+            扩展字符串字段13
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt14">
+            <summary>
+            扩展字符串字段14
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt15">
+            <summary>
+            扩展字符串字段15
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt16">
+            <summary>
+            扩展字符串字段16
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt17">
+            <summary>
+            扩展字符串字段17
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt18">
+            <summary>
+            扩展字符串字段18
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt19">
+            <summary>
+            扩展字符串字段19
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt20">
+            <summary>
+            扩展字符串字段20
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt21">
+            <summary>
+            扩展字符串字段21
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt22">
+            <summary>
+            扩展字符串字段22
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt23">
+            <summary>
+            扩展字符串字段23
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt24">
+            <summary>
+            扩展字符串字段24
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt25">
+            <summary>
+            扩展字符串字段25
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt26">
+            <summary>
+            扩展字符串字段26
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt27">
+            <summary>
+            扩展字符串字段27
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt28">
+            <summary>
+            扩展字符串字段28
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt29">
+            <summary>
+            扩展字符串字段29
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.StrExt30">
+            <summary>
+            扩展字符串字段30
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt1">
+            <summary>
+            扩展数字字段1
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt2">
+            <summary>
+            扩展数字字段2
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt3">
+            <summary>
+            扩展数字字段3
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt4">
+            <summary>
+            扩展数字字段4
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt5">
+            <summary>
+            扩展数字字段5
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt6">
+            <summary>
+            扩展数字字段6
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt7">
+            <summary>
+            扩展数字字段7
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt8">
+            <summary>
+            扩展数字字段8
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt9">
+            <summary>
+            扩展数字字段9
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.NumExt10">
+            <summary>
+            扩展数字字段10
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.ExtObjects">
+            <summary>
+            扩展的关联对象
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.MZ_Unit">
+            <summary>
+            单位表
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Unit.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Unit.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Unit.UnitName">
+            <summary>
+            单位名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.MZ_Unit.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:ProducerService.Model.OutCertInfo">
+            <summary>
+            代理证书数据源
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.OutCertInfo.Logo">
+            <summary>
+            生产商Logo
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.OutCertInfo.AddressName">
+            <summary>
+            生产商省市区地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.OutCertInfo.AddressDetail">
+            <summary>
+            生产商详细地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.OutCertInfo.Intro">
+            <summary>
+            生产商简介
+            </summary>
+        </member>
+        <member name="M:ProducerService.Model.OutCertInfo.DemoData">
+            <summary>
+            返回示例数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ProducerService.Model.Out_Agent.ParentOrgName">
+            <summary>
+            上级企业名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_Agent.OrgName">
+            <summary>
+            当前企业名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_Agent.GradeName">
+            <summary>
+            级别名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_Agent.FactoryName">
+            <summary>
+            生产商名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_Agent.RegionsName">
+            <summary>
+            代理区域名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_Agent.Logo">
+            <summary>
+            组织Logo
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_AgentFactory.FactoryName">
+            <summary>
+            生产商名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_AgentFactory.Logo">
+            <summary>
+            生产商Logo
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_AgentFactory.ParentOrgName">
+            <summary>
+            上级企业名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_AgentFactory.GradeName">
+            <summary>
+            代理级别名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_AgentFactory.RegionsName">
+            <summary>
+            代理区域名称（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_AgentFactory.CertTemplateId">
+            <summary>
+            授权证书打印模板Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.Industry">
+            <summary>
+            行业类型代码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.IndustryName">
+            <summary>
+            行业类型名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.Size">
+            <summary>
+            员工规模代码
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Out_FactoryItem.SizeName">
+            <summary>
+            员工规模名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Tx_AgYq_Count.first_send">
+            <summary>
+            开始计时的时间
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.Tx_AgYq_Count.count">
+            <summary>
+            1小时内
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.OrgId">
+            <summary>
+            来源组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.DeviceNumber">
+            <summary>
+            设备唯一编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.DeviceId">
+            <summary>
+            通讯Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.ProductId">
+            <summary>
+            所属物联产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotDevice.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotProduct.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotProduct.Name">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotProduct.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_IotProduct.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_ProductRoute.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_ProductRoute.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.T_ProductRoute.RouteName">
+            <summary>
+            工艺路线名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.SkuNumber">
+            <summary>
+            产品编号(sku编码)
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.IOTProductId">
+            <summary>
+            关联的物联产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.ProductLabel">
+            <summary>
+            产品标签：U半成品，F成品
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.TypeId">
+            <summary>
+            产品分组Id，为空所属全部
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.TypeName">
+            <summary>
+            产品分组
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Prop">
+            <summary>
+            产品分组对应的产品属性，可为空
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Unit">
+            <summary>
+            单位名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Specs">
+            <summary>
+            产品规格
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Price">
+            <summary>
+            成本单价
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.SalesPrice">
+            <summary>
+            销售单价
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Route">
+            <summary>
+            工艺路线
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Supplier">
+            <summary>
+            供应商Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.SupplierName">
+            <summary>
+            供应商名称
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.V_ProductBatch.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="T:ProducerService.PluginConfig">
+            <summary>
+            生产商资料模块
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1510 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CRMService</name>
+    </assembly>
+    <members>
+        <member name="M:CRMService.Business.CRMActionBLL.NoFollowToPublic">
+            <summary>
+            未跟进定时转到公海
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Agent">
+            <summary>
+            代理API
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Agent.AddInvite(CRMService.Model.In_Invite)">
+            <summary>
+            生成邀请（代理用）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.PubList(CRMService.Model.In_ClueList)">
+            <summary>
+            公海线索
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.PriList(CRMService.Model.In_ClueList)">
+            <summary>
+            私海线索
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Add(CRMService.Model.MZ_Clue)">
+            <summary>
+            添加线索（私海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.PubAdd(CRMService.Model.MZ_Clue)">
+            <summary>
+            添加线索（公海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Info(System.Int64)">
+            <summary>
+            获取线索
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Edit(CRMService.Model.MZ_Clue)">
+            <summary>
+            修改线索（私海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.PubEdit(CRMService.Model.MZ_Clue)">
+            <summary>
+            修改线索（公海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Transform(CRMService.Model.In_ClueTrans)">
+            <summary>
+            转换为客户
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Draw(System.String)">
+            <summary>
+            领取线索
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Return(System.String,System.String)">
+            <summary>
+            退回线索
+            </summary>
+            <param name="id"></param>
+            <param name="reason"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.Remove(System.String)">
+            <summary>
+            删除线索（私海）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Clue.PubRemove(System.String)">
+            <summary>
+            删除线索（公海）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Config">
+            <summary>
+            CRM配置API
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Config.SetCrm(CRMService.Model.MZ_CrmConf)">
+            <summary>
+            CRM设置
+            </summary>
+            <param name="conf"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Config.CrmInfo(System.Int64)">
+            <summary>
+            获取CRM设置
+            </summary>
+            <param name="id">指定企业Id,为0表示当前企业</param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Contact">
+            <summary>
+            联系人API接口
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Contact.List(CRMService.Model.In_ContactList)">
+            <summary>
+            联系人列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Contact.Info(System.String)">
+            <summary>
+            联系人信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Contact.Add(CRMService.Model.MZ_Contact)">
+            <summary>
+            添加联系人
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Contact.Edit(CRMService.Model.MZ_Contact)">
+            <summary>
+            修改联系人
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Contact.Remove(System.String)">
+            <summary>
+            删除联系人
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.CrmReport">
+            <summary>
+            CRM报表接口
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.CrmReport.StatisticsInfo(System.Int32)">
+            <summary>
+            获取CRM统计信息
+            </summary>
+            <param name="day">0为今天、1为昨天、7为近7天、30为近30天</param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.CrmReport.StatisticsCount">
+            <summary>
+            获取CRM总计信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.CrmReport.PeriodCountList(System.Int32)">
+            <summary>
+            获取销售漏斗信息
+            </summary>
+            <param name="day"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Customer">
+            <summary>
+            客户API接口
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Customer.PubList(CRMService.Model.In_CustomerList)">
+            <summary>
+            客户列表（公海）
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.List(CRMService.Model.In_CustomerList)">
+            <summary>
+            客户列表（私海）
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.Info(System.String)">
+            <summary>
+            客户信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.Add(CRMService.Model.MZ_Customer)">
+            <summary>
+            添加客户（私海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.PubAdd(CRMService.Model.MZ_Customer)">
+            <summary>
+            添加客户（公海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.Edit(CRMService.Model.MZ_Customer)">
+            <summary>
+            修改客户（私海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.PubEdit(CRMService.Model.MZ_Customer)">
+            <summary>
+            修改客户（公海）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.Draw(System.String)">
+            <summary>
+            领取客户
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.UnBind(System.String,System.Boolean)">
+            <summary>
+            取消邀请客户
+            </summary>
+            <param name="id"></param>
+            <param name="cancelAgent">是否取消代理权限（默认false)</param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.Return(System.String,System.String)">
+            <summary>
+            退回客户
+            </summary>
+            <param name="id"></param>
+            <param name="reason"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.Remove(System.String)">
+            <summary>
+            删除客户（私海）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.PubRemove(System.String)">
+            <summary>
+            删除客户（公海）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Customer.GenerateNumber">
+            <summary>
+            生成客户编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Follow">
+            <summary>
+            跟进记录API
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Follow.List(CRMService.Model.In_FollowList)">
+            <summary>
+            跟进列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Follow.Info(System.String)">
+            <summary>
+            获取跟进记录
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Follow.Add(CRMService.Model.MZ_Follow)">
+            <summary>
+            添加跟进
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Follow.Edit(CRMService.Model.MZ_Follow)">
+            <summary>
+            修改跟进
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Follow.Remove(System.String)">
+            <summary>
+            删除跟进
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Opportunity">
+            <summary>
+            商机API接口
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.List(CRMService.Model.In_OpportunityList)">
+            <summary>
+            商机列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.Info(System.String)">
+            <summary>
+            获取商机
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.Add(CRMService.Model.MZ_Opportunity)">
+            <summary>
+            添加商机
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.Edit(CRMService.Model.MZ_Opportunity)">
+            <summary>
+            修改商机
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.Forward(System.String,System.String)">
+            <summary>
+            推进商机
+            </summary>
+            <param name="id"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.GenerateNumber">
+            <summary>
+            生成商机编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Opportunity.Remove(System.String)">
+            <summary>
+            删除商机
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Period">
+            <summary>
+            阶段API
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Period.List">
+            <summary>
+            阶段列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Period.Add(CRMService.Model.MZ_Period)">
+            <summary>
+            添加阶段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Period.Edit(CRMService.Model.MZ_Period)">
+            <summary>
+            修改阶段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Period.Remove(System.String)">
+            <summary>
+            删除阶段
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Controller.Plan">
+            <summary>
+            跟进计划API
+            </summary>
+        </member>
+        <member name="M:CRMService.Controller.Plan.List(CRMService.Model.In_FollowPlanList)">
+            <summary>
+            跟进计划列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Plan.Info(System.String)">
+            <summary>
+            获取跟进计划
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Plan.Add(CRMService.Model.MZ_FollowPlan)">
+            <summary>
+            添加跟进计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Plan.Edit(CRMService.Model.MZ_FollowPlan)">
+            <summary>
+            修改跟进计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Plan.Remove(System.String)">
+            <summary>
+            删除跟进计划
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CRMService.Controller.Plan.Finish(System.String)">
+            <summary>
+            完成跟进计划
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CRMService.Model.DiscussEvent">
+            <summary>
+            评论事件
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.DiscussEvent.UserId">
+            <summary>
+            评论人
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.DiscussEvent.RealName">
+            <summary>
+            评论人姓名
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.DiscussEvent.TargetId">
+            <summary>
+            目标Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.DiscussEvent.TargetType">
+            <summary>
+            评论类型
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.DiscussEvent.CommentId">
+            <summary>
+            评论Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_ClueList.Belong">
+            <summary>
+            为1表示公海，为2表示私海，其它为全部（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_ClueTrans.ClueId">
+            <summary>
+            线索Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_ClueTrans.SyncFollow">
+            <summary>
+            是否在客户中同步显示跟进
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_ClueTrans.Customer">
+            <summary>
+            客户信息
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_ContactList.CustomerId">
+            <summary>
+            过滤客户Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_CustomerList.Belong">
+            <summary>
+            为1表示公海，为2表示私海，其它为全部（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_CustomerList.IsInvite">
+            <summary>
+            是否邀请：true,false
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_CustomerList.IsFollowOver">
+            <summary>
+            跟进即将超时的
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowList.TargetType">
+            <summary>
+            过滤跟进目标类型：0为客户、1为线索（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowList.TargetId">
+            <summary>
+            过滤跟进目标Id（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowList.Key">
+            <summary>
+            过滤搜索关键字
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowPlanList.PlanStartTime">
+            <summary>
+            计划开始时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowPlanList.PlanEndTime">
+            <summary>
+            计划结束时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowPlanList.Status">
+            <summary>
+            A待完成、F已完成
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_FollowPlanList.Key">
+            <summary>
+            过滤搜索关键字
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.BindCustomerId">
+            <summary>
+            绑定的客户
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.GradeId">
+            <summary>
+            代理级别（手动代理需要传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.FactoryId">
+            <summary>
+            代理的工厂（下级代理发出邀请时，需要传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Regions">
+            <summary>
+            代理的区域代码，多个用,分隔
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.ContactName">
+            <summary>
+            联系人
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Tel">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Logo">
+            <summary>
+            组织Logo
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Industry">
+            <summary>
+            行业类型
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Size">
+            <summary>
+            员工规模
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.In_Invite.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_Clue">
+            <summary>
+            线索表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.OrgId">
+            <summary>
+            企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.RealName">
+            <summary>
+            联系人（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.Mobile">
+            <summary>
+            手机号码（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.CompanyName">
+            <summary>
+            客户名称（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.FromType">
+            <summary>
+            线索来源：微信线索weixin,流程表单form,其它other
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.FromId">
+            <summary>
+            来源表单Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.LeaderId">
+            <summary>
+            线索跟进人（为0则为公海线索）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.PostName">
+            <summary>
+            职务
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.DeptName">
+            <summary>
+            部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.Helper">
+            <summary>
+            协作者（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.LastFollowId">
+            <summary>
+            最后一条跟进
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.LastFollowDate">
+            <summary>
+            最后一条跟进时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.StartFollowDate">
+            <summary>
+            领取时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.ChangeDate">
+            <summary>
+            转换时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.ChangeId">
+            <summary>
+            转换的目标客户Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.SyncFollow">
+            <summary>
+            是否在客户中同步显示跟进
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.ReturnReason">
+            <summary>
+            退回原因
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.del_flag">
+            <summary>
+            删除标志（0代表存在、1代表被转换、 2代表删除）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.LeaderName">
+            <summary>
+            负责人姓名
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.HelperName">
+            <summary>
+            协作人员名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Clue.HelperUsers">
+            <summary>
+            协作人信息
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_Contact">
+            <summary>
+            联系人
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.RealName">
+            <summary>
+            姓名（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.Mobile">
+            <summary>
+            手机号码（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.PostName">
+            <summary>
+            职务
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.DeptName">
+            <summary>
+            部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.Sex">
+            <summary>
+            性别（0男 1女 2未知）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.WxNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.LeaderId">
+            <summary>
+            负责人（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.Helper">
+            <summary>
+            协作者（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.CustomerId">
+            <summary>
+            客户Id（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.del_flag">
+            <summary>
+            删除标志（0代表存在、 2代表删除）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.HelperUsers">
+            <summary>
+            协作人员列表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.LeaderUser">
+            <summary>
+            负责人信息
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Contact.CustomerName">
+            <summary>
+            客户名称
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_CrmConf">
+            <summary>
+            企业的CRM配置
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_CrmConf.EnableKPer">
+            <summary>
+            跨阶段推进
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_CrmConf.EnableIngBack">
+            <summary>
+            进行中阶段回退
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_CrmConf.EnableWinBack">
+            <summary>
+            终点阶段回退
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_CrmConf.FollowReturnDay">
+            <summary>
+            设置几天未跟进将被回收，为0不回收
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_Customer">
+            <summary>
+            客户表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.CustomerNumber">
+            <summary>
+            客户唯一编号
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.CustomerName">
+            <summary>
+            客户名称（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.CustomerType">
+            <summary>
+            客户类型：0为代理，1为直销（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.FromType">
+            <summary>
+            线索来源：微信线索weixin,流程表单form,其它other
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.FromId">
+            <summary>
+            来源表单Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.LeaderId">
+            <summary>
+            负责人
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.BindOrgId">
+            <summary>
+            客户对应的企业Id,未绑定则为0
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Geo">
+            <summary>
+            经纬度的geo编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Industry">
+            <summary>
+            行业类型
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.CompanyTel">
+            <summary>
+            公司电话
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.CompanyUrl">
+            <summary>
+            公司网址
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Helper">
+            <summary>
+            协作者（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.LastFollowId">
+            <summary>
+            最后一条跟进
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.LastFollowDate">
+            <summary>
+            最后一条跟进时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.StartFollowDate">
+            <summary>
+            领取时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.ReturnReason">
+            <summary>
+            退回原因
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.del_flag">
+            <summary>
+            删除标志（0代表存在、 2代表删除）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.LeaderName">
+            <summary>
+            负责人姓名
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.HelperName">
+            <summary>
+            协作人员姓名
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Customer.HelperUsers">
+            <summary>
+            协作人信息
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_Follow">
+            <summary>
+            跟进记录表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.TargetType">
+            <summary>
+            跟进目标类型：0为客户、1为线索（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.TargetId">
+            <summary>
+            跟进目标Id（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.OpportId">
+            <summary>
+            商机Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.Remark">
+            <summary>
+            跟进内容
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.FollowTime">
+            <summary>
+            跟进时间（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.FollowUser">
+            <summary>
+            跟进人（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.FollowUserInfo">
+            <summary>
+            跟进人信息
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.ContactId">
+            <summary>
+            联系人Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.ContactInfo">
+            <summary>
+            联系人信息
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.FollowWay">
+            <summary>
+            跟进方式
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.del_flag">
+            <summary>
+            删除标志（0代表存在、 2代表删除）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.TargetName">
+            <summary>
+            跟进目标名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Follow.OpportName">
+            <summary>
+            商机名称
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_FollowPlan">
+            <summary>
+            跟进计划表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.DeptIds">
+            <summary>
+            所属部门（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.CustomerId">
+            <summary>
+            跟进的目标客户（必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.Executor">
+            <summary>
+            计划执行人（多个,号分隔）（必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.ExecutorUsers">
+            <summary>
+            计划执行人列表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.PlanTime">
+            <summary>
+            计划时间（必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.Remark">
+            <summary>
+            计划内容（必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.Status">
+            <summary>
+            状态：A待完成、F已完成
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.CustomerName">
+            <summary>
+            客户名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_FollowPlan.CustomerType">
+            <summary>
+            客户类型：0为代理，1为直销
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_OpportDetail">
+            <summary>
+            商机明细
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.OpportId">
+            <summary>
+            商机Id（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.Price">
+            <summary>
+            价格
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.OrgId">
+            <summary>
+            所属企业Id（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.Sort">
+            <summary>
+            排序（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_OpportDetail.ProductInfo">
+            <summary>
+            产品信息
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_Opportunity">
+            <summary>
+            商机表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.OpportNumber">
+            <summary>
+            商机唯一编号
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.LeaderId">
+            <summary>
+            负责人（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.OpportName">
+            <summary>
+            商机名称（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.CustomerId">
+            <summary>
+            客户Id（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.ContactId">
+            <summary>
+            联系人Id（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.Probability">
+            <summary>
+            预计成交几率，单位%（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.Period">
+            <summary>
+            销售阶段（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.PeriodType">
+            <summary>
+            阶段类型（不用传）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.Helper">
+            <summary>
+            协作者（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.LoseRemark">
+            <summary>
+            输单原因
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.LastFollowId">
+            <summary>
+            最后一条跟进
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.LastFollowDate">
+            <summary>
+            最后一条跟进时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.StartFollowDate">
+            <summary>
+            领取时间
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.ReturnReason">
+            <summary>
+            退回原因
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.DetailList">
+            <summary>
+            明细表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.LeaderUser">
+            <summary>
+            负责人信息
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.ContactUser">
+            <summary>
+            联系人信息
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.CustomerName">
+            <summary>
+            客户名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.CustomerNumber">
+            <summary>
+            客户编号
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.PeriodName">
+            <summary>
+            销售阶段
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Opportunity.HelperUsers">
+            <summary>
+            协作人信息
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.MZ_Period">
+            <summary>
+            销售阶段表
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Period.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Period.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Period.PeriodName">
+            <summary>
+            阶段名称（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Period.PeriodType">
+            <summary>
+            阶段类型：进行中ing,赢单win,输单lose,无效invalid（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Period.Probability">
+            <summary>
+            赢率，单位%（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.MZ_Period.Sort">
+            <summary>
+            排序（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmCount.KfCount">
+            <summary>
+            总客户数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmCount.ClueCount">
+            <summary>
+            总线索数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmCount.OpportCount">
+            <summary>
+            总商机数
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.Out_CrmStatistics">
+            <summary>
+            销售简报
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.NewKfCount">
+            <summary>
+            新增客户数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.NewOpportCount">
+            <summary>
+            新增商机数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.NewFollowCount">
+            <summary>
+            新增跟进数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.MaybeTotalPrice">
+            <summary>
+            预测总金额
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.FollowClueCount">
+            <summary>
+            跟进线索数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.FollowCustomerCount">
+            <summary>
+            跟进客户数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.FollowOpportCount">
+            <summary>
+            跟进商机数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CrmStatistics.WinOpportCount">
+            <summary>
+            商机赢单数
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CustomerInfo.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CustomerInfo.CustomerNumber">
+            <summary>
+            客户唯一编号
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CustomerInfo.CustomerName">
+            <summary>
+            客户名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CustomerInfo.CustomerType">
+            <summary>
+            客户类型：0为代理，1为直销（新增必填）
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_CustomerInfo.BindOrgId">
+            <summary>
+            客户对应的企业Id,未邀请则为0
+            </summary>
+        </member>
+        <member name="T:CRMService.Model.Out_PeriodCount">
+            <summary>
+            销售阶段数据
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_PeriodCount.Id">
+            <summary>
+            阶段Id
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_PeriodCount.Name">
+            <summary>
+            阶段名称
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_PeriodCount.Count">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:CRMService.Model.Out_PeriodCount.TotalPrice">
+            <summary>
+            销售金额
+            </summary>
+        </member>
+    </members>
+</doc>

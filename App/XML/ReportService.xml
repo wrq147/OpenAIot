@@ -1,0 +1,1326 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ReportService</name>
+    </assembly>
+    <members>
+        <member name="T:ReportService.Controller.ApiSource">
+            <summary>
+            接口数据源Api
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.ApiSource.List(ReportService.Models.In_ApiSourceListPage)">
+            <summary>
+            获取当前企业的接口数据源
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ApiSource.Info(System.String)">
+            <summary>
+            获取接口数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ApiSource.Add(ReportService.Models.MZ_ApiSource)">
+            <summary>
+            新增接口数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ApiSource.Edit(ReportService.Models.MZ_ApiSource)">
+            <summary>
+            修改接口数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ApiSource.Remove(System.String)">
+            <summary>
+            删除接口数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ReportService.Controller.DataSource">
+            <summary>
+            Sql数据源Api
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.List(ReportService.Models.In_DataSourceListPage)">
+            <summary>
+            获取当前企业的Sql数据源
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.Info(System.String)">
+            <summary>
+            获取Sql数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.Add(ReportService.Models.MZ_DataSource)">
+            <summary>
+            新增Sql数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.Edit(ReportService.Models.MZ_DataSource)">
+            <summary>
+            修改Sql数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.Remove(System.String)">
+            <summary>
+            删除Sql数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.GetDataSourceByIds(System.Collections.Generic.List{System.String})">
+            <summary>
+            获取指定数据库数据源
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.Analysis(ReportService.Models.In_Database)">
+            <summary>
+            解释执行数据源
+            </summary>
+            <param name="database"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.ShowDatabases(ReportService.Models.In_DatabaseNames)">
+            <summary>
+            查询指定数据库的所有数据库列表
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.TableNames(ReportService.Models.In_TableNames)">
+            <summary>
+            查询指定数据库的所有表名
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.AllTableStruct(ReportService.Models.In_AllTableStruct)">
+            <summary>
+            查询数据库的所有表的结构
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.DataSource.TableStruct(ReportService.Models.In_TableStruct)">
+            <summary>
+            查询指定表的结构
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ReportService.Controller.FileSource">
+            <summary>
+            文件数据源Api
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.FileSource.List(ReportService.Models.In_FileSourceListPage)">
+            <summary>
+            获取当前企业的File数据源
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.FileSource.Info(System.String)">
+            <summary>
+            获取File数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.FileSource.Add(ReportService.Models.MZ_FileSource)">
+            <summary>
+            新增File数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.FileSource.Edit(ReportService.Models.MZ_FileSource)">
+            <summary>
+            修改File数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.FileSource.Remove(System.String)">
+            <summary>
+            删除File数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ReportService.Controller.Preview">
+            <summary>
+            报表history路由用
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.Preview.DatavView">
+            <summary>
+            预览用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Preview.DatavRelease">
+            <summary>
+            发布用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Preview.ReportUpdateTime(System.String)">
+            <summary>
+            获取指定报表的当前更新时间
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Preview.CheckShare(System.String,System.String)">
+            <summary>
+            获取报表信息
+            </summary>
+            <param name="id">报表Id</param>
+            <param name="pwd">查看密码</param>
+            <returns>返回代码1，则表示需要输入查看密码</returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.List(ReportService.Models.In_PrintList)">
+            <summary>
+            查询打印模板
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.Info(System.String)">
+            <summary>
+            获取指定打印模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.DataList">
+            <summary>
+            获取打印数据源列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.DataInfo(System.String)">
+            <summary>
+            获取打印数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.Add(ReportService.Models.MZ_PrintTemplate)">
+            <summary>
+            添加打印模板
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.Edit(ReportService.Models.MZ_PrintTemplate)">
+            <summary>
+            编辑打印模板
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Print.Remove(System.String)">
+            <summary>
+            删除打印模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ReportService.Controller.Report">
+            <summary>
+            报表设计器接口
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.Report.List(ReportService.Models.In_ReportListPage)">
+            <summary>
+            查询报表列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Report.Info(System.String)">
+            <summary>
+            获取报表详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Report.Add(ReportService.Models.MZ_Report)">
+            <summary>
+            新增报表
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Report.Copy(System.Int64)">
+            <summary>
+            复制指定报表
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Report.Edit(ReportService.Models.MZ_Report)">
+            <summary>
+            修改报表
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Report.Remove(System.String)">
+            <summary>
+            删除报表
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportGroup.ListTree">
+            <summary>
+            报表分组树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportGroup.TreeSelect">
+            <summary>
+            报表分组选择树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportGroup.Info(System.String)">
+            <summary>
+            获取指定分组信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportWarn.List(ReportService.Models.In_ReportWarnPage)">
+            <summary>
+            数据告警列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportWarn.Info(System.String)">
+            <summary>
+            获取数据告警信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportWarn.Add(ReportService.Models.MZ_ReportWarn)">
+            <summary>
+            新增数据告警
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportWarn.Edit(ReportService.Models.MZ_ReportWarn)">
+            <summary>
+            修改数据告警
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.ReportWarn.Remove(System.String)">
+            <summary>
+            删除数据告警
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ReportService.Controller.Share">
+            <summary>
+            报表分享接口
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.Share.List(ReportService.Models.In_ShareListPage)">
+            <summary>
+            获取分享列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Share.Info(System.String)">
+            <summary>
+            获取分享信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Share.Add(ReportService.Models.MZ_ReportShare)">
+            <summary>
+            新增分享链接
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Share.Edit(ReportService.Models.MZ_ReportShare)">
+            <summary>
+            编辑分享链接
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Share.Remove(System.String[])">
+            <summary>
+            批量删除分享链接
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ReportService.Controller.Theme">
+            <summary>
+            报表主题接口
+            </summary>
+        </member>
+        <member name="M:ReportService.Controller.Widget.Info(System.Int32)">
+            <summary>
+            查询组件
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Widget.Add(ReportService.Models.MZ_ReportCom)">
+            <summary>
+            新增组件
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Widget.Edit(ReportService.Models.MZ_ReportCom)">
+            <summary>
+            修改组件
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Controller.Widget.Remove(System.String)">
+            <summary>
+            删除组件
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ReportService.Models.In_AllTableStruct.type">
+            <summary>
+            数据源类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_AllTableStruct.ipAdress">
+            <summary>
+            数据源链接IP地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_AllTableStruct.port">
+            <summary>
+            端口
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_AllTableStruct.baseName">
+            <summary>
+            数据库名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_AllTableStruct.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_AllTableStruct.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ApiSourceListPage.Name">
+            <summary>
+            过滤接口名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ApiSourceListPage.ApiType">
+            <summary>
+            过滤接口类型
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.In_Database">
+            <summary>
+            数据库执行请求参数
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.type">
+            <summary>
+            数据源类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.ipAdress">
+            <summary>
+            数据源链接IP地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.port">
+            <summary>
+            端口
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.baseName">
+            <summary>
+            数据库名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.executeSql">
+            <summary>
+            执行sql结构
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_Database.cacheTime">
+            <summary>
+            缓存时间（单位秒）:为0不缓存
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DatabaseNames.type">
+            <summary>
+            数据源类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DatabaseNames.ipAdress">
+            <summary>
+            数据源链接IP地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DatabaseNames.port">
+            <summary>
+            端口
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DatabaseNames.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DatabaseNames.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DataSourceListPage.Name">
+            <summary>
+            过滤链接名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_DataSourceListPage.DataType">
+            <summary>
+            数据库类型：mysql、sqlserver
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_FileSourceListPage.Name">
+            <summary>
+            过滤文件名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_FileSourceListPage.OrgId">
+            <summary>
+            过滤所属企业
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.In_PrintList">
+            <summary>
+            过滤打印模板列表
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_PrintList.DataId">
+            <summary>
+            过滤数据源
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ReportListPage.OrgId">
+            <summary>
+            过滤组织（前端不用传）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ReportListPage.Key">
+            <summary>
+            关键词搜索
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ReportListPage.Status">
+            <summary>
+            状态（0正常 1停用 2已发布）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ReportListPage.GroupId">
+            <summary>
+            分组Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ReportWarnPage.ReportId">
+            <summary>
+            报表Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ShareListPage.SearchKey">
+            <summary>
+            通过报表名称搜索
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ShareListPage.ReportId">
+            <summary>
+            过滤报表Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableNames.type">
+            <summary>
+            数据源类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableNames.ipAdress">
+            <summary>
+            数据源链接IP地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableNames.port">
+            <summary>
+            端口
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableNames.baseName">
+            <summary>
+            数据库名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableNames.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableNames.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.type">
+            <summary>
+            数据源类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.ipAdress">
+            <summary>
+            数据源链接IP地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.port">
+            <summary>
+            端口
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.baseName">
+            <summary>
+            数据库名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_TableStruct.tableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.In_ThemeListPage.Name">
+            <summary>
+            过滤主题名称
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_ApiSource">
+            <summary>
+            Api数据源
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.OrgId">
+            <summary>
+            所属组织ID（0代表所有用户可见）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.ApiType">
+            <summary>
+            接口类型：0为BI报表、1为打印模板
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.InterfaceName">
+            <summary>
+            接口名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.Url">
+            <summary>
+            接口地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.Method">
+            <summary>
+            接口Method
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.ParamJson">
+            <summary>
+            请求的Param
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.ParamType">
+            <summary>
+            参数类型:PARAM、JSON、FORM
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ApiSource.HeaderJson">
+            <summary>
+            请求的Header
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_DataSource">
+            <summary>
+            数据库源
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.LinkName">
+            <summary>
+            连接名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.DatabaseType">
+            <summary>
+            数据库类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.IpAddress">
+            <summary>
+            ip地址
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.Port">
+            <summary>
+            端口号
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.DatabaseName">
+            <summary>
+            数据库名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_DataSource.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_FileSource">
+            <summary>
+            文件数据源
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_FileSource.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_FileSource.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_FileSource.FileName">
+            <summary>
+            文件名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_FileSource.FileUrl">
+            <summary>
+            文件连接
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_FileSource.FileData">
+            <summary>
+            解析后的表格json数据
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_FileSource.ChartType">
+            <summary>
+            图表类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintData.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintData.Name">
+            <summary>
+            数据源名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintData.DataMap">
+            <summary>
+            数据源标识
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintData.ApiId">
+            <summary>
+            接口数据源Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.Id">
+            <summary>
+            模板ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.Name">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.Content">
+            <summary>
+            模板内容
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.PaperDirection">
+            <summary>
+            纸张方向
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.PaperMarginTop">
+            <summary>
+            页面上边距
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.PaperMarginBottom">
+            <summary>
+            页面下边距
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.Background">
+            <summary>
+            背景颜色
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.FontFamily">
+            <summary>
+            默认字体
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.LineHeight">
+            <summary>
+            默认行高
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.PaperName">
+            <summary>
+            纸张类型名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.PaperWidth">
+            <summary>
+            纸张宽
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.PaperHeight">
+            <summary>
+            纸张高
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_PrintTemplate.DataId">
+            <summary>
+            数据源Id
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_Report">
+            <summary>
+            报表存储结构
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Name">
+            <summary>
+            报表名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.ReportType">
+            <summary>
+            报表类型：screen、table
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.GroupId">
+            <summary>
+            分组Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.DesInfo">
+            <summary>
+            报表描述
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Tag">
+            <summary>
+            标签
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Resolution">
+            <summary>
+            大屏分辨率
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.DeviceType">
+            <summary>
+            设备类型 pc、phone、double
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.IdGlobal">
+            <summary>
+            组件累计Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.DrawOption">
+            <summary>
+            数据大屏再画数据结构
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.ThemeOption">
+            <summary>
+            主题再画数据结构
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.MapOption">
+            <summary>
+            echart图option集合
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Zindex">
+            <summary>
+            全局累计zindex图层索引
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Thumbnail">
+            <summary>
+            报表缩略图
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.Status">
+            <summary>
+            状态（0未发布 2已发布）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_Report.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_ReportCom">
+            <summary>
+            报表组件
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Name">
+            <summary>
+            组件名称（唯一）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Tag">
+            <summary>
+            组件的搜索关键字
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Option">
+            <summary>
+            组件option配置
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Graph">
+            <summary>
+            所属图表
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Component">
+            <summary>
+            所属组件
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.DesInfo">
+            <summary>
+            组件描述
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Thumbnail">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.Status">
+            <summary>
+            状态（0正常 1停用 2已发布）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportCom.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_ReportGroup">
+            <summary>
+            报表分组
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.Name">
+            <summary>
+            分组名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.ParentId">
+            <summary>
+            父分组Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.Path">
+            <summary>
+            分组层级
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportGroup.Children">
+            <summary>
+            子分组
+            </summary>
+        </member>
+        <member name="M:ReportService.Models.MZ_ReportGroup._RecursionFn(System.Collections.Generic.List{ReportService.Models.MZ_ReportGroup},ReportService.Models.MZ_ReportGroup)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:ReportService.Models.MZ_ReportGroup._GetChildList(System.Collections.Generic.List{ReportService.Models.MZ_ReportGroup},ReportService.Models.MZ_ReportGroup)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ReportService.Models.MZ_ReportGroup.GroupList2Tree(System.Collections.Generic.List{ReportService.Models.MZ_ReportGroup})">
+            <summary>
+            分组树转选择树
+            </summary>
+            <param name="groupTree"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.ReportId">
+            <summary>
+            报表Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.ReportName">
+            <summary>
+            报表名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.ReportType">
+            <summary>
+            报表类型：screen、table
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.UsingPassword">
+            <summary>
+            报表的使用密码
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.TokenStr">
+            <summary>
+            分享的登录令牌
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.EffectiveTime">
+            <summary>
+            有效时间(单位：天):0为永久
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.ExpirationTime">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.TimerCron">
+            <summary>
+            Cron表达式
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.TimerJobId">
+            <summary>
+            定时器关联的Job
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.NoticeUserType">
+            <summary>
+            通知对象类型：0为人员，1为角色
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.NoticeUsers">
+            <summary>
+            通知人员
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.NoticeWay">
+            <summary>
+            通知方式：APP站内通知,EMAIL邮件通知,SMS短信通知,WX微信通知，多个逗号隔开
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.TimerStatus">
+            <summary>
+            是否启用定时推送（0启用 1停用）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.CronName">
+            <summary>
+            Cron的文字表述
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.NoticeUserList">
+            <summary>
+            通知的用户列表
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportShare.NoticeRoleList">
+            <summary>
+            通知的角色列表
+            </summary>
+        </member>
+        <member name="T:ReportService.Models.MZ_ReportTheme">
+            <summary>
+            报表主题
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportTheme.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportTheme.ThemeName">
+            <summary>
+            主题名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportTheme.ThemeOption">
+            <summary>
+            主题配置json
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.ReportId">
+            <summary>
+            所属报表Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.Name">
+            <summary>
+            预警名称
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.ConditionJson">
+            <summary>
+            条件json
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.TimerCron">
+            <summary>
+            Cron表达式
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.CronName">
+            <summary>
+            Cron的文字表述
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.TimerJobId">
+            <summary>
+            定时器关联的Job
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.SilenceTime">
+            <summary>
+            沉默周期，单位秒（默认表示86400S，最小60秒）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.NoticeUserType">
+            <summary>
+            通知对象类型：0为人员，1为角色
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.NoticeUsers">
+            <summary>
+            通知人员
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.NoticeWay">
+            <summary>
+            通知方式：APP站内通知,EMAIL邮件通知,SMS短信通知,WX微信通知，多个逗号隔开
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.Status">
+            <summary>
+            状态（0启用 1停用）
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.MZ_ReportWarn.ShareId">
+            <summary>
+            报表分享Id
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.WarnJsonConfig.DataSet">
+            <summary>
+            数据集
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.WarnJsonConfig.DataSetType">
+            <summary>
+            数据集类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.WarnJsonConfig.Conditions">
+            <summary>
+            条件字段
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.WarnJsonConfig.Groups">
+            <summary>
+            条件组合
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.ConditionField.field">
+            <summary>
+            字段名
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.ConditionField.compare">
+            <summary>
+            比较字符
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.ConditionField.valtype">
+            <summary>
+            值类型
+            </summary>
+        </member>
+        <member name="P:ReportService.Models.ConditionField.val">
+            <summary>
+            值
+            </summary>
+        </member>
+    </members>
+</doc>

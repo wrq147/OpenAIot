@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DiscussService</name>
+    </assembly>
+    <members>
+        <member name="T:DiscussService.Controller.Comment">
+            <summary>
+            评论API
+            </summary>
+        </member>
+        <member name="M:DiscussService.Controller.Comment.Add(DiscussService.Model.In_AddComment)">
+            <summary>
+            添加评论
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscussService.Controller.Comment.List(DiscussService.Model.In_CommentList)">
+            <summary>
+            评论列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscussService.Controller.Comment.Remove(System.String)">
+            <summary>
+            删除评论
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:DiscussService.DiscussOption.discuss_way">
+            <summary>
+            评论消息通知方式
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.In_AddComment.TargetId">
+            <summary>
+            关联对象Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.In_AddComment.TargetType">
+            <summary>
+            主题类型
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.In_CommentList.TargetType">
+            <summary>
+            过滤评论类型
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.In_CommentList.TargetId">
+            <summary>
+            过滤目标Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.In_CommentList.IsMy">
+            <summary>
+            过滤我的评论
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.In_CommentList.IsMyReply">
+            <summary>
+            过滤回复我的
+            </summary>
+        </member>
+        <member name="T:DiscussService.Model.MZ_Comment">
+            <summary>
+            评论表
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.UserId">
+            <summary>
+            评论人
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.SubjectId">
+            <summary>
+            主题Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.ParentCommentId">
+            <summary>
+            父评论Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.ParentCommentUserId">
+            <summary>
+            父评论用户Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.Content">
+            <summary>
+            回复内容（必填）
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.PraiseNum">
+            <summary>
+            点赞数
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.Subject">
+            <summary>
+            关联的主题
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Comment.UserInfo">
+            <summary>
+            评论人信息
+            </summary>
+        </member>
+        <member name="T:DiscussService.Model.MZ_Subject">
+            <summary>
+            主题
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.IsExt">
+            <summary>
+            是否为扩展用主题
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.TargetId">
+            <summary>
+            关联对象Id
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.TargetType">
+            <summary>
+            主题类型
+            </summary>
+        </member>
+        <member name="P:DiscussService.Model.MZ_Subject.SubjectContent">
+            <summary>
+            主题内容
+            </summary>
+        </member>
+    </members>
+</doc>

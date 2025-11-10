@@ -1,0 +1,1438 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AfterService</name>
+    </assembly>
+    <members>
+        <member name="M:AfterService.Business.DevPlaneTaskBLL.ExpireExecute">
+            <summary>
+            定期执行到期处理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AfterService.Controller.Dev">
+            <summary>
+            客户设备列表
+            </summary>
+        </member>
+        <member name="M:AfterService.Controller.Dev.List(AfterService.Model.In_KFDevListPage)">
+            <summary>
+            客户设备列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Dev.ProductList(AfterService.Model.OutKFProductPage)">
+            <summary>
+            客户产品列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Dev.UpdateDevice(AfterService.Model.In_UpdateDevice)">
+            <summary>
+            客户修改设备名称
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Dev.TransferTo(AfterService.Model.In_TransferTo)">
+            <summary>
+            将设备移动到指定房间
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Dev.DevInfo(System.String)">
+            <summary>
+            获取设备的打印数据源信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AfterService.Controller.DevMap">
+            <summary>
+            设备的地图分布API
+            </summary>
+        </member>
+        <member name="M:AfterService.Controller.DevMap.Info(System.String,System.String)">
+            <summary>
+            获取设备分布的统计信息
+            </summary>
+            <param name="code"></param>
+            <param name="dstates">设备运行状态统计：维修、保养等（多个逗号分隔）</param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevMap.List(System.String)">
+            <summary>
+            获取设备分布数量列表
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevMap.RangeAreaList(AfterService.Model.In_DevRangeAreaList)">
+            <summary>
+            通过经纬度获取指定范围内的区域设备数量
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevMap.RangeList(AfterService.Model.In_DevRangeList)">
+            <summary>
+            通过经纬度获取指定范围内的设备
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AfterService.Controller.DevPlane">
+            <summary>
+            设备计划
+            </summary>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.List(AfterService.Model.In_DevPlaneType)">
+            <summary>
+            获取计划列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.DeviceFlowList(System.String)">
+            <summary>
+            获取设备的计划流程列表
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.Add(AfterService.Model.MZ_PlaneType)">
+            <summary>
+            添加计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.Edit(AfterService.Model.MZ_PlaneType)">
+            <summary>
+            修改计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.Remove(System.String)">
+            <summary>
+            删除计划
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.Info(System.String,System.Boolean)">
+            <summary>
+            获取计划信息
+            </summary>
+            <param name="id"></param>
+            <param name="showTarget">是否显示目标</param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlane.DevList(AfterService.Model.In_PlaneDevList)">
+            <summary>
+            获取计划的设备列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.List(AfterService.Model.In_DevPlaneTask)">
+            <summary>
+            计划任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.DayList(AfterService.Model.In_DevPlaneTask)">
+            <summary>
+            计划任务日视图
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.Info(System.String)">
+            <summary>
+            获取计划任务详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.GeneratePlaneNumber">
+            <summary>
+            生成计划任务单编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.FormData(System.String,System.String)">
+            <summary>
+            生成初始化表单数据
+            </summary>
+            <param name="devId"></param>
+            <param name="planeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.Add(AfterService.Model.In_AddPlaneTask)">
+            <summary>
+            添加计划任务
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.DevPlaneTask.Cancel(System.String)">
+            <summary>
+            作废
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.PlaneTaskStatis(System.String)">
+            <summary>
+            获取计划任务的统计信息
+            </summary>
+            <param name="typeid">计划类型编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.PlaneTaskStatisList(AfterService.Model.In_PlaneTaskStatisList)">
+            <summary>
+            获取计划任务统计信息列表（按类型分组统计）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.PlaneTaskTypeList">
+            <summary>
+            获取计划类型列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.RoomList">
+            <summary>
+            查询房间列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.RoomLive(System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            按房间查询实时数据（离线返回null）
+            </summary>
+            <param name="roomId">房间Id</param>
+            <param name="needTag">是否需要显示同步到标签的属性</param>
+            <param name="needSend">是否同时发送读取属性消息</param>
+            <param name="needWait">是否同时等待数据</param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.Info(System.String,System.String)">
+            <summary>
+            获取设备分布的统计信息
+            </summary>
+            <param name="code"></param>
+            <param name="dstates">设备运行状态统计：维修、保养等（多个逗号分隔）</param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.List(System.String)">
+            <summary>
+            获取设备分布数量列表
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.RangeAreaList(AfterService.Model.In_DevRangeAreaList)">
+            <summary>
+            通过经纬度获取指定范围内的区域设备数量
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.HttpSync.RangeList(AfterService.Model.In_DevRangeList)">
+            <summary>
+            通过经纬度获取指定范围内的设备
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AfterService.Controller.Room">
+            <summary>
+            房间管理
+            </summary>
+        </member>
+        <member name="M:AfterService.Controller.Room.List(AfterService.Model.In_RoomList)">
+            <summary>
+            获取房间列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Room.Add(AfterService.Model.MZ_Room)">
+            <summary>
+            添加房间
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Room.Edit(AfterService.Model.MZ_Room)">
+            <summary>
+            修改房间
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Room.Remove(System.String)">
+            <summary>
+            删除房间
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Room.Info(System.String)">
+            <summary>
+            获取房间信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomCategory.ListTree(System.Int64)">
+            <summary>
+            房间分类树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomCategory.Info(System.String)">
+            <summary>
+            获取指定房间分类信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomCategory.Sort(System.Collections.Generic.List{System.String})">
+            <summary>
+            房间分类排序
+            </summary>
+            <param name="ids">排序Id列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomCategory.Add(AfterService.Model.MZ_RoomCategory)">
+            <summary>
+            添加房间分类
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomCategory.Edit(AfterService.Model.MZ_RoomCategory)">
+            <summary>
+            编辑房间分类
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomCategory.Remove(System.String)">
+            <summary>
+            删除房间分类
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomDevice.Add(System.Collections.Generic.List{AfterService.Model.In_RoomDevice})">
+            <summary>
+            关联设备与房间
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.RoomDevice.Remove(System.Collections.Generic.List{AfterService.Model.In_RoomDevice})">
+            <summary>
+            删除设备与房间的关联
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AfterService.Model.DevFlowCreate.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFlowCreate.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFlowCreate.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFlowCreate.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFlowCreate.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFlowItem.way">
+            <summary>
+            0为自定义、1为系统值
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.ExpireNoticeItem.ccway">
+            <summary>
+            0为单独提醒、1为合并提醒
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_AddPlaneTask.task">
+            <summary>
+            任务数据
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_AddPlaneTask.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_AddPlaneTask.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneTask.UserId">
+            <summary>
+            过滤流程发起人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneTask.DeviceId">
+            <summary>
+            过滤设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneTask.PlanTypeId">
+            <summary>
+            计划类型Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneTask.TaskStatus">
+            <summary>
+            状态：0进行中、1待执行、2执行中、3已完成、4已过期、5已验收、6验收失败、7已作废
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneTask.FlowTemplateId">
+            <summary>
+            过滤流程模板Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneType.StartWay">
+            <summary>
+            过滤发起类型
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneType.DeviceId">
+            <summary>
+            过滤设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneType.CanStart">
+            <summary>
+            只显示公开或拥有设备权限的类型
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneType.FlowTemplateId">
+            <summary>
+            过滤流程模板Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevPlaneType.Key">
+            <summary>
+            搜索关键词
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeAreaList.GroupBy">
+            <summary>
+            组合方式：Province、City、District
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeAreaList.NetStatus">
+            <summary>
+            过滤联网状态：0为离线，1为在线，2为未初始化
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeAreaList.DState">
+            <summary>
+            过滤运行状态
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeList.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeList.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeList.level">
+            <summary>
+            地图绽放级别，最小为1，最大为9，默认为7
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeList.NetStatus">
+            <summary>
+            过滤联网状态：0为离线，1为在线，2为未初始化
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_DevRangeList.DState">
+            <summary>
+            过滤运行状态
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.ClassId">
+            <summary>
+            过滤物联产品分类
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.Online">
+            <summary>
+            0为离线，1为在线，2为未知
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.ProductId">
+            <summary>
+            过滤产品Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.ProductList">
+            <summary>
+            过滤多个产品Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.DeviceId">
+            <summary>
+            通讯Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.DeviceNumber">
+            <summary>
+            设备编号
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.ShowWarn">
+            <summary>
+            是否显示告警
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.Key">
+            <summary>
+            通过关键词搜索设备名称、编号、通讯Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.Keywords">
+            <summary>
+            关键词搜索
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.TargetOrgId">
+            <summary>
+            过滤目标企业Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.RoomId">
+            <summary>
+            过滤房间Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.RoomCategory">
+            <summary>
+            过滤房间分类
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.FilterRoom">
+            <summary>
+            是否过滤已分配房间的
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.DState">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_PlaneDevList.Id">
+            <summary>
+            计划类型Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_PlaneDevList.Key">
+            <summary>
+            通过关键词搜索设备名称、编号、通讯Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_PlaneTaskStatisList.PlaneTypeId">
+            <summary>
+            过滤计划类型Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_PlaneTaskStatisList.CreaetStart">
+            <summary>
+            过滤计划任务开始的起始时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_PlaneTaskStatisList.CreaetEnd">
+            <summary>
+            过滤计划任务开始的结束时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_RoomDevice.RoomId">
+            <summary>
+            房间Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_RoomDevice.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_RoomList.TargetOrgId">
+            <summary>
+            过滤所属企业Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_RoomList.CategoryId">
+            <summary>
+            过滤分类Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_TransferTo.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_TransferTo.RoomId">
+            <summary>
+            房间Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_UpdateDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_UpdateDevice.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_UpdateDevice.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_UpdateDevice.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_UpdateDevice.DState">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.In_UpdateDevice.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.MZ_PlaneEvent">
+            <summary>
+            计划的设备事件
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneEvent.PlaneId">
+            <summary>
+            计划类型编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneEvent.OrgId">
+            <summary>
+            事件所属组织
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneEvent.EventId">
+            <summary>
+            设备事件格式:ProductId$事件标识符
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneEvent.EventName">
+            <summary>
+            事件名称
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.MZ_PlaneTarget">
+            <summary>
+            计划的设备关联
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTarget.TargetType">
+            <summary>
+            0为设备，1为产品，2为房间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTarget.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTarget.TargetName">
+            <summary>
+            目标名称
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.MZ_PlaneTask">
+            <summary>
+            计划任务
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.PlaneNumber">
+            <summary>
+            任务单号：流程编号
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.PlanName">
+            <summary>
+            计划名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.PlanTypeId">
+            <summary>
+            设备计划Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.FlowId">
+            <summary>
+            关联流程任务Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.FlowInfo">
+            <summary>
+            关联的流程
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.TodoTasks">
+            <summary>
+            关联的待办列表
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.TaskStatus">
+            <summary>
+            状态：0进行中、1待执行、2执行中、3已完成、4已过期、5已验收、6验收失败、7已作废
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.TargetId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.NoticeCount">
+            <summary>
+            超时已提醒次数
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.DeptId">
+            <summary>
+            任务发起人所在部门
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.UserId">
+            <summary>
+            任务的发起人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.UserInfo">
+            <summary>
+            任务的发起人信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.StartOn">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.EndOn">
+            <summary>
+            截止时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.DispatchOn">
+            <summary>
+            派工时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.DispatchUserId">
+            <summary>
+            派工人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.ExecutedOn">
+            <summary>
+            执行时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.ExeUserId">
+            <summary>
+            执行人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.FinishedOn">
+            <summary>
+            完成时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.CheckOn">
+            <summary>
+            验收时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.CheckUserId">
+            <summary>
+            验收人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.TargetDevice">
+            <summary>
+            设备信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.RoomNames">
+            <summary>
+            设备所属房间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneTask.DataItems">
+            <summary>
+            流程数据
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.MZ_PlaneType">
+            <summary>
+            计划类型
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Name">
+            <summary>
+            计划名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.StartWay">
+            <summary>
+            0为手动发起、1为定时发起、2为设备事件发起
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.TimerCron">
+            <summary>
+            Cron表达式(定时计划才需要填）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.TimerName">
+            <summary>
+            定时执行描述
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.PlaneDays">
+            <summary>
+            计划执行天数，为0不限制
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.TimerJobId">
+            <summary>
+            定时器关联的Job
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.ExcludeHoliday">
+            <summary>
+            是否排除假期
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.IsFilterLeader">
+            <summary>
+            是否限制展示
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.FlowTemplateId">
+            <summary>
+            派工流程模板Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.FlowTemplateName">
+            <summary>
+            流程模板名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.FlowInitJson">
+            <summary>
+            流程初始化json
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.ExpireNotices">
+            <summary>
+            超期提醒Json:格式为[{'day':3,'way':1,ccway:0,'target':[{'userid':1,'img':'','name':''}]}]
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.FlowCreatedUserId">
+            <summary>
+            流程的发起人(定时计划才需要填）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.FlowCreatedUser">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Events">
+            <summary>
+            计划事件
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_PlaneType.Targets">
+            <summary>
+            计划目标
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.Name">
+            <summary>
+            房间名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.TargetOrgId">
+            <summary>
+            房间所属企业Id，为0则无所属
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.TargetName">
+            <summary>
+            房间所属企业名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.CustomerId">
+            <summary>
+            客户Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.LeaderId">
+            <summary>
+            负责人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.Helper">
+            <summary>
+            协作者（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.CategoryId">
+            <summary>
+            所属分类
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.CategoryName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.AutoAdd">
+            <summary>
+            是否自动从关联客户或负责人添加设备到房间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.ReportToken">
+            <summary>
+            房间的监控报表
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.LeaderInfo">
+            <summary>
+            负责人信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.OrgInfo">
+            <summary>
+            所属企业信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.TargetOrgInfo">
+            <summary>
+            目标企业信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_Room.HelperUsers">
+            <summary>
+            协作人信息
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.MZ_RoomCategory">
+            <summary>
+            房间分类
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.TargetOrgId">
+            <summary>
+            房间所属企业Id，为0则无所属
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.TargetName">
+            <summary>
+            房间所属企业名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.CustomerId">
+            <summary>
+            客户Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.Name">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.ParentId">
+            <summary>
+            父分类Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.Path">
+            <summary>
+            分类层级
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomCategory.Children">
+            <summary>
+            子分类
+            </summary>
+        </member>
+        <member name="M:AfterService.Model.MZ_RoomCategory._RecursionFn(System.Collections.Generic.List{AfterService.Model.MZ_RoomCategory},AfterService.Model.MZ_RoomCategory)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:AfterService.Model.MZ_RoomCategory._GetChildList(System.Collections.Generic.List{AfterService.Model.MZ_RoomCategory},AfterService.Model.MZ_RoomCategory)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomDevice.Id">
+            <summary>
+            房间编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomDevice.TargetId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomDevice.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.MZ_RoomDevice.Name">
+            <summary>
+            房间名称
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.Out_DevAreaData">
+            <summary>
+            设备区域数量信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaData.AreaName">
+            <summary>
+            区域名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaData.AreaCode">
+            <summary>
+            区域代码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaData.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaData.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaData.Count">
+            <summary>
+            总数
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.Out_DevAreaInfo">
+            <summary>
+            设备区域统计信息
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaInfo.onCount">
+            <summary>
+            在线数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaInfo.offCount">
+            <summary>
+            离线数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DevAreaInfo.unCount">
+            <summary>
+            未初始化数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceOfRoom.OrgId">
+            <summary>
+            来源组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceOfRoom.OwnerOrgId">
+            <summary>
+            拥有者组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceOfRoom.RoomNames">
+            <summary>
+            房间名称（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceOfRoom.DeviceNumber">
+            <summary>
+            设备唯一编号
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceOfRoom.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceOfRoom.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceWithRoome.RoomName">
+            <summary>
+            房间名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceWithRoome.TargetId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceWithRoome.CategoryId">
+            <summary>
+            分类Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceWithRoome.CategoryName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceWithRoome.LeaderId">
+            <summary>
+            负责人
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_DeviceWithRoome.Helper">
+            <summary>
+            协作者
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProductName.Id">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProductName.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProductName.Name">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProductName.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneDay.TargetId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneDay.DeviceName">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneDay.TaskIds">
+            <summary>
+            任务Id（逗号分隔）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneDay.TaskIdList">
+            <summary>
+            任务Id列表
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneDay.TaskList">
+            <summary>
+            任务列表
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneDay.RoomNames">
+            <summary>
+            设备所属房间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneFlowItem.WaitDeal">
+            <summary>
+            待处理数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneFlowItem.FlowTemplateId">
+            <summary>
+            派工流程模板Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneFlowItem.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneFlowItem.Background">
+            <summary>
+            背景色
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneFlowItem.FlowTemplateName">
+            <summary>
+            流程模板名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.doing">
+            <summary>
+            进行中数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.wait_work">
+            <summary>
+            待执行数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.working">
+            <summary>
+            执行中数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.finish">
+            <summary>
+            已完成数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.expired">
+            <summary>
+            已过期数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.accepted">
+            <summary>
+            已验收数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.noaccept">
+            <summary>
+            验收失败数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.invalid">
+            <summary>
+            已作废数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_PlaneStatis.total">
+            <summary>
+            总数量
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_RoomLive.Id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_RoomLive.DeviceName">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_RoomLive.DeviceNumber">
+            <summary>
+            第三方设备编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_RoomLive.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_RoomLive.PropertyList">
+            <summary>
+            设备实时数据
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.FlowNumber">
+            <summary>
+            流程第三方编号或关联工单
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.GroupId">
+            <summary>
+            所属分组
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.FlowName">
+            <summary>
+            流程实例名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.Description">
+            <summary>
+            流程描述
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.FinishTime">
+            <summary>
+            完成或取消时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.V_FlowInfo.Status">
+            <summary>
+            流程状态
+            </summary>
+        </member>
+        <member name="T:AfterService.PluginConfig">
+            <summary>
+            售后服务模块
+            </summary>
+        </member>
+    </members>
+</doc>

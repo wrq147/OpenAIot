@@ -1,0 +1,1915 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PaiBanService</name>
+    </assembly>
+    <members>
+        <member name="F:PaiBanService.Business.BanCiBLL.zhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="F:PaiBanService.Business.BanCiBLL.zhouQiTian">
+            <summary>
+            天
+            </summary>
+        </member>
+        <member name="F:PaiBanService.Business.BanCiBLL.zhouQiZhou">
+            <summary>
+            周
+            </summary>
+        </member>
+        <member name="F:PaiBanService.Business.BanCiBLL.zhouQiYue">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.SelectDanWei">
+            <summary>
+            周期单位
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.SelectDanWeiTian">
+            <summary>
+            天
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.SelectDanWeiZhou">
+            <summary>
+            周
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.SelectDanWeiYue">
+            <summary>
+            月
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.AddBanCi(PaiBanService.Model.In_BanCi)">
+            <summary>
+            新增班次
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.UpdateBanCiShiDuan(PaiBanService.Model.In_BanCiShiDuan)">
+            <summary>
+            设置班次时段
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.UpdateBanCiShiDuans(PaiBanService.Model.In_BanCiShiDuans)">
+            <summary>
+            批量设置班次时段
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.CheckTimeOverlap(System.Collections.Generic.List{PaiBanService.Business.TimeRange})">
+            <summary>
+            检查时间段是否重叠
+            True：重叠
+            False：没重叠
+            </summary>
+            <param name="timeRanges"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.UpdateBanCi(PaiBanService.Model.In_BanCi2)">
+            <summary>
+            修改班次信息
+            </summary>
+            <param name="data">班组信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.DeleteByBanCiId(System.String)">
+            <summary>
+            删除班次
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.SelectList(PaiBanService.Model.In_BanCiList)">
+            <summary>
+            分页查询班次列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanCiBLL.SelectInfo(System.String)">
+            <summary>
+            查询班次信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.SelectList(PaiBanService.Model.In_BanZuList)">
+            <summary>
+            分页查询班组列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.SelectInfo(System.String)">
+            <summary>
+            查询班组信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.AddBanZu(System.String)">
+            <summary>
+            新增班组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.AddBanZuChengYuan(PaiBanService.Model.In_BanZuChengYuan)">
+            <summary>
+            新增班组成员
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.DeleteByBanZuId(System.String)">
+            <summary>
+            删除班组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.DeleteByChengYuanId(PaiBanService.Model.In_BanZuChengYuan)">
+            <summary>
+            删除成员
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.UpdateBanZu(PaiBanService.Model.In_BanZu)">
+            <summary>
+            修改保存时段信息
+            </summary>
+            <param name="data">班组信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.AddOEEReport(PaiBanService.Model.T_PB_OEEReport)">
+            <summary>
+            新增OEE持久化记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.BanZuBLL.SelectOEEReportList(System.String,System.String)">
+            <summary>
+            分页查询班组列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.KanBanBLL.SelectKanBanConfigByID(System.String)">
+            <summary>
+            根据看板ID获取看板配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.KanBanBLL.UpdateKanBanConfig(System.String,System.String,System.Int32)">
+            <summary>
+            更新看板配置
+            </summary>
+            <param name="id"></param>
+            <param name="roll_Flag"></param>
+            <param name="speed"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.KanBanBLL.SelectKanBanCurrentByID(System.String,System.String,System.String)">
+            <summary>
+            获取看板内不显示灯
+            </summary>
+            <param name="kanBanId">看板ID</param>
+            <param name="roomId">房间ID</param>
+            <param name="dengId">灯ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.KanBanBLL.UpdateKanBanCurrent(System.String,System.String,System.String,System.String)">
+            <summary>
+            更新看板配置
+            </summary>
+            <param name="id"></param>
+            <param name="roll_Flag"></param>
+            <param name="speed"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.SheBeiBanCiBLL.SelectSheBeiBanCi(PaiBanService.Model.In_SheBeiBanCi)">
+            <summary>
+            查询设备排班信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.SheBeiBanCiBLL.CalculateSheBeiBanCi(PaiBanService.Model.In_SheBeiBanCi3)">
+            <summary>
+            计算设备排班表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.SheBeiBanCiBLL.IsDate(System.String)">
+            <summary>
+            判断日期格式
+            </summary>
+            <param name="inputString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.SheBeiBanCiBLL.Update(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            更新设备排班
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.SheBeiBanCiBLL.UpdateManys(PaiBanService.Model.In_SheBeiBanCi4)">
+            <summary>
+            更新设备排班
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.SheBeiBanCiBLL.DeleteById(System.String)">
+            <summary>
+            删除设备排班
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.ShiJianDuanBLL.DeleteById(System.String)">
+            <summary>
+            删除时段
+            </summary>
+            <param name="id">时段ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Business.ShiJianDuanBLL.Update(PaiBanService.Model.In_ShiJianDuan_Update)">
+            <summary>
+            修改保存时段信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.ZhouQiList(PaiBanService.Model.In_ZhouQiList)">
+            <summary>
+            周期列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.AddBanCi(PaiBanService.Model.In_BanCi)">
+            <summary>
+            新增班次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.EditBanCiShiDuan(PaiBanService.Model.In_BanCiShiDuan)">
+            <summary>
+            设置班次时段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.EditBanCiShiDuans(PaiBanService.Model.In_BanCiShiDuans)">
+            <summary>
+            批量设置班次时段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.EditBanCi(PaiBanService.Model.In_BanCi2)">
+            <summary>
+            编辑班次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.RemoveBanCi(System.String)">
+            <summary>
+            删除班次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.List(PaiBanService.Model.In_BanCiList)">
+            <summary>
+            班次列表
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanCi.Info(System.String)">
+            <summary>
+            班次信息
+            </summary>
+            <param name="banCiId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.AddBanZu(System.String)">
+            <summary>
+            新增班组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.AddBanZuChengYuan(PaiBanService.Model.In_BanZuChengYuan)">
+            <summary>
+            添加班组成员
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.RemoveBanZu(System.String)">
+            <summary>
+            删除班组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.RemoveChengYuan(PaiBanService.Model.In_BanZuChengYuan)">
+            <summary>
+            删除班组成员
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.EditBanZu(PaiBanService.Model.In_BanZu)">
+            <summary>
+            编辑班组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.Info(System.String)">
+            <summary>
+            班组信息
+            </summary>
+            <param name="banZuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.BanZu.List(PaiBanService.Model.In_BanZuList)">
+            <summary>
+            班组列表
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.IsDate(System.String)">
+            <summary>
+            判断日期格式
+            </summary>
+            <param name="inputString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.TimeState(System.String,System.String)">
+            <summary>
+            设备排班表
+            时序图
+            </summary>
+            <param name="dengId">四色灯ID</param>
+            <param name="date">日期，格式2025-05-01</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.NowState(PaiBanService.Model.In_SheBeiBanCi6)">
+            <summary>
+            四色灯当前状态
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.Info(PaiBanService.Model.In_SheBeiBanCi)">
+            <summary>
+            设备排班表
+            </summary>
+            <param dengId="query">dengId:四色灯编码</param>
+            <param startDate="query">startDate:开始日期，格式2025-05-01</param>   
+            <param endDate="query">endDate:结束日期，格式2025-05-30</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.Calculate(PaiBanService.Model.In_SheBeiBanCi3)">
+            <summary>
+            设备排班表
+            增加返回时间段ID
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.Edit(PaiBanService.Model.In_SheBeiBanCi2)">
+            <summary>
+            编辑设备排班
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.EditMany(PaiBanService.Model.In_SheBeiBanCi4)">
+            <summary>
+            批量编辑设备排班
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.Remove(System.String)">
+            <summary>
+            删除设备排班
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.BanZuList(PaiBanService.Model.In_BanZuList)">
+            <summary>
+            班组列表
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.BanCiList(PaiBanService.Model.In_BanCiList)">
+            <summary>
+            班次列表
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.ShiJianDuanList(PaiBanService.Model.In_ShiJianDuanList)">
+            <summary>
+            时段列表
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.TreeSelect(AuthService.MZ_Dept)">
+            <summary>
+            获取部门下拉树列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.MemberList(AuthService.In_UserList)">
+            <summary>
+            导出用户
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.CurrentState(PaiBanService.Model.In_SheBeiBanCi6)">
+            <summary>
+            当班时序图
+            </summary>
+            <param name="TargetOrgId">过滤企业ID</param>
+            <param name="RoomId">过滤房间ID</param>
+            <param name="RoomCategory">过滤房间类型</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:PaiBanService.Controller.HttpSync.SelectKanBanConfigByID(System.String)" -->
+        <member name="M:PaiBanService.Controller.HttpSync.UpdateKanBanConfig(System.String,System.String,System.Int32)">
+            <summary>
+            更新看板配置
+            </summary>
+            <param name="kanBanId">看板ID</param>
+            <param name="roll_Flag">是否自动滚动 1：自动滚  0：不自动滚</param>
+            <param name="speed">滚动速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.SelectKanBanCurrentByID(System.String,System.String,System.Nullable{System.Int64},System.String)">
+            <summary>
+            查询看板显示灯配置
+            </summary>
+            <param name="kanBanId">看板编号 1：时序分析看板  2：设备运行分析看板  3：设备OEE分析看板  4：设备稼动率分析看板  5：开机率看板 6：设备运行看板</param>
+            <param name="roomId">房间ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.UpdateKanBanCurrent(System.String,System.String,System.String,System.String)">
+            <summary>
+            更新看板配置
+            </summary>
+            <param name="kanBanId">看板ID</param>
+            <param name="roomId">房间号</param>
+            <param name="dengId">灯ID</param>
+            <param name="show_Flag">显示标识 1：</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.OEEState(PaiBanService.Model.In_SheBeiBanCi7)">
+            <summary>
+            当班时序图
+            </summary>
+            <param name="TargetOrgId">过滤企业ID</param>
+            <param name="RoomId">过滤房间ID</param>
+            <param name="RoomCategory">过滤房间类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.HttpSync.OEEDayReport(PaiBanService.Model.In_OEEDayReport)">
+            <summary>
+            设备排班表
+            时序图
+            </summary>
+            <param name="TargetOrgId">四色灯ID</param>
+            <param name="RoomId">房间ID</param>
+            <param name="RoomCategory">房间类型</param>
+            <param name="BanCiId">班次ID</param>
+            <param name="BanZuId">班组ID</param>
+            <param name="StartDate">开始日期</param>
+            <param name="EndDate">结束日期</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.Info(PaiBanService.Model.In_SheBeiBanCi)">
+            <summary>
+            设备排班表
+            </summary>
+            <param dengId="query">dengId:四色灯编码</param>
+            <param startDate="query">startDate:开始日期，格式2025-05-01</param>   
+            <param endDate="query">endDate:结束日期，格式2025-05-30</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.Calculate(PaiBanService.Model.In_SheBeiBanCi3)">
+            <summary>
+            设备排班表
+            增加返回时间段ID
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.Edit(PaiBanService.Model.In_SheBeiBanCi2)">
+            <summary>
+            编辑设备排班
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.EditMany(PaiBanService.Model.In_SheBeiBanCi4)">
+            <summary>
+            批量编辑设备排班
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.Remove(System.String)">
+            <summary>
+            删除设备排班
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.TimeState(PaiBanService.Model.In_SheBeiBanCi5)">
+            <summary>
+            设备排班表
+            时序图
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.NowState(PaiBanService.Model.In_SheBeiBanCi6)">
+            <summary>
+            四色灯当前状态
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.IsDate(System.String)">
+            <summary>
+            判断日期格式
+            </summary>
+            <param name="inputString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.SheBeiBanCi.OEEDayReport(PaiBanService.Model.In_OEEDayReport)">
+            <summary>
+            设备排班表
+            时序图
+            </summary>
+            <param name="TargetOrgId">四色灯ID</param>
+            <param name="RoomId">房间ID</param>
+            <param name="RoomCategory">房间类型</param>
+            <param name="BanCiId">班次ID</param>
+            <param name="BanZuId">班组ID</param>
+            <param name="StartDate">开始日期</param>
+            <param name="EndDate">结束日期</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.ShiJianDuan.List(PaiBanService.Model.In_ShiJianDuanList)">
+            <summary>
+            时段列表
+            </summary>
+            <param TimeName="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.ShiJianDuan.Add(PaiBanService.Model.In_ShiJianDuan_Add)">
+            <summary>
+            新增时间段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.ShiJianDuan.Edit(PaiBanService.Model.In_ShiJianDuan_Update)">
+            <summary>
+            编辑时间段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.Controller.ShiJianDuan.Remove(System.String)">
+            <summary>
+            删除时间段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.AddBanCi(PaiBanService.Model.T_PB_BanCi)">
+            <summary>
+            新增班次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.UpdateBanCi(PaiBanService.Model.T_PB_BanCi)">
+            <summary>
+            更新班次
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.DeleteBanCi(System.String)">
+            <summary>
+            删除班次
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.AddBanCiShiDuan(PaiBanService.Model.T_PB_BanCiShiDuan)">
+            <summary>
+            新增班次时段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.UpdateBanCiShiDuan(PaiBanService.Model.In_BanCiShiDuan)">
+            <summary>
+            更新班次时段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.DeleteBanCiShiDuan(PaiBanService.Model.T_PB_BanCiShiDuan)">
+            <summary>
+            删除班次时段
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.DeleteBanCiShiDuanByBanCiId(System.String)">
+            <summary>
+            删除班次时段
+            </summary>
+            <param name="banCiId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.SelectByBanCiName(PaiBanService.Model.In_BanCiList)">
+            <summary>
+            分页查询班次
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.SelectBanCiByID(System.String)">
+            <summary>
+            查询班次信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.SelectBanCiShiDuanByID(System.String)">
+            <summary>
+            查询班次时段
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.BanCiDAL.SelectBanCiShiDuanByID(System.String,System.String)">
+            <summary>
+            查询班次时段
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.KanBanDAL.SelectKanBanConfigByID(System.String)">
+            <summary>
+            根据看板ID获取看板配置
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.KanBanDAL.UpdateKanBanConfig(PaiBanService.Model.T_PB_KBConfig)">
+            <summary>
+            更新看板配置
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.KanBanDAL.SelectKanBanCurrentByID(System.String,System.String,System.String)">
+            <summary>
+            根据房间ID获取房间内不显示灯
+            </summary>
+            <param name="roomId">房间ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.KanBanDAL.AddKanBanCurrent(PaiBanService.Model.T_PB_KBCurrent)">
+            <summary>
+            新增房间内不显示灯
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.KanBanDAL.DeleteKanBanCurrent(System.String,System.String,System.String)">
+            <summary>
+            删除房间内不显示灯
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.SheBeiBanCiDAL.SelectBanCiShiDuanByDengId(System.String,System.String)">
+            <summary>
+            查询设备班次时段
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.SheBeiBanCiDAL.SelectBanCiShiDuanByID(System.String)">
+            <summary>
+            查询设备班次信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.SheBeiBanCiDAL.SelectBanCiShiDuanByDate(System.String,System.String,System.String)">
+            <summary>
+            查询设备班次信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PaiBanService.DAL.SheBeiBanCiDAL.DeleteByDate(System.String,System.String)">
+            <summary>
+            删除某一天排班
+            </summary>
+            <param name="dengId"></param>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi.StartDate">
+            <summary>
+            开始日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi.EndTDate">
+            <summary>
+            结束日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi2.BanCiID">
+            <summary>
+            班次ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi2.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi2.StartDate">
+            <summary>
+            开始日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCi2.EndTDate">
+            <summary>
+            结束日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiList.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiShiDuan.BanCiId">
+            <summary>
+            班次编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiShiDuan.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiShiDuan.ZhouQi">
+            <summary>
+            周期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiShiDuan.ShiDuanId">
+            <summary>
+            时段编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiShiDuans.BanCiId">
+            <summary>
+            班次编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanCiShiDuans.ShiDuans">
+            <summary>
+            时段
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiDuan.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiDuan.ZhouQi">
+            <summary>
+            周期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiDuan.ShiDuanId">
+            <summary>
+            时段编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanZu.BanZuName">
+            <summary>
+            班组名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanZu.BanZuID">
+            <summary>
+            班组编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanZuChengYuan.BanZuId">
+            <summary>
+            班组编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanZuChengYuan.UserId">
+            <summary>
+            用户编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_BanZuList.BanZuName">
+            <summary>
+            班组名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_KBConfig.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_KBConfig.Roll_Flag">
+            <summary>
+            滚动标志（0代表不滚 1代表滚）
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_KBConfig.Speed">
+            <summary>
+            滚动速度
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi6.TargetOrgId">
+            <summary>
+            过滤目标企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi6.RoomId">
+            <summary>
+            过滤房间Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi6.RoomCategory">
+            <summary>
+            过滤房间分类
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi6.KanBanId">
+            <summary>
+            看板ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi7.TargetOrgId">
+            <summary>
+            过滤目标企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi7.RoomId">
+            <summary>
+            过滤房间Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi7.RoomCategory">
+            <summary>
+            过滤房间分类
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi7.KanBanId">
+            <summary>
+            看板ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi7.StartDate">
+            <summary>
+            日期 2025-05-01
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_SheBeiBanCi7.EndDate">
+            <summary>
+            日期 2025-05-01
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.TargetOrgId">
+            <summary>
+            过滤目标企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.RoomId">
+            <summary>
+            过滤房间Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.RoomCategory">
+            <summary>
+            过滤房间分类
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.BanCiId">
+            <summary>
+            班次ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.BanZuId">
+            <summary>
+            班组ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.StartDate">
+            <summary>
+            日期 2025-05-01
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_OEEDayReport.EndDate">
+            <summary>
+            日期 2025-05-01
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.SheBeiBanCi2.Date">
+            <summary>
+            日期 2025-05-01
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.SheBeiBanCi2.BanCi">
+            <summary>
+            设备的班次
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan.Id">
+            <summary>
+            时段ID，新增的时候不传
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan.StartTime">
+            <summary>
+            上班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan.EndTime">
+            <summary>
+            下班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Update.Id">
+            <summary>
+            时段ID，新增的时候不传
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Update.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Update.StartTime">
+            <summary>
+            上班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Update.EndTime">
+            <summary>
+            下班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Add.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Add.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Add.StartTime">
+            <summary>
+            上班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuan_Add.EndTime">
+            <summary>
+            下班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuanList.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuanList.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ShiJianDuanList.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ZhouQiList.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.In_ZhouQiList.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.StartDate">
+            <summary>
+            开始日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.EndTDate">
+            <summary>
+            结束日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.StartDate">
+            <summary>
+            开始日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.EndTDate">
+            <summary>
+            结束日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanCi2.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanZu.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanZu.BanZuName">
+            <summary>
+            班组名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_BanZu.RenShu">
+            <summary>
+            人数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.BanZuChengYuan.BanZuId">
+            <summary>
+            班组编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.BanZuChengYuan.UserId">
+            <summary>
+            用户编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.SheBeiBanCi.Date">
+            <summary>
+            日期 2025-05-01
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.SheBeiBanCi.BanCi">
+            <summary>
+            设备的班次
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.YuanGong">
+            <summary>
+            员工
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.BanZu">
+            <summary>
+            班组
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.TotalCount">
+            <summary>
+            当班产量
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.StartTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu.TimeState">
+            <summary>
+            设备状态列表
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu3.StartTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu3.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu3.ShiXus">
+            <summary>
+            当前设备时序
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu4.StartTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu4.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu4.ShiXus">
+            <summary>
+            当前设备时序
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.DengId">
+            <summary>
+            四色灯ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.DengName">
+            <summary>
+            四色灯名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.YuanGong">
+            <summary>
+            员工
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.BanZu">
+            <summary>
+            班组
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.TotalCount">
+            <summary>
+            当班产量
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.GreenPercent">
+            <summary>
+            绿灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.GreenTotal">
+            <summary>
+            绿灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.BluePercent">
+            <summary>
+            蓝灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.BlueTotal">
+            <summary>
+            蓝灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.YellowPercent">
+            <summary>
+            黄灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.YellowTotal">
+            <summary>
+            黄灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.RedPercent">
+            <summary>
+            红灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.RedTotal">
+            <summary>
+            红灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.ClosePercent">
+            <summary>
+            关机占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.CloseTotal">
+            <summary>
+            关机持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.StartTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu2.TimeState">
+            <summary>
+            设备状态列表
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu6.OEEXus">
+            <summary>
+            设备OEE排名
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu6.ShunShi">
+            <summary>
+            每日损失分钟
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.Date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.ShunShi">
+            <summary>
+            损失分钟
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.GreenPercent">
+            <summary>
+            绿灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.GreenTotal">
+            <summary>
+            绿灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.BluePercent">
+            <summary>
+            蓝灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.BlueTotal">
+            <summary>
+            蓝灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.YellowPercent">
+            <summary>
+            黄灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.YellowTotal">
+            <summary>
+            黄灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.RedPercent">
+            <summary>
+            红灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.RedTotal">
+            <summary>
+            红灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.ClosePercent">
+            <summary>
+            关机占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu7.CloseTotal">
+            <summary>
+            关机持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.DengId">
+            <summary>
+            四色灯ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.DengName">
+            <summary>
+            四色灯名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.GreenPercent">
+            <summary>
+            绿灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.GreenTotal">
+            <summary>
+            绿灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.BluePercent">
+            <summary>
+            蓝灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.BlueTotal">
+            <summary>
+            蓝灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.YellowPercent">
+            <summary>
+            黄灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.YellowTotal">
+            <summary>
+            黄灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.RedPercent">
+            <summary>
+            红灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.RedTotal">
+            <summary>
+            红灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.ClosePercent">
+            <summary>
+            关机占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.ShiXu5.CloseTotal">
+            <summary>
+            关机持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.DengState.machineState">
+            <summary>
+            灯状态
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.DengState.chiXuShiJian">
+            <summary>
+            持续时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.DengState.jiaDongLv">
+            <summary>
+            稼动率
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.DengState.jiShu">
+            <summary>
+            计数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.TimeState.machineState">
+            <summary>
+            设备状态
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.TimeState.machineStateName">
+            <summary>
+            设备状态名
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.TimeState.startTime">
+            <summary>
+            状态开始时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ShiJianDuan.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ShiJianDuan.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ShiJianDuan.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ShiJianDuan.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ShiJianDuan.StartTime">
+            <summary>
+            上班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ShiJianDuan.EndTime">
+            <summary>
+            下班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ZhouQiList.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ZhouQiList.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ZhouQiShiDuanList.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.Out_ZhouQiShiDuanList.ZhouQiShiDuan">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.StartDate">
+            <summary>
+            开始日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.EndTDate">
+            <summary>
+            结束日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.ZhouQiDanWei">
+            <summary>
+            周期单位
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCi.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCiShiDuan.BanCiId">
+            <summary>
+            班次编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCiShiDuan.ZhouQiShu">
+            <summary>
+            周期数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCiShiDuan.ZhouQi">
+            <summary>
+            周期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCiShiDuan.ShiDuanId">
+            <summary>
+            时段编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanCiShiDuan.PaiXu">
+            <summary>
+            排序因子
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanZu.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanZu.BanZuName">
+            <summary>
+            班组名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanZu.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanZu.RenShu">
+            <summary>
+            人数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanZuChengYuan.BanZuId">
+            <summary>
+            班组编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_BanZuChengYuan.UserId">
+            <summary>
+            用户编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBConfig.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBConfig.KanBan">
+            <summary>
+            看板名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBConfig.Roll_Flag">
+            <summary>
+            滚动标志（0代表不滚 1代表滚）
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBConfig.Speed">
+            <summary>
+            滚动速度
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBCurrent.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBCurrent.KanBanId">
+            <summary>
+            看板ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBCurrent.RoomId">
+            <summary>
+            房间ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_KBCurrent.DengId">
+            <summary>
+            不显示的灯ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.RoomCurent.KanBanId">
+            <summary>
+            看板ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.RoomCurent.RoomId">
+            <summary>
+            房间ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.RoomCurent.DengId">
+            <summary>
+            不显示的灯ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.RoomCurent.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.RoomCurent.Show_Flag">
+            <summary>
+            显示标识  1:显示 0：不显示
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.Date">
+            <summary>
+            日期 2025-07-02
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.BanCiId">
+            <summary>
+            班次ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.BanCiName">
+            <summary>
+            班次名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.BanZuID">
+            <summary>
+            班组ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.BanZuName">
+            <summary>
+            班组名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.YuanGong">
+            <summary>
+            班组成员
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.DengId">
+            <summary>
+            四色灯ID
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.DengName">
+            <summary>
+            四色灯名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.DengNo">
+            <summary>
+            四色灯编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.GreenPercent">
+            <summary>
+            绿灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.GreenTotal">
+            <summary>
+            绿灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.BluePercent">
+            <summary>
+            蓝灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.BlueTotal">
+            <summary>
+            蓝灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.YellowPercent">
+            <summary>
+            黄灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.YellowTotal">
+            <summary>
+            黄灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.RedPercent">
+            <summary>
+            红灯占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.RedTotal">
+            <summary>
+            红灯持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.ClosePercent">
+            <summary>
+            关机占比
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.CloseTotal">
+            <summary>
+            关机持续时长
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.JiShu">
+            <summary>
+            计数
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_OEEReport.RoomName">
+            <summary>
+            房间名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_SheBeiBanCi.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_SheBeiBanCi.DengId">
+            <summary>
+            四色灯编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_SheBeiBanCi.Date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_SheBeiBanCi.ShiDuanId">
+            <summary>
+            时段编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_SheBeiBanCi.YuanGongId">
+            <summary>
+            员工编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_SheBeiBanCi.BanZuId">
+            <summary>
+            班组编号
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.TimeName">
+            <summary>
+            时段名称
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.StartTime">
+            <summary>
+            上班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.EndTime">
+            <summary>
+            下班时间
+            </summary>
+        </member>
+        <member name="P:PaiBanService.Model.T_PB_ShiJianDuan.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+    </members>
+</doc>

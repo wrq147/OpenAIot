@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+    <Description>报表服务</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>..\..\App\XML\ReportService.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="theme.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="theme.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuthService\AuthService.csproj" />
+    <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
+    <ProjectReference Include="..\MonitorService\MonitorService.csproj" />
+  </ItemGroup>
+
+</Project>

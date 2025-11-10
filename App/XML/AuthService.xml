@@ -1,0 +1,3838 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AuthService</name>
+    </assembly>
+    <members>
+        <member name="F:AuthService.AuthConstant.CONFIG_REPEAT_SUBMIT_KEY">
+            <summary>
+            Redis Key重复提交用
+            </summary>
+        </member>
+        <member name="F:AuthService.AuthConstant.CONFIG_CACHE_PRE">
+            <summary>
+            Redis Key配置信息用
+            </summary>
+        </member>
+        <member name="F:AuthService.AuthConstant.CONFIG_TOKEN_KEY">
+            <summary>
+            在请求头里的登录令牌Key
+            </summary>
+        </member>
+        <member name="F:AuthService.AuthConstant.CONFIG_OTHER_TOKEN_KEY">
+            <summary>
+            在请求头里的其它登录令牌Key
+            </summary>
+        </member>
+        <member name="F:AuthService.AuthConstant.CONFIG_AREA_KEY">
+            <summary>
+            Redis Key区域代码用
+            </summary>
+        </member>
+        <member name="F:AuthService.AuthConstant.CONFIG_INDUSTRY_KEY">
+            <summary>
+            Redis Key行业代码用
+            </summary>
+        </member>
+        <member name="M:AuthService.AuthBLL.GenerateCaptchaImage">
+            <summary>
+            生成图形验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.Logout(System.Int64,TemplateAction.Core.ITAContext)">
+            <summary>
+            登出
+            </summary>
+            <param name="uid"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.LoginBySys(System.Int64,TemplateAction.Core.ITAContext)">
+            <summary>
+            系统登录
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.Login(AuthService.In_Login,TemplateAction.Core.ITAContext)">
+            <summary>
+            登录
+            </summary>
+            <param name="ipt"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.CheckToken(TemplateAction.Core.TAAction)">
+            <summary>
+            校验令牌
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.CheckPermis(AuthService.Data_ServerTokenInfo,System.String)">
+            <summary>
+            校验权限
+            </summary>
+            <param name="savetk"></param>
+            <param name="permis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.RefreshToken(System.String,System.String,TemplateAction.Core.ITAContext)">
+            <summary>
+            刷新令牌（客户端用）
+            </summary>
+            <param name="refreshtk"></param>
+            <param name="clientToken"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.GetPermis(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            获取功能权限
+            </summary>
+        </member>
+        <member name="M:AuthService.AuthBLL.GetLoginUserInfo(AuthService.MZ_AdminInfo,AuthService.Data_ServerTokenInfo)">
+            <summary>
+            获取客户端所需登录信息
+            </summary>
+            <param name="info"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.AuthBLL.Login(AuthService.MZ_AdminInfo,TemplateAction.Core.ITAContext)">
+            <summary>
+            登录的通用代码
+            </summary>
+            <param name="account"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Business.CodeBLL.SelectAreaDict">
+            <summary>
+            获取地址字典
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Business.CodeBLL.SelectIndustryDict">
+            <summary>
+            获取行业字典
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Business.UpgradeBLL.SelectList(AuthService.Model.In_UpgradeList)">
+            <summary>
+            查询App升级列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Business.UpgradeBLL._SelectLast(System.Int32,System.String,System.Int64,System.String)">
+            <summary>
+            获取指定包类型和平台的最新发行版本
+            </summary>
+            <param name="type">包类型</param>
+            <param name="platform">平台</param>
+            <param name="orgId">所属企业</param>
+            <param name="styleId">所属主题</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Business.UpgradeBLL.InsertUpgrade(AuthService.Model.MZ_Upgrade)">
+            <summary>
+            新增App升级
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Business.UpgradeBLL.DeleteByIds(System.Int32[])">
+            <summary>
+            批量删除App升级
+            </summary>
+            <param name="ids"></param>
+        </member>
+        <member name="M:AuthService.ConfigBLL._LoadingConfigCache">
+            <summary>
+            缓存配置数据
+            </summary>
+        </member>
+        <member name="M:AuthService.ConfigBLL.SelectConfigById(System.Int32)">
+            <summary>
+            查询参数配置信息
+            </summary>
+            <param name="configId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigBLL.SelectConfigByKey(System.String)">
+            <summary>
+            根据键名查询参数配置信息
+            </summary>
+            <param name="configKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigBLL.SelectConfigList(AuthService.In_ConfigList)">
+            <summary>
+            查询参数配置列表
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigBLL.InsertConfig(AuthService.MZ_Config)">
+            <summary>
+            新增参数配置
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigBLL.UpdateConfig(AuthService.MZ_Config)">
+            <summary>
+            修改参数配置
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigBLL.DeleteConfigByIds(System.Int32[])">
+            <summary>
+            批量删除参数信息
+            </summary>
+            <param name="configIds"></param>
+        </member>
+        <member name="M:AuthService.ConfigBLL._ClearConfigCache">
+            <summary>
+            清空参数缓存数据
+            </summary>
+        </member>
+        <member name="M:AuthService.ConfigBLL.ResetConfigCache">
+            <summary>
+            重置参数缓存数据
+            </summary>
+        </member>
+        <member name="M:AuthService.ConfigBLL.CheckConfigKeyUnique(AuthService.MZ_Config)">
+            <summary>
+            校验参数键名是否唯一
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SelectDeptList(AuthService.MZ_Dept)">
+            <summary>
+            查询部门列表
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SelectDeptListForSync(AuthService.MZ_Dept)">
+            <summary>
+            查询部门列表
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.BuildDeptTree(System.Collections.Generic.List{AuthService.MZ_Dept})">
+            <summary>
+            构建前端所需要树结构
+            </summary>
+            <param name="depts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL._RecursionFn(System.Collections.Generic.List{AuthService.MZ_Dept},AuthService.MZ_Dept)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:AuthService.DeptBLL._GetChildList(System.Collections.Generic.List{AuthService.MZ_Dept},AuthService.MZ_Dept)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SelectNormalChildrenDeptById(System.Int64)">
+            <summary>
+            根据ID查询所有子部门（正常状态）
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.HasChildByDeptId(System.Int64)">
+            <summary>
+            是否存在子节点
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.CheckDeptExistUser(System.Int64)">
+            <summary>
+            查询部门是否存在用户
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SelectDeptById(System.Int64)">
+            <summary>
+            根据部门ID查询信息
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SelectDeptLeaders(System.Int64)">
+            <summary>
+            获取指定部门的负责人Id数组
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SetDeptLeaders(AuthService.Model.In_SetDeptLeaders)">
+            <summary>
+            批量设置部门负责人
+            </summary>
+            <param name="leaders"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.SetDeptLeader(System.Int64,System.Int64,System.Boolean)">
+            <summary>
+            单个设置部门负责人
+            </summary>
+            <param name="deptId"></param>
+            <param name="leaderId"></param>
+            <param name="isLeader"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.InsertDept(AuthService.MZ_Dept)">
+            <summary>
+            新增保存部门信息
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.UpdateDept(AuthService.MZ_Dept)">
+            <summary>
+            修改保存部门信息
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL.MoveDept(System.Collections.Generic.List{System.Int64},System.Collections.Generic.List{System.Int64},System.Int64,System.Int64)">
+            <summary>
+            批量移动
+            </summary>
+            <param name="ids"></param>
+            <param name="uids"></param>
+            <param name="memDeptId"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptBLL._UpdateParentDeptStatusNormal(AuthService.MZ_Dept)">
+            <summary>
+            修改该部门与父级部门状态
+            </summary>
+            <param name="dept"></param>
+        </member>
+        <member name="M:AuthService.DeptBLL._UpdateDeptChildren(System.Int64,System.String,System.String)">
+            <summary>
+            修改子元素关系
+            </summary>
+            <param name="deptId">被修改的部门ID</param>
+            <param name="newAncestors">新的父ID集合</param>
+            <param name="oldAncestors">旧的父ID集合</param>
+        </member>
+        <member name="M:AuthService.DeptBLL.DeleteDeptById(System.Int64)">
+            <summary>
+            删除部门
+            </summary>
+            <param name="deptId">部门ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.LoginLogBLL.InsertLoginLog(AuthService.MZ_LoginLog)">
+            <summary>
+            新增系统登录日志
+            </summary>
+            <param name="logininfor"></param>
+        </member>
+        <member name="M:AuthService.LoginLogBLL.SelectLogininforList(AuthService.In_LoginLogList)">
+            <summary>
+            查询系统登录日志集合
+            </summary>
+            <param name="logininfor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.LoginLogBLL.DeleteLoginLogByIds(System.Int64[])">
+            <summary>
+            批量删除系统登录日志
+            </summary>
+            <param name="infoIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.LoginLogBLL.CleanLoginLog">
+            <summary>
+            清空系统登录日志
+            </summary>
+        </member>
+        <member name="M:AuthService.MenuBLL.BuildMenuTree(System.Collections.Generic.List{AuthService.MZ_Menu})">
+            <summary>
+            构建前端所需要树结构
+            </summary>
+            <param name="menus"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.MenuBLL._RecursionFn(System.Collections.Generic.List{AuthService.MZ_Menu},AuthService.MZ_Menu)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:AuthService.MenuBLL._GetChildList(System.Collections.Generic.List{AuthService.MZ_Menu},AuthService.MZ_Menu)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgBLL.GetTree(AuthService.Model.In_MemberTreeList)">
+            <summary>
+            获取当前级别的组织数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL.SelectRoleScope(System.Int64,System.Int64)">
+            <summary>
+            获取角色域
+            </summary>
+            <param name="roleId"></param>
+            <param name="menuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL.GetRoleIdsByUser(System.Int64,System.Int64)">
+            <summary>
+            获取指定用户的角色Id
+            </summary>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL.GetRolesListByUser(System.Int64,System.Int64)">
+            <summary>
+            获取指定用户的角色组
+            </summary>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL.GetRolesListByOrgId(System.Int64)">
+            <summary>
+            获取指定组织的角色组
+            </summary>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL.GetUserScope(System.String,System.Int64,System.Int64)">
+            <summary>
+            获取当前用户的数据权限
+            </summary>
+            <param name="perm"></param>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._GetChildPerms(System.Collections.Generic.List{AuthService.MZ_Menu},System.Int32)">
+            <summary>
+            根据父节点的ID获取所有子节点
+            </summary>
+            <param name="list"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._RecursionFn(System.Collections.Generic.List{AuthService.MZ_Menu},AuthService.MZ_Menu)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:AuthService.PermissionBLL._GetChildList(System.Collections.Generic.List{AuthService.MZ_Menu},AuthService.MZ_Menu)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._HasChild(System.Collections.Generic.List{AuthService.MZ_Menu},AuthService.MZ_Menu)">
+            <summary>
+            判断是否有子节点
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._GetRouteName(AuthService.MZ_Menu)">
+            <summary>
+            获取路由名称
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._GetRouterPath(AuthService.MZ_Menu)">
+            <summary>
+            获取路由地址
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._GetComponent(AuthService.MZ_Menu)">
+            <summary>
+            获取组件信息
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._IsInnerLink(AuthService.MZ_Menu)">
+            <summary>
+            是否为内链组件
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionBLL._IsParentView(AuthService.MZ_Menu)">
+            <summary>
+            是否为parent_view组件
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.UserBLL.DeleteAuthUser(AuthService.MZ_UserRole)">
+            <summary>
+            取消授权用户角色
+            </summary>
+            <param name="userRole"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.UserBLL.DeleteAuthUsers(System.Int64,System.Int64[])">
+            <summary>
+            批量取消授权用户角色
+            </summary>
+            <param name="roleId"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.UserBLL.InsertAuthUsers(System.Int64,System.Int64[])">
+            <summary>
+            批量选择授权用户角色
+            </summary>
+            <param name="roleId"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.AbstractLoginedController">
+            <summary>
+            已登录接口处理需要继承此控制器
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.AbstractLoginedController.Exception(System.Int32,System.Exception)">
+            <summary>
+            异常处理
+            </summary>
+            <param name="code"></param>
+            <param name="ex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.AbstractLoginedController.GetUser">
+            <summary>
+            获取当前登录用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.AreaList">
+            <summary>
+            获取省市区列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.Geocoder(System.String,System.String)">
+            <summary>
+            根据经纬度获取区域代码等信息
+            </summary>
+            <param name="location">lat纬度,lng经度</param>
+            <param name="maptype">地图类型：默认腾讯地图，百度地图bd、高德地图gd,本地算法lc</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.IndustryList">
+            <summary>
+            获取行业列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.GetByKey(System.String)">
+            <summary>
+            根据参数键名查询参数值
+            </summary>
+            <param name="configKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.GetConfigList(System.String[])">
+            <summary>
+            获取所有配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.AutoCompany(System.String)">
+            <summary>
+            自动识别快递单号的对应快递企业
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Code.KuaiDiCompanys">
+            <summary>
+            获取所有快递企业
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Config.List(AuthService.In_ConfigList)">
+            <summary>
+            获取参数配置列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Config.Info(System.Int32)">
+            <summary>
+            根据参数编号获取详细信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Config.Add(AuthService.MZ_Config)">
+            <summary>
+            新增参数配置
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Config.Edit(AuthService.MZ_Config)">
+            <summary>
+            修改参数配置
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Config.Remove(System.Int32[])">
+            <summary>
+            删除参数配置
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Config.RefreshCache">
+            <summary>
+            刷新参数缓存
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.Dept">
+            <summary>
+            部门管理API
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.Dept.Sort(AuthService.Model.In_DeptSort)">
+            <summary>
+            部门排序
+            </summary>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.List(AuthService.MZ_Dept)">
+            <summary>
+            获取部门列表
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.ExcludeChild(System.Int64)">
+            <summary>
+            查询部门列表（排除节点）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.Info(System.Int64)">
+            <summary>
+            根据部门编号获取详细信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.TreeSelect(AuthService.MZ_Dept)">
+            <summary>
+            获取部门下拉树列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.Add(AuthService.MZ_Dept)">
+            <summary>
+            新增部门
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.Edit(AuthService.MZ_Dept)">
+            <summary>
+            修改部门
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.SetLeaders(AuthService.Model.In_SetDeptLeaders)">
+            <summary>
+            批量设置部门负责人
+            </summary>
+            <param name="leaders"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.SetLeader(System.Int64,System.Int64,System.Boolean)">
+            <summary>
+            单个设置部门负责人
+            </summary>
+            <param name="deptId">部门Id</param>
+            <param name="leaderId">负责人</param>
+            <param name="isLeader">true为负责人，false取消</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.GetLeaders(System.Int64)">
+            <summary>
+            获取指定部门的负责人Id数组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.Move(AuthService.Model.In_DeptMove)">
+            <summary>
+            移动部门
+            </summary>
+            <param name="move"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Dept.Remove(System.Int64)">
+            <summary>
+            删除部门
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.File">
+            <summary>
+            文件处理API
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.File.Upload(System.Boolean)">
+            <summary>
+            文件上传
+            </summary>
+            <param name="withDomain">返回路径是否带上域名</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.File.Delete(System.String)">
+            <summary>
+            删除文件
+            </summary>
+            <param name="id">文件路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.FileTemp.Upload">
+            <summary>
+            上传临时文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.GroupView">
+            <summary>
+            通用分组API
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.GroupView.List(System.String)">
+            <summary>
+            获取分组列表
+            </summary>
+            <param name="table">表名</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.GroupView.Info(System.String)">
+            <summary>
+            获取指定分组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.GroupView.Sort(System.Collections.Generic.List{System.String})">
+            <summary>
+            分组排序
+            </summary>
+            <param name="ids">排序Id列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.GroupView.Add(AuthService.Model.MZ_GroupView)">
+            <summary>
+            添加分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.GroupView.Edit(AuthService.Model.MZ_GroupView)">
+            <summary>
+            编辑分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.GroupView.Remove(System.String)">
+            <summary>
+            删除分组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.Member">
+            <summary>
+            后台管理员工管理用API
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.Member.Export(AuthService.In_UserList)">
+            <summary>
+            导出用户
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.List(AuthService.In_UserList)">
+            <summary>
+            获取员工列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.Tree(AuthService.Model.In_MemberTreeList)">
+            <summary>
+            获取员工选择列表树
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.Search(System.String)">
+            <summary>
+            搜索员工
+            </summary>
+            <param name="realName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.Add(AuthService.Model.In_JoinUser)">
+            <summary>
+            邀请指定用户加入当前企业
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.Edit(AuthService.Model.MZ_User_Org)">
+            <summary>
+            修改用户的企业信息
+            </summary>
+            <param name="uo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.UpdateAuthRole(System.Int64,System.Int64[])">
+            <summary>
+            给员工授权角色
+            </summary>
+            <param name="userId"></param>
+            <param name="roleIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.UserDepts(System.Int64,System.Int64)">
+            <summary>
+            获取指定用户的部门
+            </summary>
+            <param name="userId"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.ResetPwd(System.Int64,System.String)">
+            <summary>
+            员工重置密码
+            </summary>
+            <param name="userId"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.AddClone(System.Int64,System.Int64)">
+            <summary>
+            添加分身
+            </summary>
+            <param name="uid"></param>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.DelClone(System.Int64,System.Int64)">
+            <summary>
+            删除分身
+            </summary>
+            <param name="uid"></param>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.Remove(System.Int64)">
+            <summary>
+            从当前企业中移除员工
+            </summary>
+            <param name="id">目标员工Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Member.InviteLink">
+            <summary>
+            生成邀请码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.List(System.String,System.String,System.String)">
+            <summary>
+            获取菜单列表
+            </summary>
+            <param name="menuName"></param>
+            <param name="visible"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.ScopeList(System.Int64)">
+            <summary>
+            获取可过滤功能权限列表
+            </summary>
+            <param name="roleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.Info(System.Int64)">
+            <summary>
+            根据菜单编号获取详细信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.MenuList2Tree(System.Collections.Generic.List{AuthService.MZ_Menu})">
+            <summary>
+            菜单树转选择树
+            </summary>
+            <param name="menus"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.TreeSelect(System.String,System.String,System.String)">
+            <summary>
+            获取菜单下拉树列表
+            </summary>
+            <param name="menuName"></param>
+            <param name="visible"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.RoleMenuTreeSelect(System.Int64)">
+            <summary>
+            加载对应角色菜单列表树
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.Add(AuthService.MZ_Menu)">
+            <summary>
+            新增菜单
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.Edit(AuthService.MZ_Menu)">
+            <summary>
+            修改菜单
+            </summary>
+            <param name="menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Menu.Remove(System.Int64)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="menuId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.Org">
+            <summary>
+            新的企业API
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.Org.Recovery(AuthService.Model.In_RecoveryOrg)">
+            <summary>
+            恢复指定企业
+            </summary>
+            <param name="org"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Search(System.String)">
+            <summary>
+            查询指定组织
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Info(System.Int64)">
+            <summary>
+            获取指定组织详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Join(AuthService.Model.In_JoinAO)">
+            <summary>
+            通过邀请码加入企业
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Edit(AuthService.MZ_Org)">
+            <summary>
+            修改当前企业
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Create(AuthService.MZ_Org)">
+            <summary>
+            创建新企业
+            </summary>
+            <param name="org"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Remove(System.Int64)">
+            <summary>
+            解散企业
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.ChangeCreator(System.Int64,System.Int64)">
+            <summary>
+            移交企业
+            </summary>
+            <param name="id">企业Id</param>
+            <param name="uid">移交的目标用户Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Exit(System.Int64)">
+            <summary>
+            退出企业
+            </summary>
+            <param name="id">企业Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.StyleList">
+            <summary>
+            企业拥有的主题列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.ChangeStyle(System.String)">
+            <summary>
+            更改企业的主题
+            </summary>
+            <param name="styleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.Field(System.Int64,System.String)">
+            <summary>
+            获取指定组织的扩展字段信息
+            </summary>
+            <param name="orgId">组织Id</param>
+            <param name="field">扩展字段</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.SaveField(System.String,System.String)">
+            <summary>
+            保存组织的扩展字段信息
+            </summary>
+            <param name="field"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.FormFields(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            获取表单信息列表
+            </summary>
+            <param name="field">产品、用户、部门、供应商、报工、工序</param>
+            <param name="ext">是否包含扩展字段信息</param>
+            <param name="isfixed">是否包含固定字段信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Org.SearchObject(AuthService.Fields.SearchPageParam)">
+            <summary>
+            通过关键词搜索关联对象
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Permission.GetRouters">
+            <summary>
+            获取路由信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.Profile">
+            <summary>
+            个人信息 业务处理
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.Profile.Info">
+            <summary>
+            个人信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.OrgList">
+            <summary>
+            当前用户加入的组织列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.Edit(AuthService.MZ_AdminInfo)">
+            <summary>
+            修改用户
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.Delete">
+            <summary>
+            删除本人账号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.UpdatePwd(System.String,System.String)">
+            <summary>
+            通过旧密码修改密码
+            </summary>
+            <param name="oldPassword"></param>
+            <param name="newPassword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.UpdatePwdByCode(System.String,System.String)">
+            <summary>
+            通过登录返回的PwdCode修改密码
+            </summary>
+            <param name="code"></param>
+            <param name="newPassword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.Switch(System.Int64)">
+            <summary>
+            切换企业
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Profile.Avatar(System.Boolean)">
+            <summary>
+            头像上传（登录后修改头像用）
+            </summary>
+            <param name="withDomain">是否带上域名</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.AllocatedList(AuthService.Model.In_UserRoleList)">
+            <summary>
+            查询已分配用户角色列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.UnallocatedList(AuthService.Model.In_UserRoleList)">
+            <summary>
+            查询未分配用户角色列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.GetRolePermission(System.Int64)">
+            <summary>
+            获取角色权限
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.RoleScopeTreeSelect(System.Int64,System.Int64)">
+            <summary>
+            加载对应角色部门列表树
+            </summary>
+            <param name="id"></param>
+            <param name="menuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.Cancel(AuthService.MZ_UserRole)">
+            <summary>
+            取消授权用户
+            </summary>
+            <param name="SysUserRole"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.CancelAll(System.Int64,System.Int64[])">
+            <summary>
+            批量取消授权用户
+            </summary>
+            <param name="roleId"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Role.SelectAll(System.Int64,System.Int64[])">
+            <summary>
+            批量选择用户授权
+            </summary>
+            <param name="roleId"></param>
+            <param name="userIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Style.OrgStyle(System.Int64)">
+            <summary>
+            根据企业Id获取当前企业的主题
+            </summary>
+            <param name="orgId">企业Id</param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.StyleMan">
+            <summary>
+            应用主题管理
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.List(AuthService.Model.In_StyleList)">
+            <summary>
+            应用主题列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.StyleOrgList(AuthService.Model.In_StyleOrgList)">
+            <summary>
+            主题的企业列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.Add(AuthService.Model.MZ_AppStyle)">
+            <summary>
+            添加应用主题
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.Edit(AuthService.Model.MZ_AppStyle)">
+            <summary>
+            修改应用主题
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.Remove(System.String)">
+            <summary>
+            删除应用主题
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.Info(System.String)">
+            <summary>
+            获取应用主题
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.SetOrgStyle(System.Int64,System.String)">
+            <summary>
+            给企业分配指定主题
+            </summary>
+            <param name="orgId"></param>
+            <param name="styleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.StyleMan.DelOrgStyle(System.Int64,System.String)">
+            <summary>
+            删除企业的指定主题
+            </summary>
+            <param name="orgId"></param>
+            <param name="styleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.SysLogin.Login(AuthService.In_Login)">
+            <summary>
+            用户登录
+            </summary>
+            <param name="username"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.SysLogin.RefreshToken(System.String,System.String)">
+            <summary>
+            登出后，可直接使用刷新令牌重新登录
+            </summary>
+            <param name="refreshtk"></param>
+            <param name="clientToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.SysLogin.CaptchaImage">
+            <summary>
+            获取图形验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.SysLogin.Check(System.String)">
+            <summary>
+            远程验证令牌权限
+            </summary>
+            <param name="permis">权限点</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.SysLogin.InviteCode(System.String)">
+            <summary>
+            解释邀请码
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Test.IsOk">
+            <summary>
+            测试网络用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Test.IsServiceStart(System.String)">
+            <summary>
+            判断是否启用指定服务
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.Upgrade">
+            <summary>
+            App升级接口
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.Upgrade.Info(System.Int64,System.String)">
+            <summary>
+            最新App下载信息
+            </summary>
+            <param name="orgId"></param>
+            <param name="styleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Upgrade.Down(System.Int64,System.String)">
+            <summary>
+            App下载地址
+            </summary>
+            <param name="orgId">所属企业</param>
+            <param name="styleId">所属主题</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.Upgrade.CheckVersion(System.String,System.String,System.Int64,System.String)">
+            <summary>
+            检测是否需要更新
+            </summary>
+            <param name="appVersion">App版本</param>
+            <param name="wgtVersion">wgt版本</param>
+            <param name="orgId">所属企业</param>
+            <param name="styleId">所属主题</param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.UpgradeMan">
+            <summary>
+            App升级管理
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.UpgradeMan.List(AuthService.Model.In_UpgradeList)">
+            <summary>
+            获取App升级列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.UpgradeMan.Info(System.Int32)">
+            <summary>
+            获取指定升级详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.UpgradeMan.Add(AuthService.Model.MZ_Upgrade)">
+            <summary>
+            新增App升级
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.UpgradeMan.Remove(System.Int32[])">
+            <summary>
+            删除App升级
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Controller.User">
+            <summary>
+            后台管理用户用API
+            </summary>
+        </member>
+        <member name="M:AuthService.Controller.User.Scopes(System.String)">
+            <summary>
+            获取用户的数据权限信息
+            </summary>
+            <param name="permis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.Search(System.String)">
+            <summary>
+            全局搜索指定用户
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.Info(System.Int64)">
+            <summary>
+            获取用户信息
+            </summary>
+            <param name="id">指定用户编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.UserInfo(System.Int64)">
+            <summary>
+            获取当前企业的指定用户信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.LoginInfo">
+            <summary>
+            获取登录用户信息（客户端同步用户信息用）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.List(AuthService.Model.In_UserAllList)">
+            <summary>
+            获取平台所有用户列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.SysRoleList">
+            <summary>
+            获取系统角色列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.UserRoleList(System.Int64)">
+            <summary>
+            获取用户的所有角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.UserOrgList(System.Int64)">
+            <summary>
+            获取用户的所有企业
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.LoginBySys(System.Int64)">
+            <summary>
+            通过账号管理登录用户
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.Export(AuthService.Model.In_UserAllList)">
+            <summary>
+            导出用户
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.ExportTemplate">
+            <summary>
+            导出模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.ResetPwd(System.Int64,System.String)">
+            <summary>
+            重置密码
+            </summary>
+            <param name="userId"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.ChangeStatus(System.Int64,System.String)">
+            <summary>
+            修改用户状态
+            </summary>
+            <param name="userId"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.AddSysRole(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            为用户添加系统角色
+            </summary>
+            <param name="userId"></param>
+            <param name="roleId"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.DelSysRole(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            删除用户系统角色
+            </summary>
+            <param name="userId"></param>
+            <param name="roleId"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.AuthRole(System.Int64)">
+            <summary>
+            根据用户编号获取授权角色
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controller.User.Logout">
+            <summary>
+            登出
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.DAL.CodeDAL">
+            <summary>
+            各种代码数据层
+            </summary>
+        </member>
+        <member name="M:AuthService.ConfigDAL.SelectConfig(AuthService.MZ_Config)">
+            <summary>
+            查询参数配置信息
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigDAL.SelectConfigList(AuthService.In_ConfigList)">
+            <summary>
+            查询参数配置列表
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigDAL.CheckConfigKeyUnique(System.String)">
+            <summary>
+            根据键名查询参数配置信息
+            </summary>
+            <param name="configKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigDAL.DeleteConfigById(System.Int32)">
+            <summary>
+            删除参数配置
+            </summary>
+            <param name="configId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.ConfigDAL.DeleteConfigByIds(System.Int32[])">
+            <summary>
+            批量删除参数信息
+            </summary>
+            <param name="configIds"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.DeptDAL">
+            <summary>
+            部门数据层
+            </summary>
+        </member>
+        <member name="M:AuthService.DeptDAL.SelectDeptList(AuthService.MZ_Dept)">
+            <summary>
+            查询部门管理数据
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.SelectById(System.Int64)">
+            <summary>
+            根据部门ID查询信息
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.ExistUserList(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            获取存在用户的部门列表
+            </summary>
+            <param name="orgId"></param>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.SelectChildrenById(System.Int64)">
+            <summary>
+            根据ID查询所有子部门
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.SelectNormalChildrenById(System.Int64)">
+            <summary>
+            根据ID查询所有子部门数量（正常状态）
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.SearchDeptByName(System.String,System.Int64)">
+            <summary>
+            搜索指定名称的部门
+            </summary>
+            <param name="name"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.hasChildByDeptId(System.Int64)">
+            <summary>
+            是否存在子节点
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.CheckDeptExistUser(System.Int64)">
+            <summary>
+            查询部门是否存在用户
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.CheckDeptNameUnique(System.String,System.Int64,System.Int64)">
+            <summary>
+            校验部门名称是否唯一
+            </summary>
+            <param name="deptName"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.CheckDeptId(System.Int64,System.Int64)">
+            <summary>
+            校验部门是否与组织一致
+            </summary>
+            <param name="deptId"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.InsertDept(AuthService.MZ_Dept)">
+            <summary>
+            新增部门信息
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.UpdateDept(AuthService.MZ_Dept)">
+            <summary>
+            修改部门信息
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.UpdateDeptStatusNormal(System.Int64[])">
+            <summary>
+            修改所在部门正常状态
+            </summary>
+            <param name="deptIds"></param>
+        </member>
+        <member name="M:AuthService.DeptDAL.UpdateDeptChildren(System.Collections.Generic.List{AuthService.MZ_Dept})">
+            <summary>
+            修改子元素关系
+            </summary>
+            <param name="depts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DeptDAL.DeleteDeptById(System.Int64)">
+            <summary>
+            删除部门管理信息
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.LoginLogDAL.SelectLoginLogList(AuthService.In_LoginLogList)">
+            <summary>
+            查询系统登录日志集合
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.LoginLogDAL.DeleteLoginLogByIds(System.Int64[])">
+            <summary>
+            批量删除系统登录日志
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.LoginLogDAL.CleanLoginLog">
+            <summary>
+            清空系统登录日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.MenuDAL.CheckMenuNameUnique(AuthService.MZ_Menu)">
+            <summary>
+            
+            </summary>
+            <param name="inmenu"></param>
+            <returns>返回false表示唯一</returns>
+        </member>
+        <member name="T:AuthService.OrgDAL">
+            <summary>
+            组织数据层
+            </summary>
+        </member>
+        <member name="M:AuthService.OrgDAL.CheckOrgNameUnique(System.String)">
+            <summary>
+            判断企业名称是否已存在
+            </summary>
+            <param name="orgName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.CheckExistOrg(System.Int64,System.Int64)">
+            <summary>
+            判断用户是否加入企业
+            </summary>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.CheckManOrg(System.Int64,System.Int64)">
+            <summary>
+            判断用户是否有管理企业的权限
+            </summary>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.CheckRoleOrg(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            判断用户是否有指定企业角色权限
+            </summary>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <param name="roleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.CheckOrgPerm(System.Int64,System.Int64,System.String)">
+            <summary>
+            判断用户是否有指定企业的权限
+            </summary>
+            <param name="uid"></param>
+            <param name="orgId"></param>
+            <param name="perm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.UpdateOrg(AuthService.MZ_Org)">
+            <summary>
+            修改企业信息
+            </summary>
+            <param name="org"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.SelectById(System.Int64)">
+            <summary>
+            根据ID查询信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.SelectCount(System.Int64)">
+            <summary>
+            获取指定用户拥有的企业数量
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.InsertOrgTrans(AuthService.MZ_Org)">
+            <summary>
+            新增企业
+            </summary>
+            <param name="org"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.InsertUserOrg(AuthService.Model.MZ_User_Org)">
+            <summary>
+            添加用户组织关联
+            </summary>
+            <param name="userOrg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.SelectUserOrgViewById(System.Int64,System.Int64)">
+            <summary>
+            获取用户组织数据
+            </summary>
+            <param name="userId"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.UpdateUserOrg(AuthService.Model.MZ_User_Org)">
+            <summary>
+            修改用户组织关联
+            </summary>
+            <param name="userOrg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.DeleteUserOrg(System.Int64,System.Int64)">
+            <summary>
+            删除用户组织关联
+            </summary>
+            <param name="userId"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.DeleteUserOrg(System.Int64)">
+            <summary>
+            删除指定组织的所有用户关联
+            </summary>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OrgDAL.DeleteTrans(System.Int64)">
+            <summary>
+            标记删除企业
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionDAL.SelectRoleScope(System.Int64,System.Int64)">
+            <summary>
+            获取角色域
+            </summary>
+            <param name="roleId"></param>
+            <param name="menuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.PermissionDAL.GetRolePermissionsByUser(System.Int64,System.Int64)">
+            <summary>
+            获取用户当前企业的角色权限
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.DataScope">
+            <summary>
+            数据权限类
+            </summary>
+        </member>
+        <member name="P:AuthService.DataScope.DeptList">
+            <summary>
+            部门过滤
+            </summary>
+        </member>
+        <member name="P:AuthService.DataScope.UserList">
+            <summary>
+            用户过滤
+            </summary>
+        </member>
+        <member name="M:AuthService.DataScope.Contact(System.Collections.Generic.List{AuthService.DataScope})">
+            <summary>
+            多个数据权限组合成一个
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DataScope.GenerateFilter(System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            生成过滤条件
+            </summary>
+            <param name="deptAlias"></param>
+            <param name="userAlias"></param>
+            <param name="initOr"></param>
+            <param name="deptAliasIsMulti">deptAlias对应的字段是否是全文索引</param>
+            <param name="userAliasIsMulti">userAlias对应的字段是否是全文索引</param>
+            <param name="allAnd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DataScope.CheckDept(System.Int64)">
+            <summary>
+            判断是否有指定部门权限
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.DataScope.CheckUser(System.Int64)">
+            <summary>
+            判断是否有指定的用户权限
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Fields.AttachField">
+            <summary>
+            附件
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.CheckBoxField">
+            <summary>
+            多选框
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.CheckBoxField.is_add">
+            <summary>
+            是否允许用户添加选项
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.CheckBoxField.optionals">
+            <summary>
+            可选项
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.CheckBoxField.show_way">
+            <summary>
+            显示方式：下拉、平铺
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.CheckBoxField.prompt_text">
+            <summary>
+            引导文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.CheckBoxField.describe_text">
+            <summary>
+            描述文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldBase.mapid">
+            <summary>
+            映射的字段：字符串：StrExt1~StrExt30，数值：NumExt1~NumExt10
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldBase.name">
+            <summary>
+            字段名
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldBase.type">
+            <summary>
+            字段类型：文本、数字、时间、附件、图片、超链接、单选框、复选框、关联对象
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldBase.conditions">
+            <summary>
+            隐藏条件
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldBase.groups">
+            <summary>
+            隐藏条件的组合方式
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldBase.is_required">
+            <summary>
+            是否必填
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ConditionField.field">
+            <summary>
+            字段名
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ConditionField.compare">
+            <summary>
+            比较字符
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ConditionField.valtype">
+            <summary>
+            值类型
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ConditionField.val">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldFilterItem.field">
+            <summary>
+            过滤字段
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldFilterItem.compare">
+            <summary>
+            比较符号：大于、小于、大于等于、小于等于、不等于、等于、包含、不包含、关联
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldFilterItem.val">
+            <summary>
+            比较的值（字符串）
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldFilterItem.val_num">
+            <summary>
+            比较的值（数字）
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.FieldFilterItem.val_arr">
+            <summary>
+            比较的值（字符串数组）
+            </summary>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.GetObjectFieldId(System.String)">
+            <summary>
+            获取关联对象的Id
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.GetObjectFieldName(System.String)">
+            <summary>
+            获取关联对象的名称
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.GetExtVal``1(``0,System.String)">
+            <summary>
+            获取扩展字段的值
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="formobj"></param>
+            <param name="field"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.SetExtVal``1(``0,System.String,System.Object)">
+            <summary>
+            设置扩展字段的值
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="formobj"></param>
+            <param name="field"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.CheckAddForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction,System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            检查表单新增的输入
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider"></param>
+            <param name="formobj"></param>
+            <param name="orgId"></param>
+            <param name="formName"></param>
+            <param name="ac"></param>
+            <param name="filterFields"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.CheckEditForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction,System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            检查表单编辑的输入
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider"></param>
+            <param name="formobj"></param>
+            <param name="orgId"></param>
+            <param name="formName"></param>
+            <param name="ac"></param>
+            <param name="filterFields"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.GenerateExtForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction)">
+            <summary>
+            生成表单的扩展信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider"></param>
+            <param name="formobj"></param>
+            <param name="orgId"></param>
+            <param name="formName"></param>
+            <param name="ac"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Fields.HyperlinkField">
+            <summary>
+            超链接
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.HyperlinkField.is_readonly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.HyperlinkField.prompt_text">
+            <summary>
+            引导文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.HyperlinkField.describe_text">
+            <summary>
+            描述文字
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.ImageField">
+            <summary>
+            图片
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.NumberField">
+            <summary>
+            数字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.NumberField.is_readonly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.NumberField.is_thousandth">
+            <summary>
+            是否显示千分位分割符
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.NumberField.decimals">
+            <summary>
+            小数点位数
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.NumberField.defval">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.NumberField.prompt_text">
+            <summary>
+            引导文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.NumberField.describe_text">
+            <summary>
+            描述文字
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.ObjectField">
+            <summary>
+            关联对象字段
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ObjectField.object_type">
+            <summary>
+            对象类型：用户、部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ObjectField.items">
+            <summary>
+            数据填充规则
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.Fill_Item.source_obj">
+            <summary>
+            对象的字段，填充的数据源
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.Fill_Item.field">
+            <summary>
+            要填充的字段
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.ObjectListItem">
+            <summary>
+            通用关联对象的列表项
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ObjectListItem.Name">
+            <summary>
+            列表显示名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ObjectListItem.ValueName">
+            <summary>
+            值显示名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ObjectListItem.Value">
+            <summary>
+            关联对象的Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.ObjectListItem.Obj">
+            <summary>
+            关联对象
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.RadioField">
+            <summary>
+            单选
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.RadioField.is_add">
+            <summary>
+            是否允许用户添加选项
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.RadioField.optionals">
+            <summary>
+            可选项
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.RadioField.defval">
+            <summary>
+            默认选项
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.RadioField.show_way">
+            <summary>
+            显示方式：下拉、平铺
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.RadioField.prompt_text">
+            <summary>
+            引导文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.RadioField.describe_text">
+            <summary>
+            描述文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.SearchPageParam.key">
+            <summary>
+            搜索关键词
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.SearchPageParam.objtype">
+            <summary>
+            对象类型：用户、部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.SearchPageParam.pageNum">
+            <summary>
+            分页号
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.SearchPageParam.pageSize">
+            <summary>
+            分页大小
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.TextField">
+            <summary>
+            文本
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TextField.is_readonly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TextField.is_multiple">
+            <summary>
+            是否多行
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TextField.is_scan">
+            <summary>
+            是否允许扫码输入
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TextField.is_update_scan">
+            <summary>
+            可修改扫码结果
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TextField.prompt_text">
+            <summary>
+            引导文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TextField.describe_text">
+            <summary>
+            描述文字
+            </summary>
+        </member>
+        <member name="T:AuthService.Fields.TimeField">
+            <summary>
+            时间
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TimeField.is_readonly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TimeField.defval">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.TimeField.format">
+            <summary>
+            格式化字符串
+            </summary>
+        </member>
+        <member name="T:AuthService.Data_ClientToken">
+            <summary>
+            客户端令牌
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ClientToken.UserId">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ClientToken.Time">
+            <summary>
+            登录时间
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ClientToken.Mode">
+            <summary>
+            令牌身份认证模式
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ClientToken.Ext">
+            <summary>
+            扩展数据
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ClientToken.Sign">
+            <summary>
+            签名数据
+            </summary>
+        </member>
+        <member name="M:AuthService.Data_ClientToken.MakeClientToken(System.Int64,System.Int64,System.String,AuthService.TokenMode,System.String)">
+            <summary>
+            生成客户端令牌
+            </summary>
+            <param name="uid"></param>
+            <param name="time"></param>
+            <param name="tk"></param>
+            <param name="mode"></param>
+            <param name="ext"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.Expire">
+            <summary>
+            过期时间
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.OrgId">
+            <summary>
+            所属组织
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.UserId">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.UserName">
+            <summary>
+            真实姓名或用户名
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.Ipaddr">
+            <summary>
+            ip地址
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.Location">
+            <summary>
+            登录地址
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.Browser">
+            <summary>
+            客户端浏览器
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.OSName">
+            <summary>
+            客户端操作系统
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.Terminal">
+            <summary>
+            客户端终端
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.DeveloperSecKey">
+            <summary>
+            分享令牌传的开发者密钥
+            </summary>
+        </member>
+        <member name="P:AuthService.Data_ServerTokenInfo.LoginTime">
+            <summary>
+            登录时间
+            </summary>
+        </member>
+        <member name="M:AuthService.Data_ServerTokenInfo.GetScope(TemplateAction.Core.ITAServiceProvider,System.String)">
+            <summary>
+            当前操作数据权限
+            </summary>
+            <param name="provider"></param>
+            <param name="permis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Data_ServerTokenInfo.ToShareToken(TemplateAction.Core.ITAServiceProvider,System.String)">
+            <summary>
+            转成分享令牌（分享令牌只能操作GET接口）
+            </summary>
+            <param name="provider"></param>
+            <param name="extInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Data_ServerTokenInfo.From(TemplateAction.Core.ITAContext)">
+            <summary>
+            从上下文获取服务端登录数据
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Data_ServerTokenInfo.To(TemplateAction.Core.ITAContext,AuthService.Data_ServerTokenInfo)">
+            <summary>
+            上下文赋值
+            </summary>
+            <param name="context"></param>
+            <param name="data"></param>
+        </member>
+        <member name="T:AuthService.Model.EmailNote">
+            <summary>
+            邮箱验证存储实体
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.EmailNote.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.EmailNote.UserId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.EmailNote.Message">
+            <summary>
+            验证码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.EmailNote.Num">
+            <summary>
+            错误次数
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.EmailNote.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.In_DeptMove">
+            <summary>
+            部门移动参数
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_DeptMove.ids">
+            <summary>
+            要移入的部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_DeptMove.uids">
+            <summary>
+            要移入的用户
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_DeptMove.memDeptId">
+            <summary>
+            要移入的用户所属部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_DeptMove.parentId">
+            <summary>
+            目标部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_DeptSort.idList">
+            <summary>
+            要排序的部门，按排序放在列表里
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_JoinUser.uid">
+            <summary>
+            邀请的用户Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_JoinUser.depId">
+            <summary>
+            邀请加入的部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_JoinUser.postName">
+            <summary>
+            邀请加入的职位
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_JoinAO.code">
+            <summary>
+            邀请码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_JoinAO.postName">
+            <summary>
+            要加入的职位
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_JoinAO.deptId">
+            <summary>
+            要加入的部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_MemberTreeList.orgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_MemberTreeList.deptId">
+            <summary>
+            当前部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_MemberTreeList.type">
+            <summary>
+            获取组织数据：user=人和部门  dept=只能选部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RecoveryOrg.OrgId">
+            <summary>
+            要恢复的组织Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RecoveryOrg.UserId">
+            <summary>
+            要恢复的用户Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RecoveryOrg.Roles">
+            <summary>
+            恢复的角色Id列表
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.Code">
+            <summary>
+            员工邀请码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.Avatar">
+            <summary>
+            头像（需要库Base64图片格式）
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.RealName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.Mobile">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.DeptId">
+            <summary>
+            部门Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_RegData.PostName">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_SetDeptLeaders.depId">
+            <summary>
+            设置的部门Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_SetDeptLeaders.Leaders">
+            <summary>
+            设置的负责人列表
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_StyleOrgList.StyleId">
+            <summary>
+            指定主题
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_StyleOrgList.NoExist">
+            <summary>
+            是否过滤已存在主题的企业
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_StyleOrgList.Key">
+            <summary>
+            搜索关键字
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_UpgradeList.SearchKey">
+            <summary>
+            搜索版本、标题、内容
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_UpgradeList.OrgId">
+            <summary>
+            过滤应用所属
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.In_UpgradeList.StyleId">
+            <summary>
+            过滤主题Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AdminExt.ExtField">
+            <summary>
+            扩展字段
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AdminExt.ExtValue">
+            <summary>
+            扩展值
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_AppStyle">
+            <summary>
+            应用主题
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AppStyle.Name">
+            <summary>
+            主题名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AppStyle.PhotoUrl">
+            <summary>
+            主题展示图
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AppStyle.StyleJson">
+            <summary>
+            主题Json
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AppStyle.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_AppStyle.IsPublic">
+            <summary>
+            是否公开
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_Area">
+            <summary>
+            区域代码实体
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.ParentId">
+            <summary>
+            父区域
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.LevelType">
+            <summary>
+            区域级别
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.ParentPath">
+            <summary>
+            层级路径
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Province">
+            <summary>
+            所属省
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.City">
+            <summary>
+            所属市
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.District">
+            <summary>
+            所属区
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Street">
+            <summary>
+            所属县
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Pinyin">
+            <summary>
+            拼音
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Jianpin">
+            <summary>
+            首字母拼音
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.FirstChar">
+            <summary>
+            首字母
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.CityCode">
+            <summary>
+            城市区号
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.ZipCode">
+            <summary>
+            邮政编码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Area.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="M:AuthService.Model.AreaDict.ToName(System.String)">
+            <summary>
+            代码转名称
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Model.AreaDict.MultiToName(System.String)">
+            <summary>
+            多个代码转名称
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Model.MZ_GroupView">
+            <summary>
+            通用分组表
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.Name">
+            <summary>
+            分组名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.TableName">
+            <summary>
+            分组的表名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.LevelCode">
+            <summary>
+            二级分组字段
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.ConditionJson">
+            <summary>
+            过滤条件的json
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_GroupView.ListFieldsJson">
+            <summary>
+            列表字段的json
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_Industry">
+            <summary>
+            行业实体
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Industry.Id">
+            <summary>
+            行业编码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Industry.Name">
+            <summary>
+            行业名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Industry.ParentId">
+            <summary>
+            父Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Industry.Sort">
+            <summary>
+            排序
+            越小越前
+            </summary>
+        </member>
+        <member name="M:AuthService.Model.IndustryDict.ToName(System.Int32)">
+            <summary>
+            代码转名称
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.Model.MZ_OrgExt">
+            <summary>
+            企业扩展设置
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgExt.ExtField">
+            <summary>
+            扩展字段
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgExt.ExtValue">
+            <summary>
+            扩展值
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_OrgStyle">
+            <summary>
+            组织的应用主题
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgStyle.OrgId">
+            <summary>
+            组织编号
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgStyle.StyleId">
+            <summary>
+            主题Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgStyle.FrowWay">
+            <summary>
+            来源方式：0自购，1为继承，2为管理员分配
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgStyle.IsUsing">
+            <summary>
+            是否使用中
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_OrgStyle.CreatedOn">
+            <summary>
+            添加时间
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_RoleScope.RoleID">
+            <summary>
+            角色Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_RoleScope.MenuId">
+            <summary>
+            菜单Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_RoleScope.DataScope">
+            <summary>
+            数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限 5:仅本人数据权限）
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_RoleScope.CustomScope">
+            <summary>
+            自定义数据权限Json
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_Upgrade">
+            <summary>
+            App升级中心
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.OrgId">
+            <summary>
+            所属企业Id，0为平台
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.StyleId">
+            <summary>
+            所属主题Id,空为默认
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.OrgName">
+            <summary>
+            所属企业名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.PackageType">
+            <summary>
+            包类型：0为原生App安装包，1为wgt资源包
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.Title">
+            <summary>
+            更新标题
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.UpContent">
+            <summary>
+            更新内容
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.Platform">
+            <summary>
+            平台：android、ios（多个,号分隔）
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.UpVersion">
+            <summary>
+            当前包版本号，必须大于当前线上发行版本号
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.MinAppVersion">
+            <summary>
+            Wgt资源包时，原生App最低版本
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.UpUrl">
+            <summary>
+            下载链接
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.IsSilently">
+            <summary>
+            WGT是否静默更新
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.IsMandatory">
+            <summary>
+            App安装包是否强制更新
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.IsPublish">
+            <summary>
+            是否上线发行
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_Upgrade.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_User_Org">
+            <summary>
+            用户组织关联表
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.UserId">
+            <summary>
+            关联用户ID
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.dept_id">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.dept_name">
+            <summary>
+            所属部门名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.post_name">
+            <summary>
+            当前职位
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.IsLeader">
+            <summary>
+            是否为部门领导
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_User_Org.IsPrimary">
+            <summary>
+            是否为主要部门
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.MZ_User_Org_V">
+            <summary>
+            用户的组织信息
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.Out_GeoInfo">
+            <summary>
+            逆地址解释结果
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_GeoInfo.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_GeoInfo.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_GeoInfo.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_GeoInfo.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_GeoInfo.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_MemberTreeItem.type">
+            <summary>
+            user为用户，dept为部门，role为角色，device为设备
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_MemberTreeItem.avatar">
+            <summary>
+            图片
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.Out_RolePermiss">
+            <summary>
+            角色权限
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_ScopeItem.menu_name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_ScopeItem.menu_id">
+            <summary>
+            菜单Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_ScopeItem.DataScope">
+            <summary>
+            数据范围
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_SearchUser.Id">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_SearchUser.Name">
+            <summary>
+            姓名、手机号、用户名，按顺序不为空优先显示
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_SearchUser.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_UserDept.post_name">
+            <summary>
+            当前职位
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_UserDept.IsLeader">
+            <summary>
+            是否为部门领导
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_UserDept.IsPrimary">
+            <summary>
+            是否为主要部门
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_UserRole.RoleName">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.Out_UserRole.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="T:AuthService.Model.SmsNote">
+            <summary>
+            短信验证存储实体
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.SmsNote.Phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.SmsNote.Message">
+            <summary>
+            短信验证码
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.SmsNote.Num">
+            <summary>
+            错误次数
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.SmsNote.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:AuthService.In_Login.code">
+            <summary>
+            验证码
+            </summary>
+        </member>
+        <member name="P:AuthService.In_Login.uuid">
+            <summary>
+            验证码唯一标识
+            </summary>
+        </member>
+        <member name="P:AuthService.In_RoleList.roleName">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:AuthService.In_RoleList.status">
+            <summary>
+            角色状态（0正常 1停用）
+            </summary>
+        </member>
+        <member name="P:AuthService.In_UserList.deptIdList">
+            <summary>
+            过滤部门Id列表
+            </summary>
+        </member>
+        <member name="P:AuthService.In_UserList.deptIdWithChildren">
+            <summary>
+            判断deptId过滤是否包含子部门，默认true包含
+            </summary>
+        </member>
+        <member name="P:AuthService.In_UserList.key">
+            <summary>
+            过滤用户名、手机号、姓名
+            </summary>
+        </member>
+        <member name="P:AuthService.In_UserList.isPrimaryDept">
+            <summary>
+            过滤主要部门标记
+            </summary>
+        </member>
+        <member name="P:AuthService.In_UserList.isMyLeader">
+            <summary>
+            过滤我为负责人的部门成员
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.dept_id">
+            <summary>
+            当前所在部门
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.post_name">
+            <summary>
+            当前职位
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.IsLeader">
+            <summary>
+            是否为部门负责人
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.IsPrimary">
+            <summary>
+            是否为主要部门
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.OrgId">
+            <summary>
+            当前使用的企业编号（不用传）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.OrgNames">
+            <summary>
+            所属企业名称（多个分号隔开）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.dept_name">
+            <summary>
+            部门名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.UserName">
+            <summary>
+            后台用户名
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.RealName">
+            <summary>
+            真实姓名(初始为用户名）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Password">
+            <summary>
+            后台密码
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Salt">
+            <summary>
+            密码盐
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Mobile">
+            <summary>
+            手机号码
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.EmailActive">
+            <summary>
+            邮箱是否激活
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Avatar">
+            <summary>
+            头像地址
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Sex">
+            <summary>
+            用户性别（0男 1女 2未知）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Introduction">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.status">
+            <summary>
+            帐号状态（0正常 1停用）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.Signature">
+            <summary>
+            工作签名
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.WaitSignature">
+            <summary>
+            原签名
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_AdminInfo.roleIds">
+            <summary>
+            角色组
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Config.config_id">
+            <summary>
+            参数主键
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Config.config_name">
+            <summary>
+            参数名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Config.config_key">
+            <summary>
+            参数键名
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Config.config_value">
+            <summary>
+            参数键值
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Config.config_type">
+            <summary>
+            系统内置（Y是 N否）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Config.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.dept_id">
+            <summary>
+            部门ID
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.parent_id">
+            <summary>
+            父部门ID
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.ancestors">
+            <summary>
+            祖级列表
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.dept_name">
+            <summary>
+            部门名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.order_num">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.phone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.status">
+            <summary>
+            部门状态:0正常,1停用
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.OrgId">
+            <summary>
+            部门所属组织
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.parentName">
+            <summary>
+            父部门名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Dept.children">
+            <summary>
+            子部门
+            </summary>
+        </member>
+        <member name="M:AuthService.MZ_Dept.DeptList2Tree(System.Collections.Generic.List{AuthService.MZ_Dept})">
+            <summary>
+            部门树转选择树
+            </summary>
+            <param name="deptTree"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.MZ_LoginLog">
+            <summary>
+            登录日志
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.UserId">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.Status">
+            <summary>
+            登录状态（0成功 1失败）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.IPAddress">
+            <summary>
+            ip地址
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.IPLocation">
+            <summary>
+            登录地点
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.Browser">
+            <summary>
+            浏览器类型
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.OS">
+            <summary>
+            操作系统
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.Terminal">
+            <summary>
+            终端设备
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_LoginLog.Info">
+            <summary>
+            提示消息
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.menu_id">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.menu_name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.name">
+            <summary>
+            路由名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.parent_name">
+            <summary>
+            父菜单名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.parent_id">
+            <summary>
+            父菜单ID
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.order_num">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.path">
+            <summary>
+            路由地址
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.component">
+            <summary>
+            组件路径
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.query">
+            <summary>
+            路由参数
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.is_frame">
+            <summary>
+            是否为外链（0否 1是）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.is_cache">
+            <summary>
+            是否缓存（0缓存 1不缓存）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.menu_type">
+            <summary>
+            类型（M目录 C菜单 F按钮）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.visible">
+            <summary>
+            显示状态（0显示 1隐藏）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.status">
+            <summary>
+            菜单状态（0正常 1停用）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.perms">
+            <summary>
+            权限字符串
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Menu.scope">
+            <summary>
+            是否过滤数据
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Id">
+            <summary>
+            组织编号
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.KeyWords">
+            <summary>
+            组织关键字
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Logo">
+            <summary>
+            组织Logo
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Industry">
+            <summary>
+            行业类型
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Size">
+            <summary>
+            员工规模
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Geo">
+            <summary>
+            经纬度的geo编码
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Intro">
+            <summary>
+            企业简介
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.status">
+            <summary>
+            组织认证状态（0未认证 1为认证中 2为已认证）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Org.Creator">
+            <summary>
+            创建人信息
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Role.RoleName">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Role.IsSystem">
+            <summary>
+            是否为系统角色，不可删除，不可修改
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Role.NoAlloca">
+            <summary>
+            是否禁止分配:1为禁止，0为可分配
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_Role.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:AuthService.MZ_UserMenu.RightType">
+            <summary>
+            0为允许，1为禁止
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_Login.token">
+            <summary>
+            令牌
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_Login.refresh_token">
+            <summary>
+            刷新令牌
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_Login.isnew">
+            <summary>
+            是否为新创建的
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_Login.ext_info">
+            <summary>
+            额外信息
+            </summary>
+        </member>
+        <member name="T:AuthService.Out_LoginUserInfo">
+            <summary>
+            用户返回信息
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.OrgId">
+            <summary>
+            所属组织
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.name">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.Sex">
+            <summary>
+            用户性别（0男 1女 2未知）
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.mobile">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.extObj">
+            <summary>
+            扩展信息
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_LoginUserInfo.permissions">
+            <summary>
+            权限
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_MetaInfo.title">
+            <summary>
+            设置该路由在侧边栏和面包屑中展示的名字
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_MetaInfo.icon">
+            <summary>
+            设置该路由的图标，对应路径src/assets/icons/svg
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:AuthService.Out_MetaInfo.noCache" -->
+        <member name="P:AuthService.Out_MetaInfo.link">
+            <summary>
+            内链地址（http(s)://开头）
+            </summary>
+        </member>
+        <member name="T:AuthService.Out_RouterInfo">
+            <summary>
+            路由配置信息
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.name">
+            <summary>
+            路由名字
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.path">
+            <summary>
+            路由地址
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.hidden">
+            <summary>
+            是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.redirect">
+            <summary>
+            重定向地址，当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.component">
+            <summary>
+            组件地址
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.query">
+            <summary>
+            路由参数：如 {"id": 1, "name": "ry"}
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.alwaysShow">
+            <summary>
+            当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
+            </summary>
+        </member>
+        <member name="P:AuthService.Out_RouterInfo.meta">
+            <summary>
+            其他元素
+            </summary>
+        </member>
+        <member name="T:AuthService.OperatorHelper">
+            <summary>
+            令牌操作类
+            </summary>
+        </member>
+        <member name="M:AuthService.OperatorHelper.CheckClientToken(AuthService.Data_ClientToken,System.String)">
+            <summary>
+            判断令牌签名是否正确
+            </summary>
+            <param name="info"></param>
+            <param name="tk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.MakeRefreshToken(System.String,System.String)">
+            <summary>
+            生成刷新令牌（长期使用，ip与客户端信息变更后不可使用)
+            </summary>
+            <param name="clientToken"></param>
+            <param name="ip"></param>
+            <param name="agent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.ParseClientToken(System.String)">
+            <summary>
+            解释token字符串
+            </summary>
+            <param name="tk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.GetServerData(System.Int64,System.String)">
+            <summary>
+            获取服务端登录数据
+            </summary>
+            <param name="uid"></param>
+            <param name="terminal"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.DeleteServerData(System.Int64,System.String)">
+            <summary>
+            删除服务端登录数据
+            </summary>
+            <param name="uid"></param>
+            <param name="terminal"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.RefreshServerData(AuthService.MZ_AdminInfo,TemplateAction.Core.ITAContext)">
+            <summary>
+            刷新服务端登录数据
+            </summary>
+            <param name="account"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.ClearServerData(System.Int64)">
+            <summary>
+            清除指定登录数据
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.JudgeRelogin(System.Int64)">
+            <summary>
+            判断是否需要重新登录
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.OperatorHelper.MakeServerData(AuthService.MZ_AdminInfo,System.Int64,TemplateAction.Core.ITAContext)">
+            <summary>
+            重新生成服务端数据
+            </summary>
+            <param name="account"></param>
+            <param name="loginTime"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.RepeatableMiddlewareAttribute">
+            <summary>
+            防重复提交过滤器
+            10秒内不可重复提交算
+            </summary>
+        </member>
+        <member name="F:AuthService.RepeatableMiddlewareAttribute._tokenKey">
+            <summary>
+            令牌键名
+            </summary>
+        </member>
+        <member name="M:AuthService.ServiceProviderExtensions.GetUser(TemplateAction.Core.ITAServiceProvider)">
+            <summary>
+            获取当前用户
+            </summary>
+            <param name="provider"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AuthService.ShareCheckAttribute">
+            <summary>
+            允许共享令牌访问
+            </summary>
+        </member>
+    </members>
+</doc>

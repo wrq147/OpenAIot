@@ -1,0 +1,3364 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IoTService</name>
+    </assembly>
+    <members>
+        <member name="M:IoTService.Business.IotCardBLL.QueryNewestInfo(System.String)">
+            <summary>
+            查询最新卡信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotCardBLL.SyncCard">
+            <summary>
+            定时处理物联卡信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotCodeBLL._RecursionFn(System.Collections.Generic.List{IoTService.Models.MZ_IotCodeGroup},IoTService.Models.MZ_IotCodeGroup)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:IoTService.Business.IotCodeBLL._GetChildList(System.Collections.Generic.List{IoTService.Models.MZ_IotCodeGroup},IoTService.Models.MZ_IotCodeGroup)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotDeviceBLL.Live(Common.Share.IUserInfo,System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+            获取设备实时数据（离线返回null）
+            </summary>
+            <param name="user">当前用户</param>
+            <param name="id"></param>
+            <param name="needTag">是否显示标签绑定的属性</param>
+            <param name="sendWay">0不发送，1为只发送读取属性消息，2为同时等待属性返回</param>
+            <param name="waitProps">需要等待的属性（不传则等待全部，多个用逗号隔开）</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotDeviceBLL.ClearSyncDeviceLog">
+            <summary>
+            定时清除同步日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotDeviceBLL.SyncDevice">
+            <summary>
+            定时同步设备
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotTagBLL.ToTagItem(System.String,ChannelUtility.Tsl.BaseTagInfo,System.Object)">
+            <summary>
+            存储的标签转显示用数据
+            </summary>
+            <param name="id"></param>
+            <param name="tag"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotTagBLL.TagUpdateValue(ChannelUtility.Tsl.BaseTagInfo,System.Object,System.String)">
+            <summary>
+            更新设备标签
+            </summary>
+            <param name="tag"></param>
+            <param name="val"></param>
+            <param name="id">设备Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotWarningBLL.Insert(ChannelUtility.Tsl.BaseEvent,ChannelUtility.Message.DeviceEventMessage,IoTService.Models.MZ_IotDevice,System.String)">
+            <summary>
+            添加报警记录
+            </summary>
+            <param name="evt"></param>
+            <param name="rdmsg"></param>
+            <param name="device"></param>
+            <param name="extInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotWarningBLL.ClearWarning(System.String,System.String,System.String)">
+            <summary>
+            标记报警已处理（批量）
+            </summary>
+            <param name="devId"></param>
+            <param name="code"></param>
+            <param name="remark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotWarningBLL.ClearWarning(System.Int64,System.String,Common.Share.IUserInfo)">
+            <summary>
+            标记报警已处理（单个）
+            </summary>
+            <param name="id"></param>
+            <param name="remark"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Business.IotWarningBLL.ClearOverWarning">
+            <summary>
+            清除超3个月的过期报警
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.Channel(System.String)">
+            <summary>
+            获取指定通道信息
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ChgChannel(IoTService.Models.In_SyncChannel)">
+            <summary>
+            修改通道信息
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.RefreshAllProductCache">
+            <summary>
+            刷新所属所有产品的缓存
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.SaveTags(IoTService.Models.In_SyncSaveTags)">
+            <summary>
+            保存设备标签
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.WarnCount">
+            <summary>
+            获取当前告警数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.WarnListPage(IoTService.Models.In_WarningListPage)">
+            <summary>
+            分页获取告警列表
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ClearWarn(System.Int64,System.String)">
+            <summary>
+            清理指定告警
+            </summary>
+            <param name="id"></param>
+            <param name="remark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ClearAllWarn(System.String)">
+            <summary>
+            清理所有告警
+            </summary>
+            <param name="remark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ExeFunc(IoTService.Models.In_SyncExeFunc)">
+            <summary>
+            执行设备的功能
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ListPage(IoTService.Models.In_DeviceListPage)">
+            <summary>
+            设备列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.DeviceByNumber(System.String)">
+            <summary>
+            通过设备唯一编号获取设备信息
+            </summary>
+            <param name="number">设备唯一编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.TagList(System.String)">
+            <summary>
+            通过第三方编码获取设备的标签列表
+            </summary>
+            <param name="number">第三方编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ProductNames(IoTService.Models.In_ProductNamePage)">
+            <summary>
+            获取产品名称列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.ProductInfo(System.String)">
+            <summary>
+            获取产品信息
+            </summary>
+            <param name="id"></param>
+            <param name="notsl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.AddDevice(IoTService.Models.In_SyncDevice)">
+            <summary>
+            添加开发者的物联设备信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.EditDevice(IoTService.Models.In_SyncDevice)">
+            <summary>
+            修改开发者的物联设备信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.BindDevice(IoTService.Models.In_SyncDevice)">
+            <summary>
+            绑定开发者的物联设备信息(在不知道是添加还是更新的情况下使用)
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.DelDevice(System.String)">
+            <summary>
+            删除开发者的设备
+            </summary>
+            <param name="number">设备唯一编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.Recharge(System.String,System.Int32)">
+            <summary>
+            设备的物联卡续费
+            </summary>
+            <param name="number"></param>
+            <param name="month"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.GetCard(System.String)">
+            <summary>
+            获取设备的物联卡信息
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.HttpSync.GetCardList(System.String[])">
+            <summary>
+            批量获取设备的物联卡信息
+            </summary>
+            <param name="numbers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.ListPage(IoTService.Models.In_IotCardListPage)">
+            <summary>
+            物联卡列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.Info(System.String)">
+            <summary>
+            获取物联卡详情数据
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.SyncCard(System.String)">
+            <summary>
+            同步并获取最新物联卡数据
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.StopCard(System.String)">
+            <summary>
+            手动停卡
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.UnUsing(System.String)">
+            <summary>
+            物联卡解绑
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.UsingDevice(IoTService.Models.In_UsingDevice)">
+            <summary>
+            物联卡绑定设备
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.Recharge(IoTService.Models.In_RechargeData)">
+            <summary>
+            物联卡续费
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.Remove(System.String[])">
+            <summary>
+            删除物联卡
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.Import(System.String)">
+            <summary>
+            导入物联卡
+            </summary>
+            <param name="cardFrom"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotCard.ExportTemplate">
+            <summary>
+            导出模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.IotClass">
+            <summary>
+            物联分类接口
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotClass.ListTree">
+            <summary>
+            分类树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotClass.Info(System.String)">
+            <summary>
+            获取指定分类信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotClass.Sort(System.Collections.Generic.List{System.String})">
+            <summary>
+            分类排序
+            </summary>
+            <param name="ids">排序Id列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotClass.Add(IoTService.Models.MZ_IotClass)">
+            <summary>
+            添加分类
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotClass.Edit(IoTService.Models.MZ_IotClass)">
+            <summary>
+            编辑分类
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotClass.Remove(System.String)">
+            <summary>
+            删除分类
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.IotConfig">
+            <summary>
+            物联第三方接入配置
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotConfig.Update(IoTService.Models.In_IotConfig)">
+            <summary>
+            修改物联第三方接入配置
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotConfig.Info">
+            <summary>
+            获取当前的物联配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.IsOnline(System.String)">
+            <summary>
+            获取设备离在线状态
+            </summary>
+            <param name="id">通讯Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.ListPage(IoTService.Models.In_DeviceListPage)">
+            <summary>
+            设备列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.Info(System.String)">
+            <summary>
+            获取指定设备信息
+            </summary>
+            <param name="id">设备Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.InfoOfDtuId(System.String)">
+            <summary>
+            使用通讯Id获取设备信息
+            </summary>
+            <param name="dtuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.FuncList(System.String)">
+            <summary>
+            获取指定设备的功能列表
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.ExeFunc(IoTService.Models.In_ExeFunc)">
+            <summary>
+            执行设备的功能
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.UseDeviceByUser(System.String,System.Int32,System.Int64)">
+            <summary>
+            将指定用户设置为使用者
+            </summary>
+            <param name="id"></param>
+            <param name="t">Id类型：0为Id,1为通讯Id,2为唯一编码</param>
+            <param name="uid">用户Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.UseDevice(System.String,System.Int32)">
+            <summary>
+            将当前用户的组织或个人设置为使用者
+            </summary>
+            <param name="id"></param>
+            <param name="t">Id类型：0为Id,1为通讯Id,2为唯一编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.UnUseDevice(System.String)">
+            <summary>
+            将解除当前设备使用者的绑定
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.Live(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            获取指定设备的实时属性数据（离线返回null）
+            </summary>
+            <param name="id"></param>
+            <param name="needTag">是否显示标签绑定的属性</param>
+            <param name="needSend">是否同时发送读取属性消息</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.BatchLive(IoTService.Models.In_DevBatchList)">
+            <summary>
+            批量获取设备的实时数据
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.SelectExcepts(IoTService.Models.In_JVList)">
+            <summary>
+            查询设备的异常数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.SelectHistory(IoTService.Models.In_HistoryList)">
+            <summary>
+            查询设备的历史数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.SelectMergeList(IoTService.Models.In_HistoryMergeList)">
+            <summary>
+            统计设备数据，并返回
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.SelectOnlines(IoTService.Models.In_OnOfflineList)">
+            <summary>
+            查询设备的离在线历史数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.TagList(System.String)">
+            <summary>
+            查询设备的标签值列表
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.TagListByProduct(System.String)">
+            <summary>
+            查询产品的标签默认值列表
+            </summary>
+            <param name="id">产品id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.SaveTags(IoTService.Models.In_SaveTags)">
+            <summary>
+            保存设备标签值
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.SaveProps(IoTService.Models.In_SaveProps)">
+            <summary>
+            保存设备属性值
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.DelHistory(IoTService.Models.In_HistoryDelete)">
+            <summary>
+            删除历史数据
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.Add(IoTService.Models.MZ_IotDevice)">
+            <summary>
+            添加设备
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.Edit(IoTService.Models.MZ_IotDevice)">
+            <summary>
+            编辑设备
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.BindDevice(IoTService.Models.MZ_IotDevice)">
+            <summary>
+            绑定物联设备
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.Remove(System.String)">
+            <summary>
+            删除设备
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.GenerateNumber">
+            <summary>
+            生成设备编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotDevice.ExportTemplate">
+            <summary>
+            导出模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotGroup.ListTree">
+            <summary>
+            设备分组树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotGroup.TreeSelect">
+            <summary>
+            设备分组选择树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotGroup.Info(System.String)">
+            <summary>
+            获取指定分组信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotGroup.Add(IoTService.Models.MZ_IotGroup)">
+            <summary>
+            添加分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotGroup.Edit(IoTService.Models.MZ_IotGroup)">
+            <summary>
+            编辑分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotGroup.Remove(System.String)">
+            <summary>
+            删除分组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.IotProduct">
+            <summary>
+            物联产品接口
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.ProductNames(IoTService.Models.In_ProductNamePage)">
+            <summary>
+            获取产品名称列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugDelHistory(IoTService.Models.In_HistoryDelete)">
+            <summary>
+            册除指定设备的历史信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugModbus(IoTService.Models.In_DebugModbus)">
+            <summary>
+            发送modbus调试
+            </summary>
+            <param name="data">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugProperty(IoTService.Models.In_DebugProperty)">
+            <summary>
+            发送读属性调试
+            </summary>
+            <param name="data">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugFunc(IoTService.Models.In_DebugFunction)">
+            <summary>
+            发送执行功能调试
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugEvent(IoTService.Models.In_DebugEvent)">
+            <summary>
+            发送执行事件调试
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugText(IoTService.Models.In_DebugText)">
+            <summary>
+            发送文本到设备
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.DebugMsg(IoTService.Models.In_DebugMsg)">
+            <summary>
+            发送特殊消息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.ChannelList">
+            <summary>
+            获取接入通道配置列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.Channel(System.String)">
+            <summary>
+            通过接入方式获取通道配置信息
+            </summary>
+            <param name="code">接入方式的代码</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.ListPage(IoTService.Models.In_ProductListPage)">
+            <summary>
+            产品列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.TSLList(System.String[])">
+            <summary>
+            批量获取物模型
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.Info(System.String,System.Boolean)">
+            <summary>
+            获取指定产品信息
+            </summary>
+            <param name="id"></param>
+            <param name="notsl">是否不返回物模型信息（加速用）</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.Add(IoTService.Models.MZ_IotProduct)">
+            <summary>
+            添加产品
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.Edit(IoTService.Models.MZ_IotProduct)">
+            <summary>
+            编辑产品
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.Remove(System.String)">
+            <summary>
+            删除产品
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.Copy(System.String)">
+            <summary>
+            拷贝产品
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.CodeListTree(System.Int32)">
+            <summary>
+            标识符模板树
+            </summary>
+            <param name="t">0为属性、1为功能</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.PropRuleList(System.String)">
+            <summary>
+            属性规则列表
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.PropRuleInfo(System.String)">
+            <summary>
+            获取属性规则信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.AddPropRule(IoTService.Models.MZ_IotWinRule)">
+            <summary>
+            添加属性规则
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.EditPropRule(IoTService.Models.MZ_IotWinRule)">
+            <summary>
+            修改属性规则
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotProduct.RemovePropRule(System.String[])">
+            <summary>
+            删除属性规则
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.IotReport">
+            <summary>
+            Iot报表接口
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotReport.StatisticsInfo(System.Int64)">
+            <summary>
+            设备数量统计
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotReport.RunStatisticsInfo(IoTService.Models.In_RunStatisticsInfo)">
+            <summary>
+            设备状态数量统计
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotReport.WarnCount(System.String[])">
+            <summary>
+            指定告警代码的数量统计
+            </summary>
+            <param name="codes"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.IotScript">
+            <summary>
+            Iot脚本模板接口
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotScript.ListPage(IoTService.Models.In_ScriptList)">
+            <summary>
+            脚本模板列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotScript.Info(System.String)">
+            <summary>
+            获取指定模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotScript.Add(IoTService.Models.MZ_IotScript)">
+            <summary>
+            添加脚本模板
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotScript.Edit(IoTService.Models.MZ_IotScript)">
+            <summary>
+            编辑脚本模板
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotScript.Remove(System.String[])">
+            <summary>
+            删除脚本模板
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.IotSource">
+            <summary>
+            物联历史数据的数据源
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotSource.ListPage(IoTService.Models.In_HisSourceList)">
+            <summary>
+            物联历史数据源列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotSource.Info(System.String)">
+            <summary>
+            获取物联历史数据源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotSource.Add(IoTService.Models.MZ_IotHisSource)">
+            <summary>
+            添加物联历史数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotSource.Edit(IoTService.Models.MZ_IotHisSource)">
+            <summary>
+            编辑物联历史数据源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotSource.Remove(System.String[])">
+            <summary>
+            删除物联历史数据源
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotUpdate.ListPage(IoTService.Models.In_UpdatePage)">
+            <summary>
+            产品升级列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotUpdate.DeviceUp(System.String)">
+            <summary>
+            设备手动升级
+            </summary>
+            <param name="id">设备Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotUpdate.ClearError">
+            <summary>
+            清除升级失败的
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.ListPage(IoTService.Models.In_WarningListPage)">
+            <summary>
+            报警列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.Info(System.Int64)">
+            <summary>
+            报警信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.InfoByNumber(System.String)">
+            <summary>
+            通过工单编号获取报警信息
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.Clear(System.String,System.String,System.String)">
+            <summary>
+            手动处理报警（批量处理）
+            </summary>
+            <param name="devId">设备Id（为空则不过滤）</param>
+            <param name="code">事件标识（为空则不过滤）</param>
+            <param name="remark">备注</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.ClearOne(System.Int64,System.String)">
+            <summary>
+            手动处理报警（单个处理）
+            </summary>
+            <param name="id"></param>
+            <param name="remark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.ConfigInfo(System.String)">
+            <summary>
+            报警配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotWarning.SaveConfig(IoTService.Models.MZ_IotWarnConfig)">
+            <summary>
+            保存报警配置信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Controller.UnicomCallback">
+            <summary>
+            联通卡回调api
+            </summary>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.SelectIdList(System.String)">
+            <summary>
+            查询指定产品的所有设备Id列表
+            </summary>
+            <param name="productId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.SelectDtuIdListByOnline(System.String)">
+            <summary>
+            查询指定产品的所有在线设备
+            </summary>
+            <param name="productId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.ExistDevice(System.String)">
+            <summary>
+            指定分组路径下面是否有设备
+            </summary>
+            <param name="groupPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.UpdateBatchOwnerOrgId(System.Collections.Generic.List{System.String},System.Int64,System.Boolean)">
+            <summary>
+            批量更新拥有者
+            </summary>
+            <param name="ids"></param>
+            <param name="newOrgId"></param>
+            <param name="clearUse"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.ClearOwnerOrgPath(System.Collections.Generic.List{System.String},System.Int64)">
+            <summary>
+            批量清除设备经过的组织路径
+            </summary>
+            <param name="ids"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.UpdateUseOrgId(System.Collections.Generic.List{System.String},System.Int64)">
+            <summary>
+            批量更改设备的使用者组织
+            </summary>
+            <param name="ids"></param>
+            <param name="orgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.DAL.IotDeviceDAL.IdsToDtuIds(System.Collections.Generic.List{System.String})">
+            <summary>
+            Id转通讯id
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.InfluxOption">
+            <summary>
+            时序存储配置
+            </summary>
+        </member>
+        <member name="P:IoTService.InfluxOption.enable">
+            <summary>
+            1表示存储，0表示不使用
+            </summary>
+        </member>
+        <member name="P:IoTService.InfluxOption.url">
+            <summary>
+            连接的URL
+            </summary>
+        </member>
+        <member name="P:IoTService.InfluxOption.token">
+            <summary>
+            连接令牌
+            </summary>
+        </member>
+        <member name="P:IoTService.InfluxOption.bucket">
+            <summary>
+            存储的bucket名称,默认值MZIoT
+            </summary>
+        </member>
+        <member name="P:IoTService.InfluxOption.org">
+            <summary>
+            存储使用的组织
+            </summary>
+        </member>
+        <member name="P:IoTService.IotOption.runer_count">
+            <summary>
+            规则执行者数量（默认3）
+            </summary>
+        </member>
+        <member name="P:IoTService.IotOption.node_name">
+            <summary>
+            物联服务名称（多个物联服务名称不能一样）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.ExceptProperty.ExceptType">
+            <summary>
+            异常检测类型：峰值spike、更改change、range范围、SRCNN
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.FlowCreateData.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.FlowCreateData.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.FlowCreateData.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.FlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugEvent.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugEvent.EventId">
+            <summary>
+            事件标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugEvent.Inputs">
+            <summary>
+            输入的参数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugFunction.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugFunction.FunctionId">
+            <summary>
+            功能标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugFunction.Inputs">
+            <summary>
+            输入的参数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugModbus.DeviceId">
+            <summary>
+            设备id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugModbus.MatchName">
+            <summary>
+            modbus匹配规则名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugMsg.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugMsg.MsgType">
+            <summary>
+            消息类型
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugProperty.DeviceId">
+            <summary>
+            设备id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugProperty.Properties">
+            <summary>
+            读取的属性标识列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugText.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugText.Text">
+            <summary>
+            下发文本
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DebugText.IsHex">
+            <summary>
+            是否为Hex格式
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DevBatchList.DtuIds">
+            <summary>
+            要查询的通讯编码数组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DevBatchList.Codes">
+            <summary>
+            要查询的属性标识符数组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DevBatchList.needSend">
+            <summary>
+            是否同时发送读取属性消息
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DevBatchList.needTag">
+            <summary>
+            是否需要显示同步到标签的属性
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.GroupId">
+            <summary>
+            分组过滤
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.ClassId">
+            <summary>
+            过滤物联产品分类
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.Online">
+            <summary>
+            0为离线，1为在线，2为未知
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.DState">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.ProductId">
+            <summary>
+            过滤产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.ProductList">
+            <summary>
+            过滤多个产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.Ids">
+            <summary>
+            过滤多个设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.DtuIds">
+            <summary>
+            过滤多个设备的通讯Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.Numbers">
+            <summary>
+            过滤多个第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.DeviceId">
+            <summary>
+            设备编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.DeviceNumber">
+            <summary>
+            设备唯一编码（第三方编码）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.HasDeviceId">
+            <summary>
+            过滤是否绑定通讯Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.Key">
+            <summary>
+            同时搜索设备名称、设备编码、第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.Keywords">
+            <summary>
+            关键词搜索
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.TagConditions">
+            <summary>
+            标签条件
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_DeviceListPage.ShowTags">
+            <summary>
+            是否显示标签
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.TagCondition.code">
+            <summary>
+            标签标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.TagCondition.optionType">
+            <summary>
+            标签类型
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.TagCondition.compare">
+            <summary>
+            比较方式：ne不等于、eq等于、gt大于、lt小于、ge大于等于、le小于等于、like（字符串用）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.TagCondition.val">
+            <summary>
+            比较值
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ExeFunc.Id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ExeFunc.FunctionId">
+            <summary>
+            功能标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ExeFunc.Inputs">
+            <summary>
+            输入的参数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryDelete.Id">
+            <summary>
+            设备的Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryDelete.BeginTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryDelete.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryList.Id">
+            <summary>
+            设备的Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryListSync.Number">
+            <summary>
+            设备的第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryBase.Code">
+            <summary>
+            物模型属性标识（不传则为全部属性的历史数据,当有分页时可以传多个以逗分隔的标识）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryBase.BeginTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryBase.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryBase.pageNum">
+            <summary>
+            分页号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryBase.pageSize">
+            <summary>
+            分页大小
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryBase.showTotal">
+            <summary>
+            显示总数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeList.Ids">
+            <summary>
+            设备Id列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeListSync.Numbers">
+            <summary>
+            设备第三方编码列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.MergeWay">
+            <summary>
+            最大值:max，最小值：min，平均值：mean，合计：sum，期初值：first，期末值：last，计数：count（传数组）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.WindowWay">
+            <summary>
+            0表示按日，1表示按月，2表示按时，3表示按分，4表示按15分
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.Code">
+            <summary>
+            物模型属性标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.BeginTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.Hours">
+            <summary>
+            过滤时段
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_HistoryMergeBase.IsGroup">
+            <summary>
+            是否启用分组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.TimeHour.StartHour">
+            <summary>
+            开始（小时）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.TimeHour.EndHour">
+            <summary>
+            结束（小时）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.CardFrom">
+            <summary>
+            过滤来源
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.Status">
+            <summary>
+            过滤物联卡状态: 测试中:testing、库存:inventory、待激活:pending-activation、已激活:activation、已停卡:deactivation、已销卡:retired
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.Key">
+            <summary>
+            按ICCID号、IMSI、MSISDN查询
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.DeviceKey">
+            <summary>
+            按绑定设备的第三方编码、通讯编码查询
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.IsBindDev">
+            <summary>
+            过滤是否绑定设备
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.ExpirBeginTime">
+            <summary>
+            到期开始时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotCardListPage.ExpirEndTime">
+            <summary>
+            到期结束时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotConfig.EnableAutoAdd">
+            <summary>
+            是否自动增加物联卡
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotConfig.AutoICCIDFrom">
+            <summary>
+            为空不开启，设备上线自动添加卡来源，YiDong、SimBoss
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotConfig.YiDongOption">
+            <summary>
+            移动物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotConfig.SimBossOption">
+            <summary>
+            SimBoss物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotConfig.SohanOption">
+            <summary>
+            SohanOption物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_IotConfig.UnicomOption">
+            <summary>
+            联通物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_JVList.Id">
+            <summary>
+            设备的Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_JVList.Code">
+            <summary>
+            物模型属性标识（不传则为全部属性）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_JVList.BeginTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_JVList.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_JVList.pageNum">
+            <summary>
+            分页号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_JVList.pageSize">
+            <summary>
+            分页大小
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_OnOffline.BeginTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_OnOffline.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_OnOffline.pageNum">
+            <summary>
+            分页号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_OnOffline.pageSize">
+            <summary>
+            分页大小
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_OnOfflineList.Id">
+            <summary>
+            设备的Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_OnOfflineListSync.Number">
+            <summary>
+            设备的第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.OrgId">
+            <summary>
+            过滤组织（前端不用传）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.Name">
+            <summary>
+            名称过滤
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.ClassId">
+            <summary>
+            分类过滤
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.ClassPath">
+            <summary>
+            分类路径过滤
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.Status">
+            <summary>
+            状态过滤（0未发布、1已发布）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.IsNet">
+            <summary>
+            过滤联网
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductListPage.Ids">
+            <summary>
+            过滤产品Id数组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_ProductNamePage.ClassId">
+            <summary>
+            过滤分类
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_RechargeData.Ids">
+            <summary>
+            需要续费的卡Id数组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_RechargeData.Month">
+            <summary>
+            需要续费几个月
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_RunStatisticsInfo.OrgId">
+            <summary>
+            客户组织Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_RunStatisticsInfo.StateList">
+            <summary>
+            状态列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SaveProps.Id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SaveProps.NewVals">
+            <summary>
+            设备属性键值对
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SaveProps.Indate">
+            <summary>
+            写入时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SaveTags.id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SaveTags.list">
+            <summary>
+            标签值列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SaveTags.indate">
+            <summary>
+            标签修改时间（不传为当前时间）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.DeviceNumber">
+            <summary>
+            设备编号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.SkuNumber">
+            <summary>
+            规格编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.PD">
+            <summary>
+            设备生产日期
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.Price">
+            <summary>
+            原价
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.Tags">
+            <summary>
+            标签列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncExeFunc.Number">
+            <summary>
+            设备的第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncExeFunc.FunctionId">
+            <summary>
+            功能标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncExeFunc.Inputs">
+            <summary>
+            输入的参数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncSaveTags.number">
+            <summary>
+            设备第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncSaveTags.list">
+            <summary>
+            标签值列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_TagItem.Code">
+            <summary>
+            标签标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_TagItem.Value">
+            <summary>
+            标签值
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_UpdatePage.OrgId">
+            <summary>
+            过滤组织（前端不用传）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_UpdatePage.ProductId">
+            <summary>
+            过滤产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_UsingDevice.Id">
+            <summary>
+            物联卡Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_UsingDevice.devId">
+            <summary>
+            绑定的设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_WarningListPage.DeviceId">
+            <summary>
+            过滤设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_WarningListPage.DeviceNumber">
+            <summary>
+            过滤设备的第三方编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_WarningListPage.ProductId">
+            <summary>
+            过滤产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_WarningListPage.Name">
+            <summary>
+            过滤报警名称、设备名称、产品名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_WarningListPage.WarnCode">
+            <summary>
+            过滤事件标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_WarningListPage.Status">
+            <summary>
+            过滤状态
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.ICCID">
+            <summary>
+            ICCID号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.IMSI">
+            <summary>
+            IMSI号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.MSISDN">
+            <summary>
+            对应的手机号码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.CardFrom">
+            <summary>
+            卡来源：YiDong、SimBoss、Sohan、Unicom、Unknow
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.SpeedLimit">
+            <summary>
+            网络限速值，单位：Kbps，4G上限为150Mbps(153600Kbps)
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.Carrier">
+            <summary>
+            运营商
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.CardType">
+            <summary>
+            SINGLE：单卡，POOL：流量池卡
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.CardPoolId">
+            <summary>
+            流量池id，CardType为POOL的才有此字段
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.RatePlanName">
+            <summary>
+            卡当前套餐名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.RatePlanId">
+            <summary>
+            卡当前套餐ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.TotalDataVolume">
+            <summary>
+            卡套餐大小, 单位M
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.UsedDataVolume">
+            <summary>
+            卡套餐用量
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.UseCountAsVolume">
+            <summary>
+            卡套餐单位，false表示按流量（MB），true表示按次数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.StartDate">
+            <summary>
+            激活时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.ExpirationDate">
+            <summary>
+            到期时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.LastSyncDate">
+            <summary>
+            最后一次同步时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.UsingDevice">
+            <summary>
+            使用中的设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.Status">
+            <summary>
+            卡在运营商的状态, 测试中:testing、库存:inventory、待激活:pending-activation、已激活:activation、已停卡:deactivation、已销卡:retired
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.UsingOn">
+            <summary>
+            设备绑定时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCard.UsingDeviceName">
+            <summary>
+            绑定的设备名称
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotClass">
+            <summary>
+            物联网产品分类
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.Name">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.ParentId">
+            <summary>
+            父分类Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.Path">
+            <summary>
+            分类层级
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotClass.Children">
+            <summary>
+            子分类
+            </summary>
+        </member>
+        <member name="M:IoTService.Models.MZ_IotClass._RecursionFn(System.Collections.Generic.List{IoTService.Models.MZ_IotClass},IoTService.Models.MZ_IotClass)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:IoTService.Models.MZ_IotClass._GetChildList(System.Collections.Generic.List{IoTService.Models.MZ_IotClass},IoTService.Models.MZ_IotClass)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotCode">
+            <summary>
+            物联标识模板
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCode.Name">
+            <summary>
+            标识符名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCode.Code">
+            <summary>
+            标识符
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCode.CodeGroup">
+            <summary>
+            标识符分组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCode.OptionData">
+            <summary>
+            默认选项内容
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCode.CodeType">
+            <summary>
+            0为属性、1为功能
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCode.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotCodeGroup">
+            <summary>
+            物联属性标识符分组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCodeGroup.Name">
+            <summary>
+            分组名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCodeGroup.ParentId">
+            <summary>
+            父Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCodeGroup.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCodeGroup.Children">
+            <summary>
+            子分组
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotCodeGroup.CodeList">
+            <summary>
+            标识符列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotConfig.OrgId">
+            <summary>
+            企业Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotConfig.EnableAutoAdd">
+            <summary>
+            是否自动增加物联卡
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotConfig.YiDongOption">
+            <summary>
+            移动物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotConfig.SimBossOption">
+            <summary>
+            SimBoss物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotConfig.SohanOption">
+            <summary>
+            SohanOption物联卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotConfig.UnicomOption">
+            <summary>
+            UnicomOption联通卡接口配置
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.YiDongOption.expire_month">
+            <summary>
+            初始到期时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.YiDongOption.enable_expire">
+            <summary>
+            是否启用过期
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.SohanOption.expire_month">
+            <summary>
+            初始到期时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.SohanOption.enable_expire">
+            <summary>
+            是否启用过期
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.UnicomOption.tenantId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.UnicomOption.expire_month">
+            <summary>
+            初始到期时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.UnicomOption.enable_expire">
+            <summary>
+            是否启用过期
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.OrgId">
+            <summary>
+            来源组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.OwnerOrgId">
+            <summary>
+            拥有者组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.UseOrgId">
+            <summary>
+            使用者组织ID（使用者为组织）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.UseUserId">
+            <summary>
+            当前使用者（使用者为个人）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.DeviceNumber">
+            <summary>
+            设备唯一编号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.GroupId">
+            <summary>
+            分组Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.GroupName">
+            <summary>
+            分组名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Online">
+            <summary>
+            0为离线，1为在线，2为未初始化
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.DState">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.AreaCode">
+            <summary>
+            设备所在区域代码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.GeoHash">
+            <summary>
+            经纬度对应geohash码值(传入经纬度后由后台计算出此值）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.CreateOn">
+            <summary>
+            设备创建时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.LastOnline">
+            <summary>
+            最后在线时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.FirmwareVer">
+            <summary>
+            固件版本
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.ProductVer">
+            <summary>
+            产品版本
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.OwnerOrgPath">
+            <summary>
+            设备经过的拥有者组织路径
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.DeviceUpIdx">
+            <summary>
+            设备所属处理节点索引
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.KeyWords">
+            <summary>
+            设备的关键词
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.NeedUpdateKey">
+            <summary>
+            设备是否需要更新关键词
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.dBm">
+            <summary>
+            信号强度
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.Tags">
+            <summary>
+            标签列表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.TagsView">
+            <summary>
+            列表展示标签用
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.HavWarn">
+            <summary>
+            是否存在报警
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.OwnerOrgName">
+            <summary>
+            当前拥有者组织
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.RoomName">
+            <summary>
+            房间名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.AreaCodeName">
+            <summary>
+            区域代码地址名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDeviceTag.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDeviceTag.Code">
+            <summary>
+            标签标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDeviceTag.Name">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDeviceTag.Value">
+            <summary>
+            扩展信息值（字符串存储）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDeviceTag.NumValue">
+            <summary>
+            扩展信息值（数值存储）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.GroupName">
+            <summary>
+            分组名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary> 
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.ParentId">
+            <summary>
+            父分组Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.Path">
+            <summary>
+            分组层级
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotGroup.Children">
+            <summary>
+            子分组
+            </summary>
+        </member>
+        <member name="M:IoTService.Models.MZ_IotGroup._RecursionFn(System.Collections.Generic.List{IoTService.Models.MZ_IotGroup},IoTService.Models.MZ_IotGroup)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:IoTService.Models.MZ_IotGroup._GetChildList(System.Collections.Generic.List{IoTService.Models.MZ_IotGroup},IoTService.Models.MZ_IotGroup)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Models.MZ_IotGroup.GroupList2Tree(System.Collections.Generic.List{IoTService.Models.MZ_IotGroup})">
+            <summary>
+            分组树转选择树
+            </summary>
+            <param name="groupTree"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotHisSource">
+            <summary>
+            历史数据存储源
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotHisSource.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotHisSource.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotHisSource.Name">
+            <summary>
+            数据源名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotHisSource.StorageType">
+            <summary>
+            数据源类型：influx（默认）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotHisSource.StorageConfig">
+            <summary>
+            历史数据存储配置Json
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotHisSource.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotProduct">
+            <summary>
+            物联网产品
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.Name">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.ClassifiedId">
+            <summary>
+            所属品类ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.ClassName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.NetworkWay">
+            <summary>
+            设备接入方式：mqtt、http、tcp，为空则无物联
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.NoticeWay">
+            <summary>
+            告警通知方式
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.Status">
+            <summary>
+            状态（0未发布、1已发布）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.PhysicsWay">
+            <summary>
+            设备通信方式：WiFi、以太网、2G网络、3G网络、4G网络、5G网络、NB-IoT（多个,号隔开）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.StorageConfig">
+            <summary>
+            历史数据存储配置Json
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.InterScripts">
+            <summary>
+            数据解释脚本
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.ModelTSL">
+            <summary>
+            物模型json
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.Version">
+            <summary>
+            当前版本号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.PublicTime">
+            <summary>
+            最后一次发布时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.MonitorReportToken">
+            <summary>
+            画面监控报表
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.TSLUpdated">
+            <summary>
+            物模型变更时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotProduct.Path">
+            <summary>
+            所属分类路径
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotScript">
+            <summary>
+            物联网脚本模板
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.Id">
+            <summary>
+            模板Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.OrgId">
+            <summary>
+            创建者组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.IsSystem">
+            <summary>
+            是否为系统模板
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.Name">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.Remark">
+            <summary>
+            模板介绍
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.KeyWords">
+            <summary>
+            搜索用关键字
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.ScriptContent">
+            <summary>
+            脚本内容
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotScript.InitModelTSL">
+            <summary>
+            物模型初始化
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.Id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.Status">
+            <summary>
+            状态：0待更新，1更新中，2失败（需要人工处理）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.UpdateCount">
+            <summary>
+            尝试更新次数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.UpdateErr">
+            <summary>
+            更新失败原因
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.Version">
+            <summary>
+            更新的目标版本
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotUpdate.Level">
+            <summary>
+            设备更新优先级（数字越低越优先）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarnConfig.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarnConfig.ProductId">
+            <summary>
+            所属物联产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarnConfig.WarnFlowId">
+            <summary>
+            告警工单执行流程
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarnConfig.WarnFlowInitJson">
+            <summary>
+            表单初始化映射
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarnConfig.WarnFlowName">
+            <summary>
+            流程名称
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotWarning">
+            <summary>
+            Iot设备告警
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.WarnNumber">
+            <summary>
+            工单唯一编号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.Name">
+            <summary>
+            告警名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.Code">
+            <summary>
+            事件标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.Description">
+            <summary>
+            告警描述
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.Level">
+            <summary>
+            报警级别：0普通、1告警、2紧急
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.DeviceId">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.MsgInfo">
+            <summary>
+            消息内容
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.Status">
+            <summary>
+            状态：0待处理，1已处理，2、待派工
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.ClearOn">
+            <summary>
+            处理时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.ClearId">
+            <summary>
+            处理人员
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.ClearRemark">
+            <summary>
+            处理备注
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.CreateOn">
+            <summary>
+            告警时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.FlowId">
+            <summary>
+            关联的流程Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.DeviceName">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.DevicePhotoUrl">
+            <summary>
+            设备图片
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWarning.ClearUser">
+            <summary>
+            处理人信息
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.MZ_IotWinRule">
+            <summary>
+            物联产品的属性规则
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.PropCode">
+            <summary>
+            关联属性
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.WindowWay">
+            <summary>
+            统计时间：0每时、1每日、2每月
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.MergeWay">
+            <summary>
+            统计方式：最大值:max，最小值：min，平均值：mean，合计值：sum，期初值：first，期末值：last，计数：count
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.MergeCode">
+            <summary>
+            统计属性
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotWinRule.Priority">
+            <summary>
+            优先级：值越小越先统计
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_PropExcept.DtuId">
+            <summary>
+            DtuId
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_PropExcept.PropCode">
+            <summary>
+            属性的标识符
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_PropExcept.ExceptType">
+            <summary>
+            异常类型：峰值spike、更改change
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_PropExcept.ExceptValue">
+            <summary>
+            异常值
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_PropExcept.CreatedOn">
+            <summary>
+            发生时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_BatchLive.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_BatchLive.PropertyList">
+            <summary>
+            设备实时数据
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_ChannelInfo.Name">
+            <summary>
+            通道名
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_ChannelInfo.Code">
+            <summary>
+            通道代码
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_ChannelInfo.ImageUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_ChannelInfo.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceFunc.name">
+            <summary>
+            功能名称（必填项）
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceFunc.code">
+            <summary>
+            标识符（必填项）
+            支持大小写字母、数字和下划线
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceFunc.description">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceFunc.disabled">
+            <summary>
+            是否禁用
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceFunc.inputs">
+            <summary>
+            输入参数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceStatistics.TotalCount">
+            <summary>
+            总设备数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceStatistics.OnlineCount">
+            <summary>
+            在线数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceStatistics.OfflineCount">
+            <summary>
+            离线数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceStatistics.UnknowCount">
+            <summary>
+            未知数
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceStatistics.EventCount">
+            <summary>
+            待处理事件数
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.Out_DeviceTagItem">
+            <summary>
+            设备标签信息
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.Id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.Code">
+            <summary>
+            标签标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.MapCode">
+            <summary>
+            绑定的属性标识
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.Name">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.Option">
+            <summary>
+            对应物模型选项
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.Value">
+            <summary>
+            真值
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_DeviceTagItem.DisplayValue">
+            <summary>
+            显示值
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_OnOffline.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_OnOffline.IsOnline">
+            <summary>
+            true为在线，false为离线
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.Out_ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_TagItem.Name">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_TagItem.DisplayValue">
+            <summary>
+            显示值
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_UpdateItem.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_UpdateItem.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_UpdateItem.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.WarningNoticeItem">
+            <summary>
+            告警通知方式
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.WarningNoticeItem.NoticeWay">
+            <summary>
+            通知方式:APP站内通知,EMAIL邮件通知,SMS短信通知,WX微信通知
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.WarningNoticeItem.TargetType">
+            <summary>
+            目标类型：0为设备来源的用户，1为设备来源的角色，2为设备拥有者，3为设备使用者（可能是组织的管理员或设备使用者）,4为固定目标
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.WarningNoticeItem.TargetValue">
+            <summary>
+            TargetType为4时传邮件通知时传固定邮箱，短信通知时传固定手机号，0时传用户Id,1时传角色Id，其它传空
+            </summary>
+        </member>
+        <member name="T:IoTService.ServerBusProxy">
+            <summary>
+            服务端用事件总线代理
+            </summary>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.DownUpdateProductSys(IoTService.Models.MZ_IotProduct)">
+            <summary>
+            更新产品缓存物模型信息
+            </summary>
+            <param name="product"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.WaitDownReadProperty(System.String,System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            读取指定设备的属性
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="networkWay"></param>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.DownFunction(System.String,System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行指定功能
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="netway"></param>
+            <param name="functionId"></param>
+            <param name="inputs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.DownSyncDevice(IoTService.Models.MZ_IotDevice,System.Int32,ChannelUtility.Config.ChannelConfig)">
+            <summary>
+            更新设备信息（发送设备绑定消息）
+            </summary>
+            <param name="device"></param>
+            <param name="targetVersion"></param>
+            <param name="channelConfig"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.DownModbusMessage(System.String,System.String,System.String,System.String)">
+            <summary>
+            下发Modbus规则消息
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="networkWay"></param>
+            <param name="matchName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.RegNode">
+            <summary>
+            注册新的规则处理节点
+            </summary>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.RegName(System.String)">
+            <summary>
+            注册新的规则处理节点（指定名称）
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.TestUpNode(System.String)">
+            <summary>
+            发送规则处理节点的心跳包
+            </summary>
+            <param name="nodename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.ForcedDownNode(System.String)">
+            <summary>
+            强制下线规则处理节点
+            </summary>
+            <param name="nodename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.SendEvent(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Collections.Generic.HashSet{System.Int64},System.String)">
+            <summary>
+            发送服务端事件
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="eventId"></param>
+            <param name="outputs"></param>
+            <param name="redirectFromProductId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.SendConnect(System.String,System.String,System.String,System.String,System.Collections.Generic.HashSet{System.Int64},System.String)">
+            <summary>
+            发送服务端上线事件
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="ip"></param>
+            <param name="redirectFromProductId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.SendDisconnect(System.String,System.String,System.String,System.Collections.Generic.HashSet{System.Int64},System.String)">
+            <summary>
+            发送服务端离线事件
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="redirectFromProductId"></param>
+            <param name="ruleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.ServerBusProxy.SendPropertyReply(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Boolean,System.Collections.Generic.HashSet{System.Int64},System.String,System.Nullable{System.DateTime})">
+            <summary>
+            发送服务端属性回复
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="properties"></param>
+            <param name="redirectFromProductId"></param>
+            <param name="isTagSync"></param>
+            <param name="ruleId"></param>
+            <param name="fromDtuId"></param>
+            <param name="indate"></param>
+            <returns></returns>
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.Id">
+            流量池ID
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.PoolSpecification">
+            流量池规格
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.Carrier">
+            运营商
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.TotalVolume">
+            总容量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.UseVolume">
+            使用量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.LeftVolume">
+            剩余流量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.PackageVolume">
+            叠加流量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.UseRate">
+            流量使用率
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.TotalCount">
+            卡总数
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.CurrentActivationCount">
+            当前激活卡量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.CurrentDeactivationCount">
+            当前停卡量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.CurrentInventoryCount">
+            当前库存量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.CurrentTestingCount">
+            当前测试期卡量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.CurrentRetiredCount">
+            当前销卡的卡量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.ActivationReadyCount">
+            待激活数
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Iccid">
+             iccid
+            
+             @ref https://baike.baidu.com/item/iccid/5181544
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Imsi">
+             imsi
+            
+             @ref https://baike.baidu.com/item/imsi/307249
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Msisdn">
+            msisdn
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Carrier">
+             运营商
+            
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Type">
+            卡片类型：单卡: SINGLE，流量池: POOL
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Status">
+             状态
+            
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.DeviceStatus">
+             设备状态
+            
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.OpenDate">
+            出库时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.StartDate">
+            激活时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.ExpireDate">
+            过期时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.LastSyncDate">
+            套餐流量最后更新时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.ActiveDuration">
+            激活宽限期(天）
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Memo">
+            卡备注
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.RealnameRequired">
+            是否需要实名认证
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.RealName">
+            实名认证用户姓名
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.RealNameCertifystatus">
+            卡实名审核状态，审核通过：pass、未提交：not-submit、审核不通过：not-pass、待审核：not-audit
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.CardPoolId">
+            流量池ID
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.TestingExpireDate">
+            测试期结束时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.RatePlanId">
+            套餐id
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.IratePlanName">
+            套餐名称
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.UsedDataVolume">
+            套使用量(MB)
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.TotalDataVolume">
+            当前套餐总流量(MB)
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.RatePlanEffetiveDate">
+            当前套餐生效时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.RatePlanExpirationDate">
+            当前套餐失效时间
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.DataUsage">
+            套餐当月用量
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.Functions">
+            
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.OrgName">
+            公司名称
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.ImeiStatus">
+            imei状态
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.SpeedLimit">
+            网络限速值
+        </member>
+        <member name="P:IoTService.Third.Api.SimBoss.DeviceDetailModel.UseCountAsVolume">
+            
+        </member>
+        <member name="T:IoTService.Third.Api.SimBoss.ThreeIdCombineModel">
+             ICCID, MSISDN, IMSI三字段
+             Created by Abel 2018-06-20.
+            
+        </member>
+        <member name="T:IoTService.Third.Api.SimBoss.UriConstants">
+             URI常量
+             Created by Abel 2018-06-20.
+            
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomResult`1.code">
+            <summary>
+            错误码
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomResult`1.data">
+            <summary>
+            业务数据实体
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomResult`1.msg">
+            <summary>
+            返回信息
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomResult`1.success">
+            <summary>
+            是否成功
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.status">
+            <summary>
+            设备状态
+            1:已激活；2:可激活；3:已停用；4:已失效；5:可测试；6:库存；7:已更换；8:已清除;
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.isRealName">
+            <summary>
+            实名状态
+            0:未实名；1：已实名；2:无需实名
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.accountName">
+            <summary>
+            归属公司
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.subAccount">
+            <summary>
+            子账户
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.activatedTime">
+            <summary>
+            设备首次激活时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.synchronizeTime">
+            <summary>
+            设备同步时间
+            仅在设备激活期间会与设备进行同步
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.currentRateId">
+            <summary>
+            当前资费ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.currentRateType">
+            <summary>
+            当前资费类型
+            1：月付灵活共享；
+            2：月付阶梯计费；
+            3：预付单个连接；
+            6：月付单个连接；
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.deadlineTime">
+            <summary>
+            沉默期时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.deadlineRateName">
+            <summary>
+            沉默期资费
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.cycleUsedFlow">
+            <summary>
+            套包账期已用流量（MB）未使用为0
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.cycleUsedVoice">
+            <summary>
+            套包账期已用语音（Min）未使用为0
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.cycleUsedSms">
+            <summary>
+            套包账期已用短信（条） 未使用为0
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.simCycleUsedFlow">
+            <summary>
+            设备账期已用流量（MB）未使用为0
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.simCycleUsedVoice">
+            <summary>
+            设备账期已用语音（Min）未使用为0
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCardInfo.simCycleUsedSms">
+            <summary>
+            设备账期已用短信（条） 未使用为0
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCharge.id">
+            <summary>
+            资费ID
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCharge.rateName">
+            <summary>
+            资费名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCharge.status">
+            <summary>
+            状态:1 已启用 2 已停用
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCharge.rateType">
+            <summary>
+            资费类型
+            1月付灵活共享 2月付阶梯计费 3预付单个连接 6月付单个连接
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCharge.price">
+            <summary>
+            售价
+            </summary>
+        </member>
+        <member name="P:IoTService.Third.Api.UnicomCharge.ratedFlowTotal">
+            <summary>
+            额定流量总量（MB）
+            </summary>
+        </member>
+        <member name="T:IoTService.Third.IThirdApi">
+            <summary>
+            第三方接口
+            </summary>
+        </member>
+        <member name="M:IoTService.Third.IThirdApi.QueryCardInfo(System.String)">
+            <summary>
+            查询单卡信息
+            </summary>
+            <param name="iccid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Third.IThirdApi.QueryCardInfoList(System.Collections.Generic.List{System.String})">
+            <summary>
+            批量查询卡信息
+            </summary>
+            <param name="iccids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Third.IThirdApi.Recharge(IoTService.Models.MZ_IotCard,System.Int32)">
+            <summary>
+            单卡套餐续费
+            </summary>
+            <param name="card"></param>
+            <param name="month"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Third.IThirdApi.StopSimStatusBatch(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            批量办理物联卡停机
+            </summary>
+            <param name="msisdns"></param>
+            <param name="iccids"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

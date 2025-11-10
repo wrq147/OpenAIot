@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "配置文件 1": {
+      "commandName": "Executable",
+      "executablePath": "D:\\workspace\\hdCard\\Channel\\MqttChannel\\bin\\Debug\\net7.0\\MqttChannel.exe"
+    }
+  }
+}

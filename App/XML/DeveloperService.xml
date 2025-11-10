@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeveloperService</name>
+    </assembly>
+    <members>
+        <member name="M:DeveloperService.AbstractDeveloperController.GetDeveloper">
+            <summary>
+            获取当前开发者
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DeveloperService.Controller.Center.Profile">
+            <summary>
+            获取当前用户的开发者信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DeveloperService.Controller.Developer.ListPage(DeveloperService.Model.In_DeveloperPage)">
+            <summary>
+            开发者列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DeveloperService.Controller.Developer.Info(System.String)">
+            <summary>
+            开发者详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DeveloperService.Controller.Developer.Add(DeveloperService.Model.MZ_Developer)">
+            <summary>
+            添加开发者
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DeveloperService.Controller.Developer.Edit(DeveloperService.Model.MZ_Developer)">
+            <summary>
+            编辑开发者
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DeveloperService.Controller.Developer.Remove(System.String)">
+            <summary>
+            删除开发者
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DeveloperService.Controller.OAuth">
+            <summary>
+            OAuth2接口
+            </summary>
+        </member>
+        <member name="T:DeveloperService.DeveloperOption">
+            <summary>
+            配置信息
+            </summary>
+        </member>
+        <member name="P:DeveloperService.DeveloperOption.token_life_time">
+            <summary>
+            AccessToken存活时间（单位分钟）
+            </summary>
+        </member>
+        <member name="P:DeveloperService.DeveloperOption.public_key">
+            <summary>
+            公钥
+            </summary>
+        </member>
+        <member name="P:DeveloperService.DeveloperOption.private_key">
+            <summary>
+            私钥
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.In_DeveloperPage.Key">
+            <summary>
+            搜索开发者名称
+            </summary>
+        </member>
+        <member name="T:DeveloperService.Model.MZ_Developer">
+            <summary>
+            开发者实体
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.DevId">
+            <summary>
+            开发者Id
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.SecKey">
+            <summary>
+            开发者SecKey
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.KeyType">
+            <summary>
+            0为简单验证，1为OAuth验证
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.UserType">
+            <summary>
+            0为个人开发者，1为企业开发者
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.UserId">
+            <summary>
+            开发者关联用户
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.OrgId">
+            <summary>
+            开发者关联组织
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.DeveloperName">
+            <summary>
+            开发者名称
+            </summary>
+        </member>
+        <member name="P:DeveloperService.Model.MZ_Developer.DeveloperOrgName">
+            <summary>
+            开发者组织名称
+            </summary>
+        </member>
+    </members>
+</doc>

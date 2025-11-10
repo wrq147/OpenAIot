@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\</OutputPath>
+		<DocumentationFile>..\..\App\XML\ProducerService.xml</DocumentationFile>
+	</PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuthService\AuthService.csproj" />
+    <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
+    <ProjectReference Include="..\DictService\DictService.csproj" />
+  </ItemGroup>
+
+</Project>

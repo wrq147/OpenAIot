@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net9.0</TargetFrameworks>
+	</PropertyGroup>
+
+
+	<PropertyGroup>
+		<PackageId>WebView.Avalonia.Desktop</PackageId>
+		<Title>WebView.Avalonia.Desktop</Title> 
+	</PropertyGroup>
+
+
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.3.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Linux\Avalonia.WebView.Linux\Avalonia.WebView.Linux.csproj" />
+		<ProjectReference Include="..\..\Windows\Avalonia.WebView.Windows\Avalonia.WebView.Windows.csproj" />
+	</ItemGroup>
+
+
+</Project>

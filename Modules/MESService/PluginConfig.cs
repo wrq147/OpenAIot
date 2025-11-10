@@ -1,0 +1,248 @@
+﻿using AuthService.Fields;
+using Common;
+using Common.DataAc;
+using Common.EventBus;
+using MESService.Business;
+using MESService.DAL;
+using MESService.Model;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using MonitorService.Business;
+using MonitorService.Model;
+using System;
+using System.Collections.Generic;
+using TemplateAction.Core;
+using TemplateAction.NetCore;
+
+namespace MESService
+{
+    public class PluginConfig : TANetCorePluginConfig
+    {
+        public override string[] DependOn => new string[] { "AuthService", "FlowService", "ProducerService" };
+        protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
+        {
+            services.AddBLL<BomBLL>();
+            services.AddBLL<ConfigBLL>();
+            services.AddBLL<DefectBLL>();
+            services.AddBLL<MesActionBLL>();
+            services.AddBLL<OperBLL>();
+            services.AddBLL<PlanBLL>();
+            services.AddBLL<ReportBLL>();
+            services.AddBLL<RouteBLL>();
+            services.AddBLL<WorkOrderBLL>();
+            services.AddBLL<WorkTaskBLL>();
+            services.AddBLL<BatchDevHisBLL>();
+
+            services.AddDAL<BomHeaderDAL>();
+            services.AddDAL<BomLineDAL>();
+            services.AddDAL<DefectDAL>();
+            services.AddDAL<OperDAL>();
+            services.AddDAL<RouteDAL>();
+            services.AddDAL<RouteOperDAL>();
+            services.AddDAL<ProductPlanDAL>();
+            services.AddDAL<ProductPlanItemDAL>();
+            services.AddDAL<FactoryMesDAL>();
+            services.AddDAL<MesActionDAL>();
+            services.AddDAL<WorkOrderDAL>();
+            services.AddDAL<WorkBomDAL>();
+            services.AddDAL<WorkReportDAL>();
+            services.AddDAL<WorkBatchDAL>();
+            services.AddDAL<WorkTaskDAL>();
+            services.AddDAL<BatchDevHisDAL>();
+        }
+        private DA_Table tb1;
+        private DA_Table tb2;
+        protected override void Configure(ITAApplication app, PluginObject plg)
+        {
+
+            #region 可变动数据
+            var redis = app.ServiceProvider.GetService<GeneralRedisHelper>();
+            tb1 = new DA_Table()
+            {
+                name = "生产计划",
+                code = "mz_product_plan"
+            };
+            tb1.fields = new List<DA_Field>
+                {
+                    new DA_Field()
+                    {
+                        name = "生产计划单号",
+                        code = "@Number",
+                        type = "Text",
+                        used = 1,
+                        formlist = new List<DA_Value>
+                        {
+                           new DA_Value()
+                           {
+                               name="发起的单号",
+                               val="@from"
+                           }
+                        }
+                    },
+                    new DA_Field()
+                    {
+                        name = "生产计划状态",
+                        code = "Status",
+                        type = "Enum",
+                        used = 2,
+                       options=new List<DA_Value>
+                       {
+                           new DA_Value()
+                           {
+                               name="待执行",
+                               val="2"
+                           },
+                           new DA_Value()
+                           {
+                               name="已驳回",
+                               val="6"
+                           }
+                       }
+                    }
+                };
+
+            tb2 = new DA_Table()
+            {
+                name = "生产报工",
+                code = "mz_work_report"
+            };
+            tb2.fields = new List<DA_Field>
+                {
+                    new DA_Field()
+                    {
+                        name = "生产报工单号",
+                        code = "@Number",
+                        type = "Text",
+                        used = 1,
+                        formlist = new List<DA_Value>
+                        {
+                           new DA_Value()
+                           {
+                               name="发起的单号",
+                               val="@from"
+                           }
+                        }
+                    },
+                    new DA_Field()
+                    {
+                        name = "生产报工状态",
+                        code = "Status",
+                        type = "Enum",
+                        used = 2,
+                       options=new List<DA_Value>
+                       {
+                           new DA_Value()
+                           {
+                               name="已审核",
+                               val="2"
+                           },
+                           new DA_Value()
+                           {
+                               name="已驳回",
+                               val="4"
+                           }
+                       }
+                    }
+                };
+
+            redis.HashSet("BusChange-Event", "MESService", new List<DA_Table> { tb1, tb2 });
+
+            #endregion
+
+            #region 固有字段
+            List<FieldBase> reportfields = new List<FieldBase>();
+            reportfields.Add(new TextField()
+            {
+                mapid = "BatchNo",
+                name = "批次编号",
+                type = "文本"
+            });
+            reportfields.Add(new TextField()
+            {
+                mapid = "LNumber",
+                name = "通讯编号",
+                type = "文本"
+            });
+            redis.HashSet("FixedFields", "报工", reportfields);
+            #endregion
+
+            //监听数据变动
+            plg.RegisterCall("ChangeData", async (evt) =>
+            {
+                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<ActionChangeData>(evt.Params);
+                if (tb1.IsThisTable(paramdata))
+                {
+                    var res = await app.ServiceProvider.GetService<MesActionBLL>().DoPlanActionEvent(paramdata);
+                    return new CallResponse(res);
+                }
+                else if (tb2.IsThisTable(paramdata))
+                {
+                    var res = await app.ServiceProvider.GetService<MesActionBLL>().DoReportActionEvent(paramdata);
+                    return new CallResponse(res);
+                }
+                return CallResponse.Next();
+            });
+
+
+            plg.RegisterBus("ResetNumberTaskInfo", async (evt) =>
+            {
+                var taskOrgId = evt.GetLong("OrgId");
+                var taskNumber = evt.GetValue("Number");
+                var workTaskBLL = app.ServiceProvider.GetService<WorkTaskBLL>();
+                var reportlist = await app.ServiceProvider.GetService<WorkReportDAL>().SelectList(x => x.OrgId == taskOrgId && x.Number == taskNumber);
+                if (reportlist.Count > 0)
+                {
+                    await workTaskBLL.ResetTaskInfo(reportlist[0].WorkTaskId, reportlist[0]);
+                }
+            });
+
+
+
+            plg.RegisterBus("GenerateNumberWorkOrder", async (evt) =>
+            {
+                var tOrgId = evt.GetLong("OrgId");
+                var tNumber = evt.GetValue("Number");
+                var planDAL = app.ServiceProvider.GetService<ProductPlanDAL>();
+                var planItemDAL = app.ServiceProvider.GetService<ProductPlanItemDAL>();
+                var orderBLL = app.ServiceProvider.GetService<WorkOrderBLL>();
+                List<MZ_ProductPlan> planlist = await planDAL.SelectList(x => x.OrgId == tOrgId && x.Number == tNumber);
+                foreach (var planItem in planlist)
+                {
+                    planItem.Items = await planItemDAL.SelectList(x => x.PlanId == planItem.Id);
+                    await orderBLL.GenerateWorkOrder(planItem);
+                }
+            });
+
+
+            TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
+            {
+                if (Constants.General.quick_init != true)
+                {
+                    //添加定时生成工单任务
+                    string tjobname = "OrderToTask";
+                    string tgroup = "SYSTEM";
+                    var jobBLL = app.ServiceProvider.GetService<JobBLL>();
+                    if (!await jobBLL.ExistJob(tjobname, tgroup))
+                    {
+                        MZ_Job devjob = new MZ_Job();
+                        devjob.concurrent = "1";
+                        devjob.createId = 0;
+                        devjob.create_time = DateTime.Now;
+                        devjob.updateId = 0;
+                        devjob.update_time = DateTime.Now;
+                        devjob.cron_expression = "0 5 0/1 * * ?";
+                        devjob.invoke_target = typeof(WorkOrderBLL).FullName + ".OrderToTask()";
+                        devjob.job_group = tgroup;
+                        devjob.job_name = tjobname;
+                        devjob.misfire_policy = "2";
+                        devjob.status = "0";
+
+                        await jobBLL.InsertJob(devjob);
+                    }
+                }
+            });
+
+
+        }
+    }
+}

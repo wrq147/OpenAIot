@@ -1,0 +1,1152 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MonitorService</name>
+    </assembly>
+    <members>
+        <member name="M:MonitorService.Business.CalendarBLL.Execute">
+            <summary>
+            定时清除过期假日和每日生成假日
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.ExistJob(System.String,System.String)">
+            <summary>
+            判断是否存在指定名称任务
+            </summary>
+            <param name="name"></param>
+            <param name="group"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.SelectJobList(MonitorService.Model.In_JobList)">
+            <summary>
+            获取quartz调度器的计划任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.SelectJobByName(System.String,System.String)">
+            <summary>
+            通过调度任务名称查询调度信息
+            </summary>
+            <param name="name"></param>
+            <param name="group"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.SelectJobById(System.Int64)">
+            <summary>
+            通过调度任务ID查询调度信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.InsertJob(MonitorService.Model.MZ_Job)">
+            <summary>
+            新增任务
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.UpdateJob(MonitorService.Model.MZ_Job)">
+            <summary>
+            更新任务的时间表达式
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.UpdateSchedulerJob(MonitorService.Model.MZ_Job,System.String)">
+            <summary>
+            更新任务
+            </summary>
+            <param name="job"></param>
+            <param name="jobGroup"></param>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.PauseJob(MonitorService.Model.MZ_Job)">
+            <summary>
+            暂停任务
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.ResumeJob(MonitorService.Model.MZ_Job)">
+            <summary>
+            恢复任务
+            </summary>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.ChangeStatus(System.Int64,System.String)">
+            <summary>
+            任务调度状态修改
+            </summary>
+            <param name="jobId"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.Run(System.Int64)">
+            <summary>
+            立即运行任务
+            </summary>
+            <param name="jobId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.DeleteJobByIds(System.Int64[])">
+            <summary>
+            批量删除调度信息
+            </summary>
+            <param name="jobIds"></param>
+        </member>
+        <member name="M:MonitorService.Business.JobBLL.DeleteJob(System.Int64)">
+            <summary>
+            删除任务后，所对应的trigger也将被删除
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobLogBLL.SelectJobLogList(MonitorService.Model.In_JobLogList)">
+            <summary>
+            获取quartz调度器日志的计划任务
+            </summary>
+            <param name="jobLog"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobLogBLL.SelectJobById(System.Int64)">
+            <summary>
+            通过调度任务日志ID查询调度信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobLogBLL.AddJobLog(MonitorService.Model.MZ_JobLog)">
+            <summary>
+            新增任务日志
+            </summary>
+            <param name="jobLog"></param>
+        </member>
+        <member name="M:MonitorService.Business.JobLogBLL.DeleteJobLogByIds(System.Int64[])">
+            <summary>
+            批量删除调度日志信息
+            </summary>
+            <param name="logIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobLogBLL.DeleteJobLogById(System.Int64)">
+            <summary>
+            删除任务日志
+            </summary>
+            <param name="jobId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.JobLogBLL.CleanJobLog(System.String,System.String)">
+            <summary>
+            清空任务日志
+            </summary>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.InsertOperlog(MonitorService.Model.MZ_OperLog)">
+            <summary>
+            新增操作日志
+            </summary>
+            <param name="operLog"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.SelectOperLogList(MonitorService.Model.In_OperLogList)">
+            <summary>
+            查询系统操作日志集合
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.SelectOperLogListByPerson(MonitorService.Model.In_OperLogList)">
+            <summary>
+            查询本人的操作日志
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.DeleteOperLogByIds(System.Int64[])">
+            <summary>
+            批量删除系统操作日志
+            </summary>
+            <param name="operIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.SelectOperLogById(System.Int64)">
+            <summary>
+            查询操作日志详细
+            </summary>
+            <param name="operId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.CleanOperLog">
+            <summary>
+            清空操作日志
+            </summary>
+        </member>
+        <member name="M:MonitorService.Business.OperLogBLL.CleanOver">
+            <summary>
+            清空超一个月的日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MonitorService.Controller.Cache">
+            <summary>
+            缓存监控
+            </summary>
+        </member>
+        <member name="M:MonitorService.Controller.Cache.Del(System.String)">
+            <summary>
+            删除指定缓存键
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.List">
+            <summary>
+            获取企业假期列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.Add(System.DateTime)">
+            <summary>
+            新增假期
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.Remove(System.DateTime)">
+            <summary>
+            删除假期
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.HolidayTypeList">
+            <summary>
+            获取节日类型列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.AddType(MonitorService.Model.MZ_HolidayType)">
+            <summary>
+            新增节日类型
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.EditType(MonitorService.Model.MZ_HolidayType)">
+            <summary>
+            编辑节日类型
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Calendar.DelType(System.String)">
+            <summary>
+            删除节日类型
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MonitorService.Controller.Job">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MonitorService.Controller.Job.List(MonitorService.Model.In_JobList)">
+            <summary>
+            查询定时任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.Export(MonitorService.Model.In_JobList)">
+            
+             <summary>
+             导出Excel
+             </summary>
+             <param name="query"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.Info(System.Int64)">
+            <summary>
+            获取定时任务详细信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.Add(MonitorService.Model.MZ_Job)">
+            <summary>
+            新增定时任务
+            </summary>
+            <param name="SysJob"></param>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.Edit(MonitorService.Model.MZ_Job)">
+            <summary>
+            修改定时任务
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.ChangeStatus(System.Int64,System.String)">
+            <summary>
+            定时任务状态修改
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.Run(System.Int64)">
+            <summary>
+            定时任务立即执行一次
+            </summary>
+            <param name="SysJob"></param>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.Remove(System.Int64[])">
+            <summary>
+            删除定时任务
+            </summary>
+            <param name="Long"></param>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.Job.CronToDes(System.String)">
+            <summary>
+            Cron表达式转描述
+            </summary>
+            <param name="cron"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.JobLog.List(MonitorService.Model.In_JobLogList)">
+            <summary>
+            查询定时任务调度日志列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.JobLog.Export(MonitorService.Model.In_JobLogList)">
+            <summary>
+            导出定时任务调度日志列表
+            </summary>
+            <param name="sysJobLog"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.JobLog.Info(System.Int64)">
+            <summary>
+            根据调度编号获取详细信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.JobLog.Clean(System.String,System.String)">
+            <summary>
+            清空定时任务调度日志
+            </summary>
+            <param name="name"></param>
+            <param name="group"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MonitorService.Controller.Online">
+            <summary>
+            在线用户
+            </summary>
+        </member>
+        <member name="M:MonitorService.Controller.Online.ForceLogout(System.String)">
+            <summary>
+            强退用户
+            </summary>
+            <param name="tokenId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.OperLog.List(MonitorService.Model.In_OperLogList)">
+            <summary>
+            查询所有操作日志
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Controller.OperLog.PersonList(MonitorService.Model.In_OperLogList)">
+            <summary>
+            查询本人的操作日志
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MonitorService.Controller.Server">
+            <summary>
+            本机信息
+            </summary>
+        </member>
+        <member name="M:MonitorService.DAL.JobDAL.UpdateJob(MonitorService.Model.MZ_Job)">
+            <summary>
+            修改调度任务信息
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobDAL.InsertJob(MonitorService.Model.MZ_Job)">
+            <summary>
+            新增调度任务信息
+            </summary>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobDAL.DeleteJobById(System.Int64)">
+            <summary>
+            通过调度ID删除调度任务信息
+            </summary>
+            <param name="jobId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobLogDAL.SelectJobLogList(MonitorService.Model.In_JobLogList)">
+            <summary>
+            获取quartz调度器日志的计划任务
+            </summary>
+            <param name="jobLog"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobLogDAL.SelectJobLogById(System.Int64)">
+            <summary>
+            通过调度任务日志ID查询调度信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobLogDAL.InsertJobLog(MonitorService.Model.MZ_JobLog)">
+            <summary>
+            新增任务日志
+            </summary>
+            <param name="jobLog"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobLogDAL.DeleteJobLogByIds(System.Int64[])">
+            <summary>
+            批量删除调度日志信息
+            </summary>
+            <param name="logIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobLogDAL.DeleteJobLogByName(System.String,System.String)">
+            <summary>
+            删除指定任务组和名称的日志
+            </summary>
+            <param name="name"></param>
+            <param name="group"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.JobLogDAL.CleanJobLog">
+            <summary>
+            清空任务日志
+            </summary>
+        </member>
+        <member name="M:MonitorService.DAL.OperLogDAL.InsertOperlog(MonitorService.Model.MZ_OperLog)">
+            <summary>
+            新增操作日志
+            </summary>
+            <param name="operLog"></param>
+        </member>
+        <member name="M:MonitorService.DAL.OperLogDAL.SelectOperLogList(MonitorService.Model.In_OperLogList,Common.Share.IUserInfo)">
+            <summary>
+            查询系统操作日志集合
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.OperLogDAL.DeleteOperLogByIds(System.Int64[])">
+            <summary>
+            批量删除系统操作日志
+            </summary>
+            <param name="operIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.OperLogDAL.SelectOperLogById(System.Int64)">
+            <summary>
+            查询操作日志详细
+            </summary>
+            <param name="operId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.DAL.OperLogDAL.CleanOperLog">
+            <summary>
+            清空操作日志
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.CLR.FrameworkDescription">
+            <summary>
+            运行框架
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.CLR.runTime">
+            <summary>
+            运行时长
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.CLR.startTime">
+            <summary>
+            启动时间
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.CLR.UseMem">
+            <summary>
+            程序占用内存
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Cpu.CpuNum">
+            <summary>
+            核心数
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Cpu.CpuUse">
+            <summary>
+            CPU使用率
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Cpu.ThreadCount">
+            <summary>
+            CPU线程数
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Cpu.CpuBit">
+            <summary>
+            cpu架构
+            </summary>
+        </member>
+        <member name="T:MonitorService.Hardware.Mem">
+            <summary>
+            內存相关信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Mem.total">
+            <summary>
+            内存总量  单位GB
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Mem.used">
+            <summary>
+            已用内存  单位GB
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Mem.free">
+            <summary>
+            剩余内存  单位GB
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Mem.usage">
+            <summary>
+            使用率
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.ServerInfo.cpu">
+            <summary>
+            CPU相关信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.ServerInfo.mem">
+            <summary>
+            內存相关信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.ServerInfo.clr">
+            <summary>
+            .net clr
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.ServerInfo.sys">
+            <summary>
+            服务器相关信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.ServerInfo.sysFiles">
+            <summary>
+            磁盘相关信息
+            </summary>
+        </member>
+        <member name="T:MonitorService.Hardware.Sys">
+            <summary>
+            系统相关信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Sys.computerName">
+            <summary>
+            服务器名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Sys.userDir">
+            <summary>
+            项目路径
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Sys.osName">
+            <summary>
+            操作系统
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Sys.osArch">
+            <summary>
+            系统架构
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Sys.RemoteIp">
+            <summary>
+            服务器IP
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.Sys.SysRunTime">
+            <summary>
+            系统运行时间
+            </summary>
+        </member>
+        <member name="T:MonitorService.Hardware.SysFile">
+            <summary>
+            系统文件相关信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.SysFile.dirName">
+            <summary>
+            盘符路径
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.SysFile.typeName">
+            <summary>
+            文件类型
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.SysFile.total">
+            <summary>
+            总大小
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.SysFile.free">
+            <summary>
+            剩余大小
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.SysFile.used">
+            <summary>
+            已经使用量
+            </summary>
+        </member>
+        <member name="P:MonitorService.Hardware.SysFile.usage">
+            <summary>
+            资源的使用率
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.In_JobList.jobName">
+            <summary>
+            任务名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.In_JobList.jobGroup">
+            <summary>
+            任务组名
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.In_JobList.status">
+            <summary>
+            任务状态
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.In_JobList.invoke_target">
+            <summary>
+            调用目标字符串
+            </summary>
+        </member>
+        <member name="T:MonitorService.Model.MZ_HolidayOrg">
+            <summary>
+            企业的节日表
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.Holiday">
+            <summary>
+            节日日期
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.TimeWay">
+            <summary>
+            0表示整天，1表示起点，2表示结束
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.DayStr">
+            <summary>
+            日期表示的字符串
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.HolidayTypeId">
+            <summary>
+            关联的节日类型Id
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayOrg.HolidayTypeName">
+            <summary>
+            节日类型名称
+            </summary>
+        </member>
+        <member name="T:MonitorService.Model.MZ_HolidayType">
+            <summary>
+            节日类型表(每日根据类型定时生成节日)
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.Id">
+            <summary>
+            节日类型ID
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.HolidayName">
+            <summary>
+            节日类型名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.CalendarType">
+            <summary>
+            日历类型：0为公历、1为农历
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.HolidayStart">
+            <summary>
+            开始放假
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.HolidayEnd">
+            <summary>
+            结束放假
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.NextTime">
+            <summary>
+            下次生成节日时间
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_HolidayType.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.job_id">
+            <summary>
+            任务序号
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.job_name">
+            <summary>
+            任务名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.job_group">
+            <summary>
+            任务组名
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.invoke_target">
+            <summary>
+            调用目标字符串
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.cron_expression">
+            <summary>
+            执行表达式,如果为空表示为高频间隔为 0 秒的任务
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.misfire_policy">
+            <summary>
+            计划策略
+             0=默认策略，会根据实际情况自动调整,1=每个失火触发一次,2=所有失火只触发一次执行,3=不追回失火
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.concurrent">
+            <summary>
+            是否并发执行（0允许 1禁止）
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_Job.status">
+            <summary>
+            任务状态（0正常 1暂停）
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.job_log_id">
+            <summary>
+            任务日志ID
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.job_name">
+            <summary>
+            任务名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.job_group">
+            <summary>
+            任务组名
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.invoke_target">
+            <summary>
+            调用目标字符串
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.job_message">
+            <summary>
+            日志信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.status">
+            <summary>
+            执行状态（0正常 1失败）
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.exception_info">
+            <summary>
+            异常信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_JobLog.create_time">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_id">
+            <summary>
+            日志主键
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.title">
+            <summary>
+            模块标题
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.method">
+            <summary>
+            方法名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.request_method">
+            <summary>
+            请求方式
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.operator_type">
+            <summary>
+            操作类别（pc weixin android ios）
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_name">
+            <summary>
+            操作人员
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_uid">
+            <summary>
+            操作人员ID
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_org">
+            <summary>
+            操作人员所属组织
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_url">
+            <summary>
+            请求URL
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_ip">
+            <summary>
+            主机地址
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_location">
+            <summary>
+            操作地点
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_param">
+            <summary>
+            请求参数
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.json_result">
+            <summary>
+            返回参数
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.status">
+            <summary>
+            操作状态（0正常 1异常）
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.error_msg">
+            <summary>
+            错误消息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.MZ_OperLog.oper_time">
+            <summary>
+            操作时间
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.Ipaddr">
+            <summary>
+            ip地址
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.Location">
+            <summary>
+            登录地址
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.Browser">
+            <summary>
+            客户端浏览器
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.OSName">
+            <summary>
+            客户端操作系统
+            </summary>
+        </member>
+        <member name="P:MonitorService.Model.OnlineUser.LoginTime">
+            <summary>
+            登录时间
+            </summary>
+        </member>
+        <member name="P:MonitorService.MonitorOption.log_enable">
+            <summary>
+            是否记录操作日志
+            </summary>
+        </member>
+        <member name="P:MonitorService.MonitorOption.instance_name">
+            <summary>
+            调度器名称
+            </summary>
+        </member>
+        <member name="P:MonitorService.MonitorOption.instance_id">
+            <summary>
+            调度器Id
+            </summary>
+        </member>
+        <member name="T:MonitorService.Util.AbstractQuartzJob">
+            <summary>
+            抽象quartz调用
+            </summary>
+        </member>
+        <member name="M:MonitorService.Util.AbstractQuartzJob.Before(Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job)">
+            <summary>
+            执行前
+            </summary>
+            <param name="context"></param>
+            <param name="job"></param>
+        </member>
+        <member name="M:MonitorService.Util.AbstractQuartzJob.After(Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job,System.Exception)">
+            <summary>
+            执行后
+            </summary>
+            <param name="context"></param>
+            <param name="job"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:MonitorService.Util.ComputerUtil.GetComputerInfo">
+            <summary>
+            内存信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ComputerUtil.GetDiskInfos">
+            <summary>
+            磁盘信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ComputerUtil.GetRunTime">
+            <summary>
+            获取系统运行时间
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MonitorService.Util.MemoryMetrics">
+            <summary>
+            内存信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.MemoryMetrics.UsedRam">
+            <summary>
+            已用内存
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.MemoryMetrics.CpuRate">
+            <summary>
+            CPU使用率%
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.MemoryMetrics.TotalRam">
+            <summary>
+            总内存 GB
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.MemoryMetrics.RamRate">
+            <summary>
+            内存使用率 %
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.MemoryMetrics.FreeRam">
+            <summary>
+            空闲内存
+            </summary>
+        </member>
+        <member name="T:MonitorService.Util.DiskInfo">
+            <summary>
+            磁盘信息
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.DiskName">
+            <summary>
+            磁盘名
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.TypeName">
+            <summary>
+            类型名
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.TotalFree">
+            <summary>
+            总剩余
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.TotalSize">
+            <summary>
+            总量
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.Used">
+            <summary>
+            已使用
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.AvailableFreeSpace">
+            <summary>
+            可使用
+            </summary>
+        </member>
+        <member name="P:MonitorService.Util.DiskInfo.AvailablePercent">
+            <summary>
+            使用百分比
+            </summary>
+        </member>
+        <member name="M:MonitorService.Util.MemoryMetricsClient.GetWindowsMetrics">
+            <summary>
+            windows系统获取内存信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.MemoryMetricsClient.GetUnixMetrics">
+            <summary>
+            Unix系统获取
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ShellUtil.Bash(System.String)">
+            <summary>
+            linux 系统命令
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ShellUtil.Cmd(System.String,System.String)">
+            <summary>
+            windows系统命令
+            </summary>
+            <param name="fileName"></param>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MonitorService.Util.IOCJobFactory">
+            <summary>
+            控制反转的Job创建工厂
+            </summary>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.GetTriggerKey(System.Int64,System.String)">
+            <summary>
+            构建任务触发对象
+            </summary>
+            <param name="jobId"></param>
+            <param name="jobGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.GetJobKey(System.Int64,System.String)">
+            构建任务键对象
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.HandleCronScheduleMisfirePolicy(MonitorService.Model.MZ_Job,Quartz.CronScheduleBuilder)">
+            <summary>
+            设置定时任务策略
+            </summary>
+            <param name="job"></param>
+            <param name="cb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.CreateScheduleJob(Quartz.IScheduler,MonitorService.Model.MZ_Job)">
+            <summary>
+            创建定时任务
+            </summary>
+            <param name="scheduler"></param>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.InvokeMethod(TemplateAction.Core.ITAServiceProvider,Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job)">
+            <summary>
+            执行指定类的方法
+            </summary>
+            <param name="provider"></param>
+            <param name="context"></param>
+            <param name="job"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.GetMethodParams(System.String,Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job)">
+            <summary>
+            获取method方法参数相关列表
+            </summary>
+            <param name="invokeTarget"></param>
+            <param name="context"></param>
+            <param name="job"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.GetNextExecution(System.String)">
+            <summary>
+            返回下一个执行时间根据给定的Cron表达式
+            </summary>
+            <param name="cronExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonitorService.Util.ScheduleUtils.ToChineseDescription(System.String)">
+            <summary>
+            Cron表达式转中文描述
+            </summary>
+            <param name="cronStr"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

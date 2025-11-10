@@ -1,0 +1,122 @@
+<template>
+  <el-popover placement="bottom-start" title="添加流程节点" width="450" trigger="click">
+    <div class="node-select">
+      <div @click="addApprovalNode">
+        <i class="el-icon-s-check" style="color:rgb(255, 148, 62);"></i>
+        <span>审批人</span>
+      </div>
+      <div @click="addUserNode">
+        <i class="el-icon-user-solid" style="color:rgb(24, 117, 159);"></i>
+        <span>办理人</span>
+      </div>
+      <div @click="addCcNode">
+        <i class="el-icon-s-promotion" style="color:rgb(50, 150, 250);"></i>
+        <span>抄送人</span>
+      </div>
+      <div @click="addConditionsNode">
+        <i class="el-icon-share" style="color:rgb(21, 188, 131);"></i>
+        <span>条件分支</span>
+      </div>
+      <div @click="addConcurrentsNode">
+        <i class="el-icon-s-operation" style="color:#718dff;"></i>
+        <span>并行分支</span>
+      </div>
+      <div @click="addDelayNode">
+        <i class="el-icon-time" style="color:#f25643;"></i>
+        <span>延迟等待</span>
+      </div>
+      <div @click="addTriggerNode">
+        <i class="el-icon-set-up" style="color:#15BC83;"></i>
+        <span>触发器</span>
+      </div>
+      <div @click="addDataNode">
+        <i class="el-icon-s-grid" style="color: #5913db;"></i>
+        <span>数据执行</span>
+      </div>
+      <div @click="addFuncNode" v-if="checkPermission(['/After/'])">
+        <i class="el-icon-mobile" style="color: #00CED1"></i>
+        <span>设备执行</span>
+      </div>
+    </div>
+    <el-button icon="el-icon-plus" slot="reference" type="primary" size="small" circle></el-button>
+  </el-popover>
+</template>
+
+<script>
+import { checkPermi } from "@/utils/permission";
+export default {
+  name: "InsertButton",
+  components: {},
+  data() {
+    return {}
+  },
+  computed:{
+    selectedNode(){
+      this.$store.state.selectedNode
+    }
+  },
+  methods: {
+    checkPermission(perms) {
+      return checkPermi(perms);
+    },
+    addApprovalNode(){
+      this.$emit('insertNode', "APPROVAL")
+    },
+    addUserNode(){
+      this.$emit('insertNode', "USER")
+    },
+    addCcNode(){
+      this.$emit('insertNode', "CC")
+    },
+    addDelayNode(){
+      this.$emit('insertNode', "DELAY")
+    },
+    addConditionsNode(){
+      this.$emit('insertNode', "CONDITIONS")
+    },
+    addConcurrentsNode(){
+      this.$emit('insertNode', "CONCURRENTS")
+    },
+    addTriggerNode(){
+      this.$emit('insertNode', "TRIGGER")
+    },
+    addDataNode(){
+      this.$emit('insertNode', "DATAXE")
+    },
+    addFuncNode(){
+      this.$emit('insertNode', "FUNC")
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.node-select{
+  div{
+    display: inline-block;
+    margin: 5px 5px;
+    cursor: pointer;
+    padding: 10px 15px;
+    border: 1px solid #F8F9F9;
+    background-color: #F8F9F9;
+    border-radius: 10px;
+    width: 130px;
+    position: relative;
+    span{
+      position: absolute;
+      left: 65px;
+      top: 18px;
+    }
+    &:hover{
+      background-color: #fff;
+      box-shadow: 0 0 8px 2px #d6d6d6;
+    }
+    i{
+      font-size: 25px;
+      padding: 5px;
+      border: 1px solid #dedfdf;
+      border-radius: 14px;
+    }
+  }
+}
+</style>

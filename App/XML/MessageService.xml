@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MessageService</name>
+    </assembly>
+    <members>
+        <member name="M:MessageService.Business.PushBLL.PushSingle(System.Int64,System.String,System.String,System.String)">
+            <summary>
+            单推
+            </summary>
+            <param name="uid"></param>
+            <param name="title"></param>
+            <param name="content"></param>
+            <param name="payload"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MessageService.Controller.Client.UpClientId(System.String)">
+            <summary>
+            上报当前用户的App客户端Id
+            </summary>
+            <param name="clientId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MessageService.Controller.Message.UnreadCount">
+            <summary>
+            获取当前用户的未读消息数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MessageService.Controller.Message.ReadAll">
+            <summary>
+            全部已读
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MessageService.Controller.Message.Read(System.Int64)">
+            <summary>
+            设置指定消息已读
+            </summary>
+            <param name="id">站内消息Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:MessageService.Controller.Message.UnReadList(System.Int32)">
+            <summary>
+            获取前几条未读消息
+            </summary>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MessageService.Controller.Message.ListPage(MessageService.Model.In_MessageList)">
+            <summary>
+            获取分页消息列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MessageService.MessageJson.active_notice">
+            <summary>
+            是否激活消息主动通知用户
+            </summary>
+        </member>
+        <member name="P:MessageService.MessageJson.push_appid">
+            <summary>
+            个推开放平台的AppId
+            </summary>
+        </member>
+        <member name="P:MessageService.MessageJson.push_appkey">
+            <summary>
+            个推开放平台的appkey
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.In_MessageList.status">
+            <summary>
+            0 未读，1 已读，-1全部
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.In_MessageList.t">
+            <summary>
+            过滤类型：click_type
+            </summary>
+        </member>
+        <member name="T:MessageService.Model.MZ_Message">
+            <summary>
+            站内消息表
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.OrgId">
+            <summary>
+            关联组织ID
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.sender_id">
+            <summary>
+            发送者id
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.receiver_id">
+            <summary>
+            接收者id
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.label">
+            <summary>
+            消息标签
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.click_type">
+            <summary>
+            消息点击类型
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.click_url">
+            <summary>
+            消息点击跳转目标
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.content">
+            <summary>
+            正文
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.create_time">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message.status">
+            <summary>
+            状态
+            </summary>
+        </member>
+        <member name="T:MessageService.Model.MZ_Message_Log">
+            <summary>
+            用户站内消息处理表
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message_Log.receiver_id">
+            <summary>
+            接收者id
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message_Log.messsage_id">
+            <summary>
+            消息id
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message_Log.status">
+            <summary>
+            0 未读，1 已读，2 删除
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_Message_Log.read_time">
+            <summary>
+            读取时间
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_PushClient.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_PushClient.ClientId">
+            <summary>
+            用户最新使用的客户端的CID
+            </summary>
+        </member>
+        <member name="P:MessageService.Model.MZ_PushClient.UpdatedOn">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+    </members>
+</doc>

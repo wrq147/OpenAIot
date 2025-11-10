@@ -1,0 +1,56 @@
+﻿using ChannelUtility.Message;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+
+namespace ChannelUtility
+{
+    [JsonSerializable(typeof(List<object>))]
+    [JsonSerializable(typeof(List<string>))]
+    [JsonSerializable(typeof(byte[]))]
+    [JsonSerializable(typeof(double[]))]
+    [JsonSerializable(typeof(string[]))]
+    [JsonSerializable(typeof(long))]
+    [JsonSerializable(typeof(long?))]
+    [JsonSerializable(typeof(bool))]
+    [JsonSerializable(typeof(bool?))]
+    [JsonSerializable(typeof(byte))]
+    [JsonSerializable(typeof(byte?))]
+    [JsonSerializable(typeof(ushort))]
+    [JsonSerializable(typeof(ushort?))]
+    [JsonSerializable(typeof(int))]
+    [JsonSerializable(typeof(int?))]
+    [JsonSerializable(typeof(float))]
+    [JsonSerializable(typeof(float?))]
+    [JsonSerializable(typeof(double))]
+    [JsonSerializable(typeof(double?))]
+    [JsonSerializable(typeof(string))]
+    [JsonSerializable(typeof(HashSet<long>))]
+    [JsonSerializable(typeof(IDictionary<string, object>))]
+    [JsonSerializable(typeof(Dictionary<string, object>))]
+    [JsonSerializable(typeof(DeviceEventMessage))]
+    [JsonSerializable(typeof(DeviceOfflineMessage))]
+    [JsonSerializable(typeof(DeviceOnlineMessage))]
+    [JsonSerializable(typeof(FunctionInvokeMessage))]
+    [JsonSerializable(typeof(FunctionInvokeMessageReply))]
+    [JsonSerializable(typeof(ReadPropertyMessage))]
+    [JsonSerializable(typeof(ReadPropertyMessageReply))]
+    [JsonSerializable(typeof(ExecuteRuleMessage))]
+    [JsonSerializable(typeof(ModbusMessage))]
+    [JsonSerializable(typeof(DeviceBindMessage))]
+    [JsonSerializable(typeof(DeviceBindMessageReply))]
+    [JsonSerializable(typeof(RawDataMessage))]
+    [JsonSerializable(typeof(TempProductMessage))]
+    [JsonSerializable(typeof(QueryICCIDMessage))]
+    [JsonSerializable(typeof(QueryICCIDMessageReply))]
+    [JsonSerializable(typeof(ChangeProductMessage))]
+    [JsonSerializable(typeof(StartReadAllMessage))]
+    [JsonSerializable(typeof(BaseUpDeviceMessage))]
+    [JsonSerializable(typeof(RequestMessage))]
+    [JsonSerializable(typeof(BaseDeviceMessage))]
+    public partial class JsonMessageSerializerContext : JsonSerializerContext
+    {
+    }
+}

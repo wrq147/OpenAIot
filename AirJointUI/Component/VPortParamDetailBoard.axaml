@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="830" Height="1300"
+        x:Class="AirJointUI.VPortParamDetailBoard"
+		xmlns:lang="clr-namespace:AirJointUI.Utils"
+        Title="Data Details"
+		xmlns:vm="using:AirJointUI.Models"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaTitleBarHeightHint="-1"
+		WindowStartupLocation="CenterOwner"
+		CanResize="False"
+		x:DataType="vm:ParamObject">
+	<Border BorderThickness="1" Background="#fff" CornerRadius="10" BorderBrush="#333">
+		<StackPanel>
+			<Button Click="HandleClick" Name="btnClose" FontSize="22" Content="{lang:Resx Off}" Background="#F56C6C" Foreground="#fff" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="10" Padding="0 25 0 25"/>
+			<ItemsControl ItemsSource="{Binding ParamItems}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<WrapPanel  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Border Width="190" Height="66" CornerRadius="10" Background="#F7F8FA" Margin="10 0 0 10">
+							<StackPanel VerticalAlignment="Center">
+								<TextBlock FontSize="18" Text="{Binding Val}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+								<TextBlock FontSize="16" Foreground="#999999" VerticalAlignment="Center" HorizontalAlignment="Center">
+									<Run Text="{Binding ParamName}"></Run>
+									<Run Text="{Binding Unit}"></Run>
+								</TextBlock>
+							</StackPanel>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</StackPanel>
+
+	</Border>
+
+</Window>

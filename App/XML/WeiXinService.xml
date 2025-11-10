@@ -1,0 +1,578 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiXinService</name>
+    </assembly>
+    <members>
+        <member name="M:WeiXinService.Controller.Account.List">
+            <summary>
+            获取微信应用列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Account.Add(WeiXinService.Model.MZ_WXAccount)">
+            <summary>
+            添加微信应用
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Account.Remove(System.String)">
+            <summary>
+            删除微信应用
+            </summary>
+            <param name="appid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Corp.StartSync(WeiXinService.Model.In_CorpSync)">
+            <summary>
+            启动定时同步企业微信
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Corp.StopSync(System.String)">
+            <summary>
+            关闭定时同步企业微信
+            </summary>
+            <param name="appid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Corp.ManualSync(System.String,System.String)">
+            <summary>
+            手动同步企业微信
+            </summary>
+            <param name="appid"></param>
+            <param name="username"></param>
+            <returns>创建的任务Id</returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Corp.Info(System.String)">
+            <summary>
+            获取企业微信同步信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Corp.TaskInfo(System.String)">
+            <summary>
+            获取企业微信同步任务详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Corp.TaskList(WeiXinService.Model.In_TaskListPage)">
+            <summary>
+            获取企业微信同步任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiXinService.Controller.Ext">
+            <summary>
+            微信扩展操作
+            </summary>
+        </member>
+        <member name="M:WeiXinService.Controller.Ext.SmsJmp">
+            <summary>
+            短信跳转小程序中转页面
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Ext.WxSchemeTick(WeiXinService.Model.In_GenerateWxSchemeTick)">
+            <summary>
+            获取微信小程序的跳转加密URL Scheme
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiXinService.Controller.Login">
+            <summary>
+            微信登录API
+            </summary>
+        </member>
+        <member name="M:WeiXinService.Controller.Login.FromWxApplet(WeiXinService.Model.In_LoginApplet)">
+            <summary>
+            微信小程序登录
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Login.CreateWxCorpRedirectUrl(System.String,System.String)">
+            <summary>
+            构造企业微信网页授权链接
+            </summary>
+            <param name="appId"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Login.FromWxCorp(WeiXinService.Model.In_LoginCorp)">
+            <summary>
+            企业微信登录
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Login.WxConfigJson(System.String,System.String)">
+            <summary>
+            获取微信JSSDK配置信息
+            </summary>
+            <param name="appid"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.Login.CorpWxConfigJson(System.String,System.String)">
+            <summary>
+            获取企业微信JSSDK配置信息
+            </summary>
+            <param name="appid"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiXinService.Controller.User">
+            <summary>
+            微信用户相关API
+            </summary>
+        </member>
+        <member name="M:WeiXinService.Controller.User.MobileBind(WeiXinService.Model.In_MobileBind)">
+            <summary>
+            绑定手机号
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.User.WxAppletBind(WeiXinService.Model.In_WxAppletBind)">
+            <summary>
+            绑定微信小程序
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.Controller.User.WxAppletUnBind(System.String)">
+            <summary>
+            解绑微信小程序
+            </summary>
+            <param name="appid"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiXinService.Model.In_CorpSync.speed">
+            <summary>
+            速度：1为快速，2为慢速
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_CorpSync.username">
+            <summary>
+            同步的用户名
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_GenerateWxSchemeTick.appid">
+            <summary>
+            跳转的小程序appid
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_GenerateWxSchemeTick.path">
+            <summary>
+            跳转的小程序path
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_GenerateWxSchemeTick.query">
+            <summary>
+            跳转的小程序query
+            </summary>
+        </member>
+        <member name="T:WeiXinService.Model.In_LoginApplet">
+            <summary>
+            微信登录参数
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginApplet.appid">
+            <summary>
+            登录的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginApplet.code">
+            <summary>
+            小程序登录code
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginApplet.created">
+            <summary>
+            是否不存在自动创建账号
+            </summary>
+        </member>
+        <member name="T:WeiXinService.Model.In_LoginCorp">
+            <summary>
+            企业微信登录参数
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginCorp.appid">
+            <summary>
+            登录的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginCorp.code">
+            <summary>
+            登录code
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginCorp.created">
+            <summary>
+            是否不存在自动创建账号
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_LoginCorp.ext">
+            <summary>
+            扩展信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_WxAppletBind.appid">
+            <summary>
+            登录的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_WxAppletBind.code">
+            <summary>
+            小程序登录code
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_YqSms.appid">
+            <summary>
+            微信AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_YqSms.tel">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.In_YqSms.tk">
+            <summary>
+            邀请码
+            </summary>
+        </member>
+        <member name="T:WeiXinService.Model.MZ_AdminCrop">
+            <summary>
+            账号与企业微信应用关联
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_AdminCrop.AppId">
+            <summary>
+            企业微信的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_AdminCrop.CropUserId">
+            <summary>
+            绑定的企业微信UserId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_AdminCrop.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:WeiXinService.Model.MZ_AdminWx">
+            <summary>
+            账号与微信的关联表
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_AdminWx.AppId">
+            <summary>
+            微信的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_AdminWx.UnionId">
+            <summary>
+            绑定的微信unionId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_AdminWx.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.AppId">
+            <summary>
+            企业微信的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.DeptDict">
+            <summary>
+            部门同步关联字典
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.MemDict">
+            <summary>
+            人员同步关联字典
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.JobId">
+            <summary>
+            定时任务Id
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.Speed">
+            <summary>
+            速度：1为快速，2为慢速
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.Status">
+            <summary>
+            状态（0启用 1停用）
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpSync.UserName">
+            <summary>
+            账号绑定的企业微信扩展字段
+            </summary>
+        </member>
+        <member name="T:WeiXinService.Model.MZ_CorpTask">
+            <summary>
+            企业微信同步任务表
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.AppId">
+            <summary>
+            企业微信的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsUpdateDept">
+            <summary>
+            是否完成更新部门
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsAddDept">
+            <summary>
+            是否完成新增部门
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsMoveDept">
+            <summary>
+            是否完成移动部门
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsDelDept">
+            <summary>
+            是否完成删除部门
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsUpdateMem">
+            <summary>
+            是否完成更新人员
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsAddMem">
+            <summary>
+            是否完成新增人员
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.IsDelMem">
+            <summary>
+            是否完成删除人员
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.UpdateDeptErr">
+            <summary>
+            更新部门失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.AddDeptErr">
+            <summary>
+            新增部门失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.MoveDeptErr">
+            <summary>
+            移动部门失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.DelDeptErr">
+            <summary>
+            删除部门失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.UpdateMemErr">
+            <summary>
+            更新人员失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.AddMemErr">
+            <summary>
+            新增人员失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.DelMemErr">
+            <summary>
+            删除人员失败信息
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.Status">
+            <summary>
+            0为同步中，1为已完成
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_CorpTask.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_WeiXin.UnionId">
+            <summary>
+            微信全局Id
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_WeiXin.AppId">
+            <summary>
+            对应的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_WeiXin.OpenId">
+            <summary>
+            微信OpenId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_WXAccount.OrgId">
+            <summary>
+            企业微信账号绑定的组织Id
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_WXAccount.OrgName">
+            <summary>
+            存储账号绑定的组织名称
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.MZ_WXAccount.AccType">
+            <summary>
+            账号类型：公众号js,小程序applet，企业微信corp
+            </summary>
+        </member>
+        <member name="T:WeiXinService.Model.Out_CorpDeptUser">
+            <summary>
+            企业微信部门成员
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.Out_CorpDeptUser.userid">
+            <summary>
+            成员UserID。对应管理端的账号
+            </summary>
+        </member>
+        <member name="P:WeiXinService.Model.Out_CorpDeptUser.name">
+            <summary>
+            成员名称
+            </summary>
+        </member>
+        <member name="P:WeiXinService.WeiXinJson.default_appid">
+            <summary>
+            默认使用的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.WeiXinJson.push_appid">
+            <summary>
+            微信推送使用的AppId
+            </summary>
+        </member>
+        <member name="P:WeiXinService.WeiXinJson.push_template">
+            <summary>
+            推送模板
+            </summary>
+        </member>
+        <member name="T:WeiXinService.WxApiHelper">
+            <summary>
+            获取小程序接口
+            </summary>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetCorpUserInfo(System.String,System.String)">
+            <summary>
+            获取访问用户身份
+            </summary>
+            <param name="appid"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetCorpUserDetail(System.String,System.String)">
+            <summary>
+            获取访问用户敏感信息
+            </summary>
+            <param name="appid"></param>
+            <param name="userid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.PushCorpTemplateMsg(System.String,System.Collections.Generic.List{System.String},System.String,System.String,System.String)">
+            <summary>
+            推送企业微信消息
+            </summary>
+            <param name="appid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetCorpWxConfigJson(System.String,System.String)">
+            <summary>
+            获取企业微信JSSDK配置信息
+            </summary>
+            <param name="appid"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetDepartmentList(System.String)">
+            <summary>
+            获取企业微信的所有部门信息
+            </summary>
+            <param name="appid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetDepartmentMembers(System.String,System.Int64)">
+            <summary>
+            获取企业微信的部门成员
+            </summary>
+            <param name="appid"></param>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GenerateWxSchemeTick(System.String,System.String,System.String)">
+            <summary>
+            生成小程序中转tick
+            </summary>
+            <param name="appid"></param>
+            <param name="path"></param>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetWxConfigJson(System.String,System.String)">
+            <summary>
+            获取微信JSSDK配置信息
+            </summary>
+            <param name="appid"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.GetWxMobile(System.String,System.String)">
+            <summary>
+            获取手机号
+            </summary>
+            <param name="appid"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.PushTemplateMsg(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+            推送微信公众号消息
+            </summary>
+            <param name="appid"></param>
+            <param name="openId"></param>
+            <param name="templateId"></param>
+            <param name="url"></param>
+            <param name="data"></param>
+            <param name="appId"></param>
+            <param name="pagePath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiXinService.WxApiHelper.RefreshToken">
+            <summary>
+            刷新微信各个应用的令牌
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

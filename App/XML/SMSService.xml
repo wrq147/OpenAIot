@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SMSService</name>
+    </assembly>
+    <members>
+        <member name="T:SMSService.Business.SmsCodeBLL">
+            <summary>
+            短信验证码处理服务
+            </summary>
+        </member>
+        <member name="M:SMSService.Business.SmsCodeBLL.MakeImgToken(System.String)">
+            <summary>
+            生成验证令牌,10分钟内有效
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SMSService.Business.SmsCodeBLL._CheckImgToken(System.String,System.String,System.String)">
+            <summary>
+            验证码验证
+            </summary>
+            <param name="tk"></param>
+            <param name="code"></param>
+            <param name="ip"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SMSService.Controller.Sms.Bind(System.String,System.String)">
+            <summary>
+            修改绑定手机
+            </summary>
+            <param name="phone"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SMSService.Controller.Visitor">
+            <summary>
+            短信服务
+            </summary>
+        </member>
+        <member name="M:SMSService.Controller.Visitor.GetSMSCaptcha">
+            <summary>
+            生成短信发送验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SMSService.Controller.Visitor.SendCode(System.String,System.String,System.String)">
+            <summary>
+            发送短信验证码,用来判断手机号码是否存在
+            </summary>
+            <param name="phone"></param>
+            <param name="code"></param>
+            <param name="imgid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SMSService.Controller.Visitor.Reg(SMSService.Model.In_RegTelData)">
+            <summary>
+            注册用户（需要手机验证码）
+            </summary>
+            <param name="data"></param>
+            <returns>返回登录的信息</returns>
+        </member>
+        <member name="M:SMSService.Controller.Visitor.FromTel(SMSService.Model.In_LoginSMS)">
+            <summary>
+            手机短信登录
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SMSService.ISmsHelper.SendSMSCode(System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            发送短信验证码
+            </summary>
+            <param name="phone"></param>
+            <param name="templateCode">模板编码</param>
+            <param name="parameters">参数</param>
+            <returns></returns>
+        </member>
+        <member name="P:SMSService.Model.In_LoginSMS.tel">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:SMSService.Model.In_LoginSMS.code">
+            <summary>
+            短信验证码
+            </summary>
+        </member>
+        <member name="P:SMSService.Model.In_RegTelData.MobileCode">
+            <summary>
+            手机验证码
+            </summary>
+        </member>
+        <member name="T:SMSService.JsonSmsHelper">
+            <summary>
+            通用的json格式接口访问短信平台
+            </summary>
+        </member>
+        <member name="T:SMSService.ShanYunSmsHelper">
+            <summary>
+            闪云短信平台
+            </summary>
+        </member>
+        <member name="P:SMSService.SmsShanYunConfig.signatureStr">
+            <summary>
+            签名字符串
+            </summary>
+        </member>
+        <member name="P:SMSService.SmsShanYunSendItem.phoneNumber">
+            <summary>
+            手机号码
+            </summary>
+        </member>
+        <member name="P:SMSService.SmsShanYunSendItem.content">
+            <summary>
+            短信内容
+            </summary>
+        </member>
+        <member name="P:SMSService.SmsShanYunSendItem.outOrderId">
+            <summary>
+            客户订单号，必须是唯一值
+            </summary>
+        </member>
+    </members>
+</doc>

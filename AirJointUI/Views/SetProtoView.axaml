@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+			 xmlns:cb="using:AirJointUI.Component"
+			 xmlns:vm="clr-namespace:AirJointUI.ViewModels"
+             x:Class="AirJointUI.Views.SetProtoView"
+			 xmlns:lang="clr-namespace:AirJointUI.Utils"
+			 x:DataType="vm:SetProtoViewModel">
+	<StackPanel Background="#F7F8FA">
+		<ItemsControl Margin="0 30 20 0" ItemsSource="{Binding DeviceList}" >
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border Margin="30 0 0 30" Background="#FFFFFF" CornerRadius="6">
+						<StackPanel Orientation="Vertical" Margin="20 20">
+							<TextBlock Width="220" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Foreground="#c40001" Text="{Binding DeviceName}" Margin="0 0 0 20" />
+							<StackPanel Orientation="Horizontal">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock TextAlignment="Right" Width="120" VerticalAlignment="Center" FontSize="20" Foreground="#666" Text="{lang:Resx Protocol}" />
+									<ComboBox ItemsSource="{Binding ProdList}" SelectedIndex="{Binding SelectIndex}" Margin="30 0 0 0" Width="350" Height="60" Padding="30 0" FontSize="20" MaxDropDownHeight="300" BorderBrush="#DEDEDE" BorderThickness="1" CornerRadius="10">
+										<ComboBox.ItemTemplate>
+											<DataTemplate>
+												<StackPanel Height="60" Orientation="Horizontal">
+													<TextBlock Text="{Binding Name}" Margin="30 0 0 0" VerticalAlignment="Center" Width="300"  FontSize="20" />
+												</StackPanel>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+								</StackPanel>
+								<StackPanel IsVisible="{Binding HasEnableShow}" Orientation="Horizontal">
+									<TextBlock TextAlignment="Right" Width="120" VerticalAlignment="Center" FontSize="20" Foreground="#666" Text="{lang:Resx DisplayStatus}" />
+									<cb:SwitchButton Margin="30 0 0 0" ContentTrue="{lang:Resx On}" ContentFalse="{lang:Resx Off}" IsChecked="{Binding EnableShow}">
+									</cb:SwitchButton>
+								</StackPanel>
+							</StackPanel>
+						</StackPanel>
+					</Border>
+
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10 0 10 20">
+			<!-- 用于显示当前页码和总页数 -->
+			<TextBlock Text="{Binding PageInfo, StringFormat=''}" Margin="0 10 0 0" HorizontalAlignment="Center" FontSize="26"/>
+			<Button Width="100" Height="50" Content="{lang:Resx prevPage}" Click="HandlePreviousPage" Margin="40 0 0 0"/>
+			<Button Width="100" Height="50" Content="{lang:Resx nextPage}" Click="HandleNextPage" Margin="20 0 0 0"/>
+		</StackPanel>
+
+		<Button Click="HandleSave" Margin="20 30 20 30" HorizontalAlignment="Right" CornerRadius="40" Width="240" Height="80" Background="#2371FF" Foreground="#FFF" FontSize="24" Content="{lang:Resx Save}"></Button>
+	</StackPanel>
+</UserControl>

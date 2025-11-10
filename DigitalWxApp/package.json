@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "uni-ajax": "^2.4.4"
+  }
+}

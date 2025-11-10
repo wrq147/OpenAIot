@@ -1,0 +1,15 @@
+yunda:韵达快运
+zhongtong:中通速递
+tiantian:天天快递
+shunfeng:	顺丰快递
+yuantong:	圆通快递
+shentong:	申通快递
+debangwuliu:德邦物流
+debangkuaidi:德邦快递
+huitongkuaidi:百世快递
+jtexpress:极兔速递
+zhongtongguoji:中通国际
+zhongtongkuaiyun:中通快运
+danniao:丹鸟
+youzhengguonei:邮政快递包裹
+shenghuiwuliu:盛辉物流

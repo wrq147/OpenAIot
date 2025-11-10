@@ -1,0 +1,2236 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MESService</name>
+    </assembly>
+    <members>
+        <member name="M:MESService.Business.RouteBLL.PredictedWorkTime(System.String,System.Int32)">
+            <summary>
+            预计工艺路线所需工时（分钟）
+            </summary>
+            <param name="routeId">工艺路线</param>
+            <param name="num">数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Business.WorkOrderBLL.GenerateWorkOrder(MESService.Model.MZ_ProductPlan)">
+            <summary>
+            通过生产计划生成生产工单
+            </summary>
+            <param name="plan"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Business.WorkOrderBLL.OrderToTask">
+            <summary>
+            定时生成工单任务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Batch">
+            <summary>
+            生产批次接口
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Batch.List(MESService.Model.In_WorkBatchList)">
+            <summary>
+            获取生产批次列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Bom">
+            <summary>
+            物料清单API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Bom.List(MESService.Model.In_BomList)">
+            <summary>
+            查询物料清单列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Bom.ListTree(System.String)">
+            <summary>
+            查询指定产品的所有层级的物料清单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Bom.Info(System.String)">
+            <summary>
+            获取物料清单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Bom.Add(MESService.Model.MZ_BomHeader)">
+            <summary>
+            新增物料清单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Bom.Edit(MESService.Model.MZ_BomHeader)">
+            <summary>
+            编辑物料清单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Bom.Remove(System.String)">
+            <summary>
+            删除物料清单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Config.Set(MESService.Model.MZ_FactoryMes)">
+            <summary>
+            设置厂家MES配置信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Config.Info">
+            <summary>
+            获取厂家MES配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Defect">
+            <summary>
+            不良品项API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Defect.List(MESService.Model.In_DefectList)">
+            <summary>
+            不良品项列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Defect.Add(MESService.Model.MZ_DefectType)">
+            <summary>
+            添加不良品项
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Defect.Edit(MESService.Model.MZ_DefectType)">
+            <summary>
+            修改不良品项
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Defect.Remove(System.String)">
+            <summary>
+            删除不良品项
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Defect.Info(System.String)">
+            <summary>
+            获取不良品项信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.DevHis">
+            <summary>
+            工序设备采集历史API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.DevHis.List(MESService.Model.In_BatchDevHisList)">
+            <summary>
+            查询生产的设备采集数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.DevHis.Record(MESService.Model.In_BatchDevHisData)">
+            <summary>
+            记录生产的设备采集数据
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Oper">
+            <summary>
+            工序API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Oper.List(MESService.Model.In_OperList)">
+            <summary>
+            工序列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Oper.Info(System.String)">
+            <summary>
+            获取工序信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Oper.Add(MESService.Model.MZ_ProductOper)">
+            <summary>
+            添加工序
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Oper.Edit(MESService.Model.MZ_ProductOper)">
+            <summary>
+            修改工序
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Oper.Remove(System.String)">
+            <summary>
+            删除工序
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Order">
+            <summary>
+            生产工单API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Order.List(MESService.Model.In_WorkOrderList)">
+            <summary>
+            生产工单列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Plan">
+            <summary>
+            生产计划API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Plan.List(MESService.Model.In_PlanList)">
+            <summary>
+            生产计划列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.Info(System.String)">
+            <summary>
+            获取生产计划信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.Add(MESService.Model.MZ_ProductPlan)">
+            <summary>
+            添加生产计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.Edit(MESService.Model.MZ_ProductPlan)">
+            <summary>
+            修改生产计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.Remove(System.String)">
+            <summary>
+            删除生产计划（待提交和已取消状态使用）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.GeneratePlaneNumber">
+            <summary>
+            生成生产计划编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.SubmitModel(MESService.Model.In_SubmitPlan)">
+            <summary>
+            提交生产计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.Cancel(System.String)">
+            <summary>
+            取消生产计划（待审核状态使用）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Plan.FormData(MESService.Model.MZ_ProductPlan)">
+            <summary>
+            生产计划的审核表单初始化
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.List(MESService.Model.In_ReportList)">
+            <summary>
+            报工列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.GeneratePlaneNumber">
+            <summary>
+            生成生产报工编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.Add(MESService.Model.MZ_WorkReport)">
+            <summary>
+            添加生产报工
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.Edit(MESService.Model.MZ_WorkReport)">
+            <summary>
+            修改生产报工
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.Remove(System.String)">
+            <summary>
+            删除生产报工（待提交和已取消状态使用）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.SubmitModel(MESService.Model.In_SubmitReport)">
+            <summary>
+            提交生产报工
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.Cancel(System.String)">
+            <summary>
+            取消生产报工（待审核状态使用）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Report.FormData(MESService.Model.MZ_WorkReport)">
+            <summary>
+            生成报工的审核表单初始化
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Route">
+            <summary>
+            工艺路线API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Route.List(MESService.Model.In_RouteList)">
+            <summary>
+            工艺路线列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Route.Info(System.String)">
+            <summary>
+            获取工艺路线信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Route.Add(MESService.Model.MZ_ProductRoute)">
+            <summary>
+            添加工艺路线
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Route.Edit(MESService.Model.MZ_ProductRoute)">
+            <summary>
+            修改工艺路线
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Route.Remove(System.String)">
+            <summary>
+            删除工艺路线
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Controller.Task">
+            <summary>
+            生产任务API
+            </summary>
+        </member>
+        <member name="M:MESService.Controller.Task.List(MESService.Model.In_WorkTaskList)">
+            <summary>
+            生产任务列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MESService.Model.FieldPermsItem">
+            <summary>
+            字段权限项
+            </summary>
+        </member>
+        <member name="P:MESService.Model.FieldPermsItem.id">
+            <summary>
+            自定义字段Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.FieldPermsItem.title">
+            <summary>
+            字段名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.FieldPermsItem.perm">
+            <summary>
+            R只读.E可编辑,H隐藏
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_BatchDevHisData.BatchNo">
+            <summary>
+            批次编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_BatchDevHisData.OperId">
+            <summary>
+            关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_BatchDevHisData.Items">
+            <summary>
+            数据采集的历史数据列表
+            </summary>
+        </member>
+        <member name="P:MESService.Model.BatchHisItem.PropName">
+            <summary>
+            采集的属性名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.BatchHisItem.PropCode">
+            <summary>
+            采集的属性标识符
+            </summary>
+        </member>
+        <member name="P:MESService.Model.BatchHisItem.PropType">
+            <summary>
+            采集的属性类型
+            </summary>
+        </member>
+        <member name="P:MESService.Model.BatchHisItem.PropVal">
+            <summary>
+            采集的属性值
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_BomList.Key">
+            <summary>
+            查询关键字
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_DefectList.Key">
+            <summary>
+            搜索不良品的关键词
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_OperList.Key">
+            <summary>
+            关键词搜索
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_OperList.Items">
+            <summary>
+            过滤扩展字段
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_ReportList.OnlyMy">
+            <summary>
+            是否只显示我的报工
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_ReportList.Items">
+            <summary>
+            过滤扩展字段
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_RouteList.Key">
+            <summary>
+            搜索关键词
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_SubmitPlan.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_SubmitPlan.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_SubmitPlan.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_SubmitReport.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_SubmitReport.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_SubmitReport.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkBatchList.Key">
+            <summary>
+            关键词搜索
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkBatchList.Items">
+            <summary>
+            过滤扩展字段
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkOrderList.Status">
+            <summary>
+            状态：0、待排产；1、待生产；2、生产中；3、已完成；4、已取消
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkTaskList.Items">
+            <summary>
+            过滤扩展字段
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_BatchDevHis">
+            <summary>
+            生产批次数据采集的历史数据表
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.BatchNo">
+            <summary>
+            批次编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.OperId">
+            <summary>
+            关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.OperName">
+            <summary>
+            关联的工序名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.PropName">
+            <summary>
+            采集的属性名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.PropCode">
+            <summary>
+            采集的属性标识符
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.PropType">
+            <summary>
+            采集的属性类型
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.PropVal">
+            <summary>
+            采集的数值型属性值
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.PropStrVal">
+            <summary>
+            采集的字符串属性值
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BatchDevHis.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_BomHeader">
+            <summary>
+            物料清单头表
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomHeader.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomHeader.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomHeader.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomHeader.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomHeader.Items">
+            <summary>
+            物料清单明细
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_BomLine">
+            <summary>
+            物料清单明细表
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.HeaderId">
+            <summary>
+            所属BOM头Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.ParentProductId">
+            <summary>
+            父项产品Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.ProductId">
+            <summary>
+            子项产品Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.Quantity">
+            <summary>
+            使用的计量
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.ProcessStepId">
+            <summary>
+            关联工序ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.ProInfo">
+            <summary>
+            子项产品信息
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_DefectType.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_DefectType.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_DefectType.DefectName">
+            <summary>
+            不良品项名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_DefectType.DefectCategory">
+            <summary>
+            不良类别(外观/功能/性能/其它等)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.PlanTemplateId">
+            <summary>
+            生产计划审核模板
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.PlanTemplateName">
+            <summary>
+            生产计划审核模板名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.ReportTemplateId">
+            <summary>
+            报工审核模板
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.ReportTemplateName">
+            <summary>
+            报工审核模板名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.PlanFlowInitJson">
+            <summary>
+            生产计划流程初始化json
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_FactoryMes.ReportFlowInitJson">
+            <summary>
+            报工流程初始化json
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_ProductOper">
+            <summary>
+            产品工序
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.DeviceIds">
+            <summary>
+            工序使用的设备，多台设备用逗号分隔
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.OperName">
+            <summary>
+            工序名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.AssignedUser">
+            <summary>
+            允许提交的人员
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.PropOf">
+            <summary>
+            报工数配比:‌生产计划数 × 报工数配比 = 工序计划数‌
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.WorkTime">
+            <summary>
+            预计工时(分钟)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.PriceMethod">
+            <summary>
+            计件、计时
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.UnitPrice">
+            <summary>
+            工资单价
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.ReportFields">
+            <summary>
+            工序的报工表单权限，存储json格式（[{"id":"自定义报工字段Id","title":"字段名称","perm":"R只读.E可编辑,H隐藏"}]）
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.FieldsInit">
+            <summary>
+            报工表单初始化配置，存储json格式（[{"sid":"自定义工序字段Id","tid":"自定义报工字段Id"}]）,工序与报工字段的类型要一致
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt1">
+            <summary>
+            扩展字符串字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt2">
+            <summary>
+            扩展字符串字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt3">
+            <summary>
+            扩展字符串字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt4">
+            <summary>
+            扩展字符串字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt5">
+            <summary>
+            扩展字符串字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt6">
+            <summary>
+            扩展字符串字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt7">
+            <summary>
+            扩展字符串字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt8">
+            <summary>
+            扩展字符串字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt9">
+            <summary>
+            扩展字符串字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt10">
+            <summary>
+            扩展字符串字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt11">
+            <summary>
+            扩展字符串字段11
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt12">
+            <summary>
+            扩展字符串字段12
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt13">
+            <summary>
+            扩展字符串字段13
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt14">
+            <summary>
+            扩展字符串字段14
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt15">
+            <summary>
+            扩展字符串字段15
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt16">
+            <summary>
+            扩展字符串字段16
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt17">
+            <summary>
+            扩展字符串字段17
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt18">
+            <summary>
+            扩展字符串字段18
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt19">
+            <summary>
+            扩展字符串字段19
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt20">
+            <summary>
+            扩展字符串字段20
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt21">
+            <summary>
+            扩展字符串字段21
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt22">
+            <summary>
+            扩展字符串字段22
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt23">
+            <summary>
+            扩展字符串字段23
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt24">
+            <summary>
+            扩展字符串字段24
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt25">
+            <summary>
+            扩展字符串字段25
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt26">
+            <summary>
+            扩展字符串字段26
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt27">
+            <summary>
+            扩展字符串字段27
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt28">
+            <summary>
+            扩展字符串字段28
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt29">
+            <summary>
+            扩展字符串字段29
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.StrExt30">
+            <summary>
+            扩展字符串字段30
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt1">
+            <summary>
+            扩展数字字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt2">
+            <summary>
+            扩展数字字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt3">
+            <summary>
+            扩展数字字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt4">
+            <summary>
+            扩展数字字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt5">
+            <summary>
+            扩展数字字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt6">
+            <summary>
+            扩展数字字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt7">
+            <summary>
+            扩展数字字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt8">
+            <summary>
+            扩展数字字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt9">
+            <summary>
+            扩展数字字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.NumExt10">
+            <summary>
+            扩展数字字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductOper.ExtObjects">
+            <summary>
+            扩展的关联对象
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_ProductPlan">
+            <summary>
+            生产计划
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.Number">
+            <summary>
+            唯一编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.PlanName">
+            <summary>
+            计划名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.Status">
+            <summary>
+            状态：0、待提交；1、待审批；2、待执行；3、执行中；4、已完成；5、已取消、6、已驳回
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.Priority">
+            <summary>
+            优先级：1、优先安排；2、加急处理；3、正常排产
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.FlowId">
+            <summary>
+            关联的审核流程Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.OverTime">
+            <summary>
+            超期时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlan.Items">
+            <summary>
+            生产计划的产品信息
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_ProductPlanItem">
+            <summary>
+            生产计划的产品信息
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.PlanId">
+            <summary>
+            生产计划Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.ProductId">
+            <summary>
+            所属产品ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.Quantity">
+            <summary>
+            计划数量
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.PlannedStartOn">
+            <summary>
+            计划开始时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.PlannedEndOn">
+            <summary>
+            计划结束时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductPlanItem.ProdInfo">
+            <summary>
+            产品信息
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_ProductRoute">
+            <summary>
+            产品工艺路线
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRoute.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRoute.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRoute.RouteName">
+            <summary>
+            工艺路线名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRoute.ToHouseId">
+            <summary>
+            产品入库的目标仓库，没有则不自动入库
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRoute.Items">
+            <summary>
+            工艺路线明细
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_ProductRouteOper">
+            <summary>
+            产品工艺路线明细
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.RouteId">
+            <summary>
+            工艺路线Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.OperId">
+            <summary>
+            工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.PropOf">
+            <summary>
+            报工数配比
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.WorkTime">
+            <summary>
+            工时(分钟)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.Sequence">
+            <summary>
+            工序顺序
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt1">
+            <summary>
+            扩展字符串字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt2">
+            <summary>
+            扩展字符串字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt3">
+            <summary>
+            扩展字符串字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt4">
+            <summary>
+            扩展字符串字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt5">
+            <summary>
+            扩展字符串字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt6">
+            <summary>
+            扩展字符串字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt7">
+            <summary>
+            扩展字符串字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt8">
+            <summary>
+            扩展字符串字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt9">
+            <summary>
+            扩展字符串字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt10">
+            <summary>
+            扩展字符串字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt11">
+            <summary>
+            扩展字符串字段11
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt12">
+            <summary>
+            扩展字符串字段12
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt13">
+            <summary>
+            扩展字符串字段13
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt14">
+            <summary>
+            扩展字符串字段14
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt15">
+            <summary>
+            扩展字符串字段15
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt16">
+            <summary>
+            扩展字符串字段16
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt17">
+            <summary>
+            扩展字符串字段17
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt18">
+            <summary>
+            扩展字符串字段18
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt19">
+            <summary>
+            扩展字符串字段19
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt20">
+            <summary>
+            扩展字符串字段20
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt21">
+            <summary>
+            扩展字符串字段21
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt22">
+            <summary>
+            扩展字符串字段22
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt23">
+            <summary>
+            扩展字符串字段23
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt24">
+            <summary>
+            扩展字符串字段24
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt25">
+            <summary>
+            扩展字符串字段25
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt26">
+            <summary>
+            扩展字符串字段26
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt27">
+            <summary>
+            扩展字符串字段27
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt28">
+            <summary>
+            扩展字符串字段28
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt29">
+            <summary>
+            扩展字符串字段29
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.StrExt30">
+            <summary>
+            扩展字符串字段30
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt1">
+            <summary>
+            扩展数字字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt2">
+            <summary>
+            扩展数字字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt3">
+            <summary>
+            扩展数字字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt4">
+            <summary>
+            扩展数字字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt5">
+            <summary>
+            扩展数字字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt6">
+            <summary>
+            扩展数字字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt7">
+            <summary>
+            扩展数字字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt8">
+            <summary>
+            扩展数字字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt9">
+            <summary>
+            扩展数字字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.NumExt10">
+            <summary>
+            扩展数字字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_ProductRouteOper.ExtObjects">
+            <summary>
+            扩展的关联对象
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_WorkBatch">
+            <summary>
+            生产批次
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.Id">
+            <summary>
+            批次编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.LNumber">
+            <summary>
+            通讯编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.WorkOrderId">
+            <summary>
+            关联的工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt1">
+            <summary>
+            扩展字符串字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt2">
+            <summary>
+            扩展字符串字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt3">
+            <summary>
+            扩展字符串字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt4">
+            <summary>
+            扩展字符串字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt5">
+            <summary>
+            扩展字符串字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt6">
+            <summary>
+            扩展字符串字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt7">
+            <summary>
+            扩展字符串字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt8">
+            <summary>
+            扩展字符串字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt9">
+            <summary>
+            扩展字符串字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt10">
+            <summary>
+            扩展字符串字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt11">
+            <summary>
+            扩展字符串字段11
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt12">
+            <summary>
+            扩展字符串字段12
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt13">
+            <summary>
+            扩展字符串字段13
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt14">
+            <summary>
+            扩展字符串字段14
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt15">
+            <summary>
+            扩展字符串字段15
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt16">
+            <summary>
+            扩展字符串字段16
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt17">
+            <summary>
+            扩展字符串字段17
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt18">
+            <summary>
+            扩展字符串字段18
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt19">
+            <summary>
+            扩展字符串字段19
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt20">
+            <summary>
+            扩展字符串字段20
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt21">
+            <summary>
+            扩展字符串字段21
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt22">
+            <summary>
+            扩展字符串字段22
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt23">
+            <summary>
+            扩展字符串字段23
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt24">
+            <summary>
+            扩展字符串字段24
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt25">
+            <summary>
+            扩展字符串字段25
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt26">
+            <summary>
+            扩展字符串字段26
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt27">
+            <summary>
+            扩展字符串字段27
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt28">
+            <summary>
+            扩展字符串字段28
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt29">
+            <summary>
+            扩展字符串字段29
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.StrExt30">
+            <summary>
+            扩展字符串字段30
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt1">
+            <summary>
+            扩展数字字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt2">
+            <summary>
+            扩展数字字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt3">
+            <summary>
+            扩展数字字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt4">
+            <summary>
+            扩展数字字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt5">
+            <summary>
+            扩展数字字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt6">
+            <summary>
+            扩展数字字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt7">
+            <summary>
+            扩展数字字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt8">
+            <summary>
+            扩展数字字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt9">
+            <summary>
+            扩展数字字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.NumExt10">
+            <summary>
+            扩展数字字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.ExtObjects">
+            <summary>
+            扩展的关联对象
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_WorkBom">
+            <summary>
+            生产工单物料
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.WorkOrderId">
+            <summary>
+            关联的工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.OperId">
+            <summary>
+            关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.NeedQuantity">
+            <summary>
+            所需用量
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.UsedQuantity">
+            <summary>
+            实际用量
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.Quantity">
+            <summary>
+            单个用量
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_WorkOrder">
+            <summary>
+            生产工单
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.PlanId">
+            <summary>
+            生产计划Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.ParentWorkOrderId">
+            <summary>
+            父工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.Status">
+            <summary>
+            状态：0、待生产；1、生产中；2、已完成；3、已取消；
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.Priority">
+            <summary>
+            优先级：1、优先安排；2、加急处理；3、正常排产
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.OverTime">
+            <summary>
+            超期时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.Quantity">
+            <summary>
+            计划产量
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.ProductId">
+            <summary>
+            所属产品ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.RouteId">
+            <summary>
+            工艺路线Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.PlannedStartOn">
+            <summary>
+            计划开始时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.PlannedEndOn">
+            <summary>
+            计划结束时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.StartOn">
+            <summary>
+            实际开始时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.EndOn">
+            <summary>
+            实际结束时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.ProdInfo">
+            <summary>
+            产品信息
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_WorkReport">
+            <summary>
+            报工
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.WorkOrderId">
+            <summary>
+            关联的工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.WorkTaskId">
+            <summary>
+            关联的任务Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.OperId">
+            <summary>
+            关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.Number">
+            <summary>
+            唯一编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.BatchNo">
+            <summary>
+            批次编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.GoodNum">
+            <summary>
+            良品数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.DefectNum">
+            <summary>
+            不良品数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.DefectStr">
+            <summary>
+            不良品项：多个逗号分隔
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.StartWork">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.EndWork">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.WorkTime">
+            <summary>
+            报工时长(分钟)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.OverReason">
+            <summary>
+            超时原因，当报工时长超过标准时间时需要填写
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.Status">
+            <summary>
+            状态：0、待提交；1、待审核；2、已审核；3、已取消；4、已驳回；
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.FlowId">
+            <summary>
+            关联的审核流程Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.RepBat">
+            <summary>
+            报工的批次
+            </summary>
+        </member>
+        <member name="T:MESService.Model.MZ_WorkTask">
+            <summary>
+            生产任务
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.PlanId">
+            <summary>
+            生产计划Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.WorkOrderId">
+            <summary>
+            关联的工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.OperId">
+            <summary>
+            关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StartOn">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.FinishOn">
+            <summary>
+            完成时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.IsFinish">
+            <summary>
+            任务是否完成
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.Priority">
+            <summary>
+            优先级：1、优先安排；2、加急处理；3、正常排产
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.OverTime">
+            <summary>
+            超期时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.PropOf">
+            <summary>
+            报工数配比
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.WorkTime">
+            <summary>
+            工时(分钟)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.WorkTimeTotal">
+            <summary>
+            总工时(分钟)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.PlanNum">
+            <summary>
+            计划数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.GoodNum">
+            <summary>
+            良品数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.DefectNum">
+            <summary>
+            不良品数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.Sequence">
+            <summary>
+            工序顺序序号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt1">
+            <summary>
+            扩展字符串字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt2">
+            <summary>
+            扩展字符串字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt3">
+            <summary>
+            扩展字符串字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt4">
+            <summary>
+            扩展字符串字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt5">
+            <summary>
+            扩展字符串字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt6">
+            <summary>
+            扩展字符串字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt7">
+            <summary>
+            扩展字符串字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt8">
+            <summary>
+            扩展字符串字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt9">
+            <summary>
+            扩展字符串字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt10">
+            <summary>
+            扩展字符串字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt11">
+            <summary>
+            扩展字符串字段11
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt12">
+            <summary>
+            扩展字符串字段12
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt13">
+            <summary>
+            扩展字符串字段13
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt14">
+            <summary>
+            扩展字符串字段14
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt15">
+            <summary>
+            扩展字符串字段15
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt16">
+            <summary>
+            扩展字符串字段16
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt17">
+            <summary>
+            扩展字符串字段17
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt18">
+            <summary>
+            扩展字符串字段18
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt19">
+            <summary>
+            扩展字符串字段19
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt20">
+            <summary>
+            扩展字符串字段20
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt21">
+            <summary>
+            扩展字符串字段21
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt22">
+            <summary>
+            扩展字符串字段22
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt23">
+            <summary>
+            扩展字符串字段23
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt24">
+            <summary>
+            扩展字符串字段24
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt25">
+            <summary>
+            扩展字符串字段25
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt26">
+            <summary>
+            扩展字符串字段26
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt27">
+            <summary>
+            扩展字符串字段27
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt28">
+            <summary>
+            扩展字符串字段28
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt29">
+            <summary>
+            扩展字符串字段29
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.StrExt30">
+            <summary>
+            扩展字符串字段30
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt1">
+            <summary>
+            扩展数字字段1
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt2">
+            <summary>
+            扩展数字字段2
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt3">
+            <summary>
+            扩展数字字段3
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt4">
+            <summary>
+            扩展数字字段4
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt5">
+            <summary>
+            扩展数字字段5
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt6">
+            <summary>
+            扩展数字字段6
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt7">
+            <summary>
+            扩展数字字段7
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt8">
+            <summary>
+            扩展数字字段8
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt9">
+            <summary>
+            扩展数字字段9
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.NumExt10">
+            <summary>
+            扩展数字字段10
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.ExtObjects">
+            <summary>
+            扩展的关联对象
+            </summary>
+        </member>
+        <member name="T:MESService.Model.Out_BomTreeItem">
+            <summary>
+            Bom树项
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_BomTreeItem.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_BomTreeItem.ParentProductId">
+            <summary>
+            父产品Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_BomTreeItem.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_BomTreeItem.Quantity">
+            <summary>
+            使用的计量
+            </summary>
+        </member>
+        <member name="M:MESService.Model.Out_BomTreeItem._RecursionFn(System.Collections.Generic.List{MESService.Model.Out_BomTreeItem},MESService.Model.Out_BomTreeItem)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:MESService.Model.Out_BomTreeItem._GetChildList(System.Collections.Generic.List{MESService.Model.Out_BomTreeItem},MESService.Model.Out_BomTreeItem)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MESService.Model.Out_WorkTaskInfo.TotalGoodNum">
+            <summary>
+            总报工良品数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_WorkTaskInfo.TotalDefectNum">
+            <summary>
+            总报工不良品数
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_WorkTaskInfo.TotalWorkTime">
+            <summary>
+            总报工时长
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowCreate.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowCreate.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowCreate.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowCreate.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowCreate.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdPlanFlowItem.way">
+            <summary>
+            0为自定义、1为系统值
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowCreate.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowCreate.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowCreate.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowCreate.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowCreate.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:MESService.Model.ProdReportFlowItem.way">
+            <summary>
+            0为自定义、1为系统值
+            </summary>
+        </member>
+    </members>
+</doc>

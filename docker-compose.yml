@@ -1,0 +1,134 @@
+version: "3"
+services:
+  # nginx-app:
+  #   image: cym1102/nginxwebui:latest
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #     - 9443:9443
+  #     - 443:443
+  #   environment:
+  #     BOOT_OPTIONS: "--server.port=9443 --initAdmin=hello --initPass=HD3.1415926"
+  #   volumes:
+  #     - type: bind
+  #       source: "/home/nginxWebUI"
+  #       target: "/home/nginxWebUI"
+  #   networks:
+  #     mynetwork:
+  #       ipv4_address: 172.18.0.8
+  mz-rabbitmq:
+    image: rabbitmq:3.12.6-management
+    ports:
+      - '5117:5672'
+      - '5118:15672'
+    environment:
+      - RABBITMQ_DEFAULT_VHOST
+      - RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS
+    restart: always
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.2
+  database-influxdb:
+    container_name: hdcenter-db-influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_BUCKET
+      - DOCKER_INFLUXDB_INIT_MODE
+      - DOCKER_INFLUXDB_INIT_ORG
+      - DOCKER_INFLUXDB_INIT_PASSWORD
+      - DOCKER_INFLUXDB_INIT_USERNAME
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+    image: influxdb:2.3
+    ports:
+    - mode: ingress
+      target: 8086
+      published: "5222"
+      protocol: tcp
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+    restart: always
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.3
+  database-mysql:
+    container_name: hdcenter-db-mysql
+    command: ["mysqld","--innodb_ft_min_token_size=1","--ft_min_word_len=1"]
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASS
+    image: mysql:8.0.29
+    ports:
+    - mode: ingress
+      target: 3306
+      published: "5233"
+      protocol: tcp
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.4
+  mz-emqx:
+    image: emqx:5.7.2
+    container_name: hdcenter-emqx
+    restart: always
+    environment:
+      - EMQX_LISTENERS__TCP__DEFAULT__BIND
+      - EMQX_DASHBOARD__DEFAULT_PASSWORD
+      - EMQX_MQTT__SHARED_SUBSCRIPTION_STRATEGY
+    ports:
+      - 2883:2883
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18883:18083
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.5
+  database-redis:
+    command: ${REDIS_COMMAND}
+    container_name: hdcenter-db-redis
+    ports:
+    - mode: ingress
+      target: 6379
+      published: "6222"
+      protocol: tcp
+    image: redis:7.0-alpine
+    restart: always
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.6
+  db-admin-phpmyadmin:
+    container_name: hdcenter-dbadmin-phpmyadmin
+    environment:
+      PMA_HOST: hdcenter-db-mysql
+      PMA_PORT: 3306
+      MAX_EXECUTION_TIME: 1800
+      UPLOAD_LIMIT: 200M
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      database-influxdb:
+        condition: service_started
+      database-mysql:
+        condition: service_started
+      database-redis:
+        condition: service_started
+    ports:
+    - mode: ingress
+      target: 80
+      published: "8088"
+      protocol: tcp
+    image: phpmyadmin:latest
+    restart: always
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.7
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

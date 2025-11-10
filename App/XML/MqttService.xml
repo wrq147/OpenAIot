@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MqttService</name>
+    </assembly>
+    <members>
+        <member name="M:MqttService.Controller.Server.WebIp(System.Boolean)">
+            <summary>
+            获取Mqtt的web连接地址
+            </summary>
+            <param name="ssl">是否为ssl</param>
+            <returns></returns>
+        </member>
+        <member name="M:MqttService.Controller.Server.GetTimezoneOffset">
+            <summary>
+            返回服务端格林威治时间和本地时间之间的时差：
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MqttService.Controller.User.ClientId">
+            <summary>
+            获取当前用户连接mqtt的clientid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MqttService.Controller.User.AuthConn(MqttService.EmqxAuthParam)">
+            <summary>
+            Emqx验证连接用
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MqttService.Controller.User.AuthAcl(MqttService.Model.EmqxAclParam)">
+            <summary>
+            Emqx验证发布和订阅
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MqttService.Model.EmqxAclParam.topic">
+            <summary>
+            当前请求想要发布或订阅的主题（或主题过滤器）
+            </summary>
+        </member>
+        <member name="P:MqttService.Model.EmqxAclParam.action">
+            <summary>
+            当前执行的动作请求，例如 publish，subscribe。
+            </summary>
+        </member>
+        <member name="P:MqttService.Model.EmqxResult.result">
+            <summary>
+            认证结果通过 body 中的 result 标示，可选 allow、deny、ignore。
+            </summary>
+        </member>
+        <member name="P:MqttService.Model.EmqxResult.is_superuser">
+            <summary>
+            是否为超级用户
+            </summary>
+        </member>
+        <member name="T:MqttService.MqttController">
+            <summary>
+            脚本打印输出
+            </summary>
+        </member>
+        <member name="M:MqttService.MqttController.Startup">
+            <summary>
+            起动服务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MqttService.MqttController.NoticeData(System.String,System.String)">
+            <summary>
+            通知数据变更
+            </summary>
+            <param name="key"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MqttService.MqttController.NoticeUpdate(System.String)">
+            <summary>
+            通知用户有新的消息
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MqttService.MqttOption.enable_emqx">
+            <summary>
+            是否启用emqx：否时则使用内置mqtt
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.node_name">
+            <summary>
+            节点名称
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.mqtt_tcp_server">
+            <summary>
+            服务端Tcp连接服务器地址
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.mqtt_tcp_port">
+            <summary>
+            服务端Tcp连接端口
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.mqtt_web_port">
+            <summary>
+            服务端Websocket连接端口
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.mqtt_web_ssl_port">
+            <summary>
+            服务端SSL的Websocket连接端口
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.sys_username">
+            <summary>
+            系统账号
+            </summary>
+        </member>
+        <member name="P:MqttService.MqttOption.sys_password">
+            <summary>
+            系统密码
+            </summary>
+        </member>
+    </members>
+</doc>

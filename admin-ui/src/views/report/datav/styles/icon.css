@@ -1,0 +1,1432 @@
+/* 柱状图 */
+
+.el-icon-datav-bar {
+    background: url(../image/fsux_tubiao_zhuzhuangtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-bar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 堆叠图 */
+
+.el-icon-datav-stackedBar {
+    background: url(../image/fsux_tubiao_duijizhuzhuangtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-stackedBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 交错正负轴标签 */
+
+.el-icon-datav-staggeredLabel {
+    background: url(../image/fsux_staggeredLabel.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-staggeredLabel:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 双柱状图 */
+
+.el-icon-datav-doublebar {
+    background: url(../image/fsux_tubiao_duibitu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-doublebar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 排行榜 */
+
+.el-icon-datav-topbar {
+    background: url(../image/fsux_topbar.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-topbar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 水平柱图 */
+
+.el-icon-datav-parallebar {
+    background: url(../image/fsux_tubiao_tiaoxingtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-parallebar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 双y轴柱图 */
+
+.el-icon-datav-doubleyAxis {
+    background: url(../image/fsux_tubiao_baifenbi.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-doubleyAxis:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 双向柱形图 */
+
+.el-icon-datav-doubleDirectionBar {
+    background: url(../image/fsux_tubiao_duibitu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-doubleDirectionBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 伪立体柱状图 */
+
+.el-icon-datav-threeDBar {
+    background: url(../image/fsux_lititu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-threeDBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 单柱Line */
+
+.el-icon-datav-singleColumn {
+    /** background: url(../image/fsux_singlecolun.png) center no-repeat; **/
+    background: url(../image/fsux_tubiao_danzhu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-singleColumn:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 立体柱 */
+
+.el-icon-datav-cylinder {
+    background: url(../image/fsux_cylinder.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-cylinder:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 双向Bar图 */
+
+.el-icon-datav-doublebartime {
+    background: url(../image/fsux_tubiao_duibitu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-doublebartime:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 饼图 */
+
+.el-icon-datav-pie {
+    background: url(../image/fsux_tubiao_bingtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-pie:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 环饼图 */
+
+.el-icon-datav-ringPie {
+    /* background: url(../image/fsux_ringpie.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_pirmore.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-ringPie:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 折线图 */
+
+.el-icon-datav-line {
+    background: url(../image/fsux_zhexiantu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-line:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 阴影折线图 */
+
+.el-icon-datav-shadowline {
+    background: url(../image/fsux_shadowline.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-shadowline:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 雨量流量关系图 */
+
+.el-icon-datav-rain {
+    background: url(../image/fsux_tubiao_pubutu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-rain:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 漏斗图 */
+
+.el-icon-datav-funnel {
+    background: url(../image/fsux_tubiao_loudoutu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-funnel:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 仪表盘 */
+
+.el-icon-datav-gauge {
+    background: url(../image/fsux_tubiao_yibiaopan.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-gauge:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 键盘仪表盘 */
+
+.el-icon-datav-keygauge {
+    /* background: url(../image/fsux_keygauge.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_keygauge.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-keygauge:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 散点图 */
+
+.el-icon-datav-scatter {
+    background: url(../image/fsux_tubiao_sandiantu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-scatter:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 雷达图 */
+
+.el-icon-datav-radar {
+    background: url(../image/fsux_tubiao_leidatu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-radar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 水球图 */
+
+.el-icon-datav-waterball {
+    background: url(../image/fsux_tubiao_waterball.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-radar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 水球图加基线 */
+
+.el-icon-datav-waterballline {
+    background: url(../image/fsux_tubiao_waterballline.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-waterballline:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 环形图 */
+
+.el-icon-datav-doughnut {
+    /* background: url(../image/fsux_huanxingtu.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_huantu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-doughnut:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 圆点环形图 */
+
+.el-icon-datav-circle {
+    /* background: url(../image/fsux_tubiao_circle.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_yukuai.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-circle:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 多环形图 */
+
+.el-icon-datav-piemore {
+    /* background: url(../image/fsux_tubiao_pirmore.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_duohuan.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-piemore:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 进度图表 */
+
+.el-icon-datav-progressChart {
+    /* background: url(../image/fsux_tubiao_jindutubiao.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_percentring.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-progressChart:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 树图 */
+
+.el-icon-datav-tree {
+    background: url(../image/fsux_shuxingtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-tree:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 地图 */
+
+.el-icon-datav-map {
+    background: url(../image/fsux_tubiao_ditu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-map:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 地图下钻 */
+
+.el-icon-datav-mapMore {
+    background: url(../image/fsux_map_down.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-mapMore:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 3D地球 */
+
+.el-icon-datav-earth {
+    background: url(../image/fsux_earth.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-earth:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 数据集 */
+
+.el-icon-datav-datamap {
+    background: url(../image/fsux_tubiao_juxingshutu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-datamap:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 饼图-折线图 */
+
+.el-icon-datav-pieline {
+    background: url(../image/fsux_tubiao_bingtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-pieline:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 柱状图-饼图 */
+
+.el-icon-datav-barPie {
+    background: url(../image/fsux_tubiao_zhuzhuangtu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-barPie:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 折线图-柱状图 */
+
+.el-icon-datav-linebar {
+    background: url(../image/fsux_tubiao_linebar.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-linebar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 地图-柱状图 */
+
+.el-icon-datav-mapbar {
+    background: url(../image/fsux_mapbar.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-mapbar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 温度计 */
+
+.el-icon-datav-thermometer {
+    background: url(../image/fsux_thermometer.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-thermometer:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 知识图谱 */
+
+.el-icon-datav-knowledge {
+    background: url(../image/fsux_tubiao_relation.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-knowledge:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 主题图谱 */
+
+.el-icon-datav-pops {
+    /* background: url(../image/pops.png) center no-repeat; */
+    background: url(../image/fsux_tubiao_pops.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-pops:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 自定义图表 */
+
+.el-icon-datav-customChart {
+    background: url(../image/own.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-customChart:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 文本框 */
+
+.el-icon-datav-text {
+    background: url(../image/fsux_wenben.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-text:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 跑马灯 */
+
+.el-icon-datav-lamp {
+    background: url(../image/fsux_lunbobiaoge.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-lamp:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 实时时间 */
+
+.el-icon-datav-date {
+    background: url(../image/fsux_time.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-date:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 图片 */
+
+.el-icon-datav-img {
+    background: url(../image/fsux_tupian.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-img:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 视频 */
+
+.el-icon-datav-video {
+    background: url(../image/fsux_shipin.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-video:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 二维码 */
+
+.el-icon-datav-qRcode {
+    background: url(../image/fsux_rcode.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-qRcode:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 背景框 */
+
+.el-icon-datav-backborder {
+    background: url(../image/fsux_backborder.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-backborder:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* iframe */
+
+.el-icon-datav-iframe {
+    background: url(../image/fsux_iframe.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-iframe:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 超链接 */
+
+.el-icon-datav-hyperlink {
+    background: url(../image/fsux_chaolianjie.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-hyperlink:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 轮播图 */
+
+.el-icon-datav-rotation {
+    background: url(../image/rotation.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-rotation:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 简单曲线 */
+
+.el-icon-datav-ellipse {
+    background: url(../image/fsux_ellipse.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-ellipse:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 自定义曲线 */
+
+.el-icon-datav-myEllipse {
+    background: url(../image/fsux_myEllipse.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-myEllipse:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 颜色块 */
+
+.el-icon-datav-colorBlock {
+    background: url(../image/fsux_tubiao_masaiketu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-colorBlock:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 字符云 */
+
+.el-icon-datav-wordcloud {
+    background: url(../image/fsux_tubiao_ciyun.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-wordcloud:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 数字卡片 */
+
+.el-icon-datav-digitalCard {
+    background: url(../image/fsux_tubiao_kapian.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-digitalCard:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 汇总卡片 */
+
+.el-icon-datav-number {
+    background: url(../image/fsux_tubiao_card.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-number:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 翻牌器 */
+
+.el-icon-datav-flop {
+    background: url(../image/flop.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-flop:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 分页表格 */
+
+.el-icon-datav-taBle {
+    background: url(../image/fsux_tablerotation.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-taBle:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 滚动表格 */
+
+.el-icon-datav-tablerotation {
+    background: url(../image/fsux_tubiao_biaoge.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-tablerotation:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 排行表格 */
+
+.el-icon-datav-tabletop {
+    background: url(../image/fsux_tabletop.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-tabletop:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 输入框 */
+
+.el-icon-datav-input {
+    background: url(../image/fsux_input.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-input:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 下拉菜单 */
+
+.el-icon-datav-select {
+    background: url(../image/select.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-select:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 级联选择 */
+
+.el-icon-datav-cascade {
+    background: url(../image/fsux_cascade.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-cascade:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 时间 */
+
+.el-icon-datav-time {
+    background: url(../image/date_time.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-time:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 按钮 */
+
+.el-icon-datav-button {
+    background: url(../image/fsux_tubiao_anniu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-button:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 选项卡 */
+
+.el-icon-datav-interactivetab {
+    background: url(../image/fsux_tubiao_tab.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-interactivetab:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 文本复选框 */
+
+.el-icon-datav-textCheckBox {
+    background: url(../image/textCheckBox.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-textCheckBox:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 特效 */
+
+.el-icon-datav-effects {
+    background: url(../image/fsux_effects.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-effects:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 扫描 */
+
+.el-icon-datav-scanning {
+    background: url(../image/fsux_scanning.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-scanning:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 转盘 */
+
+.el-icon-datav-turntable {
+    background: url(../image/fsux_turntable.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-turntable:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 闪烁边框 */
+
+.el-icon-datav-twinkleborder {
+    background: url(../image/fsux_twinkleborder.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-twinkleborder:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 闪烁边框 */
+
+.el-icon-datav-aroundborder {
+    background: url(../image/fsux_aroundborder.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-aroundborder:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 射线 */
+
+.el-icon-datav-ray {
+    background: url(../image/fsux_ray.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-ray:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* MIDI键盘 */
+
+.el-icon-datav-midikeyboard {
+    background: url(../image/fsux_midikeyboard.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-midikeyboard:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 声纹 */
+
+.el-icon-datav-voiceprint {
+    background: url(../image/fsux_voiceprint.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-voiceprint:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 发散射线 */
+
+.el-icon-datav-diffuseray {
+    background: url(../image/fsux_diffuseray.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-diffuseray:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 时间轴 */
+
+.el-icon-datav-timeline {
+    background: url(../image/fsux_timeline.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-timeline:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 银河系 */
+
+.el-icon-datav-galaxy {
+    background: url(../image/fsux_galaxy.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-galaxy:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 3d地图 */
+
+.el-icon-datav-threedMap {
+    background: url(../image/fsux_tubiao_3dmap.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-threedMap:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 天地图 */
+
+.el-icon-datav-tiandiMap {
+    background: url(../image/fsux_tubiao_tianditu.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-tiandiMap:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 报表 */
+
+.el-icon-datav-handsonTable {
+    background: url(../image/fsux_baobiao.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-handsonTable:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 组合 */
+
+.el-icon-datav-folder {
+    background: url(../image/fsux_folder.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-folder:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 卡片 */
+
+.el-icon-datav-card {
+    background: url(../image/fsux_card.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-card:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 进度仪表盘 */
+
+.el-icon-datav-progauge {
+    background: url(../image/fsux_gauge-progress.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-progauge:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 箱线图 */
+
+.el-icon-datav-boxline {
+    background: url(../image/fsux_tubiao_boxline.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-boxline:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 旭日图 */
+
+.el-icon-datav-sunburst {
+    background: url(../image/fsux_tubiao_sunburst.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-sunburst:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 飞线地图 */
+
+.el-icon-datav-mapline {
+    background: url(../image/fsux_tubiao_mapline.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-mapline:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 象形柱图 */
+
+.el-icon-datav-pictorialBar {
+    background: url(../image/fsux_tubiao_pictorialBar.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-pictorialBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 3d柱图 */
+
+.el-icon-datav-customThreeDBar {
+    background: url(../image/bar_3d_chart.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-customThreeDBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 比例柱图 */
+
+.el-icon-datav-rateBar {
+    background: url(../image/fsux_rateBar.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-rateBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 桑基图 */
+
+.el-icon-datav-sankey {
+    background: url(../image/fsux_tubiao_sankey.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-sankey:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 树状结构图 */
+
+.el-icon-datav-tree {
+    background: url(../image/tree.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-tree:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 热力图 */
+
+.el-icon-datav-heatMap {
+    background: url(../image/heatMap.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-heatMap:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 旭日图 */
+
+.el-icon-datav-sunburst {
+    background: url(../image/fsux_tubiao_sunburst.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-sunburst:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 3d地图柱状图 */
+
+.el-icon-datav-threedMapBar {
+    background: url(../image/fsux_threedMapBar.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-threedMapBar:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 实时视频 */
+
+.el-icon-datav-realtime {
+    background: url(../image/fsux_realtime.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-realtime:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 交互组件 */
+
+.el-icon-datav-interact {
+    background: url(../image/fsux_interact.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-interact:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+
+/* 其他组件 */
+
+.el-icon-datav-others {
+    background: url(../image/others.png) center no-repeat;
+    background-size: cover;
+    width: 12px;
+    height: 12px;
+}
+
+.el-icon-datav-others:before {
+    content: "\66ff";
+    font-size: 12px;
+    visibility: hidden;
+}
+
+
+/* 组态组件 */
+
+.el-icon-datav-iot-groups {
+    background: url(../image/iot_groups.png) center no-repeat;
+    background-size: cover;
+    width: 12px;
+    height: 12px;
+}
+
+.el-icon-datav-iot-groups:before {
+    content: "\66ff";
+    font-size: 12px;
+    visibility: hidden;
+}
+
+.el-icon-datav-custom-iot {
+    background: url(../image/iot_custom.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-custom-iot:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}
+
+.el-icon-datav-line-iot {
+    background: url(../image/iot_line.png) center no-repeat;
+    background-size: cover;
+}
+
+.el-icon-datav-line-iot:before {
+    content: "\66ff";
+    font-size: 16px;
+    visibility: hidden;
+}

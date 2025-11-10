@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EmailService</name>
+    </assembly>
+    <members>
+        <member name="T:EmailService.Controller.Email">
+            <summary>
+            邮箱绑定API
+            </summary>
+        </member>
+        <member name="M:EmailService.Controller.Email.SendCode(System.String)">
+            <summary>
+            发送验证码邮件
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EmailService.Controller.Email.BindEmail(System.String)">
+            <summary>
+            绑定邮箱
+            </summary>
+            <param name="note"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EmailService.Controller.Visitor">
+            <summary>
+            游客执行
+            </summary>
+        </member>
+        <member name="M:EmailService.Controller.Visitor.SendCode(System.String)">
+            <summary>
+            发送验证码邮件
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EmailService.Controller.Visitor.ActiveEmail(System.String,System.Int64)">
+            <summary>
+            激活邮箱
+            </summary>
+            <param name="note">激活码</param>
+            <param name="uid">用户id</param>
+            <returns></returns>
+        </member>
+        <member name="M:EmailService.Controller.Visitor.Reg(AuthService.Model.In_RegData)">
+            <summary>
+            注册用户
+            </summary>
+            <param name="data"></param>
+            <returns>返回登录的信息</returns>
+        </member>
+        <member name="M:EmailService.Controller.Visitor.FromEmail(EmailService.Model.In_LoginEmail)">
+            <summary>
+            邮箱验证码登录
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="P:EmailService.EmailConfig.email_from_name">
+            <summary>
+            email用户名
+            </summary>
+        </member>
+        <member name="P:EmailService.EmailConfig.email_from">
+            <summary>
+            email地址
+            </summary>
+        </member>
+        <member name="P:EmailService.EmailConfig.email_password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:EmailService.EmailConfig.ssl">
+            <summary>
+            使用的ssl：0为不使用、1为自动、2为SslOnConnect、3为StartTls
+            </summary>
+        </member>
+        <member name="P:EmailService.EmailConfig.email_host">
+            <summary>
+            email主机
+            </summary>
+        </member>
+        <member name="P:EmailService.EmailConfig.email_post">
+            <summary>
+            email端口
+            </summary>
+        </member>
+        <member name="P:EmailService.EmailConfig.email_bind_title">
+            <summary>
+            email绑定的标题
+            </summary>
+        </member>
+        <member name="T:EmailService.EmailSenderHelper">
+            <summary>
+            邮件发送帮助类
+            </summary>
+        </member>
+        <member name="M:EmailService.EmailSenderHelper.SendPlainEmail(System.Collections.Generic.List{System.String},System.String,System.String,System.String[])">
+            <summary>
+            发送纯文本
+            </summary>
+            <param name="to"></param>
+            <param name="subject"></param>
+            <param name="message"></param>
+            <param name="attachments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EmailService.EmailSenderHelper.SendHtmlEmail(System.Collections.Generic.List{System.String},System.String,System.String,System.String[])">
+            <summary>
+            发送html
+            </summary>
+            <param name="to"></param>
+            <param name="subject"></param>
+            <param name="message"></param>
+            <param name="attachments"></param>
+            <returns></returns>
+        </member>
+        <member name="P:EmailService.Model.In_LoginEmail.email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:EmailService.Model.In_LoginEmail.code">
+            <summary>
+            邮箱验证码
+            </summary>
+        </member>
+    </members>
+</doc>

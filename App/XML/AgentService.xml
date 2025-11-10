@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AgentService</name>
+    </assembly>
+    <members>
+        <member name="M:AgentService.Business.FactoryBLL.SelectList(AgentService.Model.In_FactoryList)">
+            <summary>
+            查询工厂列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AgentService.Controller.Factory.List(AgentService.Model.In_FactoryList)">
+            <summary>
+            厂家列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AgentService.Controller.Factory.Add(AgentService.Model.MZ_Factory)">
+            <summary>
+            添加新的厂家
+            </summary>
+            <param name="factory"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AgentService.Controller.Factory.Edit(AgentService.Model.MZ_Factory)">
+            <summary>
+            修改工厂
+            </summary>
+            <param name="factory"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AgentService.Controller.Factory.Remove(System.Int64)">
+            <summary>
+            删除工厂
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AgentService.Model.MZ_AgentGrade">
+            <summary>
+            代理级别
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentGrade.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentGrade.GradeName">
+            <summary>
+            代理级别
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentGrade.GradeSort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentGrade.FactoryId">
+            <summary>
+            厂家Id
+            </summary>
+        </member>
+        <member name="T:AgentService.Model.MZ_AgentRel">
+            <summary>
+            代理商关系表
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentRel.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentRel.OrgId">
+            <summary>
+            代理商Id
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentRel.GradeId">
+            <summary>
+            代理级别
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentRel.LevelPath">
+            <summary>
+            代理商层级信息，每一层,号分隔
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentRel.FactoryId">
+            <summary>
+            厂家Id
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_AgentRel.Regions">
+            <summary>
+            代理区域代码（多个,号分隔）
+            </summary>
+        </member>
+        <member name="T:AgentService.Model.MZ_Factory">
+            <summary>
+            厂家配置
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_Factory.Id">
+            <summary>
+            厂家Id
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_Factory.GradeWay">
+            <summary>
+            代理方式：auto表示逐级自动分配代理级别，manual表示符合代理条件后手动升级
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.MZ_Factory.Enabled">
+            <summary>
+            是否启用
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.OrgName">
+            <summary>
+            组织名称
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.Industry">
+            <summary>
+            行业类型代码
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.IndustryName">
+            <summary>
+            行业类型名称
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.Size">
+            <summary>
+            员工规模代码
+            </summary>
+        </member>
+        <member name="P:AgentService.Model.Out_FactoryItem.SizeName">
+            <summary>
+            员工规模名称
+            </summary>
+        </member>
+    </members>
+</doc>

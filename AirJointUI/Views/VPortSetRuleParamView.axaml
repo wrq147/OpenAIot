@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+			 xmlns:cc="using:AirJointUI.Component"
+			 xmlns:vm="clr-namespace:AirJointUI.ViewModels"
+             x:Class="AirJointUI.Views.VPortSetRuleParamView"
+			 xmlns:lang="clr-namespace:AirJointUI.Utils"
+			 x:DataType="vm:SetRuleParamViewModel">
+	<DockPanel Margin="40 0 40 40" Background="#FFF">
+		<StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Height="90">
+			<StackPanel Width="820" Orientation="Horizontal" VerticalAlignment="Center">
+				<Button Background="Transparent" Opacity="1" BorderThickness="0" Click="HandleBackClick">
+					<StackPanel Background="White" Orientation="Horizontal">
+						<Image Height="24" Source="avares://AirJointUI/Assets/Images/return.png"/>
+						<TextBlock Foreground="rgba(51, 51, 51, 1)" Margin="5 0 0 0" FontSize="24" Text="{lang:Resx Back}"></TextBlock>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+			<StackPanel Width="180" HorizontalAlignment="Center" VerticalAlignment="Center"
+				Orientation="Vertical">
+				<StackPanel Orientation="Horizontal" Margin="0 0 0 5" HorizontalAlignment="Right">
+					<Image IsVisible="{Binding Top.HasNet}" Source="avares://AirJointUI/Assets/Images/signal.png" Height="18"/>
+					<TextBlock  Text="{Binding Top.UIDateTime}" FontSize="18" Foreground="Black" VerticalAlignment="Center" Margin="10 0 0 0"/>
+				</StackPanel>
+				<TextBlock  Text="{Binding Top.UIDate}" FontSize="18" Foreground="Black" HorizontalAlignment="Right"
+					VerticalAlignment="Center"/>
+			</StackPanel>
+		</StackPanel>
+		<Border Background="#F7F8FA" CornerRadius="20">
+			<StackPanel>
+				<TextBox Name="FocusHolder" Height="0"/>
+				<DockPanel>
+					<TextBlock DockPanel.Dock="Left" Margin="40" FontSize="24" FontWeight="Bold" Text="{lang:Resx Name}"/>
+					<Button DockPanel.Dock="Right" Click="HandleSave" Margin="0 30 40 20" HorizontalAlignment="Right" CornerRadius="40" Width="240" Height="80" Background="#2371FF" Foreground="#FFF" FontSize="24"  Content="{lang:Resx Save}"></Button>
+				</DockPanel>
+
+				<StackPanel Name="ParamPanel" Width="960" Height="1520" Margin="0 10 0 10">
+					<StackPanel.Styles>
+						<Style Selector="StackPanel>StackPanel">
+							<Setter Property="Margin" Value="0 0 0 15"></Setter>
+						</Style>
+						<Style Selector="StackPanel>StackPanel>TextBox">
+							<Setter Property="CornerRadius" Value="10"></Setter>
+							<Setter Property="BorderBrush" Value="#DEDEDE"></Setter>
+							<Setter Property="Padding" Value="30 0"></Setter>
+							<Setter Property="FontSize" Value="20"></Setter>
+							<Setter Property="Margin" Value="20 0"></Setter>
+							<Setter Property="Width" Value="350"></Setter>
+							<Setter Property="Height" Value="60"></Setter>
+							<Setter Property="VerticalAlignment" Value="Center"></Setter>
+							<Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+						</Style>
+						<Style Selector="StackPanel>StackPanel>ComboBox">
+							<Setter Property="CornerRadius" Value="10"></Setter>
+							<Setter Property="BorderThickness" Value="1"></Setter>
+							<Setter Property="FontSize" Value="20"></Setter>
+							<Setter Property="BorderBrush" Value="#DEDEDE"></Setter>
+							<Setter Property="MaxDropDownHeight" Value="500"></Setter>
+							<Setter Property="Padding" Value="30 0"></Setter>
+							<Setter Property="Margin" Value="20 0"></Setter>
+							<Setter Property="Width" Value="320"></Setter>
+							<Setter Property="Height" Value="60"></Setter>
+						</Style>
+						<Style Selector="StackPanel>StackPanel>ComboBox>ComboBoxItem">
+							<Setter Property="Height" Value="45"></Setter>
+							<Setter Property="FontSize" Value="20"></Setter>
+							<Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+						</Style>
+						<Style Selector="StackPanel>StackPanel>TextBlock">
+							<Setter Property="VerticalAlignment" Value="Center"></Setter>
+							<Setter Property="FontSize" Value="20"></Setter>
+							<Setter Property="TextAlignment" Value="Right"></Setter>
+							<Setter Property="Foreground" Value="#666"></Setter>
+							<Setter Property="Width" Value="290"></Setter>
+						</Style>
+					</StackPanel.Styles>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10 0 10 20">
+					<!-- 用于显示当前页码和总页数 -->
+					<TextBlock Text="{Binding PageInfo, StringFormat=''}" Margin="0 10 0 0" HorizontalAlignment="Center" FontSize="26"/>
+					<Button Width="100" Height="50" Content="{lang:Resx prevPage}" Click="HandlePreviousPage" Margin="40 0 0 0"/>
+					<Button Width="100" Height="50" Content="{lang:Resx nextPage}" Click="HandleNextPage" Margin="20 0 0 0"/>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+
+	</DockPanel>
+
+
+</UserControl>

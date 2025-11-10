@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IoTAIService</name>
+    </assembly>
+    <members>
+        <member name="M:IoTAIService.AICode.FaceDetOnnxRunner.DecodePredictions(System.Collections.Generic.List{Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single}},System.Collections.Generic.List{Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single}},System.Int32[],System.Int32,System.Int32,System.Single)">
+            <summary>
+            解码预测结果为边界框
+            </summary>
+            <param name="classifications">各尺度分类结果 (List[Tensor], 每个Tensor形状: [1, num_class, H, W])</param>
+            <param name="regressions">各尺度回归结果 (List[Tensor], 每个Tensor形状: [1, 4, H, W])</param>
+            <param name="strides">各尺度下采样步长</param>
+            <param name="inputHeight">输入图像高度</param>
+            <param name="inputWidth">输入图像宽度</param>
+            <param name="confThreshold">置信度阈值</param>
+            <returns>解码后的边界框列表</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.FaceDetOnnxRunner.ResizeBBoxes(System.Collections.Generic.List{IoTAIService.AICode.BBox},System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            调整边界框到原始尺寸
+            </summary>
+        </member>
+        <member name="T:IoTAIService.Controller.Face">
+            <summary>
+            人脸接口
+            </summary>
+        </member>
+        <member name="M:IoTAIService.Controller.Face.HouseList(IoTAIService.Models.In_FaceHouseList)">
+            <summary>
+            人脸库列表
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.Face.AddHouse(IoTAIService.Models.MZ_AIHouse)">
+            <summary>
+            添加人脸库
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.Face.EditHouse(IoTAIService.Models.MZ_AIHouse)">
+            <summary>
+            编辑人脸库
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.Face.RemoveHouse(System.String[])">
+            <summary>
+            删除人脸库
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.HttpSync.FaceDetect(IoTAIService.Models.In_FaceDetect)">
+            <summary>
+            检测人脸
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.HttpSync.FaceRecog(IoTAIService.Models.In_FaceRecog)">
+            <summary>
+            识别人脸
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.ImageExtends.IsAreaValid(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},SixLabors.ImageSharp.Rectangle)">
+            <summary>
+            验证区域是否在图像范围内
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.InitMilvus">
+            <summary>
+            是否初始化Milvus表
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.MilvusUrl">
+            <summary>
+            Milvus的连接地址
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.MilvusDatabase">
+            <summary>
+            Milvus数据库名称
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.FaceDetectionFile">
+            <summary>
+            人脸检测模型
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.FaceKeyPointsFile">
+            <summary>
+            人脸关键点模型
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.FaceRecogFile">
+            <summary>
+            人脸识别模型
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.FaceSTNFile">
+            <summary>
+            人脸空间变换模型
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceDetect.ImageBase64">
+            <summary>
+            Base64图片
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceDetect.ImageUrl">
+            <summary>
+            图片的 Url
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceDetect.Threshold">
+            <summary>
+            阈值
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceDetect.IOU_Threshold">
+            <summary>
+            排除交并比阈值
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceHouseList.Status">
+            <summary>
+            状态（0禁用、1启用）
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.ImageBase64">
+            <summary>
+            Base64图片
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.ImageUrl">
+            <summary>
+            图片的 Url
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.EnableSTN">
+            <summary>
+            是否启用空间变换
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.Threshold">
+            <summary>
+            阈值
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.IOU_Threshold">
+            <summary>
+            排除交并比阈值
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.SimiScore">
+            <summary>
+            最小相似度得分
+            </summary>
+        </member>
+        <member name="T:IoTAIService.Models.MZ_AIHouse">
+            <summary>
+            人员建模库表
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIHouse.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIHouse.HouseName">
+            <summary>
+            建模库名称
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIHouse.Remark">
+            <summary>
+            建模库备注
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIHouse.Status">
+            <summary>
+            状态（0禁用、1启用）
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIHouse.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:IoTAIService.Models.MZ_AIMem">
+            <summary>
+            人员建模信息表
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.HouseId">
+            <summary>
+            所属库
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.MemId">
+            <summary>
+            人员Id
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.FStatus">
+            <summary>
+            建模状态：0未建模，1为建模成功，2为建模失败
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.FaceImg">
+            <summary>
+            人脸建模头像
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+    </members>
+</doc>

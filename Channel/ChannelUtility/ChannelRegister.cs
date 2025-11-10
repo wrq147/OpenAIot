@@ -1,0 +1,112 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using ChannelUtility.Buffers;
+using ChannelUtility.Config;
+using ChannelUtility.Redis;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+namespace ChannelUtility
+{
+    public class ChannelRegister : IDisposable
+    {
+        protected GeneralRedisHelper _redis;
+        public GeneralRedisHelper RedisHelper { get { return _redis; } }
+        protected ChannelOption _option;
+        public ChannelOption Option
+        {
+            get { return _option; }
+        }
+        protected IMemoryCache _memoryCache;
+        public IMemoryCache MemoryCache { get { return _memoryCache; } }
+        /// <summary>
+        /// 拆包、拼包用
+        /// </summary>
+        protected ConcurrentDictionary<string, FastReader> _lastReaderDict = new ConcurrentDictionary<string, FastReader>();
+        protected ConcurrentDictionary<string, ConcurrentDictionary<string, string>> _readerCache = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
+        public ConcurrentDictionary<string, string> GetReaderCache(string deviceId)
+        {
+            return _readerCache.GetOrAdd(deviceId, (k) => new ConcurrentDictionary<string, string>());
+        }
+        public void SetChannelInfo(string info)
+        {
+            if (_option.config.CanModify == true)
+            {
+                _redis.StringSet("XChannelInfo", info);
+            }
+        }
+        public async Task<X> GetChannelInfo<X>()
+        {
+            return await _redis.StringGetAsync<X>("XChannelInfo");
+        }
+        /// <summary>
+        /// 将原二进制转FastReader
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="deviceId"></param>
+        /// <returns></returns>
+        public FastReader BytesToReader(byte[] input, string deviceId)
+        {
+            FastReader lastReader;
+            if (_lastReaderDict.TryRemove(deviceId, out lastReader))
+            {
+                return lastReader.Contact(input);
+            }
+            else
+            {
+                return new FastReader(input);
+            }
+        }
+        /// <summary>
+        /// 保存剩余
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="lastReader"></param>
+        public void SaveFastReader(string deviceId, FastReader lastReader)
+        {
+            _lastReaderDict.AddOrUpdate(deviceId, lastReader, (key, existv) => lastReader);
+        }
+
+        public ChannelRegister(IServiceProvider provider)
+        {
+            _memoryCache = provider.GetService<IMemoryCache>();
+            _option = provider.GetService<ChannelOption>();
+            _redis = provider.GetService<GeneralRedisHelper>();
+            ChannelConfig oldConfig = _redis.HashGet<ChannelConfig>("IotChannels", _option.config.Code);
+            if (oldConfig != null)
+            {
+                _option.config.SendInterval = oldConfig.SendInterval;
+            }
+            _redis.HashSet("IotChannels", _option.config.Code, System.Text.Json.JsonSerializer.Serialize(_option.config, JsonMessageSerializerConfig.SerializeOptions));
+        }
+        //供程序员显式调用的Dispose方法
+        public void Dispose()
+        {
+            //调用带参数的Dispose方法，释放托管和非托管资源
+            Dispose(true);
+            //手动调用了Dispose释放资源，那么析构函数就是不必要的了，这里阻止GC调用析构函数
+            System.GC.SuppressFinalize(this);
+        }
+
+        //protected的Dispose方法，保证不会被外部调用。
+        //传入bool值disposing以确定是否释放托管资源
+        protected void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                //TODO:在这里加入清理"托管资源"的代码，应该是xxx.Dispose();
+            }
+            //TODO:在这里加入清理"非托管资源"的代码
+        }
+
+        //供GC调用的析构函数
+        ~ChannelRegister()
+        {
+            Dispose(false);//释放非托管资源
+        }
+    }
+}

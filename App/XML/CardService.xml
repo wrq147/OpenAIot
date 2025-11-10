@@ -1,0 +1,1499 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CardService</name>
+    </assembly>
+    <members>
+        <member name="M:CardService.Business.CardBLL.Add(CardService.Model.MZ_Card)">
+            <summary>
+            添加名片
+            </summary>
+            <param name="data"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Business.CardBLL.Update(CardService.Model.MZ_Card)">
+            <summary>
+            编辑名片
+            </summary>
+            <param name="data"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Business.CardOrgBLL.Join(CardService.Model.In_JoinOrg)">
+            <summary>
+            邀请加入企业
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Business.CardProBLL.CategoryList2Tree(System.Collections.Generic.List{CardService.Model.MZ_Card_Category})">
+            <summary>
+            分类树转选择树
+            </summary>
+            <param name="deptTree"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Business.CardProBLL.BuildCategoryTree(System.Collections.Generic.List{CardService.Model.MZ_Card_Category})">
+            <summary>
+            构建前端所需要树结构
+            </summary>
+            <param name="depts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Business.CardProBLL._RecursionFn(System.Collections.Generic.List{CardService.Model.MZ_Card_Category},CardService.Model.MZ_Card_Category)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:CardService.Business.CardProBLL._GetChildList(System.Collections.Generic.List{CardService.Model.MZ_Card_Category},CardService.Model.MZ_Card_Category)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="F:CardService.CardConstant.CardMsgReadedKey">
+            <summary>
+            指定消息已读处理
+            </summary>
+        </member>
+        <member name="T:CardService.Controller.Api">
+            <summary>
+            供第三方调用Api接口
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Api.JudgeBindId(System.String,System.String)">
+            <summary>
+            判断是否有创建第三方企业Id
+            </summary>
+            <param name="dev">开发者Id</param>
+            <param name="id">第三方企业Id</param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Card">
+            <summary>
+            名片API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Card.List(CardService.Model.In_Card_List)">
+            <summary>
+            获取我的名片列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Card.Info(System.Int64)">
+            <summary>
+            获取指定名片的信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Card.Add(CardService.Model.MZ_Card)">
+            <summary>
+            添加名片
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Card.Edit(CardService.Model.MZ_Card)">
+            <summary>
+            编辑名片
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Card.Remove(System.Int64)">
+            <summary>
+            删除名片
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Card.Switch(System.Int64)">
+            <summary>
+            切换名片
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Case">
+            <summary>
+            案例API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Case.List(CardService.Model.In_Card_Case)">
+            <summary>
+            名片案例列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Case.Info(System.Int64)">
+            <summary>
+            获取案例信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Case.ListM(CardService.Model.In_Card_Case_M)">
+            <summary>
+            管理案例列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Case.Add(CardService.Model.MZ_Card_Case)">
+            <summary>
+            管理添加案例
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Case.Edit(CardService.Model.MZ_Card_Case)">
+            <summary>
+            管理编辑案例
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Case.Remove(System.Int64)">
+            <summary>
+            管理删除案例
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Dept">
+            <summary>
+            名片用部门API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Dept.Sort(AuthService.Model.In_DeptSort)">
+            <summary>
+            部门排序
+            </summary>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.List(AuthService.MZ_Dept)">
+            <summary>
+            获取部门列表
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.ExcludeChild(AuthService.MZ_Dept)">
+            <summary>
+            查询部门列表（排除节点）
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Dept.Info(System.Int64)">
+            <summary>
+            根据部门编号获取详细信息
+            </summary>
+            <param name="deptId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.TreeSelect(AuthService.MZ_Dept)">
+            <summary>
+            获取部门下拉树列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.Add(AuthService.MZ_Dept)">
+            <summary>
+            新增部门
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.Edit(AuthService.MZ_Dept)">
+            <summary>
+            修改部门
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.Move(AuthService.Model.In_DeptMove)">
+            <summary>
+            移动部门
+            </summary>
+            <param name="move"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Dept.Remove(System.Int64)">
+            <summary>
+            删除部门
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Exchange">
+            <summary>
+            名片交换请求API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Exchange.Add(System.Int64)">
+            <summary>
+            递名片
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Exchange.Info(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            获取指定名片的交换信息
+            </summary>
+            <param name="tuid">目标用户Id</param>
+            <param name="tcid">目标名片Id</param>
+            <param name="ucid">登录用户名片Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Exchange.List(CardService.Model.In_CardExchange)">
+            <summary>
+            获取名片交换请求列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Exchange.PendingCount">
+            <summary>
+            待处理数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Exchange.Agree(System.Int64)">
+            <summary>
+            同意
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Exchange.Refuse(System.Int64)">
+            <summary>
+            拒绝
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Holder">
+            <summary>
+            名片夹API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Holder.List(CardService.Model.In_Card_Holder)">
+            <summary>
+            获取通讯录
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Holder.Remove(System.Int64)">
+            <summary>
+            从通讯录中删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Holder.Add(System.Int64)">
+            <summary>
+            存入通讯录
+            </summary>
+            <param name="id">要存入的名片</param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Man">
+            <summary>
+            企业管理员设置API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Man.List">
+            <summary>
+            管理员列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Man.Add(System.Int64)">
+            <summary>
+            添加管理员
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Man.Remove(System.Int64)">
+            <summary>
+            删除管理员
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Man.Exist(System.Int64)">
+            <summary>
+            判断是否有指定企业的管理员权限
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Msg">
+            <summary>
+            访客消息API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Msg.Record(CardService.Model.In_Record_List)">
+            <summary>
+            获取我的浏览记录
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Msg.Visited(CardService.Model.In_Visited_List)">
+            <summary>
+            获取受访记录列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Msg.Visit(CardService.Model.MZ_Card_Msg)">
+            <summary>
+            访问开始时调用
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Msg.VisitEnd(System.Int64)">
+            <summary>
+            访问结束时调用
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Msg.Readed(System.Int64)">
+            <summary>
+            设置已读
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Msg.UnreadAmount">
+            <summary>
+            获取未读数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Org">
+            <summary>
+            名片组织关联API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Org.RemoveUser(System.Int64)">
+            <summary>
+            从当前组织中移除指定用户
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.OrgView(System.Int64)">
+            <summary>
+            用户的关联企业信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Edit(AuthService.MZ_Org)">
+            <summary>
+            修改企业（名片前端用）
+            </summary>
+            <param name="dept"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.EditUser(AuthService.Model.MZ_User_Org)">
+            <summary>
+            修改用户的企业信息
+            </summary>
+            <param name="uo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.EditPost(System.Int64,System.String)">
+            <summary>
+            编辑指定企业的职位
+            </summary>
+            <param name="orgId"></param>
+            <param name="postName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Config(CardService.Model.MZ_Card_Org)">
+            <summary>
+            配置组织模块信息
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Info(System.Int64)">
+            <summary>
+            获取指定组织详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.UserInfo(System.Int64)">
+            <summary>
+            获取指定用户组织信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Create(CardService.Model.In_Org)">
+            <summary>
+            创建新企业
+            </summary>
+            <param name="org"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Switch(System.Int64)">
+            <summary>
+            切换企业
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.UserOrgList(System.Boolean)">
+            <summary>
+            用户的关联企业列表
+            </summary>
+            <param name="man"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Remove(System.Int64)">
+            <summary>
+            解散企业
+            </summary>
+            <param name="id">企业Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.JoinAt(CardService.Model.In_Join)">
+            <summary>
+            直接加入指定企业
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Join(CardService.Model.In_JoinOrg)">
+            <summary>
+            通过邀请码创建或加入企业
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Exit(System.Int64)">
+            <summary>
+            退出企业
+            </summary>
+            <param name="id">企业Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.IsJoin(System.Int64)">
+            <summary>
+            判断是否加入了指定企业
+            </summary>
+            <param name="id">企业Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.Invite(CardService.Model.MZ_YQCode)">
+            <summary>
+            生成邀请码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.SendYqSms(WeiXinService.Model.In_YqSms)">
+            <summary>
+            发送邀请短信
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Org.ParseYq(System.String)">
+            <summary>
+            解释邀请码
+            </summary>
+            <param name="id">邀请码</param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.Pro">
+            <summary>
+            名片产品API
+            </summary>
+        </member>
+        <member name="M:CardService.Controller.Pro.List(CardService.Model.In_Card_Pro)">
+            <summary>
+            查询产品列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.Info(System.Int64)">
+            <summary>
+            查询产品信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.Add(CardService.Model.MZ_Card_Pro)">
+            <summary>
+            管理添加产品
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.Edit(CardService.Model.MZ_Card_Pro)">
+            <summary>
+            管理编辑产品
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.Remove(System.Int64)">
+            <summary>
+            标记删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.Recover(System.Int64)">
+            <summary>
+            恢复产品
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.CategoryList(CardService.Model.In_Card_Category)">
+            <summary>
+            查询产品分类
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.SortCategory(CardService.Model.In_ProCateSort)">
+            <summary>
+            产品分类排序
+            </summary>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.AddCategory(CardService.Model.MZ_Card_Category)">
+            <summary>
+            添加产品分类
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.EditCategory(CardService.Model.MZ_Card_Category)">
+            <summary>
+            编辑产品分类
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.RemoveCategory(System.Int64)">
+            <summary>
+            删除产品分类
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CardService.Controller.Pro.CategoryTreeSelect(CardService.Model.In_Card_Category)">
+            <summary>
+            获取分类下拉树列表
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.Controller.User">
+            <summary>
+            名片专用用户管理API
+            </summary>
+        </member>
+        <member name="T:CardService.DAL.CardHolderDAL">
+            <summary>
+            通讯录操作类
+            </summary>
+        </member>
+        <member name="T:CardService.DAL.CardMsgDAL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CardService.DAL.CardOrgDAL.SelectUserOrgListById(System.Int64,System.Boolean)">
+            <summary>
+            获取用户的组织列表数据
+            </summary>
+            <param name="userId"></param>
+            <param name="man"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CardService.EditorHelper">
+            <summary>
+            编辑器专用
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_CardExchange.ReceiveUserId">
+            <summary>
+            接收人
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Card_Case">
+            <summary>
+            案例查询
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Case.CardId">
+            <summary>
+            过滤名片
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Case.OrgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Case_M.OrgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Case_M.key">
+            <summary>
+            过滤案例关键字
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Card_Category">
+            <summary>
+            产品分类查询
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Category.Key">
+            <summary>
+            搜索的关键字
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Category.OrgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Category.ParentId">
+            <summary>
+            过滤父分类
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Category.CardId">
+            <summary>
+            过滤名片
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Card_Holder">
+            <summary>
+            通讯录列表过滤参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Holder.Key">
+            <summary>
+            通讯录的搜索关键字
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Holder.UserId">
+            <summary>
+            过滤用户
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Card_List">
+            <summary>
+            名片列表请求参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_List.UserId">
+            <summary>
+            所属用户过滤
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_List.OrgId">
+            <summary>
+            所属组织过滤
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Card_Pro">
+            <summary>
+            产品查询
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.Key">
+            <summary>
+            搜索的关键字
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.CategoryId">
+            <summary>
+            过滤分类
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.CategoryPath">
+            <summary>
+            过滤分类Path
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.CardId">
+            <summary>
+            过滤名片
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.orgId">
+            <summary>
+            过滤组织
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.del_flag">
+            <summary>
+            删除标记
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Card_Pro.filterAncestors">
+            <summary>
+            过滤部门
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_InviteOrg">
+            <summary>
+            邀请参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_InviteOrg.OrgId">
+            <summary>
+            邀请加入的组织
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_InviteOrg.DeptId">
+            <summary>
+            邀请加入的部门
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Join">
+            <summary>
+            加入企业的参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Join.orgId">
+            <summary>
+            企业Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Join.depId">
+            <summary>
+            部门Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Join.postName">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Join.realName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_JoinOrg">
+            <summary>
+            邀请加入的参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_JoinOrg.code">
+            <summary>
+            邀请码
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_JoinOrg.postName">
+            <summary>
+            要加入的职位
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_JoinOrg.realName">
+            <summary>
+            要加入的真实姓名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_JoinOrg.deptId">
+            <summary>
+            要加入的部门
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Org.BindId">
+            <summary>
+            绑定的外部Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_ProCateSort.idList">
+            <summary>
+            要排序的分类，按排序放在列表里
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Record_List">
+            <summary>
+            浏览记录列表请求参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Record_List.VisitCardId">
+            <summary>
+            访问者名片过滤
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_ThirdOrg">
+            <summary>
+            第三方组织信息
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_ThirdOrg.Id">
+            <summary>
+            第三方组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_ThirdOrg.OrgName">
+            <summary>
+            第三方组织名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_ThirdOrg.Logo">
+            <summary>
+            第三方组织Logo
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_ThirdOrg.AddressDetail">
+            <summary>
+            第三方地址
+            </summary>
+        </member>
+        <member name="T:CardService.Model.In_Visited_List">
+            <summary>
+            受访记录列表请求参数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Visited_List.ReceiveUserId">
+            <summary>
+            消息接收人
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Visited_List.VisitType">
+            <summary>
+            访问类型过滤
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Visited_List.TargetId">
+            <summary>
+            受访目标过滤
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Visited_List.InitTarget">
+            <summary>
+            是否初始化目标
+            </summary>
+        </member>
+        <member name="P:CardService.Model.In_Visited_List.LastVisited">
+            <summary>
+            是否相同访问时只显示最近的一条记录
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card">
+            <summary>
+            名片
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Id">
+            <summary>
+            Id主键
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.RealName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Mobile">
+            <summary>
+            手机
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.WxNumber">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Website">
+            <summary>
+            官网
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Avatar">
+            <summary>
+            名片头像
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.TemplateId">
+            <summary>
+            名片风格
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.TemplateBk">
+            <summary>
+            名片风格背景图
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.UserId">
+            <summary>
+            所属用户Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.OrgId">
+            <summary>
+            所属组织,为0则无所属企业
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.OrgName">
+            <summary>
+            所属组织名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.DeptId">
+            <summary>
+            所属部门Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.DeptName">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.PostName">
+            <summary>
+            职位,多个职位用逗号分隔
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.ShareTitle">
+            <summary>
+            分享标题
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Intro">
+            <summary>
+            个人简介
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.AddressCode">
+            <summary>
+            省市区代码
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.AddressName">
+            <summary>
+            地址名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.AddressDetail">
+            <summary>
+            详细地址
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_CardExchange">
+            <summary>
+            交换请求实体
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.SendCardId">
+            <summary>
+            请求名片Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.SendAvatar">
+            <summary>
+            请求人头像
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.SendRealName">
+            <summary>
+            请求人姓名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.SendPostName">
+            <summary>
+            请求人职位
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.SendOrgName">
+            <summary>
+            请求人组织名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.ReceiveCardId">
+            <summary>
+            接收人名片Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.RecvRealName">
+            <summary>
+            接收人姓名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.RecvOrgName">
+            <summary>
+            接收人组织名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.ReceiveUserId">
+            <summary>
+            接收人
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardExchange.Status">
+            <summary>
+            状态（0待处理 1同意 2为忽略）
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_CardHolder">
+            <summary>
+            通讯录
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardHolder.UserId">
+            <summary>
+            关联账号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardHolder.CardId">
+            <summary>
+            目标名片
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_CardHolder.CreatedOn">
+            <summary>
+            添加时间
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Case">
+            <summary>
+            案例实体
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Case.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Case.OrgId">
+            <summary>
+            所属组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Case.Title">
+            <summary>
+            案例标题
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Case.ImageUrl">
+            <summary>
+            案例封面
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Case.Detail">
+            <summary>
+            案例详情
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Category">
+            <summary>
+            产品分类实体
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.OrgId">
+            <summary>
+            所属组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.CategoryName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.Sort">
+            <summary>
+            分类排序
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.ParentId">
+            <summary>
+            父分类Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.Path">
+            <summary>
+            分类层级
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Category.children">
+            <summary>
+            子分类
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Holder_V">
+            <summary>
+            列表通讯录视图
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Holder_V.CreatedOn">
+            <summary>
+            加入时间
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Msg">
+            <summary>
+            访客消息表
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.UserId">
+            <summary>
+            访问者
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.VisitCardId">
+            <summary>
+            访问者名片
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.VisitSource">
+            <summary>
+            来源：0为其它
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.VisitType">
+            <summary>
+            访问模块,0为名片,1为产品,2为案例
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.VisitNumber">
+            <summary>
+            记录第几次访问
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.TargetId">
+            <summary>
+            目标Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.ReceiveUserId">
+            <summary>
+            消息接收人
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.Status">
+            <summary>
+            状态（0未读 1已读）
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.CreatedOn">
+            <summary>
+            访问时间
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.EndOn">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Msg.ReadedOn">
+            <summary>
+            读取时间
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Org">
+            <summary>
+            组织扩展信息
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org.OrgId">
+            <summary>
+            对应的组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org.BindId">
+            <summary>
+            绑定的组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org.ProConfig">
+            <summary>
+            产品模块配置
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org.CaseConfig">
+            <summary>
+            案例模块配置
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Org_V">
+            <summary>
+            名片使用的组织信息
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org_V.BindId">
+            <summary>
+            绑定的组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org_V.ProConfig">
+            <summary>
+            产品模块配置
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Org_V.CaseConfig">
+            <summary>
+            案例模块配置
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Pro">
+            <summary>
+            产品实体
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.OrgId">
+            <summary>
+            所属组织Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.DeptId">
+            <summary>
+            所属部门Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.ImageUrl">
+            <summary>
+            产品主图
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.ProName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.CategoryId">
+            <summary>
+            产品类别Id
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.Price">
+            <summary>
+            单价
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.WholePrice">
+            <summary>
+            批发价
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.Detail">
+            <summary>
+            产品详情（json数组[{"t":"img","v":"https://xx/g.jpg"}])
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Pro.del_flag">
+            <summary>
+            删除标志（0代表存在 2代表删除）
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Record_V">
+            <summary>
+            访问过的名片记录实体
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Record_V.Avatar">
+            <summary>
+            名片头像
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Record_V.RealName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Record_V.PostName">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Record_V.OrgName">
+            <summary>
+            组织名
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_Card_Visited_V">
+            <summary>
+            受访记录实体
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Visited_V.Avatar">
+            <summary>
+            访问者名片头像
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Visited_V.RealName">
+            <summary>
+            访问者真实姓名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Visited_V.PostName">
+            <summary>
+            访问者职位
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Visited_V.OrgName">
+            <summary>
+            访问者组织名
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_Card_Visited_V.Target">
+            <summary>
+            访问目标结构
+            </summary>
+        </member>
+        <member name="T:CardService.Model.MZ_YQCode">
+            <summary>
+            邀请码
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.OrgId">
+            <summary>
+            邀请加入的企业
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.OrgName">
+            <summary>
+            邀请的企业名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.DeptId">
+            <summary>
+            邀请的部门
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.DeptName">
+            <summary>
+            邀请的部门名称
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.Limit">
+            <summary>
+            是否限制只能一人加入
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.YQCount">
+            <summary>
+            已邀请人数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.MZ_YQCode.YQCodeType">
+            <summary>
+            邀请码类型：0为4位邀请码,1为GUID
+            </summary>
+        </member>
+        <member name="T:CardService.Model.Out_Exchange_Info">
+            <summary>
+            指定名片的交换信息
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Out_Exchange_Info.Exchanging">
+            <summary>
+            是否已递名片（已互换名片、互申请中为true）
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Out_Exchange_Info.InHolder">
+            <summary>
+            是否已在通讯录中
+            </summary>
+        </member>
+        <member name="T:CardService.Model.Tx_Pro_Item">
+            <summary>
+            产品详情元素
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Tx_Pro_Item.type">
+            <summary>
+            元素类型
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Tx_Pro_Item.attr">
+            <summary>
+            元素属性
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Tx_Pro_Item.data">
+            <summary>
+            元素值
+            </summary>
+        </member>
+        <member name="T:CardService.Model.Tx_Yq_Count">
+            <summary>
+            邀请短信计数
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Tx_Yq_Count.first_send">
+            <summary>
+            开始计时的时间
+            </summary>
+        </member>
+        <member name="P:CardService.Model.Tx_Yq_Count.count">
+            <summary>
+            1小时内
+            </summary>
+        </member>
+    </members>
+</doc>

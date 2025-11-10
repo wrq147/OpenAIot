@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+	  <Description>论坛服务</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <OutputPath>bin\</OutputPath>
+	  <DocumentationFile>..\..\App\XML\DiscussService.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+	  <ProjectReference Include="..\AuthService\AuthService.csproj" />
+	  <ProjectReference Include="..\DictService\DictService.csproj" />
+  </ItemGroup>
+</Project>

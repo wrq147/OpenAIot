@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>2.1.2</Version>
+	<TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\FastTunnel.Core\Extensions\ObjectExtensions.cs" Link="Extensions\ObjectExtensions.cs" />
+    <Compile Include="..\FastTunnel.Core\Exceptions\SocketClosedException.cs" Link="Exceptions\SocketClosedException.cs" />
+    <Compile Include="..\FastTunnel.Core\Extensions\LoggerExtentions.cs" Link="Extensions\LoggerExtentions.cs" />
+    <Compile Include="..\FastTunnel.Core\Extensions\WebSocketExtensions.cs" Link="Extensions\WebSocketExtensions.cs" />
+    <Compile Include="..\FastTunnel.Core\FastTunnelConst.cs" Link="FastTunnelConst.cs" />
+    <Compile Include="..\FastTunnel.Core\Models\ForwardConfig.cs" Link="Models\ForwardConfig.cs" />
+    <Compile Include="..\FastTunnel.Core\Models\LogInMassage.cs" Link="Models\LogInMassage.cs" />
+    <Compile Include="..\FastTunnel.Core\Models\Message.cs" Link="Models\Message.cs" />
+    <Compile Include="..\FastTunnel.Core\Models\TunnelMassage.cs" Link="Models\TunnelMassage.cs" />
+    <Compile Include="..\FastTunnel.Core\Models\WebConfig.cs" Link="Models\WebConfig.cs" />
+    <Compile Include="..\FastTunnel.Core\Utilitys\WebSocketUtility.cs" Link="Utilitys\WebSocketUtility.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

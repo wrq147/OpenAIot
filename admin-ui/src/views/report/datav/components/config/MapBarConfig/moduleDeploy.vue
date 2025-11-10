@@ -1,0 +1,107 @@
+<template>
+    <el-form size="small" label-width="90px">
+      <el-collapse v-model="activeNames" accordion>
+        <el-collapse-item title="图层" name="1">
+          <el-form-item v-if="configData.layerName !== undefined" label="图层名称">
+            <el-input v-model="configData.layerName" placeholder="请输入图层名称" />
+          </el-form-item>
+        </el-collapse-item>
+        <el-collapse-item title="标题" name="2">
+          <el-form-item v-if="configData.chartOption.title.text!==undefined" label="标题">
+            <el-input v-model="configData.chartOption.title.text" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.title.subtext!==undefined" label="副标题">
+            <el-input v-model="configData.chartOption.title.subtext" placeholder="请输入副标题" />
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.title.left!==undefined" label="标题的位置（水平）">
+            <el-select v-model="configData.chartOption.title.left" placeholder="请选择">
+              <el-option label="居左" value="left"></el-option>
+              <el-option label="居中" value="center"></el-option>
+              <el-option label="居右" value="right"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-collapse-item>
+        <el-collapse-item title="图表" name="3">
+          <el-form-item v-if="configData.chartOption.isScatter !== undefined" label="是否散点">
+            <el-switch v-model="configData.chartOption.isScatter" />
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.isToolBox !== undefined" label="是否显示工具箱">
+            <el-switch v-model="configData.chartOption.isToolBox" />
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.mapTooltip!==undefined" label="提示名称">
+            <el-input v-model="configData.chartOption.mapTooltip" placeholder="请输入提示名称" />
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.topNum!==undefined" label="显示数据排名前n">
+            <el-slider v-model="configData.chartOption.topNum" :min="1" :max="100" :step="1" show-input></el-slider>
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.barNum!==undefined " label="柱状图数据项数">
+            <el-slider v-model="configData.chartOption.barNum" :min="1" :max="100" :step="1" show-input></el-slider>
+          </el-form-item>
+          <el-form-item v-if="configData.chartOption.color!==undefined" label="图表颜色">
+            <el-color-picker v-model="configData.chartOption.color" show-alpha></el-color-picker>
+          </el-form-item>
+        </el-collapse-item>
+        <el-collapse-item title="动画" name="4">
+          <el-form-item v-if="configData.chartOption.animate !== undefined" label="载入动画">
+            <el-select v-model="configData.chartOption.animate" placeholder="请选择">
+              <el-option v-for="item in animateOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-collapse-item>
+      </el-collapse>
+    </el-form>
+</template>
+<script>
+import { animateOptions } from "../../../animate/animate";
+export default {
+  props: {
+    configData: {
+      type: Object,
+      required: true
+    },
+    costomData: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      activeNames: ["1"],
+      animateOptions,
+      chartList: this.drawingList,
+    }
+  },
+  methods: {}
+}
+</script>
+<style lang="scss" scoped>
+::v-deep {
+    .el-input--medium .el-input__inner {
+      height: 32px;
+      width: 100%;
+    }
+    .inputFontSize{
+      width: 100%;
+    }
+    .el-select{
+      height: 32px;
+      width: 100%;
+    }
+    .el-input--suffix, .el-input__inner{
+      height: 32px;
+    }
+    .el-select .el-input__icon {
+      line-height: 32px; //el-select 改了多高，这边多高
+    }
+    .lableText .el-form-item__label{
+        float: none;
+    }
+  }
+  .delete-icon {
+    line-height: 32px;
+    font-size: 22px;
+    padding: 0 4px;
+    cursor: pointer;
+    color: #f56c6c;
+  }
+</style>

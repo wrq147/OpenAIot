@@ -1,0 +1,270 @@
+﻿using AuthService;
+using AuthService.Business;
+using Common.Share;
+using AfterService.DAL;
+using AfterService.Model;
+using IoTService.DAL;
+using IoTService.Models;
+using TemplateAction.Core;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using AuthService.DAL;
+using AuthService.Model;
+using System;
+
+namespace AfterService.Business
+{
+    public class KFDeviceBLL
+    {
+        private ITAServiceProvider _provider;
+        private KFDeviceDAL _deviceDAL;
+        private IotGroupDAL _groupDAL;
+        public KFDeviceBLL(KFDeviceDAL deviceDAL, IotGroupDAL groupDAL, ITAServiceProvider serviceProvider)
+        {
+            _deviceDAL = deviceDAL;
+            _groupDAL = groupDAL;
+            _provider = serviceProvider;
+        }
+        public virtual async Task<PageObject<Out_KFProductName>> SelectKFProductList(OutKFProductPage query)
+        {
+            var user = _provider.GetUser();
+            if (user.OrgId <= 0)
+            {
+                return new PageObject<Out_KFProductName>();
+            }
+            return await _deviceDAL.SelectKFProductList(user.OrgId, query);
+        }
+        public virtual async Task<Dictionary<string,int>> SelectKFDevAreaInfo(string parentCode, string dstates, IUserInfo user, DataScope scope)
+        {
+            Dictionary<string, int> ret = new Dictionary<string, int>();
+            if (parentCode == "100000")
+            {
+                var tInfo = await _deviceDAL.SelectKFDevAreaInfo(string.Empty, user, scope);
+                ret.Add("onCount", tInfo.onCount);
+                ret.Add("offCount", tInfo.offCount);
+                ret.Add("unCount", tInfo.unCount);
+                if (string.IsNullOrEmpty(dstates))
+                {
+                    return ret;
+                }
+                var dstatearr = dstates.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var ditem in dstatearr)
+                {
+                    var tmpcc = await _deviceDAL.SelectKFDevAreaDStateCount(string.Empty, ditem, user, scope);
+                    ret.Add(ditem, tmpcc);
+                }
+                return ret;
+            }
+            else
+            {
+                var tmparea = await _provider.GetService<CodeDAL>().SelectArea(parentCode);
+                if (tmparea != null)
+                {
+                    var tInfo = await _deviceDAL.SelectKFDevAreaInfo(tmparea.ParentPath, user, scope);
+                    ret.Add("onCount", tInfo.onCount);
+                    ret.Add("offCount", tInfo.offCount);
+                    ret.Add("unCount", tInfo.unCount);
+                    if (string.IsNullOrEmpty(dstates))
+                    {
+                        return ret;
+                    }
+                    var dstatearr = dstates.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var ditem in dstatearr)
+                    {
+                        var tmpcc = await _deviceDAL.SelectKFDevAreaDStateCount(string.Empty, ditem, user, scope);
+                        ret.Add(ditem, tmpcc);
+                    }
+                    return ret;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+        }
+
+
+        public virtual async Task<List<Out_DevAreaData>> SelectAreaDataList(string parentCode, IUserInfo user, DataScope scope)
+        {
+            List<Out_DevAreaData> tareaList;
+            if (parentCode == "100000")
+            {
+                tareaList = await _deviceDAL.SelectKFDevAreaDataList(string.Empty, user, scope);
+            }
+            else
+            {
+                var tmparea = await _provider.GetService<CodeDAL>().SelectArea(parentCode);
+                if (tmparea != null)
+                {
+                    tareaList = await _deviceDAL.SelectKFDevAreaDataList(tmparea.ParentPath, user, scope);
+                }
+                else
+                {
+                    tareaList = new List<Out_DevAreaData>();
+                }
+            }
+
+            var tcodes = tareaList.Select(x => x.AreaCode).ToList();
+            if (tcodes.Count > 0)
+            {
+                var tareas = await _provider.GetService<CodeDAL>().SelectCodeListByCode(tcodes);
+                var tareaDict = tareas.ToDictionary(x => x.Id);
+                foreach (var tarea in tareaList)
+                {
+                    if (tareaDict.TryGetValue(tarea.AreaCode, out var area))
+                    {
+                        tarea.AreaName = area.Name;
+                        tarea.Lng = Convert.ToDouble(area.Lng);
+                        tarea.Lat = Convert.ToDouble(area.Lat);
+                    }
+                }
+            }
+            return tareaList;
+        }
+        public virtual async Task<List<Out_DevAreaData>> SelectKFDevAreaDataListByRange(In_DevRangeAreaList query, IUserInfo user, DataScope scope)
+        {
+            var tareaList = await _deviceDAL.SelectKFDevAreaDataListByRange(query, user, scope);
+            var tcodes = tareaList.Select(x => x.AreaCode).ToList();
+            if (tcodes.Count > 0)
+            {
+                var tareas = await _provider.GetService<CodeDAL>().SelectCodeListByCode(tcodes);
+                var tareaDict = tareas.ToDictionary(x => x.Id);
+                foreach (var tarea in tareaList)
+                {
+                    if (tareaDict.TryGetValue(tarea.AreaCode, out var area))
+                    {
+                        tarea.AreaName = area.Name;
+                        tarea.Lng = Convert.ToDouble(area.Lng);
+                        tarea.Lat = Convert.ToDouble(area.Lat);
+                    }
+                }
+            }
+            return tareaList;
+        }
+        public virtual async Task<List<MZ_IotDevice>> SelectKFDeviceListByRange(In_DevRangeList query, IUserInfo user, DataScope scope)
+        {
+            return await _deviceDAL.SelectKFDeviceListByRange(query, user, scope);
+        }
+        public virtual async Task<PageObject<MZ_IotDevice>> ListPage(In_KFDevListPage query, IUserInfo user, DataScope scope)
+        {
+            string classPath = null;
+            if (query.ClassId != null)
+            {
+                MZ_IotClass cls = await this._provider.GetService<IotClassDAL>().Select(query.ClassId);
+                if (cls != null)
+                {
+                    classPath = cls.Path;
+                }
+            }
+
+            var tpageList = await _deviceDAL.SelectWithGroupPage(query, classPath, user, scope);
+            var ids = tpageList.List.Select(x => x.Id).ToList();
+            if (ids.Count > 0)
+            {
+                var warnList = await _provider.GetService<IotWarningDAL>().SelectWarningDeviceList(ids, user.OrgId);
+                foreach (var item in tpageList.List)
+                {
+                    item.HavWarn = warnList.Contains(item.Id);
+                }
+            }
+
+            return tpageList;
+        }
+        public virtual async Task<BusResponse<int>> UpdateDevice(In_UpdateDevice data)
+        {
+            if (data.Name == "")
+            {
+                return BusResponse<int>.Error(110, "设备名称不能为空");
+            }
+            var user = _provider.GetUser();
+            var device = await _deviceDAL.Select(data.Id);
+            if (device == null)
+            {
+                return BusResponse<int>.Error(111, "设备不存在");
+            }
+            if (user.OrgId != device.OrgId && user.OrgId != device.OwnerOrgId && user.OrgId != device.UseOrgId && user.UserId != device.UseUserId)
+            {
+                return BusResponse<int>.Error(112, "无修改该设备的权限");
+            }
+            MZ_IotDevice updateDevice = new MZ_IotDevice();
+            updateDevice.Id = data.Id;
+            updateDevice.Name = data.Name;
+            updateDevice.PhotoUrl = data.PhotoUrl;
+            updateDevice.Remark = data.Remark;
+            updateDevice.DState = data.DState;
+            if (data.Lat != null && data.Lng != null)
+            {
+                updateDevice.Lat = data.Lat;
+                updateDevice.Lng = data.Lng;
+                updateDevice.GeoHash = MyAccess.Core.GeoHash.Encode(data.Lat.Value, data.Lng.Value);
+                if (string.IsNullOrEmpty(updateDevice.AreaCode))
+                {
+                    var areaInfo = await _provider.GetService<CodeBLL>().SelectAreaByLatLng(data.Lng.Value, data.Lat.Value);
+                    if (areaInfo != null)
+                    {
+                        updateDevice.AreaCode = areaInfo.Id;
+                    }
+                    else
+                    {
+                        updateDevice.AreaCode = string.Empty;
+                    }
+                }
+            }
+            return BusResponse<int>.Success(await _deviceDAL.Update(updateDevice));
+        }
+
+        public virtual async Task<BusResponse<int>> TransferTo(In_TransferTo data)
+        {
+            var roomDeviceDAL = _provider.GetService<RoomDeviceDAL>();
+            if (await roomDeviceDAL.Some(x => x.Id == data.RoomId && x.TargetId == data.DeviceId))
+            {
+                return BusResponse<int>.Error(111, "设备已在房间中");
+            }
+            var user = _provider.GetUser();
+            try
+            {
+                MZ_RoomDevice roomDevice = new MZ_RoomDevice();
+                roomDevice.Id = data.RoomId;
+                roomDevice.TargetId = data.DeviceId;
+                roomDevice.OrgId = user.OrgId;
+                int rs = await roomDeviceDAL.Insert(roomDevice);
+                return BusResponse<int>.Success(rs);
+            }
+            catch
+            {
+                return BusResponse<int>.Error(122, "操作异常,请重新尝试");
+            }
+        }
+        public async Task<BusResponse<Out_DeviceOfRoom>> DevInfo(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return new BusResponse<Out_DeviceOfRoom>(1, string.Empty, Out_DeviceOfRoom.DemoData());
+            }
+
+            var device = await _deviceDAL.Select(id);
+            if (device == null)
+            {
+                return BusResponse<Out_DeviceOfRoom>.Error(111, "设备不存在");
+            }
+            Out_DeviceOfRoom devNR = new Out_DeviceOfRoom();
+            devNR.Id = device.Id;
+            devNR.Name = device.Name;
+
+            var toutlist = await _provider.GetService<RoomDeviceDAL>().QueryDeivceWithRoom(id);
+            if (toutlist.Count > 0)
+            {
+                var tmplist = toutlist.Select(x => x.RoomName).ToList();
+                devNR.RoomNames = string.Join(',', tmplist);
+            }
+
+            devNR.DeviceNumber = device.DeviceNumber;
+            devNR.OwnerOrgId = device.OwnerOrgId;
+            devNR.OrgId = device.OrgId;
+            devNR.DeviceId = device.DeviceId;
+            return BusResponse<Out_DeviceOfRoom>.Success(devNR);
+        }
+    }
+}

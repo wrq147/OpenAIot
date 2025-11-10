@@ -1,0 +1,16 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "106574928",
+      "name": "筛选1",
+      "font_class": "shaixuan1",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    }
+  ]
+}

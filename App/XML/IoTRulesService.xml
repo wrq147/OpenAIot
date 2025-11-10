@@ -1,0 +1,1490 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IoTRulesService</name>
+    </assembly>
+    <members>
+        <member name="M:IoTRulesService.Business.RuleBLL.ExecuteSendHeartbeat">
+            <summary>
+            定时心跳验证iot节点是否存活
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Business.RuleBLL.Execute(System.Int64,System.Int32,Quartz.IJobExecutionContext,System.Int64,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            http触发与定时器触发
+            </summary>
+            <param name="id"></param>
+            <param name="triggerWay"></param>
+            <param name="context"></param>
+            <param name="jobId"></param>
+            <param name="inputs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.RuleListPage(IoTRulesService.Model.In_ListPage)">
+            <summary>
+            查询规则列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.RuleInfo(System.Int64)">
+            <summary>
+            查询规则模板详情
+            </summary>
+            <param name="id">规则Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.SaveRuleParams(IoTRulesService.Model.In_RuleParams)">
+            <summary>
+            保存规则参数
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.ResetRule(System.Int64)">
+            <summary>
+            重置规则，参数会重置
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.EnableRule(IoTRulesService.Model.In_RuleEnable)">
+            <summary>
+            启用或暂停规则
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.Execute(IoTRulesService.Model.In_Execute)">
+            <summary>
+            触发规则引擎的指定Http规则
+            </summary>
+            <param name="data">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.IsOnline(System.String)">
+            <summary>
+            获取设备离在线状态
+            </summary>
+            <param name="id">通讯Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.Live(System.String,System.Boolean,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            获取指定设备的实时属性数据（离线返回null）
+            </summary>
+            <param name="id">通讯Id</param>
+            <param name="needTag">是否需要显示同步到标签的属性</param>
+            <param name="needSend">是否同时发送读取属性消息</param>
+            <param name="needWait">是否同时等待数据</param>
+            <param name="waitProps">需要等待的属性（不传则等待全部，多个用逗号隔开）</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.GroupLive(System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            按分组查询实时数据（离线返回null）
+            </summary>
+            <param name="groupId">分组Id</param>
+            <param name="needTag">是否需要显示同步到标签的属性</param>
+            <param name="needSend">是否同时发送读取属性消息</param>
+            <param name="needWait">是否同时等待数据</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.BatchLive(IoTService.Models.In_DevBatchList)">
+            <summary>
+            批量获取设备的实时数据
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.SelectGroups">
+            <summary>
+            查询开发者的所有设备分组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.SelectMergeList(IoTService.Models.In_HistoryMergeListSync)">
+            <summary>
+            统计设备数据，并返回
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.SelectHistory(IoTService.Models.In_HistoryListSync)">
+            <summary>
+            查询设备的历史数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.HttpRule.SelectOnlines(IoTService.Models.In_OnOfflineListSync)">
+            <summary>
+            查询设备的离在线历史数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.ListPage(IoTRulesService.Model.In_ListPage)">
+            <summary>
+            分页查询规则模板
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.Info(System.Int64)">
+            <summary>
+            获取规则模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.Add(IoTRulesService.Model.MZ_RuleTemplate)">
+            <summary>
+            添加规则
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.Edit(IoTRulesService.Model.MZ_RuleTemplate)">
+            <summary>
+            编辑规则
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.Reset(System.Int64)">
+            <summary>
+            重置规则，参数会重置
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.Remove(System.Int64)">
+            <summary>
+            删除规则
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.DebugOn(System.Int64)">
+            <summary>
+            启用规则调试
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.DebugOff(System.Int64)">
+            <summary>
+            关闭规则调试
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.NodeList">
+            <summary>
+            获取规则节点列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.ForcedDown(System.String)">
+            <summary>
+            强制下线规则节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleFlow.RegNode(System.String)">
+            <summary>
+            上线指定名称的规则节点
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleGroup.ListTree">
+            <summary>
+            设备分组树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleGroup.TreeSelect">
+            <summary>
+            设备分组选择树
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleGroup.Info(System.String)">
+            <summary>
+            获取指定分组信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleGroup.Add(IoTRulesService.Model.MZ_RuleGroup)">
+            <summary>
+            添加分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleGroup.Edit(IoTRulesService.Model.MZ_RuleGroup)">
+            <summary>
+            编辑分组
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Controller.RuleGroup.Remove(System.String)">
+            <summary>
+            删除分组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DAL.RuleTemplateDAL.ExistRule(System.String)">
+            <summary>
+            指定分组路径下面是否有设备
+            </summary>
+            <param name="groupPath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.DeviceCache">
+            <summary>
+            设备本地缓存
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.SetParam(System.String,System.Object)">
+            <summary>
+            设置参数
+            </summary>
+            <param name="key">键名</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.GetParam(System.String)">
+            <summary>
+            获取参数
+            </summary>
+            <param name="key">键名</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.Input">
+            <summary>
+            获取节点的输入数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.Print(System.Object)">
+            <summary>
+            打印
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.ResetSilenceTime(System.String)">
+            <summary>
+            清除事件沉默周期
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.ExeFunc(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行指定设备的功能
+            </summary>
+            <param name="devId">为null表示当前设备</param>
+            <param name="functionId"></param>
+            <param name="data"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.DeviceProp(System.String)">
+            <summary>
+            获取指定设备属性信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.DevicePropByDtuId(System.String)">
+            <summary>
+            通过dtuid获取设备属性信息
+            </summary>
+            <param name="dtuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.SetProp(System.String,System.String,System.Object)">
+            <summary>
+            修改设备属性值
+            </summary>
+            <param name="dtuId">为null表示当前设备</param>
+            <param name="code">属性标识符</param>
+            <param name="val">修改的值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.DeviceTag(System.String)">
+            <summary>
+            获取指定设备标签信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.SetTag(System.String,System.String,System.Object)">
+            <summary>
+            修改设备标签
+            </summary>
+            <param name="devId">为null表示当前设备</param>
+            <param name="code">标签标识符</param>
+            <param name="val"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.CreateData(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            创建一条数据
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.TouchEvent(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            触发指定事件
+            </summary>
+            <param name="code"></param>
+            <param name="data"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.CountList(System.String)">
+            <summary>
+            获取节拍器的指定属性集合
+            </summary>
+            <param name="name">节拍名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.QueryMergeList(System.String,System.String,System.Int32,System.String,System.DateTimeOffset,System.DateTimeOffset)">
+            <summary>
+            查询历史记录数据
+            </summary>
+            <param name="id"></param>
+            <param name="merge">合计方式：最大值:max，最小值：min，平均值：mean，合计：sum，期初值：first，期末值：last</param>
+            <param name="window">合计窗口：0表示按日，1表示按月，2表示按时，-1表示无窗口</param>
+            <param name="code">属性标识</param>
+            <param name="beginTime">开始时间</param>
+            <param name="endTime">结束时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.Next(System.Collections.Generic.List{IoTRulesService.Flow.Builder.StreamData})">
+            <summary>
+            执行下一个节点，追加数据流
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.NextObject(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行下一个节点，追加数据
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.HttpGet(System.String)">
+            <summary>
+            Http的Get请求
+            </summary>
+            <param name="url"></param>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.HttpPost(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Http的Post请求
+            </summary>
+            <param name="url"></param>
+            <param name="postParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.JsContext.HttpPostJson(System.String,System.Object)">
+            <summary>
+            Http的Post请求（Json格式）
+            </summary>
+            <param name="url"></param>
+            <param name="postParams"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.RuleExecutionContext">
+            <summary>
+            规则执行上下文信息
+            </summary>
+        </member>
+        <member name="F:IoTRulesService.Flow.Builder.RuleExecutionContext._dataStack">
+            <summary>
+            并行执行栈
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.Source">
+            <summary>
+            消息源
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.IsDebug">
+            <summary>
+            是否启用调试
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.Steps">
+            <summary>
+            节点列表
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.Data">
+            <summary>
+            规则流转数据
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.ExecuteTime">
+            <summary>
+            触发时间
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.ExcuteIndex">
+            <summary>
+            当前执行的索引位置
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.StartIndex">
+            <summary>
+            开始位置
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.Step">
+            <summary>
+            当前执行节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.RuleInstanceId">
+            <summary>
+            实例Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.RuleId">
+            <summary>
+            规则模板Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.RuleExecutionContext.ParamTypeDict">
+            <summary>
+            参数类型字典
+            </summary>
+        </member>
+        <member name="F:IoTRulesService.Flow.Builder.RuleExecutionContext._globalParam">
+            <summary>
+            全局参数
+            </summary>
+        </member>
+        <member name="F:IoTRulesService.Flow.Builder.RuleExecutionContext.JobList">
+            <summary>
+            定时执行任务
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutionContext.GetTsl(System.String)">
+            <summary>
+            判断是否有缓存物模型
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutionContext.DeviceProp(System.String)">
+            <summary>
+            获取设备属性信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutionContext.SetProp(System.String,System.String,System.Object)">
+            <summary>
+            修改设备属性值
+            </summary>
+            <param name="dtuId">为null表示当前设备</param>
+            <param name="code">属性标识符</param>
+            <param name="val">修改的值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutionContext.DeviceTag(System.String)">
+            <summary>
+            获取设备标签信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutionContext.ReadSourceValue(System.String)">
+            <summary>
+            读取数据源值
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutionContext.ExcuteNext(IoTRulesService.Flow.Builder.RuleResult)">
+            <summary>
+            执行下一个节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutor.Execute(IoTRulesService.Flow.Builder.RuleExecutionContext)">
+            <summary>
+            执行
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleExecutor.ExcuteStep(IoTRulesService.Flow.Builder.RuleExecutionContext)">
+            <summary>
+            执行完成就返回true
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.RuleExecutorBuilder">
+            <summary>
+            构建规则
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleResult.Next">
+            <summary>
+            执行下一个节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.RuleResult.End">
+            <summary>
+            结束执行
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.StepJsonConverter">
+            <summary>
+            节点json转换
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.ClearDeltaStep">
+            <summary>
+            数据清除
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.CountStep">
+            <summary>
+            聚合节点（聚合设备数据用）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.CountStep.Way">
+            <summary>
+            计数方式：0为次数、1为时间秒计数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.CountStep.FieldName">
+            <summary>
+            聚合的字段
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.CountStep.Count">
+            <summary>
+            计数值
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.CountStep.CountLen">
+            <summary>
+            保留计数（事件触发后保留的数据量，默认为0）
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.DataMapStep">
+            <summary>
+            数据转换节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.DataWriteStep">
+            <summary>
+            修改参数
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.EndStep">
+            <summary>
+            终结流程
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.ExceptStep">
+            <summary>
+            AI数据异常检测
+            目前只提供三种：峰值、拐点、SRCNN
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.Step.ExceptStep.GenerateInput(System.Collections.Generic.List{IoTRulesService.Flow.Builder.StreamData})">
+            <summary>
+            输入数据流转换成模型输入
+            </summary>
+            <param name="inputList"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.ExceptInputItem">
+            <summary>
+            检测的输入
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.ExceptOutputItem">
+            <summary>
+            检测的输出
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.FuncStep">
+            <summary>
+            执行功能节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.HttpStep">
+            <summary>
+            Http节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.IfStep.IsLastCondition">
+            <summary>
+            是否为最后的条件
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.IfStep.Result">
+            <summary>
+            条件是否已激活过
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.NextStep">
+            <summary>
+            什么都不做执行下一个节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.ParallelEnd">
+            <summary>
+            并行结束
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.ParallelStep">
+            <summary>
+            并行节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.PIDStep">
+            <summary>
+            PID算法节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.RedirectStep">
+            <summary>
+            转发节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.RuleflowStep.Level">
+            <summary>
+            层级
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.RuleflowStep.Index">
+            <summary>
+            节点所在索引
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.RuleflowStep.IsActive">
+            <summary>
+            节点的激活状态
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.SetPropStep">
+            <summary>
+            修改属性
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.StartStep">
+            <summary>
+            开始节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.TagStep">
+            <summary>
+            修改标签
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.TimeSchedulerStep">
+            <summary>
+            设备调度节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.Step.WarnStep">
+            <summary>
+            报警节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Builder.StreamData">
+            <summary>
+            表示一条有时间的数据流
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionsProps.expression">
+            <summary>
+            自定义条件解释脚本，灵活构建逻辑关系
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionsProps.groupsType">
+            <summary>
+            条件组逻辑关系 OR、AND
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionGroup.groupType">
+            <summary>
+            条件逻辑关系 OR、AND
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.BaseCondition.code">
+            <summary>
+            条件代码
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.BaseCondition.gname">
+            <summary>
+            分组名称（不一定有）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.BaseCondition.valueType">
+            <summary>
+             Number 数字、Date 日期、 String 字符串
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.BoolCondition.valueFrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.DateCondition.valueFrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.DoubleCondition.valueFrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.EnumCondition.valueFrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.LongCondition.valueFrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.Conditions.StringCondition.valueFrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConvertProps.func">
+            <summary>
+            自定义转换脚本
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.CountProps.Way">
+            <summary>
+            计数方式：0为次数、1为秒计数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.CountProps.FieldName">
+            <summary>
+            聚合的字段
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.CountProps.Count">
+            <summary>
+            计数值
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.CountProps.CountLen">
+            <summary>
+            保留计数（事件触发后保留的数据量，默认为0）
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Node.DataWriteNode">
+            <summary>
+            服务端修改参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WriteCode.code">
+            <summary>
+            参数标识符
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WriteCode.express">
+            <summary>
+            值或计算表达式,$data表示原数据
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WriteCount.code">
+            <summary>
+            参数标识符
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WriteCount.nodeId">
+            <summary>
+            聚合数据Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WriteCount.calway">
+            <summary>
+            计算方式：sum求和、average平均
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Node.DelayNode">
+            <summary>
+            延时节点
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Node.ExceptNode">
+            <summary>
+            异常检测节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ExceptProps.CountId">
+            <summary>
+            节拍器Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ExceptProps.ExceptType">
+            <summary>
+            异常检测类型：峰值spike、更改change、range范围、SRCNN
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ExceptProps.Confidence">
+            <summary>
+            [0， 100] 范围内的峰值检测置信度
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ExceptProps.Min">
+            <summary>
+            最小值
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ExceptProps.Max">
+            <summary>
+            最大值
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RewriteProps.TargetType">
+            <summary>
+            目标类型：0为当前设备、1为选择设备、2为选择产品
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RewriteProps.TargetId">
+            <summary>
+            目标设备Id、目标产品
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RewriteProps.FunctionId">
+            <summary>
+            功能标识
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RewriteProps.InputData">
+            <summary>
+            EventInput为false时，执行功能传的值
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RewriteProps.EventInput">
+            <summary>
+            是否将输入数据同步给功能
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RewriteProps.ReturnOutput">
+            <summary>
+            是否将执行功能的结果输出到下一节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.HttpProps.method">
+            <summary>
+            请求方法 支持GET/POST
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.HttpProps.url">
+            <summary>
+            URL地址，可以直接带参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.HttpProps.contentType">
+            <summary>
+            请求参数类型
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.HttpDataItem.value">
+            <summary>
+            支持表达式 ${xxx} xxx为表单字段名称
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Node.JsonConditionConverter">
+            <summary>
+            条件转换
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.refdevid">
+            <summary>
+            参考的设备id或选择当前设备
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.pidtype">
+            <summary>
+            0为位置式、1为增量式
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.refprop">
+            <summary>
+            参考的设备属性（浮点）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.targetval">
+            <summary>
+            目标值参数（浮点）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.pname">
+            <summary>
+            比例参数（浮点，一般在 10～50 之间）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.iname">
+            <summary>
+            积分时间（浮点，通常在 30～100 秒之间）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.dname">
+            <summary>
+            微分时间（浮点，一般在 5～20 秒之间）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.PIDProps.items">
+            <summary>
+            控制的设备列表
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.DevControllerItem.id">
+            <summary>
+            设备Id或选择当前设备
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.DevControllerItem.maxval">
+            <summary>
+            最大控制量参数（浮点型）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.DevControllerItem.minval">
+            <summary>
+            最小控制量参数（浮点型）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.DevControllerItem.code">
+            <summary>
+            执行的功能
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.DevControllerItem.codeval">
+            <summary>
+            功能的控制量参数
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Flow.Node.RedirectNode">
+            <summary>
+            消息重定向节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RedirectProps.ProductId">
+            <summary>
+            转发后的产品Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RedirectProps.TargetDtuIdsList">
+            <summary>
+            转发后的设备通信Id为:原dtuId+suffix
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RedirectProps.Maping">
+            <summary>
+            属性消息、事件消息与转发的产品标识符映射
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.id">
+            <summary>
+            节点id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.parentId">
+            <summary>
+            父节点id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.type">
+            <summary>
+            节点类型
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.name">
+            <summary>
+            节点名称
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.desc">
+            <summary>
+            节点描述
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.pid">
+            <summary>
+            父节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.children">
+            <summary>
+            下一个节点
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.SetPropProps.PropCode">
+            <summary>
+            属性标识
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.SetPropProps.Express">
+            <summary>
+            赋值表达式
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TagProps.TargetType">
+            <summary>
+            目标类型：0为当前设备、1为选择设备
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TagProps.TargetId">
+            <summary>
+            目标设备Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TagProps.TagId">
+            <summary>
+            标签标识
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TagProps.Express">
+            <summary>
+            赋值表达式
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TimeSchedulerProps.DeviceList">
+            <summary>
+            设备Id列表
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TimeSchedulerProps.ScheAmount">
+            <summary>
+            调度数量
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.TimeSchedulerProps.DeviceSets">
+            <summary>
+            设备列表配置
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ItemSet.id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ItemSet.level">
+            <summary>
+            优先级参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ItemSet.conditions">
+            <summary>
+            调度条件
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ItemSet.groups">
+            <summary>
+            条件组合
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ActionItem.targettype">
+            <summary>
+            目标类型：0为当前设备、1为选择设备
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ActionItem.targetid">
+            <summary>
+            目标设备Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ActionItem.codetype">
+            <summary>
+            0为功能，1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ActionItem.code">
+            <summary>
+            执行功能（限无参功能）、修改参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ActionItem.express">
+            <summary>
+            功能参数或参数表达式
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ActionItem.errbreak">
+            <summary>
+            是否中断执行失败
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionItem.enablecode">
+            <summary>
+             条件参数：属性、$参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionItem.valtype">
+            <summary>
+            条件值类型:Long、Double、String、Bool、Date
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionItem.compare">
+            <summary>
+            比较
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionItem.val">
+            <summary>
+            条件值
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.ConditionItem.valuefrom">
+            <summary>
+            0为值、1为参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WarnProps.TargetType">
+            <summary>
+            目标类型：0为当前设备、1为选择设备
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WarnProps.TargetId">
+            <summary>
+            目标设备Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Flow.Node.WarnProps.EventId">
+            <summary>
+            执行的报警事件
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.TAServiceExtension.AddRuleflow(TemplateAction.Core.IServiceCollection)">
+            <summary>
+            注册规则引擎
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="P:IoTRulesService.Model.In_Execute.Id">
+            <summary>
+            规则Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_Execute.Inputs">
+            <summary>
+            其它自定义参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_ListPage.way">
+            <summary>
+            触发方式：0为订阅，1为Http，2为定时
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_ListPage.status">
+            <summary>
+            状态:（0正常 1暂停）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_ListPage.key">
+            <summary>
+            搜索关键词
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_ListPage.from">
+            <summary>
+            过滤创建源
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_ListPage.GroupId">
+            <summary>
+            分组过滤
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_RuleEnable.Id">
+            <summary>
+            规则Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_RuleEnable.IsEnable">
+            <summary>
+            是否可用
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_RuleParams.Id">
+            <summary>
+            规则Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.In_RuleParams.HttpParams">
+            <summary>
+            规则参数Json格式字符串
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.Model.MZ_RuleEvent">
+            <summary>
+            规则执行事件
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleEvent.Id">
+            <summary>
+            规则执行实例Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleEvent.RuleId">
+            <summary>
+            规则模板Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleEvent.InstanceJson">
+            <summary>
+            实例Json
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleEvent.StackJson">
+            <summary>
+            规则流json
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleEvent.SourceJson">
+            <summary>
+            源数据Json
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleEvent.Index">
+            <summary>
+            触发节点索引
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.GroupName">
+            <summary>
+            分组名称
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.Sort">
+            <summary>
+            排序值：越小越前面
+            </summary> 
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.ParentId">
+            <summary>
+            父分组Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.Path">
+            <summary>
+            分组层级
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleGroup.Children">
+            <summary>
+            子分组
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Model.MZ_RuleGroup._RecursionFn(System.Collections.Generic.List{IoTRulesService.Model.MZ_RuleGroup},IoTRulesService.Model.MZ_RuleGroup)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:IoTRulesService.Model.MZ_RuleGroup._GetChildList(System.Collections.Generic.List{IoTRulesService.Model.MZ_RuleGroup},IoTRulesService.Model.MZ_RuleGroup)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.Model.MZ_RuleGroup.GroupList2Tree(System.Collections.Generic.List{IoTRulesService.Model.MZ_RuleGroup})">
+            <summary>
+            分组树转选择树
+            </summary>
+            <param name="groupTree"></param>
+            <returns></returns>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.OrgId">
+            <summary>
+            规则模板关联组织ID
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.GroupId">
+            <summary>
+            分组Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.Name">
+            <summary>
+            规则名称
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.CreatedFrom">
+            <summary>
+            创建源：pc、mobile
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.TriggerWay">
+            <summary>
+            触发方式：0为设备，1为Http，2为定时
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.TimerCron">
+            <summary>
+            Cron表达式（定时触发用）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.CronName">
+            <summary>
+            Cron的文字表述
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.TimerJobId">
+            <summary>
+            定时器关联的Job
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.HttpParams">
+            <summary>
+            参数json字符串
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.Sort">
+            <summary>
+            规则优先级(越小越前）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.Status">
+            <summary>
+            状态（0正常 1暂停）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.RuleJson">
+            <summary>
+            规则流程内容
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.TriggerList">
+            <summary>
+            规则的触发方式列表
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTemplate.EnableParam">
+            <summary>
+            规则是否存在可修改参数
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTrigger.TopicDevice">
+            <summary>
+            订阅的设备：/Product/Device
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.MZ_RuleTrigger.TopicMsg">
+            <summary>
+            订阅的消息类型：参考JsonMessageConverter里的（当触发方式为0时使用）
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.Out_GroupLive.Id">
+            <summary>
+            设备Id
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.Out_GroupLive.DeviceName">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.Out_GroupLive.DeviceNumber">
+            <summary>
+            第三方设备编码
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.Out_GroupLive.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:IoTRulesService.Model.Out_GroupLive.PropertyList">
+            <summary>
+            设备实时数据
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.PluginConfig.UpMsgExe(System.String,System.Threading.CancellationToken)">
+            <summary>
+            处理上报的消息
+            </summary>
+            <param name="msg"></param>
+            <param name="tk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.PluginConfig.ExecuteRules(ChannelUtility.Message.BaseUpDeviceMessage,ChannelUtility.TslReturn,System.DateTime,TemplateAction.Core.ITAServiceProvider,IoTService.IotRedisHelper)">
+            <summary>
+            执行规则
+            </summary>
+            <param name="rs"></param>
+            <param name="model"></param>
+            <param name="nowTime"></param>
+            <param name="provider"></param>
+            <param name="redis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.PluginConfig.ExcuteNotice(TemplateAction.Core.ITAServiceProvider,ChannelUtility.Tsl.BaseEvent,IoTService.Models.MZ_IotDevice,System.Collections.Generic.List{IoTService.Models.WarningNoticeItem},System.Collections.Generic.List{IoTService.Models.Out_WarnTargetId},System.String)">
+            <summary>
+            执行设备通知
+            </summary>
+            <param name="provider"></param>
+            <param name="evt"></param>
+            <param name="device"></param>
+            <param name="notices"></param>
+            <param name="warnids"></param>
+            <param name="extInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.RuleCache">
+            <summary>
+            规则缓存
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.RuleChangeEvent">
+            <summary>
+            规则变更事件
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.RuleWheelRuner">
+            <summary>
+            规则引擎执行者
+            </summary>
+        </member>
+    </members>
+</doc>

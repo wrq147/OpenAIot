@@ -1,0 +1,2315 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StorageService</name>
+    </assembly>
+    <members>
+        <member name="M:StorageService.Controller.Apply.List(StorageService.Model.In_LeaveApplyList)">
+            <summary>
+            获取出库申请单列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.WaitCount(System.String)">
+            <summary>
+            待出库申请单数量
+            </summary>
+            <param name="houseId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.Info(System.String)">
+            <summary>
+            获取出库申请单详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.InfoByNumber(System.String)">
+            <summary>
+            获取出库申请单详情
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.Add(StorageService.Model.MZ_LeaveApply)">
+            <summary>
+            新增出库申请单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.Edit(StorageService.Model.MZ_LeaveApply)">
+            <summary>
+            修改出库申请单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.SubmitModel(StorageService.Model.In_SubmitStock)">
+            <summary>
+            提交出库申请单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.Cancel(System.String)">
+            <summary>
+            取消出库申请单（待审核状态使用）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.Remove(System.String)">
+            <summary>
+            删除出库申请单（待提交和已取消状态使用）
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.GenerateNumber">
+            <summary>
+            生成出库申请单编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Apply.FormData(StorageService.Model.MZ_LeaveApply)">
+            <summary>
+            生成申请单的初始化表单数据
+            </summary>
+            <param name="apply"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StorageService.Controller.House">
+            <summary>
+            仓库API
+            </summary>
+        </member>
+        <member name="M:StorageService.Controller.House.List(StorageService.Model.In_HouseList)">
+            <summary>
+            仓库列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.House.Add(StorageService.Model.MZ_StoreHouse)">
+            <summary>
+            添加仓库
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.House.Edit(StorageService.Model.MZ_StoreHouse)">
+            <summary>
+            修改仓库
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.House.Remove(System.String)">
+            <summary>
+            删除仓库
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.House.Info(System.String,System.Boolean)">
+            <summary>
+            获取仓库
+            </summary>
+            <param name="id"></param>
+            <param name="showTemplateName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.House.ChangeStaus(System.String,System.String)">
+            <summary>
+            修改仓库状态
+            </summary>
+            <param name="id"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StorageService.Controller.HttpSync">
+            <summary>
+            同步设备入库
+            </summary>
+        </member>
+        <member name="M:StorageService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.HttpSync.AddPileIn(StorageService.Model.In_Pile)">
+            <summary>
+            物品入库
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.HttpSync.AddPileOut(StorageService.Model.In_OutPile)">
+            <summary>
+            物品出库
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.HttpSync.ClearPile(System.String)">
+            <summary>
+            清除指定入库单号（注：将清除入库单关联物品的所有库存信息、记录信息和关联的出入库单据）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:StorageService.Controller.Inventory">
+            <summary>
+            盘点API
+            </summary>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.List(StorageService.Model.In_InventoryList)">
+            <summary>
+            盘点列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.ItemList(StorageService.Model.In_InventoryItem)">
+            <summary>
+            盘点项列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Task(StorageService.Model.In_InventoryList)">
+            <summary>
+            盘点任务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.ConfirmItem(System.String,System.String,System.Int32)">
+            <summary>
+            记录盘点数据
+            </summary>
+            <param name="id">盘点Id</param>
+            <param name="number">物品编号</param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Info(System.String)">
+            <summary>
+            获取盘点
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.ItemInfo(System.String,System.String)">
+            <summary>
+            获取盘点项信息
+            </summary>
+            <param name="id"></param>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Add(StorageService.Model.MZ_Inventory)">
+            <summary>
+            添加盘点
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Edit(StorageService.Model.MZ_Inventory)">
+            <summary>
+            修改盘点
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Submit(System.String)">
+            <summary>
+            提交盘点单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Start(System.String[])">
+            <summary>
+            开始初盘
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Check(System.String[])">
+            <summary>
+            开始复盘
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Cancel(System.String[])">
+            <summary>
+            取消盘点单
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Finish(System.String[])">
+            <summary>
+            完成盘点单
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Repair(System.String,System.Collections.Generic.List{StorageService.Model.MZ_InventoryItem})">
+            <summary>
+            修正盘点单
+            </summary>
+            <param name="id"></param>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.Remove(System.String[])">
+            <summary>
+            删除盘点
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.DelItems(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            删除指定盘点项
+            </summary>
+            <param name="id"></param>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.AddItems(System.String,System.Collections.Generic.List{StorageService.Model.MZ_InventoryItem})">
+            <summary>
+            添加盘点项
+            </summary>
+            <param name="id"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.AddItemsAll(StorageService.Model.In_AllItem)">
+            <summary>
+            添加全部
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Inventory.DelItemsAll(System.String)">
+            <summary>
+            移除全部
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StorageService.Controller.Stock">
+            <summary>
+            库存管理API
+            </summary>
+        </member>
+        <member name="M:StorageService.Controller.Stock.List(StorageService.Model.In_PileList)">
+            <summary>
+            库存列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.SetPileWarn(System.Collections.Generic.List{StorageService.Model.In_UpdatePileItem})">
+            <summary>
+            设置库存预警值
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.RecordList(StorageService.Model.In_StockRecordPage)">
+            <summary>
+            获取库存的记录
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.Export(StorageService.Model.In_PileList)">
+            <summary>
+            导出库存数据
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.LeaveList(StorageService.Model.In_LeaveList)">
+            <summary>
+            出库列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.EnterList(StorageService.Model.In_EnterList)">
+            <summary>
+            入库列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.ExportEnter(StorageService.Model.In_EnterList)">
+            <summary>
+            入库单导出
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.LeaveInfoByNumber(System.String)">
+            <summary>
+            通过工单编号获取出库单详情
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.LeaveInfo(System.String)">
+            <summary>
+            获取出库单详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.EnterInfoByNumber(System.String)">
+            <summary>
+            通过工单编号获取入库单详情
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.EnterFormData(StorageService.Model.MZ_EnterStock)">
+            <summary>
+            生成入库单的初始化表单数据
+            </summary>
+            <param name="stock"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.LeaveFormData(StorageService.Model.MZ_LeaveStock)">
+            <summary>
+            生成出库单的初始化表单数据
+            </summary>
+            <param name="stock"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.EnterInfo(System.String)">
+            <summary>
+            获取入库单详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.LeaveBySource(System.String)">
+            <summary>
+            查询入库单的关联的出库单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.GenerateCKNumber">
+            <summary>
+            生成出库单编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.GenerateRKNumber">
+            <summary>
+            生成入库单编号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.AddLeave(StorageService.Model.MZ_LeaveStock)">
+            <summary>
+            新增出库单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.EditLeave(StorageService.Model.MZ_LeaveStock)">
+            <summary>
+            修改出库单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.Submit(System.String,System.Int64)">
+            <summary>
+            出库提交
+            </summary>
+            <param name="id"></param>
+            <param name="flowId"></param>
+            <returns>返回值为1表示时表示需要提交审核单，返回2时表示待出库，需要调用出库接口</returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.SubmitModel(StorageService.Model.In_SubmitStock)">
+            <summary>
+            出库提交（同时提交审核表单）
+            </summary>
+            <param name="data"></param>
+            <returns>返回值为1表示时表示需要提交审核单，返回2时表示待出库，需要调用出库接口</returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.ScanEnterPile(StorageService.Model.In_ManualStock)">
+            <summary>
+            扫码入库（自动上级出库）
+            </summary>
+            <param name="ipt"></param>
+            <returns>返回入库单号</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:StorageService.Controller.Stock.ManualPile(StorageService.Model.In_ManualStock)" -->
+        <member name="M:StorageService.Controller.Stock.SubmitManualPile(System.String,System.Int64)">
+            <summary>
+            提交入库单
+            </summary>
+            <param name="id"></param>
+            <param name="flowId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.SubmitManualPileModel(StorageService.Model.In_SubmitManualPile)">
+            <summary>
+            提交入库单（同时提交审核表单）
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.CancelEnter(StorageService.Model.In_StockCancel)">
+            <summary>
+            撤销入库单
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.CancelEnterModel(StorageService.Model.In_StockCancelModel)">
+            <summary>
+            撤销入库单（同时提交审核表单）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.CancelLeave(System.String)">
+            <summary>
+            撤销出库单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.EnterDevList(StorageService.Model.In_EnterDevList)">
+            <summary>
+            可入库批次列表查询
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.InStockByKey(System.String)">
+            <summary>
+            入库扫码用
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.Stock.OutStockByKey(System.String)">
+            <summary>
+            出库扫码用
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StorageService.Controller.StReport">
+            <summary>
+            仓储报表接口
+            </summary>
+        </member>
+        <member name="M:StorageService.Controller.StReport.StockInfo">
+            <summary>
+            库存信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.Controller.StReport.DetailRecords(StorageService.Model.In_DetailRecordPage)">
+            <summary>
+            库存记录列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.DAL.EnterStockDAL.SelectEnterByPage(StorageService.Model.In_EnterList,AuthService.Data_ServerTokenInfo,AuthService.DataScope)">
+            <summary>
+            获取入库单列表
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StorageService.DAL.LeaveStockDAL.SelectLeaveByPage(StorageService.Model.In_LeaveList,AuthService.Data_ServerTokenInfo,AuthService.DataScope)">
+            <summary>
+            获取出库单列表
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowCreate.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowCreate.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowCreate.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowCreate.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowCreate.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.EnterFlowItem.way">
+            <summary>
+            0为自定义、1为系统值
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_AllItem.Key">
+            <summary>
+            搜索设备、耗材名称或唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_AllItem.HouseId">
+            <summary>
+            过滤所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_AllItem.InventId">
+            <summary>
+            过滤盘点单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ApplyModel.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ApplyModel.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ApplyModel.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_DetailRecordPage.Day">
+            <summary>
+            0为今天、1为昨天、7为近7天、30为近30天
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.In_EnterDevList">
+            <summary>
+            入库列表的参数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterDevList.Key">
+            <summary>
+            过滤设备名称、设备绑定的通讯Id、设备的唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterList.ToHouseId">
+            <summary>
+            过滤所入仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterList.Status">
+            <summary>
+            提交状态：-1、全部；0、待提交；1、待审批；2、入库成功；3、入库失败；
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterList.Key">
+            <summary>
+            搜索入库单编号、物品名称、来源企业
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterList.FromCompany">
+            <summary>
+            来源企业
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterList.EnterMethod">
+            <summary>
+            入库方式：0、出库，1、退货，2、调拨，3、手动，21、所有可退货单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_EnterList.ShowItems">
+            <summary>
+            是否显示入库单的物品列表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_HouseList.Name">
+            <summary>
+            过滤名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_HouseList.Status">
+            <summary>
+            状态：0为停用，1为正常
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_HouseList.IsSystem">
+            <summary>
+            过滤系统仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_InventoryItem.Id">
+            <summary>
+            盘点Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_InventoryItem.OnlyRevise">
+            <summary>
+            只显示库存不正常的
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_InventoryItem.UnFirst">
+            <summary>
+            只显示未初盘项
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_InventoryItem.UnCheck">
+            <summary>
+            只显示未复盘项
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_InventoryList.Name">
+            <summary>
+            盘点名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_InventoryList.Status">
+            <summary>
+            盘点状态：0、待提交；1、待开始；2、初盘中；3、复盘中；4、已结束；5、已修正；6、已取消；
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveApplyList.Key">
+            <summary>
+            申请单号、物品名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveApplyList.Status">
+            <summary>
+            提交状态：0、待提交；1、待审批；2、申请成功；3、申请失败；4、已取消;
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveApplyList.OutStatus">
+            <summary>
+            0、待出库;1、出库中;2、已出库;3、取消出库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveApplyList.HouseId">
+            <summary>
+            过滤出库仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveApplyList.OnlyMy">
+            <summary>
+            只显示我的
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveApplyList.ShowDetail">
+            <summary>
+            是否显示详情列表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveList.FromHouseId">
+            <summary>
+            过滤所出仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveList.Status">
+            <summary>
+            提交状态：-1、全部；0、待提交；1、待审批；2、出库成功；3、出库失败；
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveList.Key">
+            <summary>
+            搜索出库单编号、物品名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveList.ToCompany">
+            <summary>
+            目标企业名
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveList.LeaveMethod">
+            <summary>
+            出库方式：0、出货，1、退货，2、调拨
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_LeaveList.ShowItems">
+            <summary>
+            是否显示出库单的物品列表
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.In_ManualStock">
+            <summary>
+            手动入库参数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.Id">
+            <summary>
+            编辑的入库单Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.StockNumber">
+            <summary>
+            入库单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.ExpressNumber">
+            <summary>
+            物流单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.ExpressCompany">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.ExpressPhone">
+            <summary>
+            顺风用联系电话
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.List">
+            <summary>
+            导入的产品批次
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.HouseId">
+            <summary>
+            所入仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.InDate">
+            <summary>
+            入库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_ManualStock.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.StockNumber">
+            <summary>
+            出库单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.FromHouseId">
+            <summary>
+            出库的仓库Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.ToAgentId">
+            <summary>
+            出库的目标代理商ID
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.ExpressNumber">
+            <summary>
+            物流单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.ExpressCompany">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.ExpressPhone">
+            <summary>
+            顺风用联系电话
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.OutDate">
+            <summary>
+            出库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPile.Items">
+            <summary>
+            出库物品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPileItem.TargetNumber">
+            <summary>
+            产品批次编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPileItem.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_OutPileItem.Price">
+            <summary>
+            出库价格
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.In_Pile">
+            <summary>
+            开发者入库接口参数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_Pile.StockNumber">
+            <summary>
+            入库单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_Pile.ToHouseId">
+            <summary>
+            入库的目标仓库Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_Pile.InDate">
+            <summary>
+            入库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_Pile.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_Pile.Items">
+            <summary>
+            入库物品
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.In_PileItem">
+            <summary>
+            开发者入库接口的物品参数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileItem.TargetNumber">
+            <summary>
+            产品批次编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileItem.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileItem.Price">
+            <summary>
+            入库价格
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileList.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileList.HouseId">
+            <summary>
+            过滤所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileList.IsWarn">
+            <summary>
+            过滤预警库存
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileList.Key">
+            <summary>
+            搜索设备、耗材名称或唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_PileList.InventId">
+            <summary>
+            过滤盘点单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.Id">
+            <summary>
+            要撤销的入库单Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.StockNumber">
+            <summary>
+            出库单编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.ExpressNumber">
+            <summary>
+            物流单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.ExpressCompany">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.ExpressPhone">
+            <summary>
+            顺风用联系电话
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.OutDate">
+            <summary>
+            出库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.FlowId">
+            <summary>
+            出库流程
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancel.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.Id">
+            <summary>
+            要撤销的入库单Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.StockNumber">
+            <summary>
+            出库单编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.ExpressNumber">
+            <summary>
+            物流单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.ExpressCompany">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.ExpressPhone">
+            <summary>
+            顺风用联系电话
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.OutDate">
+            <summary>
+            出库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockCancelModel.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockRecordPage.HouseId">
+            <summary>
+            仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockRecordPage.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_StockRecordPage.TargetId">
+            <summary>
+            目标物品Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_SubmitManualPile.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_SubmitManualPile.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_SubmitManualPile.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_SubmitStock.model">
+            <summary>
+            初始化表单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_SubmitStock.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_SubmitStock.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_UpdatePileItem.HouseId">
+            <summary>
+            所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_UpdatePileItem.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_UpdatePileItem.TargetId">
+            <summary>
+            耗材或设备Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_UpdatePileItem.MinNum">
+            <summary>
+            库存下限，-1不预警
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.In_UpdatePileItem.MaxNum">
+            <summary>
+            库存上限，-1不预警
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowCreate.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowCreate.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowCreate.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowCreate.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowCreate.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveApplyFlowItem.way">
+            <summary>
+            0为自定义、1为系统值
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowCreate.templateId">
+            <summary>
+            流程模板ID
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowCreate.model">
+            <summary>
+            提交的表单数据
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowCreate.assign">
+            <summary>
+            自选人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowCreate.UserId">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowCreate.flowId">
+            <summary>
+            要编辑的工作流
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowItem.eltype">
+            <summary>
+            表单项类型
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.LeaveFlowItem.way">
+            <summary>
+            0为自定义、1为系统值
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_EnterDetail">
+            <summary>
+            入库单明细表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.StockId">
+            <summary>
+            入库单Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.TargetId">
+            <summary>
+            产品批次Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.Price">
+            <summary>
+            入库价格
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.TargetNumber">
+            <summary>
+            目标编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.PhotoUrl">
+            <summary>
+            目标图片
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterDetail.TargetName">
+            <summary>
+            目标名称
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_EnterStock">
+            <summary>
+            入库单实体
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.FromOrgId">
+            <summary>
+            来源企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.StockNumber">
+            <summary>
+            入库单唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.FromHouseId">
+            <summary>
+            所出仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.ToHouseId">
+            <summary>
+            所入仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.EnterMethod">
+            <summary>
+            入库方式：0、出库，1、退货，2、调拨，3、手动
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.ExpressNumber">
+            <summary>
+            物流单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.ExpressCompany">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.ExpressPhone">
+            <summary>
+            顺风用联系电话
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.InDate">
+            <summary>
+            入库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.Status">
+            <summary>
+            提交状态：0、待提交；1、待审批；2、入库成功；3、待退货；4、已退货；
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.FlowId">
+            <summary>
+            关联的流程Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.List">
+            <summary>
+            入库单详情列表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.FromName">
+            <summary>
+            来源企业名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.FromHouseName">
+            <summary>
+            所出仓库名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.FromHouseLeaveTemplateId">
+            <summary>
+            所出仓库审核模板Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.ToHouseName">
+            <summary>
+            所入仓库名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.ToHouseEnterTemplateId">
+            <summary>
+            所入仓库审核模板Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_EnterStock.Creater">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_Inventory">
+            <summary>
+            盘点实体
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.Name">
+            <summary>
+            盘点名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.HouseId">
+            <summary>
+            盘点仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.Status">
+            <summary>
+            盘点状态：0、待提交；1、待开始；2、初盘中；3、复盘中；4、已结束；5、已修正；6、已取消
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.StartOn">
+            <summary>
+            初盘时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.CheckOn">
+            <summary>
+            复盘时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.EndOn">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.House">
+            <summary>
+            盘点仓库数据
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.UserList">
+            <summary>
+            盘点人员
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_Inventory.Items">
+            <summary>
+            盘点物品
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_InventoryItem">
+            <summary>
+            盘点项实体
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.Id">
+            <summary>
+            GUID编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.InventoryId">
+            <summary>
+            盘点Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.HouseId">
+            <summary>
+            所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.SnapQuantity">
+            <summary>
+            快照数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.TargetId">
+            <summary>
+            产品批次Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.FirstCount">
+            <summary>
+            初盘数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.CheckCount">
+            <summary>
+            复盘数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.Count">
+            <summary>
+            最终数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.DiffCount">
+            <summary>
+            最终差异数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.FirstUserId">
+            <summary>
+            初盘人员
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.FirstAtTime">
+            <summary>
+            初盘时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.CheckUserId">
+            <summary>
+            复盘人员
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryItem.CheckAtTime">
+            <summary>
+            复盘时间
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_InventoryUser">
+            <summary>
+            盘点人表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryUser.InventoryId">
+            <summary>
+            盘点Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryUser.TimeIn">
+            <summary>
+            0表示初盘人员、1表示复盘人员
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryUser.UserId">
+            <summary>
+            盘点人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_InventoryUser.UserInfo">
+            <summary>
+            盘点人信息
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.OrgId">
+            <summary>
+            所属组织
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyNumber">
+            <summary>
+            申请单唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.HouseId">
+            <summary>
+            出库仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.House">
+            <summary>
+            出库仓库实体
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyType">
+            <summary>
+            申请类型,参考字典apply_type
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyWorkId">
+            <summary>
+            关联的申请类型工单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyUserId">
+            <summary>
+            申请人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyUserInfo">
+            <summary>
+            申请人信息
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyDeptId">
+            <summary>
+            申请部门
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.ApplyOn">
+            <summary>
+            申请时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.Reason">
+            <summary>
+            申请原因
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.FlowId">
+            <summary>
+            关联的流程Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.Status">
+            <summary>
+            提交状态：0、待提交；1、待审批；2、申请成功；3、申请失败；4、已取消;5、待出库;6、已出库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.OutStatus">
+            <summary>
+            0、待出库;1、出库中;2、已出库;3、出库失败
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApply.List">
+            <summary>
+            出库申请单详情列表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.OrgId">
+            <summary>
+            所属组织
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.ApplyId">
+            <summary>
+            申请单编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.HouseId">
+            <summary>
+            所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.TargetId">
+            <summary>
+            产品批次Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.TargetNumber">
+            <summary>
+            目标编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.TargetName">
+            <summary>
+            目标名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveApplyDetail.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_LeaveDetail">
+            <summary>
+            出库单明细实体
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.StockId">
+            <summary>
+            出库单Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.TargetId">
+            <summary>
+            产品批次Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.Price">
+            <summary>
+            出库价格
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.TargetNumber">
+            <summary>
+            目标编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.TargetName">
+            <summary>
+            目标名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveDetail.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_LeaveStock">
+            <summary>
+            出库单表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ToOrgId">
+            <summary>
+            目标企业Id（必传）
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.CustomerId">
+            <summary>
+            对应的客户Id（不用传）
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.CustomerType">
+            <summary>
+            客户类型：0为代理，1为直销
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.SourceEnterId">
+            <summary>
+            关联的入库单、领用申请单
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.StockNumber">
+            <summary>
+            出库单唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.FromHouseId">
+            <summary>
+            所出仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ToHouseId">
+            <summary>
+            所入仓库（不用传）
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.LeaveMethod">
+            <summary>
+            出库方式：0、出货，1、退货，2、调拨，3、领用
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ExpressNumber">
+            <summary>
+            物流单号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ExpressCompany">
+            <summary>
+            物流公司
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ExpressPhone">
+            <summary>
+            顺风用联系电话
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.OutDate">
+            <summary>
+            出库时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.Status">
+            <summary>
+            提交状态：0、待提交；1、待审批；2、出库成功；3、出库失败；4、已取消
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.FlowId">
+            <summary>
+            关联的流程Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.List">
+            <summary>
+            出库单详情列表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ToName">
+            <summary>
+            出库目标企业名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.CustomerName">
+            <summary>
+            出库目标客户名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.FromHouseName">
+            <summary>
+            所出仓库名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.FromHouseLeaveTemplateId">
+            <summary>
+            所出仓库审核模板Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ToHouseName">
+            <summary>
+            所入仓库名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.ToHouseEnterTemplateId">
+            <summary>
+            所入仓库审核模板Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_LeaveStock.Creater">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_StockConf">
+            <summary>
+            企业的进销存配置
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockConf.LeaveTemplateId">
+            <summary>
+            出库审核模板Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockConf.EnterTemplateId">
+            <summary>
+            入库审核模板Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockConf.LeaveTemplateName">
+            <summary>
+            出库审核模板名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockConf.EnterTemplateName">
+            <summary>
+            入库审核模板名称
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_StockPile">
+            <summary>
+            库存表
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.HouseId">
+            <summary>
+            所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.TargetId">
+            <summary>
+            产品批次Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.Quantity">
+            <summary>
+            存储数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.Price">
+            <summary>
+            成本均价
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.LockQuantity">
+            <summary>
+            被锁定数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.MinNum">
+            <summary>
+            库存下限，-1不预警
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.MaxNum">
+            <summary>
+            库存上限，-1不预警
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockPile.IsTrigger">
+            <summary>
+            是否已发送提醒
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_StockRecord">
+            <summary>
+            库存记录实体（记录每次出入库后的数量）
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.HouseId">
+            <summary>
+            所在仓库
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.TargetId">
+            <summary>
+            耗材或设备Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.Remnant">
+            <summary>
+            变更前存储数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.LockRemnant">
+            <summary>
+            变更前锁数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.FormType">
+            <summary>
+            单据类型：0为出库，1为入库，2为盘亏修正，3为盘盈修正
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.FormId">
+            <summary>
+            单据Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.Quantity">
+            <summary>
+            调整数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.StockPrice">
+            <summary>
+            原库存价格
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.Price">
+            <summary>
+            价格
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StockRecord.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.MZ_StoreHouse">
+            <summary>
+            仓库实体
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.StoreName">
+            <summary>
+            仓库名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.IsSystem">
+            <summary>
+            是否为系统仓库：0为否，1为是，系统仓库不可删除、不可停用
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.Status">
+            <summary>
+            状态：0为停用，1为正常
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.del_flag">
+            <summary>
+            删除标志（0代表存在、 2代表删除）
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaderId">
+            <summary>
+            负责人
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.DeptId">
+            <summary>
+            所属部门
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaveTemplateId">
+            <summary>
+            出库审核模板
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.EnterTemplateId">
+            <summary>
+            入库审核模板
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaveApplyTemplateId">
+            <summary>
+            出库申请单审核模板
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaveFlowInitJson">
+            <summary>
+            出库流程初始化json
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.EnterFlowInitJson">
+            <summary>
+            入库流程初始化json
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaveApplyFlowInitJson">
+            <summary>
+            出库申请流程初始化json
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaderName">
+            <summary>
+            负责人名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaveTemplateName">
+            <summary>
+            出库流程模板名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.EnterTemplateName">
+            <summary>
+            入库流程模板名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.MZ_StoreHouse.LeaveApplyTemplateName">
+            <summary>
+            出库申请单模板名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.Id">
+            <summary>
+            盘点项Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.DeviceNumber">
+            <summary>
+            唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.TargetId">
+            <summary>
+            耗材或设备Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.Quantity">
+            <summary>
+            存储数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.LockQuantity">
+            <summary>
+            被锁定数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.FirstCount">
+            <summary>
+            初盘数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.CheckCount">
+            <summary>
+            复盘数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.Count">
+            <summary>
+            最终数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.DiffCount">
+            <summary>
+            差异数量
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.FirstUserId">
+            <summary>
+            初盘人员
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.FirstAtTime">
+            <summary>
+            初盘时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.CheckUserId">
+            <summary>
+            复盘人员
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_InventoryItem.CheckAtTime">
+            <summary>
+            复盘时间
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockPie.DeviceNumber">
+            <summary>
+            唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockPie.SkuNumber">
+            <summary>
+            规格编码
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockPie.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockPie.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockPie.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockPie.StoreName">
+            <summary>
+            仓库名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockRecord.DeviceNumber">
+            <summary>
+            唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockRecord.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockRecord.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockRecord.StoreName">
+            <summary>
+            仓库名称
+            </summary>
+        </member>
+        <member name="T:StorageService.Model.Out_StockStatistics">
+            <summary>
+            库存统计
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TotalCount">
+            <summary>
+            总数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.DevCount">
+            <summary>
+            总设备数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.PartsCount">
+            <summary>
+            总耗材数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TodayInCount">
+            <summary>
+            今日入库数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TodayDevInCount">
+            <summary>
+            今日入库设备数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TodayPartsInCount">
+            <summary>
+            今日入库耗材数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TodayOutCount">
+            <summary>
+            今日出库数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TodayDevOutCount">
+            <summary>
+            今日出库成品数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Out_StockStatistics.TodayPartsOutCount">
+            <summary>
+            今日出库半成品数
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Tmp_CustomerInfo.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Tmp_CustomerInfo.CustomerNumber">
+            <summary>
+            客户唯一编号
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Tmp_CustomerInfo.CustomerName">
+            <summary>
+            客户名称
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Tmp_CustomerInfo.CustomerType">
+            <summary>
+            客户类型：0为代理，1为直销（新增必填）
+            </summary>
+        </member>
+        <member name="P:StorageService.Model.Tmp_CustomerInfo.BindOrgId">
+            <summary>
+            客户对应的企业Id,未邀请则为0
+            </summary>
+        </member>
+        <member name="P:StorageService.StorageOption.is_leave_customer">
+            <summary>
+            是否出库自动关联CRM客户
+            </summary>
+        </member>
+        <member name="T:IoTService.Models.Out_Item">
+            <summary>
+            物品信息
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.TargetType">
+            <summary>
+            存储类型：0半成品、1成品
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.TargetId">
+            <summary>
+            产品批次Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.DeviceNumber">
+            <summary>
+            目标编号
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.Name">
+            <summary>
+            目标名称
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.PhotoUrl">
+            <summary>
+            目标图片
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.Quantity">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.Price">
+            <summary>
+            价格
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.Out_Item.Unit">
+            <summary>
+            单位
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,130 @@
+<template>
+    <div style="padding:20px 20px 0 20px;height:100%" id="big_con">
+      <div>
+        <el-row :gutter="20">
+          <!--用户数据-->
+          <el-col :span="24" :xs="24">
+            <div class="from_con" id="from_con">
+              <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
+                <el-form-item label="状态" prop="status">
+                    <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+                        <el-option label="待排产" :value="0" />
+                        <el-option label="待生产" :value="1" />
+                        <el-option label="生产中" :value="2" />
+                        <el-option label="已完成" :value="3" />
+                        <el-option label="已取消" :value="4" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="创建时间">
+                    <el-date-picker class="set_radius" v-model="dateRange" style="width:232px" value-format="yyyy-MM-dd HH:mm:ss"
+                    type="datetimerange" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间" />
+                </el-form-item>
+                <el-form-item class="submit_button_con">
+                  <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+                  <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
+              <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
+                <el-table-column label="生产计划Id" align="center" prop="PlanId" :show-overflow-tooltip="true" />
+                <el-table-column label="产品名称" align="center" prop="PlanId" :show-overflow-tooltip="true" >
+                  <template slot-scope="scope">
+                    <span>{{scope.row.ProdInfo?scope.row.ProdInfo.ProductName:''}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="父工单Id" align="center" prop="ParentWorkOrderId" />
+                <el-table-column label="优先级" align="center" prop="priority" >
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.Status == 1">优先安排</span>
+                    <span v-if="scope.row.Status == 2">加急处理</span>
+                    <span v-if="scope.row.Status == 3">正常排产</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="状态" align="center">
+                  <template slot-scope="scope">
+                    <el-tag v-if="scope.row.Status == 0" type="warning">待排产</el-tag>
+                    <el-tag v-if="scope.row.Status == 1" type="warning">待生产</el-tag>
+                    <el-tag v-if="scope.row.Status == 2" type="warning">生产中</el-tag>
+                    <el-tag v-if="scope.row.Status == 3" type="success">已完成</el-tag>
+                    <el-tag v-if="scope.row.Status == 4" type="danger">已取消</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column label="超期时间" align="center" prop="OverTime" />
+                <el-table-column label="计划产量" align="center" prop="Quantity" />
+                <el-table-column label="计划开始时间" align="center" prop="PlannedStartOn" />
+                <el-table-column label="计划结束时间" align="center" prop="PlannedEndOn" />
+                <el-table-column label="实际开始时间" align="center" prop="StartOn" />
+                <el-table-column label="实际结束时间" align="center" prop="EndOn" />
+                <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
+                  <template slot-scope="scope">
+                    <el-button type="text" icon="el-icon-edit" @click="handleAdd(scope.row)">编辑</el-button>
+                  </template>
+                </el-table-column> -->
+              </el-table>
+              <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
+                :limit.sync="queryParams.pageSize" @pagination="getList" />
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+</template>
+  
+<script>
+  import { mesOrderList } from "@/api/mes/report";
+  import { resizeTableCon } from "@/mixins/resizeTableCon";
+  export default {
+    name: "OrderList",
+    mixins: [resizeTableCon],
+    data() {
+      return {
+        loading: false,
+        // 查询参数
+        queryParams: {
+          status: '',
+          pageNum: 1,
+          pageSize: 20,
+          beginTime: '',
+          endTime: ''
+        },
+        dateRange: [],
+        total: 0,
+        taskList: []
+      }
+    },
+    created() {
+      this.getList();
+    },
+    methods: {
+      getList() {
+        this.open = false;
+        this.loading = true;
+        // if(this.dateRange.length > 0) {
+        //   this.queryParams.beginTime = this.dateRange[0];
+        //   this.queryParams.endTime = this.dateRange[1];
+        // }
+        if(this.queryParams.status!=null&&this.queryParams.status!=undefined){}else{
+            delete this.queryParams.status
+        }
+        mesOrderList(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
+            console.log("生产工单",response);
+          this.taskList = response.data.List;
+          this.total = response.data.Total;
+          this.loading = false;
+        })
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getList();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.dateRange= []; 
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+    }
+  }
+</script>

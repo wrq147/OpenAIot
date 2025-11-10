@@ -1,0 +1,58 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Width="590" Height="690"
+		xmlns:lang="clr-namespace:AirJointUI.Utils"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaTitleBarHeightHint="-1"
+		WindowStartupLocation="CenterOwner"
+		CanResize="False"
+        x:Class="AirJointUI.Component.VPortNumberKeyboard"
+        Title="{lang:Resx NumberKeyboardTitle}">
+	<Border BorderBrush="#333" BorderThickness="1">
+		<StackPanel>
+			<TextBox Text="0" Name="txtResult" Margin="15 20 15 10" Padding="15 0" Height="80" Width="550" HorizontalAlignment="Left" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="40"  Watermark="请输入数值" IsReadOnly="True" />
+			<Grid Name="NumberGrid" Background="#fff" Margin="10">
+				<Grid.Styles>
+					<Style Selector="Button">
+						<Setter Property="FontSize" Value="35"></Setter>
+						<Setter Property="FontWeight" Value="Bold"></Setter>
+					</Style>
+				</Grid.Styles>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="140" />
+					<RowDefinition Height="140"/>
+					<RowDefinition Height="140"/>
+					<RowDefinition Height="140"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+					<ColumnDefinition Width="140" />
+				</Grid.ColumnDefinitions>
+
+				<Button Click="HandleNumberClick" Name="btn1" Content="1" Grid.Row="2" Grid.Column="0" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn2" Content="2" Grid.Row="2" Grid.Column="1" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn3" Content="3" Grid.Row="2" Grid.Column="2" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn4" Content="4" Grid.Row="1" Grid.Column="0" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn5" Content="5" Grid.Row="1" Grid.Column="1" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn6" Content="6" Grid.Row="1" Grid.Column="2" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn7" Content="7" Grid.Row="0" Grid.Column="0" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn8" Content="8" Grid.Row="0" Grid.Column="1" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btn9" Content="9" Grid.Row="0" Grid.Column="2" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+
+				<Button Click="HandleNumberClick" Name="btn0" Content="0" Grid.Row="3" Grid.Column="0" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btnClear" Content="{lang:Resx NumberKeyboardClear}" Grid.Row="3" Grid.Column="1" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btndot" Content="." Grid.Row="3" Grid.Column="2" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btnDel" Content="{lang:Resx NumberKeyboardDel}" Grid.Row="0" Grid.Column="3" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btnClose" Content="{lang:Resx NumberKeyboardClose}" Grid.Row="1" Grid.Column="3" Background="#F56C6C" Foreground="#fff" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+				<Button Click="HandleNumberClick" Name="btnEnter" Content="{lang:Resx NumberKeyboardConfirm}" Grid.Row="2" Grid.Column="3" Grid.RowSpan="2" Background="#409EFF" Foreground="#fff" BorderBrush="#FF474747" BorderThickness="1" CornerRadius="6" Margin="5"/>
+			</Grid>
+		</StackPanel>
+	
+	</Border>
+</Window>

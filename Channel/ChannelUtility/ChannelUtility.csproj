@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	 <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+	<PackageReference Include="Jint" Version="3.1.0" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.9.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Third\EasyNetQ\EasyNetQ.csproj" />
+  </ItemGroup>
+
+</Project>

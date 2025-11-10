@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Description>物联网AI模块，规则引擎AI节点专用</Description>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\</OutputPath>
+		<DocumentationFile>..\..\App\XML\IoTAIService.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.3" />
+	  <PackageReference Include="Milvus.Client" Version="2.3.0-preview.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="AIModel\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
+	  <ProjectReference Include="..\IoTRulesService\IoTRulesService.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="AIModel\FaceDetection.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="AIModel\FaceKeyPoints.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="AIModel\FaceRecog.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="AIModel\FaceSTN.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+
+</Project>

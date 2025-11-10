@@ -1,0 +1,77 @@
+{
+  "id": "jp-signature",
+  "displayName": "手写签名组件，弹框签名，可配置签名，签名返回base64，签名专用，手写一键使用 ",
+  "version": "2.5.1",
+  "description": "用于手写签名，同时内置了弹框签名组件，对于不想布局的同学来说可以开箱即用, 能跑在uniapp各端中的签名插件，支持横屏、背景色、笔画颜色、笔画大小等功能,可生成有内容的区域，减小图片尺寸，节省空间。",
+  "keywords": [
+    "手写签名",
+    "弹框签名",
+    "手写一键使用",
+    "可配置签名",
+    "小白专用签名"
+],
+  "repository": "",
+  "engines": {
+    "HBuilderX": "^3.5.4"
+  },
+"dcloudext": {
+    "sale": {
+      "regular": {
+        "price": "0.00"
+      },
+      "sourcecode": {
+        "price": "0.00"
+      }
+    },
+    "contact": {
+      "qq": ""
+    },
+    "declaration": {
+      "ads": "无",
+      "data": "无",
+      "permissions": "无"
+    },
+    "npmurl": "",
+    "type": "component-vue"
+  },
+  "uni_modules": {
+    "dependencies": [],
+    "encrypt": [],
+    "platforms": {
+      "cloud": {
+        "tcb": "y",
+        "aliyun": "y"
+      },
+      "client": {
+        "App": {
+          "app-vue": "y",
+          "app-nvue": "y"
+        },
+        "H5-mobile": {
+          "Safari": "y",
+          "Android Browser": "y",
+          "微信浏览器(Android)": "y",
+          "QQ浏览器(Android)": "y"
+        },
+        "H5-pc": {
+          "Chrome": "y",
+          "IE": "y",
+          "Edge": "y",
+          "Firefox": "y",
+          "Safari": "y"
+        },
+        "小程序": {
+          "微信": "y",
+          "阿里": "y",
+          "百度": "y",
+          "字节跳动": "y",
+          "QQ": "y"
+        },
+        "快应用": {
+          "华为": "y",
+          "联盟": "y"
+        }
+      }
+    }
+  }
+}

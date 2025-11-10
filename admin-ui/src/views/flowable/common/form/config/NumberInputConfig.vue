@@ -1,0 +1,40 @@
+<template>
+  <div>
+    <el-form-item label="提示文字">
+      <el-input size="small" v-model="value.placeholder" placeholder="请设置提示语"/>
+    </el-form-item>
+    <el-form-item label="最小值">
+      <el-input-number controls-position="right" :precision="value.precision" size="small" v-model="value.min"/>
+    </el-form-item>
+    <el-form-item label="最大值">
+      <el-input-number controls-position="right" :precision="value.precision" size="small" v-model="value.max"/>
+    </el-form-item>
+    <el-form-item label="保留小数">
+      <el-input-number style="width:90px" controls-position="right" :precision="0" :max="3" :min="0" size="small" v-model="value.precision"  placeholder="小数位数"/>
+       位
+    </el-form-item>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "NumberInput",
+  components: {},
+  props:{
+    value:{
+      type: Object,
+      default: ()=>{
+        return {}
+      }
+    }
+  },
+  data() {
+    return {}
+  },
+  methods: {}
+}
+</script>
+
+<style scoped>
+
+</style>

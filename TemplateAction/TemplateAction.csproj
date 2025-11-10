@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Version>4.7.4</Version>
+    <Description>A modular MVC framework，This is the core component. The source address：https://gitee.com/mz-cn/MZFrame</Description>
+    <Company>重新读取</Company>
+    <Copyright>Copyright © 重新读取 2021</Copyright>
+    <Authors>重新读取</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NetCore\**" />
+    <EmbeddedResource Remove="NetCore\**" />
+    <None Remove="NetCore\**" />
+  </ItemGroup>
+
+</Project>

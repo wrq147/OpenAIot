@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+	<DocumentationFile>..\..\App\XML\FlowService.xml</DocumentationFile>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="DynamicExpresso.Core" Version="2.13.0" />
+	<PackageReference Include="Jint" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Channel\ChannelUtility\ChannelUtility.csproj" />
+    <ProjectReference Include="..\AuthService\AuthService.csproj" />
+    <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
+    <ProjectReference Include="..\MonitorService\MonitorService.csproj" />
+  </ItemGroup>
+</Project>

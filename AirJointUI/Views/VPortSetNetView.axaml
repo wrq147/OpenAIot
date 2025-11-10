@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AirJointUI.ViewModels"
+			 mc:Ignorable="d"
+			 xmlns:cc="using:AirJointUI.Component"
+             x:Class="AirJointUI.Views.VPortSetNetView"
+			 xmlns:lang="clr-namespace:AirJointUI.Utils"
+			 x:DataType="vm:SetNetViewModel">
+	<StackPanel  Width="620">
+		<StackPanel Orientation="Horizontal" Height="60">
+			<TextBlock TextAlignment="Right" Width="120" VerticalAlignment="Center" FontSize="20" Foreground="#666" Text="{lang:Resx WifiSwitch}"></TextBlock>
+			<cc:SwitchButton VerticalAlignment="Center" Checked="Wifi_Checked" Unchecked="Wifi_Uncheck" Margin="30 0 0 0" IsChecked="{Binding EnableNet}" ContentTrue="{lang:Resx On}" ContentFalse="{lang:Resx Off}">
+			</cc:SwitchButton>
+		</StackPanel>
+		<StackPanel IsEnabled="{Binding EnableNet}" Orientation="Horizontal" Height="60" Margin="0 34 0 0">
+			<TextBlock TextAlignment="Right" Width="120" VerticalAlignment="Center" FontSize="20" Foreground="#666" Text="{lang:Resx SSID}"></TextBlock>
+			<ComboBox Name="ssidCB" ItemsSource="{Binding SSIDList}" Margin="30 0 0 0" Width="350" Height="60" Padding="30 0" FontSize="20" SelectedIndex="{Binding NetIndex}" MaxDropDownHeight="300" PlaceholderText="{lang:Resx SSIDPlaceholder}" BorderBrush="#DEDEDE" BorderThickness="1" CornerRadius="10">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Height="60" Orientation="Horizontal">
+							<TextBlock Margin="30 0 0 0" VerticalAlignment="Center" Width="300"  FontSize="20" Text="{Binding Name}"/>
+						</StackPanel>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+		</StackPanel>
+		<StackPanel IsEnabled="{Binding EnableNet}" Orientation="Horizontal" Height="60" Margin="0 34 0 0">
+			<TextBlock TextAlignment="Right" Width="120" VerticalAlignment="Center" FontSize="20" Foreground="#666" Text="{lang:Resx Password}"></TextBlock>
+			<TextBox Name="netPassword" Text="{Binding TxtPassword}" GotFocus="HandleGotFocus" Padding="30 0" Width="350" Height="60" FontSize="20" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="30 0 0 0" Watermark="{lang:Resx PasswordPlaceholder}" BorderBrush="#DEDEDE" BorderThickness="1" CornerRadius="10"/>
+		</StackPanel>
+		<TextBox Name="FocusHolder" Height="0"/>
+		<Button Click="HandleSave" Margin="0 100 0 0" HorizontalAlignment="Right" CornerRadius="40" Width="240" Height="80" Background="#2371FF" Foreground="#FFF" FontSize="24" Content="{lang:Resx Save}"></Button>
+
+		<TextBlock Text="{Binding TxtRemoteCode}" Margin="0 70 0 20" TextAlignment="Center" FontSize="26" Foreground="#666">
+		</TextBlock>
+		<TextBlock Text="{Binding TxtIp}" IsVisible="{Binding Top.HasNet}" Margin="0 20 0 20" TextAlignment="Center" FontSize="20" Foreground="#666">
+		</TextBlock>
+	</StackPanel >
+</UserControl>

@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+			 xmlns:vm="using:AirJointUI.ViewModels"
+			 xmlns:lang="clr-namespace:AirJointUI.Utils"
+             x:Class="AirJointUI.GoWebView"
+			 x:DataType="vm:GoWebViewModel">
+    <Grid>
+        <!-- WebView 作为底层内容 -->
+        <WebView x:Name="PART_WebView" Url="{Binding ReportUrl}"/>
+
+        <!-- 使用 Popup 包裹按钮，强制置顶 -->
+        <Popup IsOpen="True" 
+               Placement="RightEdgeAlignedBottom" 
+               HorizontalOffset="-120"
+               VerticalOffset="-20"> 
+
+            <!-- 圆形按钮 -->
+            <Button x:Name="PART_Button" 
+                    Content="{lang:Resx Back}" 
+                    FontSize="22"
+                    Width="100"
+                    Height="100"
+                    Background="#F7F8FA"
+                    BorderThickness="0"
+                    Padding="0"
+                    CornerRadius="50"/>
+        </Popup>
+    </Grid>
+</UserControl>

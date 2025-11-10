@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AirJointUI.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="1080" d:DesignHeight="1920"
+             x:Class="AirJointUI.Views.VPortLoadView"
+			 xmlns:lang="clr-namespace:AirJointUI.Utils"
+			 x:DataType="vm:LoadViewModel">
+	<Design.DataContext>
+		<vm:LoadViewModel />
+	</Design.DataContext>
+
+
+	<RelativePanel >
+		<Image x:Name="BackgroundImg" Stretch="UniformToFill"  Source="avares://AirJointUI/Assets/Images/vloading.png"/>
+		<TextBlock Margin="0 0 0 0" FontSize="34" FontWeight="Bold" RelativePanel.AlignHorizontalCenterWith="BackgroundImg" RelativePanel.AlignVerticalCenterWith="BackgroundImg"  Text="{lang:Resx LogoTxt}"></TextBlock>
+		<TextBlock Text="{Binding TipTxt}" Margin="0 180 0 0" FontSize="24" FontWeight="Bold" RelativePanel.AlignHorizontalCenterWith="BackgroundImg" RelativePanel.AlignVerticalCenterWith="BackgroundImg">
+		</TextBlock>
+	</RelativePanel>
+
+</UserControl>

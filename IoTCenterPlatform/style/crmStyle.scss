@@ -1,0 +1,349 @@
+//公海池页面新增样式--——公新增海池//////新增客户/////新增线索池 //////联系人添加
+.PlaceStyle{
+			color:rgba(255, 255, 255, 0.2);
+			font-size:32rpx;
+		}
+	#CreateCustomer{
+		padding-bottom: 10rpx;
+		.addPool-button{
+			width: 94%;
+			margin:30rpx 3%;
+			background: linear-gradient(180deg,#FF3535,#FF613D);
+			height: 100rpx;
+			line-height: 100rpx;
+			text-align: center;
+			color:#fff;
+			border-radius: 10rpx;
+			font-size:36rpx;
+			font-weight: bold;
+		}
+		.addPool-form{
+			width:94%;
+			margin:0rpx 3%;
+			.addPool-textarea{
+				font-size:28rpx;
+				border:1rpx solid rgba(255, 255, 255, .2);
+				border-radius: 12rpx;
+				padding:20rpx;
+				height:120rpx;
+				width:94%;
+				color:#fff;
+			}
+			.addPool-form-item{
+				margin-top:20rpx;
+				margin-bottom: 35rpx;
+				
+				/deep/.uni-forms-item__label{
+					height:50rpx;
+					color:rgba(255, 255, 255, .7);
+				}
+				/deep/.uni-forms-item{
+					
+				}
+				.addPool-selected{
+					/deep/.uni-select__input-text{
+						color:#fff!important;
+					}
+					/deep/.uni-select{
+						height: 88rpx!important;
+						border:1rpx solid rgba(255, 255, 255, .2);
+					}
+					/deep/.uni-select__input-placeholder{
+						font-size:32rpx!important;
+						color:rgba(255, 255, 255, .2)!important;
+					}
+				}
+				
+				.addPool-easyinput{
+					background: #161A26!important;
+					border:1rpx solid rgba(255, 255, 255, .2);
+					border-radius: 12rpx;
+					font-size:32rpx;
+					height: 88rpx;
+					color:#fff;
+					padding:0rpx 20rpx;
+				}
+				::-webkit-input-placeholder{
+					color:red!important;
+				}
+			}
+			
+			
+		}
+		.addPool-top{
+			
+		}
+	}
+	
+	
+	//CRM模块所有列表样式——公海池列表//////客户列表/////线索池列表
+	#Customer{
+		.poolsList{
+			width:94%;
+			margin:0rpx 3%;
+			background: #1C2232;
+			margin-bottom: 20rpx;
+			border-radius: 15rpx!important;
+			.poolsList-item{
+				color:#fff;
+				padding:20rpx 30rpx;
+				.poolsList-top{
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					padding-bottom: 30rpx;
+					padding-top:10rpx;
+					.poolsList-top-title{
+						font-size:32rpx;
+					}
+					.Agent{
+						position: absolute;
+						right:-30rpx;
+						top:-20rpx;
+						//width:100rpx;
+						padding:0rpx 10rpx;
+						text-align: center;
+						font-size:20rpx;
+						border-top-right-radius: 14rpx;
+						border-bottom-left-radius: 14rpx;
+						background: linear-gradient(180deg,#FF3535,#FF613D);
+						
+					}
+					.DirectSales{
+						position: absolute;
+						right:-20rpx;
+						top:-20rpx;
+						padding:0rpx 10rpx;
+						text-align: center;
+						font-size:23rpx;
+						border-top-right-radius: 15rpx;
+						border-bottom-left-radius: 15rpx;
+						background: linear-gradient(180deg,#EFA902,#F4BE3F);
+					}
+					.time{
+						color:rgba(255, 255, 255, .6);
+						font-size:28rpx;
+					}
+				}
+				.poolsList-item-button{
+					display: flex;
+					align-items: center;
+					justify-content: space-around;
+					padding-top:30rpx;
+					padding-bottom: 10rpx;
+					border-top:1rpx solid rgba(255, 255, 255, .1);
+					.button{
+						width:33%;
+						text-align: center;
+						margin:0 auto;
+						font-size:28rpx;
+						border-right:1rpx solid rgba(255, 255, 255, .1);
+						.iconfont{
+							font-size:30rpx;
+							margin-right:10rpx;
+						}
+					}
+					.btnRight{
+						border:none;
+					}
+				}
+			}
+		}
+		.OpenPool-header{
+			display: flex;
+			align-items: center;
+			margin-bottom: 10rpx;
+			.icon-shaixuan{
+				color:#fff;
+				margin-left:auto;
+				margin-right:20rpx;
+			}
+			.OpenPool-header-input{
+				display: flex;
+				outline: none;
+				border:none;
+				flex:1;
+				border:1rpx solid rgba(255, 255, 255, .6);
+				margin:20rpx;
+				height:60rpx;
+				border-radius: 8rpx;
+				padding:0rpx 20rpx;
+				align-items: center;
+				.icon-sousuo{
+					color:rgba(255,255,255,.6);
+					font-size:24rpx;
+				}
+				.inputArrow{
+					height:60rpx;
+					font-size:24rpx;
+					margin-left:10rpx;
+					min-width: 440rpx;
+					color:#fff;
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	//CRM详情页面公共样式  公海池详情/////////线索池详情
+	#PoolDetails{
+		position: relative;
+		.PoolDetails-Height{
+			height:110rpx;
+		}
+		.PoolDetails-button{
+			position: fixed;
+			bottom: 0rpx;
+			left:0rpx;
+			width: 100%;
+			display: flex;
+			color:#fff;
+			padding:25rpx 0rpx;
+			align-items: center;
+			background: #1C2232;
+			.button{
+				width:33%;
+				text-align: center;
+				margin:0 auto;
+				font-size:32rpx;
+				.iconfont{
+					margin-right:9rpx;
+				}
+			}
+		}
+		.PoolDetails-content{
+			width: 94%;
+			margin:0rpx 3%;
+			.Avatar-information-text{
+				display: flex;
+				flex-direction: column;
+				color:#fff;
+				background: #1C2232;
+				margin-top:20rpx;
+				border-radius: 8rpx;
+				.Avatar-information-text-item{
+					margin:0rpx 30rpx;
+					padding:30rpx 0rpx;
+					padding-top:20rpx;
+					border-top: 1rpx solid rgba(255, 255, 255, .2);
+					.Avatar-information-text-item-header{
+						display: flex;
+						align-items: center;
+						.content{
+							font-size:32rpx;
+						}
+						.Avatar-information-text-item-img{
+							width:60rpx;
+							height:60rpx;
+							border-radius: 50%;
+							margin-right:20rpx;
+						}
+					}
+				
+					.Avatar-information-text-item-title{
+						color:rgba(255, 255, 255, .5);
+						padding:10rpx 0rpx;
+						font-size:28rpx;
+					}
+				}
+					.itemTextBorde{
+						border:none;
+					}
+			}
+			.Avatar-information{
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				color:#fff;
+				background: #1C2232;
+				text-align: center;
+				padding:30rpx 0rpx;
+				margin-top:80rpx;
+				.Agent{
+					position: absolute;
+					right:0rpx;
+					top:0rpx;
+					padding:0rpx 10rpx;
+					//width:100rpx;
+					text-align: center;
+					font-size:20rpx;
+					border-top-right-radius: 10rpx;
+					border-bottom-left-radius: 10rpx;
+					background: linear-gradient(180deg,#FF3535,#FF613D);
+				}
+				.Avatar-Contacts {
+					display: flex;
+					flex-direction: column;
+					margin: 10rpx 4%;
+					padding:24rpx;
+					border: 2rpx solid rgba(255, 255, 255, .2);
+					border-radius: 8rpx;
+					margin-top:30rpx;
+					.Avatar-Contacts-right {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						// margin:15rpx 0rpx;
+						.t-icon-dianhua {
+							width: 50rpx;
+							height: 50rpx;
+							line-height: 50rpx;
+							text-align: right;
+							font-size: 52rpx;
+						}
+				
+						.Avatar-Contacts-right-David {
+							.content {
+								height: 60rpx;
+								line-height: 60rpx;
+								margin-left: 20rpx;
+								font-size:32rpx;
+							}
+				
+							.aviter {
+								float: left;
+								width: 60rpx;
+								height: 60rpx;
+								
+								border-radius: 50%;
+							}
+						}
+					}
+				
+					.Avatar-Contacts-left {
+						display: flex;
+						justify-content: space-between;
+						margin-bottom: 20rpx;
+						color: rgba(255, 255, 255, .6);
+						font-size:28rpx;
+						.Avatar-Contacts-iconfont {}
+				
+						.icon-a-youjiantoubai {
+							font-size: 20rpx;
+						}
+					}
+				}
+				.Avatar-information-title{
+					margin-top:40rpx;
+					font-size:36rpx;
+				}
+				.Avatar-information-content{
+					color:rgba(255, 255, 255, .6);
+					font-size:24rpx;
+					margin-top:13rpx;
+				}
+				.t-icon-gonghaitouxiang,.t-icon-xiansuochitouxiang,.t-icon-xiansuotouxiang,.t-icon-kehumorentouxiang{
+					width: 140rpx;
+					height:140rpx;
+					line-height: 140rpx;
+					margin:0 auto;
+					margin-top:-90rpx;
+					color:#1C2232;
+					border-radius: 10rpx;
+				}
+			}
+		}
+		
+	}
