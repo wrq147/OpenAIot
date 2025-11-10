@@ -21,7 +21,6 @@ HOW TO USE： new SqlBuilder(new MySqlHelp("conn")).AppendInsert(model, "table")
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="5.1.0" />
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
   </ItemGroup>
 
 </Project>
