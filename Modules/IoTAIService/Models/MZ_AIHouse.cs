@@ -35,5 +35,10 @@ namespace IoTAIService.Models
         /// 创建时间
         /// </summary>
         public DateTime? CreatedOn { get; set; }
+        /// <summary>
+        /// 人脸数量
+        /// </summary>
+        [DataIgnore]
+        public int FaceCount { get; set; }
     }
 }

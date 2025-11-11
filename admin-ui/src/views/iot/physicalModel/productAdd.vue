@@ -43,7 +43,7 @@
                 <el-menu-item index="event" @click="definitonSelect('event')">事件定义</el-menu-item>
                 <el-menu-item index="modbus" @click="definitonSelect('modbus')" v-if="CanModbus">Modbus</el-menu-item>
                 <el-menu-item index="expands" @click="definitonSelect('expands')">标签</el-menu-item>
-                <el-menu-item v-if="enableStore==true" index="proprules" @click="definitonSelect('proprules')">属性规则</el-menu-item>
+                <el-menu-item v-if="enableStore==true" index="proprules" @click="definitonSelect('proprules')">统计规则</el-menu-item>
                 <el-menu-item index="firmwareFiles" @click="definitonSelect('firmwareFiles')">固件文件</el-menu-item>
               </el-menu>
             </div>

@@ -214,7 +214,7 @@ export default {
     // 删除
     async delRule(idx) {
       this.$modal
-        .confirm('是否确认删除属性规则"' + this.itemList[idx].PropName + '"？')
+        .confirm('是否确认删除统计规则"' + this.itemList[idx].PropName + '"？')
         .then(() => {
           return removePropRule(this.itemList[idx].Id);
         })

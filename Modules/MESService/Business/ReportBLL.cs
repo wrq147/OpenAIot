@@ -126,6 +126,7 @@ namespace MESService.Business
             var snowflake = _provider.GetService<SnowflakeHelper>();
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
+            data.FlowId = 0;
 
 
 

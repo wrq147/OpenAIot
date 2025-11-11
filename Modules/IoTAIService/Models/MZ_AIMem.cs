@@ -1,4 +1,5 @@
-﻿using MyAccess.DB.Attr;
+﻿using AuthService;
+using MyAccess.DB.Attr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,5 +40,15 @@ namespace IoTAIService.Models
         /// 创建时间
         /// </summary>
         public DateTime? CreatedOn { get; set; }
+        /// <summary>
+        /// 人员信息
+        /// </summary>
+        [DataIgnore]
+        public MZ_AdminInfo MemInfo { get; set; }
+        /// <summary>
+        /// 建模库信息
+        /// </summary>
+        [DataIgnore]
+        public MZ_AIHouse HouseInfo { get; set; }
     }
 }

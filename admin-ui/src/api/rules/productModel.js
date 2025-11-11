@@ -187,7 +187,7 @@ export function getCodeListTree(t) {
     })
 }
 
-//属性规则列表
+//统计规则列表
 export function getPropRuleList(id) {
     return request({
         url: '/IoTService/IotProduct/PropRuleList',
@@ -196,7 +196,7 @@ export function getPropRuleList(id) {
     })
 }
 
-//获取属性规则信息
+//获取统计规则信息
 export function getPropRuleInfo(id) {
     return request({
         url: '/IoTService/IotProduct/PropRuleInfo',
@@ -205,7 +205,7 @@ export function getPropRuleInfo(id) {
     })
 }
 
-//添加属性规则
+//添加统计规则
 export function addPropRule(data){
     return request({
         url: '/IoTService/IotProduct/AddPropRule',
@@ -214,7 +214,7 @@ export function addPropRule(data){
     })
 }
 
-//修改属性规则
+//修改统计规则
 export function editPropRule(data){
     return request({
         url: '/IoTService/IotProduct/EditPropRule',
@@ -223,7 +223,7 @@ export function editPropRule(data){
     })
 }
 
-//删除属性规则
+//删除统计规则
 export function removePropRule(delid){
     return request({
         url: '/IoTService/IotProduct/RemovePropRule',

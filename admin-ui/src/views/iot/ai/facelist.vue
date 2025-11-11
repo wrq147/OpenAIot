@@ -60,16 +60,16 @@
                                 <i class="el-icon-folder-opened text-primary"></i>
                                 <span>{{ library.HouseName }}</span>
                             </div>
-                            <el-dropdown trigger="click">
+                            <el-dropdown trigger="click" @command="handleLibraryCommand($event, library)">
                                 <i class="el-icon-more text-gray-400"></i>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item @click="enterFaceManagement(library)">
+                                    <el-dropdown-item command="man">
                                         <i class="el-icon-picture"></i> 管理人脸
                                     </el-dropdown-item>
-                                    <el-dropdown-item @click="showEditLibraryDialog(library)">
+                                    <el-dropdown-item command="edit">
                                         <i class="el-icon-edit"></i> 编辑
                                     </el-dropdown-item>
-                                    <el-dropdown-item divided @click="deleteLibrary(library.id)">
+                                    <el-dropdown-item command="del" divided>
                                         <i class="el-icon-delete text-danger"></i> 删除
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
@@ -77,16 +77,16 @@
                         </div>
 
                         <div class="library-card-body">
-                            <p class="library-desc">{{ library.description || '无描述信息' }}</p>
+                            <p class="library-desc">{{ library.Remark || '无描述信息' }}</p>
 
                             <div class="library-meta">
                                 <div class="meta-item">
                                     <i class="el-icon-user"></i>
-                                    <span>人脸数量: {{ library.faceCount }}</span>
+                                    <span>人脸数量: {{ library.FaceCount }}</span>
                                 </div>
                                 <div class="meta-item">
                                     <i class="el-icon-time"></i>
-                                    <span>{{ formatDate(library.createdAt) }}</span>
+                                    <span>{{ library.CreatedOn }}</span>
                                 </div>
                             </div>
 
@@ -118,7 +118,7 @@
                         返回列表
                     </el-button>
                     <el-button type="primary" icon="el-icon-upload" @click="showUploadDialog = true">
-                        上传人脸建模
+                        创建人脸建模
                     </el-button>
                 </div>
             </div>
@@ -155,15 +155,15 @@
                     <el-card v-for="face in filteredFaces" :key="face.id" class="face-card" shadow="hover">
                         <div class="face-image-container">
                             <img :src="face.imageUrl" alt="人脸建模" class="face-image">
-                            <el-checkbox v-model="selectedFaceIds" :label="face.id" class="face-checkbox"></el-checkbox>
+                            <el-checkbox v-model="selectedFaceIds" :label="face.Id" class="face-checkbox"></el-checkbox>
                             <div class="face-info-overlay">
-                                <p class="face-name">{{ face.name }}</p>
-                                <p class="face-id">{{ face.id }}</p>
+                                <p class="face-name">{{ face.MemInfo.RealName }}</p>
+                                <p class="face-id">{{ face.Id }}</p>
                             </div>
                         </div>
 
                         <div class="face-card-footer">
-                            <span class="upload-time">{{ formatDate(face.uploadTime) }}</span>
+                            <span class="upload-time">{{ face.CreatedOn }}</span>
                             <el-dropdown trigger="click">
                                 <i class="el-icon-more text-gray-400"></i>
                                 <el-dropdown-menu slot="dropdown">
@@ -186,7 +186,7 @@
                 <div v-if="filteredFaces.length === 0" class="empty-state">
                     <el-empty description="暂无人脸建模数据">
                         <el-button type="primary" size="small" @click="showUploadDialog = true">
-                            <i class="el-icon-upload"></i> 上传人脸建模
+                            <i class="el-icon-upload"></i> 创建人脸建模
                         </el-button>
                     </el-empty>
                 </div>
@@ -226,56 +226,17 @@
             </div>
         </el-dialog>
 
-        <!-- 上传人脸建模对话框 -->
-        <el-dialog title="上传人脸建模" :visible.sync="showUploadDialog" width="600px" :close-on-click-modal="false" border>
-            <el-upload class="upload-demo" drag action="" :on-change="handleFileChange" :before-upload="beforeUpload"
-                :file-list="uploadFileList" multiple :auto-upload="false">
-                <i class="el-icon-upload text-4xl"></i>
-                <div class="el-upload__text">
-                    拖放文件到此处，或<em>点击上传</em>
-                </div>
-                <div class="el-upload__tip">
-                    支持 JPG、PNG 格式，单文件不超过 5MB，最多上传 10 个文件
-                </div>
-            </el-upload>
-
-            <!-- 上传文件列表 -->
-            <div v-if="uploadFileList.length > 0" class="upload-file-list">
-                <div v-for="(file, index) in uploadFileList" :key="file.uid" class="file-item">
-                    <i class="el-icon-picture text-primary"></i>
-                    <div class="file-info">
-                        <p class="file-name">{{ file.name }}</p>
-                        <el-progress :percentage="file.percentage || 0" stroke-width="2"></el-progress>
-                    </div>
-                    <el-button type="text" size="small" class="file-remove" @click="removeUploadFile(index)">
-                        <i class="el-icon-delete text-danger"></i>
-                    </el-button>
-                </div>
-            </div>
-
-            <div slot="footer">
-                <el-button @click="cancelUpload">取消</el-button>
-                <el-button type="primary" @click="confirmUpload" :disabled="uploadFileList.length === 0 || isUploading">
-                    <i class="el-icon-loading" v-if="isUploading"></i>
-                    {{ isUploading ? '上传中...' : '开始上传' }}
-                </el-button>
-            </div>
-        </el-dialog>
-
         <!-- 人脸详情对话框 -->
         <el-dialog title="人脸详情" :visible.sync="showFaceDetailDialog" width="500px" :close-on-click-modal="false" border>
             <div v-if="currentFaceDetail" class="face-detail">
                 <div class="face-detail-image">
-                    <img :src="currentFaceDetail.imageUrl" alt="人脸建模">
+                    <img :src="currentFaceDetail.FaceImg" alt="人脸建模">
                 </div>
                 <el-descriptions column="1" border class="face-detail-info">
-                    <el-descriptions-item label="人脸ID">{{ currentFaceDetail.id }}</el-descriptions-item>
-                    <el-descriptions-item label="名称">{{ currentFaceDetail.name }}</el-descriptions-item>
-                    <el-descriptions-item label="上传时间">{{ formatDate(currentFaceDetail.uploadTime)
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="文件大小">{{ formatFileSize(currentFaceDetail.fileSize)
-                    }}</el-descriptions-item>
-                    <el-descriptions-item label="文件格式">{{ currentFaceDetail.fileType }}</el-descriptions-item>
+                    <el-descriptions-item label="人脸ID">{{ currentFaceDetail.Id }}</el-descriptions-item>
+                    <el-descriptions-item label="姓名">{{ currentFaceDetail.MemInfo.RealName }}</el-descriptions-item>
+                    <el-descriptions-item label="建模状态">{{ getFStatus(currentFaceDetail.FStatus)
+                        }}</el-descriptions-item>
                     <el-descriptions-item label="备注">{{ currentFaceDetail.remark || '无' }}</el-descriptions-item>
                 </el-descriptions>
             </div>
@@ -284,19 +245,26 @@
             </div>
         </el-dialog>
 
-        <!-- 编辑人脸信息对话框 -->
-        <el-dialog title="编辑人脸信息" :visible.sync="showEditFaceDialog" width="400px" :close-on-click-modal="false" border>
-            <el-form :model="currentFaceForm" :rules="faceRules" ref="faceForm" label-width="80px">
-                <el-form-item label="名称" prop="name">
-                    <el-input v-model="currentFaceForm.name" placeholder="请输入人脸名称"></el-input>
+        <!-- 创建人脸信息对话框 -->
+        <el-dialog title="创建人脸信息" :visible.sync="showCreateFaceDialog" width="400px" :close-on-click-modal="false"
+            border>
+            <el-form :model="currentFaceForm" ref="faceForm" label-width="80px">
+                <el-form-item label="员工" prop="MemId">
+                    <el-select v-model="currentFaceForm.MemInfo.RealName" ref="selectUser" placeholder="请选择员工"
+                        @focus="getUsersFocus" style="width:100%"></el-select>
+                    <org-picker :multiple="true" ref="userPicker" :selected="currentFaceForm.userInfo"
+                        @ok="selectUsersed" />
                 </el-form-item>
-                <el-form-item label="备注">
-                    <el-input v-model="currentFaceForm.remark" placeholder="请输入备注信息" type="textarea"
-                        rows="3"></el-input>
+                <el-form-item label="建模库" prop="HouseId">
+                    <el-input v-model="currentFaceForm.HouseInfo.HouseName" :readonly="true">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="建模头像" prop="FaceImg">
+                    <image-upload v-model="currentFaceForm.FaceImg" :limit="1"></image-upload>
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button @click="showEditFaceDialog = false">取消</el-button>
+                <el-button @click="showCreateFaceDialog = false">取消</el-button>
                 <el-button type="primary" @click="saveFaceInfo">
                     保存
                 </el-button>
@@ -306,10 +274,12 @@
 </template>
 <script>
 import {
-    getFaceHouseList,addFaceHouse
+    getFaceHouseList, addFaceHouse, removeFaceHouse, updateFaceHouse, getHouseInfo, addFace
 } from "@/api/ai/face";
+import OrgPicker from "@/views/flowable/common/OrgPicker";
 
 export default {
+    components: { OrgPicker },
     data() {
         return {
             currentView: 'libraryList',
@@ -334,21 +304,22 @@ export default {
             currentLibraryForm: {
                 HouseName: '',
                 Status: '1',
-                Remark:""
+                Remark: ""
             },
 
-            showUploadDialog: false,
-            uploadFileList: [],
-            isUploading: false,
 
             showFaceDetailDialog: false,
             currentFaceDetail: null,
 
-            showEditFaceDialog: false,
+            showCreateFaceDialog: false,
             currentFaceForm: {
-                id: '',
-                name: '',
-                remark: ''
+                Id: '',
+                HouseId: '',
+                MemId: '',
+                MemInfo: { "RealName": "" },
+                HouseInfo: { "HouseName": "" },
+                FaceImg: '',
+                userInfo: null
             },
 
             // 表单验证规则
@@ -361,41 +332,23 @@ export default {
                     { max: 200, message: '描述不能超过 200 个字符', trigger: 'blur' }
                 ]
             },
-
-            faceRules: {
-                name: [
-                    { required: true, message: '请输入人脸名称', trigger: 'blur' },
-                    { min: 1, max: 50, message: '名称长度在 1 到 50 个字符', trigger: 'blur' }
-                ]
-            }
         };
     },
     async created() {
-        await searchLibraries();
+        await this.searchLibraries();
     },
     methods: {
-        // 格式化日期
-        formatDate(dateString) {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            return date.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            }).replace(',', '');
+        getFStatus(state) {
+            switch (state) {
+                case 0:
+                    return "未建模";
+                case 1:
+                    return "建模成功";
+                case 2:
+                    return "建模失败";
+            }
+            return "未知"
         },
-
-        // 格式化文件大小
-        formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        },
-
         // 建模库搜索和筛选
         async searchLibraries() {
             let res = await getFaceHouseList({ "Key": this.librarySearchQuery, "Status": this.libraryStatusFilter });
@@ -407,11 +360,22 @@ export default {
             this.libraryStatusFilter = '';
             this.searchLibraries();
         },
-
+        handleLibraryCommand(command, libitem) {
+            if (command == "man") {
+                this.enterFaceManagement(libitem);
+            }
+            else if (command == "edit") {
+                this.showEditLibraryDialog(libitem.Id);
+            }
+            else if (command == "del") {
+                this.deleteLibrary(libitem.Id);
+            }
+        },
         // 显示编辑建模库对话框
-        showEditLibraryDialog(library) {
+        async showEditLibraryDialog(id) {
             this.isEditingLibrary = true;
-            this.currentLibraryForm = { ...library };
+            let tmprsp = await getHouseInfo(id);
+            this.currentLibraryForm = tmprsp.data;
             this.showAddLibraryDialog = true;
         },
 
@@ -421,7 +385,7 @@ export default {
                 if (valid) {
                     if (this.isEditingLibrary) {
                         // 更新现有建模库
-
+                        await updateFaceHouse(this.currentLibraryForm);
                     } else {
                         // 添加新建模库
                         await addFaceHouse(this.currentLibraryForm);
@@ -440,18 +404,10 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                const index = this.libraries.findIndex(lib => lib.id === id);
-                if (index !== -1) {
-                    this.libraries.splice(index, 1);
-                    delete this.faces[id];
-                    if (this.currentLibrary && this.currentLibrary.id === id) {
-                        this.currentView = 'libraryList';
-                        this.currentLibrary = null;
-                    }
-                    this.searchLibraries();
-                    this.$message.success('建模库已删除');
-                }
+            }).then(async () => {
+                await removeFaceHouse({ ids: id });
+                this.searchLibraries();
+                this.$message.success('建模库已删除');
             }).catch(() => { });
         },
 
@@ -503,122 +459,24 @@ export default {
             this.currentFacePage = page;
         },
 
-        // 文件上传处理
-        handleFileChange(file, fileList) {
-            this.uploadFileList = fileList;
-        },
-
-        beforeUpload(file) {
-            const isImage = file.type === 'image/jpeg' || file.type === 'image/png';
-            const isLt5M = file.size / 1024 / 1024 < 5;
-
-            if (!isImage) {
-                this.$message.error('只能上传 JPG/PNG 格式的图片');
-                return false;
-            }
-            if (!isLt5M) {
-                this.$message.error('图片大小不能超过 5MB');
-                return false;
-            }
-
-            return true;
-        },
-
-        removeUploadFile(index) {
-            this.uploadFileList.splice(index, 1);
-        },
-
-        cancelUpload() {
-            this.uploadFileList = [];
-            this.isUploading = false;
-            this.showUploadDialog = false;
-        },
-
-        confirmUpload() {
-            if (!this.currentLibrary) {
-                this.$message.error('请先选择一个建模库');
-                return;
-            }
-
-            this.isUploading = true;
-
-            // 模拟上传进度
-            let completed = 0;
-            const totalFiles = this.uploadFileList.length;
-            const interval = setInterval(() => {
-                this.uploadFileList.forEach(file => {
-                    if (file.percentage < 100) {
-                        file.percentage = Math.min(100, (file.percentage || 0) + 10);
-                    } else {
-                        completed++;
-                    }
-                });
-
-                if (completed === totalFiles) {
-                    clearInterval(interval);
-                    this.isUploading = false;
-
-                    // 添加新上传的人脸到库中
-                    this.uploadFileList.forEach(file => {
-                        const faceId = 'face-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-                        const fileName = file.name.split('.').slice(0, -1).join('.');
-                        const fileType = file.name.split('.').pop().toLowerCase();
-                        const imageUrl = URL.createObjectURL(file.raw);
-
-                        const newFace = {
-                            id: faceId,
-                            name: fileName,
-                            imageUrl: imageUrl,
-                            uploadTime: new Date().toLocaleString('zh-CN', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit'
-                            }).replace(',', ' '),
-                            fileSize: file.size,
-                            fileType: fileType,
-                            remark: ''
-                        };
-
-                        if (!this.faces[this.currentLibrary.id]) {
-                            this.faces[this.currentLibrary.id] = [];
-                        }
-                        this.faces[this.currentLibrary.id].unshift(newFace);
-
-                        // 更新建模库的人脸数量
-                        const libIndex = this.libraries.findIndex(lib => lib.id === this.currentLibrary.id);
-                        if (libIndex !== -1) {
-                            this.libraries[libIndex].faceCount++;
-                        }
-                        if (this.currentLibrary) {
-                            this.currentLibrary.faceCount++;
-                        }
-                    });
-
-                    this.loadFaces();
-                    this.uploadFileList = [];
-                    this.showUploadDialog = false;
-                    this.$message.success(`成功上传 ${totalFiles} 个人脸建模`);
-                }
-            }, 300);
-        },
-
         // 显示人脸详情
         showFaceDetail(face) {
             this.currentFaceDetail = { ...face };
             this.showFaceDetailDialog = true;
         },
 
-        // 编辑人脸信息
-        editFace(face) {
+        // 创建人脸信息
+        createFace(face) {
             this.currentFaceForm = {
-                id: face.id,
-                name: face.name,
-                remark: face.remark || ''
+                Id: face.Id,
+                HouseId: face.HouseId,
+                MemId: face.MemId,
+                MemInfo: { "RealName": "" },
+                FaceImg: face.FaceImg,
+                HouseInfo: { "HouseName": "" },
+                userInfo: null
             };
-            this.showEditFaceDialog = true;
+            this.showCreateFaceDialog = true;
         },
 
         // 保存人脸信息
@@ -632,7 +490,7 @@ export default {
                         faceList[index].name = this.currentFaceForm.name;
                         faceList[index].remark = this.currentFaceForm.remark;
                         this.filteredFaces = [...faceList];
-                        this.showEditFaceDialog = false;
+                        this.showCreateFaceDialog = false;
                         this.$message.success('人脸信息更新成功');
                     }
                 }
@@ -705,7 +563,33 @@ export default {
                 this.selectedFaceIds = [];
                 this.$message.success(`成功删除 ${deletedCount} 个人脸建模`);
             }).catch(() => { });
-        }
+        },
+        getUsersFocus() {
+            //获取员工选择下拉列表的焦点
+            this.$refs.selectUser.blur();
+            if (this.currentFaceForm.userInfo == null) {
+                if (this.currentFaceForm.MemInfo) {
+                    let arr = [{ id: this.currentFaceForm.MemId, name: this.currentFaceForm.MemInfo.RealName, avatar: this.currentFaceForm.MemInfo.Avatar, type: "user" }]
+                    this.currentFaceForm.userInfo = JSON.parse(JSON.stringify(arr));
+                }
+                else {
+                    this.currentFaceForm.userInfo = [];
+                }
+            }
+            this.$refs.userPicker.show(this.currentFaceForm.userInfo, "user");
+        },
+        selectUsersed(values) {
+            this.currentFaceForm.userInfo = values;
+            if (values.length > 0) {
+                this.currentFaceForm.MemId = values[0].id;
+            }
+            else {
+                this.currentFaceForm.MemId = undefined;
+            }
+            this.$forceUpdate();
+
+        },
+
     }
 };
 </script>

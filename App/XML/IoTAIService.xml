@@ -33,6 +33,13 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.Controller.Face.HouseInfo(System.String)">
+            <summary>
+            人脸库信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTAIService.Controller.Face.AddHouse(IoTAIService.Models.MZ_AIHouse)">
             <summary>
             添加人脸库
@@ -52,6 +59,13 @@
             删除人脸库
             </summary>
             <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.Controller.Face.AddFace(IoTAIService.Models.MZ_AIMem)">
+            <summary>
+            添加人脸
+            </summary>
+            <param name="data"></param>
             <returns></returns>
         </member>
         <member name="M:IoTAIService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
@@ -201,6 +215,11 @@
             创建时间
             </summary>
         </member>
+        <member name="P:IoTAIService.Models.MZ_AIHouse.FaceCount">
+            <summary>
+            人脸数量
+            </summary>
+        </member>
         <member name="T:IoTAIService.Models.MZ_AIMem">
             <summary>
             人员建模信息表
@@ -234,6 +253,26 @@
         <member name="P:IoTAIService.Models.MZ_AIMem.CreatedOn">
             <summary>
             创建时间
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.MemInfo">
+            <summary>
+            人员信息
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.HouseInfo">
+            <summary>
+            建模库信息
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.Out_FaceCount.HouseId">
+            <summary>
+            所属模型库
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.Out_FaceCount.TotalFace">
+            <summary>
+            总人脸数
             </summary>
         </member>
     </members>

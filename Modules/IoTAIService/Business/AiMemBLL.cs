@@ -43,7 +43,21 @@ namespace IoTAIService.Business
                 expression = expression.And(x => x.Status == data.Status);
             }
             var tlist = await _aiHouseDAL.SelectList(expression, "CreatedOn desc");
+            var tfaceCountList = await _aimemDAL.GetFaceCount(user.OrgId);
+            foreach (var tlib in tlist)
+            {
+                tlib.FaceCount = tfaceCountList.Where(x => x.HouseId == tlib.Id).Count();
+            }
             return BusResponse<List<MZ_AIHouse>>.Success(tlist);
+        }
+        public virtual async Task<BusResponse<MZ_AIHouse>> Info(string id)
+        {
+            var info = await _aiHouseDAL.Select(id);
+            if (info == null)
+            {
+                return BusResponse<MZ_AIHouse>.Error(111, "数据源不存在");
+            }
+            return BusResponse<MZ_AIHouse>.Success(info);
         }
         public virtual async Task<BusResponse<int>> InsertHouse(MZ_AIHouse data, IUserInfo user)
         {
@@ -81,6 +95,7 @@ namespace IoTAIService.Business
             }
             try
             {
+                await _aimemDAL.Delete(x => x.OrgId == user.OrgId && ids.Contains(x.HouseId));
                 var num = await _aiHouseDAL.Delete(x => x.OrgId == user.OrgId && ids.Contains(x.Id));
                 return BusResponse<int>.Success(num);
             }
