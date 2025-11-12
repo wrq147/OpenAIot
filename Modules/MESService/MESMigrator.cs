@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MESService
 {
-    [Migration(20250627005)]
+    [Migration(20251112001)]
     public class MESMigrator : Migration
     {
         public override void Up()
@@ -427,6 +427,7 @@ namespace MESService
                 .WithColumn("PlannedEndOn").AsDateTime().WithColumnDescription("计划结束时间")
                 .WithColumn("StartOn").AsDateTime().Nullable().WithColumnDescription("实际开始时间")
                 .WithColumn("EndOn").AsDateTime().Nullable().WithColumnDescription("实际结束时间")
+                .WithColumn("CancelReason").AsString(500).WithColumnDescription("取消原因")
                 .WithColumn("CreatedOn").AsDateTime().WithColumnDescription("创建时间")
                 .WithColumn("UpdatedOn").AsDateTime().WithColumnDescription("更新时间");
 

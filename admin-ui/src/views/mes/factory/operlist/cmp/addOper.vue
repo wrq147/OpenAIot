@@ -156,26 +156,26 @@
                 <el-link :disabled="item.is_readonly" v-if="item.type === '超链接'" href="#" target="_blank">{{ item.describe_text }}</el-link>
                 <!-- <image-upload @input="customValChange" v-model="ruleForm[item.mapid]" :limit="1" v-if="item.type === '图片'"></image-upload> -->
                 <div class="avatar_con" v-if="item.type == '图片'">
-                  <image-upload @input="customValChange($event,item)" v-model="ruleForm[item.mapid]" :limit="1" :isShowLeft="true">
-                    <template #tip>
-                      <div class="label_tip">
-                        <div class="label_text">　　</div>
-                        <div class="tip_con">
-                          <span style="margin-left:6px">请上传</span>
-                        </div>
-                      </div>
-                    </template>
-                  </image-upload>
+                    <image-upload @input="customValChange($event,item)" v-model="ruleForm[item.mapid]" :limit="1" :isShowLeft="true">
+                        <template #tip>
+                            <div class="label_tip">
+                            <div class="label_text">　　</div>
+                            <div class="tip_con">
+                                <span style="margin-left:6px">请上传</span>
+                            </div>
+                            </div>
+                        </template>
+                    </image-upload>
                 </div>
                 <file-upload @input="customValChange($event,item)" v-model="ruleForm[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
-                  <template #tip>
-                    <div class="label_tip">
-                      <div class="label_text">　　</div>
-                      <div class="tip_con">
-                        <span style="margin-left:6px">请上传</span>
-                      </div>
-                    </div>
-                  </template>
+                    <template #tip>
+                        <div class="label_tip">
+                            <div class="label_text">　　</div>
+                            <div class="tip_con">
+                            <span style="margin-left:6px">请上传</span>
+                            </div>
+                        </div>
+                    </template>
                 </file-upload>
                 <el-select @focus="afterValSearch(ruleForm[item.mapid],item)" :clearable="true" @change="customValChange2($event,item)" style="width: 100%" v-model="ruleForm[item.mapid]" filterable remote reserve-keyword
                   :placeholder="item.prompt_text ? item.prompt_text : '请选择'" :remote-method="(query)=>associationMethod(query,item)" :loading="Supplierloading" v-if="item.type === '关联对象'">
@@ -459,6 +459,122 @@ export default {
                 return false;
             }
         },
+        returnCompareResult(field, compare, val, type) {//隐藏规则设置方法
+            let result = true;
+            switch (compare) {
+                case "=":
+                result = this.deviceAddFrom[field] == val;
+                break;
+                case "!=":
+                result = this.deviceAddFrom[field] != val;
+                break;
+                case "IN":
+                result = this.deviceAddFrom[field] && this.deviceAddFrom[field].indexOf(val) > -1;
+                break;
+                case "NOTIN":
+                result =!this.deviceAddFrom[field] ||(this.deviceAddFrom[field] && this.deviceAddFrom[field].indexOf(val) == -1);
+                break;
+                case "ISNULL":
+                result = this.deviceAddFrom[field] == "" || this.deviceAddFrom[field] == null;
+                break;
+                case "NOTNULL":
+                result = this.deviceAddFrom[field] != "" && this.deviceAddFrom[field] != null;
+                break;
+                case ">":
+                if (type && type == "时间") {
+                    result =val.timeValue &&dayjs(this.deviceAddFrom[field]).valueOf()>dayjs(val.timeValue).valueOf();
+                } else if (type && type == "数字") {
+                    result = this.deviceAddFrom[field] > val;
+                }
+                break;
+                case "<":
+                if (type && type == "时间") {
+                    result =val.timeValue &&dayjs(this.deviceAddFrom[field]).valueOf() <dayjs(val.timeValue).valueOf();
+                } else if (type && type == "数字") {
+                    result = this.deviceAddFrom[field] < val;
+                }
+                break;
+                case "==":
+                if (type && type == "时间") {
+                    result =val.timeValue &&dayjs(this.deviceAddFrom[field]).valueOf() ==dayjs(val.timeValue).valueOf();
+                } else if (type && type == "数字") {
+                    result = this.deviceAddFrom[field] == val;
+                }
+                break;
+                case "><":
+                if (type && type == "时间") {
+                    result =val.timeValue &&dayjs(this.deviceAddFrom[field]).valueOf() !=dayjs(val.timeValue).valueOf();
+                } else if (type && type == "数字") {
+                    result = this.deviceAddFrom[field] != val;
+                }
+                break;
+                case ">=":
+                if (type && type == "时间") {
+                    result =val.timeValue &&dayjs(this.deviceAddFrom[field]).valueOf() >=dayjs(val.timeValue).valueOf();
+                } else if (type && type == "数字") {
+                    result = this.deviceAddFrom[field] >= val;
+                }
+                break;
+                case "<=":
+                if (type && type == "时间") {
+                    result =val.timeValue &&dayjs(this.deviceAddFrom[field]).valueOf() <=dayjs(val.timeValue).valueOf();
+                } else if (type && type == "数字") {
+                    result = this.deviceAddFrom[field] <= val;
+                }
+                break;
+                case "INRANGE":
+                if (type && type == "数字") {
+                    
+                    if (val.min && val.max) {
+                    if (this.deviceAddFrom[field] >= val.min && this.deviceAddFrom[field] <= val.max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                    }
+                }
+                
+                break;
+                case "NOTINRANGE":
+                if (type && type == "数字") {
+                    if (val.min && val.max) {
+                    if (this.deviceAddFrom[field] < val.min && this.deviceAddFrom[field] > val.max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                    }
+                }
+                break;
+                case "SELECTRANGE":
+                if (type && type == "时间") {
+                    if (val[0] && val[1]) {
+                    let max = Math.max(...val);
+                    let min = Math.min(...val);
+                    if (this.deviceAddFrom[field] >= min && this.deviceAddFrom[field] <= max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                    }
+                }
+                break;
+                case "DYNAMICS":
+                if (type && type == "时间") {
+                    if (val[0] && val[1]) {
+                    let max = Math.max(...val);
+                    let min = Math.min(...val);
+                    if (this.deviceAddFrom[field] >= min && this.deviceAddFrom[field] <= max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                    }
+                }
+                break;
+            }
+            return result;
+            },
         customValChange() {
             let ruleForm = JSON.parse(JSON.stringify(this.ruleForm));
             this.ruleForm = JSON.parse(JSON.stringify(ruleForm));

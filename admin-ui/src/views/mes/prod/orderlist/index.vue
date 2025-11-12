@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:20px 20px 0 20px;height:100%" id="big_con">
+    <div style="padding:10px 10px 0 10px;height:100%" id="big_con">
       <div>
         <el-row :gutter="20">
           <!--用户数据-->
@@ -28,7 +28,7 @@
             <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
               <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
                 <el-table-column label="生产计划Id" align="center" prop="PlanId" :show-overflow-tooltip="true" />
-                <el-table-column label="产品名称" align="center" prop="PlanId" :show-overflow-tooltip="true" >
+                <el-table-column label="物料名称" align="center" prop="PlanId" :show-overflow-tooltip="true" >
                   <template slot-scope="scope">
                     <span>{{scope.row.ProdInfo?scope.row.ProdInfo.ProductName:''}}</span>
                   </template>

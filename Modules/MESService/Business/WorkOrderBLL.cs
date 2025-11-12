@@ -92,6 +92,7 @@ namespace MESService.Business
                 order.CreatedOn = order.UpdatedOn = DateTime.Now;
                 order.PlannedStartOn = planItem.PlannedStartOn;
                 order.PlannedEndOn = planItem.PlannedEndOn;
+                order.CancelReason = string.Empty;
                 await _workOrderDAL.Insert(order);
 
                 var tbomLineList = await _bomLineDAL.SelectList(x => x.ParentProductId == productId);
@@ -122,7 +123,6 @@ namespace MESService.Business
         public async Task OrderToTask()
         {
             //提前6个小时生成任务
-            
             var orderlist = await _workOrderDAL.SelectList(x => x.Status == 0 && DateTime.Now.AddHours(6) > x.PlannedStartOn);
             foreach (var order in orderlist)
             {
@@ -132,10 +132,19 @@ namespace MESService.Business
                 {
                     neworder.Id = order.Id;
                     neworder.Status = 3;
+                    neworder.CancelReason = $"工单的产品未关联任何工艺路线";
                     await _workOrderDAL.Update(neworder);
                     continue;
                 }
                 var routeOpers = await _routeOperDAL.SelectList(x => x.RouteId == product.Route);
+                if (routeOpers.Count == 0)
+                {
+                    neworder.Id = order.Id;
+                    neworder.Status = 3;
+                    neworder.CancelReason = $"工单的工序未关联任何工艺路线";
+                    await _workOrderDAL.Update(neworder);
+                    continue;
+                }
                 List<MZ_WorkTask> tasks = new List<MZ_WorkTask>();
                 foreach (var oper in routeOpers)
                 {
@@ -199,11 +208,8 @@ namespace MESService.Business
                     task.NumExt10 = oper.NumExt10;
                     tasks.Add(task);
                 }
-                if (tasks.Count > 0)
-                {
-                    await _workTaskDAL.Insert(tasks);
-                }
 
+                await _workTaskDAL.Insert(tasks);
                 neworder.Id = order.Id;
                 neworder.Status = 1;
                 await _workOrderDAL.Update(neworder);

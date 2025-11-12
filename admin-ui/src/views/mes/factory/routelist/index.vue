@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:20px 20px 0 20px;height:100%" id="big_con">
+    <div style="padding:10px 10px 0 10px;height:100%" id="big_con">
       <div>
         <el-row :gutter="20">
           <!--用户数据-->
@@ -16,7 +16,7 @@
                 </el-form-item>
               </el-form>
             </div>
-            <div class="elbiaoge_elform">
+            <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
               <el-row :gutter="10" class="mb8 button_row">
                 <div>
                   <el-col :span="1.5">
@@ -26,12 +26,12 @@
               </el-row>
   
               <el-table v-loading="loading" :data="routeList" class="data_table" style="width:100%">
-                <el-table-column label="工艺路线编号" align="center" prop="Id" :show-overflow-tooltip="true" />
+                <!-- <el-table-column label="工艺路线编号" align="center" prop="Id" :show-overflow-tooltip="true" /> -->
                 <el-table-column label="工艺路线名称" align="center" prop="RouteName" />
-                <el-table-column label="创建者" align="center" prop="CreateName" />
-                <el-table-column label="更新者" align="center" prop="UpdateName" />
-                <el-table-column label="创建时间" align="center" prop="Create_time" />
-                <el-table-column label="更新时间" align="center" prop="Update_time" />
+                <el-table-column label="创建者" align="center" prop="createName" />
+                <el-table-column label="更新者" align="center" prop="updateName" />
+                <el-table-column label="创建时间" align="center" prop="createTime" />
+                <el-table-column label="更新时间" align="center" prop="updateTime" />
                 <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
                   <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-edit" @click="handleAdd(scope.row)">编辑</el-button>
@@ -55,11 +55,13 @@
   import { orgField } from "@/api/factory/customFields";
   import { routeList, routeRemove } from "@/api/mes/processRoute";
   import addRoute from './cmp/addRoute.vue'
+  import { resizeTableCon } from "@/mixins/resizeTableCon";
   export default {
     name: "BatchList",
     components: {
       addRoute
     },
+    mixins: [resizeTableCon],
     data() {
       return {
         loading: false,

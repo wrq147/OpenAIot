@@ -71,6 +71,10 @@ namespace MESService.Model
         /// </summary>
         public DateTime? EndOn { get; set; }
         /// <summary>
+        /// 取消原因
+        /// </summary>
+        public string CancelReason { get; set; }
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime? CreatedOn { get; set; }

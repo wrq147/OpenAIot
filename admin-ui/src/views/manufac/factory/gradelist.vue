@@ -136,6 +136,7 @@
                             <el-option label="发起人" value="发起人" v-if="scope.row.eltype == 'UserPicker'"></el-option>
                             <el-option label="发起人所属部门" value="发起人所属部门"
                               v-if="scope.row.eltype == 'DeptPicker'"></el-option>
+                            <el-option label="工序名称" value="工序名称" v-if="scope.row.eltype == 'TextInput' || scope.row.eltype == 'TextareaInput'"></el-option>
                           </el-select>
                         </template>
                       </template>

@@ -61,6 +61,13 @@
             <param name="ids"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.Controller.Face.FacePage(IoTAIService.Models.In_FaceList)">
+            <summary>
+            人脸列表
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTAIService.Controller.Face.AddFace(IoTAIService.Models.MZ_AIMem)">
             <summary>
             添加人脸
@@ -153,6 +160,11 @@
         <member name="P:IoTAIService.Models.In_FaceHouseList.Status">
             <summary>
             状态（0禁用、1启用）
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_FaceList.Name">
+            <summary>
+            按姓名搜索
             </summary>
         </member>
         <member name="P:IoTAIService.Models.In_FaceRecog.ImageBase64">

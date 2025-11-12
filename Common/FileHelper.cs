@@ -1,19 +1,20 @@
 ﻿using Common.Attr;
 using Common.Share;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TemplateAction.Common;
 using TemplateAction.Core;
+
 
 namespace Common
 {
@@ -366,6 +367,51 @@ namespace Common
                     return Image.Load<Rgb24>(stream);
                 }
             }
+        }
+        private static byte[] ImageRgb24ToBytes(Image<Rgb24> image)
+        {
+            int byteCount = image.Width * image.Height * 3;
+            byte[] result = new byte[byteCount];
+
+            int currentIndex = 0;
+            var pixelMemoryGroup = image.GetPixelMemoryGroup();
+            for (int i = 0; i < pixelMemoryGroup.Count; i++)
+            {
+                var pixelMemory = pixelMemoryGroup[i];
+                // 复制当前内存块的字节到结果数组
+                var pixelBytes = MemoryMarshal.AsBytes(pixelMemory.Span);
+                MemoryMarshal.AsBytes(pixelMemory.Span).CopyTo(result.AsSpan(currentIndex));
+                currentIndex += pixelBytes.Length;
+            }
+            return result;
+        }
+        public async Task<string> UploadRgb24File(Image<Rgb24> file)
+        {
+            if (string.IsNullOrEmpty(_option.Value.minio_server))
+            {
+                IWebHostEnvironment env = _provider.GetService<IWebHostEnvironment>();
+                string fileExt = ".jpg";
+                string fileName = MyAccess.Core.StringTool.GetGUID() + fileExt;
+                DateTime now = DateTime.Now;
+                string saveurl = string.Format("/uploads/{0}/{1}/{2}", now.Year, now.ToString("MMdd"), fileName);
+                string filepath = TAUtility.RelativeToAbsolutePath(env.WebRootPath, saveurl);
+                string dirPath = Path.GetDirectoryName(filepath);
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                await file.SaveAsJpegAsync(filepath);
+                return saveurl;
+            }
+            else
+            {
+                var result = ImageRgb24ToBytes(file);
+                string ext = ".jpg";
+                var client = _provider.GetService<MinioHelper>();
+                string fileName = DateTime.Now.ToString("yyyyMMdd") + "/" + MyAccess.Core.StringTool.GetGUID() + ext;
+                return await client.UploadFile(result, fileName);
+            }
+
         }
     }
 

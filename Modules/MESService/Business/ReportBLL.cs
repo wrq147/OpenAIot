@@ -242,7 +242,11 @@ namespace MESService.Business
             {
                 return BusResponse<string>.Error(125, "状态错误");
             }
-
+            MZ_ProductOper operInfo = await _provider.GetService<OperDAL>().Select(old.OperId);
+            if (operInfo == null)
+            {
+                return BusResponse<string>.Error(126, "工序不存在");
+            }
             var mesConfig = await _provider.GetService<FactoryMesDAL>().Select(user.OrgId);
             if (mesConfig != null && mesConfig.PlanTemplateId > 0)
             {
@@ -255,6 +259,7 @@ namespace MESService.Business
                 {
                     flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson);
                 }
+
                 ProdReportFlowCreate flowcreate = new ProdReportFlowCreate();
                 flowcreate.templateId = mesConfig.ReportTemplateId.Value;
                 flowcreate.model = data.model;
@@ -284,7 +289,7 @@ namespace MESService.Business
                 {
                     if (!flowcreate.model.ContainsKey(fitem.id))
                     {
-                        flowcreate.model.Add(fitem.id, fitem.GetRealValue(old, sumbitUser, sumbitDept));
+                        flowcreate.model.Add(fitem.id, fitem.GetRealValue(old, operInfo, sumbitUser, sumbitDept));
                     }
                 }
                 var fcrsp = await BusUtility.Call("NewFlowTask", flowcreate);
@@ -375,12 +380,16 @@ namespace MESService.Business
             {
                 sumbitDept = await _provider.GetService<DeptDAL>().Select(sumbitUser.dept_id);
             }
-
+            MZ_ProductOper operInfo = await _provider.GetService<OperDAL>().Select(data.OperId);
+            if (operInfo == null)
+            {
+                return BusResponse<Dictionary<string, object>>.Error(112, "工序不存在");
+            }
             var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var fitem in flowitems)
             {
-                dict.Add(fitem.id, fitem.GetRealValue(data, sumbitUser, sumbitDept));
+                dict.Add(fitem.id, fitem.GetRealValue(data, operInfo, sumbitUser, sumbitDept));
             }
             return BusResponse<Dictionary<string, object>>.Success(dict);
         }

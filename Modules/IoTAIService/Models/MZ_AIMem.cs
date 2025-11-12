@@ -1,5 +1,7 @@
 ﻿using AuthService;
+using Common.Attr;
 using MyAccess.DB.Attr;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,7 @@ namespace IoTAIService.Models
         /// <summary>
         /// 人脸建模头像
         /// </summary>
+        [JsonConverter(typeof(ImageUrl), true)]
         public string FaceImg { get; set; }
         /// <summary>
         /// 创建时间

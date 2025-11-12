@@ -1707,6 +1707,11 @@
             实际结束时间
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.CancelReason">
+            <summary>
+            取消原因
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkOrder.CreatedOn">
             <summary>
             创建时间

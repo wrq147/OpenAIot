@@ -1,13 +1,16 @@
 ﻿using Common;
 using Common.IdGenerator;
 using Common.Share;
+using InfluxDB.Client.Api.Domain;
 using IoTAIService.AICode;
 using IoTAIService.DAL;
 using IoTAIService.Models;
+using IoTRulesService.Model;
 using IoTService.Models;
 using JiebaNet.Segmenter.FinalSeg;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using MyAccess.DB.Builder.WhereToSql;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,7 +107,11 @@ namespace IoTAIService.Business
                 return BusResponse<int>.Error(111, ex.Message);
             }
         }
-
+        public virtual async Task<BusResponse<PageObject<MZ_AIMem>>> FacePage(In_FaceList data, IUserInfo user)
+        {
+            var rs = await _aimemDAL.FacePage(data, user);
+            return BusResponse<PageObject<MZ_AIMem>>.Success(rs);
+        }
         public virtual async Task<BusResponse<int>> Insert(MZ_AIMem data, IUserInfo user)
         {
             if (user.OrgId <= 0)
@@ -120,7 +127,8 @@ namespace IoTAIService.Business
             #region 建模
             try
             {
-                var originalImage = await _provider.GetService<FileHelper>().CreateRgb24FromUrl(data.FaceImg);
+                var fileHelper = _provider.GetService<FileHelper>();
+                var originalImage = await fileHelper.CreateRgb24FromUrl(data.FaceImg);
                 var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage);
                 if (tbbx.Count > 0)
                 {
@@ -128,11 +136,11 @@ namespace IoTAIService.Business
                     var milBLL = _provider.GetService<MilvusBLL>();
                     var tmpimg = originalImage.CropByBox(tbbx[0].X1, tbbx[0].X2, tbbx[0].Y1, tbbx[0].Y2);
                     Tensor<float> recogdata = faceRecogRunner.Predict(tmpimg);
-
                     var res = await milBLL.InsertToMemberCollection(data.MemId.Value, recogdata.ToArray());
                     if (res.IsSuccess())
                     {
                         data.FStatus = 1;
+                        data.FaceImg = await fileHelper.UploadRgb24File(tmpimg);
                     }
                 }
             }

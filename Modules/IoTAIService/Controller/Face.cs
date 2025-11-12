@@ -76,7 +76,16 @@ namespace IoTAIService.Controller
         {
             return (await _aiMemBLL.DeleteHouse(ids, GetUser())).ToAjaxResult();
         }
-
+        /// <summary>
+        /// 人脸列表
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<PageObject<MZ_AIMem>>> FacePage(In_FaceList data)
+        {
+            return (await _aiMemBLL.FacePage(data, GetUser())).ToAjaxResult();
+        }
         /// <summary>
         /// 添加人脸
         /// </summary>

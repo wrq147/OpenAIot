@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:20px 20px 0 20px" id="big_con">
+  <div style="padding:10px 10px 0 10px" id="big_con">
     
     <div style="background:#ffffff;border-radius:10px">
       <secondaryGrouping ref="secondaryGrouping" @handleGroupClick="handleGroupClick" table="报工" :filterFiledList="supplierFiledList" @setFilterProp="setFilterProp"></secondaryGrouping>
@@ -18,8 +18,13 @@
               </div>
               <div>
                 <el-col :span="1.5">
+                  <el-input @input="handleQuery" v-model="queryParams.BatchNo" placeholder="请输入报工批次编号" clearable>
+                    <i slot="suffix" class="el-input__icon el-icon-search"></i>
+                  </el-input>
+                </el-col>
+                <el-col :span="1.5">
                   <el-date-picker class="set_radius" v-model="dateRange" style="width: 250px" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
-                  <!-- <el-input @input="getList" v-model="queryParams.key" placeholder="请输入报工关键字" clearable>
+                  <!-- <el-input @input="getList" v-model="queryParams.BatchNo" placeholder="请输入报工批次编号" clearable>
                     <i slot="suffix" class="el-input__icon el-icon-search"></i>
                   </el-input> -->
                 </el-col>
@@ -47,10 +52,11 @@
                   </template>
                 </el-table-column>
               </template>
-              <el-table-column label="操作" align="center" width="248" class-name="small-padding fixed-width">
+              <el-table-column label="操作" align="center" width="168" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
-                  <el-button type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-                  <el-button type="text" icon="el-icon-edit" @click="handleDelete(scope.row)">删除</el-button>
+                  <el-button class="table_btn" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-if="scope.row.Status==0">修改</el-button>
+                  <el-button class="table_btn" type="text" icon="el-icon-tickets" @click="handleUpdate(scope.row,true)" v-if="scope.row.Status!=0">详情</el-button>
+                  <el-button style="color:#F56C6C" class="table_btn" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -71,7 +77,7 @@ import filterPopover from '@/views/manufac/factory/component/filterPopover.vue'
 import secondaryGrouping from '@/views/manufac/factory/component/secondaryGrouping.vue'
 import reportAdd from '@/views/mes/prod/component/reportAdd'
 import slectTaskList from '@/views/mes/prod/component/slectTaskList'
-import {ReportList} from '@/api/mes/report'
+import {ReportList,reportRemove} from '@/api/mes/report'
 import {orgFormFields} from '@/api/factory/customFields'
 export default {
   name: 'AdminUiReportlist',
@@ -107,6 +113,7 @@ export default {
           { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
           { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
+          { "field": "OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
           { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },
           { "field": "defectStr", "fieldName": "不良品项", "type": "数字", "isShow": true, "isFixed": false },
@@ -209,6 +216,7 @@ export default {
           { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
           { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
+          { "field": "OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
           { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },
           { "field": "defectStr", "fieldName": "不良品项", "type": "数字", "isShow": true, "isFixed": false },
@@ -261,17 +269,22 @@ export default {
 
     },
     handleQuery(){
-
+      this.queryParams.pageNum=1
+      if(this.queryParams.BatchNo){}else{
+        delete this.queryParams.BatchNo
+      }
+      this.getList()
     },
-    handleUpdate(row){
+    handleUpdate(row,isOnlyRead){
       //修改
-      this.$refs.reportAdd.openDialog(row.Id)//打开添加报工的弹窗
+      console.log("修改时",JSON.parse(JSON.stringify(row)));
+      this.$refs.reportAdd.openDialog(row,isOnlyRead)//打开添加报工的弹窗
     },
     handleDelete(row){
       //删除
       let that=this
-      this.$modal.confirm('是否确认删除报工"' + row.SupplierName + '"？').then(function () {
-        return factorySupplierRemove({ id:row.Id });
+      this.$modal.confirm('是否确认删除报工"' + row.Number + '"？').then(function () {
+        return reportRemove(row.Id);
       }).then(() => {
         that.getList();
         that.$modal.msgSuccess("移除成功");
@@ -284,5 +297,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+::v-deep .table_btn.el-button{
+  margin-right: 0 !important;
+  padding-top: 0;
+  padding-bottom: 0;
+}
 </style>

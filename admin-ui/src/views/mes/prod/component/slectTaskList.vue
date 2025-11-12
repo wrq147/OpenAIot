@@ -18,15 +18,17 @@
           </el-form-item>
           <el-form-item class="submit_button_con">
             <el-button icon="el-icon-refresh" @click="resetTask">重置</el-button>
-            <el-button type="primary" icon="el-icon-search" @click="taskQuery.pageNum = 1;loadTaskList()">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="queryParams.pageNum = 1;loadTaskList()">搜索</el-button>
           </el-form-item>
         </el-form>
         <el-table ref="devTable" v-loading="loading" :data="taskList" class="data_table" tooltip-effect="dark" style="width:100%" 
-        highlight-current-row  @current-change="onPlanChange" row-key="Id">
-          <el-table-column label="唯一编号" align="center" prop="Number" :show-overflow-tooltip="true" />
+        highlight-current-row  @current-change="onTaskChange" row-key="Id">
+          <el-table-column label="计划编号" align="center" prop="Number" :show-overflow-tooltip="true"/>
+          <el-table-column label="计划名称" align="center" prop="PlanName" :show-overflow-tooltip="true"/>
+          <el-table-column label="工序名称" align="center" prop="OperName" :show-overflow-tooltip="true"/>
           <el-table-column label="良品数" align="center" prop="GoodNum" />
           <el-table-column label="不良品数" align="center" prop="DefectNum" />
-          <el-table-column label="不良品项" align="center" prop="DefectStr" />
+          <el-table-column label="不良品项" align="center" prop="DefectStr" :show-overflow-tooltip="true"/>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.Status == 0">待提交</span>
@@ -39,9 +41,9 @@
             </template>
           </el-table-column>
           <el-table-column label="报工时长(分钟)" align="center" prop="WorkTime" />
-          <el-table-column label="超时原因" align="center" prop="OverReason" />
-          <el-table-column label="开始时间" align="center" prop="StartWork" />
-          <el-table-column label="结束时间" align="center" prop="EndWork" />
+          <el-table-column label="超时原因" align="center" prop="OverReason" :show-overflow-tooltip="true"/>
+          <el-table-column label="开始时间" align="center" prop="StartWork" :show-overflow-tooltip="true"/>
+          <el-table-column label="结束时间" align="center" prop="EndWork" :show-overflow-tooltip="true"/>
           
           <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
             <template slot-scope="scope">
@@ -98,6 +100,7 @@ export default {
   },
   methods: {
     loadTaskList() {
+      console.log('点击搜索');
         this.loading = true;
         if(this.time.length > 0) {
           this.queryParams.beginTime = this.time[0];

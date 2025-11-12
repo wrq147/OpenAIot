@@ -45,6 +45,15 @@ export function removeFaceHouse(query) {
     })
 }
 
+//人脸列表
+export function getFacePage(data){
+    return request({
+        url: '/IoTAIService/Face/FacePage',
+        method: 'get',
+        params: data
+    })
+}
+
 //添加人脸
 export function addFace(data) {
     return request({

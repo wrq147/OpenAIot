@@ -8,7 +8,14 @@ export function bomList(params) {
         params: params
     })
 }
-
+// 物料清单详情
+export function bomInfo(params) {
+    return request({
+        url: '/MESService/Bom/Info',
+        method: 'get',
+        params: params
+    })
+}
 // 添加物料清单
 export function bomAdd(data) {
     return request({

@@ -110,14 +110,14 @@
             <!-- 页面标题和操作栏 -->
             <div class="page-header">
                 <div class="title-and-desc">
-                    <h2 class="page-title">{{ currentLibrary.name }} - 人脸建模管理</h2>
-                    <p class="page-desc">共 {{ currentFaces.length }} 个人脸建模</p>
+                    <h2 class="page-title">人脸建模管理 - {{ currentLibrary.HouseName }}</h2>
+                    <p class="page-desc">共 {{ currentLibrary.FaceCount }} 个人脸建模</p>
                 </div>
                 <div class="page-actions">
                     <el-button type="default" icon="el-icon-back" @click="backToLibraryList">
                         返回列表
                     </el-button>
-                    <el-button type="primary" icon="el-icon-upload" @click="showUploadDialog = true">
+                    <el-button type="primary" icon="el-icon-upload" @click="createFace">
                         创建人脸建模
                     </el-button>
                 </div>
@@ -151,10 +151,10 @@
 
             <!-- 人脸列表 -->
             <div class="main-content">
-                <div class="face-grid">
-                    <el-card v-for="face in filteredFaces" :key="face.id" class="face-card" shadow="hover">
+                <div class="face-grid" v-loading="loading">
+                    <el-card v-for="face in filteredFaces" :key="face.Id" class="face-card" shadow="hover">
                         <div class="face-image-container">
-                            <img :src="face.imageUrl" alt="人脸建模" class="face-image">
+                            <img :src="face.FaceImg" alt="人脸建模" class="face-image">
                             <el-checkbox v-model="selectedFaceIds" :label="face.Id" class="face-checkbox"></el-checkbox>
                             <div class="face-info-overlay">
                                 <p class="face-name">{{ face.MemInfo.RealName }}</p>
@@ -164,16 +164,13 @@
 
                         <div class="face-card-footer">
                             <span class="upload-time">{{ face.CreatedOn }}</span>
-                            <el-dropdown trigger="click">
+                            <el-dropdown trigger="click" @command="handleFaceCommand($event, face)">
                                 <i class="el-icon-more text-gray-400"></i>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item @click="showFaceDetail(face)">
+                                    <el-dropdown-item command="detail">
                                         <i class="el-icon-view"></i> 查看详情
                                     </el-dropdown-item>
-                                    <el-dropdown-item @click="editFace(face)">
-                                        <i class="el-icon-edit"></i> 编辑信息
-                                    </el-dropdown-item>
-                                    <el-dropdown-item divided @click="deleteFace(face.id)">
+                                    <el-dropdown-item divided command="del">
                                         <i class="el-icon-delete text-danger"></i> 删除
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
@@ -185,7 +182,7 @@
                 <!-- 空状态 -->
                 <div v-if="filteredFaces.length === 0" class="empty-state">
                     <el-empty description="暂无人脸建模数据">
-                        <el-button type="primary" size="small" @click="showUploadDialog = true">
+                        <el-button type="primary" size="small" @click="createFace">
                             <i class="el-icon-upload"></i> 创建人脸建模
                         </el-button>
                     </el-empty>
@@ -193,9 +190,8 @@
 
                 <!-- 分页 -->
                 <div v-if="filteredFaces.length > 0" class="pagination-container">
-                    <el-pagination @size-change="handleFaceSizeChange" @current-change="handleFaceCurrentChange"
-                        :current-page="currentFacePage" :page-sizes="[12, 24, 36, 48]" :page-size="facePageSize"
-                        layout="total, sizes, prev, pager, next, jumper" :total="filteredFaces.length"></el-pagination>
+                    <pagination v-show="total > 0" :total="total" :page.sync="currentFacePage"
+                        :limit.sync="facePageSize" @pagination="loadFaces"></pagination>
                 </div>
             </div>
         </div>
@@ -235,9 +231,12 @@
                 <el-descriptions column="1" border class="face-detail-info">
                     <el-descriptions-item label="人脸ID">{{ currentFaceDetail.Id }}</el-descriptions-item>
                     <el-descriptions-item label="姓名">{{ currentFaceDetail.MemInfo.RealName }}</el-descriptions-item>
-                    <el-descriptions-item label="建模状态">{{ getFStatus(currentFaceDetail.FStatus)
-                        }}</el-descriptions-item>
-                    <el-descriptions-item label="备注">{{ currentFaceDetail.remark || '无' }}</el-descriptions-item>
+                    <el-descriptions-item label="建模状态">
+                        <el-tag type="info" v-if="currentFaceDetail.FStatus==0">未建模</el-tag>
+                        <el-tag type="success" v-if="currentFaceDetail.FStatus==1">建模成功</el-tag>
+                        <el-tag type="danger" v-if="currentFaceDetail.FStatus==2">建模失败</el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="创建时间">{{ currentFaceDetail.CreatedOn }}</el-descriptions-item>
                 </el-descriptions>
             </div>
             <div slot="footer">
@@ -246,7 +245,7 @@
         </el-dialog>
 
         <!-- 创建人脸信息对话框 -->
-        <el-dialog title="创建人脸信息" :visible.sync="showCreateFaceDialog" width="400px" :close-on-click-modal="false"
+        <el-dialog title="创建人脸信息" :visible.sync="showCreateFaceDialog" width="450px" :close-on-click-modal="false"
             border>
             <el-form :model="currentFaceForm" ref="faceForm" label-width="80px">
                 <el-form-item label="员工" prop="MemId">
@@ -274,7 +273,7 @@
 </template>
 <script>
 import {
-    getFaceHouseList, addFaceHouse, removeFaceHouse, updateFaceHouse, getHouseInfo, addFace
+    getFaceHouseList, addFaceHouse, removeFaceHouse, updateFaceHouse, getHouseInfo, getFacePage, addFace
 } from "@/api/ai/face";
 import OrgPicker from "@/views/flowable/common/OrgPicker";
 
@@ -284,7 +283,6 @@ export default {
         return {
             currentView: 'libraryList',
             currentLibrary: null,
-            currentFaces: [],
             faces: {},
             // 筛选和分页
             librarySearchQuery: '',
@@ -295,7 +293,9 @@ export default {
             faceSearchQuery: '',
             filteredFaces: [],
             currentFacePage: 1,
-            facePageSize: 12,
+            facePageSize: 30,
+            total: 0,
+            loading: false,
             selectedFaceIds: [],
 
             // 对话框状态
@@ -338,17 +338,6 @@ export default {
         await this.searchLibraries();
     },
     methods: {
-        getFStatus(state) {
-            switch (state) {
-                case 0:
-                    return "未建模";
-                case 1:
-                    return "建模成功";
-                case 2:
-                    return "建模失败";
-            }
-            return "未知"
-        },
         // 建模库搜索和筛选
         async searchLibraries() {
             let res = await getFaceHouseList({ "Key": this.librarySearchQuery, "Status": this.libraryStatusFilter });
@@ -369,6 +358,14 @@ export default {
             }
             else if (command == "del") {
                 this.deleteLibrary(libitem.Id);
+            }
+        },
+        handleFaceCommand(command, faceitem) {
+            if (command == "detail") {
+                this.showFaceDetail(faceitem);
+            }
+            else if (command == "del") {
+                this.deleteFace(faceitem.Id);
             }
         },
         // 显示编辑建模库对话框
@@ -415,6 +412,8 @@ export default {
         enterFaceManagement(library) {
             this.currentLibrary = { ...library };
             this.currentView = 'faceManagement';
+            this.currentFacePage = 1;
+            this.faceSearchQuery = '';
             this.loadFaces();
         },
 
@@ -425,40 +424,25 @@ export default {
         },
 
         // 加载人脸数据
-        loadFaces() {
+        async loadFaces() {
             if (!this.currentLibrary) return;
-            this.currentFacePage = 1;
-            this.faceSearchQuery = '';
-            this.filteredFaces = this.faces[this.currentLibrary.id] || [];
+            let res = await getFacePage({ "Name": this.faceSearchQuery, "pageNum": this.currentFacePage, "pageSize": this.facePageSize })
+            this.total = res.data.Total;
+            this.loading = false;
+            this.filteredFaces = res.data.List || [];
         },
 
         // 人脸搜索
         searchFaces() {
             this.currentFacePage = 1;
-            if (!this.currentLibrary) return;
-            const allFaces = this.faces[this.currentLibrary.id] || [];
-            this.filteredFaces = allFaces.filter(face => {
-                return face.name.toLowerCase().includes(this.faceSearchQuery.toLowerCase()) ||
-                    face.id.toLowerCase().includes(this.faceSearchQuery.toLowerCase());
-            });
+            this.loadFaces();
         },
 
         resetFaceFilters() {
             this.faceSearchQuery = '';
             this.currentFacePage = 1;
-            this.filteredFaces = this.faces[this.currentLibrary.id] || [];
+            this.loadFaces();
         },
-
-        // 人脸分页处理
-        handleFaceSizeChange(size) {
-            this.facePageSize = size;
-            this.currentFacePage = 1;
-        },
-
-        handleFaceCurrentChange(page) {
-            this.currentFacePage = page;
-        },
-
         // 显示人脸详情
         showFaceDetail(face) {
             this.currentFaceDetail = { ...face };
@@ -466,35 +450,34 @@ export default {
         },
 
         // 创建人脸信息
-        createFace(face) {
+        createFace() {
+
             this.currentFaceForm = {
-                Id: face.Id,
-                HouseId: face.HouseId,
-                MemId: face.MemId,
+                Id: null,
+                HouseId: this.currentLibrary.HouseId,
+                MemId: null,
                 MemInfo: { "RealName": "" },
-                FaceImg: face.FaceImg,
-                HouseInfo: { "HouseName": "" },
+                FaceImg: "",
+                HouseInfo: this.currentLibrary,
                 userInfo: null
             };
             this.showCreateFaceDialog = true;
         },
 
         // 保存人脸信息
-        saveFaceInfo() {
-            this.$refs.faceForm.validate(valid => {
-                if (valid && this.currentLibrary) {
-                    const faceList = this.faces[this.currentLibrary.id] || [];
-                    const index = faceList.findIndex(face => face.id === this.currentFaceForm.id);
+        async saveFaceInfo() {
+            if (this.currentFaceForm.MemId == null) {
+                this.$message.error("请选择员工");
+                return;
+            }
+            if (this.currentFaceForm.FaceImg == "") {
+                this.$message.error("请上传建模头像");
+                return;
+            }
+            let res = await addFace(this.currentFaceForm);
 
-                    if (index !== -1) {
-                        faceList[index].name = this.currentFaceForm.name;
-                        faceList[index].remark = this.currentFaceForm.remark;
-                        this.filteredFaces = [...faceList];
-                        this.showCreateFaceDialog = false;
-                        this.$message.success('人脸信息更新成功');
-                    }
-                }
-            });
+            this.showCreateFaceDialog = false;
+            this.$message.success('人脸信息更新成功');
         },
 
         // 删除单个人脸
@@ -568,7 +551,7 @@ export default {
             //获取员工选择下拉列表的焦点
             this.$refs.selectUser.blur();
             if (this.currentFaceForm.userInfo == null) {
-                if (this.currentFaceForm.MemInfo) {
+                if (this.currentFaceForm.MemId != null) {
                     let arr = [{ id: this.currentFaceForm.MemId, name: this.currentFaceForm.MemInfo.RealName, avatar: this.currentFaceForm.MemInfo.Avatar, type: "user" }]
                     this.currentFaceForm.userInfo = JSON.parse(JSON.stringify(arr));
                 }
@@ -580,10 +563,13 @@ export default {
         },
         selectUsersed(values) {
             this.currentFaceForm.userInfo = values;
+
             if (values.length > 0) {
+                this.currentFaceForm.MemInfo = { "Id": values[0].id, "RealName": values[0].name, "Avatar": values[0].avatar }
                 this.currentFaceForm.MemId = values[0].id;
             }
             else {
+                this.currentFaceForm.MemInfo = { "RealName": "" };
                 this.currentFaceForm.MemId = undefined;
             }
             this.$forceUpdate();

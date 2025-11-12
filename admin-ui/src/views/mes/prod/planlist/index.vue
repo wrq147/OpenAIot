@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:20px 20px 0 20px;height:100%" id="big_con">
+    <div style="padding:10px 10px 0 10px;height:100%" id="big_con">
       <div>
         <el-row :gutter="20">
           <!--用户数据-->

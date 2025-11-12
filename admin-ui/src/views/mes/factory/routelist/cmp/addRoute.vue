@@ -60,6 +60,18 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column align="center">
+          <template #header>
+            <span>
+              <span style="color: #f56c6c;">*</span>百分比(%)
+            </span>
+          </template>
+          <template slot-scope="scope">
+            <div>
+              <el-input type="number" v-model="scope.row.Proportion" placeholder="请输入百分比(%)" />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column v-for="(item, index) in filedTableList" :key="index" align="center">
           <template #header>
             <span>
@@ -88,25 +100,25 @@
                 <el-link :disabled="item.is_readonly" v-if="item.type == '超链接'" href="#" target="_blank">{{ item.describe_text }}</el-link>
                 <!-- <image-upload v-model="scope.row[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
                 <div class="avatar_con" v-if="item.type == '图片'">
-                  <image-upload @input="customValChange($event,item)" v-model="scope.row[item.mapid]" :limit="1" :isShowLeft="true">
-                    <template #tip>
-                      <div class="label_tip">
-                        <div class="label_text">　　</div>
-                        <div class="tip_con">
-                          <span style="margin-left:6px">请上传</span>
-                        </div>
-                      </div>
-                    </template>
+                  <image-upload v-model="scope.row[item.mapid]" :limit="1" :isShowLeft="true">
+                      <template #tip>
+                          <div class="label_tip">
+                          <div class="label_text">　　</div>
+                          <div class="tip_con">
+                              <span style="margin-left:6px">请上传</span>
+                          </div>
+                          </div>
+                      </template>
                   </image-upload>
                 </div>
-                <file-upload @input="customValChange($event,item)" v-model="scope.row[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
+                <file-upload v-model="scope.row[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
                   <template #tip>
-                    <div class="label_tip">
-                      <div class="label_text">　　</div>
-                      <div class="tip_con">
-                        <span style="margin-left:6px">请上传</span>
+                      <div class="label_tip">
+                          <div class="label_text">　　</div>
+                          <div class="tip_con">
+                          <span style="margin-left:6px">请上传</span>
+                          </div>
                       </div>
-                    </div>
                   </template>
                 </file-upload>
                 <el-select @focus="afterValSearch(scope.row[item.mapid],item)" :clearable="true" style="width: 100%" v-model="scope.row[item.mapid]" filterable remote reserve-keyword
@@ -246,6 +258,7 @@
           PropOf: "",
           WorkTime: '',
           Sequence: '',
+          Proportion:null,
           // 添加所有mapid作为属性，初始值为空字符串
           ...this.filedTableList.reduce((acc, item) => {
               acc[item.mapid] = ''; // 初始化为空值
@@ -269,7 +282,8 @@
         const errors = {
           OperId: !row || !row.OperId,
           PropOf: !row || (!row.PropOf && row.PropOf !== 0),
-          WorkTime: !row || (!row.WorkTime && row.WorkTime !== 0)
+          WorkTime: !row || (!row.WorkTime && row.WorkTime !== 0),
+          Proportion: !row || (!row.WorkTime && row.WorkTime !== 0)
         };
         
         // 再添加动态字段的验证（根据filedTableList）
@@ -363,52 +377,52 @@
     align-items: center;
   }
   .avatar_con {
-    width: 100%;
-    text-align: center;
-    display: flex;
-    align-items: flex-start;
-    .label_tip{
-      height: 40px;
-      text-align: left;
-      .label_text{
-        height: 8px;
-      }
-    }
-    .tip_con{
-      width: 182px;
-      height: 30px;
-      border: 1px solid rgba(223, 226, 234, 1);
-      color: rgba(120, 130, 157, 1);
-      line-height: 30px;
-      margin-right: 10px;
-      text-align: center;
-      border-radius: 4px;
-      .zhongtaiiconfont{
-        font-size: 10px;
-      }
-    }
-    .el-upload--picture-card {
-      background-color: #202e57;
-      border: none;
-    }
-    ::v-deep .el-upload--picture-card i{
-      font-size: 16px;
-    }
-    ::v-deep .el-upload.el-upload--picture-card{
-      width: 70px;
-      height: 40px;
-      line-height: 40px;
-    }
-    ::v-deep .component-upload-image{
-      height: 40px;
-      // margin-bottom: 20px;
-      .el-upload__tip{
-        margin-top: 0;
-      }
-    }
-    ::v-deep .el-upload-list--picture-card .el-upload-list__item{
-      width: 70px;
-      height: 40px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  .label_tip{
+    height: 40px;
+    text-align: left;
+    .label_text{
+      height: 8px;
     }
   }
+  .tip_con{
+    width: 182px;
+    height: 30px;
+    border: 1px solid rgba(223, 226, 234, 1);
+    color: rgba(120, 130, 157, 1);
+    line-height: 30px;
+    margin-right: 10px;
+    text-align: center;
+    border-radius: 4px;
+    .zhongtaiiconfont{
+      font-size: 10px;
+    }
+  }
+  .el-upload--picture-card {
+    background-color: #202e57;
+    border: none;
+  }
+  ::v-deep .el-upload--picture-card i{
+    font-size: 16px;
+  }
+  ::v-deep .el-upload.el-upload--picture-card{
+    width: 70px;
+    height: 40px;
+    line-height: 40px;
+  }
+  ::v-deep .component-upload-image{
+    height: 40px;
+    // margin-bottom: 20px;
+    .el-upload__tip{
+      margin-top: 0;
+    }
+  }
+  ::v-deep .el-upload-list--picture-card .el-upload-list__item{
+    width: 70px;
+    height: 40px;
+  }
+}
   </style>

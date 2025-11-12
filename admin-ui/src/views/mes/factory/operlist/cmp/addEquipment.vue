@@ -24,15 +24,15 @@
         >
           <el-table-column type="selection" width="55" />
           <el-table-column prop="Id" label="设备编码" align="center" width="150" />
-          <el-table-column prop="Name" label="设备名称" />
-          <el-table-column label="联网状态">
+          <el-table-column prop="Name" label="出厂编号" />
+          <el-table-column label="设备状态">
             <template slot-scope="scope">
               <span v-if="scope.row.Online === 1">在线</span>
               <span v-else-if="scope.row.Online === 0">离线</span>
               <span v-else>未初始化</span>
             </template>
           </el-table-column>
-          <el-table-column prop="ProductName" label="产品名称" />
+          <el-table-column prop="ProductName" label="物料名称" />
         </el-table>
         <pagination
           v-show="total > 0"

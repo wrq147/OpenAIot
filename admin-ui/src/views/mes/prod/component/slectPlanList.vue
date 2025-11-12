@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-if="planOpen" title="请选择所属产品" :visible.sync="planOpen" :close-on-click-modal="false" append-to-body width="980px" top="2vh" @close="cancel">
+    <el-dialog v-if="planOpen" title="请选择所属物料" :visible.sync="planOpen" :close-on-click-modal="false" append-to-body width="980px" top="2vh" @close="cancel">
         <el-form :model="planQuery" ref="planForm" :inline="true" style="display: flex; justify-content: space-between">
           <div>
             <el-form-item label="创建日期">
@@ -23,7 +23,7 @@
           row-key="Id"
         >
           <el-table-column label="唯一编号" align="center" prop="Number" :show-overflow-tooltip="true" />
-          <el-table-column label="计划名称" align="center" prop="PlanName" />
+          <el-table-column label="计划名称" align="center" prop="PlanName" :show-overflow-tooltip="true"/>
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.Status == 0">待提交</span>
@@ -42,7 +42,7 @@
               <span v-if="scope.row.Priority == 3">正常排产</span>
             </template>
           </el-table-column>
-          <el-table-column label="超期时间" align="center" prop="OverTime" />
+          <el-table-column label="超期时间" align="center" prop="OverTime" :show-overflow-tooltip="true"/>
         </el-table>
         <pagination
           v-show="total > 0"

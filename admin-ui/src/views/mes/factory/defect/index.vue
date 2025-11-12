@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:20px 20px 0 20px;height:100%" id="big_con">
+    <div style="padding:10px 10px 0 10px;height:100%" id="big_con">
       <div>
         <el-row :gutter="20">
           <!--用户数据-->
@@ -16,7 +16,7 @@
                 </el-form-item>
               </el-form>
             </div>
-            <div class="elbiaoge_elform">
+            <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
               <el-row :gutter="10" class="mb8 button_row">
                 <div>
                   <el-col :span="1.5">
@@ -51,8 +51,10 @@
 <script>
   import { defectList, defectRemove } from "@/api/mes/defect";
   import addDefect from './cmp/addDefect.vue'
+  import { resizeTableCon } from "@/mixins/resizeTableCon";
   export default {
     name: "BatchList",
+    mixins: [resizeTableCon],
     components: {
       addDefect
     },

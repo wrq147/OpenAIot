@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="dialogVisible" width="800px" :show-close="false" class="report_add_dialog">
-      <div slot="title" class="dialog_slot_title" :class="{'nodata':filedTableList&&filedTableList.length==0}">
+      <div slot="title" class="dialog_slot_title">
         <div class="title_text">添加报工</div>
         <el-tabs v-model="dialogName" tab-position="top" :stretch="true" v-if="filedTableList&&filedTableList.length>0">
           <el-tab-pane name="null1" :disabled="true"><span slot="label"></span></el-tab-pane>
@@ -23,31 +23,36 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="批次编号" prop="BatchNo">
-              <el-input v-model="form.BatchNo" placeholder="请输入批次编号"></el-input>
+              <el-input v-model="form.BatchNo" placeholder="请输入批次编号" :disabled="isOnlyRead"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="生产任务" prop="WorkTaskId">
               <div style="display: flex; align-items: center">
-                <el-input class="houseipt" v-model="form.WorkTaskNumber" readonly placeholder="请选择生产任务" @focus="onOpenWorkTask">
-                  <i slot="suffix" @click="onAgentClear" v-if="form.WorkTaskId != null" class="el-icon-circle-close" style="font-size: 22px;cursor: pointer;vertical-align: middle;"></i>
+                <el-input :disabled="isOnlyRead" class="houseipt" v-model="form.WorkTaskNumber" readonly placeholder="请选择生产任务" @focus="onOpenWorkTask">
+                  <i slot="suffix" @click="onTaskClear" v-if="form.WorkTaskId != null" class="el-icon-circle-close" style="font-size: 22px;cursor: pointer;vertical-align: middle;"></i>
                 </el-input>
               </div>
             </el-form-item>
           </el-col>
+          <el-col :span="12" v-if="form.WorkTaskId&&form.OperId">
+            <el-form-item label="工序" prop="OperName" v-if="form.OperName">
+              <el-input v-model="form.OperName" placeholder="请选择工序" :disabled="true"></el-input>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="良品数" prop="GoodNum">
-              <el-input-number v-model="form.GoodNum" :min="0"></el-input-number>
+              <el-input-number :disabled="isOnlyRead" v-model="form.GoodNum" :min="0"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="不良品数" prop="DefectNum">
-              <el-input-number v-model="form.DefectNum" :min="0"></el-input-number>
+              <el-input-number :disabled="isOnlyRead" v-model="form.DefectNum" :min="0"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.DefectNum>0">
             <el-form-item label="不良品项" prop="DefectStr">
-              <el-select @focus="defectSearch" clearable style="width: 100%" v-model="form.DefectStr" filterable remote reserve-keyword
+              <el-select :disabled="isOnlyRead" @focus="defectSearch" clearable style="width: 100%" v-model="form.DefectStr" filterable remote reserve-keyword
                 placeholder="请输入不良品项" :remote-method="defectRemoteMethod" :loading="defectLoading">
                 <el-option v-for="item in defectOptions" :key="item.Id" :label="item.DefectName" :value="item.Id+','+item.DefectName">{{item.DefectName}}</el-option>
               </el-select>
@@ -55,12 +60,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="开始时间" prop="StartWork">
-              <el-date-picker @change="workTimeChange" v-model="form.StartWork" type="datetime" placeholder="开始时间" style="width: 100%"></el-date-picker>
+              <el-date-picker :disabled="isOnlyRead" @change="workTimeChange" v-model="form.StartWork" type="datetime" placeholder="开始时间" style="width: 100%"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="报工时长" prop="WorkTime">
-              <el-input-number @change="workTimeChange" v-model="form.WorkTime" :min="0"></el-input-number><span>分钟</span>
+              <el-input-number :disabled="isOnlyRead" @change="workTimeChange" v-model="form.WorkTime" :min="0"></el-input-number><span>分钟</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -68,6 +73,24 @@
               <el-date-picker disabled v-model="form.EndWork" type="datetime" placeholder="结束时间" style="width: 100%"></el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="图片" prop="PhotoUrl">
+              <div class="avatar_con">
+                <image-upload :disabled="isOnlyRead" ref="logoupload" v-model="form.PhotoUrl" :limit="1" :isShowLeft="true">
+                  <template #tip>
+                    <div class="label_tip">
+                      <div class="label_text">　　</div>
+                      <div class="tip_con">
+                        <span style="margin-left:6px">请上传图片</span>
+                      </div>
+                    </div>
+                  </template>
+                </image-upload>
+              </div>
+              <!-- <image-upload v-model="form.PhotoUrl" :limit="1"></image-upload> -->
+            </el-form-item>
+          </el-col>
+          
           <!-- <el-col :span="12">
             <el-form-item label="报工状态" prop="Status">
               <el-radio-group v-model="form.Status">
@@ -78,8 +101,8 @@
             </el-form-item>
           </el-col> -->
           <el-col :span="24">
-            <el-form-item label="超时原因" prop="OverReason">
-              <el-input type="textarea" v-model="form.OverReason" placeholder="请输入超时原因"></el-input>
+            <el-form-item label="备注" prop="OverReason">
+              <el-input :disabled="isOnlyRead" type="textarea" v-model="form.OverReason" placeholder="请输入备注"></el-input>
             </el-form-item>
           </el-col>
           
@@ -88,33 +111,33 @@
           <template v-for="(item, ix) in filedTableList">
             <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item)">
               <el-form-item :label="item.name" :prop="item.mapid">
-                <el-select @change="customValChange" :disabled="item.is_readonly" :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
+                <el-select @change="customValChange" :disabled="item.is_readonly&&isOnlyRead" :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
                   v-model="form[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
                   v-if=" (item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉') ">
                   <template v-for="it in item.optionals">
                     <el-option :label="it" :value="it" :key="it + ix"></el-option>
                   </template>
                 </el-select>
-                <el-radio-group @change="customValChange" :disabled="item.is_readonly" v-model="form[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
+                <el-radio-group @change="customValChange" :disabled="item.is_readonly&&isOnlyRead" v-model="form[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
                   <template v-for="it in item.optionals">
                     <el-radio :label="it" :key="it + ix">{{ it }}</el-radio>
                   </template>
                 </el-radio-group>
-                <el-checkbox-group @change="customValChange" :disabled="item.is_readonly" v-model="form[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
+                <el-checkbox-group @change="customValChange" :disabled="item.is_readonly&&isOnlyRead" v-model="form[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
                   <template v-for="it in item.optionals">
                     <el-checkbox :label="it" :key="it + ix">{{ it }}</el-checkbox>
                   </template>
                 </el-checkbox-group>
-                <el-date-picker @blur="customValChange" @change="customValChange" :disabled="item.is_readonly" v-if="item.type == '时间'" v-model="form[item.mapid]"
+                <el-date-picker @blur="customValChange" @change="customValChange" :disabled="item.is_readonly&&isOnlyRead" v-if="item.type == '时间'" v-model="form[item.mapid]"
                   type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%" :value-format="item.format" :format="item.format"></el-date-picker>
-                <el-input @input="customValChange" :disabled="item.is_readonly" v-if="item.type == '文本'" :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
+                <el-input @input="customValChange" :disabled="item.is_readonly&&isOnlyRead" v-if="item.type == '文本'" :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
                   :type="item.is_multiple ? 'textarea' : 'text'" v-model="form[item.mapid]"></el-input>
-                <el-input @input="customValChange" :disabled="item.is_readonly" v-if="item.type == '数字'" :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
+                <el-input @input="customValChange" :disabled="item.is_readonly&&isOnlyRead" v-if="item.type == '数字'" :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
                   type="number" v-model="form[item.mapid]" :precision="item.decimals"></el-input>
-                <el-link :disabled="item.is_readonly" v-if="item.type == '超链接'" href="#" target="_blank">{{ item.describe_text }}</el-link>
+                <el-link :disabled="item.is_readonly&&isOnlyRead" v-if="item.type == '超链接'" href="#" target="_blank">{{ item.describe_text }}</el-link>
                 <!-- <image-upload @input="customValChange" v-model="form[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
                 <div class="avatar_con" v-if="item.type == '图片'">
-                  <image-upload @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" :isShowLeft="true">
+                  <image-upload :disabled="isOnlyRead" @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" :isShowLeft="true">
                     <template #tip>
                       <div class="label_tip">
                         <div class="label_text">　　</div>
@@ -125,7 +148,7 @@
                     </template>
                   </image-upload>
                 </div>
-                <file-upload @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
+                <file-upload :disabled="isOnlyRead" @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
                   <template #tip>
                     <div class="label_tip">
                       <div class="label_text">　　</div>
@@ -135,7 +158,7 @@
                     </div>
                   </template>
                 </file-upload>
-                <el-select @focus="afterValSearch(form[item.mapid],item)" :clearable="true" @change="customValChange2($event,item)" style="width: 100%" v-model="form[item.mapid]" filterable remote reserve-keyword
+                <el-select :disabled="isOnlyRead" @focus="afterValSearch(form[item.mapid],item)" :clearable="true" @change="customValChange2($event,item)" style="width: 100%" v-model="form[item.mapid]" filterable remote reserve-keyword
                   :placeholder="item.prompt_text ? item.prompt_text : '请选择'" :remote-method="(query)=>associationMethod(query,item)" :loading="objectLoading" v-if="item.type == '关联对象'">
                   <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name" :value="ite.Value+','+ite.ValueName">{{ite.Name}}</el-option>
                 </el-select>
@@ -153,7 +176,8 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitFiledAdd">确 定</el-button>
+        <el-button @click="submitFiledAdd(0)" v-if="!isOnlyRead">保 存</el-button>
+        <el-button type="primary" @click="submitFiledAdd(2)" v-if="!isOnlyRead">提 交</el-button>
       </span>
     </el-dialog>
 </template>
@@ -198,9 +222,13 @@ components: { AddEmbed, OrgPicker },
         StartWork: "",//开始时间
         EndWork: "",//结束时间
         WorkTime: "", //报工时长
-        OverReason: "", //超时原因
-        FlowId: "", //流程表单id
-        RepBat:{}
+        OverReason: "", //超时原因改备注
+        // FlowId: 0, //流程表单id
+        RepBat:{},
+        PhotoUrl:'',
+        WorkOrderId:'',
+        WorkTaskId:'',
+        OperId:'',
       },
       rules: {
         GoodNum: [
@@ -218,8 +246,11 @@ components: { AddEmbed, OrgPicker },
         WorkTime: [
           { required: true, trigger: "change", message: "请输入报工时长" },
         ],
-        OverReason: [
-          { required: true, trigger: "blur", message: "请输入超时原因" },
+        // OverReason: [
+        //   { required: true, trigger: "blur", message: "请输入超时原因" },
+        // ],
+        WorkTaskId: [
+          { required: true, trigger: "change", message: "请选择生产任务" },
         ],
       },
       filedTableList: [], //报工自定义列表
@@ -228,6 +259,7 @@ components: { AddEmbed, OrgPicker },
       mesform:{},
       associationObject:{},//所有关联对象对应的下拉的参数列表
       objectLoading:true,
+      isOnlyRead:false,//是否只读
     };
   },
   computed: {
@@ -243,11 +275,28 @@ components: { AddEmbed, OrgPicker },
   },
 
   methods: {
-    setPlanSelect(val){
-      //完成生产计划的选择
+    setTaskSelect(val){
+      //完成生产任务的选择
+      console.log(val,'val');
+      this.form.WorkTaskNumber=val.Number
+      this.form.WorkOrderId=val.WorkOrderId
+      this.form.WorkTaskId=val.Id
+      this.form.OperId=val.OperId
+      this.form.OperName=val.OperName
+      this.$forceUpdate()
+      let form=JSON.parse(JSON.stringify(this.form))
+      this.form=JSON.parse(JSON.stringify(form))
+      console.log(this.form,'val');
     },
     onOpenWorkTask(){
       this.$emit('onOpenWorkTask')
+    },
+    onTaskClear(){
+      this.form.WorkTaskNumber=null
+      this.form.WorkOrderId=''
+      this.form.WorkTaskId=''
+      this.form.OperId=''
+      this.$forceUpdate()
     },
     defectSearch(){
       if(this.form.DefectStr&&this.form.DefectStr.indexOf(',')>-1){
@@ -481,7 +530,7 @@ components: { AddEmbed, OrgPicker },
       // console.log(res,'resres');
     },
     customValChange2(val,fidItem) {//数据发生变化后刷新，并验证表单
-      console.log("看看关联对象选择后有没有出现",fidItem);
+      // console.log("看看关联对象选择后有没有出现",fidItem);
       let form = JSON.parse(JSON.stringify(this.form));
       this.form = JSON.parse(JSON.stringify(form));
       if(fidItem&&fidItem.type=='关联对象'&&this.form[fidItem.mapid]){
@@ -506,7 +555,7 @@ components: { AddEmbed, OrgPicker },
     },
     customValChange() {
       let form = JSON.parse(JSON.stringify(this.form));
-      console.log('form',form);
+      // console.log('form',form);
       this.$nextTick(()=>{
         this.form = JSON.parse(JSON.stringify(form));
         this.$refs["form"].validate((valid) => {});
@@ -571,7 +620,7 @@ components: { AddEmbed, OrgPicker },
           }
         }
       });
-      console.log("this.rules", this.rules);
+      // console.log("this.rules", this.rules);
     },
     async getCustomFiled() {
       //获取自定义的字段
@@ -588,8 +637,13 @@ components: { AddEmbed, OrgPicker },
         this.filedTableList = [];
       }
     },
-    async openDialog(item) {
+    async openDialog(item,isOnlyRead) {
       await this.getCustomFiled();
+      if(isOnlyRead){
+        this.isOnlyRead=isOnlyRead
+      }else{
+        this.isOnlyRead=false
+      }
       if (item) {
         // let res = await factoryreportInfo({ id: id });
         console.log("item,报工详情", item, this.filedTableList);
@@ -604,9 +658,16 @@ components: { AddEmbed, OrgPicker },
           StartWork: reportInfo.StartWork,//开始时间
           EndWork: reportInfo.EndWork,//结束时间
           WorkTime: reportInfo.WorkTime, //报工时长
-          OverReason: reportInfo.OverReason, //超时原因
+          OverReason: reportInfo.OverReason, //备注
           FlowId: reportInfo.FlowId, //流程表单id
+          PhotoUrl:reportInfo.PhotoUrl,
+          WorkTaskNumber:reportInfo.Number,
+          WorkOrderId:reportInfo.WorkOrderId,
+          WorkTaskId:reportInfo.WorkTaskId,
+          OperId:reportInfo.OperId,
+          OperName:reportInfo.OperName,
         };
+        this.resetForm("form");
         this.setCustomDefaultValue(reportInfo);
       } else {
         this.form = {
@@ -619,9 +680,16 @@ components: { AddEmbed, OrgPicker },
           StartWork: "",//开始时间
           EndWork: "",//结束时间
           WorkTime: 0, //报工时长
-          OverReason: "", //超时原因
-          FlowId: "", //流程表单id
+          OverReason: "", //备注
+          // FlowId: 0, //流程表单id
+          PhotoUrl:'',
+          WorkTaskNumber:'',
+          WorkOrderId:'',
+          WorkTaskId:'',
+          OperId:'',
+          OperName:'',
         }
+        this.resetForm("form");
         let numres=await GeneratePlaneNumber()//获取报工编号
         this.form.Number=numres.data
         this.setCustomDefaultValue();
@@ -629,7 +697,8 @@ components: { AddEmbed, OrgPicker },
         // console.log("初始化配置信息",response);
         this.mesform.ReportTemplateName = response.data.ReportTemplateName;
         this.mesform.ReportTemplateId = response.data.ReportTemplateId;
-        console.log("表单初始化",this.form);
+        // this.form.FlowId=response.data.ReportTemplateId
+        // console.log("表单初始化",this.form);
       }
       this.dialogVisible = true;
       if (this.mesform.ReportTemplateId > 0) {
@@ -646,12 +715,13 @@ components: { AddEmbed, OrgPicker },
           );
         })
       }
-      
+      let form = JSON.parse(JSON.stringify(this.form));
+      this.form = JSON.parse(JSON.stringify(form));
     },
-    submitFiledAdd() {
+    submitFiledAdd(st) {
       //提交数据
       this.$refs["form"].validate(async (valid,validateResult) => {
-        console.log("检验");
+        // console.log("检验");
         if (valid) {
           let submitForm = JSON.parse(JSON.stringify(this.form));
           if(this.form.DefectNum>0&&this.form.DefectStr&&this.form.DefectStr.length>0){//是否有不良品项
@@ -684,17 +754,26 @@ components: { AddEmbed, OrgPicker },
             submitForm.RepBat[row.mapid]=submitForm[row.mapid]
             delete submitForm[row.mapid]
           }
-          console.log("提交的数据", submitForm);
+          // console.log("提交的数据", submitForm);
+          delete submitForm.WorkTaskNumber
+          delete submitForm.OperName
+          // if(st==0){
+            submitForm.Status=0
+          // }else{
+          //   delete submitForm.Status
+          // }
+          delete submitForm.FlowId
           let response;
           if (submitForm.Id) {
             response=await reportEdit(submitForm);
-            console.log("修改执行结果", response);
+            // console.log("修改执行结果", response);
+            response.data=submitForm.Id
             this.$modal.msgSuccess("修改成功");
             this.dialogVisible = false;
             this.$emit("reloadData");
           } else {
             response=await reportAdd(submitForm);
-            console.log("添加执行结果", response);
+            // console.log("添加执行结果", response);
             this.$modal.msgSuccess("添加成功");
             this.dialogVisible = false;
             this.$emit("reloadData");
@@ -715,7 +794,10 @@ components: { AddEmbed, OrgPicker },
             }
           }
           else{
-            await reportSubmitModel({ id: response.data });
+            if(st==2){
+              await reportSubmitModel({ id: response.data });
+            }
+            
           }
         }else{
           let errKey=Object.keys(validateResult)
@@ -749,9 +831,9 @@ components: { AddEmbed, OrgPicker },
   margin-bottom: 5px;
 }
 .report_add_dialog{
-  ::v-deep .el-dialog__body{
-    padding-top: 0;
-  }
+  // ::v-deep .el-dialog__body{
+  //   padding-top: 30px;
+  // }
   ::v-deep .el-form-item__label{
     line-height: 14px;
   }
@@ -767,9 +849,6 @@ components: { AddEmbed, OrgPicker },
   align-items: flex-start;
   width: 100%;
   position: relative;
-  &.nodata{
-    margin-bottom: 20px;
-  }
   .el-tabs {
     width: 100%;
   }

@@ -20,11 +20,11 @@
         </DetailEmbed>
       <el-table :data="ruleForm.items" border tooltip-effect="dark" style="width: 100%;">
         <el-table-column type="index" label="序号" align="center" width="50" />
-        <el-table-column label="产品编号" prop="ProductId" align="center"></el-table-column>
-        <el-table-column label="产品名称" prop="ProdInfo.ProductName" align="center"></el-table-column>
+        <el-table-column label="物料编号" prop="ProductId" align="center"></el-table-column>
+        <el-table-column label="物料名称" prop="ProdInfo.ProductName" align="center"></el-table-column>
         <el-table-column label="规格" prop="ProdInfo.Specs" align="center"></el-table-column>
         <el-table-column label="单位" prop="ProdInfo.Unit" align="center" width="80"></el-table-column>
-        <el-table-column label="产品属性" prop="ProdInfo.ProductFrom" align="center"></el-table-column>
+        <el-table-column label="物料属性" prop="ProdInfo.ProductFrom" align="center"></el-table-column>
         <el-table-column label="计划数量" prop="Quantity" align="center"></el-table-column>
         <el-table-column label="计划开始时间" prop="PlannedStartOn" align="center" width="200"></el-table-column>
         <el-table-column label="计划结束时间" prop="PlannedEndOn" align="center" width="200"></el-table-column>

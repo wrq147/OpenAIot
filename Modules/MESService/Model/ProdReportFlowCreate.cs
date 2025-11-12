@@ -47,7 +47,7 @@ namespace MESService.Model
         /// </summary>
         public int way { get; set; }
         public object val { get; set; }
-        public object GetRealValue(MZ_WorkReport data, MZ_AdminInfo startUser, MZ_Dept startDept)
+        public object GetRealValue(MZ_WorkReport data, MZ_ProductOper oper, MZ_AdminInfo startUser, MZ_Dept startDept)
         {
             if (way == 1)
             {
@@ -86,7 +86,10 @@ namespace MESService.Model
                             });
                             return tlist;
                         }
-
+                    case "工序名称":
+                        {
+                            return oper.OperName;
+                        }
                 }
                 return string.Empty;
             }

@@ -125,7 +125,7 @@ namespace IoTService.Business
                 querysql.Append($" |> range(start: -inf,stop:now())");
             }
             querysql.Append(" |> filter(fn: (r) => r[\"_measurement\"] == \"onoffline\")");
-            querysql.Append(" |> filter(fn: (r) => r[\"DeviceId\"] == \"" + device.DeviceId + "\")");
+            querysql.Append(" |> filter(fn: (r) => r[\"DxId\"] == \"" + device.Id + "\")");
             querysql.Append(" |> filter(fn: (r) => r[\"_field\"] == \"stat\")");
             int startRow = (query.pageNum.Value - 1) * query.pageSize.Value;
             if (startRow < 0) startRow = 0;
@@ -265,7 +265,7 @@ namespace IoTService.Business
             {
                 return BusResponse<string>.Error(103, "请配置产品的存储方式");
             }
-            string pred = "_measurement=\"device\" AND DeviceId=\"" + device.DeviceId + "\"";
+            string pred = "_measurement=\"device\" AND DxId=\"" + device.Id + "\"";
             using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
             try
             {
@@ -383,11 +383,11 @@ namespace IoTService.Business
                 {
                     if (i == 0)
                     {
-                        dvsb.Append("r[\"DeviceId\"] == \"" + devlist[i].DeviceId + "\"");
+                        dvsb.Append("r[\"DxId\"] == \"" + devlist[i].Id + "\"");
                     }
                     else
                     {
-                        dvsb.Append(" or r[\"DeviceId\"] == \"" + devlist[i].DeviceId + "\"");
+                        dvsb.Append(" or r[\"DxId\"] == \"" + devlist[i].Id + "\"");
                     }
                 }
                 querysql.Append(" |> filter(fn: (r) => (" + dvsb.ToString() + "))");
@@ -441,7 +441,7 @@ namespace IoTService.Business
                 }
                 if (query.IsGroup == true)
                 {
-                    querysql.Append(" |> group(columns: [\"DeviceId\"])");
+                    querysql.Append(" |> group(columns: [\"DxId\"])");
                 }
                 switch (query.WindowWay)
                 {
@@ -680,7 +680,7 @@ namespace IoTService.Business
                 querysql.Append($" |> range(start: -inf,stop:now())");
             }
             querysql.Append(" |> filter(fn: (r) => r[\"_measurement\"] == \"device\")");
-            querysql.Append(" |> filter(fn: (r) => r[\"DeviceId\"] == \"" + device.DeviceId + "\")");
+            querysql.Append(" |> filter(fn: (r) => r[\"DxId\"] == \"" + device.Id + "\")");
 
 
             if (query.pageNum != null && query.pageNum > 0)
