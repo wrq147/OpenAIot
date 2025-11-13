@@ -506,9 +506,9 @@ export default {
             }).then(async () => {
                 await removeFace({ ids: this.selectedFaceIds });
                 this.loadFaces();
-                this.currentLibrary.FaceCount -= deletedCount;
+                this.currentLibrary.FaceCount -= this.selectedFaceIds.length;
                 this.selectedFaceIds = [];
-                this.$message.success(`成功删除 ${deletedCount} 个人脸建模`);
+                this.$message.success(`成功删除 ${this.selectedFaceIds.length} 个人脸建模`);
             }).catch(() => { });
         },
         getUsersFocus() {

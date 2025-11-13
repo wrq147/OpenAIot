@@ -32,5 +32,9 @@ namespace IoTAIService.Models
         /// 最小相似度得分
         /// </summary>
         public float SimiScore { get; set; } = 0.8f;
+        /// <summary>
+        /// 过滤的人脸库
+        /// </summary>
+        public string HouseId { get; set; }
     }
 }

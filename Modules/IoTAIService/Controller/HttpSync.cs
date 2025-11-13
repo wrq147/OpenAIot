@@ -149,7 +149,7 @@ namespace IoTAIService.Controller
                             var tmpstn = faceSTNRunner.Predict(tmpimg);
                             var recogdata = faceRecogRunner.PredictTensor(tmpstn);
                             var tmpfls = recogdata.ToArray<float>();
-                            var tmprsp = await milBLL.Search(tmpfls);
+                            var tmprsp = await milBLL.Search(tmpfls, data.HouseId);
                             if (tmprsp.IsSuccess())
                             {
                                 tlist.AddRange(tmprsp.Data);
@@ -190,7 +190,7 @@ namespace IoTAIService.Controller
                         recogdata = faceRecogRunner.Predict(tmpimg);
                     }
                     var tmpfls = recogdata.ToArray<float>();
-                    var tmprsp = await milBLL.Search(tmpfls);
+                    var tmprsp = await milBLL.Search(tmpfls, data.HouseId);
                     if (tmprsp.IsSuccess())
                     {
                         tlist.AddRange(tmprsp.Data);

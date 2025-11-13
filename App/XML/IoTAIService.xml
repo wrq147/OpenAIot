@@ -204,6 +204,11 @@
             最小相似度得分
             </summary>
         </member>
+        <member name="P:IoTAIService.Models.In_FaceRecog.HouseId">
+            <summary>
+            过滤的人脸库
+            </summary>
+        </member>
         <member name="T:IoTAIService.Models.MZ_AIHouse">
             <summary>
             人员建模库表

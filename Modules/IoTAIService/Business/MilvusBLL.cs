@@ -32,12 +32,14 @@ namespace IoTAIService.Business
             // 定义集合结构 - 假设我们使用128维的向量
             var schema = new CollectionSchema();
             schema.Fields.Add(FieldSchema.Create<long>("vec_id", isPrimaryKey: true, autoId: true));
+            schema.Fields.Add(FieldSchema.CreateVarchar("h_id", maxLength: 128));
             schema.Fields.Add(FieldSchema.Create<long>("mem_id"));
             schema.Fields.Add(FieldSchema.CreateFloatVector("mem_vector", dimension: 128));
 
             var collection = await _client.CreateCollectionAsync("MemCollect", schema);
             // 创建索引以提高搜索性能
             await collection.CreateIndexAsync("mem_vector", IndexType.AutoIndex, SimilarityMetricType.Cosine);
+            await collection.CreateIndexAsync(fieldName: "h_id", indexType: IndexType.AutoIndex);
             await collection.CreateIndexAsync(fieldName: "mem_id", indexType: IndexType.AutoIndex);
 
             return BusResponse<string>.Success();
@@ -68,10 +70,12 @@ namespace IoTAIService.Business
                 return BusResponse<int>.Error(111, "删除成员向量失败");
             }
         }
-        public virtual async Task<BusResponse<long>> InsertToMemberCollection(long uid, float[] data)
+        public virtual async Task<BusResponse<long>> InsertToMemberCollection(long uid, string houseid, float[] data)
         {
-            List<long> memIds = new();
+            List<string> houseIds = new List<string>();
+            List<long> memIds = new List<long>();
             List<ReadOnlyMemory<float>> memVector = new();
+            houseIds.Add(houseid);
             memIds.Add(uid);
             memVector.Add(data);
 
@@ -79,6 +83,7 @@ namespace IoTAIService.Business
             MutationResult result = await collection.InsertAsync(
             new FieldData[]
             {
+                FieldData.CreateVarChar("h_id", houseIds),
                 FieldData.Create<long>("mem_id", memIds),
                 FieldData.CreateFloatVector("mem_vector", memVector),
             });
@@ -92,10 +97,15 @@ namespace IoTAIService.Business
                 return BusResponse<long>.Error(111, "添加成员向量失败");
             }
         }
-        public virtual async Task<BusResponse<List<long>>> Search(float[] vectors, float score = 0.8f)
+        public virtual async Task<BusResponse<List<long>>> Search(float[] vectors, string houseId, float score = 0.8f)
         {
             SearchParameters searchParameters = new();
             searchParameters.OutputFields.Add("mem_id");
+            if (!string.IsNullOrEmpty(houseId))
+            {
+                searchParameters.Expression = "h_id='" + houseId + "'";
+            }
+
             MilvusCollection collection = _client.GetCollection("MemCollect");
             var results = await collection.SearchAsync(
                 vectorFieldName: "mem_vector",

@@ -161,7 +161,7 @@ namespace IoTAIService.Business
                     var tmpstn = faceSTNRunner.Predict(tmpimg);
 
                     Tensor<float> recogdata = faceRecogRunner.PredictTensor(tmpstn);
-                    var res = await milBLL.InsertToMemberCollection(data.MemId.Value, recogdata.ToArray());
+                    var res = await milBLL.InsertToMemberCollection(data.MemId.Value, data.HouseId, recogdata.ToArray());
                     if (res.IsSuccess())
                     {
                         data.MilvusId = res.Data;
