@@ -75,6 +75,13 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.Controller.Face.DeleteFace(System.String[])">
+            <summary>
+            删除人脸
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTAIService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
             <summary>
             校验开发者权限
@@ -260,6 +267,11 @@
         <member name="P:IoTAIService.Models.MZ_AIMem.FaceImg">
             <summary>
             人脸建模头像
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.MZ_AIMem.MilvusId">
+            <summary>
+            建模Id
             </summary>
         </member>
         <member name="P:IoTAIService.Models.MZ_AIMem.CreatedOn">

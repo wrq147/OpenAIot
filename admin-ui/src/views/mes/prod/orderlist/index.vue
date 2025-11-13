@@ -27,27 +27,32 @@
             </div>
             <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
               <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
-                <el-table-column label="生产计划Id" align="center" prop="PlanId" :show-overflow-tooltip="true" />
+                <el-table-column label="计划名称" align="center" prop="PlanName" :show-overflow-tooltip="true" />
                 <el-table-column label="物料名称" align="center" prop="PlanId" :show-overflow-tooltip="true" >
                   <template slot-scope="scope">
                     <span>{{scope.row.ProdInfo?scope.row.ProdInfo.ProductName:''}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="父工单Id" align="center" prop="ParentWorkOrderId" />
+                <!-- <el-table-column label="父工单Id" align="center" prop="ParentWorkOrderId" /> -->
+                <el-table-column label="是否子级" align="center" prop="PlanNameSub" :show-overflow-tooltip="true" >
+                  <template slot-scope="scope">
+                    <span>{{scope.row.PlanNameSub}}</span>
+                  </template>
+                </el-table-column>
                 <el-table-column label="优先级" align="center" prop="priority" >
                   <template slot-scope="scope">
-                    <span v-if="scope.row.Status == 1">优先安排</span>
-                    <span v-if="scope.row.Status == 2">加急处理</span>
-                    <span v-if="scope.row.Status == 3">正常排产</span>
+                    <span v-if="scope.row.priority == 1">优先安排</span>
+                    <span v-if="scope.row.priority == 2">加急处理</span>
+                    <span v-if="scope.row.priority == 3">正常排产</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
                   <template slot-scope="scope">
-                    <el-tag v-if="scope.row.Status == 0" type="warning">待排产</el-tag>
-                    <el-tag v-if="scope.row.Status == 1" type="warning">待生产</el-tag>
-                    <el-tag v-if="scope.row.Status == 2" type="warning">生产中</el-tag>
-                    <el-tag v-if="scope.row.Status == 3" type="success">已完成</el-tag>
-                    <el-tag v-if="scope.row.Status == 4" type="danger">已取消</el-tag>
+                    <!-- <el-tag v-if="scope.row.Status == 0" type="warning">待排产</el-tag> -->
+                    <el-tag v-if="scope.row.Status == 0" type="warning">待生产</el-tag>
+                    <el-tag v-if="scope.row.Status == 1" type="warning">生产中</el-tag>
+                    <el-tag v-if="scope.row.Status == 2" type="success">已完成</el-tag>
+                    <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column label="超期时间" align="center" prop="OverTime" />

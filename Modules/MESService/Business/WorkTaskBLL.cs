@@ -98,7 +98,7 @@ namespace MESService.Business
                     else
                     {
                         //关联了物联产品，则生成对应的物联设备
-                        var tmprsp = await BusUtility.Call("CreateIotDevice", new
+                        var tmprsp = await BusUtility.Call("SaveIotDevice", new
                         {
                             UserId = 2,
                             OrgId = product.OrgId,

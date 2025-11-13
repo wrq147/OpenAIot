@@ -357,8 +357,8 @@ namespace IoTService
             });
 
 
-            //添加新的物联设备
-            plg.RegisterCall("CreateIotDevice", async (bs) =>
+            //同步物联设备
+            plg.RegisterCall("SaveIotDevice", async (bs) =>
             {
                 var tUserId = bs.GetLong("UserId");
                 var tOrgId = bs.GetLong("OrgId");
@@ -368,19 +368,32 @@ namespace IoTService
                 var tDeviceId = bs.GetValue("DeviceId");
                 var tName = bs.GetValue("Name");
                 ArtificialUser artificialUser = new ArtificialUser(tUserId, tOrgId);
-                MZ_IotDevice dev = new MZ_IotDevice();
-                dev.PhotoUrl = tPhotoUrl;
-                dev.DeviceNumber = tDeviceNumber;
-                dev.ProductId = tProductId;
-                dev.DeviceId = tDeviceId;
-                dev.Name = tName;
-                var res = await app.ServiceProvider.GetService<IotDeviceBLL>().Insert(dev, artificialUser);
-                return new CallResponse(res);
+                var tdevlist = await app.ServiceProvider.GetService<IotDeviceDAL>().SelectList(x => x.DeviceNumber == tDeviceNumber);
+                if (tdevlist.Count > 0)
+                {
+                    MZ_IotDevice dev = new MZ_IotDevice();
+                    dev.Id = tdevlist[0].Id;
+                    dev.PhotoUrl = tPhotoUrl;
+                    dev.ProductId = tProductId;
+                    dev.DeviceId = tDeviceId;
+                    dev.Name = tName;
+                    await app.ServiceProvider.GetService<IotDeviceBLL>().Update(dev, artificialUser, tdevlist[0], false);
+                    return new CallResponse(tdevlist[0].Id);
+                }
+                else
+                {
+                    MZ_IotDevice dev = new MZ_IotDevice();
+                    dev.PhotoUrl = tPhotoUrl;
+                    dev.DeviceNumber = tDeviceNumber;
+                    dev.ProductId = tProductId;
+                    dev.DeviceId = tDeviceId;
+                    dev.Name = tName;
+                    var res = await app.ServiceProvider.GetService<IotDeviceBLL>().Insert(dev, artificialUser, false);
+                    return new CallResponse(res);
+                }
+
             });
 
-
-
-            
         }
 
     }

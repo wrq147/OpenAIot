@@ -42,6 +42,19 @@ namespace IoTAIService.Business
 
             return BusResponse<string>.Success();
         }
+        public virtual async Task<BusResponse<int>> DelFromIdsCollection(long[] ids)
+        {
+            MilvusCollection collection = _client.GetCollection("MemCollect");
+            var res = await collection.DeleteAsync("vec_id in [" + string.Join(',', ids) + "]");
+            if (res.DeleteCount > 0)
+            {
+                return BusResponse<int>.Success((int)res.DeleteCount);
+            }
+            else
+            {
+                return BusResponse<int>.Error(111, "删除成员向量失败");
+            }
+        }
         public virtual async Task<BusResponse<int>> DelFromMemberCollection(long uid)
         {
             MilvusCollection collection = _client.GetCollection("MemCollect");
@@ -55,7 +68,7 @@ namespace IoTAIService.Business
                 return BusResponse<int>.Error(111, "删除成员向量失败");
             }
         }
-        public virtual async Task<BusResponse<int>> InsertToMemberCollection(long uid, float[] data)
+        public virtual async Task<BusResponse<long>> InsertToMemberCollection(long uid, float[] data)
         {
             List<long> memIds = new();
             List<ReadOnlyMemory<float>> memVector = new();
@@ -71,11 +84,12 @@ namespace IoTAIService.Business
             });
             if (result.InsertCount > 0)
             {
-                return BusResponse<int>.Success((int)result.InsertCount);
+
+                return BusResponse<long>.Success(result.Ids.LongIds[0]);
             }
             else
             {
-                return BusResponse<int>.Error(111, "添加成员向量失败");
+                return BusResponse<long>.Error(111, "添加成员向量失败");
             }
         }
         public virtual async Task<BusResponse<List<long>>> Search(float[] vectors, float score = 0.8f)

@@ -49,7 +49,11 @@ namespace IoTAIService.Business
             var tfaceCountList = await _aimemDAL.GetFaceCount(user.OrgId);
             foreach (var tlib in tlist)
             {
-                tlib.FaceCount = tfaceCountList.Where(x => x.HouseId == tlib.Id).Count();
+                var tmpcc = tfaceCountList.Where(x => x.HouseId == tlib.Id).FirstOrDefault();
+                if (tmpcc != null)
+                {
+                    tlib.FaceCount = tmpcc.TotalFace.Value;
+                }
             }
             return BusResponse<List<MZ_AIHouse>>.Success(tlist);
         }
@@ -112,6 +116,24 @@ namespace IoTAIService.Business
             var rs = await _aimemDAL.FacePage(data, user);
             return BusResponse<PageObject<MZ_AIMem>>.Success(rs);
         }
+        public virtual async Task<BusResponse<int>> Delete(string[] ids, IUserInfo user)
+        {
+            if (user.OrgId <= 0)
+            {
+                return BusResponse<int>.Error(112, "非企业用户无法删除建模");
+            }
+            try
+            {
+                var tmparr = (await _aimemDAL.SelectList(x => x.OrgId == user.OrgId && ids.Contains(x.Id))).Select(x => x.MilvusId.Value).ToArray();
+                int num = await _aimemDAL.Delete(x => x.OrgId == user.OrgId && ids.Contains(x.Id));
+                await _provider.GetService<MilvusBLL>().DelFromIdsCollection(tmparr);
+                return BusResponse<int>.Success(num);
+            }
+            catch (Exception ex)
+            {
+                return BusResponse<int>.Error(111, ex.Message);
+            }
+        }
         public virtual async Task<BusResponse<int>> Insert(MZ_AIMem data, IUserInfo user)
         {
             if (user.OrgId <= 0)
@@ -122,7 +144,7 @@ namespace IoTAIService.Business
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
             data.CreatedOn = DateTime.Now;
-
+            data.MilvusId = 0;
             data.FStatus = 2;
             #region 建模
             try
@@ -135,12 +157,16 @@ namespace IoTAIService.Business
                     var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
                     var milBLL = _provider.GetService<MilvusBLL>();
                     var tmpimg = originalImage.CropByBox(tbbx[0].X1, tbbx[0].X2, tbbx[0].Y1, tbbx[0].Y2);
-                    Tensor<float> recogdata = faceRecogRunner.Predict(tmpimg);
+                    var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
+                    var tmpstn = faceSTNRunner.Predict(tmpimg);
+
+                    Tensor<float> recogdata = faceRecogRunner.PredictTensor(tmpstn);
                     var res = await milBLL.InsertToMemberCollection(data.MemId.Value, recogdata.ToArray());
                     if (res.IsSuccess())
                     {
+                        data.MilvusId = res.Data;
                         data.FStatus = 1;
-                        data.FaceImg = await fileHelper.UploadRgb24File(tmpimg);
+                        data.FaceImg = await fileHelper.UploadRgb24File(tmpstn.ToImage());
                     }
                 }
             }

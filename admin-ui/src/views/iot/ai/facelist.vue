@@ -232,9 +232,9 @@
                     <el-descriptions-item label="人脸ID">{{ currentFaceDetail.Id }}</el-descriptions-item>
                     <el-descriptions-item label="姓名">{{ currentFaceDetail.MemInfo.RealName }}</el-descriptions-item>
                     <el-descriptions-item label="建模状态">
-                        <el-tag type="info" v-if="currentFaceDetail.FStatus==0">未建模</el-tag>
-                        <el-tag type="success" v-if="currentFaceDetail.FStatus==1">建模成功</el-tag>
-                        <el-tag type="danger" v-if="currentFaceDetail.FStatus==2">建模失败</el-tag>
+                        <el-tag type="info" v-if="currentFaceDetail.FStatus == 0">未建模</el-tag>
+                        <el-tag type="success" v-if="currentFaceDetail.FStatus == 1">建模成功</el-tag>
+                        <el-tag type="danger" v-if="currentFaceDetail.FStatus == 2">建模失败</el-tag>
                     </el-descriptions-item>
                     <el-descriptions-item label="创建时间">{{ currentFaceDetail.CreatedOn }}</el-descriptions-item>
                 </el-descriptions>
@@ -273,7 +273,7 @@
 </template>
 <script>
 import {
-    getFaceHouseList, addFaceHouse, removeFaceHouse, updateFaceHouse, getHouseInfo, getFacePage, addFace
+    getFaceHouseList, addFaceHouse, removeFaceHouse, updateFaceHouse, getHouseInfo, getFacePage, addFace, removeFace
 } from "@/api/ai/face";
 import OrgPicker from "@/views/flowable/common/OrgPicker";
 
@@ -454,7 +454,7 @@ export default {
 
             this.currentFaceForm = {
                 Id: null,
-                HouseId: this.currentLibrary.HouseId,
+                HouseId: this.currentLibrary.Id,
                 MemId: null,
                 MemInfo: { "RealName": "" },
                 FaceImg: "",
@@ -474,8 +474,9 @@ export default {
                 this.$message.error("请上传建模头像");
                 return;
             }
-            let res = await addFace(this.currentFaceForm);
 
+            await addFace(this.currentFaceForm);
+            this.loadFaces();
             this.showCreateFaceDialog = false;
             this.$message.success('人脸信息更新成功');
         },
@@ -486,28 +487,11 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                if (!this.currentLibrary) return;
-
-                const faceList = this.faces[this.currentLibrary.id] || [];
-                const index = faceList.findIndex(face => face.id === faceId);
-
-                if (index !== -1) {
-                    faceList.splice(index, 1);
-                    this.filteredFaces = [...faceList];
-
-                    // 更新建模库的人脸数量
-                    const libIndex = this.libraries.findIndex(lib => lib.id === this.currentLibrary.id);
-                    if (libIndex !== -1) {
-                        this.libraries[libIndex].faceCount--;
-                    }
-                    if (this.currentLibrary) {
-                        this.currentLibrary.faceCount--;
-                    }
-
-                    this.selectedFaceIds = this.selectedFaceIds.filter(id => id !== faceId);
-                    this.$message.success('人脸建模已删除');
-                }
+            }).then(async () => {
+                await removeFace({ ids: faceId });
+                this.loadFaces();
+                this.currentLibrary.FaceCount -= 1;
+                this.$message.success('人脸建模已删除');
             }).catch(() => { });
         },
 
@@ -519,30 +503,10 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                if (!this.currentLibrary) return;
-
-                let deletedCount = 0;
-                const faceList = this.faces[this.currentLibrary.id] || [];
-
-                // 过滤掉要删除的人脸
-                this.faces[this.currentLibrary.id] = faceList.filter(face => {
-                    const isDeleted = this.selectedFaceIds.includes(face.id);
-                    if (isDeleted) deletedCount++;
-                    return !isDeleted;
-                });
-
-                this.filteredFaces = [...this.faces[this.currentLibrary.id]];
-
-                // 更新建模库的人脸数量
-                const libIndex = this.libraries.findIndex(lib => lib.id === this.currentLibrary.id);
-                if (libIndex !== -1) {
-                    this.libraries[libIndex].faceCount -= deletedCount;
-                }
-                if (this.currentLibrary) {
-                    this.currentLibrary.faceCount -= deletedCount;
-                }
-
+            }).then(async () => {
+                await removeFace({ ids: this.selectedFaceIds });
+                this.loadFaces();
+                this.currentLibrary.FaceCount -= deletedCount;
                 this.selectedFaceIds = [];
                 this.$message.success(`成功删除 ${deletedCount} 个人脸建模`);
             }).catch(() => { });

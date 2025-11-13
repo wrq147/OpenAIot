@@ -1161,7 +1161,7 @@ namespace IoTService.Business
             }
 
         }
-        public virtual async Task<BusResponse<string>> Update(MZ_IotDevice data, IUserInfo user, MZ_IotDevice old = null)
+        public virtual async Task<BusResponse<string>> Update(MZ_IotDevice data, IUserInfo user, MZ_IotDevice old = null, bool enableEvt = true)
         {
             if (old == null)
             {
@@ -1290,19 +1290,23 @@ namespace IoTService.Business
                 await _saveTags(data, product, data.Tags);
             }
 
-            //触发修改编码事件
-            await BusUtility.Dispatch("UpdateIOTDevice", new
+            if (enableEvt)
             {
-                Id = data.Id,
-                Number = data.DeviceNumber ?? old.DeviceNumber,
-                LNumber = data.DeviceId ?? old.DeviceId,
-                Name = data.Name ?? old.Name,
-                PhotoUrl = data.PhotoUrl ?? old.PhotoUrl
-            });
+                //触发修改编码事件
+                await BusUtility.Dispatch("UpdateIOTDevice", new
+                {
+                    Id = data.Id,
+                    Number = data.DeviceNumber ?? old.DeviceNumber,
+                    LNumber = data.DeviceId ?? old.DeviceId,
+                    Name = data.Name ?? old.Name,
+                    PhotoUrl = data.PhotoUrl ?? old.PhotoUrl
+                });
+            }
+
             return BusResponse<string>.Success();
         }
 
-        public virtual async Task<BusResponse<string>> Insert(MZ_IotDevice data, IUserInfo user)
+        public virtual async Task<BusResponse<string>> Insert(MZ_IotDevice data, IUserInfo user, bool enableEvt = true)
         {
             if (user.OrgId <= 0)
             {
@@ -1394,17 +1398,21 @@ namespace IoTService.Business
                 await _saveTags(data, product, data.Tags);
             }
 
-            //触发新增事件
-            await BusUtility.Dispatch("AddIOTDevice", new
+            if (enableEvt)
             {
-                Id = data.Id,
-                OrgId = user.OrgId,
-                Number = data.DeviceNumber,
-                LNumber = data.DeviceId,
-                Name = data.Name,
-                PhotoUrl = data.PhotoUrl,
-                ProductId = data.ProductId
-            });
+                //触发新增事件
+                await BusUtility.Dispatch("AddIOTDevice", new
+                {
+                    Id = data.Id,
+                    OrgId = user.OrgId,
+                    Number = data.DeviceNumber,
+                    LNumber = data.DeviceId,
+                    Name = data.Name,
+                    PhotoUrl = data.PhotoUrl,
+                    ProductId = data.ProductId
+                });
+
+            }
 
             return BusResponse<string>.Success(data.Id);
         }

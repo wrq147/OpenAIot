@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IoTAIService.Migrations
 {
-    [Migration(20251101003)]
+    [Migration(20251113001)]
     public class IoTAIMigrator : Migration
     {
         public override void Up()
@@ -31,6 +31,7 @@ namespace IoTAIService.Migrations
 .WithColumn("MemId").AsInt64().Indexed().WithColumnDescription("人员Id")
 .WithColumn("FStatus").AsByte().WithColumnDescription("建模状态：0未建模，1为建模成功，2为建模失败")
 .WithColumn("FaceImg").AsString(255).WithColumnDescription("人脸建模头像")
+.WithColumn("MilvusId").AsInt64().WithDefaultValue(0).WithColumnDescription("建模Id")
 .WithColumn("CreatedOn").AsDateTime().WithColumnDescription("创建时间");
 
 

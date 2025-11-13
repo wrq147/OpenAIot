@@ -48,6 +48,14 @@
                       </el-image>
                     </span>
                     <span v-else-if="ite.type == '关联对象'">{{ returnObjectName(scope.row[ite.field]) }}</span>
+                    
+                    <template slot-scope="scope" v-else-if="ite.field == 'Status'">
+                      <el-tag v-if="scope.row.Status == 0" type="warning">待提交</el-tag>
+                      <el-tag v-if="scope.row.Status == 1" type="warning">待审核</el-tag>
+                      <el-tag v-if="scope.row.Status == 2" type="success">已审核</el-tag>
+                      <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
+                      <el-tag v-if="scope.row.Status == 4" type="danger">已驳回</el-tag>
+                    </template>
                     <span v-else>{{ scope.row[ite.field] }}</span>
                   </template>
                 </el-table-column>

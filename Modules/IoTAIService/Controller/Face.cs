@@ -96,5 +96,16 @@ namespace IoTAIService.Controller
         {
             return (await _aiMemBLL.Insert(data, GetUser())).ToAjaxResult();
         }
+        /// <summary>
+        /// 删除人脸
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<int>> DeleteFace(string[] ids)
+        {
+            return (await _aiMemBLL.Delete(ids, GetUser())).ToAjaxResult();
+        }
+        
     }
 }

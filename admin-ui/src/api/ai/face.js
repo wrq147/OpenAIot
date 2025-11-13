@@ -62,3 +62,12 @@ export function addFace(data) {
         data: data
     })
 }
+
+//删除人脸
+export function removeFace(query) {
+    return request({
+        url: '/IoTAIService/Face/DeleteFace',
+        method: 'get',
+        params: query
+    })
+}

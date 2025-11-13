@@ -40,6 +40,10 @@ namespace IoTAIService.Models
         [JsonConverter(typeof(ImageUrl), true)]
         public string FaceImg { get; set; }
         /// <summary>
+        /// 建模Id
+        /// </summary>
+        public long? MilvusId { get; set; }
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime? CreatedOn { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MESService
 {
-    [Migration(20251112001)]
+    [Migration(20251112002)]
     public class MESMigrator : Migration
     {
         public override void Up()
@@ -551,7 +551,7 @@ namespace MESService
                               .WithColumn("NumExt9").AsDouble().Indexed().Nullable().WithColumnDescription("扩展数字字段9")
                               .WithColumn("NumExt10").AsDouble().Indexed().Nullable().WithColumnDescription("扩展数字字段10");
 
-
+            Execute.Sql("DROP TABLE IF EXISTS mz_batch_dev_his");
             Create.Table("mz_batch_dev_his").WithDescription("生产批次数据采集的历史数据表")
                 .WithColumn("Id").AsInt64().Identity().PrimaryKey().WithColumnDescription("Id编号")
                 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")

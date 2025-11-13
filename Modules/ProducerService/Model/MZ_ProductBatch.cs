@@ -30,7 +30,7 @@ namespace ProducerService.Model
         [JsonConverter(typeof(ImageUrl))]
         public string PhotoUrl { get; set; }
         /// <summary>
-        /// 唯一编号
+        /// 批次编号
         /// </summary>
         public string Number { get; set; }
         /// <summary>

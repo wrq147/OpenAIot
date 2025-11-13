@@ -138,7 +138,8 @@
             factoryMesConfig().then(res => {
                 this.PlanTemplateId = res.data.PlanTemplateId;
                 this.ruleForm.flowId = res.data.PlanTemplateId;
-                planeFormData({ number: this.PlanTemplateId }).then(repont => {
+                if(this.PlanTemplateId){
+                  planeFormData({ number: this.PlanTemplateId }).then(repont => {
                     this.$refs.flowForm.InitData(
                         this.PlanTemplateId,{
                         "@from": this.ruleForm.number,
@@ -147,7 +148,9 @@
                     this.ruleForm.id === '' ? null : this.ruleForm.number,
                     repont.data
                    )
-                })
+                  })
+                }
+                
             });
         }
       }
@@ -156,7 +159,20 @@
         // 编辑进来时获取子元素信息
         getDataInfo(id) {
             operInfo({ id }).then(res => {
-                this.ruleForm.items = res.data.Items;
+              console.log(res,'res');
+                this.ruleForm.items = res.data.Items.map(row=>{
+                  let dataObj={
+                    ProductId: row.ProdInfo.Id,
+                    ProductName: row.ProdInfo.ProductName,
+                    Specs: row.ProdInfo.Specs,
+                    Unit: row.ProdInfo.Unit,
+                    ProductFrom: row.ProdInfo.ProductFrom,
+                    Quantity: row.Quantity,
+                    PlannedStartOn: row.PlannedStartOn,
+                    PlannedEndOn: row.PlannedEndOn,
+                  }
+                  return dataObj
+                });
             })
         },
       // 提交新增/修改按钮
@@ -169,12 +185,13 @@
               return false;
             }
             let response;
-            if (this.title === '新增生产计划') {
-                response = await operAdd(this.ruleForm)
-            } else {
-                response = await operEdit(this.ruleForm)
+            console.log(this.ruleForm.id,'this.ruleForm.id');
+            if(this.ruleForm.id){
+              response = await operEdit(this.ruleForm)
+            }else{
+              response = await operAdd(this.ruleForm)
             }
-            if (this.PlanTemplateId !== '') {
+            if (this.PlanTemplateId !== ''&&this.PlanTemplateId) {
                 if (st === 2) {
                     let tmpmodel = this.$refs.flowForm.getModel();
                     tmpmodel["id"] = this.ruleForm.id === '' ? response.data : this.ruleForm.id;
@@ -184,7 +201,12 @@
                 }
             }
             else{
+              if(this.ruleForm.id){
+                await planeSubmitModel({ id: this.ruleForm.id });
+              }else{
                 await planeSubmitModel({ id: response.data });
+              }
+                
             }
             this.$emit('getList');
           } else {

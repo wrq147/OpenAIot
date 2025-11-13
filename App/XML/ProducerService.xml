@@ -1248,7 +1248,7 @@
         </member>
         <member name="P:ProducerService.Model.MZ_ProductBatch.Number">
             <summary>
-            唯一编号
+            批次编号
             </summary>
         </member>
         <member name="P:ProducerService.Model.MZ_ProductBatch.LNumber">
