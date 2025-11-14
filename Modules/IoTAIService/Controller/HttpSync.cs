@@ -1,20 +1,22 @@
-﻿using Common;
+﻿using AuthService;
+using Common;
 using Common.Share;
 using DeveloperService;
 using DeveloperService.Model;
 using IoTAIService.AICode;
 using IoTAIService.Business;
+using IoTAIService.DAL;
 using IoTAIService.Models;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.Label;
-using SixLabors.ImageSharp;
-using System.Linq;
 
 namespace IoTAIService.Controller
 {
@@ -115,14 +117,20 @@ namespace IoTAIService.Controller
                 return this.Error(12, "Base64和Url不能都为空", EmptyFaceBox);
             }
         }
-        private static readonly List<long> EmptyFaceFeature = new List<long>();
+
         /// <summary>
         /// 识别人脸
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<DefaultAjaxResult<List<long>>> FaceRecog(In_FaceRecog data)
+        public async Task<DefaultAjaxResult<Out_FaceMem[]>> FaceRecog(In_FaceRecog data)
         {
+            var houseList = await _provider.GetService<AiHouseDAL>().SelectList(x => x.OrgId == _develper.OrgId && x.Status == "1" && x.HouseName == data.HouseName);
+            if (houseList == null || houseList.Count == 0)
+            {
+                return this.Error(20, "人脸库名称被禁用或不存在", Array.Empty<Out_FaceMem>());
+            }
+            List<long> tlist = new List<long>();
             if (!string.IsNullOrEmpty(data.ImageBase64))
             {
                 string base64Data = data.ImageBase64;
@@ -135,7 +143,6 @@ namespace IoTAIService.Controller
                 {
                     // Base64 解码为字节数组
                     byte[] imageBytes = Convert.FromBase64String(base64Data);
-                    List<long> tlist = new List<long>();
                     using (MemoryStream ms = new MemoryStream(imageBytes))
                     {
                         var originalImage = Image.Load<Rgb24>(ms);
@@ -149,27 +156,25 @@ namespace IoTAIService.Controller
                             var tmpstn = faceSTNRunner.Predict(tmpimg);
                             var recogdata = faceRecogRunner.PredictTensor(tmpstn);
                             var tmpfls = recogdata.ToArray<float>();
-                            var tmprsp = await milBLL.Search(tmpfls, data.HouseId);
+                            var tmprsp = await milBLL.Search(tmpfls, houseList[0].Id);
                             if (tmprsp.IsSuccess())
                             {
                                 tlist.AddRange(tmprsp.Data);
                             }
                         }
                     }
-                    return this.Success(tlist);
                 }
                 catch (FormatException)
                 {
-                    return this.Error(13, "无效的 Base64 格式", EmptyFaceFeature);
+                    return this.Error(13, "无效的 Base64 格式", Array.Empty<Out_FaceMem>());
                 }
                 catch (Exception)
                 {
-                    return this.Error(14, "转换图像失败", EmptyFaceFeature);
+                    return this.Error(14, "转换图像失败", Array.Empty<Out_FaceMem>());
                 }
             }
             else if (!string.IsNullOrEmpty(data.ImageUrl))
             {
-                List<long> tlist = new List<long>();
 
                 var originalImage = await _provider.GetService<FileHelper>().CreateRgb24FromUrl(data.ImageUrl);
                 var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
@@ -190,17 +195,35 @@ namespace IoTAIService.Controller
                         recogdata = faceRecogRunner.Predict(tmpimg);
                     }
                     var tmpfls = recogdata.ToArray<float>();
-                    var tmprsp = await milBLL.Search(tmpfls, data.HouseId);
+                    var tmprsp = await milBLL.Search(tmpfls, houseList[0].Id);
                     if (tmprsp.IsSuccess())
                     {
                         tlist.AddRange(tmprsp.Data);
                     }
                 }
-                return this.Success(tlist);
             }
             else
             {
-                return this.Error(12, "Base64和Url不能都为空", EmptyFaceFeature);
+                return this.Error(12, "Base64和Url不能都为空", Array.Empty<Out_FaceMem>());
+            }
+
+            if (tlist.Count > 0)
+            {
+                var tmpuserlist = await _provider.GetService<UserDAL>().GetUserListByIds(tlist);
+                Out_FaceMem[] tmemArr = new Out_FaceMem[tmpuserlist.Count];
+                for (int i = 0; i < tmemArr.Length; i++)
+                {
+                    tmemArr[i] = new Out_FaceMem()
+                    {
+                        UserId = tmemArr[i].UserId,
+                        RealName = tmemArr[i].RealName
+                    };
+                }
+                return this.Success(tmemArr);
+            }
+            else
+            {
+                return this.Success(Array.Empty<Out_FaceMem>());
             }
         }
 

@@ -56,6 +56,9 @@
                       <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
                       <el-tag v-if="scope.row.Status == 4" type="danger">已驳回</el-tag>
                     </template>
+                    <template slot-scope="scope" v-else-if="ite.field == 'LNumber'">
+                      <span>{{scope.row.RepBat.LNumber}}</span>
+                    </template>
                     <span v-else>{{ scope.row[ite.field] }}</span>
                   </template>
                 </el-table-column>
@@ -121,6 +124,7 @@ export default {
           { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
           { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
+          { "field": "LNumber", "fieldName": "适配器imei号", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
           { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },
@@ -224,6 +228,7 @@ export default {
           { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
           { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
+          { "field": "LNumber", "fieldName": "适配器imei号", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
           { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
           { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },

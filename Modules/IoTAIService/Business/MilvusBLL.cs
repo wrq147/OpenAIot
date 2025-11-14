@@ -1,7 +1,6 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
 using Milvus.Client;
-using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;

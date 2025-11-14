@@ -1,6 +1,5 @@
 ﻿using Common;
 using Common.Share;
-using InfluxDB.Client.Api.Domain;
 using IoTAIService.Models;
 using MyAccess.DB;
 using MyAccess.DB.Builder.WhereToSql;

@@ -204,7 +204,7 @@
             最小相似度得分
             </summary>
         </member>
-        <member name="P:IoTAIService.Models.In_FaceRecog.HouseId">
+        <member name="P:IoTAIService.Models.In_FaceRecog.HouseName">
             <summary>
             过滤的人脸库
             </summary>
@@ -302,6 +302,16 @@
         <member name="P:IoTAIService.Models.Out_FaceCount.TotalFace">
             <summary>
             总人脸数
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.Out_FaceMem.UserId">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.Out_FaceMem.RealName">
+            <summary>
+            真实姓名
             </summary>
         </member>
     </members>

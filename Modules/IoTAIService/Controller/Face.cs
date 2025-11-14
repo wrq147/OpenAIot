@@ -3,8 +3,6 @@ using Common;
 using Common.Share;
 using IoTAIService.Business;
 using IoTAIService.Models;
-using IoTService.Business;
-using IoTService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TemplateAction.Route;

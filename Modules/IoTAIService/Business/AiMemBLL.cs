@@ -1,13 +1,9 @@
 ﻿using Common;
 using Common.IdGenerator;
 using Common.Share;
-using InfluxDB.Client.Api.Domain;
 using IoTAIService.AICode;
 using IoTAIService.DAL;
 using IoTAIService.Models;
-using IoTRulesService.Model;
-using IoTService.Models;
-using JiebaNet.Segmenter.FinalSeg;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using MyAccess.DB.Builder.WhereToSql;
 using SixLabors.ImageSharp;

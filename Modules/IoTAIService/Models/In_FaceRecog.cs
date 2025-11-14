@@ -35,6 +35,6 @@ namespace IoTAIService.Models
         /// <summary>
         /// 过滤的人脸库
         /// </summary>
-        public string HouseId { get; set; }
+        public string HouseName { get; set; }
     }
 }
