@@ -2,22 +2,16 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid 'd90bae2ccabc2ee778346c939f68561ba0a28904'
-    oldFile: !uuid 'c6626f613a32f04b3d0e44a634e0a5ae0dfa2307'
-  /Modules/IoTService:
-    newFile: !uuid '5b7e14cb0dac08f1e3005f2c416a4528a2418fd2'
-    oldFile: !uuid 'da7f1a532d66e92f9e7e7c1beb08a01c9a7c4d4f'
-  /Modules/IoTService/DAL:
-    newFile: !uuid 'c17f74a43a3af6587b9779622ad27171d9173291'
-    oldFile: !uuid 'f9fd0cb2bf121575d80edc5b5220e5ab0fcd5abe'
-  /Modules/IoTService/DAL/IotDeviceDAL.cs:
-    newFile: !uuid '40a7555e94aeced2fdbf9cebdf8253634c0adfd7'
-    oldFile: !uuid 'fbf20a2000a48ecbed8f6de5c7d567e145dae3ec'
-  /Modules/IoTService/PluginConfig.cs:
-    newFile: !uuid 'e27696fac6e28fdd3b139083a7c7ca4729c630b3'
-    oldFile: !uuid '96f07dcef0add84035becd07dbf790c50d8090f0'
-gitCommitId: !uuid '5fd03b5298d03859d2f5663e6c9637369beeef35'
+  /Common:
+    newFile: !uuid '74d6873560c4a76da7323b8c00e4cf56ccb0c533'
+    oldFile: !uuid '5d8ee685bf0d4d84dbe5de31283574334a21cde2'
+  /Common/EventBus:
+    newFile: !uuid '69510c57041b9b7dab1f3b76749b05443a9b76a0'
+    oldFile: !uuid 'd879ef9cabc6226f6f32b1df1322c583820bb705'
+  /Common/EventBus/BusEvent.cs:
+    newFile: !uuid '628e56f557455013f7b8afb30b1dea561df01ab2'
+    oldFile: !uuid '98f17072986811dc23b3f24368b187de3a979fa6'
+gitCommitId: !uuid '86178edf3a99b2959fc5e0ace8d8368ec28cae60'
 renames: {
   }
-revisionId: 12
+revisionId: 13
