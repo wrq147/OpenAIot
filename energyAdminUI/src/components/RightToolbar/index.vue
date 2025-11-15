@@ -1,0 +1,102 @@
+<template>
+  <div class="top-right-btn">
+    <div style="width:2px;height:2px;"></div>
+    <!-- <el-row>
+      <el-tooltip class="item" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="top" v-if="isShowSearch">
+        <el-button size="mini" circle @click="toggleSearch()" style="border-color:#DFE2EA">
+          <i class="zhongtaiiconfont zhongtai-icon-a-sousuoxiao"></i>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip class="item" content="刷新" placement="top">
+        <el-button size="mini" circle @click="refresh()" style="border-color:#DFE2EA">
+          <i class="zhongtaiiconfont zhongtai-icon-a-zhongzhixiao"></i>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip class="item" content="显隐列" placement="top" v-if="columns">
+        <el-button size="mini" circle @click="showColumn()" style="border-color:#DFE2EA">
+          <i class="zhongtaiiconfont zhongtai-icon-a-guanlixiao"></i>
+        </el-button>
+      </el-tooltip>
+    </el-row> -->
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
+      <el-transfer :titles="['显示', '隐藏']" v-model="value" :data="columns" @change="dataChange"></el-transfer>
+    </el-dialog>
+  </div>
+</template>
+<script>
+export default {
+  name: "RightToolbar",
+  data() {
+    return {
+      // 显隐数据
+      value: [],
+      // 弹出层标题
+      title: "显示/隐藏",
+      // 是否显示弹出层
+      open: false
+    };
+  },
+  props: {
+    showSearch: {
+      type: Boolean,
+      default: true
+    },
+    isShowSearch: {
+      type: Boolean,
+      default: true
+    },
+    columns: {
+      type: Array
+    }
+  },
+  created() {
+    // 显隐列初始默认隐藏列
+    for (let item in this.columns) {
+      if (this.columns[item].visible === false) {
+        this.value.push(parseInt(item));
+      }
+    }
+  },
+  methods: {
+    // 搜索
+    toggleSearch() {
+      this.$emit("update:showSearch", !this.showSearch);
+    },
+    // 刷新
+    refresh() {
+      this.$emit("queryTable");
+    },
+    // 右侧列表元素变化
+    dataChange(data) {
+      for (var item in this.columns) {
+        const key = this.columns[item].key;
+        this.columns[item].visible = !data.includes(key);
+      }
+    },
+    // 打开显隐列dialog
+    showColumn() {
+      this.open = true;
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.top-right-btn .el-button.el-tooltip.is-circle.el-button--mini {
+  height: 36px;
+  line-height: 36px;
+  width: 36px;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  // font-size: 16px;
+}
+::v-deep .el-transfer__button {
+  border-radius: 50%;
+  padding: 12px;
+  display: block;
+  margin-left: 0px;
+}
+::v-deep .el-transfer__button:first-child {
+  margin-bottom: 10px;
+}
+</style>

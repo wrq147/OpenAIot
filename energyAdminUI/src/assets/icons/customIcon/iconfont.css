@@ -1,0 +1,201 @@
+@font-face {
+    font-family: "zhongtaiiconfont";
+    /* Project id 4781489 */
+    src: url('iconfont.ttf?t=1760495411582') format('truetype');
+}
+
+.zhongtaiiconfont {
+    font-family: "zhongtaiiconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.zhongtai-icon-qiyeqiehuan:before {
+    content: "\e7ca";
+}
+
+.zhongtai-icon-gongyingliantanguanli:before {
+    content: "\e7c9";
+}
+
+.zhongtai-icon-xiajiang:before {
+    content: "\e7c7";
+}
+
+.zhongtai-icon-shangsheng:before {
+    content: "\e7c8";
+}
+
+.zhongtai-icon-xiazaidaorumoban:before {
+    content: "\e7c6";
+}
+
+.zhongtai-icon-shangchuan:before {
+    content: "\e7c5";
+}
+
+.zhongtai-icon-nengxiaopinghengyuyouhua:before {
+    content: "\e7c4";
+}
+
+.zhongtai-icon-gengduo:before {
+    content: "\e7c2";
+}
+
+.zhongtai-icon-xiugai1:before {
+    content: "\e7c3";
+}
+
+.zhongtai-icon-bukexuan:before {
+    content: "\e7c1";
+}
+
+.zhongtai-icon-xiaoxi:before {
+    content: "\e7b3";
+}
+
+.zhongtai-icon-zhongzhi:before {
+    content: "\e79e";
+}
+
+.zhongtai-icon-gouxuan:before {
+    content: "\e7b4";
+}
+
+.zhongtai-icon-zuobiao:before {
+    content: "\e7b5";
+}
+
+.zhongtai-icon-daixuanze:before {
+    content: "\e7b6";
+}
+
+.zhongtai-icon-zhongyaotishi:before {
+    content: "\e7b7";
+}
+
+.zhongtai-icon-guanbi:before {
+    content: "\e7b8";
+}
+
+.zhongtai-icon-jiantou:before {
+    content: "\e7b9";
+}
+
+.zhongtai-icon-sousuo:before {
+    content: "\e7ba";
+}
+
+.zhongtai-icon-daoru:before {
+    content: "\e7bb";
+}
+
+.zhongtai-icon-daochu:before {
+    content: "\e7bc";
+}
+
+.zhongtai-icon-shanchu:before {
+    content: "\e79d";
+}
+
+.zhongtai-icon-xinzeng:before {
+    content: "\e7bd";
+}
+
+.zhongtai-icon-shangyiye:before {
+    content: "\e79c";
+}
+
+.zhongtai-icon-xiayiye:before {
+    content: "\e7be";
+}
+
+.zhongtai-icon-a-daixuanzedanxuan:before {
+    content: "\e7bf";
+}
+
+.zhongtai-icon-a-xuanzhongdanxuan:before {
+    content: "\e7c0";
+}
+
+.zhongtai-icon-anquanyunhang:before {
+    content: "\e7a2";
+}
+
+.zhongtai-icon-qiyeguanli:before {
+    content: "\e7a4";
+}
+
+.zhongtai-icon-nengyuanfenxi:before {
+    content: "\e7a5";
+}
+
+.zhongtai-icon-shouye:before {
+    content: "\e7a6";
+}
+
+.zhongtai-icon-xitongguanli:before {
+    content: "\e7a7";
+}
+
+.zhongtai-icon-shuangjiantou:before {
+    content: "\e79f";
+}
+
+.zhongtai-icon-shouqicebianlan:before {
+    content: "\e7a8";
+}
+
+.zhongtai-icon-nenghaojisuan:before {
+    content: "\e7a9";
+}
+
+.zhongtai-icon-bangzhu:before {
+    content: "\e7a0";
+}
+
+.zhongtai-icon-channengguanli:before {
+    content: "\e7aa";
+}
+
+.zhongtai-icon-tanpaiguanli:before {
+    content: "\e7ab";
+}
+
+.zhongtai-icon-mima:before {
+    content: "\e7ac";
+}
+
+.zhongtai-icon-zhankaicebianlan:before {
+    content: "\e7ad";
+}
+
+.zhongtai-icon-shoujihao:before {
+    content: "\e7ae";
+}
+
+.zhongtai-icon-yanzhengma:before {
+    content: "\e7af";
+}
+
+.zhongtai-icon-tishi:before {
+    content: "\e7b0";
+}
+
+.zhongtai-icon-gerenshezhi:before {
+    content: "\e7b1";
+}
+
+.zhongtai-icon-tuichudenglu:before {
+    content: "\e7b2";
+}
+
+.zhongtai-icon-caijiguanli:before {
+    content: "\e7a3";
+}
+
+.zhongtai-icon-zhanghao:before {
+    content: "\e7a1";
+}

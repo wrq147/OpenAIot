@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="/src/utils/request.js"></script>
+    <script src="./jumpjs/axios.js"></script>
+    <title>
+        registration
+    </title>
+    <!--[if lt IE 11]><script>window.location.href='/html/ie.html';</script><![endif]-->
+    <style>
+        html,
+        body,
+        #app {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .mobile_tip {
+            text-align: center;
+            line-height: 26px;
+            font-size: 16px;
+            color: #666;
+            margin-top: 100px;
+        }
+        
+        .mobile_con {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .mobile_con .moblie_bg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 64px;
+        }
+        
+        .mobile_con .moblie_bg .image {
+            width: 200px;
+            height: 131px;
+        }
+        
+        .mobile_con .click_btn {
+            margin-top: 50px;
+            width: 335px;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 5px;
+            border: 1px solid rgba(35, 113, 255, 1);
+            color: #fff;
+            font-size: 16px;
+            background: rgba(35, 113, 255, 1);
+        }
+        
+        .mobile_con .other {
+            margin-top: 35px;
+            width: 335px;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 5px;
+            border: 1px solid rgba(35, 113, 255, 1);
+            color: rgba(35, 113, 255, 1);
+            font-size: 16px;
+            background: #fff;
+        }
+        
+        .mobile_con .tips {
+            margin-top: 50px;
+            font-size: 14px;
+            color: rgba(153, 153, 153, 1);
+        }
+        
+        .mobile_con .tips .xinghao {
+            color: red;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .span_con {
+            text-align: right;
+        }
+        
+        .modal-close {}
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+        
+        .modal_btn_con {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-btn {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        #cancelBtn {
+            border: 1px solid rgba(35, 113, 255, 1);
+            background: #fff;
+            border-radius: 5px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="idcont" class="mobile_con" style="display: none;">
+            <div id="cnCont" style="display: none;">
+                <div class="moblie_bg">
+                    <img class="image" src="./mobileImg.png" alt="" />
+                </div>
+                <!-- <div class="click_btn" id="jump_btn">已安装或安装完成后, 点击跳转到App</div>
+                <div class="other" id="confirmBtn">未安装app, 点击下载安装</div>
+                <div class="tips">
+                    <span class="xinghao">*</span> 如果应用程序未安装，请先安装应用程序
+                </div> -->
+                <div class="click_btn" id="jump_h5_btn">跳转H5页面注册</div>
+            </div>
+            <div id="enCont" style="display: none;">
+                <div class="moblie_bg">
+                    <img class="image" src="./mobileImg.png" alt="" />
+                </div>
+                <div class="click_btn" id="jump_btn">Click it, entering the app</div>
+                <div class="other" id="confirmBtn">Not downloaded, go download</div>
+                <div class="tips">
+                    <span class="xinghao">*</span>If app not installed, please install the app first
+                </div>
+            </div>
+        </div>
+        <div id="idtip" class="mobile_tip" style="display: none;"></div>
+    </div>
+    <script>
+        let activeOrgId = ''
+        let activeNode = ''
+        let theRequest = new Object();
+        var confirmBtn = document.getElementById("confirmBtn");
+
+        var jump_btn = document.getElementById("jump_btn");
+        var jump_h5_btn = document.getElementById("jump_h5_btn");
+        confirmBtn.onclick = function() {
+            if (activeOrgId) {
+                setAppDown(activeOrgId)
+            } else {
+                if (theRequest.lang && theRequest.lang == 'CN') {} else {
+                    window.location = location.origin + "/UpgradeDown";
+                }
+            }
+
+        }
+        jump_btn.onclick = function() {
+            jumpToApp()
+        }
+        jump_h5_btn.onclick = function() {
+            jumpToH5()
+        }
+        let url = window.location.search; //获取url中"?"符后的字串 
+        let code = '';
+        let yaoqingId = '';
+        let yqcode = ''
+        let node = ''
+        let isNotJunmp = true
+        if (url.indexOf("?") != -1) {
+            let str = url.substr(1);
+            var strs = str.split("&");
+            for (let i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
+            }
+        }
+
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(window.navigator.userAgent)) {
+            if (theRequest.code) {
+                if (theRequest.isMobile) {
+                    code = theRequest.code
+                } else {
+                    code = decodeURIComponent(theRequest.code)
+                }
+            }
+            if (theRequest.yaoqingId) {
+                yaoqingId = theRequest.yaoqingId
+            }
+            if (theRequest.yqcode) {
+                yqcode = theRequest.yqcode
+            }
+            if (theRequest.node) {
+                node = theRequest.node
+            }
+            if (theRequest.lang && theRequest.lang == 'CN') {
+                jumpToH5()
+                    // return
+            }
+            var ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                if (theRequest.lang && theRequest.lang == 'CN') {
+                    document.getElementById("idtip").innerText = "请使用外部浏览器打开它！";
+                } else {
+                    document.getElementById("idtip").innerText = "Please open it using an external browser!";
+                }
+                document.getElementById("idtip").style.display = "block";
+            } else {
+                document.getElementById("idtip").style.display = "none";
+                document.getElementById("idcont").style.display = "flex";
+                if (theRequest.lang && theRequest.lang == 'CN') {
+                    document.getElementById("cnCont").style.display = "block";
+                    document.getElementById("enCont").style.display = "none";
+                    if (theRequest.code) {
+                        codeGetOrg({
+                            code: decodeURIComponent(theRequest.code)
+                        }, (rsp) => {
+                            // console.log("员工邀请",rsp);
+                            if (rsp.data && rsp.data.OrgId) {
+                                activeOrgId = rsp.data.OrgId
+                            }
+                        })
+                    } else if (theRequest.yaoqingId) {
+                        yaoqingIdGetOrg({
+                            id: theRequest.yaoqingId
+                        }, (rsp) => {
+                            if (rsp.data && rsp.data.ParentOrgId) {
+                                activeOrgId = rsp.data.ParentOrgId
+                            }
+
+                        })
+                    } else if (theRequest.yqcode && theRequest.node) {
+                        yaoqingIdGetOrg({
+                            id: theRequest.yqcode
+                        }, (rsp) => {
+                            if (rsp.data && rsp.data.ParentOrgId) {
+                                activeOrgId = rsp.data.ParentOrgId
+                            }
+
+                        })
+                    }
+
+                } else {
+                    document.getElementById("cnCont").style.display = "none";
+                    document.getElementById("enCont").style.display = "block";
+                }
+            }
+
+        } else {
+            if (theRequest.code) {
+                window.location.href = window.location.origin + '/index.html#/?code=' + theRequest.code
+            }
+            if (theRequest.yaoqingId) {
+                if (theRequest.hailogin) {
+                    window.location.href = window.location.origin + '/index.html#/?yaoqingId=' + theRequest.yaoqingId
+                } else {
+                    window.location.href = window.location.origin + '/index.html#/?yaoqingId=' + theRequest.yaoqingId
+                }
+            }
+            // console.log(theRequest.yqcode, theRequest.node);
+            if (theRequest.yqcode && theRequest.node) {
+                window.location.href = window.location.origin + '/index.html#/?yqcode=' + theRequest.yqcode + '&node=' + theRequest.node
+            }
+        }
+
+        function codeGetOrg(query, callback) {
+            axios({
+                url: window.location.origin + '/AuthService/SysLogin/InviteCode',
+                method: 'GET',
+                params: query
+            }).then(function(res) {
+                callback(res.data)
+            });
+        }
+
+        function yaoqingIdGetOrg(query, callback) {
+            axios({
+                url: window.location.origin + '/ProducerService/AgentInvite/Info',
+                method: 'GET',
+                params: query
+            }).then(function(res) {
+                callback(res.data)
+            });
+        }
+
+        function setAppDown(orgId) {
+            window.location.href = window.location.origin + '/AuthService/Upgrade/Down?orgId=' + orgId;
+            // axios({
+            //     url:window.location.origin+'/AuthService/Upgrade/Down',
+            //     method:'GET',
+            //     params:query
+            // }).then(function (res) {
+            //     callback(res.data)
+            // });
+        }
+
+        function jumpToApp() {
+            var installScheme = "";
+            if (theRequest.lang && theRequest.lang == 'CN') {
+                if (yaoqingId) {
+                    installScheme = "wookongcloud://page=/page_register/daili_register1?yaoqingId=" + yaoqingId;
+                } else if (code) {
+                    installScheme = "wookongcloud://page=/page_register/daili_register1?code=" + code;
+                } else if (yqcode && node) {
+                    installScheme = 'wookongcloud://page=/page_register/daili_register1?yqcode=' + yqcode + '&node=' + node
+                }
+            } else {
+                if (yaoqingId) {
+                    installScheme = "Airlinkiot://page=/page_register/daili_register1?yaoqingId=" + yaoqingId;
+                } else if (code) {
+                    installScheme = "Airlinkiot://page=/page_register/daili_register1?code=" + code;
+                } else if (yqcode && node) {
+                    installScheme = 'Airlinkiot://page=/page_register/daili_register1?yqcode=' + yqcode + '&node=' + node
+                }
+            }
+
+            window.location.href = installScheme;
+            setTimeout(function() {
+                // 检查页面是否仍然存在，如果存在，可以假定应用未安装
+                if (!document.hidden) {
+                    // window.location = location.origin + "/UpgradeDown";
+                    if (activeOrgId) {
+                        setAppDown(activeOrgId)
+                    } else {
+                        if (theRequest.lang && theRequest.lang == 'CN') {} else {
+                            window.location = location.origin + "/UpgradeDown";
+                        }
+
+                    }
+                }
+            }, 3000);
+        }
+
+        function jumpToH5() {
+            var installScheme = "";
+            if (theRequest.lang && theRequest.lang == 'CN') {
+                if (yaoqingId) {
+                    installScheme = location.origin + "/corp/#/page_register/daili_register1?yaoqingId=" + yaoqingId;
+                } else if (code) {
+                    installScheme = location.origin + "/corp/#/page_register/daili_register1?code=" + code;
+                } else if (yqcode && node) {
+                    installScheme = location.origin + '/corp/#/page_register/daili_register1?yqcode=' + yqcode + '&node=' + node
+                }
+            }
+            // console.log(installScheme, 'installSchemeinstallScheme');
+            window.location.href = installScheme;
+            // setTimeout(function() {
+            //     // 检查页面是否仍然存在，如果存在，可以假定应用未安装
+            //     if (!document.hidden) {
+            //         // window.location = location.origin + "/UpgradeDown";
+            //         if (activeOrgId) {
+            //             setAppDown(activeOrgId)
+            //         } else {
+            //             if (theRequest.lang && theRequest.lang == 'CN') {} else {
+            //                 window.location = location.origin + "/UpgradeDown";
+            //             }
+
+            //         }
+            //     }
+            // }, 3000);
+        }
+    </script>
+</body>
+
+</html>
