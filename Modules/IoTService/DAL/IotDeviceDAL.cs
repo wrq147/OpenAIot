@@ -383,5 +383,18 @@ SET NeedUpdateKey=0,KeyWords = CASE Id");
             var des = new SqlBuilder(help).Append("select DeviceId from mz_iot_device where Id in (").AppendParam(ids).Append(")");
             return (await des.DoAsync<DoQuerySql<string>>()).ToList();
         }
+        public virtual async Task<string> IdToDtuId(string id)
+        {
+            var des = new SqlBuilder(help).Append("select DeviceId from mz_iot_device where Id=").AppendParam(id);
+            var tmplist = (await des.DoAsync<DoQuerySql<string>>()).ToList();
+            if (tmplist.Count > 0)
+            {
+                return tmplist[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

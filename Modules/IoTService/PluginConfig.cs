@@ -1,20 +1,21 @@
 ﻿using Common;
+using Common.DataAc;
 using Common.EventBus;
 using Common.Share;
+using EasyNetQ;
 using IoTService.Business;
 using IoTService.DAL;
+using IoTService.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
+using MyAccess.Core;
+using NPOI.HSSF.Util;
 using System;
+using System.Collections.Generic;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
-using EasyNetQ;
-using System.Collections.Generic;
-using Common.DataAc;
-using IoTService.Models;
-using MyAccess.Core;
 
 namespace IoTService
 {
@@ -301,31 +302,16 @@ namespace IoTService
                 tmpdevice.OwnerOrgId = tOwnerOrgId;
                 tmpdevice.UseOrgId = tUseOrgId;
                 tmpdevice.UseUserId = tUseUserId;
-                await app.ServiceProvider.GetService<IotDeviceDAL>().Update(tmpdevice);
-            });
+                var iotDevDAL = app.ServiceProvider.GetService<IotDeviceDAL>();
+                await iotDevDAL.Update(tmpdevice);
 
-
-            plg.RegisterBus("UpdateIotOrg", async (bs) =>
-            {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(bs.Params);
-                string tid = Convert.ToString(evt.Id);
-
-
-                MZ_IotDevice tmpdevice = new MZ_IotDevice();
-                tmpdevice.Id = tid;
-                if (Utility.IsPropertyExist(evt, "OwnerOrgId"))
+                string tmpdtuid = await iotDevDAL.IdToDtuId(tid);
+                if (tmpdtuid != null)
                 {
-                    tmpdevice.OwnerOrgId = Convert.ToInt64(evt.OwnerOrgId);
+                    IotRedisHelper iotredis = app.ServiceProvider.GetService<IotRedisHelper>();
+                    await iotredis.HashDeleteAsync("Device:" + tmpdtuid, "$DeviceOrgIds");
                 }
-                if (Utility.IsPropertyExist(evt, "UseOrgId"))
-                {
-                    tmpdevice.UseOrgId = Convert.ToInt64(evt.UseOrgId);
-                }
-                if (Utility.IsPropertyExist(evt, "UseUserId"))
-                {
-                    tmpdevice.UseUserId = Convert.ToInt64(evt.UseUserId);
-                }
-                await app.ServiceProvider.GetService<IotDeviceDAL>().Update(tmpdevice);
+             
             });
 
 
