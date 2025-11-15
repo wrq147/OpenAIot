@@ -46,7 +46,6 @@ namespace MqttChannel
                     config.CanScript = true;
                     config.CanModbus = true;
                     config.CanBind = true;
-                    config.CanDebug = true;
                     config.CanModify = false;
                     config.SendInterval = 400;
                     x.config = config;

@@ -35,10 +35,6 @@ namespace ChannelUtility.Config
         /// </summary>
         public bool CanBind { get; set; } = false;
         /// <summary>
-        /// 是否启用在线调试
-        /// </summary>
-        public bool CanDebug { get; set;} = false;
-        /// <summary>
         /// 是否允许动态修改通道参数
         /// </summary>
         public bool CanModify { get; set; } = false;

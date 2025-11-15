@@ -22,7 +22,6 @@ builder.Services.AddEventBus(x =>
     x.config.CanScript = true;
     x.config.CanModbus = false;
     x.config.CanBind = false;
-    x.config.CanDebug = true;
     x.config.CanModify = false;
 });
 

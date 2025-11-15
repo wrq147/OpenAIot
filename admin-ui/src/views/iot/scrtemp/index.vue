@@ -129,7 +129,6 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="脚本内容" prop="scriptContent">
                 <dataAnalysis
                 v-if="showScriptEditor"
                   ref="scriptcontent"
@@ -138,7 +137,6 @@
                   :isdialog="true"
                   :options="{readOnly:activeScriptType == '1'}"
                 ></dataAnalysis>
-              </el-form-item>
             </el-col>
           </el-row>
           <el-row>
@@ -181,12 +179,11 @@
 import {
   iotScriptList,
   removeIotScriptt,
-  iotScriptInfo,
   addIotScript,
   editIotScript,
 } from "@/api/scrtemp.js";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
-let dataAnalysis = () => import("@/views/iot/deviceManage/dataAnalysis.vue");
+let dataAnalysis = () => import("@/views/iot/physicalModel/dataAnalysis.vue");
 export default {
   name: "ScrtempIndex",
   mixins: [resizeTableCon],
@@ -213,10 +210,7 @@ export default {
         scriptContent: "",
       },
       scriptRules: {
-        name: [{ required: true, trigger: "blur", message: "请填写脚本名称" }],
-        scriptContent: [
-          { required: true, trigger: "blur", message: "请填写脚本内容" },
-        ],
+        name: [{ required: true, trigger: "blur", message: "请填写脚本名称" }]
         //自定义校验器
       }, //产品分类添加验证
       activeScriptType:'',

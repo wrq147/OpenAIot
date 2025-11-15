@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="typeForm" :rules="typeRules" :model="typeForm" label-width="100px">
-      <el-form-item label="数据预处理" v-if="activeDefinition == 'attribute'||isModbusAddAttribute">
+      <el-form-item label="数据预处理" v-if="activeDefinition == 'attribute'">
         <el-switch v-model="expressEnable" @change="changeExpress"></el-switch>
         <div v-if="expressEnable">
           <el-input v-model="typeForm.express" placeholder="请输入预处理表达式" style="width:400px"></el-input>
@@ -53,7 +53,7 @@
       <el-form-item label="时间格式" prop="format" v-if="typeForm.type == 'date'">
         <el-input v-model="typeForm.format" placeholder="请输入日期格式化字符串" />
       </el-form-item>
-      <el-form-item label="坐标系转换" prop="format" v-if="typeForm.type == 'geo'&&activeDefinition == 'attribute'||typeForm.type == 'geo'&&isModbusAddAttribute">
+      <el-form-item label="坐标系转换" prop="format" v-if="typeForm.type == 'geo'&&activeDefinition == 'attribute'||typeForm.type == 'geo'">
         <el-switch
           v-model="typeForm.usingGCJTo"
           active-color="#13ce66"
@@ -78,7 +78,7 @@
         <div class="enum_list_con">
           <div class="enum_list">
             <div class="enum_li" v-for="(it, inx) in typeForm.elementsLis" :key="it.key">
-              <span v-if="activeDefinition == 'attribute'||isModbusAddAttribute">{{ it.key }}:{{ it.value }}</span>
+              <span v-if="activeDefinition == 'attribute'">{{ it.key }}:{{ it.value }}</span>
               <span v-else>{{ it.value }}</span>
               <i class="zhongtaiiconfont zhongtai-icon-a-guanbihui meijuclose" @click="delEnum(inx,it)"></i>
             </div>
@@ -99,7 +99,7 @@
           </el-form-item>
         </el-form>
 
-        <div style="font-size: 14px; color: #909399" v-if="activeDefinition == 'attribute'||isModbusAddAttribute">
+        <div style="font-size: 14px; color: #909399" v-if="activeDefinition == 'attribute'">
           <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="font-size:14px;margin-right:5px;"></i>枚举的键名是原值，枚举的键值是转换的目标值
         </div>
       </el-form-item>
@@ -173,10 +173,6 @@ export default {
       default: () => {
         return [];
       },
-    },
-    isModbusAddAttribute: {
-      type: Boolean,
-      default: false,
     },
     attrTableData: {
       type: Array
@@ -337,7 +333,7 @@ export default {
       let option = {};
       if (
         this.activeDefinition == "attribute" ||
-        this.activeDefinition == "expands"||this.isModbusAddAttribute
+        this.activeDefinition == "expands"
       ) {
         if (this.activeDefinition == "expands") {
           if (this.typeForm.type == "int") {
@@ -361,7 +357,7 @@ export default {
             };
             return option;
           }
-        } else if (this.activeDefinition == "attribute"||this.isModbusAddAttribute) {
+        } else if (this.activeDefinition == "attribute") {
           if (this.typeForm.type == "int") {
             option = {
               type: this.typeForm.type,
@@ -702,7 +698,7 @@ export default {
       if (this.typeForm.enumValue) {
         this.showEnumVal = false;
 
-        if (this.activeDefinition != 'attribute'&&!this.isModbusAddAttribute){
+        if (this.activeDefinition != 'attribute'){
           this.typeForm.enumKey=this.typeForm.enumValue;
           if (!this.enumKeyList.includes(this.typeForm.enumKey)) {
             let objs = {
@@ -728,7 +724,7 @@ export default {
     },
     showEnumInput() {
       //点击后显示枚举输入框
-      if (this.activeDefinition == 'attribute'||this.isModbusAddAttribute) {
+      if (this.activeDefinition == 'attribute') {
         this.showEnumKey = true;
         this.$nextTick(() => this.$refs.enumKeyAuto.focus());
       }

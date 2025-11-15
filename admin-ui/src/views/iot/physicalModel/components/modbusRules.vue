@@ -63,7 +63,6 @@
           <el-form-item :label="inx == 0 ? '对应的属性标识符' : ''" prop="PropertyCode">
             <div slot="label" v-if="inx == 0" class="rules_form_label">
               <span class="text">对应的属性标识符</span>
-              <div class="btn" @click="addAttributeValue"><i class="zhongtaiiconfont zhongtai-icon-xinzeng" style="font-size: 12px;margin-right:5px;"></i>新增属性</div>
             </div>
             <el-select v-model="ite.PropertyCode" clearable placeholder="请选择对应的属性标识符" filterable>
               <el-option v-for="item in attrTableData" :key="item.code" :label="item.name" :value="item.code"></el-option>
@@ -206,9 +205,6 @@ export default {
       if(value=='H'||value=='L'){
         this.matchesItemsForm[inx].NumRegister="2"
       }
-    },
-    addAttributeValue(){
-      this.$emit('addAttributeValue')
     },
     delItemsFormList(row, indexRow) {
       //删除提取规则增加

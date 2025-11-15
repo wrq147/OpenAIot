@@ -8,8 +8,8 @@
           <el-menu-item index="configInfo" @click="to('configInfo')">配置信息</el-menu-item>
           <el-menu-item index="physicalModel" @click="to('physicalModel')">物模型</el-menu-item>
           <el-menu-item index="deviceManagement" @click="to('deviceManagement')">设备管理</el-menu-item>
-          <el-menu-item v-show="CanDebug" index="onlineDebug" @click="to('onlineDebug')">在线调试</el-menu-item>
-          <el-menu-item v-show="CanScript" index="dataAnalysis" @click="to('dataAnalysis')">数据解析</el-menu-item>
+          <el-menu-item index="onlineDebug" @click="to('onlineDebug')">在线调试</el-menu-item>
+          <el-menu-item index="dataAnalysis" @click="to('dataAnalysis')">数据解析</el-menu-item>
           <el-menu-item index="warning" @click="to('warning')">报警工单</el-menu-item>
           <el-menu-item index="notice" @click="to('notice')">配置事件通知</el-menu-item>
           <el-menu-item v-show="NetworkWayName != ''" index="protocolList" @click="to('protocolList')">协议介绍</el-menu-item>
@@ -41,14 +41,13 @@
                 <el-menu-item index="attribute" @click="definitonSelect('attribute')">属性定义</el-menu-item>
                 <el-menu-item index="function" @click="definitonSelect('function')">功能定义</el-menu-item>
                 <el-menu-item index="event" @click="definitonSelect('event')">事件定义</el-menu-item>
-                <el-menu-item index="modbus" @click="definitonSelect('modbus')" v-if="CanModbus">Modbus</el-menu-item>
                 <el-menu-item index="expands" @click="definitonSelect('expands')">标签</el-menu-item>
                 <el-menu-item v-if="enableStore==true" index="proprules" @click="definitonSelect('proprules')">统计规则</el-menu-item>
                 <el-menu-item index="firmwareFiles" @click="definitonSelect('firmwareFiles')">固件文件</el-menu-item>
               </el-menu>
             </div>
             <div style="padding:20px;">
-              <div v-if="activeDefinition != 'modbus'&&activeDefinition != 'firmwareFiles'&&activeDefinition != 'proprules'">
+              <div v-if="activeDefinition != 'firmwareFiles'&&activeDefinition != 'proprules'">
                 <el-row :gutter="10" class="mb8 button_row">
                   <div v-if="activeDefinition != 'expands'">
                     <el-col :span="1.5">
@@ -135,7 +134,7 @@
                   <right-toolbar :showSearch.sync="showSearch" :isShowSearch="false"
                     @queryTable="getProductInfo()"></right-toolbar>
                 </el-row>
-                <el-table v-if="activeDefinition != 'modbus'&&activeDefinition != 'firmwareFiles'" v-loading="configLoading" :data="tableData"
+                <el-table v-if="activeDefinition != 'firmwareFiles'" v-loading="configLoading" :data="tableData"
                   style="width: 100%;" row-key="code" class="data_table" :row-class-name="sortFilterClass" :header-cell-style="cellSty" border>
                   <el-table-column :prop="its.filed" :label="its.filedName" v-for="its in tableColumnsList"
                     :key="its.filed">
@@ -160,10 +159,6 @@
                   </el-table-column>
                 </el-table>
               </div>
-              <div v-else-if="activeDefinition == 'modbus'">
-                <modbus :activeDefinition="activeDefinition" :productInfos="productInfos" :modbusData="modbusData"
-                      :attrTableData="attrTableData" @saveSetData="saveSetData" @addAttributeValue="addAttributeValue"></modbus>
-              </div>
               <div v-else-if="activeDefinition == 'proprules'">
                 <propsRules :productInfos="productInfos"></propsRules>
               </div>
@@ -177,8 +172,8 @@
         <device-manage v-if="activeSelect == 'deviceManagement'" :activeSelect="activeSelect"
           :productInfos="productInfos"></device-manage>
         <online-debug v-show="activeSelect == 'onlineDebug'" :productInfos="productInfos"></online-debug>
-        <data-analysis ref="scriptEditor" v-if="activeSelect == 'dataAnalysis'" :activeSelect="activeSelect"
-          :content="productInfos.InterScripts" @saveCode="saveCode" @choiceTemple="choiceTemple"></data-analysis>
+        <data-analysis ref="scriptEditor" v-if="activeSelect == 'dataAnalysis'" :productInfo="productInfos" :ChannelData="ChannelData"
+          :content="productInfos.InterScripts" @saveCode="saveCode" @saveSetData="saveSetData"></data-analysis>
         <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-if="activeSelect == 'warning'">
           <warn-list ref="warning-list" :isComponent="true" :filProductId="productId"></warn-list>
         </div>
@@ -188,19 +183,19 @@
       </div>
     </div>
     <el-drawer
-      :title="activeDefinition == 'attribute'||isModbusAddAttribute ? '属性定义' : (activeDefinition == 'function' ? '功能定义' : (activeDefinition == 'event' ? '事件定义' : '标签'))"
+      :title="activeDefinition == 'attribute' ? '属性定义' : (activeDefinition == 'function' ? '功能定义' : (activeDefinition == 'event' ? '事件定义' : '标签'))"
       ref="attrDra" :visible.sync="attrDrawer" :wrapperClosable="false" direction="rtl" :size="attrDrawerSize"
-      :destroy-on-close="true" @close="closeParamsSet">
+      :destroy-on-close="true">
       <el-form class="attrFrom_con" label-width="100px" :rules="attrRules" ref="attrFrom"
-        :model="activeDefinition == 'attribute'||isModbusAddAttribute ? attrFrom : (activeDefinition == 'function' ? funcFrom : (activeDefinition == 'event' ? eventFrom : expandsForm))">
-        <el-form-item label="字段名称" prop="name" v-if="activeDefinition != 'modbus'||isModbusAddAttribute">
-          <el-input v-if="activeDefinition == 'attribute'||isModbusAddAttribute" v-model="attrFrom.name" placeholder="请输入字段名称" />
+        :model="activeDefinition == 'attribute' ? attrFrom : (activeDefinition == 'function' ? funcFrom : (activeDefinition == 'event' ? eventFrom : expandsForm))">
+        <el-form-item label="字段名称" prop="name">
+          <el-input v-if="activeDefinition == 'attribute'" v-model="attrFrom.name" placeholder="请输入字段名称" />
           <el-input v-if="activeDefinition == 'expands'" v-model="expandsForm.name" placeholder="请输入字段名称" />
           <el-input v-if="activeDefinition == 'function'" v-model="funcFrom.name" placeholder="请输入字段名称" />
           <el-input v-if="activeDefinition == 'event'" v-model="eventFrom.name" placeholder="请输入字段名称" />
         </el-form-item>
-        <el-form-item label="标识符" prop="code" v-if="activeDefinition != 'modbus'||isModbusAddAttribute">
-          <el-input v-if="activeDefinition == 'attribute'||isModbusAddAttribute" v-model="attrFrom.code" placeholder="请输入标识符"
+        <el-form-item label="标识符" prop="code">
+          <el-input v-if="activeDefinition == 'attribute'" v-model="attrFrom.code" placeholder="请输入标识符"
             @input="attrFrom.code = attrFrom.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"
             :disabled="(isEditCode && attrFrom.code != '')||attrFrom.isfixed==true" />
           <el-input v-if="activeDefinition == 'expands'"
@@ -217,8 +212,8 @@
             <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="font-size:14px;margin-right:5px;"></i>1到50位字母，数字，下划线
           </span>
         </el-form-item>
-        <el-form-item label="标识符前缀" prop="prefixcode" v-if="activeDefinition == 'function'||activeDefinition == 'attribute'||isModbusAddAttribute">
-          <el-input v-if="activeDefinition == 'attribute'||isModbusAddAttribute" v-model="attrFrom.prefixcode" placeholder="表示边缘的设备地址,没有则不填"
+        <el-form-item label="标识符前缀" prop="prefixcode" v-if="activeDefinition == 'function'||activeDefinition == 'attribute'">
+          <el-input v-if="activeDefinition == 'attribute'" v-model="attrFrom.prefixcode" placeholder="表示边缘的设备地址,没有则不填"
             @input="attrFrom.prefixcode = attrFrom.prefixcode.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"/>
           <el-input v-if="activeDefinition == 'function'" v-model="funcFrom.prefixcode" placeholder="表示边缘的设备地址,没有则不填"
             @input="funcFrom.prefixcode = funcFrom.prefixcode.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')" />
@@ -245,7 +240,7 @@
             <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="font-size:14px;margin-right:5px;"></i>请先在属性定义中创建属性，仅支持对应的数据类型。
           </span>
         </el-form-item>
-        <el-form-item label="属性使用者" prop="propshowway" v-if="activeDefinition == 'attribute'||isModbusAddAttribute">
+        <el-form-item label="属性使用者" prop="propshowway" v-if="activeDefinition == 'attribute'">
           <el-checkbox-group v-model="propshowway">
             <el-checkbox label="org" name="showway">来源组织</el-checkbox>
             <el-checkbox label="own" name="showway">拥有者组织</el-checkbox>
@@ -409,8 +404,8 @@
             <el-alert title="使用表达式构建复杂逻辑，例如: (A & B) | C" type="warning" :closable="false"></el-alert>
           </div>
         </el-form-item>
-        <el-form-item label="描述" prop="description" v-if="activeDefinition != 'modbus'||isModbusAddAttribute">
-          <el-input v-if="activeDefinition == 'attribute'||isModbusAddAttribute" type="textarea" :rows="2" placeholder="请输入备注说明"
+        <el-form-item label="描述" prop="description">
+          <el-input v-if="activeDefinition == 'attribute'" type="textarea" :rows="2" placeholder="请输入备注说明"
             v-model="attrFrom.description"></el-input>
           <el-input v-if="activeDefinition == 'expands'" type="textarea" :rows="2" placeholder="请输入备注说明"
             v-model="expandsForm.description"></el-input>
@@ -435,9 +430,9 @@
           </div>
           <span style="color:#0055FF;cursor: pointer;" @click="openParamsDrawer('inputs')">+输入参数</span>
         </el-form-item>
-        <type-form ref="typeFormAssembly" v-if="activeDefinition == 'attribute'||isModbusAddAttribute || activeDefinition == 'expands'"
+        <type-form ref="typeFormAssembly" v-if="activeDefinition == 'attribute' || activeDefinition == 'expands'"
           :activeDefinition="activeDefinition" :enumKeyList="enumKeyList" :paramsForm="paramsForm" :attrTableData="attrTableData"
-          @changeMapcode="changeMapcode" @setCurType="setCurType" :isModbusAddAttribute="isModbusAddAttribute"></type-form>
+          @changeMapcode="changeMapcode" @setCurType="setCurType"></type-form>
         <el-alert  v-if="activeDefinition == 'expands'&&expandsForm.code=='state'" title="只有设备运行状态在枚举值里时，属性才能变更设备的运行状态" type="warning" :closable="false"></el-alert>
         <div v-if="activeDefinition == 'function'">
           <span style="color: #72767b;line-height: 45px;margin-top: 10px;">功能执行</span>
@@ -522,47 +517,7 @@
         <el-button type="primary" @click="joinParams" :loading="paramsLoading">{{ paramsLoading ? '提交中 ...' : '确 定'}}</el-button>
       </div>
     </el-drawer>
-    <el-dialog title="选择脚本模板" :close-on-click-modal="false" :visible.sync="scriptTemVisible" width="1000px" append-to-body>
-      <el-row :gutter="20">
-        <!--产品数据-->
-        <el-col :span="24" :xs="24">
-          <!-- <div class="from_con" id="from_con"> -->
-            <el-form class="biaodan" :model="scriptQueryParams" ref="scriptQueryForm" :inline="true" style="margin-bottom:0">
-              <el-form-item label="搜索关键词" prop="SearchKey">
-                <el-input class="set_radius" v-model="scriptQueryParams.SearchKey" placeholder="请输入关键字" clearable @keyup.enter.native="handleQuery"/>
-              </el-form-item>
-              <el-form-item label="创建日期">
-                <el-date-picker class="set_radius" v-model="scriptDateRange" style="width: 232px" value-format="yyyy-MM-dd" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-              </el-form-item>
-              <el-form-item class="submit_button_con">
-                <el-button icon="el-icon-refresh" @click="resetScriptQuery">重置</el-button>
-                <el-button type="primary" icon="el-icon-search" @click="handleScriptQuery">搜索</el-button>
-              </el-form-item>
-            </el-form>
-          <!-- </div> -->
-          <el-row :gutter="10" justify="start">
-            <el-col :span="8" v-for="item in iotScriptDataArr" :key="item.Id" style="margin-bottom: 20px">
-              <div class="script_li" @click="choiceOneTemplete(item)">
-                <div class="script_label">名称：{{ item.Name }}</div>
-                <div class="tags_info" v-if="scriptSelected.Id&&scriptSelected.Id==item.Id"></div>
-                <div>
-                  <el-input type="textarea" :autosize="{ minRows: 14, maxRows: 14 }" placeholder="请输入内容" v-model="item.ScriptContent" disabled resize="none" style="background: #ffffff"></el-input>
-                </div>
-                <div class="remark_cot" v-if="item.Remark">
-                  备注：{{ item.Remark }}
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-
-          <pagination v-show="scriptTotal > 0" :total="scriptTotal" :page.sync="scriptQueryParams.pageNum" :limit.sync="scriptQueryParams.pageSize" :pageSizes="scriptPageSizes" @pagination="loadIotScriptList"/>
-        </el-col>
-      </el-row>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="finishImportScript">确 定</el-button>
-        <el-button @click="scriptTemVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
+  
 
     <edit-product-info ref="editProduct" :productInfo="productInfos" @saveInfo="saveInfo"></edit-product-info>
 
@@ -578,17 +533,13 @@ import {
   productInfo,
   channelInfo
 } from "@/api/rules/productModel";
-import {
-  iotScriptList
-} from "@/api/scrtemp.js";
 
 let topicList = () => import("@/views/iot/deviceManage/topicList.vue")
 let deviceManage = () => import("@/views/iot/deviceManage/deviceCom.vue")
 let onlineDebug = () => import("@/views/iot/deviceManage/onlineDebug.vue")
-let dataAnalysis = () => import("@/views/iot/deviceManage/dataAnalysis.vue")
+let dataAnalysis = () => import("@/views/iot/physicalModel/dataAnalysis.vue")
 let ProductInfo = () => import("./components/productInfo")//产品详情表格
 let EditProductInfo = () => import("./components/editProductInfo")//编辑产品详情弹窗
-let modbus = () => import("./components/modbus")//modbus配置
 let TypeForm = () => import("./components/typeForm")//类型的表单
 let warnList = () => import("@/views/iot/physicalModel/warnList.vue")
 let noticeList = () => import("@/views/iot/physicalModel/noticeList.vue")
@@ -615,7 +566,6 @@ export default {
     funAnalysis,
     ProductInfo,
     EditProductInfo,
-    modbus,
     TypeForm,
     warnList,
     noticeList,
@@ -848,9 +798,7 @@ export default {
       activeModelLine: -1, //当前修改的行是
       activeParamsLine: -1, //当前修改的参数是哪一行
       isFirstGet: true, //是不是第一次获取产品数据
-      CanModbus: false,
-      CanScript: false,
-      CanDebug: false,
+      ChannelData:null,
       fileType: ["png", "jpg", "jpeg", "gif"],
       // 大小限制(MB)
       fileSize: 10,
@@ -865,21 +813,6 @@ export default {
       showsort: false,
       searchTxt: "",
       enumArr: [],
-      //脚本模板相关参数
-      scriptTemVisible:false,
-      scriptPageSizes: [6, 12, 18, 24, 30],
-      scriptQueryParams: {
-        pageNum: 1,
-        pageSize: 6,
-        SearchKey:''
-      },
-      // 日期范围
-      scriptDateRange: [],
-      scriptTotal: 0,
-      iotScriptDataArr: [],
-      scriptSelected:{},
-      //脚本模板相关参数
-      isModbusAddAttribute:false,//是否是modbus添加属性
     };
   },
 
@@ -899,16 +832,6 @@ export default {
     }
   },
   computed: {
-    modbuslist() {
-      if (this.productInfos.ModelTSL == null) {
-        return [];
-      }
-      let tmpmodeltsl = JSON.parse(this.productInfos.ModelTSL);
-      if (tmpmodeltsl.modbus == null || tmpmodeltsl.modbus.Matches == null) {
-        return [];
-      }
-      return tmpmodeltsl.modbus.Matches;
-    },
     propshowway: {
       get() {
         return this.showpparr;
@@ -999,53 +922,7 @@ export default {
           break;
       }
     },
-    closeParamsSet(){//添加属性的弹窗关闭，设置moodbus添加属性关闭
-      this.isModbusAddAttribute=false
-    },
-    addAttributeValue(){
-      this.isModbusAddAttribute=true
-      this.openAttrDrawer()
-    },
-    //脚本模板相关方法
-    choiceTemple(){
-      //选择模板
-      this.scriptTemVisible=true
-      this.loadIotScriptList()
-    },
-    choiceOneTemplete(item){
-      //选择一个脚本
-      this.scriptSelected=item
-    },
-    finishImportScript(){
-      //完成导入
-      this.$refs.scriptEditor.setCodeValue(this.scriptSelected.ScriptContent)
-      this.saveCode(this.scriptSelected.ScriptContent)
-      this.scriptTemVisible=false
-    },
-    loadIotScriptList() {
-      //获取脚本模板列表
-      this.scriptLoading=true
-      iotScriptList(this.addDateRange(this.scriptQueryParams, this.scriptDateRange)).then(
-        (res) => {
-          this.iotScriptDataArr = res.data.List;
-          this.scriptTotal = res.data.Total;
-          this.scriptLoading=false
-        }
-      ).catch(err=>{
-        this.scriptLoading=false
-      });
-    },
-    handleScriptQuery() {
-      //
-      this.scriptQueryParams.pageNum = 1;
-      this.loadIotScriptList();
-    },
-    resetScriptQuery() {
-      //重置搜索
-      this.scriptDateRange = [];
-      this.resetForm("scriptQueryForm");
-      this.handleQuery();
-    },
+   
     //修改固件列表
     filesUnload(val){
         let tmpmodeltsl=JSON.parse(this.productInfos.ModelTSL)
@@ -1402,12 +1279,9 @@ export default {
 
     getChannelInfo() {
       channelInfo({ code: this.productInfos.NetworkWay }).then(res => {
-        // console.log("CanModbus", res);
         if (res.code == 0) {
           this.NetworkWayName = res.data.Name;
-          this.CanModbus = res.data.CanModbus;
-          this.CanScript = res.data.CanScript;
-          this.CanDebug = res.data.CanDebug;
+          this.ChannelData = res.data;
         }
       });
     },
@@ -1547,9 +1421,6 @@ export default {
           this.$set(this.eventFrom,"CondType",0);
         }
       }
-      else if (this.activeDefinition == "modbus") {
-        this.modbussForm = JSON.parse(JSON.stringify(row));
-      }
     },
     deleteRowData(row, indexRow, type) {
       //删除表格中的一行的数据
@@ -1557,9 +1428,6 @@ export default {
       if (type) {
         this.$modal.confirm("是否确认删除该行数据？").then(rs => {
           if (rs == "confirm") {
-            if (this.activeDefinition == "modbus") {
-              modelTSL.modbus.splice(indexRow, 1);
-            }
             this.productInfos.ModelTSL = JSON.stringify(modelTSL);
             editProduct({
               id: this.productInfos.Id,
@@ -1759,86 +1627,81 @@ export default {
     saveSetData(params, editInfo) {
       //修改和添加数据对数据进行处理
       let proModelTSL=JSON.parse(this.productInfos.ModelTSL)
-      let modelTSL = JSON.parse(JSON.stringify(proModelTSL));
-      if (this.activeModelLine > -1) {
-        if (this.activeDefinition == "attribute"||this.isModbusAddAttribute) {
-          let option = this.$refs["typeFormAssembly"].setOptionsData();
-          this.attrFrom.option = JSON.parse(JSON.stringify(option));
-          modelTSL.properties[this.activeModelLine] = JSON.parse(
-            JSON.stringify(this.attrFrom)
-          );
-        }
-        if (this.activeDefinition == "expands") {
-          let option = this.$refs["typeFormAssembly"].setOptionsData();
-          this.expandsForm.option = JSON.parse(JSON.stringify(option));
-          modelTSL.tags[this.activeModelLine] = JSON.parse(
-            JSON.stringify(this.expandsForm)
-          );
-        }
-        if (this.activeDefinition == "function") {
-          this.funcFrom.inputs = this.inputsList;
-          this.funcFrom.outputs = this.outputsList;
-          modelTSL.functions[this.activeModelLine] = JSON.parse(
-            JSON.stringify(this.funcFrom)
-          );
-        }
-        if (this.activeDefinition == "event") {
-          modelTSL.events[this.activeModelLine] = JSON.parse(
-            JSON.stringify(this.eventFrom)
-          );
-        }
-        if (this.activeDefinition == "modbus"&&!this.isModbusAddAttribute) {
-          // console.log("加入时outputsList", this.outputsList);
-          if (editInfo) {
-            modelTSL.modbus = JSON.parse(JSON.stringify(editInfo));
-          }
-          // modelTSL.modbus = JSON.parse(JSON.stringify(this.modbussForm));
-        }
-      } else {
-        if (this.activeDefinition == "attribute"||this.isModbusAddAttribute) {
-          let option = this.$refs["typeFormAssembly"].setOptionsData();
-          if (!modelTSL.properties) {
-            modelTSL.properties = [];
-          }
-          this.attrFrom.option = option;
-          modelTSL.properties.push(JSON.parse(JSON.stringify(this.attrFrom)));
-        }
-        if (this.activeDefinition == "expands") {
-          let option = this.$refs["typeFormAssembly"].setOptionsData();
-          if (!modelTSL.tags) {
-            modelTSL.tags = [];
-          }
-          // console.log("expands加入时option", option, this.expandsForm);
-          // console.log("标签",this.expandsForm);
-          this.expandsForm.option = JSON.parse(JSON.stringify(option));
-          modelTSL.tags.push(JSON.parse(JSON.stringify(this.expandsForm)));
-        }
-        if (this.activeDefinition == "function") {
-          if (!modelTSL.functions) {
-            modelTSL.functions = [];
-          }
-          // console.log("加入时", this.inputsList, this.outputsList);
-          this.funcFrom.inputs = JSON.parse(JSON.stringify(this.inputsList));
-          this.funcFrom.outputs = JSON.parse(JSON.stringify(this.outputsList));
-          modelTSL.functions.push(JSON.parse(JSON.stringify(this.funcFrom)));
-        }
-        if (this.activeDefinition == "event") {
-          if (!modelTSL.events) {
-            modelTSL.events = [];
-          }
-          modelTSL.events.push(JSON.parse(JSON.stringify(this.eventFrom)));
-        }
-        if (this.activeDefinition == "modbus"&&!this.isModbusAddAttribute) {
+      let modelTSL = JSON.parse(JSON.stringify(proModelTSL));      
+      if(params=="modbus"){
           if (!modelTSL.modbus) {
             modelTSL.modbus = {};
           }
-          // console.log("加入时this.modbussForm", modelTSL, this.modbussForm);
-          // modelTSL.modbus = JSON.parse(JSON.stringify(this.modbussForm));
           if (editInfo) {
             modelTSL.modbus = JSON.parse(JSON.stringify(editInfo));
           }
+      }
+      else{
+        if (this.activeModelLine > -1) {
+          if (this.activeDefinition == "attribute") {
+            let option = this.$refs["typeFormAssembly"].setOptionsData();
+            this.attrFrom.option = JSON.parse(JSON.stringify(option));
+            modelTSL.properties[this.activeModelLine] = JSON.parse(
+              JSON.stringify(this.attrFrom)
+            );
+          }
+          if (this.activeDefinition == "expands") {
+            let option = this.$refs["typeFormAssembly"].setOptionsData();
+            this.expandsForm.option = JSON.parse(JSON.stringify(option));
+            modelTSL.tags[this.activeModelLine] = JSON.parse(
+              JSON.stringify(this.expandsForm)
+            );
+          }
+          if (this.activeDefinition == "function") {
+            this.funcFrom.inputs = this.inputsList;
+            this.funcFrom.outputs = this.outputsList;
+            modelTSL.functions[this.activeModelLine] = JSON.parse(
+              JSON.stringify(this.funcFrom)
+            );
+          }
+          if (this.activeDefinition == "event") {
+            modelTSL.events[this.activeModelLine] = JSON.parse(
+              JSON.stringify(this.eventFrom)
+            );
+          }
+
+        } else {
+          if (this.activeDefinition == "attribute") {
+            let option = this.$refs["typeFormAssembly"].setOptionsData();
+            if (!modelTSL.properties) {
+              modelTSL.properties = [];
+            }
+            this.attrFrom.option = option;
+            modelTSL.properties.push(JSON.parse(JSON.stringify(this.attrFrom)));
+          }
+          if (this.activeDefinition == "expands") {
+            let option = this.$refs["typeFormAssembly"].setOptionsData();
+            if (!modelTSL.tags) {
+              modelTSL.tags = [];
+            }
+            // console.log("expands加入时option", option, this.expandsForm);
+            // console.log("标签",this.expandsForm);
+            this.expandsForm.option = JSON.parse(JSON.stringify(option));
+            modelTSL.tags.push(JSON.parse(JSON.stringify(this.expandsForm)));
+          }
+          if (this.activeDefinition == "function") {
+            if (!modelTSL.functions) {
+              modelTSL.functions = [];
+            }
+            // console.log("加入时", this.inputsList, this.outputsList);
+            this.funcFrom.inputs = JSON.parse(JSON.stringify(this.inputsList));
+            this.funcFrom.outputs = JSON.parse(JSON.stringify(this.outputsList));
+            modelTSL.functions.push(JSON.parse(JSON.stringify(this.funcFrom)));
+          }
+          if (this.activeDefinition == "event") {
+            if (!modelTSL.events) {
+              modelTSL.events = [];
+            }
+            modelTSL.events.push(JSON.parse(JSON.stringify(this.eventFrom)));
+          }
         }
       }
+
       let proModelTSLStr = JSON.stringify(modelTSL);
       this.saveLoading = true;
       editProduct({
@@ -1847,15 +1710,10 @@ export default {
       }).then(rsp => {
         // console.log("数据更新后返回", rsp);
         if (rsp.code == 0) {
-          if (params && params == "del") {
-            this.$modal.msgSuccess("删除成功");
-          } else {
-            this.$modal.msgSuccess("保存成功");
-          }
+          this.$modal.msgSuccess("操作成功");
           this.attrDrawer = false;
           this.saveLoading = false;
           this.getProductInfo();
-          this.isModbusAddAttribute=false//modbus添加属性关闭
           // console.log("新增修改后表格数据", this.tableData);
         }
       }).catch(err=>{
@@ -1868,49 +1726,39 @@ export default {
         this.$refs.funRef.setInputData();
       }
 
-      if (this.activeDefinition == "modbus"&&!this.isModbusAddAttribute) {
-        if (this.$refs["modbussForm"]) {
-          this.$refs["modbussForm"].validate(valid1 => {
-            if (valid1) {
-              this.saveSetData();
-            }
-          });
-        }
-      } else {
-        this.$refs["attrFrom"].validate(valid => {
-          if (valid) {
-            if (
-              this.$refs["typeFormAssembly"] &&
-              this.$refs["typeFormAssembly"].$refs["typeForm"]
-            ) {
-              this.$refs["typeFormAssembly"].$refs["typeForm"].validate(valid2 => {
-                  if (valid2) {
-                    if (this.$refs["paramsForm"]) {
-                      //效验每个参数的name和code
-                      this.$refs["paramsForm"].validate(valid3 => {
-                        if (valid3) {
-                          this.saveSetData();
-                        } else {
-                          return false;
-                        }
-                      });
-                    } else {
-                      this.saveSetData();
-                    }
+      this.$refs["attrFrom"].validate(valid => {
+        if (valid) {
+          if (
+            this.$refs["typeFormAssembly"] &&
+            this.$refs["typeFormAssembly"].$refs["typeForm"]
+          ) {
+            this.$refs["typeFormAssembly"].$refs["typeForm"].validate(valid2 => {
+                if (valid2) {
+                  if (this.$refs["paramsForm"]) {
+                    //效验每个参数的name和code
+                    this.$refs["paramsForm"].validate(valid3 => {
+                      if (valid3) {
+                        this.saveSetData();
+                      } else {
+                        return false;
+                      }
+                    });
                   } else {
-                    return false;
+                    this.saveSetData();
                   }
-              });
-            } else {
-              this.saveSetData();
-              // console.log("submit3!");
-            }
+                } else {
+                  return false;
+                }
+            });
           } else {
-            console.log("error submit1!!");
-            return false;
+            this.saveSetData();
+            // console.log("submit3!");
           }
-        });
-      }
+        } else {
+          console.log("error submit1!!");
+          return false;
+        }
+      });
     },
 
     getProductInfo() {
@@ -2019,18 +1867,7 @@ export default {
         }
       });
     },
-    /** 查询用户列表 */
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getProductInfo();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
+
     to(path) {
       if(!this.configLoading){
         this.activeSelect = path;

@@ -52,7 +52,6 @@ namespace ModbusChannel
                     x.config.CanScript = false;
                     x.config.CanModbus = true;
                     x.config.CanBind = false;
-                    x.config.CanDebug = true;
                     x.config.CanModify = true;
                     x.config.SendInterval = 300;
                 });

@@ -1,62 +1,104 @@
 <template>
-  <div>
-    <div
-      :class="[isdialog ? '' : 'elbiaoge_elform']"
-      :style="{ 'min-height': isdialog ? '' : 'calc(100vh - 194px' }"
-      v-if="activeSelect == 'dataAnalysis'"
-    >
-      <div class="js_con" :style="{ 'margin-top': isdialog ? '0' : '20px' }">
-        <div class="button_con">
-          <div>
-            <el-button
-              class="copyBtn"
-              data-clipboard-action="copy"
-              :data-clipboard-text="monacoContent"
-              @click="copyCode"
-              type="primary"
-              plain
-              v-if="!isdialog"
-              >一键复制</el-button
-            >
+  <div :class="[isdialog ? '' : 'elbiaoge_elform']" :style="{ 'min-height': isdialog ? '' : 'calc(100vh - 194px' }">
+    <el-tabs type="card" @tab-click="tagChange">
+      <el-tab-pane label="脚本解释器" v-if="ChannelData.CanScript"></el-tab-pane>
+      <el-tab-pane label="Modbus解释器" v-if="ChannelData.CanModbus"></el-tab-pane>
+    </el-tabs>
+    <div v-show="curtag == '脚本解释器'" class="js_con" :style="{ 'margin-top': '0px' }">
+      <div class="button_con">
+        <div>
+          <el-button class="copyBtn" data-clipboard-action="copy" :data-clipboard-text="monacoContent" @click="copyCode"
+            type="primary" plain v-if="!isdialog">一键复制</el-button>
 
-            <el-button @click="insertUpCode" type="primary" plain
-              >插入升级代码</el-button
-            >
-            <el-button @click="insertPrintCode" type="primary" plain>
-              插入调试代码
-            </el-button>
+          <el-button @click="insertUpCode" type="primary" plain>插入升级代码</el-button>
+          <el-button @click="insertPrintCode" type="primary" plain>
+            插入调试代码
+          </el-button>
 
-            <el-button @click="insertJsonPropCode" type="primary" plain>
-              插入JSON属性解释
-            </el-button>
+          <el-button @click="insertJsonPropCode" type="primary" plain>
+            插入JSON属性解释
+          </el-button>
 
-            <el-button @click="insertFileUpload" type="primary" plain>
-              插入文件上传
-            </el-button>
-            <el-button @click="importClick" type="primary" plain v-if="!isdialog">
-              导入模板
-            </el-button>
-          </div>
-          <div>
-            <el-button type="primary" @click="saveCode" v-if="!isdialog"
-              >保存代码</el-button
-            >
-            <el-button type="primary" @click="formatCode">格式化</el-button>
-          </div>
+          <el-button @click="insertFileUpload" type="primary" plain>
+            插入文件上传
+          </el-button>
+          <el-button @click="choiceTemple" type="primary" plain v-if="!isdialog">
+            导入模板
+          </el-button>
         </div>
-        <div class="js_func_con">
-          <div class="code-container" ref="container"></div>
+        <div>
+          <el-button type="primary" @click="saveCode" v-if="!isdialog">保存代码</el-button>
+          <el-button type="primary" @click="formatCode">格式化</el-button>
         </div>
       </div>
+      <div class="js_func_con">
+        <div class="code-container" ref="container"></div>
+      </div>
     </div>
+    <modbus v-show="curtag == 'Modbus解释器'" :productInfos="productInfo" :modbusData="modbusData"
+      :attrTableData="attrTableData" @saveSetData="saveSetData"></modbus>
+    <el-dialog title="选择脚本模板" :close-on-click-modal="false" :visible.sync="scriptTemVisible" width="1000px"
+      append-to-body>
+      <el-row :gutter="20">
+        <!--产品数据-->
+        <el-col :span="24" :xs="24">
+          <!-- <div class="from_con" id="from_con"> -->
+          <el-form class="biaodan" :model="scriptQueryParams" ref="scriptQueryForm" :inline="true"
+            style="margin-bottom:0">
+            <el-form-item label="搜索关键词" prop="SearchKey">
+              <el-input class="set_radius" v-model="scriptQueryParams.SearchKey" placeholder="请输入关键字" clearable
+                @keyup.enter.native="handleQuery" />
+            </el-form-item>
+            <el-form-item label="创建日期">
+              <el-date-picker class="set_radius" v-model="scriptDateRange" style="width: 232px"
+                value-format="yyyy-MM-dd" type="daterange" range-separator="-" start-placeholder="开始日期"
+                end-placeholder="结束日期"></el-date-picker>
+            </el-form-item>
+            <el-form-item class="submit_button_con">
+              <el-button icon="el-icon-refresh" @click="resetScriptQuery">重置</el-button>
+              <el-button type="primary" icon="el-icon-search" @click="handleScriptQuery">搜索</el-button>
+            </el-form-item>
+          </el-form>
+          <!-- </div> -->
+          <el-row :gutter="10" justify="start">
+            <el-col :span="8" v-for="item in iotScriptDataArr" :key="item.Id" style="margin-bottom: 20px">
+              <div class="script_li" @click="choiceOneTemplete(item)">
+                <div class="script_label">名称：{{ item.Name }}</div>
+                <div class="tags_info" v-if="scriptSelected.Id && scriptSelected.Id == item.Id"></div>
+                <div>
+                  <el-input type="textarea" :autosize="{ minRows: 14, maxRows: 14 }" placeholder="请输入内容"
+                    v-model="item.ScriptContent" disabled resize="none" style="background: #ffffff"></el-input>
+                </div>
+                <div class="remark_cot" v-if="item.Remark">
+                  备注：{{ item.Remark }}
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+
+          <pagination v-show="scriptTotal > 0" :total="scriptTotal" :page.sync="scriptQueryParams.pageNum"
+            :limit.sync="scriptQueryParams.pageSize" :pageSizes="scriptPageSizes" @pagination="loadIotScriptList" />
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="finishImportScript">确 定</el-button>
+        <el-button @click="scriptTemVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import * as monaco from "monaco-editor";
+import {
+  iotScriptList
+} from "@/api/scrtemp.js";
 
+let modbus = () => import("./components/modbus")//modbus配置
 export default {
+  components: {
+    modbus
+  },
   props: {
-    activeSelect: String,
     content: String,
     language: { type: String, default: "javascript" },
     theme: { type: String, default: "vs" },
@@ -64,6 +106,21 @@ export default {
       type: Object,
       default() {
         return {};
+      },
+    },
+    productInfo: {
+      type: Object,
+      default() {
+        return null;
+      },
+    },
+    ChannelData: {
+      type: Object,
+      default() {
+        return {
+          CanScript: true,
+          CanModbus: false
+        };
       },
     },
     isdialog: {
@@ -76,6 +133,22 @@ export default {
       // 编辑器对象
       monacoEditor: null,
       monacoContent: "",
+      modbusData: {}, //modbus数据
+      attrTableData: [],
+      //脚本模板相关参数
+      scriptTemVisible: false,
+      scriptPageSizes: [6, 12, 18, 24, 30],
+      scriptQueryParams: {
+        pageNum: 1,
+        pageSize: 6,
+        SearchKey: ''
+      },
+      // 日期范围
+      scriptDateRange: [],
+      scriptTotal: 0,
+      iotScriptDataArr: [],
+      scriptSelected: {},
+      curtag: '脚本解释器'
     };
   },
   watch: {
@@ -85,13 +158,32 @@ export default {
         this.monacoEditor && this.monacoEditor.updateOptions(options);
       },
     },
+    productInfo: {
+      handler(newVal) {
+        if (newVal != null) {
+          let jsonLis = JSON.parse(newVal.ModelTSL);
+          if (jsonLis.modbus) {
+            this.modbusData = jsonLis.modbus;
+            this.attrTableData = jsonLis.properties;
+          }
+        }
+      },
+      immediate: true
+    }
   },
-  created(){
+  created() {
     if (this.monacoEditor) {
       this.monacoEditor.dispose();
     }
   },
   mounted() {
+    if (this.ChannelData.CanScript == true) {
+      this.curtag = "脚本解释器";
+    }
+    else if (this.ChannelData.CanModbus == true) {
+      this.curtag = "Modbus解释器";
+    }
+
     if (this.content == null || this.content == "") {
       this.monacoContent = `
     /**
@@ -537,7 +629,7 @@ export default {
         PollTime:Number;
       }
     `;
-    
+
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
       fact,
       "customFileName"
@@ -554,15 +646,14 @@ export default {
       this.$emit("change", this.monacoContent);
     });
   },
-  beforeDestroy(){
+  beforeDestroy() {
     this.monacoEditor.dispose();
   },
   methods: {
-    importClick(){
-      //导入
-      this.$emit('choiceTemple')
+    tagChange(targetName) {
+      this.curtag = targetName.label;
     },
-    setCodeValue(code){
+    setCodeValue(code) {
       this.monacoEditor.setValue(code)
     },
     returnCode() {
@@ -675,6 +766,49 @@ export default {
       ]);
       this.monacoEditor.getAction("editor.action.formatDocument").run();
     },
+    saveSetData(params, editInfo) {
+      this.$emit("saveSetData", params, editInfo);
+    },
+    //脚本模板相关方法
+    choiceTemple() {
+      //选择模板
+      this.scriptTemVisible = true
+      this.loadIotScriptList()
+    },
+    choiceOneTemplete(item) {
+      //选择一个脚本
+      this.scriptSelected = item
+    },
+    finishImportScript() {
+      //完成导入
+      this.setCodeValue(this.scriptSelected.ScriptContent)
+      this.saveCode(this.scriptSelected.ScriptContent)
+      this.scriptTemVisible = false
+    },
+    loadIotScriptList() {
+      //获取脚本模板列表
+      this.scriptLoading = true
+      iotScriptList(this.addDateRange(this.scriptQueryParams, this.scriptDateRange)).then(
+        (res) => {
+          this.iotScriptDataArr = res.data.List;
+          this.scriptTotal = res.data.Total;
+          this.scriptLoading = false
+        }
+      ).catch(err => {
+        this.scriptLoading = false
+      });
+    },
+    handleScriptQuery() {
+      this.scriptQueryParams.pageNum = 1;
+      this.loadIotScriptList();
+    },
+    resetScriptQuery() {
+      //重置搜索
+      this.scriptDateRange = [];
+      this.resetForm("scriptQueryForm");
+      this.handleScriptQuery();
+    },
+
   },
 };
 </script>
@@ -684,6 +818,7 @@ export default {
   margin-top: 20px;
   border: 1px solid #dddddd;
   padding: 0;
+
   .button_con {
     width: 100%;
     height: 50px;
@@ -693,6 +828,7 @@ export default {
     padding: 0 30px;
     background-color: #f7f8fa;
   }
+
   .js_func_con {
     .code-container {
       // overflow-y: auto !important;
@@ -702,6 +838,7 @@ export default {
     }
   }
 }
+
 .read_js_func_con {
   border: 1px solid #dddddd;
   border-left: none;

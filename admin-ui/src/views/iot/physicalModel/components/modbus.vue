@@ -1,37 +1,39 @@
 <template>
   <div style="width: 100%">
-    <el-form label-width="120px" :rules="modbusRules" ref="modbussForm" :model="modbussForm" v-if="activeDefinition == 'modbus'" style="width: 100%">
+    <el-form label-width="120px" :rules="modbusRules" ref="modbussForm" :model="modbussForm" style="width: 100%">
       <el-row>
         <el-col :span="10" style="padding-right: 30px; box-sizing: border-box">
           <el-row class="button_row">
-              <el-col>
-                <h2>Modbus配置：</h2>
-              </el-col>
-              <el-col span="6">
-                <el-button type="primary" plain @click="exportRow(modbussForm, true)">
-                  <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
-                  <span style="margin-left: 6px">导出</span>
-                </el-button>
-              </el-col>
-              <el-col span="6">
-                <el-button type="primary" plain class="putbutton">
-                  <i class="zhongtaiiconfont zhongtai-icon-daoru"></i>
-                  <span style="margin-left: 6px">导入<input type="file" @change="importRow" id="putbuttonFile"/></span>
-                </el-button>
-              </el-col>
+            <el-col>
+              <h2>Modbus配置：</h2>
+            </el-col>
+            <el-col :span="6">
+              <el-button type="primary" plain @click="exportRow(modbussForm, true)">
+                <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
+                <span style="margin-left: 6px">导出</span>
+              </el-button>
+            </el-col>
+            <el-col :span="6">
+              <el-button type="primary" plain class="putbutton">
+                <i class="zhongtaiiconfont zhongtai-icon-daoru"></i>
+                <span style="margin-left: 6px">导入<input type="file" @change="importRow" id="putbuttonFile" /></span>
+              </el-button>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="波特率" prop="BaudRate">
                 <el-select filterable v-model="modbussForm.BaudRate" placeholder="请选择波特率" style="width: 100%">
-                  <el-option v-for="ite in BaudRateList" :key="ite.value" :label="ite.label" :value="ite.value"></el-option>
+                  <el-option v-for="ite in BaudRateList" :key="ite.value" :label="ite.label"
+                    :value="ite.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="数据位" prop="DataBits">
                 <el-select v-model="modbussForm.DataBits" placeholder="请选择数据位" style="width: 100%">
-                  <el-option v-for="ite in DataBitsList" :key="ite.value" :label="ite.label" :value="ite.value"></el-option>
+                  <el-option v-for="ite in DataBitsList" :key="ite.value" :label="ite.label"
+                    :value="ite.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -40,14 +42,16 @@
             <el-col :span="12">
               <el-form-item label="奇偶效验" prop="Parity">
                 <el-select v-model="modbussForm.Parity" placeholder="请选择奇偶效验" style="width: 100%">
-                  <el-option v-for="ite in ParityList" :key="ite.value" :label="ite.label" :value="ite.value"></el-option>
+                  <el-option v-for="ite in ParityList" :key="ite.value" :label="ite.label"
+                    :value="ite.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="停止位" prop="StopBits">
                 <el-select v-model="modbussForm.StopBits" placeholder="请选择停止位" style="width: 100%">
-                  <el-option v-for="ite in StopBitsList" :key="ite.value" :label="ite.label" :value="ite.value"></el-option>
+                  <el-option v-for="ite in StopBitsList" :key="ite.value" :label="ite.label"
+                    :value="ite.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -55,11 +59,13 @@
           <el-form-item label="轮询周期时间" prop="PollTime">
             <el-row>
               <el-col :span="12">
-                <el-input style="margin-right: 10px" type="number" :step="1000" v-model.number="modbussForm.PollTime" placeholder="请输入轮询周期时间"></el-input>
+                <el-input style="margin-right: 10px" type="number" :step="1000" v-model.number="modbussForm.PollTime"
+                  placeholder="请输入轮询周期时间"></el-input>
               </el-col>
               <el-col :span="12">
                 <div style="padding: 0 10px;background-color: #f5f7fa;margin-left: 10px;">
-                  <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="font-size: 14px;margin-right: 5px;color: rgb(232, 72, 59);"></i>
+                  <i class="zhongtaiiconfont zhongtai-icon-zhuyi"
+                    style="font-size: 14px;margin-right: 5px;color: rgb(232, 72, 59);"></i>
                   <span style="color: #6ab2fa">轮询周期时间（单位ms）</span>
                 </div>
               </el-col>
@@ -71,19 +77,21 @@
             </el-select>
           </el-form-item>
           <el-row style="text-align: right; margin-top: 30px">
-            <el-button type="primary" @click="saveProductInfo" :loading="saveLoading">{{ saveLoading ? "提交中 ..." : "保 存" }}</el-button>
+            <el-button type="primary" @click="saveProductInfo" :loading="saveLoading">{{ saveLoading ? "提交中 ..." : "保 存"
+            }}</el-button>
           </el-row>
         </el-col>
-        <el-col :span="14" style="padding-left: 10px;padding-right: 10px;box-sizing: border-box;background-color: #f0f2f5;min-height: calc(100vh - 272px);">
+        <el-col :span="14"
+          style="padding-left: 10px;padding-right: 10px;box-sizing: border-box;background-color: #f0f2f5;min-height: calc(100vh - 272px);">
           <h2>匹配规则：<span style="color:#c40001;font-size: 16px;">(注意：请确保匹配规则的数据长度不一致)</span></h2>
           <el-form-item label="规则匹配">
-            
+
             <div v-if="modbussForm.Matches && modbussForm.Matches.length > 0" class="param_list_con">
               <div class="param_list" v-for="(item, inx) in modbussForm.Matches" :key="inx">
                 <div class="list_left">
                   <i class="el-icon-rank handle" style="cursor: pointer;"></i>
                   <span>{{ item.Name }}</span>
-                  <span class="params_type">{{funCodeListMap.get(item.FuncCode)}}</span>
+                  <span class="params_type">{{ funCodeListMap.get(item.FuncCode) }}</span>
                 </div>
                 <div class="list_right">
                   <i class="el-icon-plus" @click="openMatchesDrawer(inx)"></i>
@@ -98,18 +106,10 @@
       </el-row>
     </el-form>
 
-    <modbus-rules
-      :modbussForm="modbussForm"
-      :activeParamsLine="activeParamsLine"
-      :matchesDrawer="matchesDrawer"
-      :attrTableData="attrTableData"
-      :matchesForm="matchesForm"
-      :matchesItemsForm="matchesItemsForm"
-      :activeAddParamsIndex="activeAddParamsIndex"
-      @closeMatchesDrawer="closeMatchesDrawer"
-      @saveSetDataFun="saveSetDataFun"
-      @addAttributeValue="addAttributeValue"
-    ></modbus-rules>
+    <modbus-rules :modbussForm="modbussForm" :activeParamsLine="activeParamsLine" :matchesDrawer="matchesDrawer"
+      :attrTableData="attrTableData" :matchesForm="matchesForm" :matchesItemsForm="matchesItemsForm"
+      :activeAddParamsIndex="activeAddParamsIndex" @closeMatchesDrawer="closeMatchesDrawer"
+      @saveSetDataFun="saveSetDataFun" @addAttributeValue="addAttributeValue"></modbus-rules>
   </div>
 </template>
 
@@ -139,12 +139,7 @@ export default {
       default: () => {
         return [];
       },
-    },
-    activeDefinition: {
-      //接入方式
-      type: String,
-      default: "",
-    },
+    }
   },
   data() {
     return {
@@ -254,42 +249,36 @@ export default {
         Matches: [], //规则匹配
       };
     }
-    
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.loadSortable()
+      }, 1000)
+    })
   },
-  watch:{
-    activeDefinition:{
-      handler(newval){
-        this.$nextTick(()=>{
-          setTimeout(()=>{
-            this.loadSortable()
-          },1000)
-        })
-      }
-    }
-  },
+
   methods: {
-    loadSortable(){
+    loadSortable() {
       const tbody = document.querySelector('.param_list_con')
       // console.log(tbody,'tbody',this.modbussForm);
-      if(tbody){
+      if (tbody) {
         new Sortable(tbody, {
-            handle: '.handle', // handle's class
-            animation: 150,
-            ghostClass: 'blue-background-class', // 拖动时元素的样式类
-            // 需要在odEnd方法中处理原始eltable数据，使原始数据与显示数据保持顺序一致
-            onEnd: async({ newIndex, oldIndex }) => {
-              let modbussForm=JSON.parse(JSON.stringify(this.modbussForm))
-              let targetRow = JSON.parse(JSON.stringify(modbussForm.Matches[oldIndex]))
-              let targetNewRow = JSON.parse(JSON.stringify(modbussForm.Matches[newIndex]))
-              modbussForm.Matches[newIndex]=JSON.parse(JSON.stringify(targetRow))
-              modbussForm.Matches[oldIndex]=JSON.parse(JSON.stringify(targetNewRow))
-              this.modbussForm=JSON.parse(JSON.stringify(modbussForm))
-              this.saveSetDataFun(this.modbussForm);
-            },
+          handle: '.handle', // handle's class
+          animation: 150,
+          ghostClass: 'blue-background-class', // 拖动时元素的样式类
+          // 需要在odEnd方法中处理原始eltable数据，使原始数据与显示数据保持顺序一致
+          onEnd: async ({ newIndex, oldIndex }) => {
+            let modbussForm = JSON.parse(JSON.stringify(this.modbussForm))
+            let targetRow = JSON.parse(JSON.stringify(modbussForm.Matches[oldIndex]))
+            let targetNewRow = JSON.parse(JSON.stringify(modbussForm.Matches[newIndex]))
+            modbussForm.Matches[newIndex] = JSON.parse(JSON.stringify(targetRow))
+            modbussForm.Matches[oldIndex] = JSON.parse(JSON.stringify(targetNewRow))
+            this.modbussForm = JSON.parse(JSON.stringify(modbussForm))
+            this.saveSetDataFun(this.modbussForm);
+          },
         })
       }
     },
-    addAttributeValue(){
+    addAttributeValue() {
       this.$emit('addAttributeValue')
     },
     processReadFile(file) {
@@ -298,7 +287,7 @@ export default {
       reader.onload = (e) => {
         try {
           let jsonArr = JSON.parse(e.target.result);
-          if(jsonArr.t&&jsonArr.t=='modbus'){
+          if (jsonArr.t && jsonArr.t == 'modbus') {
             this.modbussForm = jsonArr.items;
           }
         } catch (error) {
@@ -324,7 +313,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
       let msgitem = {
-        t: this.activeDefinition,
+        t: "modbus",
         items: [],
       };
       if (isAll) {
@@ -332,7 +321,7 @@ export default {
       } else {
         msgitem.items.push(row);
       }
-      let tmname = this.activeDefinition;
+      let tmname = "modbus";
       tmploading.close();
       const content = JSON.stringify(msgitem);
       const blobData = new Blob([content], { type: "application/json" });
@@ -355,7 +344,7 @@ export default {
         .then((rs) => {
           if (rs == "confirm") {
             this.modbussForm.Matches.splice(rowIndex, 1);
-            this.$emit("saveSetData", "del", this.modbussForm);
+            this.$emit("saveSetData", "modbus", this.modbussForm);
           }
         });
     },
@@ -384,10 +373,10 @@ export default {
           xuhaoNum: 0,
         },
       ];
-      if(index>-1){
-        this.activeAddParamsIndex=index
-      }else{
-        this.activeAddParamsIndex=-1
+      if (index > -1) {
+        this.activeAddParamsIndex = index
+      } else {
+        this.activeAddParamsIndex = -1
       }
     },
     closeMatchesDrawer() {
@@ -396,19 +385,17 @@ export default {
     },
     saveProductInfo() {
       //保存产品信息
-      if (this.activeDefinition == "modbus") {
-        if (this.$refs["modbussForm"]) {
-          this.$refs["modbussForm"].validate((valid1) => {
-            if (valid1) {
-              //   this.saveSetData();
-              this.saveSetDataFun(this.modbussForm);
-            }
-          });
-        }
+      if (this.$refs["modbussForm"]) {
+        this.$refs["modbussForm"].validate((valid1) => {
+          if (valid1) {
+            //   this.saveSetData();
+            this.saveSetDataFun(this.modbussForm);
+          }
+        });
       }
     },
     saveSetDataFun(modbussForm) {
-      this.$emit("saveSetData", "add", modbussForm);
+      this.$emit("saveSetData", "modbus", modbussForm);
     },
   },
 };
@@ -421,9 +408,11 @@ export default {
   position: relative;
   border: 1px solid #B3D8FF;
   margin-left: 10px;
+
   i {
     margin-right: 5px;
   }
+
   #putbuttonFile {
     position: absolute;
     left: 0;
@@ -433,13 +422,16 @@ export default {
     opacity: 0;
     filter: alpha(opacity=0);
   }
-  &::before{
+
+  &::before {
     color: #409eff;
   }
 }
+
 .param_list_con {
   background-color: #fafafa;
 }
+
 .param_list {
   color: #272e3b;
   width: 100%;
@@ -450,10 +442,12 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .list_left {
-    .handle{
+    .handle {
       margin-right: 5px;
     }
+
     .params_type {
       padding: 0 6px;
       border: 1px solid #595959;
@@ -461,6 +455,7 @@ export default {
       margin-left: 10px;
     }
   }
+
   .list_right {
     i {
       padding: 0 5px;

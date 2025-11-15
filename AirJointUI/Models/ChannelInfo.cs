@@ -38,10 +38,6 @@ namespace AirJointUI.Models
         /// </summary>
         public bool CanBind { get; set; } = false;
         /// <summary>
-        /// 是否启用在线调试
-        /// </summary>
-        public bool CanDebug { get; set; } = false;
-        /// <summary>
         /// 报文间隔
         /// </summary>
         public int SendInterval { get; set; } = 300;
