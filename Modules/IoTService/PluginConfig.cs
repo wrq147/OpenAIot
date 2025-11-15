@@ -332,7 +332,12 @@ namespace IoTService
                 {
                     await deviceDAL.UpdateUseOrgId(evt.Ids, evt.UseOrgId.Value);
                 }
-
+                IotRedisHelper iotredis = app.ServiceProvider.GetService<IotRedisHelper>();
+                var dtuIds = await deviceDAL.IdsToDtuIds(evt.Ids);
+                foreach (var dtuId in dtuIds)
+                {
+                    await redis.HashDeleteAsync("Device:" + dtuId, "$DeviceOrgIds");
+                }
             });
 
             //触发更新设备的关键词

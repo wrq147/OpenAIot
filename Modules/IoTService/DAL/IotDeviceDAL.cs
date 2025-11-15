@@ -304,8 +304,6 @@ namespace IoTService.DAL
         /// <returns></returns>
         public virtual async Task<int> UpdateBatchOwnerOrgId(List<string> ids, long newOrgId, bool clearUse)
         {
-            var dtuIds = await IdsToDtuIds(ids);
-            IotRedisHelper redis = this.Provider.GetService<IotRedisHelper>();
             int result;
             if (clearUse)
             {
@@ -318,10 +316,6 @@ namespace IoTService.DAL
                 result = des.RowCount;
             }
 
-            foreach (var dtuId in dtuIds)
-            {
-                await redis.HashDeleteAsync("Device:" + dtuId, "$DeviceOrgIds");
-            }
             return result;
         }
         /// <summary>
@@ -343,17 +337,9 @@ namespace IoTService.DAL
         /// <returns></returns>
         public virtual async Task<int> UpdateUseOrgId(List<string> ids, long orgId)
         {
-            var dtuIds = await IdsToDtuIds(ids);
-            IotRedisHelper redis = this.Provider.GetService<IotRedisHelper>();
-
             MZ_IotDevice device = new MZ_IotDevice();
             device.UseOrgId = orgId;
             var result = await new SqlBuilder(help).Update(device, x => ids.Contains(x.Id)).DoAsync();
-
-            foreach (var dtuId in dtuIds)
-            {
-                await redis.HashDeleteAsync("Device:" + dtuId, "$DeviceOrgIds");
-            }
             return result;
         }
         public virtual async Task SetNeedUpdateKeywords(string path)
@@ -378,7 +364,7 @@ SET NeedUpdateKey=0,KeyWords = CASE Id");
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        private async Task<List<string>> IdsToDtuIds(List<string> ids)
+        public virtual async Task<List<string>> IdsToDtuIds(List<string> ids)
         {
             var des = new SqlBuilder(help).Append("select DeviceId from mz_iot_device where Id in (").AppendParam(ids).Append(")");
             return (await des.DoAsync<DoQuerySql<string>>()).ToList();
