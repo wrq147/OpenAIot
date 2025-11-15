@@ -59,6 +59,24 @@ namespace Common.EventBus
             }
             return 0;
         }
+
+        public List<X> GetList<X>(string key)
+        {
+            if (_tmpobj == null)
+            {
+                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
+            }
+            if (_tmpobj == null)
+            {
+                return null;
+            }
+            object val;
+            if (_tmpobj.TryGetValue(key, out val))
+            {
+                return (List<X>)val;
+            }
+            return null;
+        }
         public object GetObject(string key)
         {
             if (_tmpobj == null)
