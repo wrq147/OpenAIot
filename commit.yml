@@ -2,22 +2,106 @@
 branches: {
   }
 fileChange:
+  /App:
+    newFile: !uuid 'aaa0ede5e5f1377706c34c82a7cda1f33723e012'
+    oldFile: !uuid 'f0c49e922143a9a607622fe20b6795d107ae063b'
+  /App/XML:
+    newFile: !uuid 'd449e2f070460b9616bf424530a0b6dd0e32cd00'
+    oldFile: !uuid 'deabb05429df0e86066fce26c6b9007a19eab97a'
+  /App/XML/ProducerService.xml:
+    newFile: !uuid 'b4763e1272596e4baf347b48bf1cc4ee3583ad04'
+    oldFile: !uuid '6f3f323aa0677eaf5872bfb3ec53d372803220f0'
   /Modules:
-    newFile: !uuid 'a544f2759f3654dee25f674079ad4f75bbdfa271'
-    oldFile: !uuid 'd90bae2ccabc2ee778346c939f68561ba0a28904'
+    newFile: !uuid '6769e955126109d7109afc10a5e921ea74539082'
+    oldFile: !uuid 'a544f2759f3654dee25f674079ad4f75bbdfa271'
   /Modules/IoTService:
-    newFile: !uuid '69445dadb225e0181fce8dbdeb923a587d0d5ac6'
-    oldFile: !uuid '5b7e14cb0dac08f1e3005f2c416a4528a2418fd2'
-  /Modules/IoTService/DAL:
-    newFile: !uuid 'cb1a632bcd7a3409d043cfb306e357526deba5c1'
-    oldFile: !uuid 'c17f74a43a3af6587b9779622ad27171d9173291'
-  /Modules/IoTService/DAL/IotDeviceDAL.cs:
-    newFile: !uuid '529f7ea6457792112454743dee24c3fce6696eeb'
-    oldFile: !uuid '40a7555e94aeced2fdbf9cebdf8253634c0adfd7'
-  /Modules/IoTService/PluginConfig.cs:
-    newFile: !uuid '008e964bd571e1efa4ddc9b948dacf69c1ace1e2'
-    oldFile: !uuid 'e27696fac6e28fdd3b139083a7c7ca4729c630b3'
-gitCommitId: !uuid '5152cf190be3b7e226523e61c154f75246aff22d'
+    newFile: !uuid '8b164fd8deeaff35cac8747aeb22cd2040469a8d'
+    oldFile: !uuid '69445dadb225e0181fce8dbdeb923a587d0d5ac6'
+  /Modules/IoTService/Business:
+    newFile: !uuid '1d16fbad3a14c1463283c3794585b32e9c39b1ec'
+    oldFile: !uuid '9b4ebb15ad4a9a66d35c10adbe6642aae001930d'
+  /Modules/IoTService/Business/IotDeviceBLL.cs:
+    newFile: !uuid '1f3f3175031a2495acc2c473d312153cedbb9ea9'
+    oldFile: !uuid '5e38cb3fad553fadd410d98e38bfe69a9cd9f9fd'
+  /Modules/MESService:
+    newFile: !uuid '1d3a8ffceb6a00fc61db16506d93e6c70c4bb410'
+    oldFile: !uuid 'f3339344ee4bf1caeb275fe774508197503cf0f6'
+  /Modules/MESService/Business:
+    newFile: !uuid 'ae9bd56111b78fbe81e80d39a80e6bcf20159ee8'
+    oldFile: !uuid '6141f66d38066c16a4e77d6745fddd4271480014'
+  /Modules/MESService/Business/WorkTaskBLL.cs:
+    newFile: !uuid 'b45a45b29fd521bbbd5a323a83f333e19d3ebee1'
+    oldFile: !uuid '3d83c659e482b3b5099b751d5a3319a5f1078314'
+  /Modules/ProducerService:
+    newFile: !uuid '0dc41694fcc5a9afa9ec2429a4ca73a80741d9b5'
+    oldFile: !uuid 'd2d76bf0713fb247d454a8ed3f7a0dd392b130e2'
+  /Modules/ProducerService/Business:
+    newFile: !uuid 'c54f1b4d3d9eba6b447ea96f37e4439b8cd28aae'
+    oldFile: !uuid '964946d050cb7932844b945e30982453857c87ef'
+  /Modules/ProducerService/Business/ProductBatchBLL.cs:
+    newFile: !uuid '5ac21fa874b2a94cde6b610c24d4e88ef0e94648'
+    oldFile: !uuid 'd851649ac2c2867cb4b523c790fe5d3acf483b77'
+  /Modules/ProducerService/Controller:
+    newFile: !uuid '84699ed73553b4a8a7eb5d990e8be4124f5f8af3'
+    oldFile: !uuid '90fc778b234e490105c7fb0933173369bb1b6104'
+  /Modules/ProducerService/Controller/ProductBatch.cs:
+    newFile: !uuid '019d8f3de545539c0b053d2f5d887676d27fab1d'
+    oldFile: !uuid '4b428b02b9dae7482f022c2900135e479445ed37'
+  /Modules/ProducerService/DAL:
+    newFile: !uuid 'cbbeb9cd33d09b5e19c16151b3c32c3d433816f4'
+    oldFile: !uuid 'f9162a56196bc1020c697027e5b82d8d1ad7837c'
+  /Modules/ProducerService/DAL/ProductBatchDAL.cs:
+    newFile: !uuid '5a5902ff01554981b20d28f522cbbdedf9819b2a'
+    oldFile: !uuid '4fd2d0c20b330ba53fa94eb6be735b26852cc8b8'
+  /Modules/ProducerService/Model:
+    newFile: !uuid '7dc07ba34030eb86fb2bb24d628b371ffb164d8f'
+    oldFile: !uuid '3d201936495c71bfcfd8c9d452916d05574bed01'
+  /Modules/ProducerService/Model/In_AddProductBatch.cs:
+    newFile: !uuid '98034f22520312e1a165d7e830b12b2fde6671b4'
+    oldFile: null
+  /Modules/ProducerService/Model/MZ_ProductBatch.cs:
+    newFile: !uuid 'a399cbe34256ef73ee21eb89231eb2bebc4b073d'
+    oldFile: !uuid '5ade14086c0e166a3ea573229f473501e8a62863'
+  /Modules/ProducerService/PluginConfig.cs:
+    newFile: !uuid '4f0b97464488dafae049b9ee7622f32a199af7b1'
+    oldFile: !uuid '8b53f2b98a01e065eebcc7676988db3d3b5996a3'
+  /Modules/ProducerService/ProducerMigrator.cs:
+    newFile: !uuid '5a262c5598caace28e098b68690bed80f805aaa4'
+    oldFile: !uuid '6359a52a674d4d3cd2f9647cd5cd0d0eb5dae723'
+  /Modules/StorageService:
+    newFile: !uuid '15fc3ae3b04c4ef53ee27f0ecb28d53aa5921d9d'
+    oldFile: !uuid '1bb96361cdac272d6358b968d66a899965203e54'
+  /Modules/StorageService/DAL:
+    newFile: !uuid 'd23df8513ee36f7d6c57f81063539987ea2bc4c7'
+    oldFile: !uuid '05a2a6537e6db9b2d00cd94df39ff5c5c22434b1'
+  /Modules/StorageService/DAL/StockPileDAL.cs:
+    newFile: !uuid 'ae836665dd6e258f0e2dd6eb22d6c3ec43a36ef1'
+    oldFile: !uuid '0dd49239278b4ce56f9344ff3c1d4229b0d2e371'
+  /admin-ui:
+    newFile: !uuid 'a0af810f2bcfd99f68451971477c149c332423d9'
+    oldFile: !uuid '673c1210c553433d33605a46c941fa3dd10d7559'
+  /admin-ui/src:
+    newFile: !uuid '2b32206c24453c05ec406ec5d7689738fd3c3ef9'
+    oldFile: !uuid 'ac421c9779b23dc55eb3fbdd319a081a5fcf323b'
+  /admin-ui/src/views:
+    newFile: !uuid 'b46d49f0e6192f90f649598161a2dd67799d735f'
+    oldFile: !uuid '70eb6d8b5ebbdd0821102d19842073233dc2ba08'
+  /admin-ui/src/views/manufac:
+    newFile: !uuid '6c776d13af8bd5706056df2f194078d71e7163e1'
+    oldFile: !uuid '2bf19660cc0e1c4fa24ddd7fd18a78eed7c74f03'
+  /admin-ui/src/views/manufac/factory:
+    newFile: !uuid '897483f7824420f3ad174ed91336a7a23cd975ff'
+    oldFile: !uuid '51aad2d38613849d9c47fa639e9ac4f8aac93d19'
+  /admin-ui/src/views/manufac/factory/batchlist.vue:
+    newFile: !uuid '792007219a6edbe86cf4daf5beea8d38ac88e523'
+    oldFile: !uuid 'b0f3507727d226dfa701ee7f1e05716197867212'
+  /admin-ui/src/views/manufac/factory/cmp:
+    newFile: !uuid 'a599136c8b4dee40f0d8a28760a19de9dbc333cd'
+    oldFile: !uuid 'f619adae8704d3c611d06e29b1486ac3e575508c'
+  /admin-ui/src/views/manufac/factory/cmp/addBatch.vue:
+    newFile: !uuid 'afcad53e3229afa43ba34936e125b2e3e8ba99ae'
+    oldFile: !uuid '244ed6ff6dafa9e79da031fee9a6af7fa7d28db8'
+gitCommitId: !uuid '6a2e4f4527698ec4bd6ebccad9dabc955f45d74d'
 renames: {
   }
-revisionId: 14
+revisionId: 15
