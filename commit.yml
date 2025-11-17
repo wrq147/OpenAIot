@@ -2,22 +2,127 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid 'b9ce9b27f5a1c4662abf9b56e9b1fd3d5943dcf6'
-    oldFile: !uuid 'c5c53b4886aa57c02d689d5d11de341fa59fda77'
-  /Modules/StorageService:
-    newFile: !uuid '54758c45c92f0009cb048e8902c8677910b34f29'
-    oldFile: !uuid 'a15b16b03dd28643ff45c43ab3a2a3cd05b71c6a'
-  /Modules/StorageService/Model:
-    newFile: !uuid 'd23b9c934e0f4cef61bbaa2b27169aa85ad86f7c'
-    oldFile: !uuid '75142c731cd5a55aca39e99d5cc5dbbc23012ac5'
-  /Modules/StorageService/Model/In_PileItem.cs:
-    newFile: !uuid '0badcb454049b2e7a5ebb51953f5fc8309a2027f'
-    oldFile: !uuid '9bd7f63f96b573bc3d0c289ee2840c92a27bd83a'
-  /悟空云开发者接口.doc:
-    newFile: !uuid 'f6ccf94bb7e23a6d1da7f0e78dbb441eb6153074'
-    oldFile: !uuid '049f1b80dbdb4fb7735cdab7624c2e2aa127d5a4'
-gitCommitId: !uuid 'fca48682187670140f9aad0ebd9fc93dd5a8998f'
+  /admin-ui:
+    newFile: !uuid 'cfa81f385f0409777dd5dc0547b5e75d596bc567'
+    oldFile: !uuid '60f9611e1ec5eb4256f54b6f81fcbf3f5bcde90b'
+  /admin-ui/src:
+    newFile: !uuid 'e694e12e2dad1f4e25a6b0b4b79fe1b501812e70'
+    oldFile: !uuid '6e810e0cf60f9adee95b752735e501e14f427f13'
+  /admin-ui/src/api:
+    newFile: !uuid '01a4beff93de35d62e6b79ae585c56773a45bf14'
+    oldFile: !uuid '7374a1ae91ccd81a905a14f0361d3d8e320aae5b'
+  /admin-ui/src/api/after:
+    newFile: !uuid '562d495cbf18bc18a31549e1e1c7a743d1c3af3b'
+    oldFile: !uuid 'ef417711c8d6d9c40d52711846d8d6776a64b546'
+  /admin-ui/src/api/after/dev.js:
+    newFile: !uuid 'e3d6912e5e18d62e89924083176098b821203f01'
+    oldFile: !uuid '33c91dc28ded472870249e19d2a68f73c8fefa8b'
+  /admin-ui/src/api/rules:
+    newFile: !uuid 'e1c71571ed93f40dd493a28d6e602398e9a1ae01'
+    oldFile: !uuid 'f001d0daa9e0041ec5eff1e9770ec725715671f0'
+  /admin-ui/src/api/rules/productModel.js:
+    newFile: !uuid 'a2d87b24f6d7cfd6c48408229d277a2f9f9c89e7'
+    oldFile: !uuid '92227c00ae2a72b513a7b39411c17933bd56c018'
+  /admin-ui/src/views:
+    newFile: !uuid '69c5d6bad7e6d3539ff33d0f384d932709cf02fc'
+    oldFile: !uuid '7048734732881d91f36599ef6de6020d597b59b2'
+  /admin-ui/src/views/flowable:
+    newFile: !uuid '62fe216e50b832c959948ef46d73d1e6f5bbe8f6'
+    oldFile: !uuid '0a6c59df9f336fe903d2961b77bb570bc63902f6'
+  /admin-ui/src/views/flowable/common:
+    newFile: !uuid '570da33677eb85507671731935977a8226675140'
+    oldFile: !uuid '18989a04641c0b1b2bfd678982fb2198c13f6f7f'
+  /admin-ui/src/views/flowable/common/DevicePickers.vue:
+    newFile: !uuid 'ed665634301cec3de28d814b31af89397ed550d2'
+    oldFile: !uuid '639ae21ec65de0ec04efcd879ab7c7474dfa8b60'
+  /admin-ui/src/views/flowable/common/form:
+    newFile: !uuid 'afbf87a5ac5f4ea7bfe4cdc226a27172febc0402'
+    oldFile: !uuid '8c608a082ac133d95896780cdf0515e85b4d589c'
+  /admin-ui/src/views/flowable/common/form/ComponentsConfigExport.js:
+    newFile: !uuid 'bb0bc067094df1eefd53f1dacf0676554bdec840'
+    oldFile: !uuid 'd9f710159e84156f3300dd79ae733ad11b8752e2'
+  /admin-ui/src/views/flowable/common/form/components:
+    newFile: !uuid '8912243d4b144e45373fc439a4a56182dbce7f07'
+    oldFile: !uuid '4a6e3ea8d034de4e22b741d350f4a277833ea7c1'
+  /admin-ui/src/views/flowable/common/form/components/DevicPicker.vue:
+    newFile: !uuid 'ede58c24df25aaff07a42cdaa07efcb0dec1a688'
+    oldFile: !uuid '145aa9c24deacc3c0d50e0037a4d7eefed2459cd'
+  /admin-ui/src/views/flowable/common/form/config:
+    newFile: !uuid '692d1747f0c6f7e8e78056f2a2eb988e6e132e87'
+    oldFile: !uuid '274e9f29bb7a210f9e25b91bbe86c050483871a8'
+  /admin-ui/src/views/flowable/common/form/config/DevicPickerConfig.vue:
+    newFile: !uuid '08a430e6f549517d7b6d032c7644264662897e59'
+    oldFile: !uuid '44ab3901443c6ab6ea9db4dc2e8eb35061e52a42'
+  /admin-ui/src/views/flowable/common/process:
+    newFile: !uuid '241582656783f6c0eca504e8e085cb5e1fe6feba'
+    oldFile: !uuid '66f8648d1eb3650f16cdc46ae8011373f27fb9e8'
+  /admin-ui/src/views/flowable/common/process/config:
+    newFile: !uuid '3722052e77eac7cfe1518aef32dfe445eb381346'
+    oldFile: !uuid '543027e519b0e1ad2da754fc87845cb15cf902bc'
+  /admin-ui/src/views/flowable/common/process/config/FuncNodeConfig.vue:
+    newFile: !uuid '97b53bb4137d626aedf0c652396152e4144bb4b9'
+    oldFile: !uuid 'ef8909ac12bded02f6c5bf355fedae5733931629'
+  /admin-ui/src/views/iot:
+    newFile: !uuid 'e0bff78507a99ffa4d06ab9c8b5ca5ec637f4832'
+    oldFile: !uuid '8606a5752a98dc42ae3fa5019545ae3c82cf3513'
+  /admin-ui/src/views/iot/card:
+    newFile: !uuid '0ffe1a93ef324ebbdce4c9171d5b8a694435f71d'
+    oldFile: !uuid 'f78697770b33f142041a06a16861f1748da3909f'
+  /admin-ui/src/views/iot/card/index.vue:
+    newFile: !uuid 'ef8eebf085623ae2af15794e9173a6a24a56d881'
+    oldFile: !uuid 'a4b6ce33dd42635242a2bbbe230da87e02a54c5a'
+  /admin-ui/src/views/iot/deviceManage:
+    newFile: !uuid '58cb1abd336e95ee9b631f4452f24861d843fe9e'
+    oldFile: !uuid '8d82a409191e4e314184023a6ef8443e4286c35e'
+  /admin-ui/src/views/iot/deviceManage/abnormalData.vue:
+    newFile: !uuid '277631146d977f6ecb96457b213215071feb90fa'
+    oldFile: !uuid '1214946a8e13969b49dadf9a7e182eb9b5e1ca5f'
+  /admin-ui/src/views/iot/deviceManage/deviceAddDialog.vue:
+    newFile: !uuid '33e54033e98482a0c6ad7c8403cda3c5e00566be'
+    oldFile: !uuid '6d9f8b79591b284232ef8100c7fb418e5b5d493e'
+  /admin-ui/src/views/iot/deviceManage/deviceBasic.vue:
+    newFile: !uuid '16d2d5b46ad9c75a64193f68ddf51390fe0cebdc'
+    oldFile: !uuid '1dfabf9edd6420f66b75483b06e2a069e4f5d2e9'
+  /admin-ui/src/views/iot/deviceManage/deviceCom.vue:
+    newFile: !uuid '4fd6462d7436e14af2145ddd04e8206c1bca2dad'
+    oldFile: !uuid '506d3c996c5f003e586257bede936b4061537009'
+  /admin-ui/src/views/iot/physicalModel:
+    newFile: !uuid 'e41e22e580722ce6b29f9eb5a7f1d2e13ee53ea3'
+    oldFile: !uuid '4a979dca898a451dcc21f8e1178f5b161c3a01f7'
+  /admin-ui/src/views/iot/physicalModel/components:
+    newFile: !uuid '25e9eef74d476ebec66e43df836d11fc742d10cb'
+    oldFile: !uuid '19f530c13e2bac1c4955e19575cddac1e3b463f9'
+  /admin-ui/src/views/iot/physicalModel/components/editProductInfo.vue:
+    newFile: !uuid 'b154514b4804eedb293408820349eccf79b6c71e'
+    oldFile: !uuid '531960ff01c660b42b0850b080f6ca8312a560d3'
+  /admin-ui/src/views/iot/physicalModel/components/productInfo.vue:
+    newFile: !uuid '17ad0a26d7aebcf3ce8a784aa7b965e3ddd1d314'
+    oldFile: !uuid '0488eef61ab016153c8cc6e9068522e175807959'
+  /admin-ui/src/views/iot/physicalModel/productAdd.vue:
+    newFile: !uuid '312607e9760de5d30cd3b9e3dca1aac5a58c1f87'
+    oldFile: !uuid '6f364752a3ead844a586fdf5a5af7116880a91b3'
+  /admin-ui/src/views/iot/physicalModel/productAddSteps.vue:
+    newFile: !uuid 'b4e709bd74b95299673f4e6422c98dd4e5f5c119'
+    oldFile: !uuid '7a5d083fa5c691ca0d21b6324a8d95f0e69d575a'
+  /admin-ui/src/views/iot/physicalModel/productClass.vue:
+    newFile: !uuid '6b65a7e8fc04ac8ce01aff233678457c8b3ce833'
+    oldFile: !uuid 'f947d0dfbc794054f167b938e222452512821fa1'
+  /admin-ui/src/views/iot/physicalModel/productList.vue:
+    newFile: !uuid '50ce8a0d48e826403e5341d492178c980a7eb193'
+    oldFile: !uuid '5c57b0b28e2eae9dd45c72b5259ef7073dd7a9d6'
+  /admin-ui/src/views/iot/rulesEngine:
+    newFile: !uuid '2d17f41667f12795b2fe6890f3a0d25c6588f2a0'
+    oldFile: !uuid '60b5292644ad1f9305705cc1becc527c11050a49'
+  /admin-ui/src/views/iot/rulesEngine/selectDeviceWay.vue:
+    newFile: !uuid '60c9fd60672ce02fcbbaab5ee44e033710728e8c'
+    oldFile: !uuid '444304424ca21ea629d30e6c85b85e705cbda94f'
+  /admin-ui/src/views/iot/scrtemp:
+    newFile: !uuid '96027ebbac5ed5dc1c1068fa8d9acc8edbd071ab'
+    oldFile: !uuid '7093a2a9dfbbdd2b57599438b5d9b304fed0620e'
+  /admin-ui/src/views/iot/scrtemp/index.vue:
+    newFile: !uuid '5e2a0746045de90fb24d9d7012ded927b735c16b'
+    oldFile: !uuid '73a4e174957e7361ea9b3f7d805032937948004d'
+gitCommitId: !uuid '2de926f748b7cf77090933781cc29b03db29e5b1'
 renames: {
   }
-revisionId: 19
+revisionId: 20
