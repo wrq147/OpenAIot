@@ -34,10 +34,6 @@ namespace ProducerService.Model
         /// </summary>
         public string Number { get; set; }
         /// <summary>
-        /// 通讯编号
-        /// </summary>
-        public string LNumber { get; set; }
-        /// <summary>
         /// 所属产品Id
         /// </summary>
         public string ProductId { get; set; }

@@ -1,8 +1,11 @@
-﻿using AuthService.DAL;
-using AuthService;
+﻿using AuthService;
+using AuthService.DAL;
+using AuthService.Fields;
 using Common;
+using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
+using MailKit.Search;
 using ProducerService.DAL;
 using ProducerService.Model;
 using System;
@@ -11,7 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using AuthService.Fields;
 
 
 namespace ProducerService.Business
@@ -56,7 +58,7 @@ namespace ProducerService.Business
                     {
                         item.SupplierName = supitem.SupplierName;
                     }
-             
+
                 }
             }
 
@@ -73,7 +75,6 @@ namespace ProducerService.Business
                 batch.BatchName = item.Name;
                 batch.PhotoUrl = item.PhotoUrl;
                 batch.Number = item.DeviceNumber;
-                batch.LNumber = item.DeviceId;
                 batch.Id = item.Id;
                 batch.ProductId = "1";
                 batchList.Add(batch);
@@ -119,7 +120,6 @@ namespace ProducerService.Business
                 batch.BatchName = item.Name;
                 batch.PhotoUrl = item.PhotoUrl;
                 batch.Number = item.DeviceNumber;
-                batch.LNumber = item.DeviceId;
                 batch.Id = item.Id;
                 batch.ProductId = data.ProductId;
                 batchList.Add(batch);
@@ -127,31 +127,59 @@ namespace ProducerService.Business
             await _productBatchDAL.Insert(batchList);
             return BusResponse<int>.Success();
         }
-        public virtual async Task<BusResponse<int>> Insert(MZ_ProductBatch data, IUserInfo user)
+        public virtual async Task<BusResponse<int>> Insert(In_AddProductBatch addData, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
                 return BusResponse<int>.Error(133, "请切换到企业账号");
             }
+            MZ_ProductBatch data = new MZ_ProductBatch();
             data.OrgId = user.OrgId;
-            var pro = await _provider.GetService<ProductDAL>().Select(data.ProductId);
+            var pro = await _provider.GetService<ProductDAL>().Select(addData.ProductId);
             if (pro == null)
             {
                 return BusResponse<int>.Error(134, "产品不存在");
             }
-            if (string.IsNullOrEmpty(data.Number))
+            if (string.IsNullOrEmpty(addData.Number))
             {
                 return BusResponse<int>.Error(135, "批次编号不能为空");
             }
             data.BatchName = pro.ProductName;
             data.PhotoUrl = pro.PhotoUrl;
-            var iotdev = await _productBatchDAL.SelectIOTNumber(data.OrgId.Value, data.Number);
-            if (iotdev != null)
+            data.ProductId = addData.ProductId;
+            data.Number = addData.Number;
+            if (!string.IsNullOrEmpty(pro.IOTProductId))
             {
-                data.Id = iotdev.Id;
-                data.BatchName = iotdev.Name;
-                data.PhotoUrl = iotdev.PhotoUrl;
-                data.LNumber = iotdev.DeviceId;
+                var iotdev = await _productBatchDAL.SelectIOTNumber(data.OrgId.Value, data.Number);
+                if (iotdev != null)
+                {
+                    data.Id = iotdev.Id;
+                    data.BatchName = iotdev.Name;
+                    data.PhotoUrl = iotdev.PhotoUrl;
+                }
+                else
+                {
+
+                    var tmprsp = await BusUtility.Call("SaveIotDevice", new
+                    {
+                        UserId = 2,
+                        OrgId = pro.OrgId,
+                        PhotoUrl = pro.PhotoUrl,
+                        DeviceNumber = data.Number,
+                        ProductId = pro.IOTProductId,
+                        DeviceId = addData.DtuId,
+                        Name = data.BatchName
+                    });
+                    var brs = tmprsp.GetResult<BusResponse<string>>();
+                    if (brs.IsSuccess())
+                    {
+                        data.Id = brs.Data;
+                    }
+                    else
+                    {
+                        return BusResponse<int>.Error(brs.Code, brs.Message);
+                    }
+                }
             }
             else
             {
@@ -184,7 +212,6 @@ namespace ProducerService.Business
                 {
                     data.BatchName = iotdev.Name;
                     data.PhotoUrl = iotdev.PhotoUrl;
-                    data.LNumber = iotdev.DeviceId;
                 }
             }
             else

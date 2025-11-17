@@ -5,8 +5,8 @@
       <el-form-item label="批次编号" prop="Number">
         <el-input v-model="ruleForm.Number" placeholder="请输入批次编号" />
       </el-form-item>
-      <el-form-item label="关联编号" prop="LNumber">
-        <el-input v-model="ruleForm.LNumber" placeholder="请输入关联编号" />
+      <el-form-item v-if="enableDtuId" label="通讯编码" prop="DtuId">
+        <el-input v-model="ruleForm.DtuId" placeholder="请输入通讯编码" />
       </el-form-item>
       <el-form-item label="所属产品" prop="ProductId">
         <el-button type="primary" size="mini" plain @click="openDeviceDialog">
@@ -43,15 +43,14 @@ export default {
     return {
       dialogFlag: false,
       deviceOpen: false,
+      enableDtuId:false,
       // 表单
-      ruleForm: {},
+      ruleForm: {
+      },
       // 校验
       rules: {
         Number: [
           { required: true, message: "唯一编号不能为空", trigger: "blur" },
-        ],
-        LNumber: [
-          { required: true, message: "其它编号不能为空", trigger: "blur" },
         ]
       }
     }

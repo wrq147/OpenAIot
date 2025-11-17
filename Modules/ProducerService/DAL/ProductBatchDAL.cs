@@ -24,7 +24,7 @@ namespace ProducerService.DAL
         }
         public virtual async Task<V_ProductBatch> SelectProductVByNumber(long orgId, string number)
         {
-            return await new SqlBuilder(help).Query<V_ProductBatch>().Where(x => x.OrgId == orgId && (x.Number == number || x.LNumber == number)).ToFirstAsync();
+            return await new SqlBuilder(help).Query<V_ProductBatch>().Where(x => x.OrgId == orgId && x.Number == number).ToFirstAsync();
         }
         public virtual async Task<V_ProductBatch> SelectProductVById(string id)
         {
@@ -35,7 +35,7 @@ namespace ProducerService.DAL
             Expression<Func<V_ProductBatch, bool>> expression = (a) => a.OrgId == orgId;
             if (!string.IsNullOrEmpty(query.Key))
             {
-                expression = expression.And(a => a.Number.Contains(query.Key) || a.LNumber.Contains(query.Key) || a.BatchName.Contains(query.Key) || a.ProductName.Contains(query.Key) || a.SkuNumber.Contains(query.Key));
+                expression = expression.And(a => a.Number.Contains(query.Key) || a.BatchName.Contains(query.Key) || a.ProductName.Contains(query.Key) || a.SkuNumber.Contains(query.Key));
             }
             return await new SqlBuilder(help).Query<V_ProductBatch>().Where(expression).GeneratePageObjectAsync(query);
         }

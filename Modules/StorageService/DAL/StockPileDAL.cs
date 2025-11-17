@@ -27,7 +27,6 @@ namespace StorageService.DAL
                 var tmpkey = query.Key.SqlLikeFilter();
                 sql.Append(" and (d.BatchName like ").AppendParam("%" + tmpkey + "%")
                 .Append(" or d.Number like ").AppendParam("%" + tmpkey + "%")
-                .Append(" or d.LNumber like ").AppendParam("%" + tmpkey + "%")
                 .Append(" or d.ProductName like ").AppendParam("%" + tmpkey + "%")
                 .Append(" or d.SkuNumber like ").AppendParam("%" + tmpkey + "%")
                 .Append(")")
@@ -125,7 +124,7 @@ namespace StorageService.DAL
 
         public virtual async Task<Out_Item> SelectItemByKey(string key, long orgId)
         {
-            var sqlbuilder = new SqlBuilder(help).Append("select sp.*,p.BatchName as Name,p.PhotoUrl,p.Number as DeviceNumber,p.Unit from mz_stock_pile sp inner join mz_product_batch_v p on sp.TargetId=p.Id where (p.Number=").AppendParam(key).Append(" or p.LNumber=").AppendParam(key).Append(") and sp.OrgId=").AppendParam(orgId);
+            var sqlbuilder = new SqlBuilder(help).Append("select sp.*,p.BatchName as Name,p.PhotoUrl,p.Number as DeviceNumber,p.Unit from mz_stock_pile sp inner join mz_product_batch_v p on sp.TargetId=p.Id where p.Number=").AppendParam(key).Append(" and sp.OrgId=").AppendParam(orgId);
             return (await sqlbuilder.DoAsync<DoQuerySql<Out_Item>>()).ToFirst();
         }
     }

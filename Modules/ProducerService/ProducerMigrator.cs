@@ -295,7 +295,6 @@ namespace ProducerService
                     .WithColumn("BatchName").AsString(80).WithColumnDescription("批次名称")
                     .WithColumn("PhotoUrl").AsString(255).WithColumnDescription("图片地址")
                     .WithColumn("Number").AsString(50).Indexed().WithColumnDescription("唯一编号")
-                    .WithColumn("LNumber").AsString(50).Indexed().Nullable().WithColumnDescription("通讯编号")
                     .WithColumn("ProductId").AsString(128).Indexed().WithColumnDescription("所属产品Id");
 
 

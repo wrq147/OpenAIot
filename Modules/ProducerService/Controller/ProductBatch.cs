@@ -34,7 +34,7 @@ namespace ProducerService.Controller
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<DefaultAjaxResult<int>> Add(MZ_ProductBatch data)
+        public async Task<DefaultAjaxResult<int>> Add(In_AddProductBatch data)
         {
             return (await _batchBLL.Insert(data, GetUser())).ToAjaxResult();
         }

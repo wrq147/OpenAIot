@@ -197,7 +197,6 @@ namespace ProducerService
                 long tOrgId = bs.GetLong("OrgId");
                 string tName = bs.GetValue("Name");
                 string tNumber = bs.GetValue("Number");
-                string tLNumber = bs.GetValue("LNumber");
                 string tPhotoUrl = bs.GetValue("PhotoUrl");
                 string tProductId = bs.GetValue("ProductId");
 
@@ -210,7 +209,6 @@ namespace ProducerService
                     MZ_ProductBatch probb = new MZ_ProductBatch();
                     probb.Id = tId;
                     probb.Number = tNumber;
-                    probb.LNumber = tLNumber;
                     probb.BatchName = tName;
                     probb.OrgId = tOrgId;
                     probb.PhotoUrl = tPhotoUrl;
@@ -222,7 +220,6 @@ namespace ProducerService
                     MZ_ProductBatch probb = new MZ_ProductBatch();
                     probb.Id = tId;
                     probb.Number = tNumber;
-                    probb.LNumber = tLNumber;
                     probb.BatchName = tName;
                     probb.OrgId = tOrgId;
                     probb.PhotoUrl = tPhotoUrl;
@@ -238,7 +235,6 @@ namespace ProducerService
                 {
                     string tId = bs.GetValue("Id");
                     string tNumber = bs.GetValue("Number");
-                    string tLNumber = bs.GetValue("LNumber");
                     string tName = bs.GetValue("Name");
                     string tPhotoUrl = bs.GetValue("PhotoUrl");
                     var productBatchDAL = app.ServiceProvider.GetService<ProductBatchDAL>();
@@ -247,7 +243,6 @@ namespace ProducerService
                     {
                         MZ_ProductBatch probb = new MZ_ProductBatch();
                         probb.Id = tId;
-                        probb.LNumber = tLNumber;
                         probb.BatchName = tName;
                         probb.PhotoUrl = tPhotoUrl;
                         probb.Number = tNumber;

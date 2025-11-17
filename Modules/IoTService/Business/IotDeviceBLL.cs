@@ -1297,11 +1297,11 @@ namespace IoTService.Business
                 {
                     Id = data.Id,
                     Number = data.DeviceNumber ?? old.DeviceNumber,
-                    LNumber = data.DeviceId ?? old.DeviceId,
                     Name = data.Name ?? old.Name,
                     PhotoUrl = data.PhotoUrl ?? old.PhotoUrl
                 });
             }
+
 
             return BusResponse<string>.Success();
         }
@@ -1413,7 +1413,6 @@ namespace IoTService.Business
                 });
 
             }
-
             return BusResponse<string>.Success(data.Id);
         }
 

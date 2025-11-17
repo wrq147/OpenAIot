@@ -38,7 +38,6 @@
               @selection-change="handleSelectionChange">
               <el-table-column type="selection" align="center" width="50" />
               <el-table-column label="批次编号" align="center" prop="Number" :show-overflow-tooltip="true"/>
-              <el-table-column label="通讯编号" align="center" prop="LNumber" :show-overflow-tooltip="true"/>
               <el-table-column label="批次名称" align="center" prop="BatchName" />
               <el-table-column label="产品标签" align="center">
                 <template slot-scope="scope">
@@ -146,20 +145,21 @@ export default {
     handleAdd(data) {
       if (data === '') {
         this.title = '新增批次';
+        this.$refs['addBatch'].enableDtuId=true;
         this.$refs['addBatch'].ruleForm = {
           Number: '',
-          LNumber: '',
           ProductId: '',
           ProductName: '',
+          DtuId:""
         };
       } else {
         this.title = '编辑批次';
+        this.$refs['addBatch'].enableDtuId=false;
         this.$refs['addBatch'].ruleForm = {
           Id: data.Id,
           Number: data.Number,
-          LNumber: data.LNumber,
           ProductId: data.ProductId,
-          ProductName: data.ProductName,
+          ProductName: data.ProductName
         };
       }
       this.open = true;

@@ -271,7 +271,7 @@
             <param name="query"></param>
             <returns></returns>
         </member>
-        <member name="M:ProducerService.Controller.ProductBatch.Add(ProducerService.Model.MZ_ProductBatch)">
+        <member name="M:ProducerService.Controller.ProductBatch.Add(ProducerService.Model.In_AddProductBatch)">
             <summary>
             添加产品批次
             </summary>
@@ -459,6 +459,21 @@
         <member name="P:ProducerService.Model.In_AddBatchList.ProductId">
             <summary>
             批次所属产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AddProductBatch.Number">
+            <summary>
+            批次编号
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AddProductBatch.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_AddProductBatch.DtuId">
+            <summary>
+            通讯编码
             </summary>
         </member>
         <member name="P:ProducerService.Model.In_AgentFlowList.YQFrom">
@@ -1249,11 +1264,6 @@
         <member name="P:ProducerService.Model.MZ_ProductBatch.Number">
             <summary>
             批次编号
-            </summary>
-        </member>
-        <member name="P:ProducerService.Model.MZ_ProductBatch.LNumber">
-            <summary>
-            通讯编号
             </summary>
         </member>
         <member name="P:ProducerService.Model.MZ_ProductBatch.ProductId">

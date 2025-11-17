@@ -112,7 +112,6 @@ namespace MESService.Business
                         batchId = brs.Data;
                     }
                     proBatch.Id = batchId;
-                    proBatch.LNumber = workBatch.LNumber;
                     await proBatchDAL.Insert(proBatch);
                 }
             }
@@ -128,14 +127,17 @@ namespace MESService.Business
             {
                 return;
             }
-            var tmpbatchlist = await proBatchDAL.SelectList(x => x.Number == report.BatchNo);
-            if (tmpbatchlist.Count > 0)
+            if (proBatch == null)
             {
-                proBatch = tmpbatchlist[0];
-            }
-            else
-            {
-                return;
+                var tmpbatchlist = await proBatchDAL.SelectList(x => x.Number == report.BatchNo);
+                if (tmpbatchlist.Count > 0)
+                {
+                    proBatch = tmpbatchlist[0];
+                }
+                else
+                {
+                    return;
+                }
             }
 
             if (!string.IsNullOrEmpty(route.ToHouseId))
