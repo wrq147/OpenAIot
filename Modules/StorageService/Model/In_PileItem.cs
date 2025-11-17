@@ -13,7 +13,7 @@ namespace StorageService.Model
     public class In_PileItem
     {
         /// <summary>
-        /// 产品批次编号
+        /// 批次编号
         /// </summary>
         public string TargetNumber { get; set; }
         /// <summary>
