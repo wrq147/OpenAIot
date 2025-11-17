@@ -14,7 +14,7 @@
           </span>
         </td>
         <th colspan="1">
-          <span>产品分类</span>
+          <span>协议分类</span>
         </th>
         <td colspan="1">
           <span>

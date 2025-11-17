@@ -198,7 +198,7 @@ export default {
         pageSize: 50,
       },
       isOver: false,
-      propertiesList: [], //产品属性列表
+      propertiesList: [], //协议属性列表
       activeCode: "",
       errorList: [], //异常数据
       echartsCodeGroup: [],
@@ -274,7 +274,7 @@ export default {
           // this.activeAttr = item;
         } else {
           this.$message({
-            message: "查看历史数据请先设置开发产品的存储方式为启用",
+            message: "查看历史数据请先设置开发协议的存储方式为启用",
             type: "error",
             duration: 5 * 1000,
           });

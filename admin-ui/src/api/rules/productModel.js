@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 获取产品分类树
+// 获取协议分类树
 export function classTree() {
     return request({
         url: '/IoTService/IotClass/ListTree',
@@ -24,7 +24,7 @@ export function removeClass(query) {
     })
 }
 
-//添加产品分类
+//添加协议分类
 export function addClass(data) {
     return request({
         url: '/IoTService/IotClass/Add',
@@ -32,7 +32,7 @@ export function addClass(data) {
         data: data
     })
 }
-//产品分类排序
+//协议分类排序
 export function classSort(data) {
     return request({
         url: '/IoTService/IotClass/Sort',
@@ -40,7 +40,7 @@ export function classSort(data) {
         data: data
     })
 }
-//编辑产品分类
+//编辑协议分类
 export function editClass(data) {
     return request({
         url: '/IoTService/IotClass/Edit',
@@ -48,7 +48,7 @@ export function editClass(data) {
         data: data
     })
 }
-//拷贝产品
+//拷贝协议
 export function copyProduct(id){
     return request({
         url: '/IoTService/IotProduct/Copy',
@@ -56,7 +56,7 @@ export function copyProduct(id){
         params: {id}
     })
 }
-//添加产品
+//添加协议
 export function addProduct(data) {
     return request({
         url: '/IoTService/IotProduct/Add',
@@ -64,7 +64,7 @@ export function addProduct(data) {
         data: data
     })
 }
-//编辑产品
+//编辑协议
 export function editProduct(data) {
     return request({
         url: '/IoTService/IotProduct/Edit',
@@ -87,7 +87,7 @@ export function channelInfo(query) {
         params: query
     })
 }
-//获取产品列表信息
+//获取协议列表信息
 export function productList(query) {
     return request({
         url: '/IoTService/IotProduct/ListPage',
@@ -103,7 +103,7 @@ export function tslList(ids) {
         params: {ids}
     })
 }
-//获取单个产品信息
+//获取单个协议信息
 export function productInfo(query) {
     return request({
         url: '/IoTService/IotProduct/Info',
@@ -111,7 +111,7 @@ export function productInfo(query) {
         params: query
     })
 }
-//删除产品
+//删除协议
 export function removeProduct(query) {
     return request({
         url: '/IoTService/IotProduct/Remove',

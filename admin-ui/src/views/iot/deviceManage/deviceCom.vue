@@ -59,7 +59,7 @@
                   <div class="lis_top_cot">
                     <div class="device_name">{{ its.Name }}</div>
                     <div class="device_name deviceId">通讯编码：{{ its.DeviceId }}</div>
-                    <div class="device_name pro_name">产品：{{ its.ProductName }}</div>
+                    <div class="device_name pro_name">协议：{{ its.ProductName }}</div>
                     <div class="device_group_name">{{ its.GroupName }}</div>
                   </div>
                 </div>
@@ -205,7 +205,6 @@ export default {
     this.configLoading = true;
     this.getGroupList();
     this.getDeviceList();
-    // console.log("产品名称", this.productInfos);
     this.configLoading = false;
   },
   methods: {

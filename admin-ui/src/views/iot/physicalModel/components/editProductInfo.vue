@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-drawer title="修改产品" :visible.sync="editProductDrawer" direction="rtl" :wrapperClosable="false" :close-on-press-escape="false" @close="closeProductDrawer" size="600px"
+    <el-drawer title="修改协议" :visible.sync="editProductDrawer" direction="rtl" :wrapperClosable="false" :close-on-press-escape="false" @close="closeProductDrawer" size="600px"
       :destroy-on-close="true">
       <el-form ref="productInfos" :model="productInfos" :rules="productInfosRules" label-width="80px"
         style="padding:20px">
-        <el-form-item label="产品名称" prop="Name">
-          <el-input v-model="productInfos.Name" placeholder="请输入产品名称"></el-input>
+        <el-form-item label="协议名称" prop="Name">
+          <el-input v-model="productInfos.Name" placeholder="请输入协议名称"></el-input>
         </el-form-item>
-        <el-form-item label="产品分类" prop="ClassifiedId">
+        <el-form-item label="协议分类" prop="ClassifiedId">
           <el-cascader ref="productCascader" v-model="productInfos.ClassifiedId" :options="productClassList"
             :props="{ children: 'Children', label: 'Name', value: 'Id' }" :show-all-levels="false" :checkStrictly="false"
             style="width:100%" @change="changeProductClass">
@@ -48,7 +48,7 @@
             <el-option :label="its.Name" :value="its.Code" v-for="its in workWayList" :key="its.Code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="产品图片" prop="PhotoUrl" class="is-required">
+        <el-form-item label="协议图片" prop="PhotoUrl" class="is-required">
           <image-upload v-model="productInfos.PhotoUrl" :limit="1"></image-upload>
         </el-form-item>
         <el-form-item label="控制面板">
@@ -99,7 +99,7 @@ export default {
     };
     return {
       matchesLoading: false,//控制提交按钮是否可以被点击
-      editProductDrawer: false,//控制修改产品信息的弹窗打开和关闭
+      editProductDrawer: false,//控制修改协议信息的弹窗打开和关闭
       //存储所有标识符，用于判定标识符是否重复
       StorageConfig: {
         enable: '0', //存储方式
@@ -121,11 +121,11 @@ export default {
         { label: "不启用", value: "0" },
         { label: "启用", value: "1" }
       ],
-      productClassList: [],//产品分类列表
+      productClassList: [],//协议分类列表
       productInfosRules: {
-        Name: [{ required: true, trigger: "blur", message: "请输入产品名称" }],
+        Name: [{ required: true, trigger: "blur", message: "请输入协议名称" }],
         ClassifiedId: [
-          { required: true, trigger: "change", message: "请选择产品分类" }
+          { required: true, trigger: "change", message: "请选择协议分类" }
         ],
         PhysicsWay: [
           { required: true, trigger: "change", message: "请选择通讯方式" }
@@ -192,7 +192,7 @@ export default {
         this.productInfos.isCustomMonitor=false
       }
 
-      //打开产品修改编辑弹出层
+      //打开协议修改编辑弹出层
       this.editProductDrawer = true;
       if (this.productInfo.StorageConfig) {
         this.StorageConfig = JSON.parse(this.productInfo.StorageConfig);
@@ -208,7 +208,7 @@ export default {
       this.$forceUpdate()
     },
     editProductInfo() {
-      //保存修改的产品信息
+      //保存修改的协议信息
       this.$refs["productInfos"].validate(val1 => {
         this.$refs["StorageConfig"].validate(val2 => {
           if (val1 && val2) {
@@ -247,7 +247,7 @@ export default {
       });
     },
     getProductClassList() {
-      //获取产品分类信息
+      //获取协议分类信息
       classTree().then(response => {
         if (response.data.length > 0) {
           // this.classmap.set(0, response.data);
@@ -258,7 +258,7 @@ export default {
       });
     },
     initClassList2() {
-      //如果一级产品分类的子级列表为空，那么设置其Children为null
+      //如果一级协议分类的子级列表为空，那么设置其Children为null
       for (let idx = 0; idx < this.productClassList.length; idx++) {
         if (
           this.productClassList[idx].Children &&
@@ -286,7 +286,7 @@ export default {
       ].getCheckedNodes()[0].value;
     },
     closeProductDrawer() {
-      //关闭产品编辑弹出层
+      //关闭协议编辑弹出层
       // this.editProductDrawer = false;
       this.$emit("closeProductDrawer", false);
     }

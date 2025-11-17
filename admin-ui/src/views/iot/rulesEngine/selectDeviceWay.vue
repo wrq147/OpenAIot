@@ -68,10 +68,10 @@
                     </el-tooltip>
                     <div class="device_group_name">
                       <div class="group_name_lft">
-                        <div class="title">产品分类</div>
+                        <div class="title">协议分类</div>
                         <el-tooltip class="item" :content="its.ClassifiedId" placement="top" v-if="its.ClassifiedId">
                           <div class="cont">
-                            {{its.ClassifiedId ? (classmap.get(its.ClassifiedId) ? classmap.get(its.ClassifiedId).Name : "该产品分类不存在") : "该产品分类不存在"}}
+                            {{its.ClassifiedId ? (classmap.get(its.ClassifiedId) ? classmap.get(its.ClassifiedId).Name : "该协议分类不存在") : "该协议分类不存在"}}
                           </div>
                         </el-tooltip>
                       </div>
@@ -101,14 +101,14 @@
                     </el-tooltip>
                     <div class="device_group_name">
                       <div class="group_name_lft" v-if="its.GroupName">
-                        <div class="title">设备类型</div>
+                        <div class="title">设备分组</div>
                         <el-tooltip class="item" :content="its.GroupName" placement="top">
                           <div class="cont">{{ its.GroupName }}</div>
                         </el-tooltip>
                       </div>
                       <div class="group_name_rht" v-if="its.ProductId">
-                        <div class="title">产品名称</div>
-                        <el-tooltip class="item" :content="its.ProductId ? (productmap.get(its.ProductId) ? productmap.get(its.ProductId).Name : '该产品不存在') : '该产品不存在'" placement="top">
+                        <div class="title">协议名称</div>
+                        <el-tooltip class="item" :content="its.ProductId ? (productmap.get(its.ProductId) ? productmap.get(its.ProductId).Name : '该协议不存在') : '该协议不存在'" placement="top">
                           <div class="cont">
                             {{its.ProductId ? (productmap.get(its.ProductId) ? productmap.get(its.ProductId).Name : "") : ""}}
                           </div>
@@ -212,7 +212,7 @@ export default {
         filterConditions: "contain", //过滤条件
         filterValue: "", //过滤的值
         filterTypeList: [
-            { label: "产品", value: "product" },
+            { label: "协议", value: "product" },
             { label: "设备名称", value: "name" },
             { label: "设备编码", value: "deviceCode" },
         ],
@@ -257,7 +257,7 @@ export default {
             // showAll:true
             Name: "",
         },
-        classmap: new Map(), //产品分类标记
+        classmap: new Map(), //协议分类标记
     };
   },
 
@@ -335,7 +335,7 @@ export default {
       this.$emit('initProEvts')
     },
     reselectProduct() {
-      //重新选择产品
+      //重新选择协议
       this.active = 0;
       this.filterType = "product";
     },
@@ -377,7 +377,7 @@ export default {
     },
     next() {
       if (this.active == 0) {
-        //第一步先选择产品
+        //第一步先选择协议
         if (this.selProLists.length == 1) {
           this.active = 1;
           this.filterType = "name";
@@ -452,8 +452,7 @@ export default {
       });
     },
     selectProduct(node, inx) {
-      // console.info(node);
-      //选择产品
+      //选择协议
       if (this.selProLists[0] && node.Id == this.selProLists[0].Id) {
         this.selProLists = [];
       } else {
@@ -524,7 +523,7 @@ export default {
       this.selTopMsg = JSON.parse(JSON.stringify(node));
       this.$forceUpdate();
     },
-    getDevProductList() {//获取产品列表
+    getDevProductList() {//获取协议列表
       productList(this.filterProductParams).then(async (response) => {
         this.devProductLists = response.data.List;
         this.proTotal = response.data.Total;

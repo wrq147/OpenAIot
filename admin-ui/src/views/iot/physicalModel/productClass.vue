@@ -162,7 +162,7 @@ export default {
         //自定义校验器
         // photoUrl: [{ validator: fileMustUpload, trigger: "change" }]
         // photoUrl: [{ required: true, trigger: "change", message: "请上传封面" }]
-      }, //产品分类添加验证
+      }, //协议分类添加验证
       addClassOpen: false, //添加分类的弹出层
       // 遮罩层
       loading: false,
@@ -181,7 +181,7 @@ export default {
       showSearch: true,
       // 日期范围
       dateRange: [],
-      classListData: [], //产品分类树形列表
+      classListData: [], //协议分类树形列表
       groupTreeList: [],
       cascaderProps: {
         checkStrictly: true,

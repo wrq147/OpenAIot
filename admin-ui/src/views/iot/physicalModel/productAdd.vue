@@ -793,7 +793,7 @@ export default {
       dateRange: [],
       typeListMap: new Map(),
       productId: "", //产品编号
-      classId: "", //产品分类编号
+      classId: "", //协议分类编号
       className: "",
       activeModelLine: -1, //当前修改的行是
       activeParamsLine: -1, //当前修改的参数是哪一行
@@ -823,7 +823,7 @@ export default {
     let pars = this.$route.query;
     if (pars.classId) {
       this.classId = pars.classId;
-      this.getProductClassInfo(); //获取产品分类名称
+      this.getProductClassInfo(); //获取协议分类名称
     }
 
     if (this.$route.params.id) {
@@ -1264,7 +1264,7 @@ export default {
     },
 
     getProductClassInfo() {
-      //获取产品分类信息
+      //获取协议分类信息
       classInfo({ id: this.classId }).then(rs => {
         this.className = rs.data.Name;
       });

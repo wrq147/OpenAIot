@@ -179,10 +179,10 @@ export const baseComponents = [{
                 required: false, //是否必填
                 enablePrint: true, //是否可打印
                 limit: 1, //限制个数
-                limit_product: [], //字符串数组  限制的产品
+                limit_product: [], //字符串数组  限制的协议
                 //同步控制列表
                 synclist: [{
-                    code: "", //产品物模型的属性标识或标签标识
+                    code: "", //协议物模型的属性标识或标签标识
                     field_id: "" //表单字段ID
                 }]
             }

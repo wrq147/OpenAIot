@@ -63,7 +63,6 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.value,this.limit,this.limit_product, "限制的产品传值");
   },
   methods: {
     jumpToDevDetail(devinfo){

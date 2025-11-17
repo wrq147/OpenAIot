@@ -25,8 +25,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="产品名称" prop="productId">
-                  <el-input type="text" v-model="deviceAddFrom.productName" placeholder="请输入产品名称" :disabled="true"
+                <el-form-item label="协议名称" prop="productId">
+                  <el-input type="text" v-model="deviceAddFrom.productName" placeholder="请输入协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
                   <el-select @change="productChange" v-model="deviceAddFrom.productId" placeholder="请选择" v-else
                     :clearable="true" filterable remote reserve-keyword :remote-method="remoteMethod">
@@ -132,7 +132,7 @@ export default {
       },
       deviceAddRules: {
         productId: [
-          { required: true, trigger: "change", message: "请选择产品" }
+          { required: true, trigger: "change", message: "请选择协议" }
         ],
         name: [{ required: true, trigger: "blur", message: "请输入设备名称" }],
       },
@@ -152,7 +152,6 @@ export default {
       this.productInit();
     },
     productInit() {
-      //产品切换
       productInfo({ id: this.deviceAddFrom.productId }).then(rsp => {
         let ModelTSL = JSON.parse(rsp.data.ModelTSL)
         let tags = ModelTSL.tags

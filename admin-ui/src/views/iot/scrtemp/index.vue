@@ -212,7 +212,7 @@ export default {
       scriptRules: {
         name: [{ required: true, trigger: "blur", message: "请填写脚本名称" }]
         //自定义校验器
-      }, //产品分类添加验证
+      }, 
       activeScriptType:'',
       showScriptEditor:false,
       initModelTSLName:'',//初始化物模型的json文件名称

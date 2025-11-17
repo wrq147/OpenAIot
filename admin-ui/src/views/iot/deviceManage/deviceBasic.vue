@@ -88,7 +88,7 @@
           </td>
         </tr>
         <tr>
-          <th colspan="1"><span>产品名称</span></th>
+          <th colspan="1"><span>协议名称</span></th>
           <td colspan="1" style="width: 21.5%">
             <div v-if="!isInfoEdit&&!isCheckPermi(['/IoTService/IotProduct/ListPage'])" style="width: 90%">{{ productInfos.Name ? productInfos.Name : "" }}</div>
             <div v-if="!isInfoEdit&&isCheckPermi(['/IoTService/IotProduct/ListPage'])" style="width: 90%;cursor: pointer;" @click="jumpToProduct">{{ productInfos.Name ? productInfos.Name : "" }}</div>
@@ -100,7 +100,7 @@
               </el-form-item>
             </div>
           </td>
-          <th colspan="1"><span>产品分类</span></th>
+          <th colspan="1"><span>协议分类</span></th>
           <td colspan="1" style="width: 21.5%">
             <span>{{ productInfos.ClassifiedId ? (productClassMap.get(productInfos.ClassifiedId) ? productClassMap.get(productInfos.ClassifiedId).Name : "" ): "" }}</span>
           </td>
@@ -124,7 +124,7 @@
           </td>
         </tr>
         <tr>
-          <th colspan="1"><span>产品说明</span></th>
+          <th colspan="1"><span>协议说明</span></th>
           <td class colspan="5"><span>{{ productInfos.Remark ? productInfos.Remark : "" }}</span></td>
         </tr>
       </table>
@@ -182,7 +182,7 @@ export default {
       saveLoading: false,
       infoRules: {
         ProductId: [
-          { required: true, trigger: "change", message: "请选择产品" },
+          { required: true, trigger: "change", message: "请选择协议" },
         ],
         Name: [
           { required: true, trigger: "blur", message: "请输入设备名称" },
@@ -217,7 +217,6 @@ export default {
     },
     jumpToProduct(){
       //跳转到设备详情
-      console.log('产品',this.productInfos);
       this.$router.push({
         path: "/iot/physicalModel/productAdd/"+this.productInfos.Id,
         query: { classId: this.productInfos.ClassifiedId }
@@ -264,11 +263,10 @@ export default {
       //修改设备信息
       this.isInfoEdit = !this.isInfoEdit;
       if (this.isInfoEdit) {
-        this.getproductList(); //产品列表
+        this.getproductList();
       }
     },
     getproductList() {
-      //获取产品信息
       productList({ showAll: true }).then((response) => {
         this.productLists = response.data.List;
       });
@@ -276,7 +274,7 @@ export default {
     loadData() {
       // console.log("loadData",this.canChangeDevice);
       if (this.canChangeDevice) {
-        this.getProductClassList(); //产品分类列表
+        this.getProductClassList(); //协议分类列表
         this.getchannelList(); //设备接入方式列表
         this.getGroupList(); //设备分组列表
       }else{
@@ -284,7 +282,7 @@ export default {
       }
     },
     getProductClassList() {
-      //获取产品分类信息
+      //获取协议分类信息
       classTree().then((response) => {
         if (response.data.length > 0) {
           // this.classmap.set(0, response.data);
@@ -295,7 +293,7 @@ export default {
       });
     },
     initClassList(node) {
-      //设置产品分类列表为Map类型数据，方便根据id获取name
+      //设置协议分类列表为Map类型数据，方便根据id获取name
       for (let idx = 0; idx < node.length; idx++) {
         let curnode = node[idx];
         this.productClassMap.set(node[idx].Id, curnode);

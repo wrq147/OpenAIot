@@ -2,7 +2,6 @@
   <div style="padding: 20px 20px 0 20px" id="big_con">
     <div>
       <el-row :gutter="20">
-        <!--产品数据-->
         <el-col :span="24" :xs="24">
           <div class="from_con" id="from_con" v-show="showSearch">
             <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
@@ -383,7 +382,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 产品表格数据
+      // 协议表格数据
       productTableList: null,
       // 弹出层标题
       title: "",

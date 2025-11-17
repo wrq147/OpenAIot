@@ -75,7 +75,7 @@
                     </el-tooltip>
                   </div>
                   <div class="group_name_rht">
-                    <div class="title">产品名称</div>
+                    <div class="title">协议名称</div>
                     <el-tooltip
                       class="item"
                       :content="its.ProductName"
@@ -152,7 +152,7 @@ export default {
         // showAll:true
         GroupId: null,
         productId: null,
-        ProductList:[],//产品数组
+        ProductList:[],//协议数组
         Name: ""
       },
       total: 0,
@@ -189,7 +189,7 @@ export default {
         // showAll:true
         GroupId: null,
         productId: null,
-        ProductList:this.limit_product,//产品数组
+        ProductList:this.limit_product,//协议数组
         Name: ""
       };
       this.getOrgList();

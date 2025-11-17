@@ -38,7 +38,7 @@
     <el-dialog title="执行项目" :visible.sync="dialogVisible" width="650px" :before-close="dlgclose" append-to-body>
       <el-form ref="form" :model="editform" label-width="100px">
 
-        <el-form-item label="匹配产品" prop="ProductId">
+        <el-form-item label="匹配协议" prop="ProductId">
           <el-select style="width:360px;" v-model="editform.ProductId" filterable remote reserve-keyword
             placeholder="请输入关键词" :remote-method="remoteMethod" :loading="prodloading" @change="chgProd"
             @visible-change="vschgProd">

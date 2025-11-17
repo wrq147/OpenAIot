@@ -2,15 +2,15 @@
   <div style="padding:20px 20px 0 20px" id="big_con">
     <div>
       <el-row :gutter="20">
-        <!--产品数据-->
+        <!--协议数据-->
         <el-col :span="24" :xs="24">
           <div class="from_con" id="from_con" v-show="showSearch">
             <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
               <el-form-item label="搜索关键词" prop="Name">
-                <el-input class="set_radius" v-model="queryParams.Name" placeholder="请输入产品名称" clearable @keyup.enter.native="handleQuery"/>
+                <el-input class="set_radius" v-model="queryParams.Name" placeholder="请输入协议名称" clearable @keyup.enter.native="handleQuery"/>
               </el-form-item>
               <el-form-item label="状态" prop="Status">
-                <el-select class="set_radius" v-model="queryParams.Status" placeholder="产品状态" clearable @change="changeStatus">
+                <el-select class="set_radius" v-model="queryParams.Status" placeholder="协议状态" clearable @change="changeStatus">
                   <el-option label="未发布" value="0" />
                   <el-option label="已发布" value="1" />
                 </el-select>
@@ -19,9 +19,9 @@
                 <el-date-picker class="set_radius" v-model="dateRange" style="width:232px" value-format="yyyy-MM-dd" type="daterange"
                   range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
               </el-form-item>
-              <el-form-item label="产品分类" prop="ClassId">
+              <el-form-item label="协议分类" prop="ClassId">
                 <treeselect class="groupSet" style="width:150px;" v-model="queryParams.ClassId" :options="proClassTree"
-                  :show-count="true" :normalizer="normalizer" placeholder="请选择产品分类" />
+                  :show-count="true" :normalizer="normalizer" placeholder="请选择协议分类" />
               </el-form-item>
               <el-form-item class="submit_button_con">
                 <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
@@ -60,7 +60,7 @@
               @selection-change="handleSelectionChange" class="data_table" :header-cell-style="cellSty" style="width:100%" :fit="true">
             <el-table-column type="selection" width="55">
             </el-table-column>
-              <el-table-column width="320" align="center" label="产品信息" key="proInfo" prop="Name" v-if="columns[0].visible">
+              <el-table-column width="320" align="center" label="协议信息" key="proInfo" prop="Name" v-if="columns[0].visible">
                 <template slot-scope="scope">
                   <!-- <span>{{ parseTime(scope.row.createTime) }}</span> -->
                   <div class="col_con">
@@ -78,14 +78,14 @@
                       <div class="col_right_bottom">
                         <div class="right_bottom1">
                           <div class="proName">{{scope.row.Name}}</div>
-                          <div v-if="scope.row.ClassifiedId">产品分类：{{classmap.get(scope.row.ClassifiedId)}}</div>
+                          <div v-if="scope.row.ClassifiedId">协议分类：{{classmap.get(scope.row.ClassifiedId)}}</div>
                         </div>
                         <div class="right_bottom2">
-                          <span style="text-align: left;">产品编号：{{scope.row.Id}}</span>
+                          <span style="text-align: left;">协议编号：{{scope.row.Id}}</span>
                           <span class="data_icon">
                             <el-tooltip
                               class="item"
-                              content="复制产品编号"
+                              content="复制协议编号"
                               placement="top"
                             >
                               <i class="el-icon-document-copy" @click="copyId(scope.row.Id)"></i>
@@ -224,7 +224,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 产品表格数据
+      // 协议表格数据
       productTableList: null,
       // 弹出层标题
       title: "",
@@ -243,7 +243,7 @@ export default {
       },
       // 列信息
       columns: [
-        { key: 0, label: `产品信息`, visible: true },
+        { key: 0, label: `协议信息`, visible: true },
         { key: 1, label: `创建者ID`, visible: true },
         { key: 2, label: `更新者ID`, visible: true },
         { key: 3, label: `接入方式`, visible: true },
@@ -252,7 +252,7 @@ export default {
         { key: 6, label: `当前版本`, visible: true },
         { key: 7, label: `创建时间`, visible: true },
       ],
-      proClassTree:[]//产品分类列表
+      proClassTree:[]//协议分类列表
     };
   },
   mounted() {
@@ -333,7 +333,7 @@ export default {
       }
     },
     copyId(id) {
-      //复制产品id
+      //复制协议id
       let oInput = document.createElement("input");
       oInput.value = id;
       document.body.appendChild(oInput);
@@ -348,12 +348,12 @@ export default {
     filterSatus(value, row) {
       return row.Status === value;
     },
-    /** 查询产品列表 */
+    /** 查询协议列表 */
     getList() {
       this.loading = true;
       productList(this.addDateRange(this.queryParams, this.dateRange)).then(
         async response => {
-          // console.log("查询到的产品", response);
+          // console.log("查询到的协议", response);
           this.productTableList = response.data.List;
           this.total = response.data.Total;
           this.loading = false;
@@ -394,7 +394,7 @@ export default {
         children: node.Children
       };
     },
-    // 产品状态修改
+    // 协议状态修改
     handleProductStatus(row) {
 
       let text = "";
@@ -404,7 +404,7 @@ export default {
         text = "发布";
       }
       this.$modal
-        .confirm('确认要"' + text + '""' + row.Name + '"产品吗？')
+        .confirm('确认要"' + text + '""' + row.Name + '"协议吗？')
         .then(function() {
           return editProduct({ Id: row.Id, Status: row.Status });
         })
@@ -484,7 +484,7 @@ export default {
       //启用
       row.Status = row.Status == "0" ? "1" : "0";
       this.$modal
-        .confirm('确认要取消发布"' + row.Name + '"产品吗？')
+        .confirm('确认要取消发布"' + row.Name + '"协议吗？')
         .then(function() {
           return editProduct({ Id: row.Id, Status: row.Status });
         })
@@ -499,7 +499,7 @@ export default {
     handleDelete(row) {
       const ids = row.Id;
       this.$modal
-        .confirm('是否确认删除产品编号为"' + ids + '"的数据项？')
+        .confirm('是否确认删除协议编号为"' + ids + '"的数据项？')
         .then(function() {
           return removeProduct({ id: ids });
         })

@@ -9,8 +9,8 @@
         <el-option v-for="item in selNumber" :key="item" :label="item + '台'" :value="item"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="限制产品" prop="product_id">
-      <el-select v-model="value.limit_product" multiple filterable remote reserve-keyword placeholder="请选择限制产品"
+    <el-form-item label="限制协议" prop="product_id">
+      <el-select v-model="value.limit_product" multiple filterable remote reserve-keyword placeholder="请选择限制协议"
         :remote-method="remoteMethod" :loading="prodloading">
         <el-option v-for="item in productLists" :key="item.Id" :label="item.Name" :value="item.Id">
         </el-option>
@@ -101,7 +101,7 @@ export default {
       productmap: new Map(),
       productCodemap: new Map(),
       codeMap: new Map(), //标识符标识
-      productLists: [], //产品列表
+      productLists: [], //协议列表
       codeGroup: [],
       codeList: [], //属性列表
       queryform: {
@@ -167,7 +167,7 @@ export default {
       this.value.synclist = JSON.parse(JSON.stringify(this.value.synclist));
       if (this.value.synclist.length == 0) {
         let obj = {
-          code: "", //产品物模型的属性标识或标签标识
+          code: "", //协议物模型的属性标识或标签标识
           field_id: "", //表单字段ID
         };
         this.value.synclist.push(obj);
@@ -222,7 +222,7 @@ export default {
     addSynclist() {
       //增加关联值绑定
       let obj = {
-        code: "", //产品物模型的属性标识或标签标识
+        code: "", //协议物模型的属性标识或标签标识
         field_id: "", //表单字段ID
       };
       this.value.synclist.push(obj);

@@ -5,10 +5,10 @@
         <el-form :model="addData" :rules="addRules" ref="addParams">
           <div style="height: 100%; padding: 0 0 0 20px; padding-top: 10px" class="steps_con">
             <el-steps direction="vertical" :active="addActive" finish-status="success">
-              <el-step title="请选择你想创建的产品分类">
+              <el-step title="请选择你想创建的协议分类">
                 <div slot="title">
-                  <span v-if="addActive == 0 || selectedClass.Id == 'undefine'">请选择你想创建的产品分类</span>
-                  <span v-if="addActive != 0 && selectedClass.Id">已选择产品分类</span>
+                  <span v-if="addActive == 0 || selectedClass.Id == 'undefine'">请选择你想创建的协议分类</span>
+                  <span v-if="addActive != 0 && selectedClass.Id">已选择协议分类</span>
                   <span style="color: #0f73e6;font-size: 12px;margin-left: 30px;cursor: pointer;" @click="reselectClass"
                     v-if="selectedClass.Id != null">重新选择</span>
                 </div>
@@ -488,7 +488,7 @@ export default {
         this.activeClassList = this.classmap.get(item.Id);
         this.cardLoading = false;
         console.log(
-          "当前选中的产品分类的子级列表",
+          "当前选中的协议分类的子级列表",
           this.classmap,
           this.activeClassList
         );
@@ -500,7 +500,7 @@ export default {
     initClassMap(node) {
       for (let idx = 0; idx < node.length; idx++) {
         let curnode = node[idx].Children;
-        // console.log("组合时产品分类列表curnode", curnode);
+        // console.log("组合时协议分类列表curnode", curnode);
         this.classmap.set(node[idx].Id, curnode);
         if (
           node[idx].hasOwnProperty("Children") &&

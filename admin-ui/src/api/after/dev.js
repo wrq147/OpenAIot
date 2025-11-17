@@ -8,7 +8,7 @@ export function myDeviceList(params) {
         params: params
     })
 }
-//产品列表
+//协议列表
 export function myProductList(params) {
     return request({
         url: '/AfterService/Dev/ProductList',
