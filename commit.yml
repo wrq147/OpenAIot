@@ -2,49 +2,22 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid 'ce2c9d165208272ad6e75b885f6d0b531cf084a5'
-    oldFile: !uuid '619187587a48c77776671749d4e18541d856b09e'
-  /App/XML:
-    newFile: !uuid '0f8bae5cc553f981af32013f98db136f9a916aad'
-    oldFile: !uuid '2a82863e92c298adc32dafcdb71d13f05512d640'
-  /App/XML/MESService.xml:
-    newFile: !uuid '413a05cb0346d6ca9208bbc4de66ce29b1fc146f'
-    oldFile: !uuid '0e489cd9b635f67afb221caf9587e92ed204d642'
   /Modules:
-    newFile: !uuid 'c5c53b4886aa57c02d689d5d11de341fa59fda77'
-    oldFile: !uuid 'a42423b1021fa823266cc610f2c879a79804cd8e'
-  /Modules/MESService:
-    newFile: !uuid '2a23a92a3732b04b830afd1c7e66901f8ba844c0'
-    oldFile: !uuid '1d3a8ffceb6a00fc61db16506d93e6c70c4bb410'
-  /Modules/MESService/Controller:
-    newFile: !uuid '22444977c7157df6052eeb4f0ce0538fc50cdd70'
-    oldFile: !uuid '7c1124780d6117b3f4c6c5838a12ac3d6a74edc9'
-  /Modules/MESService/Controller/Config.cs:
-    newFile: !uuid '00cdc0895986b7957986d9dc92f8085b45d50535'
-    oldFile: !uuid 'e1e0531844a0e0ec44d619c3fad0a6cb0fc3c32a'
-  /Modules/ProducerService:
-    newFile: !uuid '4fac6b6d632027366ee0c5ed1663170ba4b2db5c'
-    oldFile: !uuid '0dc41694fcc5a9afa9ec2429a4ca73a80741d9b5'
-  /Modules/ProducerService/ProducerMigrator.cs:
-    newFile: !uuid '98edf5fd577ab547663b294e0484bf6c3a834da5'
-    oldFile: !uuid '5a262c5598caace28e098b68690bed80f805aaa4'
-  /admin-ui:
-    newFile: !uuid '60f9611e1ec5eb4256f54b6f81fcbf3f5bcde90b'
-    oldFile: !uuid 'df9c405236725efe0dc3e47346a36512538d590a'
-  /admin-ui/src:
-    newFile: !uuid '6e810e0cf60f9adee95b752735e501e14f427f13'
-    oldFile: !uuid '62beca5b794fc02dcd4267450b24fa1c595b6906'
-  /admin-ui/src/api:
-    newFile: !uuid '7374a1ae91ccd81a905a14f0361d3d8e320aae5b'
-    oldFile: !uuid '61db323bebae59b62633bf4399f3a2ad77be39bd'
-  /admin-ui/src/api/mes:
-    newFile: !uuid '72b635f5463117a2c2d9639c610ad51fac88954f'
-    oldFile: !uuid 'f47ded4bb255b877fb08c11f2cdfe4f19b8b237b'
-  /admin-ui/src/api/mes/config.js:
-    newFile: !uuid '5e7feffefc75d94733f7202d56f1d256355d596b'
-    oldFile: !uuid 'c740bfb9d3bb35c64e2b48bca0ea638ff65a0490'
-gitCommitId: !uuid '7ae3cbb8d71698daedecb2a9571e7625020280ef'
+    newFile: !uuid 'b9ce9b27f5a1c4662abf9b56e9b1fd3d5943dcf6'
+    oldFile: !uuid 'c5c53b4886aa57c02d689d5d11de341fa59fda77'
+  /Modules/StorageService:
+    newFile: !uuid '54758c45c92f0009cb048e8902c8677910b34f29'
+    oldFile: !uuid 'a15b16b03dd28643ff45c43ab3a2a3cd05b71c6a'
+  /Modules/StorageService/Model:
+    newFile: !uuid 'd23b9c934e0f4cef61bbaa2b27169aa85ad86f7c'
+    oldFile: !uuid '75142c731cd5a55aca39e99d5cc5dbbc23012ac5'
+  /Modules/StorageService/Model/In_PileItem.cs:
+    newFile: !uuid '0badcb454049b2e7a5ebb51953f5fc8309a2027f'
+    oldFile: !uuid '9bd7f63f96b573bc3d0c289ee2840c92a27bd83a'
+  /悟空云开发者接口.doc:
+    newFile: !uuid 'f6ccf94bb7e23a6d1da7f0e78dbb441eb6153074'
+    oldFile: !uuid '049f1b80dbdb4fb7735cdab7624c2e2aa127d5a4'
+gitCommitId: !uuid 'fca48682187670140f9aad0ebd9fc93dd5a8998f'
 renames: {
   }
-revisionId: 18
+revisionId: 19
