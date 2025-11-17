@@ -212,9 +212,9 @@ namespace IoTService.Controller
             return this.Success(old);
         }
         /// <summary>
-        /// 通过第三方编码获取设备的标签列表
+        /// 通过批次编号获取设备的标签列表
         /// </summary>
-        /// <param name="number">第三方编码</param>
+        /// <param name="number">批次编号</param>
         /// <returns></returns>
         [HttpGet]
         [ShareCheck]
@@ -270,11 +270,11 @@ namespace IoTService.Controller
         {
             if (string.IsNullOrEmpty(data.DeviceNumber))
             {
-                return this.Error<string>(12, "请传入第三方编码");
+                return this.Error<string>(12, "请传入批次编号");
             }
             if (data.DeviceNumber.StartsWith("SB"))
             {
-                return this.Error<string>(13, "第三方编码不可使用SB开头");
+                return this.Error<string>(13, "批次编号不可使用SB开头");
             }
             IotDeviceBLL deviceBLL = this.ServiceProvider.GetService<IotDeviceBLL>();
             MZ_IotDevice dev = new MZ_IotDevice();
@@ -298,7 +298,7 @@ namespace IoTService.Controller
         {
             if (string.IsNullOrEmpty(data.DeviceNumber))
             {
-                return this.Error<string>(12, "请传入第三方编码");
+                return this.Error<string>(12, "请传入批次编号");
             }
             IotDeviceBLL deviceBLL = this.ServiceProvider.GetService<IotDeviceBLL>();
             MZ_IotDevice dev = new MZ_IotDevice();
@@ -343,7 +343,7 @@ namespace IoTService.Controller
         {
             if (string.IsNullOrEmpty(data.DeviceNumber))
             {
-                return this.Error<string>(12, "请传入第三方编码");
+                return this.Error<string>(12, "请传入批次编号");
             }
             IotDeviceBLL deviceBLL = this.ServiceProvider.GetService<IotDeviceBLL>();
             var old = await deviceBLL.InfoByNumber(data.DeviceNumber);

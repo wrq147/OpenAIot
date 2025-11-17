@@ -13,7 +13,7 @@ namespace IoTService.Models
     public class In_HistoryListSync : In_HistoryBase
     {
         /// <summary>
-        /// 设备的第三方编码
+        /// 设备的批次编号
         /// </summary>
         public string Number { get; set; }
     }

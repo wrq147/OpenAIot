@@ -157,7 +157,7 @@ export default {
 
         paramItems.push({
           code: "$devnumber",
-          title: "设备第三方编码"
+          title: "设备批次编号"
         });
       }
       else {

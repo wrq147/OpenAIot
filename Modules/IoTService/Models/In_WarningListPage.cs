@@ -14,7 +14,7 @@ namespace IoTService.Models
         /// </summary>
         public string DeviceId { get; set; }
         /// <summary>
-        /// 过滤设备的第三方编码
+        /// 过滤设备的批次编号
         /// </summary>
         public string DeviceNumber { get; set; }
         /// <summary>

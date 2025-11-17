@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace IoTService.Models
 {
     public class In_SyncSaveTags
-    {        
+    {
         /// <summary>
-        /// 设备第三方编码
+        /// 设备批次编号
         /// </summary>
         public string number { get; set; }
         /// <summary>

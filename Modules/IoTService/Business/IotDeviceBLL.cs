@@ -1284,12 +1284,6 @@ namespace IoTService.Business
                 }
             }
 
-            //存储标签
-            if (data.Tags != null)
-            {
-                await _saveTags(data, product, data.Tags);
-            }
-
             if (enableEvt)
             {
                 //触发修改编码事件
@@ -1390,13 +1384,6 @@ namespace IoTService.Business
 
             await _deviceDAL.Insert(data);
 
-
-            await InitBindProduct(data, product);
-            //存储标签
-            if (data.Tags != null)
-            {
-                await _saveTags(data, product, data.Tags);
-            }
 
             if (enableEvt)
             {

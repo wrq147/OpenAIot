@@ -8,12 +8,12 @@
           <div>
             <el-row :gutter="10">
               <el-col :span="12">
-                <el-form-item label="第三方编码" prop="DeviceNumber">
+                <el-form-item label="批次编号" prop="DeviceNumber">
                   <el-input type="text" v-model="deviceAddFrom.DeviceNumber"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="转发设备第三方编码" prop="DeviceNumber2">
+                <el-form-item label="转发的批次编号" prop="DeviceNumber2">
                   <el-input type="text" v-model="deviceAddFrom.DeviceNumber2"></el-input>
                 </el-form-item>
               </el-col>
@@ -26,7 +26,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12" style="padding-right:20px;">
-                <el-form-item label="转发设备分组" prop="groupId2">
+                <el-form-item label="转发的分组" prop="groupId2">
                   <treeselect style="width:100%" v-model="deviceAddFrom.groupId2" :options="groupTreeList" :show-count="true"
                     :normalizer="normalizer" placeholder="请选择转发设备分组" />
                 </el-form-item>
@@ -39,7 +39,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="转发设备名称" prop="name2">
+                <el-form-item label="转发的名称" prop="name2">
                   <el-input type="text" v-model="deviceAddFrom.name2" placeholder="请输入转发设备名称"></el-input>
                 </el-form-item>
               </el-col>
@@ -89,29 +89,21 @@
         <el-button type="primary" @click="saveDevice" :loading="saveDeviceLoading">{{saveDeviceLoading ? '提交中 ...' : '确定'}}</el-button>
       </div>
     </el-dialog>
-    <mapSelectCompt ref="mapSelectCompt" @returnMapInfo="returnMapInfo"></mapSelectCompt>
   </div>
 </template>
 
 <script>
 import {
   addDevice,
-  editDevice,
   GenerateDeviceNumber,
-  productTagList,
-  DeviceTagList,
   DeviceInfo
 } from "@/api/rules/device";
-import {
-  productInfo
-} from "@/api/rules/productModel";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import mapSelectCompt from "@/views/iot/deviceManage/mapSelectCompt";
 import { productList } from "@/api/rules/productModel";
 export default {
   name: 'AdminUiDeviceAddDialog',
-  components: { Treeselect, mapSelectCompt },
+  components: { Treeselect },
   props: {
     groupTreeList: {
       type: Array,
@@ -126,7 +118,6 @@ export default {
   },
   data() {
     return {
-      stepNum: 1,
       deviceAddDialogTitle: '',
       saveDeviceLoading: false,
       deviceAddOpen: false, //添加设备弹窗
@@ -158,10 +149,6 @@ export default {
         name2: [{ required: true, trigger: "blur", message: "请输入转发设备名称" }],
       },
       addloading: false,
-      firstLabelIfo: [],//一开始的标签数据
-      labelIfo: [],
-      labelIfo2:[],
-      maxStep: 2,
       productLists: [],
       productLists2:[],
       stateoptions: [],//设备运行状态列表
@@ -175,24 +162,7 @@ export default {
   },
 
   methods: {
-    getproductTagList() {
-      if (this.deviceAddFrom.productId) {
-        productTagList({ id: this.deviceAddFrom.productId }).then(res => {
-          this.labelIfo = res.data
-        })
-      }else{
-        this.labelIfo = []
-      }
-    },
-    getproductTagList2() {
-      if (this.deviceAddFrom.productId2) {
-        productTagList({ id: this.deviceAddFrom.productId2 }).then(res => {
-          this.labelIfo2 = res.data
-        })
-      }else{
-        this.labelIfo2=[]
-      }
-    },
+  
     remoteMethod(query) {
       if (query !== "") {
         this.loading = true;
@@ -241,29 +211,11 @@ export default {
         pageNum: 1
       }
       productList(query).then(async response => {
-        // console.log("查询到的产品", response);
         if (response.code == 0) {
           if (response.data && response.data.List)
             this.productLists2 = response.data.List;
         }
-        // this.productLists = response.data.List;
-        // this.total = response.data.Total;
-        // this.loading = false;
       });
-    },
-    choiceMap() {
-      //选择位置
-      this.$refs.mapSelectCompt.choiceMap()
-    },
-    returnMapInfo(info) {
-      this.deviceAddFrom.lat = info.Lat
-      this.deviceAddFrom.lng = info.Lng
-      this.deviceAddFrom.addressName = info.AddressName
-      this.$forceUpdate()
-    },
-    returnStep() {
-      //回到上一步
-      this.stepNum = this.stepNum - 1
     },
     normalizer(node) {
       if (node.Children == null || !node.Children.length) {
@@ -280,7 +232,6 @@ export default {
       this.stateoptions = []
       this.isOpendevPosition = false
       this.resetForm("deviceAddFrom");
-      this.stepNum = 1
       this.addloading = true;
       let rsp = await GenerateDeviceNumber()
       let rsp2 = await GenerateDeviceNumber()
@@ -300,11 +251,7 @@ export default {
         deviceId: "",
         deviceId2: "",
         PhotoUrl: '',
-        pd: "",
-        Price: 0,
         Remark: "",
-        lat: 0,
-        lng: 0,
         addressName: ''
       };
       if (productInfo) {
@@ -323,7 +270,6 @@ export default {
       this.isOpendevPosition = false
       this.resetForm("deviceAddFrom");
       this.addloading = true;
-      this.stepNum = 1
       this.deviceAddDialogTitle = '编辑设备'
       this.deviceAddFrom = {
         id: row.Id,
@@ -334,19 +280,11 @@ export default {
         name: row.Name,
         deviceId: row.DeviceId,
         PhotoUrl: row.PhotoUrl,
-        pd: row.PD,
-        Price: row.Price,
         DeviceNumber: row.DeviceNumber,
         SkuNumber: row.SkuNumber,
         Remark: row.Remark,
-        lat: row.Lat,
-        lng: row.Lng,
         addressName: ''
       };
-      if (row.Lat && row.Lng) {
-        let deinfo = await DeviceInfo({ id: row.Id });
-        this.deviceAddFrom.addressName = deinfo.data.AreaCodeName
-      }
       this.$forceUpdate()
       this.addloading = false;
       this.deviceAddOpen = true;
@@ -354,30 +292,7 @@ export default {
     saveDevice() {
       this.$refs["deviceAddFrom"].validate(valid => {
         if (valid) {
-          // let submitTag=[]
-          let hasEditlabel = false
-          let originLabel = JSON.stringify(this.firstLabelIfo)
-          let lastLabel = JSON.stringify(this.labelIfo)
-          if (originLabel == lastLabel) {
-            hasEditlabel = false
-          } else {
-            hasEditlabel = true
-          }
-          let submitTag = this.labelIfo.map(row => {
-            let obj = {
-              code: row.Code,
-              value: row.Value
-            }
-            return obj
-          })
-          let submitTag2 = this.labelIfo2.map(row => {
-            let obj = {
-              code: row.Code,
-              value: row.Value
-            }
-            return obj
-          })
-          // let submitForm = JSON.parse(JSON.stringify(this.deviceAddFrom))
+
           let submitForm={
             productId: this.deviceAddFrom.productId,
             productName: this.deviceAddFrom.productName,
@@ -387,11 +302,7 @@ export default {
             name: this.deviceAddFrom.name,
             deviceId: this.deviceAddFrom.deviceId,
             PhotoUrl: this.deviceAddFrom.PhotoUrl,
-            pd: this.deviceAddFrom.pd,
-            Price: this.deviceAddFrom.Price,
             Remark: this.deviceAddFrom.Remark,
-            lat: this.deviceAddFrom.lat,
-            lng: this.deviceAddFrom.lng,
             addressName:this.deviceAddFrom.addressName
           }
           let submitForm2={
@@ -403,25 +314,10 @@ export default {
             name: this.deviceAddFrom.name2,
             deviceId: this.deviceAddFrom.deviceId2,
             PhotoUrl: this.deviceAddFrom.PhotoUrl,
-            pd: this.deviceAddFrom.pd,
-            Price: this.deviceAddFrom.Price,
             Remark: this.deviceAddFrom.Remark,
-            lat: this.deviceAddFrom.lat,
-            lng: this.deviceAddFrom.lng,
             addressName:this.deviceAddFrom.addressName
           }
-          submitForm.tags = JSON.parse(JSON.stringify(submitTag))
-          submitForm2.tags = JSON.parse(JSON.stringify(submitTag2))
-          // if(!this.isEditTags&&submitForm.id){
-          //   delete submitForm.tags
-          // }
-          // if (!hasEditlabel && submitForm.id) {
-          //   delete submitForm.tags
-          // }
-          // delete submitForm.tags
-          // delete submitForm2.tags
-          delete submitForm.addressName
-          delete submitForm2.addressName
+
           delete submitForm.productName
           delete submitForm2.productName
           if (this.deviceAddFrom.groupId) {

@@ -193,9 +193,9 @@
         </member>
         <member name="M:IoTService.Controller.HttpSync.TagList(System.String)">
             <summary>
-            通过第三方编码获取设备的标签列表
+            通过批次编号获取设备的标签列表
             </summary>
-            <param name="number">第三方编码</param>
+            <param name="number">批次编号</param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.HttpSync.ProductNames(IoTService.Models.In_ProductNamePage)">
@@ -1221,7 +1221,7 @@
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.Numbers">
             <summary>
-            过滤多个第三方编码
+            过滤多个批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.DeviceId">
@@ -1231,7 +1231,7 @@
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.DeviceNumber">
             <summary>
-            设备唯一编码（第三方编码）
+            设备唯一编码（批次编号）
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.HasDeviceId">
@@ -1241,7 +1241,7 @@
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.Key">
             <summary>
-            同时搜索设备名称、设备编码、第三方编码
+            同时搜索设备名称、设备编码、批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.Keywords">
@@ -1316,7 +1316,7 @@
         </member>
         <member name="P:IoTService.Models.In_HistoryListSync.Number">
             <summary>
-            设备的第三方编码
+            设备的批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_HistoryBase.Code">
@@ -1356,7 +1356,7 @@
         </member>
         <member name="P:IoTService.Models.In_HistoryMergeListSync.Numbers">
             <summary>
-            设备第三方编码列表
+            设备批次编号列表
             </summary>
         </member>
         <member name="P:IoTService.Models.In_HistoryMergeBase.MergeWay">
@@ -1421,7 +1421,7 @@
         </member>
         <member name="P:IoTService.Models.In_IotCardListPage.DeviceKey">
             <summary>
-            按绑定设备的第三方编码、通讯编码查询
+            按绑定设备的批次编号、通讯编码查询
             </summary>
         </member>
         <member name="P:IoTService.Models.In_IotCardListPage.IsBindDev">
@@ -1526,7 +1526,7 @@
         </member>
         <member name="P:IoTService.Models.In_OnOfflineListSync.Number">
             <summary>
-            设备的第三方编码
+            设备的批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_ProductListPage.OrgId">
@@ -1666,7 +1666,7 @@
         </member>
         <member name="P:IoTService.Models.In_SyncExeFunc.Number">
             <summary>
-            设备的第三方编码
+            设备的批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_SyncExeFunc.FunctionId">
@@ -1681,7 +1681,7 @@
         </member>
         <member name="P:IoTService.Models.In_SyncSaveTags.number">
             <summary>
-            设备第三方编码
+            设备批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_SyncSaveTags.list">
@@ -1726,7 +1726,7 @@
         </member>
         <member name="P:IoTService.Models.In_WarningListPage.DeviceNumber">
             <summary>
-            过滤设备的第三方编码
+            过滤设备的批次编号
             </summary>
         </member>
         <member name="P:IoTService.Models.In_WarningListPage.ProductId">

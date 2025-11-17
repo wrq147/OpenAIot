@@ -476,7 +476,7 @@ beforeDestroy() {
               <div class="info_li li_left">设备名称</div><div class="info_li li_right blue">${info.Name}</div>
               <div class="info_li li_left">用户名称</div><div class="info_li li_right">${info.OwnerOrgName}</div>
               <div class="info_li li_left">通讯编码</div><div class="info_li li_right blue">${info.DeviceId}</div>
-              <div class="info_li li_left">第三方编码</div><div class="info_li li_right blue">${info.DeviceNumber}</div>
+              <div class="info_li li_left">批次编号</div><div class="info_li li_right blue">${info.DeviceNumber}</div>
               <div class="info_li li_left two">设备地址</div><div class="info_li li_right two"><div class="text">${result.regeocode.formattedAddress}</div></div>
               <div class="info_li li_left">现场单位名称</div><div class="info_li li_right"></div>
               </div>

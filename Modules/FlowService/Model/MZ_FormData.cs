@@ -12,7 +12,7 @@ namespace FlowService.Model
         /// </summary>
         public long flowId { get; set; }
         /// <summary>
-        /// 第三方编码
+        /// 批次编号
         /// </summary>
         public string FlowNumber { get; set; }
         /// <summary>

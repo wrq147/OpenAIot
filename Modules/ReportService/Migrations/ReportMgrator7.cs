@@ -129,7 +129,7 @@ namespace ReportService.Migrations
 	},
 	{
 		""id"": ""$dev0002"",
-		""title"": ""第三方编码"",
+		""title"": ""批次编号"",
 		""field"": ""DeviceNumber"",
 		""typeName"": ""String""
 	},

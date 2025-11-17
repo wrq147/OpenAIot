@@ -9,7 +9,7 @@ namespace AirJointUI.Models
     public class TagSave_In
     {
         /// <summary>
-        /// 设备第三方编码
+        /// 设备批次编号
         /// </summary>
         public string number { get; set; }
         /// <summary>

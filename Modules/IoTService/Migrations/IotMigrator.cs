@@ -111,7 +111,7 @@ namespace IotService.Migrations
             Insert.IntoTable("mz_menu").Row(new
             {
                 menu_id = 4000,
-                menu_name = "物联网",
+                menu_name = "物联网开发",
                 parent_id = 0,
                 order_num = 7,
                 path = "iot",
@@ -174,7 +174,7 @@ namespace IotService.Migrations
             }).Row(new
             {
                 menu_id = 4206,
-                menu_name = "物联设备",
+                menu_name = "开发设备",
                 parent_id = 4000,
                 order_num = 3,
                 path = "deviceManage/index",

@@ -45,11 +45,11 @@ namespace StorageService.Controller
         {
             if (string.IsNullOrEmpty(data.StockNumber))
             {
-                return this.Error<string>(12, "请传入第三方编码");
+                return this.Error<string>(12, "请传入批次编号");
             }
             if (data.StockNumber.StartsWith("RK"))
             {
-                return this.Error<string>(13, "第三方编码不可使用RK开头");
+                return this.Error<string>(13, "批次编号不可使用RK开头");
             }
             var user = _develper.ToUserInfo();
             StockBLL stockBLL = this.ServiceProvider.GetService<StockBLL>();
@@ -71,7 +71,7 @@ namespace StorageService.Controller
                 var batchInfo = await proBatchBLL.SelectVByNumber(user.OrgId, item.TargetNumber);
                 if (batchInfo == null)
                 {
-                    return this.Error<string>(32, "第三方编码不存在");
+                    return this.Error<string>(32, "批次编号不存在");
                 }
                 detail.TargetType = batchInfo.ProductLabel == "F" ? 1 : 0;
                 detail.TargetId = batchInfo.Id;
@@ -106,11 +106,11 @@ namespace StorageService.Controller
         {
             if (string.IsNullOrEmpty(data.StockNumber))
             {
-                return this.Error<string>(12, "请传入第三方编码");
+                return this.Error<string>(12, "请传入批次编号");
             }
             if (data.StockNumber.StartsWith("CK"))
             {
-                return this.Error<string>(13, "第三方编码不可使用CK开头");
+                return this.Error<string>(13, "批次编号不可使用CK开头");
             }
             var user = _develper.ToUserInfo();
             StockBLL stockBLL = this.ServiceProvider.GetService<StockBLL>();
@@ -140,7 +140,7 @@ namespace StorageService.Controller
                 var batchInfo = await proBatchBLL.SelectVByNumber(user.OrgId, item.TargetNumber);
                 if (batchInfo == null)
                 {
-                    return this.Error<string>(32, "第三方编码不存在");
+                    return this.Error<string>(32, "批次编号不存在");
                 }
                 detail.TargetType = batchInfo.ProductLabel == "F" ? 1 : 0;
                 detail.TargetId = batchInfo.Id;

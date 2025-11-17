@@ -17,7 +17,7 @@ namespace IoTService.Models
     public class In_HistoryMergeListSync : In_HistoryMergeBase
     {
         /// <summary>
-        /// 设备第三方编码列表
+        /// 设备批次编号列表
         /// </summary>
         public List<string> Numbers { get; set; }
     }

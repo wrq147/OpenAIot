@@ -22,7 +22,7 @@ namespace IoTService.Models
         /// </summary>
         public string Key { get; set; }
         /// <summary>
-        /// 按绑定设备的第三方编码、通讯编码查询
+        /// 按绑定设备的批次编号、通讯编码查询
         /// </summary>
         public string DeviceKey { get; set; }
         /// <summary>

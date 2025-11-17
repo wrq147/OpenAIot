@@ -9,7 +9,7 @@ namespace AirJointUI.Models
         public string Id { get; set; }
         private string _number;
         /// <summary>
-        /// 设备第三方编码
+        /// 设备批次编号
         /// </summary>
         public string Number
         {

@@ -5,10 +5,9 @@
       <el-form :model="deviceAddFrom" ref="deviceAddFrom" :rules="deviceAddRules" label-position="right"
         label-width="90px">
         <div>
-          <div v-if="stepNum == 1">
             <el-row :gutter="10">
               <el-col :span="12">
-                <el-form-item label="第三方编码" prop="DeviceNumber">
+                <el-form-item label="批次编号" prop="DeviceNumber">
                   <el-input type="text" v-model="deviceAddFrom.DeviceNumber"></el-input>
                 </el-form-item>
               </el-col>
@@ -75,38 +74,12 @@
                 </el-form-item>
               </el-col>
             </el-row>
-          </div>
-          <div v-if="stepNum == 2">
-            <el-row :gutter="10">
-              <el-col :span="12" v-for="item in labelIfo" :key="item.Code">
-                <el-form-item :label="item.Name" :prop="item.Code">
-                  <el-switch v-if="item.Option.type == 'boolean'" v-model="item.Value"
-                    :active-text="item.Option.trueText" :inactive-text="item.Option.falseText">
-                  </el-switch>
-                  <el-input-number v-else-if="item.Option.type == 'float'" v-model="item.Value"
-                    :precision="item.Option.decimals" :step="0.1" :min="item.Option.min"
-                    :max="item.Option.max"></el-input-number>
-                  <el-input-number v-else-if="item.Option.type == 'int'" v-model="item.Value" :min="item.Option.min"
-                    :max="item.Option.max"></el-input-number>
-                  <el-select v-else-if="item.Option.type == 'enum'" v-model="item.Value" placeholder="请选择">
-                    <el-option v-for="(elii, kii) in item.Option.elements" :key="kii" :label="elii"
-                      :value="kii"></el-option>
-                  </el-select>
-                  <el-date-picker v-else-if="item.Option.type == 'date'" v-model="item.Value" value-format="timestamp"
-                    type="datetime" placeholder="选择日期时间">
-                  </el-date-picker>
-                  <el-input v-else v-model="item.Value" placeholder="请输入内容"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
+
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="deviceAddOpen = false" v-if="stepNum == 1">取 消</el-button>
-        <el-button @click="returnStep" v-else>上一步</el-button>
-        <el-button type="primary" @click="saveDevice" :loading="saveDeviceLoading" v-if="stepNum == maxStep">{{saveDeviceLoading ? '提交中 ...' : '确定'}}</el-button>
-        <el-button type="primary" @click="nextStep" v-else>下一步</el-button>
+        <el-button @click="deviceAddOpen = false">取 消</el-button>
+        <el-button type="primary" @click="saveDevice" :loading="saveDeviceLoading">{{saveDeviceLoading ? '提交中 ...' : '确定'}}</el-button>
       </div>
     </el-dialog>
     <mapSelectCompt ref="mapSelectCompt" @returnMapInfo="returnMapInfo"></mapSelectCompt>
@@ -118,8 +91,6 @@ import {
   addDevice,
   editDevice,
   GenerateDeviceNumber,
-  productTagList,
-  DeviceTagList,
   DeviceInfo
 } from "@/api/rules/device";
 import {
@@ -146,7 +117,6 @@ export default {
   },
   data() {
     return {
-      stepNum: 1,
       deviceAddDialogTitle: '',
       saveDeviceLoading: false,
       deviceAddOpen: false, //添加设备弹窗
@@ -158,8 +128,6 @@ export default {
         name: "",
         deviceId: "",
         PhotoUrl: '',
-        pd: "",
-        Price: 0,
         Remark: ""
       },
       deviceAddRules: {
@@ -169,9 +137,6 @@ export default {
         name: [{ required: true, trigger: "blur", message: "请输入设备名称" }],
       },
       addloading: false,
-      firstLabelIfo: [],//一开始的标签数据
-      labelIfo: [],
-      maxStep: 2,
       productLists: [],
       stateoptions: [],//设备运行状态列表
       isOpendevPosition: false,//是否可以修改位置
@@ -184,7 +149,6 @@ export default {
 
   methods: {
     productChange() {
-      this.getproductTagList();
       this.productInit();
     },
     productInit() {
@@ -227,14 +191,10 @@ export default {
         pageNum: 1
       }
       productList(query).then(async response => {
-        // console.log("查询到的产品", response);
         if (response.code == 0) {
           if (response.data && response.data.List)
             this.productLists = response.data.List;
         }
-        // this.productLists = response.data.List;
-        // this.total = response.data.Total;
-        // this.loading = false;
       });
     },
     choiceMap() {
@@ -246,31 +206,6 @@ export default {
       this.deviceAddFrom.lng = info.Lng
       this.deviceAddFrom.addressName = info.AddressName
       this.$forceUpdate()
-    },
-    getproductTagList() {
-      if (this.deviceAddFrom.productId) {
-        productTagList({ id: this.deviceAddFrom.productId }).then(res => {
-          this.labelIfo = res.data
-          // console.log(res, 'res产品标签结果');
-          if (this.labelIfo.length == 0) {
-            this.maxStep = 1
-          } else {
-            this.maxStep = 2
-          }
-        })
-      }
-    },
-    nextStep() {
-      //到下一步
-      this.$refs["deviceAddFrom"].validate(valid => {
-        if (valid) {
-          this.stepNum = this.stepNum + 1
-        }
-      });
-    },
-    returnStep() {
-      //回到上一步
-      this.stepNum = this.stepNum - 1
     },
     normalizer(node) {
       if (node.Children == null || !node.Children.length) {
@@ -287,7 +222,6 @@ export default {
       this.stateoptions = []
       this.isOpendevPosition = false
       this.resetForm("deviceAddFrom");
-      this.stepNum = 1
       this.addloading = true;
       let rsp = await GenerateDeviceNumber()
       this.deviceAddDialogTitle = '添加设备'
@@ -300,8 +234,6 @@ export default {
         name: "",
         deviceId: "",
         PhotoUrl: '',
-        pd: "",
-        Price: 0,
         Remark: "",
         lat: 0,
         lng: 0,
@@ -318,12 +250,10 @@ export default {
     },
     async editRowData(row) {
       //修改一行的数据
-      console.log(row, 'rowrowrow');
       this.stateoptions = []
       this.isOpendevPosition = false
       this.resetForm("deviceAddFrom");
       this.addloading = true;
-      this.stepNum = 1
       this.deviceAddDialogTitle = '编辑设备'
       this.deviceAddFrom = {
         id: row.Id,
@@ -334,8 +264,6 @@ export default {
         name: row.Name,
         deviceId: row.DeviceId,
         PhotoUrl: row.PhotoUrl,
-        pd: row.PD,
-        Price: row.Price,
         DeviceNumber: row.DeviceNumber,
         SkuNumber: row.SkuNumber,
         Remark: row.Remark,
@@ -349,50 +277,13 @@ export default {
       }
       this.$forceUpdate()
       this.productInit()
-      this.getDeviceTagList(row.Id)
       this.addloading = false;
       this.deviceAddOpen = true;
-    },
-    getDeviceTagList(id) {
-      //获取标签信息
-      DeviceTagList({ id: id }).then((res) => {
-        // console.log("标签信息", res);
-        this.labelIfo = JSON.parse(JSON.stringify(res.data));
-        this.firstLabelIfo = JSON.parse(JSON.stringify(res.data));
-        if (this.labelIfo.length == 0) {
-          this.maxStep = 1
-        } else {
-          this.maxStep = 2
-        }
-      });
     },
     saveDevice() {
       this.$refs["deviceAddFrom"].validate(valid => {
         if (valid) {
-          // let submitTag=[]
-          let hasEditlabel = false
-          let originLabel = JSON.stringify(this.firstLabelIfo)
-          let lastLabel = JSON.stringify(this.labelIfo)
-          if (originLabel == lastLabel) {
-            hasEditlabel = false
-          } else {
-            hasEditlabel = true
-          }
-          let submitTag = this.labelIfo.map(row => {
-            let obj = {
-              code: row.Code,
-              value: row.Value
-            }
-            return obj
-          })
           let submitForm = JSON.parse(JSON.stringify(this.deviceAddFrom))
-          submitForm.tags = JSON.parse(JSON.stringify(submitTag))
-          // if(!this.isEditTags&&submitForm.id){
-          //   delete submitForm.tags
-          // }
-          if (!hasEditlabel && submitForm.id) {
-            delete submitForm.tags
-          }
           delete submitForm.addressName
           delete submitForm.productName
           if (this.deviceAddFrom.groupId) {

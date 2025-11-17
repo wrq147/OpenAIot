@@ -40,7 +40,7 @@ namespace AfterService.Model
             info.Id = "示例ID";
             info.Name = "示例设备名称";
             info.RoomNames = "示例所在房间";
-            info.DeviceNumber = "示例第三方编码";
+            info.DeviceNumber = "示例批次编号";
             info.OwnerOrgId = 2;
             info.OrgId = 2;
             info.DeviceId = "示例通讯编码";

@@ -42,7 +42,7 @@ namespace IoTService.Models
         /// </summary>
         public string[] DtuIds { get; set; }
         /// <summary>
-        /// 过滤多个第三方编码
+        /// 过滤多个批次编号
         /// </summary>
         public string[] Numbers { get; set; }
         /// <summary>
@@ -50,7 +50,7 @@ namespace IoTService.Models
         /// </summary>
         public string DeviceId { get; set; }
         /// <summary>
-        /// 设备唯一编码（第三方编码）
+        /// 设备唯一编码（批次编号）
         /// </summary>
         public string DeviceNumber { get; set; }
         /// <summary>
@@ -58,7 +58,7 @@ namespace IoTService.Models
         /// </summary>
         public bool? HasDeviceId { get; set; }
         /// <summary>
-        /// 同时搜索设备名称、设备编码、第三方编码
+        /// 同时搜索设备名称、设备编码、批次编号
         /// </summary>
         public string Key { get; set; }
         /// <summary>

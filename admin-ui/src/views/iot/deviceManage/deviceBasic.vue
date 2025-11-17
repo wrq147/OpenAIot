@@ -28,7 +28,7 @@
     <el-form ref="deviceInfosForm" :model="deviceBasicInfos" :rules="infoRules">
       <table border="1" class="configInfo" v-loading="configisLoading">
         <tr>
-          <th colspan="1"><span>第三方编码</span></th>
+          <th colspan="1"><span>批次编号</span></th>
           <td class colspan="3">
             <span>{{ deviceBasicInfos.DeviceNumber ? deviceBasicInfos.DeviceNumber : "" }}</span>
           </td>

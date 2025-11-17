@@ -338,7 +338,7 @@ namespace IoTService.Controller
         {
             if (string.IsNullOrEmpty(data.DeviceNumber))
             {
-                return this.Error<string>(12, "请传入第三方编码");
+                return this.Error<string>(12, "请传入批次编号");
             }
             IotDeviceBLL deviceBLL = this.ServiceProvider.GetService<IotDeviceBLL>();
             var old = await deviceBLL.InfoByNumber(data.DeviceNumber);

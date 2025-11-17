@@ -18,7 +18,7 @@
       :header-cell-style="cellSty" style="width: 100%" :fit="true">
       <el-table-column type="selection" width="55"></el-table-column>
 
-      <el-table-column label="第三方编码" align="center" key="DeviceNumber" prop="DeviceNumber" :show-overflow-tooltip="true">
+      <el-table-column label="批次编号" align="center" key="DeviceNumber" prop="DeviceNumber" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ scope.row.DeviceNumber }}</span>
         </template>
