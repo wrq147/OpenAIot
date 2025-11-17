@@ -484,7 +484,7 @@ namespace ProducerService
                 Insert.IntoTable("mz_menu").Row(new
                 {
                     menu_id = 5,
-                    menu_name = "厂家资料",
+                    menu_name = "生产商资料",
                     parent_id = 0,
                     order_num = 8,
                     path = "factory",
@@ -610,7 +610,7 @@ namespace ProducerService
                 }).Row(new
                 {
                     menu_id = 5600,
-                    menu_name = "厂家配置",
+                    menu_name = "生产商设置",
                     parent_id = 5,
                     order_num = 7,
                     path = "factory/gradelist",

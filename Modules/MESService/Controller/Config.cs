@@ -17,7 +17,7 @@ namespace MESService.Controller
             _configBLL = configBLL;
         }
         /// <summary>
-        /// 设置厂家MES配置信息
+        /// 设置生产商MES配置信息
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -30,7 +30,7 @@ namespace MESService.Controller
             return (await _configBLL.SetFactoryMes(data)).ToAjaxResult();
         }
         /// <summary>
-        /// 获取厂家MES配置信息
+        /// 获取生产商MES配置信息
         /// </summary>
         /// <returns></returns>
         [HttpGet]

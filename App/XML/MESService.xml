@@ -86,14 +86,14 @@
         </member>
         <member name="M:MESService.Controller.Config.Set(MESService.Model.MZ_FactoryMes)">
             <summary>
-            设置厂家MES配置信息
+            设置生产商MES配置信息
             </summary>
             <param name="data"></param>
             <returns></returns>
         </member>
         <member name="M:MESService.Controller.Config.Info">
             <summary>
-            获取厂家MES配置信息
+            获取生产商MES配置信息
             </summary>
             <returns></returns>
         </member>
