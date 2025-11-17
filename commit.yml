@@ -2,190 +2,43 @@
 branches: {
   }
 fileChange:
-  /AirJointUI:
-    newFile: !uuid '6e3e82b5cd9888f4fb0684f644658a85a66881c9'
-    oldFile: !uuid '6641ebdc77a67ee6cfa8b09637129b82c81dd144'
-  /AirJointUI/Models:
-    newFile: !uuid '002ce2a0cf2ed176ebee8d2afcc2dd830c9d1745'
-    oldFile: !uuid '719bf0e21862d480ecb4ffb22bf6ad56252bae86'
-  /AirJointUI/Models/DeviceItem_IdxV.cs:
-    newFile: !uuid '701d4db308e97e86a2c9e4a2d95b85e522ce64af'
-    oldFile: !uuid '6b042c0fbb0becc6063f5587c0edf795d1044cbe'
-  /AirJointUI/Models/FunExe_In.cs:
-    newFile: !uuid '8310a5eb1e0b115be1126b137d0185233aaaa189'
-    oldFile: !uuid 'ddedd0fe3360c6dcbfa758ec0ce000c2c3f0b6f6'
-  /AirJointUI/Models/TagSave_In.cs:
-    newFile: !uuid 'e6f3ba5869c8ea192a7068a5477e620adf8e64c2'
-    oldFile: !uuid 'efca28221e7f6cdcaae5ba5c1367165ee0c44a09'
-  /App:
-    newFile: !uuid '619187587a48c77776671749d4e18541d856b09e'
-    oldFile: !uuid 'aaa0ede5e5f1377706c34c82a7cda1f33723e012'
-  /App/XML:
-    newFile: !uuid '2a82863e92c298adc32dafcdb71d13f05512d640'
-    oldFile: !uuid 'd449e2f070460b9616bf424530a0b6dd0e32cd00'
-  /App/XML/FlowService.xml:
-    newFile: !uuid '5fd31f5427afc764c104512ef057c338428d3023'
-    oldFile: !uuid 'f027acff08e6ca188e3e5177e4ee048794b057b9'
-  /App/XML/IoTService.xml:
-    newFile: !uuid 'ca87ddc8da5154df93544c2a36f6fa0d1501afd3'
-    oldFile: !uuid 'f2ed1213a18241635d1aacdb82934b757d048a8e'
-  /Modules:
-    newFile: !uuid 'a42423b1021fa823266cc610f2c879a79804cd8e'
-    oldFile: !uuid '6769e955126109d7109afc10a5e921ea74539082'
-  /Modules/AfterService:
-    newFile: !uuid '76b2c5793572ebe6b6f7c4f9afdb07a4d5fb71c0'
-    oldFile: !uuid '003fa11b1252ca26cc388d61dd5f1f44f3b99255'
-  /Modules/AfterService/Model:
-    newFile: !uuid '4f70d1a0dc25f7dd98f72f79d2c78639bc9d1396'
-    oldFile: !uuid '785f4c07201800eff3768df677d40491a4543983'
-  /Modules/AfterService/Model/Out_DeviceOfRoom.cs:
-    newFile: !uuid 'b8b6a844110564243403c73a61fda6796332d7ae'
-    oldFile: !uuid 'd1f3405df946aff523ab48e8e3a11bc5aa7e15bf'
-  /Modules/FlowService:
-    newFile: !uuid '47c6de36756ae1efa10bbd322e8678999ae3b057'
-    oldFile: !uuid '5b7659eaf0ebc61287e296df679cbf3161eb81ef'
-  /Modules/FlowService/Model:
-    newFile: !uuid 'ea1c7437059b9632638b51ec5dadbb079e883ced'
-    oldFile: !uuid 'fc4017f69dd27bad6ca90074b36262dcbbd32b14'
-  /Modules/FlowService/Model/MZ_FormData.cs:
-    newFile: !uuid '1fa5decf2cfa374f11161baced688c6c74768286'
-    oldFile: !uuid '375de54b5db733a233e82cf794ef47908de786ab'
-  /Modules/IoTService:
-    newFile: !uuid '0a0783b212bf128df0bdda0329f71496c9f2daf0'
-    oldFile: !uuid '8b164fd8deeaff35cac8747aeb22cd2040469a8d'
-  /Modules/IoTService/Business:
-    newFile: !uuid '2d660c274584ea0b9a76e3eb1d16c0284b2d7c5c'
-    oldFile: !uuid '1d16fbad3a14c1463283c3794585b32e9c39b1ec'
-  /Modules/IoTService/Business/IotDeviceBLL.cs:
-    newFile: !uuid '182300fbc7dce535ef37b4c5bd58aa81c03a26ab'
-    oldFile: !uuid '1f3f3175031a2495acc2c473d312153cedbb9ea9'
-  /Modules/IoTService/Controller:
-    newFile: !uuid 'ff33a619758050bc38ae6a03426d2d9bff3bd874'
-    oldFile: !uuid 'f7f195929ca2cd1445d54d1b4b9a10a854a99133'
-  /Modules/IoTService/Controller/HttpSync.cs:
-    newFile: !uuid '0770fa0cc87cc4ac3bbc7e40c532f147b8d9bcaf'
-    oldFile: !uuid '73401cd283df7a5ac338da2adbd076fbf629a064'
-  /Modules/IoTService/Controller/IotDevice.cs:
-    newFile: !uuid '1a65cfbcb0e06d212d08c5726553eedc1358c185'
-    oldFile: !uuid '88c9162c75b434f3a34b615d4321390c528cd005'
-  /Modules/IoTService/Migrations:
-    newFile: !uuid 'aedc9257612eca6ef7cc27476619e02156e1ab4d'
-    oldFile: !uuid '31689681ce2cd3992a473b05cab55e316e57aeda'
-  /Modules/IoTService/Migrations/IotMigrator.cs:
-    newFile: !uuid '9edf74457241aa5333c3395ac5ec8d486eb3e6c0'
-    oldFile: !uuid '9385f6497425d2e756ae4d69db4a69dceb57a72c'
-  /Modules/IoTService/Models:
-    newFile: !uuid 'e2e0ba92335472de646f9f7ea5aca4bfe84adaf3'
-    oldFile: !uuid '1283ec9025899fa969b484be128b31ce0741f7be'
-  /Modules/IoTService/Models/In_DeviceListPage.cs:
-    newFile: !uuid 'a9228d556c6061c2390ea38f65a6f4d5547d1653'
-    oldFile: !uuid '48381366f718ba7a326f6f5d85979fa8e96ac7a6'
-  /Modules/IoTService/Models/In_HistoryList.cs:
-    newFile: !uuid '4a4fc97e480b4d1fc5622472a6fd159b2b61ec41'
-    oldFile: !uuid 'e9482d8dcda9d0ad7e6b3154f65bab9c7d4a5ae1'
-  /Modules/IoTService/Models/In_HistoryMergeList.cs:
-    newFile: !uuid 'a25e0a4c709b4b380f79742bf02faced21e9a493'
-    oldFile: !uuid '023e839ad22aa99dafe7c628c1e8bc1d154e8e04'
-  /Modules/IoTService/Models/In_IotCardListPage.cs:
-    newFile: !uuid 'ccd0d6cf7c61e228d37265c0290a49a217428cc2'
-    oldFile: !uuid '39768039dbf8bc55a11e9cca9095f2e5369f0982'
-  /Modules/IoTService/Models/In_OnOffline.cs:
-    newFile: !uuid '6ca93344248a40e7817179d8b90b6986fcbc7ca7'
-    oldFile: !uuid '342d9a28da0a14334dc147ce4e59fd0605aab4ca'
-  /Modules/IoTService/Models/In_SyncExeFunc.cs:
-    newFile: !uuid '65e5d2cd43f60f4fe83e21cff65857db2e7ed115'
-    oldFile: !uuid 'af27db204a06a4a148a39516e1ffcaea2b496795'
-  /Modules/IoTService/Models/In_SyncSaveTags.cs:
-    newFile: !uuid '6b6ac33c48bf285b9d9c4cb2f25cb8200155f330'
-    oldFile: !uuid '564a8e1f6424edc6d798b226477be62c85a826cf'
-  /Modules/IoTService/Models/In_WarningListPage.cs:
-    newFile: !uuid '8ab9b8d6ed2e692fd91ec5053a5a47a013abb847'
-    oldFile: !uuid '97ab0200d2b779580a1372b763a5f83fdb607a06'
-  /Modules/ReportService:
-    newFile: !uuid 'b2b8cca30d09390112824c03c8db2d06e3b139e1'
-    oldFile: !uuid '4b8f71bf22c0a6343f443d1f80bdbc3825c9647b'
-  /Modules/ReportService/Migrations:
-    newFile: !uuid 'a889c0b3774d22fa1f417b0220e9a8b117154b0b'
-    oldFile: !uuid 'a52ec905388b4e23418473cf3e776c2c98be482f'
-  /Modules/ReportService/Migrations/ReportMgrator7.cs:
-    newFile: !uuid 'eb98bd7e3405ad4ad55d8360e7578ed85b872aba'
-    oldFile: !uuid '0759488320a889992e7733e90b5eaed104b46c20'
-  /Modules/StorageService:
-    newFile: !uuid 'a15b16b03dd28643ff45c43ab3a2a3cd05b71c6a'
-    oldFile: !uuid '15fc3ae3b04c4ef53ee27f0ecb28d53aa5921d9d'
-  /Modules/StorageService/Controller:
-    newFile: !uuid '5df993aba5c213cd63f3ad39e9bdd56c15124037'
-    oldFile: !uuid '2469492cb5f0d4604f0228082e788c190f88ec2b'
-  /Modules/StorageService/Controller/HttpSync.cs:
-    newFile: !uuid 'f2bb29f03e103c0d30cf1bc0141de0d07e0e81e9'
-    oldFile: !uuid '7dc3389b894b372af4f1b6204fbddbaf6179859e'
   /admin-ui:
-    newFile: !uuid 'f7f99e3e8cbde5e73ff86734108bf12492d4b6a1'
-    oldFile: !uuid 'a0af810f2bcfd99f68451971477c149c332423d9'
+    newFile: !uuid 'df9c405236725efe0dc3e47346a36512538d590a'
+    oldFile: !uuid 'f7f99e3e8cbde5e73ff86734108bf12492d4b6a1'
   /admin-ui/src:
-    newFile: !uuid '91bf841990d92e0efbe53df2879faae217064449'
-    oldFile: !uuid '2b32206c24453c05ec406ec5d7689738fd3c3ef9'
+    newFile: !uuid '62beca5b794fc02dcd4267450b24fa1c595b6906'
+    oldFile: !uuid '91bf841990d92e0efbe53df2879faae217064449'
   /admin-ui/src/views:
-    newFile: !uuid '7f4f80788cf270602abaaa9d5aca6b6c749ca15f'
-    oldFile: !uuid 'b46d49f0e6192f90f649598161a2dd67799d735f'
-  /admin-ui/src/views/after:
-    newFile: !uuid '6711f82d044073cf815ba36c7879b1b72191ec9d'
-    oldFile: !uuid 'b8cb9c08dde92894b310244faaa1fa4f7741e5ce'
-  /admin-ui/src/views/after/dev:
-    newFile: !uuid '4afb5eb4a6cf6573a25c614a9af24c4e3ba72f4b'
-    oldFile: !uuid 'b109232e27133e6a26639c07aeb1cfcf32a789bf'
-  /admin-ui/src/views/after/dev/dev_table.vue:
-    newFile: !uuid 'c5ec32661335809268af53fcb8abe3d9469f8c6f'
-    oldFile: !uuid '31f4d67e6075ef422caacb6c3b92cc2535d1d72b'
-  /admin-ui/src/views/after/dev/maplist.vue:
-    newFile: !uuid 'fb7f3c2a664660742a53b3e327cf12049af160b6'
-    oldFile: !uuid '82037b69225195e762b7efb66f873868b7b02366'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '8606a5752a98dc42ae3fa5019545ae3c82cf3513'
-    oldFile: !uuid '498d7992108d8866e9c8efa063ef1e7f531e6f81'
-  /admin-ui/src/views/iot/deviceManage:
-    newFile: !uuid '8d82a409191e4e314184023a6ef8443e4286c35e'
-    oldFile: !uuid '918ef72034eadd3c86ed11187d84026c8f01223c'
-  /admin-ui/src/views/iot/deviceManage/deviceAddDialog.vue:
-    newFile: !uuid '6d9f8b79591b284232ef8100c7fb418e5b5d493e'
-    oldFile: !uuid '713e9fbbc15874c58930378dcc9510f8c1ef4efe'
-  /admin-ui/src/views/iot/deviceManage/deviceBasic.vue:
-    newFile: !uuid '1dfabf9edd6420f66b75483b06e2a069e4f5d2e9'
-    oldFile: !uuid 'b5bb64e4cb8e4b511f27e4500d36e05362b07a07'
-  /admin-ui/src/views/iot/deviceManage/deviceForwardAddDialog.vue:
-    newFile: !uuid 'a751acb3eb920e139a90f5ff623267127609338e'
-    oldFile: !uuid '3e6ff486f5f676fb13493f79d6df530ebd8438ae'
-  /admin-ui/src/views/iot/rulesFlowable:
-    newFile: !uuid '271b16f9a2329cd4cd6b32638f783e09fcc5f13b'
-    oldFile: !uuid '2768fcb6d04e2939dc9ec15486b9342436f4881c'
-  /admin-ui/src/views/iot/rulesFlowable/common:
-    newFile: !uuid '577965cc8a237d2ad66f541d510f90b909ffa7a3'
-    oldFile: !uuid '130d4e8c483b634b560e48772f3935606c5a33d9'
-  /admin-ui/src/views/iot/rulesFlowable/common/process:
-    newFile: !uuid 'be6b35c3bb6a06a1d223b02bba73642eb2b20434'
-    oldFile: !uuid '354a8e9fb75f01079cc26e92569bff16fcb7e17d'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config:
-    newFile: !uuid '659d2e0195c2bc735d48562ee83bc52bd6742a99'
-    oldFile: !uuid 'deaaaeab2e11831ed3ff3e81bbc194014228efb9'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config/TriggerNodeConfig.vue:
-    newFile: !uuid '997c1db675d368cd6de7681acbfd1340f190c47e'
-    oldFile: !uuid '5dc090bc14609a52dfbe71c70e2e31f93608393e'
+    newFile: !uuid '7048734732881d91f36599ef6de6020d597b59b2'
+    oldFile: !uuid '7f4f80788cf270602abaaa9d5aca6b6c749ca15f'
   /admin-ui/src/views/report:
-    newFile: !uuid '64cc5535add27cfb9eca45b1437d8a27d2da1e44'
-    oldFile: !uuid 'ab6234144b603e8709c353d45062154c25b9d87e'
+    newFile: !uuid 'b233827481d53ca25d3b4d6460879df5582e7a94'
+    oldFile: !uuid '64cc5535add27cfb9eca45b1437d8a27d2da1e44'
   /admin-ui/src/views/report/datav:
-    newFile: !uuid '99809e152ede08ba2f6a2b1ff70e4cbf6a0ecf76'
-    oldFile: !uuid '6d95b5359f9c0b2c761e56116f24634d77535b93'
+    newFile: !uuid 'ab2a206e871e3a066bf0a68eb160d679c7b0e57a'
+    oldFile: !uuid '99809e152ede08ba2f6a2b1ff70e4cbf6a0ecf76'
   /admin-ui/src/views/report/datav/components:
-    newFile: !uuid 'f194de804188a7d033e858791e2b46773bae76dc'
-    oldFile: !uuid '159df5bfdb2b44ecf705904c47f2bf9f8ea40700'
+    newFile: !uuid '3878c3c03eae660a29d0643f0da5b844a00c84b4'
+    oldFile: !uuid 'f194de804188a7d033e858791e2b46773bae76dc'
   /admin-ui/src/views/report/datav/components/config:
-    newFile: !uuid 'f35dbae45ce393bd397229df0a6d5a17d8c7f746'
-    oldFile: !uuid 'e13b73f2e806e21cf382769c91914ca414d13935'
-  /admin-ui/src/views/report/datav/components/config/InputConfig.vue:
-    newFile: !uuid '80e269d015811256cecd4dff3e57e74ed3b2b9f9'
-    oldFile: !uuid '8630159173f4b1a6b4375f2308b164f30eb64956'
-gitCommitId: !uuid 'a0f4a4335d255aaae7079c2657e1efb43240b242'
+    newFile: !uuid '94bcc499ea90606ffcaaf9b26e0a563f353994b3'
+    oldFile: !uuid 'f35dbae45ce393bd397229df0a6d5a17d8c7f746'
+  /admin-ui/src/views/report/datav/components/config/DataConfig:
+    newFile: !uuid 'f2097aa0936dee02c6354e672e8fb4a266d8fee7'
+    oldFile: !uuid '2f181926c9104923f927ae892264ba78dc9d1c19'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData:
+    newFile: !uuid '083f541ba3a0c90d7f7b96df8bfe197aef134f5a'
+    oldFile: !uuid '366e6ae6faf37fba47a639af075e0ddf529ec061'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/apidataLeft.vue:
+    newFile: !uuid '3051794b6ba38b05abb72924a02f72db0e2e511a'
+    oldFile: !uuid '3d993643a3002acd0bfa81ea2b167485a19ce38c'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams:
+    newFile: !uuid 'e899fba5eda05a977446fe6dfcbfa33e603b0ea0'
+    oldFile: !uuid '82ca0cb20552ac9815f0959c34e11ecc88d3e50c'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams/AllParams.js:
+    newFile: !uuid 'c5775adf23a1024d00f18680bd90c39dedd34b93'
+    oldFile: !uuid '953971b6e76e1c67b2c03654fc82e282b67ee2c1'
+gitCommitId: !uuid '3159a0ef0bfabd49aa0fe1f46c9d771e3922f3c5'
 renames: {
   }
-revisionId: 16
+revisionId: 17
