@@ -70,13 +70,13 @@ export default {
                 if (this.chartOption.dataSourceType == "gobal") {
                     if (this.chartOption.configProcessorTabs && this.chartOption.configProcessorTabs.length > 0) {
                         let arr = this.chartOption.configProcessorTabs.map(row => row.globalData)
-                        console.log(arr, 'arrarrarr');
+
                         arr.map(row => {
-                            if (this.alLoadData.includes(this.chartOption.globalData)) {
+                            if (this.alLoadData.includes(row)) {
                                 this.refreshData(row, true);
                             } else {
                                 this.refreshData(row);
-                                this.alLoadData.push(this.chartOption.globalData)
+                                this.alLoadData.push(row)
                                 this.$emit('setAlLoadData', this.alLoadData)
                             }
 
@@ -102,7 +102,7 @@ export default {
     },
     beforeCreate() {
         //监听全局数据变化
-        VueEvent.$on("GlobalData", (val, option) => {
+        VueEvent.$on("GlobalData", (val, option, isNotArrload) => {
                 this.$nextTick(() => {
                     if (this.chartOption.dataSourceType === "gobal") {
                         if (option && Array.isArray(option)) { //这里用于处理选择了多个数据源的组件
@@ -110,10 +110,12 @@ export default {
                                 let tabsArr = this.chartOption.configProcessorTabs.map(row => { if (row.globalData) { return row.globalData } }).filter(row => row)
                                 let optionsNameArr = option.map(row => row.name)
                                 const result = optionsNameArr.every(name => tabsArr.some(globalData => globalData === name));
-                                if (tabsArr.length == optionsNameArr.length && result) {
+                                if (result) {
                                     this.lastData = option;
                                     this.initSourceCode(option);
                                 }
+
+
                             } else {
                                 option.map(rw => {
                                     if (rw.name == this.chartOption.globalData) {
@@ -126,9 +128,15 @@ export default {
                         } else {
                             if (this.chartOption.configProcessorTabs && this.chartOption.configProcessorTabs.length > 0) {
                                 let arr = this.chartOption.configProcessorTabs.map(row => row.globalData)
-                                if (arr.includes(option.name)) {
-                                    this.refreshData(arr);
+                                if (isNotArrload) {
+                                    this.lastData = option;
+                                    this.initSourceCode(option);
+                                } else {
+                                    if (arr.includes(option.name)) {
+                                        this.refreshData(arr, false);
+                                    }
                                 }
+
                             } else {
                                 if (option.name == this.chartOption.globalData) {
                                     this.lastData = option;
@@ -242,6 +250,7 @@ export default {
             try {
                 this.valUpdate(initResult, res);
             } catch (err) {
+                console.log('err报错', err);
                 // this.$message('minins初始化'+err);
             }
         },

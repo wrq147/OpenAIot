@@ -184,6 +184,10 @@ let IotCustomConfig = () =>
     import ('./components/config/IotCustomConfig/index') //组态自定义组件
 let LoginConfig = () =>
     import ('./components/config/LoginConfig/index') //登录组件
+let ArrangeHorizontalConfig = () =>
+    import ('./components/config/ArrangeHorizontalConfig/index') //气站横向框组件
+let ArrangeVerticalConfig = () =>
+    import ('./components/config/ArrangeVerticalConfig/index') //气站纵向框组件
 
 export default {
     ThemeConfig,
@@ -277,5 +281,7 @@ export default {
     InteractConfig,
     polylineConfig,
     IotCustomConfig,
-    LoginConfig
+    LoginConfig,
+    ArrangeHorizontalConfig,
+    ArrangeVerticalConfig
 }

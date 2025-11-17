@@ -157,7 +157,7 @@ export default {
           typename:'开发者接口'
         },
         {
-          label: "通过批次编号查询设备",
+          label: "通过第三方编号查询设备",
           value: "Api12",
           url: "/IoTService/HttpSync/DeviceByNumber",
           method: "GET",

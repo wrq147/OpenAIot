@@ -327,7 +327,7 @@ export const PlaneTaskStatisList = { //计划任务汇总
         text: '时间范围'
     },
 }
-export const GetDeviceTagList = { //获取设备的标签列表//通过批次编号查询设备
+export const GetDeviceTagList = { //获取设备的标签列表//通过第三方编号查询设备
     interfaceName: 'GetDeviceTagList',
     form: { //接口查询的所有参数
         number: null,

@@ -75,29 +75,24 @@ export default {
       currentTab: "field",
       // filedSelected: [], //被选中的字段
       processorTabs: [],
-      defauleValue: [
-        {
-          id: "1",
-          head: {
-            headImg:
-              "http://221.212.111.73:2080/prod-api/profile/backgroundBox/2022/04/14/d60a075bdd447611d2ac2f48806226cc.png",
-            tipText: "迟到1次",
-          },
-          name: "测试1人员",
-          infoItem: [
-            { label: "联系电话", value: "13312345678" },
-            { label: "工作年限", value: "12年" },
-          ],
-          detailItem: [
-            {
-              label: "工作111日报查看",
-              address:
-                "https://echarts.apache.org/zh/option.html#series-effectScatter.label.show",
-            },
-            { label: "工作周报查看", address: "" },
+      defauleValue: [{
+        title: "1号电表(后处理)",
+        currentlist: [
+          {Name: "功率",Code: "sumkwh",Value: 0,Unit: "kw",OptionType: "float",UpdatedOn: "2025-10-28 16:06:57",Description: "",},
+          {Name: "A相电流",Code: "Fa",Value: 0,Unit: "A",OptionType: "float",UpdatedOn: "2025-10-28 16:06:57",Description: "",},
+          {Name: "B相电流",Code: "Fb",Value: 0,Unit: "A",OptionType: "float",UpdatedOn: "2025-10-28 16:06:57",Description: "",},
+          {Name: "C相电流",Code: "Fc",Value: 0,Unit: "A",OptionType: "float",UpdatedOn: "2025-10-28 16:06:57",Description: "",},
+        ],
+        rowListObj: {
+          title: [{Name: "当前总电能",Code: "Totalkwh",Value: 259.2,Unit: "kwh",OptionType: "float",UpdatedOn: "2025-10-28 16:00:58",Description: "",}],
+          list: [
+            {Value: 0,Unit: "Nm³",Name: "今日用电量",Code: "todayuseenerge",},
+            {Value: 0,Unit: "Nm³",Name: "昨日用电量",Code: "yesterdayepi",},
+            {Value: 209.6,Unit: "Nm³",Name: "本月用电量",Code: "currentenerge",},
+            {Value: 20.8,Unit: "kwh",Name: "上月用电量",Code: "preenerge",},
           ],
         },
-      ],
+      },],
       activeProcessor: "", //活动的过滤器
       tabIndex: 0,
       tableListMap: new Map(),
@@ -111,29 +106,37 @@ export default {
       let chaArr = [];
       this.configData.chartOption.staticDataValue.map((row) => {
         let obj = {
-          编码: row.id,
-          头像: {
-            头像图片: row.head.headImg,
-            提示文本: row.head.tipText,
+          标题: row.title,
+          数据列表: [],
+          统计数据: {
+            统计标题:[],
+            统计列表:[],
           },
-          名称: row.name,
-          信息: [],
-          详情: [],
         };
-        row.infoItem.map((rw) => {
+        row.currentList.map((rw) => {
           let obj2 = {
-            信息标签: rw.label,
-            信息值: rw.value,
+            标签: rw.Name,
+            标识符: rw.Code,
+            单位: rw.Unit,
+            数值: rw.Value,
           };
-          obj["详情"].push(obj2);
+          obj["数据列表"].push(obj2);
         });
-        row.detailItem.map((rw) => {
+        row.rowListObj.list.map((rw) => {
           let obj2 = {
-            详情标签: rw.label,
-            详情地址: rw.address,
+            标签: rw.Name,
+            标识符: rw.Code,
+            单位: rw.Unit,
+            数值: rw.Value,
           };
-          obj["信息"].push(obj2);
+          obj['统计数据']["统计列表"].push(obj2);
         });
+        obj['统计数据']['统计标题']=[{
+          标签: row.rowListObj.title[0].Name,
+          标识符: row.rowListObj.title[0].Code,
+          单位: row.rowListObj.title[0].Unit,
+          数值: row.rowListObj.title[0].Value,
+        }]
         chaArr.push(obj);
       });
       return JSON.stringify(chaArr);
@@ -260,36 +263,29 @@ export default {
           }
           let defarr = [
             {
-              key: "id",
+              key: "title",
               filed: "",
             },
             {
-              key: "headImg",
-              filed: "",
-              parentIdKey: "head",
-            },
-            {
-              key: "tipText",
-              filed: "",
-              parentIdKey: "head",
-            },
-            {
-              key: "name",
+              key: "rowtitle",
+              // parentIdKey: "rowListObj",
               filed: "",
             },
             {
-              key: "infoItem",
+              key: "currentList",
               filed: "",
             },
             {
-              key: "detailItem",
+              key: "list",
+              // parentIdKey: "rowListObj",
               filed: "",
             },
           ];
           let defobj = {
             main: defarr,
-            infoItem: [],
-            detailItem: [],
+            rowtitle:[],
+            currentList: [],
+            list: [],
           };
           this.$set(this.configData.chartOption, "tableSelectLine", defobj);
         }
@@ -329,11 +325,7 @@ export default {
         this.activeProcessor = activeName;
         this.processorTabs = tabs.filter((tab) => tab.name !== targetName);
       }
-      this.$set(
-        this.configData.chartOption,
-        "configProcessorTabs",
-        this.processorTabs
-      );
+      this.$set(this.configData.chartOption,"configProcessorTabs",this.processorTabs);
     },
   },
 };

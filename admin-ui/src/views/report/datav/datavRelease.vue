@@ -174,29 +174,33 @@ export default {
 
     //控制指定全局数据源刷新
     VueEvent.$on('refreshGlobal', function (name,isNotLoad) {
+      // console.log(name, 'namename', this.shouldLoadData);
       if(Array.isArray(name)){
         let optionArr=[]
+        let optionAloadArr=[]
         for (let i = 0; i < this.viewTheme.globalData.length; i++) {
-          let tmpOption = this.viewTheme.globalData[i];
-          
-          if (name.includes(tmpOption.name)) {
-            // this.shouldLoadData.push(tmpOption)
-            // optionArr.push(tmpOption)
-            // if(tmpOption&&tmpOption.dataSourceType!="combination"){
-              if(this.finishFirstLoad){
-                this.initDataName(tmpOption,isNotLoad);
-              }
-              
-            // }
+          let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
+          // console.log(name,'namenamename',tmpOption.name);
+          let findShould=this.shouldLoadData.find(rwo=>rwo.name==tmpOption.name)
+          if (name.includes(tmpOption.name)&&!findShould) {
+            this.shouldLoadData.push(tmpOption)
+            optionArr.push(tmpOption)
             
+          }else if (name.includes(tmpOption.name)){
+            optionAloadArr.push(tmpOption)
           }
         }
-        // this.initDataName(optionArr,isNotLoad);
+        if(optionArr&&optionArr.length>0){
+          this.initDataName(optionArr,isNotLoad);
+        }else if(optionAloadArr&&optionAloadArr.length>0){
+          this.initDataName(optionAloadArr,true);
+        }
+        
       }else{
         for (let i = 0; i < this.viewTheme.globalData.length; i++) {
-          let tmpOption = this.viewTheme.globalData[i];
-          
-          if (name&&tmpOption.name == name) {
+          let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
+          let findShould=this.shouldLoadData.find(rwo=>rwo.name==tmpOption.name)
+          if (name&&tmpOption.name == name&&!findShould) {
             this.shouldLoadData.push(tmpOption)
             // if(tmpOption&&tmpOption.dataSourceType!="combination"){
               if(this.finishFirstLoad){
@@ -204,6 +208,10 @@ export default {
               }
             // }
             
+          }else if (name&&tmpOption.name == name){
+            if(this.finishFirstLoad){
+              this.initDataName(tmpOption,true);
+            }
           }
         }
         
@@ -320,7 +328,7 @@ export default {
       await this.getRptList(this.viewTheme.globalData);
       this.viewTheme.globalData = await this.initBasicInfo(this.viewTheme.globalData);
       for (let i = 0; i < this.viewTheme.globalData.length; i++) {
-        let tmpOption = this.viewTheme.globalData[i];
+        let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
         if (tmpOption.timeout > 0) {
           let timerTask = () => {
             
@@ -404,9 +412,9 @@ export default {
       }
       return joinArr
     },
-    async initDataName(iptOption,isNotLoad,issetInterval) {
+    async initDataName(iptOption,isNotLoad,issetInterval,isNotArrload) {
       if(isNotLoad){
-        VueEvent.$emit("GlobalData", '', iptOption);
+        VueEvent.$emit("GlobalData", '', iptOption,isNotArrload);
       }else{
         try {
           let initResult = "";
@@ -420,7 +428,7 @@ export default {
           if(curitem!=null){
             this.$set(this.viewTheme.globalData, curitem, newiptOption);
           }
-          VueEvent.$emit("GlobalData", initResult, newiptOption);
+          VueEvent.$emit("GlobalData", initResult, newiptOption,isNotArrload);
           // if(issetInterval&&!Array.isArray(iptOption)&&iptOption.dataSourceType!="combination"){
           if(issetInterval&&!Array.isArray(iptOption)){
             let filtarr=this.viewTheme.loadingGlobalDataObj[iptOption.name]
@@ -430,7 +438,7 @@ export default {
                 if(index!=null&&index!=undefined){
                   let newiptOption2=await everyOngetData(this.viewTheme.globalData[index],this.viewTheme.globalData,this.viewData)
                   this.$set(this.viewTheme.globalData, index, newiptOption2);
-                  VueEvent.$emit("GlobalData", '', newiptOption2);
+                  VueEvent.$emit("GlobalData", '', newiptOption2,isNotArrload);
                 }
                 
               }
@@ -548,8 +556,6 @@ export default {
               }
               this.viewTheme.loadingGlobalDataObj=loadingGlobalDataObj
             })
-            // console.log(this.viewTheme,"所有数据集",this.viewTheme.globalData);
-            // await this.loadInitalData()
             this.showPanal = true;
             this.$nextTick(()=>{
               this.reportUpTimer=setInterval(()=>{
@@ -565,7 +571,7 @@ export default {
             let rectHeight = this.viewTheme.panelHeight;
 
             //是手机端页面
-            console.log(this.isMobileFlag,this.doubleType != 'phone');
+            // console.log(this.isMobileFlag,this.doubleType != 'phone');
             if (this.isMobileFlag&&this.doubleType != 'phone') {
               //设置宽是屏幕宽度的90%
               //高度按原图比例
@@ -632,29 +638,17 @@ export default {
                 //全自适应
                   if (typeof adaptionType == 'undefined' || adaptionType == '0') {
                     //遍历组件重新计算自适应宽高
-                    // drawingList.forEach(item => {
-                    //   item.width = (item.width / rectWidth) * this.screenWidth;
-                    //   item.height = (item.height / rectHeight) * this.screenHeight;
-                    //   item.x = (item.x / rectWidth) * this.screenWidth;
-                    //   item.y = (item.y / rectHeight) * this.screenHeight;
-                    // });
-                    // console.log(widthRatio,heightRatio,'heightRatio');
                     this.constainstyle='transform:scale('+widthRatio+','+heightRatio+');transform-origin:left top'
-                    // this.constainstyle='zoom:'+widthRatio+';display:flex;justify-content: center;align-items: center;'
                   }
                   //宽度自适应
                   else if (adaptionType == '1') {
                     //遍历组件重新计算自适应宽高
-                    // console.log(widthRatio,heightRatio,'heightRatio');
                     this.constainstyle='transform:scale('+widthRatio+');transform-origin:left top'
-                    // this.constainstyle='zoom:'+widthRatio+';display:flex;justify-content: center;align-items: center;'
                   }
                   //高度自适应
                   else if (adaptionType == '2') {
                     //遍历组件重新计算自适应宽高
-                    // console.log(widthRatio,heightRatio,'heightRatio');
                     this.constainstyle='transform:scale('+heightRatio+');transform-origin:left top'
-                    // this.constainstyle='zoom:'+widthRatio+';display:flex;justify-content: center;align-items: center;'
                   }
                 }
               }

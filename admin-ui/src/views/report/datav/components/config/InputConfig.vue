@@ -322,7 +322,7 @@ export default {
       animateOptions,
       paramsOptions:[{
           value: 'DeviceNumber',
-          label: '设备批次编号'
+          label: '设备第三方编码'
         }, {
           value: 'DeviceId',
           label: '设备通讯编码'

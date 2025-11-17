@@ -327,7 +327,7 @@ export default {
           },
           series: dataSeries,///
         };
-        // console.log("echarts属性",option);
+        console.log("echarts属性",option);
         this.chart.setOption(option, true);
 
         addOption(dataOption.bindingDiv, option);

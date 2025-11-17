@@ -322,7 +322,7 @@ export default {
         }
       }
       
-      tabs.forEach((tab) => {
+      tabs.map((tab) => {
         if (tab.name === this.editableTabsValue) {
           tab.resultPreCode = data?data:tab.resultPreCode;
           if(tab.name==0){
@@ -371,7 +371,7 @@ export default {
       tabs.forEach((tab) => {
         if (tab.name === this.editableTabsValue) {
           
-          tab.content =initResult.length === undefined ? [initResult] : initResult;
+          tab.content =initResult.length === undefined ? [initResult] : JSON.parse(JSON.stringify(initResult));
           
         }
       });

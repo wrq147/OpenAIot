@@ -272,7 +272,7 @@ export default {
                 }
               }
               let v = ((target / total) * 100).toFixed(1);
-              return `{one|${name}}  {two|${v}%}`;
+              return `{one|${name}}  {two|${v}%　}`;
               //     富文本第一列样式应用    富文本第二列样式应用
             }
           };

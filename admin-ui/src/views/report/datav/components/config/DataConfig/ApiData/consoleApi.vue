@@ -91,7 +91,9 @@
       </el-form-item>
 
       <el-form-item label="刷新时间">
-        <el-input-number @change="confirmValue" v-model="apiTimeout" :min="0" controls-position="right" :step="1000"></el-input-number>
+        <div style="display:flex;">
+          <el-input-number @change="confirmValue" v-model="apiTimeout" :min="0" controls-position="right" :step="1000"></el-input-number>秒
+        </div>
       </el-form-item>
 
       <el-form-item label="接口返回">
@@ -578,6 +580,7 @@ export default {
             //   this.$refs["tabsData" + this.curIdx].changeFilterFiled(rw.selectKeyFiled)
             // }
             this.$refs["tabsData" + this.curIdx].editableTabsValue = activName;
+            this.$refs["tabsData" + this.curIdx].submitData();
             // console.log("一行", rw);
           });
         }

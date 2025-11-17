@@ -9437,193 +9437,125 @@ export const factorComponents = [{
         },
     }
 ];
-export const configurationComponents = [
-    // {
-    //     chartType: "fengji",
-    //     chartTypeGroup: 'configuration',
-    //     layerName: "风机",
-    //     icon: "el-icon-datav-fengji",
-    //     customId: "",
-    //     width: 120,
-    //     height: 120,
-    //     x: 50,
-    //     y: 100,
-    //     zindex: 0,
-    //     isShow: true,
-    //     chartOption: {
-    //         isOnlyRotate: true,
-    //         aggrName: "fengji_name",
-    //         suffix: "月",
-    //         bindList: [],
-    //         //载入动画
-    //         animate: "",
-    //         customData: "",
-    //         interactData: [],
-    //         //静态数据值
-    //         staticDataValue: ["1"],
-    //         //绑定的div
-    //         bindingDiv: "",
-    //         theme: "",
-    //         // 数据源类型：静态数据：static；接口数据：url;数据源：database
-    //         dataSourceType: "static",
-    //         svgUrl: '@/views/report/datav/image/zutai/fengji1.svg',
-    //         bi: null,
-    //         // timeout: 0,
-    //     },
-    // },
-    // {
-    //     chartType: "fengjiDong",
-    //     chartTypeGroup: 'configuration',
-    //     layerName: "风机动",
-    //     icon: "el-icon-datav-fengji",
-    //     customId: "",
-    //     width: 120,
-    //     height: 120,
-    //     x: 50,
-    //     y: 100,
-    //     zindex: 0,
-    //     isShow: true,
-    //     chartOption: {
-    //         isAnimation: true,
-    //         aggrName: "fengji_dong_name",
-    //         suffix: "月",
-    //         bindList: [],
-    //         //载入动画
-    //         animate: "",
-    //         customData: "",
-    //         interactData: [],
-    //         //静态数据值
-    //         staticDataValue: ["1"],
-    //         //绑定的div
-    //         bindingDiv: "",
-    //         theme: "",
-    //         // 数据源类型：静态数据：static；接口数据：url;数据源：database
-    //         dataSourceType: "static",
-    //         svgUrl: '@/views/report/datav/image/zutai/fengji1.svg',
-    //         bi: null,
-    //         // timeout: 0,
-    //     },
-    // },
-    {
-        chartType: "iotCustom",
-        chartTypeGroup: 'configuration',
-        layerName: "自定义组态",
-        icon: "el-icon-datav-custom-iot",
-        customId: "",
-        width: 120,
-        height: 120,
-        x: 50,
-        y: 100,
-        zindex: 0,
-        isShow: true,
-        chartOption: {
-            isAnimation: true,
-            aggrName: "iot_custom_name",
-            bindList: [],
-            //载入动画
-            animate: "",
-            customData: "",
-            interactData: [],
-            //静态数据值
-            staticDataValue: [{
-                    filedName: "排气压力",
-                    filed: "presoure",
-                    value: 0,
-                },
-                {
-                    filedName: "排气温度",
-                    filed: "outTemp",
-                    value: 25,
-                },
-                {
-                    filedName: "主机电压",
-                    filed: "mainVolte",
-                    value: 0,
-                },
-            ],
-            //绑定的div
-            bindingDiv: "",
-            theme: "",
-            // 数据源类型：静态数据：static；接口数据：url;数据源：database
-            dataSourceType: "static",
-            animationList: [{
-                name: '', //动画名称
-                imglist: [''], //动画序列图
-            }], //动画列表
-            conditionList: [{
-                field: '', //字段
-                symbol: '', //符号
-                valtype: '',
-                value: '', //数值
-                // activeAnimate: '', //选择的动画
-            }], //条件列表
-            conditionGroup: [{
-                condition: [],
-                groups: [],
-                animation: null
-            }], //条件列表
-            bi: null,
-            // timeout: 0,
-        },
-    }, {
-        chartType: "polyline",
-        chartTypeGroup: 'configuration',
-        layerName: "连接线",
-        icon: "el-icon-datav-line-iot",
-        customId: "",
-        width: 400,
-        height: 100,
-        x: 50,
-        y: 100,
-        zindex: 0,
-        isShow: true,
-        chartOption: {
-            start: {
-                cx: 50,
-                cy: 50,
+export const configurationComponents = [{
+    chartType: "iotCustom",
+    chartTypeGroup: 'configuration',
+    layerName: "自定义组态",
+    icon: "el-icon-datav-custom-iot",
+    customId: "",
+    width: 120,
+    height: 120,
+    x: 50,
+    y: 100,
+    zindex: 0,
+    isShow: true,
+    chartOption: {
+        isAnimation: true,
+        aggrName: "iot_custom_name",
+        bindList: [],
+        //载入动画
+        animate: "",
+        customData: "",
+        interactData: [],
+        //静态数据值
+        staticDataValue: [{
+                filedName: "排气压力",
+                filed: "presoure",
+                value: 0,
             },
-            mid1: {
-                cx: 150,
-                cy: 50,
+            {
+                filedName: "排气温度",
+                filed: "outTemp",
+                value: 25,
             },
-            mid2: {
-                cx: 250,
-                cy: 50,
+            {
+                filedName: "主机电压",
+                filed: "mainVolte",
+                value: 0,
             },
-            end: {
-                cx: 350,
-                cy: 50,
-            },
-            isAnimation: true, //是否是动画
-            animateType: 'droplet', //动画类型，线有三种动画：电流，水珠，轨迹
-            delayTime: 10, //延迟时间s
-            lineColor: '#999',
-            lineWidth: 20, //线的宽度
-            flowColor: '#B37066',
-            flowWidth: 10, //动画的宽度
-            radius: 4,
-            radiusFillColor: 'rgb(130, 179, 102)',
-            isReverseAnimation: false, //是否反转动画
-            dasharray: 39, //线缝隙间隔
-            aggrName: "fengji_dong_name",
-            bindList: [],
-            //载入动画
-            animate: "",
-            customData: "",
-            interactData: [],
-            //静态数据值
-            staticDataValue: ["1"],
-            //绑定的div
-            bindingDiv: "",
-            theme: "",
-            // 数据源类型：静态数据：static；接口数据：url;数据源：database
-            dataSourceType: "static",
-            svgUrl: '@/views/report/datav/image/zutai/fengji1.svg',
-            bi: null,
-            // timeout: 0,
-        },
+        ],
+        //绑定的div
+        bindingDiv: "",
+        theme: "",
+        // 数据源类型：静态数据：static；接口数据：url;数据源：database
+        dataSourceType: "static",
+        animationList: [{
+            name: '', //动画名称
+            imglist: [''], //动画序列图
+        }], //动画列表
+        conditionList: [{
+            field: '', //字段
+            symbol: '', //符号
+            valtype: '',
+            value: '', //数值
+            // activeAnimate: '', //选择的动画
+        }], //条件列表
+        conditionGroup: [{
+            condition: [],
+            groups: [],
+            animation: null
+        }], //条件列表
+        bi: null,
+        // timeout: 0,
     },
-]
+}, {
+    chartType: "polyline",
+    chartTypeGroup: 'configuration',
+    layerName: "连接线",
+    icon: "el-icon-datav-line-iot",
+    customId: "",
+    width: 400,
+    height: 100,
+    x: 50,
+    y: 100,
+    zindex: 0,
+    isShow: true,
+    chartOption: {
+        start: {
+            cx: 50,
+            cy: 50,
+        },
+        mid1: {
+            cx: 150,
+            cy: 50,
+        },
+        mid2: {
+            cx: 250,
+            cy: 50,
+        },
+        end: {
+            cx: 350,
+            cy: 50,
+        },
+        isAnimation: true, //是否是动画
+        animateType: 'droplet', //动画类型，线有三种动画：电流，水珠，轨迹
+        delayTime: 10, //延迟时间s
+        lineColor: '#999',
+        lineWidth: 20, //线的宽度
+        flowColor: '#B37066',
+        flowWidth: 10, //动画的宽度
+        radius: 4,
+        radiusFillColor: 'rgb(130, 179, 102)',
+        isReverseAnimation: false, //是否反转动画
+        dasharray: 39, //线缝隙间隔
+        aggrName: "fengji_dong_name",
+        bindList: [],
+        //载入动画
+        animate: "",
+        customData: "",
+        interactData: [],
+        //静态数据值
+        staticDataValue: ["1"],
+        //绑定的div
+        bindingDiv: "",
+        theme: "",
+        // 数据源类型：静态数据：static；接口数据：url;数据源：database
+        dataSourceType: "static",
+        svgUrl: '@/views/report/datav/image/zutai/fengji1.svg',
+        bi: null,
+        // timeout: 0,
+    },
+}, ]
 export const otherComponents = [{
     chartType: "login",
     layerName: "登录",
@@ -9695,6 +9627,518 @@ export const otherComponents = [{
         //   { name: "输入事件", func: "onInput", code: "" },
         //   { name: "变更事件", func: "onChange", code: "" },
         // ],
+        timeout: 0,
+    },
+}, {
+    chartType: "arrangeHorizontal",
+    layerName: "横向排列框",
+    icon: "el-icon-datav-flop",
+    customId: "",
+    width: 408,
+    height: 220,
+    x: 50,
+    y: 100,
+    zindex: 0,
+    isShow: true,
+    chartOption: {
+        containerTitle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            paddingLeft: 14,
+            paddingRight: 0,
+            paddingTop: 14,
+            paddingBottom: 8,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 1, //下边框
+            borderColor: 'rgba(255,255,255, 0.2)',
+            letterSpacing: 0, //字体间距
+            cotBgColor: 'rgba(31, 87, 245, 0.2)',
+            textAlign: 'left',
+        },
+        cotUlStyle: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 0.2)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlLiStyle: {
+            width: 25, //单位百分比
+            paddingLeft: 10,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 10,
+            borderRadius: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 10,
+            marginBottom: 6,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 1)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlLiLabelStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+        },
+        cotUlLiValueStyle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "#CDFBFF", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 10,
+            textAlign: 'center',
+        },
+        cotUlLiUnitStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+        },
+        cotUlHasbgStyle: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            marginLeft: 12,
+            marginRight: 12,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 0.2)',
+            cotBgColor: 'rgba(31, 87, 245, 0.2)',
+        },
+        cotUlHasbgLiStyle: {
+            width: 25,
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 12,
+            paddingBottom: 12,
+            borderRadius: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 1)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlHasbgLiLabelStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+        },
+        cotUlHasbgLiValueStyle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(60, 199, 255, 1)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 10,
+            textAlign: 'center',
+        },
+        cotUlHasbgLiUnitStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+        },
+        cotUlTitleStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 1)", //字体颜色
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 14,
+            paddingBottom: 14,
+            marginLeft: 12,
+            marginRight: 12,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 1, //下边框
+            borderColor: 'rgba(255,255,255, 0.2)',
+            letterSpacing: 0, //字体间距
+            textAlign: 'left',
+        },
+        cotUlTitleNumStyle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(60, 199, 255, 1)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+        },
+        cotStyle: {
+            bgType: 'img',
+            containerBgImage: '', //背景图片
+            containerColor: 'rgba(27,43,138, 1)',
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderRadius: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 1)'
+        },
+        //静态数据值
+        staticDataValue: [{
+            title: "1号电表(后处理)",
+            currentList: [{
+                    Name: "功率",
+                    Code: "sumkwh",
+                    Value: 0,
+                    Unit: "kw",
+                    OptionType: "float",
+                    UpdatedOn: "2025-10-28 16:06:57",
+                    Description: "",
+                },
+                {
+                    Name: "A相电流",
+                    Code: "Fa",
+                    Value: 0,
+                    Unit: "A",
+                    OptionType: "float",
+                    UpdatedOn: "2025-10-28 16:06:57",
+                    Description: "",
+                },
+                {
+                    Name: "B相电流",
+                    Code: "Fb",
+                    Value: 0,
+                    Unit: "A",
+                    OptionType: "float",
+                    UpdatedOn: "2025-10-28 16:06:57",
+                    Description: "",
+                },
+                {
+                    Name: "C相电流",
+                    Code: "Fc",
+                    Value: 0,
+                    Unit: "A",
+                    OptionType: "float",
+                    UpdatedOn: "2025-10-28 16:06:57",
+                    Description: "",
+                },
+            ],
+            rowListObj: {
+                title: [{
+                    Name: "当前总电能",
+                    Code: "Totalkwh",
+                    Value: 259.2,
+                    Unit: "kwh",
+                    OptionType: "float",
+                    UpdatedOn: "2025-10-28 16:00:58",
+                    Description: "",
+                }],
+                list: [{
+                        Value: 0,
+                        Unit: "Nm³",
+                        Name: "今日用电量",
+                        Code: "todayuseenerge",
+                    },
+                    {
+                        Value: 0,
+                        Unit: "Nm³",
+                        Name: "昨日用电量",
+                        Code: "yesterdayepi",
+                    },
+                    {
+                        Value: 209.6,
+                        Unit: "Nm³",
+                        Name: "本月用电量",
+                        Code: "currentenerge",
+                    },
+                    {
+                        Value: 20.8,
+                        Unit: "kwh",
+                        Name: "上月用电量",
+                        Code: "preenerge",
+                    },
+                ],
+            },
+        }],
+        tableSelectLine: [],
+        finalResult: [],
+        //载入动画
+        animate: "",
+        customData: "",
+        interactData: [],
+
+        //绑定的div
+        bindingDiv: "",
+        theme: "",
+        // 数据源类型：静态数据：static；接口数据：url;数据源：database
+        dataSourceType: "static",
+
+        timeout: 0,
+    },
+}, {
+    chartType: "arrangeVertical",
+    layerName: "纵向排列框",
+    icon: "el-icon-datav-flop",
+    customId: "",
+    width: 246,
+    height: 280,
+    x: 50,
+    y: 100,
+    zindex: 0,
+    isShow: true,
+    chartOption: {
+        containerTitle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            paddingLeft: 14,
+            paddingRight: 0,
+            paddingTop: 14,
+            paddingBottom: 8,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 1, //下边框
+            borderColor: 'rgba(255,255,255, 0.2)',
+            letterSpacing: 0, //字体间距
+            cotBgColor: 'rgba(31, 87, 245, 0.2)',
+            textAlign: 'left',
+        },
+        titleBunberStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+        },
+        cotUlStyle: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 30,
+            marginBottom: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 0.2)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlLiStyle: {
+            width: 100, //单位百分比
+            paddingLeft: 10,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 10,
+            borderRadius: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 1)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlLiLabelStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+            width: 30,
+        },
+        cotUlLiValueStyle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(60, 199, 255, 1)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 10,
+            textAlign: 'center',
+            width: 30,
+        },
+        cotUlLiUnitStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            textAlign: 'center',
+            width: 30,
+        },
+        cotStyle: {
+            bgType: 'img',
+            containerBgImage: '', //背景图片
+            containerColor: 'rgba(27,43,138, 1)',
+            paddingLeft: 0,
+            paddingRight: 8,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderRadius: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 1)'
+        },
+        cotUlRowsStyle: {
+            width: 100,
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            marginLeft: 12,
+            marginRight: 12,
+            marginTop: 0,
+            marginBottom: 0,
+            borderRadius: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 0)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlRowsLiStyle: {
+            width: 25,
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderRadius: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+            borderWidth: 0,
+            borderColor: 'rgba(255,255,255, 1)',
+            cotBgColor: 'rgba(31, 87, 245, 0)',
+        },
+        cotUlRowsLiLineStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+            isShow: true,
+        },
+        cotUlRowsLiValueStyle: {
+            fontSize: 14,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(60, 199, 255, 1)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+        },
+        cotUlRowsLiUnitStyle: {
+            fontSize: 12,
+            fontFamily: "微软雅黑",
+            fontWeight: "normal",
+            fontColor: "rgba(255, 255, 255, 0.8)", //字体颜色
+            letterSpacing: 0, //字体间距
+            marginLeft: 0,
+            marginRight: 0,
+        },
+        //静态数据值
+        staticDataValue: [{
+            title: '智慧电表',
+            xuhao: '(2#气站，2号表)',
+            list: [
+                { cnName: '当前总电能', value: 2013130, unit: 'kwh' },
+                { cnName: '功率', value: 163.20, unit: 'kw' },
+                { cnName: '上月累计电能', value: 109436, unit: 'kwh' },
+                { cnName: '本月累计电能', value: 79666, unit: 'kwh' },
+                { cnName: '昨日累计电能', value: 4410, unit: 'kwh' },
+            ],
+            currentList: [{ cnName: 'A相电流', value: 272.40, unit: 'A' }, { cnName: 'B相电流', value: 270, unit: 'A' }, { cnName: 'C相电流', value: 246, unit: 'A' }]
+        }],
+        //载入动画
+        animate: "",
+        customData: "",
+        interactData: [],
+
+        //绑定的div
+        bindingDiv: "",
+        theme: "",
+        // 数据源类型：静态数据：static；接口数据：url;数据源：database
+        dataSourceType: "static",
+
         timeout: 0,
     },
 }, ]

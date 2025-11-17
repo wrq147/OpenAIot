@@ -75,29 +75,18 @@ export default {
       currentTab: "field",
       // filedSelected: [], //被选中的字段
       processorTabs: [],
-      defauleValue: [
-        {
-          id: "1",
-          head: {
-            headImg:
-              "http://221.212.111.73:2080/prod-api/profile/backgroundBox/2022/04/14/d60a075bdd447611d2ac2f48806226cc.png",
-            tipText: "迟到1次",
-          },
-          name: "测试1人员",
-          infoItem: [
-            { label: "联系电话", value: "13312345678" },
-            { label: "工作年限", value: "12年" },
-          ],
-          detailItem: [
-            {
-              label: "工作111日报查看",
-              address:
-                "https://echarts.apache.org/zh/option.html#series-effectScatter.label.show",
-            },
-            { label: "工作周报查看", address: "" },
-          ],
-        },
-      ],
+      defauleValue: [{
+        title:'智慧电表',
+        xuhao:'(2#气站，2号表)',
+        list:[
+          {cnName:'当前总电能',value:2013130,unit:'kwh'},
+          {cnName:'功率',value:163.20,unit:'kw'},
+          {cnName:'上月累计电能',value:109436,unit:'kwh'},
+          {cnName:'本月累计电能',value:79666,unit:'kwh'},
+          {cnName:'昨日累计电能',value:4410,unit:'kwh'},
+        ],
+        currentlist:[{cnName:'A相电流',value:272.40,unit:'A'},{cnName:'B相电流',value:270,unit:'A'},{cnName:'C相电流',value:246,unit:'A'}]
+      },],
       activeProcessor: "", //活动的过滤器
       tabIndex: 0,
       tableListMap: new Map(),
@@ -111,28 +100,26 @@ export default {
       let chaArr = [];
       this.configData.chartOption.staticDataValue.map((row) => {
         let obj = {
-          编码: row.id,
-          头像: {
-            头像图片: row.head.headImg,
-            提示文本: row.head.tipText,
-          },
-          名称: row.name,
-          信息: [],
-          详情: [],
+          标题: row.title,
+          副标题: row.xuhao,
+          实时列表:[],
+          数据列表: [],
         };
-        row.infoItem.map((rw) => {
+        row.currentList.map((rw) => {
           let obj2 = {
-            信息标签: rw.label,
-            信息值: rw.value,
+            标签: rw.cnName,
+            单位: rw.unit,
+            数值: rw.value,
           };
-          obj["详情"].push(obj2);
+          obj["实时列表"].push(obj2);
         });
-        row.detailItem.map((rw) => {
+        row.list.map((rw) => {
           let obj2 = {
-            详情标签: rw.label,
-            详情地址: rw.address,
+            标签: rw.cnName,
+            单位: rw.unit,
+            数值: rw.value,
           };
-          obj["信息"].push(obj2);
+          obj["数据列表"].push(obj2);
         });
         chaArr.push(obj);
       });
@@ -260,36 +247,26 @@ export default {
           }
           let defarr = [
             {
-              key: "id",
+              key: "title",
               filed: "",
             },
             {
-              key: "headImg",
-              filed: "",
-              parentIdKey: "head",
-            },
-            {
-              key: "tipText",
-              filed: "",
-              parentIdKey: "head",
-            },
-            {
-              key: "name",
+              key: "xuhao",
               filed: "",
             },
             {
-              key: "infoItem",
+              key: "currentList",
               filed: "",
             },
             {
-              key: "detailItem",
+              key: "list",
               filed: "",
             },
           ];
           let defobj = {
             main: defarr,
-            infoItem: [],
-            detailItem: [],
+            currentList: [],
+            list: [],
           };
           this.$set(this.configData.chartOption, "tableSelectLine", defobj);
         }
@@ -329,11 +306,7 @@ export default {
         this.activeProcessor = activeName;
         this.processorTabs = tabs.filter((tab) => tab.name !== targetName);
       }
-      this.$set(
-        this.configData.chartOption,
-        "configProcessorTabs",
-        this.processorTabs
-      );
+      this.$set(this.configData.chartOption,"configProcessorTabs",this.processorTabs);
     },
   },
 };

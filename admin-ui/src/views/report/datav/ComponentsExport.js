@@ -183,10 +183,10 @@ let IotCustomChart = () =>
     import ('./components/chart/IotCustomChart')
 let LoginChart = () =>
     import ('./components/chart/LoginChart/index')
-    // let ArrangeHorizontalChart = () =>
-    //     import ('./components/chart/ArrangeHorizontalChart')
-    // let ArrangeVerticalChart = () =>
-    //     import ('./components/chart/ArrangeVerticalChart')
+let ArrangeHorizontalChart = () =>
+    import ('./components/chart/ArrangeHorizontalChart')
+let ArrangeVerticalChart = () =>
+    import ('./components/chart/ArrangeVerticalChart')
 export default {
     BarChart,
     LineChart,
@@ -279,6 +279,6 @@ export default {
     PolylineChart,
     IotCustomChart,
     LoginChart,
-    // ArrangeHorizontalChart,
-    // ArrangeVerticalChart
+    ArrangeHorizontalChart,
+    ArrangeVerticalChart
 }
