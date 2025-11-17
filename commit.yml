@@ -2,43 +2,49 @@
 branches: {
   }
 fileChange:
+  /App:
+    newFile: !uuid 'ce2c9d165208272ad6e75b885f6d0b531cf084a5'
+    oldFile: !uuid '619187587a48c77776671749d4e18541d856b09e'
+  /App/XML:
+    newFile: !uuid '0f8bae5cc553f981af32013f98db136f9a916aad'
+    oldFile: !uuid '2a82863e92c298adc32dafcdb71d13f05512d640'
+  /App/XML/MESService.xml:
+    newFile: !uuid '413a05cb0346d6ca9208bbc4de66ce29b1fc146f'
+    oldFile: !uuid '0e489cd9b635f67afb221caf9587e92ed204d642'
+  /Modules:
+    newFile: !uuid 'c5c53b4886aa57c02d689d5d11de341fa59fda77'
+    oldFile: !uuid 'a42423b1021fa823266cc610f2c879a79804cd8e'
+  /Modules/MESService:
+    newFile: !uuid '2a23a92a3732b04b830afd1c7e66901f8ba844c0'
+    oldFile: !uuid '1d3a8ffceb6a00fc61db16506d93e6c70c4bb410'
+  /Modules/MESService/Controller:
+    newFile: !uuid '22444977c7157df6052eeb4f0ce0538fc50cdd70'
+    oldFile: !uuid '7c1124780d6117b3f4c6c5838a12ac3d6a74edc9'
+  /Modules/MESService/Controller/Config.cs:
+    newFile: !uuid '00cdc0895986b7957986d9dc92f8085b45d50535'
+    oldFile: !uuid 'e1e0531844a0e0ec44d619c3fad0a6cb0fc3c32a'
+  /Modules/ProducerService:
+    newFile: !uuid '4fac6b6d632027366ee0c5ed1663170ba4b2db5c'
+    oldFile: !uuid '0dc41694fcc5a9afa9ec2429a4ca73a80741d9b5'
+  /Modules/ProducerService/ProducerMigrator.cs:
+    newFile: !uuid '98edf5fd577ab547663b294e0484bf6c3a834da5'
+    oldFile: !uuid '5a262c5598caace28e098b68690bed80f805aaa4'
   /admin-ui:
-    newFile: !uuid 'df9c405236725efe0dc3e47346a36512538d590a'
-    oldFile: !uuid 'f7f99e3e8cbde5e73ff86734108bf12492d4b6a1'
+    newFile: !uuid '60f9611e1ec5eb4256f54b6f81fcbf3f5bcde90b'
+    oldFile: !uuid 'df9c405236725efe0dc3e47346a36512538d590a'
   /admin-ui/src:
-    newFile: !uuid '62beca5b794fc02dcd4267450b24fa1c595b6906'
-    oldFile: !uuid '91bf841990d92e0efbe53df2879faae217064449'
-  /admin-ui/src/views:
-    newFile: !uuid '7048734732881d91f36599ef6de6020d597b59b2'
-    oldFile: !uuid '7f4f80788cf270602abaaa9d5aca6b6c749ca15f'
-  /admin-ui/src/views/report:
-    newFile: !uuid 'b233827481d53ca25d3b4d6460879df5582e7a94'
-    oldFile: !uuid '64cc5535add27cfb9eca45b1437d8a27d2da1e44'
-  /admin-ui/src/views/report/datav:
-    newFile: !uuid 'ab2a206e871e3a066bf0a68eb160d679c7b0e57a'
-    oldFile: !uuid '99809e152ede08ba2f6a2b1ff70e4cbf6a0ecf76'
-  /admin-ui/src/views/report/datav/components:
-    newFile: !uuid '3878c3c03eae660a29d0643f0da5b844a00c84b4'
-    oldFile: !uuid 'f194de804188a7d033e858791e2b46773bae76dc'
-  /admin-ui/src/views/report/datav/components/config:
-    newFile: !uuid '94bcc499ea90606ffcaaf9b26e0a563f353994b3'
-    oldFile: !uuid 'f35dbae45ce393bd397229df0a6d5a17d8c7f746'
-  /admin-ui/src/views/report/datav/components/config/DataConfig:
-    newFile: !uuid 'f2097aa0936dee02c6354e672e8fb4a266d8fee7'
-    oldFile: !uuid '2f181926c9104923f927ae892264ba78dc9d1c19'
-  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData:
-    newFile: !uuid '083f541ba3a0c90d7f7b96df8bfe197aef134f5a'
-    oldFile: !uuid '366e6ae6faf37fba47a639af075e0ddf529ec061'
-  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/apidataLeft.vue:
-    newFile: !uuid '3051794b6ba38b05abb72924a02f72db0e2e511a'
-    oldFile: !uuid '3d993643a3002acd0bfa81ea2b167485a19ce38c'
-  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams:
-    newFile: !uuid 'e899fba5eda05a977446fe6dfcbfa33e603b0ea0'
-    oldFile: !uuid '82ca0cb20552ac9815f0959c34e11ecc88d3e50c'
-  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams/AllParams.js:
-    newFile: !uuid 'c5775adf23a1024d00f18680bd90c39dedd34b93'
-    oldFile: !uuid '953971b6e76e1c67b2c03654fc82e282b67ee2c1'
-gitCommitId: !uuid '3159a0ef0bfabd49aa0fe1f46c9d771e3922f3c5'
+    newFile: !uuid '6e810e0cf60f9adee95b752735e501e14f427f13'
+    oldFile: !uuid '62beca5b794fc02dcd4267450b24fa1c595b6906'
+  /admin-ui/src/api:
+    newFile: !uuid '7374a1ae91ccd81a905a14f0361d3d8e320aae5b'
+    oldFile: !uuid '61db323bebae59b62633bf4399f3a2ad77be39bd'
+  /admin-ui/src/api/mes:
+    newFile: !uuid '72b635f5463117a2c2d9639c610ad51fac88954f'
+    oldFile: !uuid 'f47ded4bb255b877fb08c11f2cdfe4f19b8b237b'
+  /admin-ui/src/api/mes/config.js:
+    newFile: !uuid '5e7feffefc75d94733f7202d56f1d256355d596b'
+    oldFile: !uuid 'c740bfb9d3bb35c64e2b48bca0ea638ff65a0490'
+gitCommitId: !uuid '7ae3cbb8d71698daedecb2a9571e7625020280ef'
 renames: {
   }
-revisionId: 17
+revisionId: 18
