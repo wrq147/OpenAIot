@@ -198,7 +198,7 @@ export default {
       configLoading: false,
       deviceInfos: {}, //设备信息
       id: "",
-      productInfos: {}, //产品信息
+      productInfos: {}, //协议信息
       isOnlyTable: false, //是否是只展示表格数据
       activeAttr: {}, //活动的设备历史数据相关属性信息
       canChangeDevice: false, //判断是否可以修改设备信息
@@ -348,7 +348,7 @@ export default {
     labelInfoVisible(item, isposition) {
       //打开弹出层
       if (this.productInfos.StorageConfig) {
-        //有设置产品存储信息才可以查看历史数据
+        //有设置协议存储信息才可以查看历史数据
         let StorageConfig = JSON.parse(this.productInfos.StorageConfig);
         if (StorageConfig.enable && StorageConfig.enable != 0) {
           let attrObj = {};
@@ -371,13 +371,13 @@ export default {
         } else {
           if (isposition) {
             this.$message({
-              message: "查看设备轨迹请先设置开发产品的存储方式为启用",
+              message: "查看设备轨迹请先设置开发协议的存储方式为启用",
               type: "error",
               duration: 5 * 1000,
             });
           } else {
             this.$message({
-              message: "查看历史数据请先设置开发产品的存储方式为启用",
+              message: "查看历史数据请先设置开发协议的存储方式为启用",
               type: "error",
               duration: 5 * 1000,
             });
@@ -573,7 +573,7 @@ export default {
           }
         } else {
           this.$message({
-            message: "查看历史数据请先设置开发产品的存储方式为启用",
+            message: "查看历史数据请先设置开发协议的存储方式为启用",
             type: "error",
             duration: 5 * 1000,
           });
@@ -585,7 +585,7 @@ export default {
       this.getDeviceInfos();
     },
     changeDeviceProduct(val) {
-      //改变设备产品
+      //改变设备协议
       this.deviceInfos.ProductId = val;
       productInfo({ id: this.deviceInfos.ProductId, notsl: false }).then(
         (rsp) => {
@@ -601,9 +601,8 @@ export default {
       if (res.code == 0) {
         this.deviceInfos = res.data;
         this.productInfos = JSON.parse(JSON.stringify(rsp.data));
-        // console.log("该设备的产品信息", this.productInfos);
         if (this.productInfos.StorageConfig) {
-          //设置设备对应产品是否开启历史信息存储功能
+          //设置设备对应协议是否开启历史信息存储功能
           let StorageConfig = JSON.parse(this.productInfos.StorageConfig);
           if (StorageConfig.enable && StorageConfig.enable != 0) {
             this.deviceStorageConfig = true;

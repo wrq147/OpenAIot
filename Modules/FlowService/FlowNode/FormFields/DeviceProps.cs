@@ -9,7 +9,7 @@ namespace FlowService.FlowNode.FormFields
         /// </summary>
         public int limit { get; set; }
         /// <summary>
-        /// 限制的产品
+        /// 限制的协议
         /// </summary>
         public string[] limit_product { get; set; }
         /// <summary>
@@ -20,7 +20,7 @@ namespace FlowService.FlowNode.FormFields
     public class SelectSyncItem
     {
         /// <summary>
-        /// 产品物模型的属性标识
+        /// 物模型的属性标识
         /// </summary>
         public string code { get; set; }
         /// <summary>

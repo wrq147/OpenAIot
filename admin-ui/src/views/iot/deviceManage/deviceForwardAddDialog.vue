@@ -46,8 +46,8 @@
             </el-row>
             <el-row :gutter="10">
               <el-col :span="12">
-                <el-form-item label="产品名称" prop="productId">
-                  <el-input type="text" v-model="deviceAddFrom.productName" placeholder="请输入产品名称" :disabled="true"
+                <el-form-item label="协议名称" prop="productId">
+                  <el-input type="text" v-model="deviceAddFrom.productName" placeholder="请输入协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
                   <el-select @change="getproductTagList" style="width:100%" v-model="deviceAddFrom.productId" placeholder="请选择" v-else
                     :clearable="true" filterable remote reserve-keyword :remote-method="remoteMethod">
@@ -57,8 +57,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="转发设备产品名称" prop="productId2">
-                  <el-input type="text" v-model="deviceAddFrom.productName2" placeholder="请输入转发设备产品名称" :disabled="true"
+                <el-form-item label="转发设备协议名称" prop="productId2">
+                  <el-input type="text" v-model="deviceAddFrom.productName2" placeholder="请输入转发设备协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
                   <el-select @change="getproductTagList2" style="width:100%" v-model="deviceAddFrom.productId2" placeholder="请选择" v-else
                     :clearable="true" filterable remote reserve-keyword :remote-method="remoteMethod2">
@@ -140,10 +140,10 @@ export default {
       },
       deviceAddRules: {
         productId: [
-          { required: true, trigger: "change", message: "请选择产品" }
+          { required: true, trigger: "change", message: "请选择协议" }
         ],
         productId2: [
-          { required: true, trigger: "change", message: "请选择转发设备产品" }
+          { required: true, trigger: "change", message: "请选择转发设备协议" }
         ],
         name: [{ required: true, trigger: "blur", message: "请输入设备名称" }],
         name2: [{ required: true, trigger: "blur", message: "请输入转发设备名称" }],
@@ -190,24 +190,18 @@ export default {
     getproductList(pageSize, key) {
       let query = {
         Name: key,
-        // pageSize:pageSize,
         pageNum: 1
       }
       productList(query).then(async response => {
-        // console.log("查询到的产品", response);
         if (response.code == 0) {
           if (response.data && response.data.List)
             this.productLists = response.data.List;
         }
-        // this.productLists = response.data.List;
-        // this.total = response.data.Total;
-        // this.loading = false;
       });
     },
     getproductList2(pageSize, key) {
       let query = {
         Name: key,
-        // pageSize:pageSize,
         pageNum: 1
       }
       productList(query).then(async response => {

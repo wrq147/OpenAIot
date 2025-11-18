@@ -10,7 +10,7 @@ namespace IoTService.Models
         /// </summary>
         public long? OrgId { get; set; }
         /// <summary>
-        /// 过滤产品Id
+        /// 过滤协议Id
         /// </summary>
         public string ProductId { get; set; }
     }

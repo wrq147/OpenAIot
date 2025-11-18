@@ -21,7 +21,7 @@ namespace IoTService.Controller
             _updateBLL = updateBLL;
         }
         /// <summary>
-        /// 产品升级列表
+        /// 协议升级列表
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

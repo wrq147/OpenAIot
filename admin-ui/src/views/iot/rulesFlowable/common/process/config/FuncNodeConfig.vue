@@ -5,7 +5,7 @@
         <el-select v-model="config.TargetType" placeholder="请选择目标类型" @change="choiceTargetType">
           <el-option label="当前设备" :value="0" v-if="enableCur"></el-option>
           <el-option label="选择设备" :value="1"></el-option>
-          <el-option label="选择产品" :value="2"></el-option>
+          <el-option label="选择协议" :value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="目标设备：" v-if="config.TargetType == 1">
@@ -14,9 +14,9 @@
           <el-option v-for="item in deviceLists" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="目标产品：" v-if="config.TargetType == 2">
+      <el-form-item label="目标协议：" v-if="config.TargetType == 2">
         <el-select v-model="config.TargetId" clearable filterable remote reserve-keyword :remote-method="remoteMethod"
-          @clear="remoteMethod('')" :loading="loading" placeholder="请选择目标产品" @change="devChange">
+          @clear="remoteMethod('')" :loading="loading" placeholder="请选择目标协议" @change="devChange">
           <el-option v-for="item in productLists" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>

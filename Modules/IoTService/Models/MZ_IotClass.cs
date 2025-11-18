@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace IoTService.Models
 {
     /// <summary>
-    /// 物联网产品分类
+    /// 物联网协议分类
     /// </summary>
     [TableName("mz_iot_class")]
     public class MZ_IotClass

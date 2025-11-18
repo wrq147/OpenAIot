@@ -606,7 +606,7 @@ export default {
         productIds.push(localProdId);
       }
 
-      //获取产品信息
+      //获取协议信息
       let allprod = [];
       if (productIds.length > 0) {
         allprod = (await tslList(productIds)).data;

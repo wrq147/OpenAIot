@@ -68,7 +68,7 @@ namespace IoTService.Controller
         }
 
         /// <summary>
-        /// 刷新所属所有产品的缓存
+        /// 刷新所属所有协议的缓存
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -230,7 +230,7 @@ namespace IoTService.Controller
             return this.Success(await deviceBLL.SelectTagsByDevice(device));
         }
         /// <summary>
-        /// 获取产品名称列表
+        /// 获取协议名称列表
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -242,7 +242,7 @@ namespace IoTService.Controller
             return this.Success(await productBLL.ProductNamePage(query, user));
         }
         /// <summary>
-        /// 获取产品信息
+        /// 获取协议信息
         /// </summary>
         /// <param name="id"></param>
         /// <param name="notsl"></param>
@@ -256,7 +256,7 @@ namespace IoTService.Controller
             var rs = await productBLL.Info(id, false);
             if (rs.OrgId != user.OrgId)
             {
-                return this.Error<MZ_IotProduct>(33, "产品不在您的企业下");
+                return this.Error<MZ_IotProduct>(33, "协议不在您的企业下");
             }
             return this.Success(rs);
         }

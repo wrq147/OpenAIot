@@ -202,7 +202,7 @@ export default {
   methods: {
     delClass(id) {
       this.$modal
-        .confirm('是否确认删除产品编号为"' + id + '"的数据项？')
+        .confirm('是否确认删除协议编号为"' + id + '"的数据项？')
         .then(function() {
           return removeClass({ id: id });
         })

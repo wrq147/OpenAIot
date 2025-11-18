@@ -23,7 +23,7 @@
             return null;
         }
         //参数searchValue: 类型String, 参数可以为空
-        //  描述:产品id或者产品名称
+        //  描述:协议id或者协议名称
         //参数pageNow: 类型long, 参数可以为空
         //  描述:当前页数
         //参数pageSize: 类型long, 参数可以为空
@@ -49,7 +49,7 @@
             return null;
         }
         //参数MasterKey: 类型String, 参数不可以为空
-        //  描述:MasterKey在该设备所属产品的概况中可以查看
+        //  描述:MasterKey在该设备所属协议的概况中可以查看
         //参数productId: 类型long, 参数不可以为空
         //  描述:
         public static string DeleteProduct(string appKey, string appSecret, string MasterKey, string productId)

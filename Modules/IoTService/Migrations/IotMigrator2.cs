@@ -12,7 +12,7 @@ namespace IoTService.Migrations
             Insert.IntoTable("mz_menu").Row(new
             {
                 menu_id = 4207,
-                menu_name = "修改产品",
+                menu_name = "修改协议",
                 parent_id = 4000,
                 order_num = 4,
                 path = "physicalModel/productAdd/:id",
@@ -33,7 +33,7 @@ namespace IoTService.Migrations
             }).Row(new
             {
                 menu_id = 4208,
-                menu_name = "新增产品",
+                menu_name = "新增协议",
                 parent_id = 4000,
                 order_num = 5,
                 path = "physicalModel/productAddSteps",

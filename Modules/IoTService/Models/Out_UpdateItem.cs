@@ -11,11 +11,11 @@ namespace IoTService.Models
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 产品Id
+        /// 协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
-        /// 产品名称
+        /// 协议名称
         /// </summary>
         public string ProductName { get; set; }
     }

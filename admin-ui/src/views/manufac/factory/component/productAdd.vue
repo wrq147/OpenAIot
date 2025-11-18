@@ -102,9 +102,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12" v-if="isCheckPermi(['/IoTService/IotProduct/ListPage'])&&form.ProductLabel=='F'">
-          <el-form-item label="物联网产品" prop="IOTProductId">
+          <el-form-item label="绑定协议" prop="IOTProductId">
             <el-select clearable style="width: 100%" v-model="form.IOTProductId" filterable remote reserve-keyword
-              placeholder="请输入物联网产品名称" :remote-method="IOTProductRemoteMethod" :loading="IOTProductloading">
+              placeholder="请输入需要关联的协议名称" :remote-method="IOTProductRemoteMethod" :loading="IOTProductloading">
               <el-option v-for="item in IOTProductoptions" :key="item.Id" :label="item.Name" :value="item.Id">{{item.Name}}</el-option>
             </el-select>
           </el-form-item>

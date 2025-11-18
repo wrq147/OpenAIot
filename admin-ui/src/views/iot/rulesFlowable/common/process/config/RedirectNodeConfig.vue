@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-form class="huancun_con" label-position="right" label-width="120px">
-      <el-form-item label="转发后的产品：">
+      <el-form-item label="转发后的协议：">
         <el-select
           v-model="config.ProductId"
           filterable
           remote
           reserve-keyword
-          placeholder="请选择转发后的产品"
+          placeholder="请选择转发后的协议"
           :remote-method="remoteMethod"
           :loading="optionLoading"
           clearable
@@ -105,7 +105,7 @@ export default {
       return this.$store.state.rulesFlowable.rulesProductEvent; //规则流程设计
     },
     rulesProductInfo(){
-      return this.$store.state.rulesFlowable.selectProductInfo; //规则所选产品
+      return this.$store.state.rulesFlowable.selectProductInfo; //规则所选协议
     }
     // dentifier(){
 
@@ -191,7 +191,7 @@ export default {
       this.identifierList.push(obj);
     },
     productChange(val) {
-      //选择产品后
+      //选择协议后
       if (this.choiceMap.get(val)) {
         let modelObj = this.choiceMap.get(val);
         if (this.topicMsgValue == "ReadPropertyReply") {
@@ -234,7 +234,7 @@ export default {
       try {
         let rsp = await productList(this.productForm);
         let rspList=[]
-        rspList = rsp.data.List.filter((item) => {//过滤非规则所选的产品
+        rspList = rsp.data.List.filter((item) => {//过滤非规则所选的协议
           return item.Id!=this.rulesProductInfo.Id;
         });
         if (rsp.code == 0) {

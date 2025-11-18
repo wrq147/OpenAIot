@@ -13,11 +13,11 @@ namespace IoTRulesService.Flow.Node
     public class RewriteProps
     {
         /// <summary>
-        /// 目标类型：0为当前设备、1为选择设备、2为选择产品
+        /// 目标类型：0为当前设备、1为选择设备、2为选择协议
         /// </summary>
         public byte TargetType { get; set; }
         /// <summary>
-        /// 目标设备Id、目标产品
+        /// 目标设备Id、目标协议
         /// </summary>
         public string TargetId { get; set; }
         /// <summary>

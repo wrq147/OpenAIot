@@ -29,7 +29,7 @@ namespace ProducerService.Model
         /// </summary>
         public string SkuNumber { get; set; }
         /// <summary>
-        /// 关联的物联产品Id
+        /// 关联的物联协议Id
         /// </summary>
         public string IOTProductId { get; set; }
         /// <summary>

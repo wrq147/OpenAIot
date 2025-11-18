@@ -73,7 +73,7 @@ namespace IoTService.Models
         public string app_id { get; set; }
         public string app_secret { get; set; }
         /// <summary>
-        /// 产品Id
+        /// 协议Id
         /// </summary>
         public string tenantId { get; set; }
         public string encodeKey{ get; set; }

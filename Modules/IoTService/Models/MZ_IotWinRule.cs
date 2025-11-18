@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace IoTService.Models
 {
     /// <summary>
-    /// 物联产品的属性规则
+    /// 物联协议的属性规则
     /// </summary>
     [TableName("mz_iot_win_rule")]
     public class MZ_IotWinRule
@@ -16,7 +16,7 @@ namespace IoTService.Models
         [ID(false)]
         public string Id { get; set; }
         /// <summary>
-        /// 所属产品Id
+        /// 所属协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>

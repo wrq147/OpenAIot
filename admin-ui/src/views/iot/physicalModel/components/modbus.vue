@@ -384,7 +384,6 @@ export default {
       this.matchesDrawer = false;
     },
     saveProductInfo() {
-      //保存产品信息
       if (this.$refs["modbussForm"]) {
         this.$refs["modbussForm"].validate((valid1) => {
           if (valid1) {

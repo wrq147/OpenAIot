@@ -158,9 +158,9 @@ namespace IoTService.Migrations
 
 
             Execute.Sql("DROP TABLE IF EXISTS mz_iot_win_rule");
-            Create.Table("mz_iot_win_rule").WithDescription("物联产品的属性规则")
+            Create.Table("mz_iot_win_rule").WithDescription("物联协议的属性规则")
             .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
-            .WithColumn("ProductId").AsString(128).WithColumnDescription("所属产品Id")
+            .WithColumn("ProductId").AsString(128).WithColumnDescription("所属协议Id")
             .WithColumn("PropCode").AsString(50).WithColumnDescription("关联属性")
             .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
             .WithColumn("WindowWay").AsByte().WithColumnDescription("统计时间：0每时、1每日、2每月")

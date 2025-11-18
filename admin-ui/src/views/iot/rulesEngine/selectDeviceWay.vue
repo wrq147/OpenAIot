@@ -2,7 +2,7 @@
   <div>
     <el-dialog title="选择触发设备" :destroy-on-close="true" :visible.sync="stepChoiceDevice" :close-on-click-modal="false" width="60%" style="z-index: inherit;">
         <el-steps :active="active" finish-status="success" class="device_step">
-          <el-step title="选择产品">
+          <el-step title="选择协议">
             <span slot="description" style="color: #1c9efe" v-if="selProLists && selProLists.length > 0 && active > 0">
               <div @click="reselectProduct">重新选择</div>
             </span>
@@ -28,7 +28,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="filterProductParams.Name" placeholder="请输入产品名称" v-if="filterType == 'product'"></el-input>
+              <el-input v-model="filterProductParams.Name" placeholder="请输入协议名称" v-if="filterType == 'product'"></el-input>
             </el-form-item>
             <div class="device_select_btn">
               <el-button icon="el-icon-search" type="primary" @click="getDevProductList">搜索</el-button>
@@ -249,7 +249,7 @@ export default {
             label: "设备事件",
             icon: "el-icon-data-line",
             }],
-        devProductLists: [], //设备选择是产品列表
+        devProductLists: [], //设备选择是协议列表
         filterProductParams: {
             pageNum: 1,
             pageSize: 6,
@@ -386,7 +386,7 @@ export default {
             that.getRulesDevList();
           });
         } else {
-          this.$message.warning("请先选择产品");
+          this.$message.warning("请先选择协议");
           return;
         }
       } else if (this.active == 1) {
@@ -421,7 +421,8 @@ export default {
           this.$message.error("接口异常");
         });
     },
-    selectProToLeft() {//确定产品是否选中
+    selectProToLeft() {
+      //确定协议是否选中
       this.devProductLists.forEach((node) => {
         if (this.selProLists.length > 0) {
           for (let i = 0; i < this.selProLists.length; i++) {

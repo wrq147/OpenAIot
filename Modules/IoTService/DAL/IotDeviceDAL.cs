@@ -265,7 +265,7 @@ namespace IoTService.DAL
             .GeneratePageObjectAsync(query, "d.Id desc");
         }
         /// <summary>
-        /// 查询指定产品的所有设备Id列表
+        /// 查询指定协议的所有设备Id列表
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>
@@ -274,7 +274,7 @@ namespace IoTService.DAL
             return (await new SqlBuilder(help).Append("select Id from mz_iot_device where ProductId=").AppendParam(productId).DoAsync<DoQuerySql<string>>()).ToList();
         }
         /// <summary>
-        /// 查询指定产品的所有在线设备
+        /// 查询指定协议的所有在线设备
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>

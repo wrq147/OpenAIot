@@ -208,7 +208,7 @@ namespace IoTRulesService
             });
 
 
-            //分发执行定时器产品规则
+            //分发执行定时器协议规则
             plg.RegisterTime(async (bs) =>
             {
                 await app.ServiceProvider.GetService<RuleBLL>().ExecuteProductTime(bs);
@@ -517,7 +517,7 @@ namespace IoTRulesService
                                 var product = await provider.GetService<IotProductDAL>().Select(devicelist[0].ProductId);
                                 if (product == null)
                                 {
-                                    await serverBus.Print(rs.DeviceId, "设备初始化", $"产品{devicelist[0].ProductId}不存在");
+                                    await serverBus.Print(rs.DeviceId, "设备初始化", $"协议{devicelist[0].ProductId}不存在");
                                     return;
                                 }
                                 rs.ProductId = product.Id;
@@ -630,7 +630,7 @@ namespace IoTRulesService
 
                                         }, TimeSpan.FromSeconds(3));
                                     }
-                                    //发送产品升级
+                                    //发送协议升级
                                     var channelConfig = await provider.GetService<IotProductBLL>().GetChannel(product.NetworkWay);
                                     if (channelConfig.CanBind && (devicelist[0].ProductVer < product.Version))
                                     {
@@ -1232,7 +1232,7 @@ namespace IoTRulesService
                             DeviceEventMessage rdmsg = (DeviceEventMessage)rs;
                             if (string.IsNullOrEmpty(rs.ProductId))
                             {
-                                await provider.GetService<ServerBusProxy>().Print(rs.DeviceId, "设备事件异常", "事件的产品Id不能为空");
+                                await provider.GetService<ServerBusProxy>().Print(rs.DeviceId, "设备事件异常", "事件的协议Id不能为空");
                                 return;
                             }
                             model = await TslCache.GetTslModel(rs.ProductId, redis, provider);

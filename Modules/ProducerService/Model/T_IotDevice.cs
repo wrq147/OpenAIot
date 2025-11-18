@@ -31,7 +31,7 @@ namespace ProducerService.Model
         /// </summary>
         public string DeviceId { get; set; }
         /// <summary>
-        /// 所属物联产品Id
+        /// 所属物联协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>

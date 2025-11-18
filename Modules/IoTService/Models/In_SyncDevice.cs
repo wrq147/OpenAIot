@@ -14,7 +14,7 @@ namespace IoTService.Models
         [JsonConverter(typeof(ImageUrl))]
         public string PhotoUrl { get; set; }
         /// <summary>
-        /// 所属产品Id
+        /// 所属协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>

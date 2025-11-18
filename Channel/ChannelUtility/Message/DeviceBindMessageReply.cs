@@ -3,7 +3,7 @@
 namespace ChannelUtility.Message
 {
     /// <summary>
-    /// 设备绑定产品消息回复
+    /// 设备绑定协议消息回复
     /// </summary>
     public class DeviceBindMessageReply : BaseUpDeviceMessage
     {

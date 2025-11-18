@@ -40,11 +40,11 @@ namespace IoTService.Models
         /// </summary>
         public string DeviceNumber { get; set; }
         /// <summary>
-        /// 所属产品Id
+        /// 所属协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
-        /// 产品名称
+        /// 协议名称
         /// </summary>
         [DataIgnore]
         public string ProductName { get; set; }
@@ -104,7 +104,7 @@ namespace IoTService.Models
         /// </summary>
         public int? FirmwareVer { get; set; }
         /// <summary>
-        /// 产品版本
+        /// 协议版本
         /// </summary>
         [JsonConverter(typeof(OnlyDeserialize))]
         public int? ProductVer { get; set; }

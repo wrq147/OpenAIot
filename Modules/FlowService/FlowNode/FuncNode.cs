@@ -26,11 +26,11 @@ namespace FlowService.FlowNode
     public class FuncExeItem
     {
         /// <summary>
-        /// 匹配的产品Id
+        /// 匹配的协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
-        /// 匹配的产品名称
+        /// 匹配的协议名称
         /// </summary>
         public string ProductName { get; set; }
         /// <summary>

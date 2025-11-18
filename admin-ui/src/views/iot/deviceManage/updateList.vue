@@ -2,21 +2,11 @@
   <div style="padding:20px 20px 0 20px" id="big_con">
     <div>
       <el-row :gutter="20">
-        <!--产品数据-->
         <el-col :span="24" :xs="24">
           <div class="from_con" id="from_con" v-show="showSearch">
             <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
-              <!-- <el-form-item label="搜索关键词" prop="Name">
-                <el-input
-                  class="set_radius"
-                  v-model="queryParams.Name"
-                  placeholder="请输入产品名称"
-                  clearable
-                  @keyup.enter.native="handleQuery"
-                />
-              </el-form-item>-->
-              <el-form-item label="过滤产品" prop="ProductId">
-                <el-select class="set_radius" v-model="queryParams.ProductId" placeholder="请选择产品" clearable filterable>
+              <el-form-item label="过滤协议" prop="ProductId">
+                <el-select class="set_radius" v-model="queryParams.ProductId" placeholder="请选择协议" clearable filterable>
                   <el-option v-for="item in productSelectList" :label="item.Name" :key="item.Id" :value="item.Id"/>
                 </el-select>
               </el-form-item>
@@ -53,7 +43,7 @@
             <el-table v-loading="loading" border :data="updateTableList" :row-style="isRed"
               @selection-change="handleSelectionChange" class="data_table" :header-cell-style="cellSty" style="width:100%">
               <el-table-column label="设备名称" align="center" key="Name" prop="Name" v-if="columns[0].visible" :show-overflow-tooltip="true"/>
-              <el-table-column label="产品名称" align="center" key="ProductName" prop="ProductName" v-if="columns[1].visible" :show-overflow-tooltip="true"/>
+              <el-table-column label="协议名称" align="center" key="ProductName" prop="ProductName" v-if="columns[1].visible" :show-overflow-tooltip="true"/>
               <el-table-column label="尝试更新的次数" align="center" key="UpdateCount" prop="UpdateCount" width="150" v-if="columns[2].visible" :show-overflow-tooltip="true"/>
               <el-table-column label="更新的目标版本" align="center" key="Version" prop="Version" width="150" v-if="columns[3].visible" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="更新失败的原因" align="center" key="UpdateErr" prop="UpdateErr" v-if="columns[4].visible" width="250"/>
@@ -112,7 +102,7 @@ export default {
       total: 0,
       // 升级列表表格数据
       updateTableList: null,
-      //选择的产品列表
+      //选择的协议列表
       productSelectList: [],
       // 弹出层标题
       title: "",
@@ -131,7 +121,7 @@ export default {
       // 列信息
       columns: [
         { key: 0, label: `设备名称`, visible: true },
-        { key: 1, label: `产品名称`, visible: true },
+        { key: 1, label: `协议名称`, visible: true },
         { key: 2, label: `尝试更新的次数`, visible: true },
         { key: 3, label: `更新的目标版本`, visible: true },
         { key: 4, label: `更新失败的原因`, visible: true },
@@ -154,7 +144,6 @@ export default {
     filterSatus(value, row) {
       return row.Status === value;
     },
-    /** 查询产品列表 */
     getProductList() {
       console.log("查询", this.queryParams);
       productList({ showAll: true }).then(async response => {

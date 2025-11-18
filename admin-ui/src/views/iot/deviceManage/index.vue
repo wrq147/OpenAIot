@@ -96,7 +96,7 @@
                   <div class="lis_top_cot">
                     <div class="device_name">{{ its.Name }}</div>
                     <div class="device_name deviceId">通讯编码：{{ its.DeviceId }}</div>
-                    <div class="device_name pro_name">产品：{{ its.ProductName }}</div>
+                    <div class="device_name pro_name">协议：{{ its.ProductName }}</div>
                     <div class="device_group_name" v-if="its.GroupName">类型：{{ its.GroupName }}</div>
                   </div>
                 </div>
@@ -129,7 +129,7 @@
             <el-table v-if="isShape && activeDevice == 'deviceManage'" v-loading="configLoading" class="data_table" :header-cell-style="cellSty" border :data="tableData" style="width:100%">
               <el-table-column label="通讯编码" align="center" prop="DeviceId" :show-overflow-tooltip="true" />
               <el-table-column label="设备名称" align="center" prop="Name" />
-              <el-table-column label="产品名称" align="center" prop="ProductName" />
+              <el-table-column label="协议名称" align="center" prop="ProductName" />
               <el-table-column label="设备类型" align="center" prop="GroupName" />
               <el-table-column label="运行状态" align="center" prop="DState" />
               <el-table-column label="联网状态" align="center" >

@@ -14,7 +14,7 @@ namespace IoTService.Models
         /// </summary>
         public string GroupId { get; set; }
         /// <summary>
-        /// 过滤物联产品分类
+        /// 过滤物联协议分类
         /// </summary>
         public string ClassId { get; set; }
         /// <summary>
@@ -26,11 +26,11 @@ namespace IoTService.Models
         /// </summary>
         public string DState { get; set; }
         /// <summary>
-        /// 过滤产品Id
+        /// 过滤协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
-        /// 过滤多个产品Id
+        /// 过滤多个协议Id
         /// </summary>
         public string[] ProductList { get; set; }
         /// <summary>

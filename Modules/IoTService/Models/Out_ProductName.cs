@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace IoTService.Models
 {
     /// <summary>
-    /// 产品名称
+    /// 协议名称
     /// </summary>
     public class Out_ProductName
     {

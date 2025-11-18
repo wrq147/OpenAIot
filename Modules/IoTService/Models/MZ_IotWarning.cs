@@ -89,7 +89,7 @@ namespace IoTService.Models
         [JsonConverter(typeof(ImageUrl))]
         public string DevicePhotoUrl { get; set; }
         /// <summary>
-        /// 产品名称
+        /// 协议名称
         /// </summary>
         [DataIgnore]
         public string ProductName { get; set; }

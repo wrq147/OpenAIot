@@ -29,7 +29,7 @@ namespace ChannelUtility
         private IServiceProvider _provider;
         public delegate Task SubProductMessage(RequestMessage msg, TslReturn ret);
         /// <summary>
-        /// 监听订阅的指定产品的消息
+        /// 监听订阅的指定协议的消息
         /// </summary>
         public event SubProductMessage OnSubProductMessage;
         private IBus _bus;
@@ -270,7 +270,7 @@ namespace ChannelUtility
             return null;
         }
         /// <summary>
-        /// 获取当前设备的源产品Id
+        /// 获取当前设备的源协议Id
         /// </summary>
         /// <param name="deviceId"></param>
         /// <returns></returns>
@@ -284,9 +284,9 @@ namespace ChannelUtility
             }
             return null;
         }
-        
+
         /// <summary>
-        /// 获取指定产品的物模型
+        /// 获取指定协议的物模型
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="deviceId"></param>
@@ -327,7 +327,7 @@ namespace ChannelUtility
                         }
                         else
                         {
-                            //使用临时设备-产品关联
+                            //使用临时设备-协议关联
                             TempProductMessage msg = new TempProductMessage();
                             msg.ProductId = string.Empty;
                             msg.DeviceId = deviceId;

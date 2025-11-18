@@ -40,7 +40,7 @@ namespace FastTunnelServer
         /// </summary>
         public string SkuNumber { get; set; }
         /// <summary>
-        /// 所属产品Id
+        /// 所属协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
@@ -96,7 +96,7 @@ namespace FastTunnelServer
         /// </summary>
         public int? FirmwareVer { get; set; }
         /// <summary>
-        /// 产品版本
+        /// 协议版本
         /// </summary>
         public int? ProductVer { get; set; }
         /// <summary>

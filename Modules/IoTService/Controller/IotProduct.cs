@@ -4,7 +4,6 @@ using Common;
 using Common.Share;
 using IoTService.Business;
 using IoTService.Models;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +15,7 @@ using TemplateAction.Route;
 namespace IoTService.Controller
 {
     /// <summary>
-    /// 物联产品接口
+    /// 物联协议接口
     /// </summary>
     public class IotProduct : AbstractLoginedController
     {
@@ -33,7 +32,7 @@ namespace IoTService.Controller
             _winRule = winRule;
         }
         /// <summary>
-        /// 获取产品名称列表
+        /// 获取协议名称列表
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -70,7 +69,7 @@ namespace IoTService.Controller
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return this.Error<string>(13, "设备未绑定产品");
+                return this.Error<string>(13, "设备未绑定协议");
             }
 
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
@@ -95,7 +94,7 @@ namespace IoTService.Controller
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return this.Error<string>(13, "设备未绑定产品");
+                return this.Error<string>(13, "设备未绑定协议");
             }
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
             var product = await _product.Info(device.ProductId);
@@ -119,7 +118,7 @@ namespace IoTService.Controller
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return this.Error<string>(13, "设备未绑定产品");
+                return this.Error<string>(13, "设备未绑定协议");
             }
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
             var product = await _product.Info(device.ProductId);
@@ -143,7 +142,7 @@ namespace IoTService.Controller
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return this.Error<string>(13, "设备未绑定产品");
+                return this.Error<string>(13, "设备未绑定协议");
             }
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
             var product = await _product.Info(device.ProductId);
@@ -167,7 +166,7 @@ namespace IoTService.Controller
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return this.Error<string>(13, "设备未绑定产品");
+                return this.Error<string>(13, "设备未绑定协议");
             }
 
             if (data.IsHex)
@@ -207,7 +206,7 @@ namespace IoTService.Controller
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return this.Error<string>(13, "设备未绑定产品");
+                return this.Error<string>(13, "设备未绑定协议");
             }
             var tsl = await TslCache.GetTslModel(device.ProductId, this.ServiceProvider);
             switch (data.MsgType)
@@ -260,7 +259,7 @@ namespace IoTService.Controller
             return this.Success(await _product.GetChannel(code));
         }
         /// <summary>
-        /// 产品列表
+        /// 协议列表
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -283,7 +282,7 @@ namespace IoTService.Controller
             return this.Success(await _product.TSLList(ids));
         }
         /// <summary>
-        /// 获取指定产品信息
+        /// 获取指定协议信息
         /// </summary>
         /// <param name="id"></param>
         /// <param name="notsl">是否不返回物模型信息（加速用）</param>
@@ -295,19 +294,19 @@ namespace IoTService.Controller
             return this.Success(await _product.Info(id, notsl));
         }
         /// <summary>
-        /// 添加产品
+        /// 添加协议
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
         [About("/IoTService/IotProduct/ListPage")]
-        [Des("新增一条产品记录")]
+        [Des("新增一条协议记录")]
         public async Task<AjaxResult> Add(MZ_IotProduct data)
         {
             return (await _product.Insert(data)).ToAjaxResult();
         }
         /// <summary>
-        /// 编辑产品
+        /// 编辑协议
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -318,19 +317,19 @@ namespace IoTService.Controller
             return (await _product.Update(data)).ToAjaxResult();
         }
         /// <summary>
-        /// 删除产品
+        /// 删除协议
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
         [About("/IoTService/IotProduct/ListPage")]
-        [Des("删除一条产品记录")]
+        [Des("删除一条协议记录")]
         public async Task<AjaxResult> Remove(string id)
         {
             return (await _product.Remove(id)).ToAjaxResult();
         }
         /// <summary>
-        /// 拷贝产品
+        /// 拷贝协议
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

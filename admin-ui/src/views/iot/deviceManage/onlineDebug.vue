@@ -3,7 +3,7 @@
     <el-alert
       v-if="productInfos.Status == 1"
       how-icon
-      title="发布状态的产品无法接收到设备上报消息和设备下发消息"
+      title="发布状态的协议无法接收到设备上报消息和设备下发消息"
       type="warning"
     >
     </el-alert>
@@ -101,7 +101,7 @@
                   @click="onSendBind"
                   type="primary"
                   style="width: 100%"
-                  >发送产品升级</el-button
+                  >发送协议升级</el-button
                 >
                 </div>
                 <div style="margin-top: 15px;width:80%;">
@@ -348,7 +348,7 @@ export default {
         type: null,
       }, //设备查询form
       CanModbus: false,
-      deviceOptionList: [], //该产品调试设备列表
+      deviceOptionList: [], 
       deviceListMap: new Map(),
       isFirstConnect: true,
       DebugText: "",

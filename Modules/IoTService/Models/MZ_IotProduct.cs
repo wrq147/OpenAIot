@@ -7,7 +7,7 @@ using System;
 namespace IoTService.Models
 {
     /// <summary>
-    /// 物联网产品
+    /// 物联网协议
     /// </summary>
     [TableName("mz_iot_product")]
     public class MZ_IotProduct : BaseEntity
@@ -19,7 +19,7 @@ namespace IoTService.Models
         /// </summary>
         public long? OrgId { get; set; }
         /// <summary>
-        /// 产品名称
+        /// 协议名称
         /// </summary>
         public string Name { get; set; }
         /// <summary>

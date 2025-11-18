@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-alert v-if="productInfos.Status == 1" how-icon title="发布状态的产品无法接收到设备上报消息和设备下发消息" type="warning">
+    <el-alert v-if="productInfos.Status == 1" how-icon title="发布状态的协议无法接收到设备上报消息和设备下发消息" type="warning">
     </el-alert>
     <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-loading="dataLoading">
       <div class="debug_con">
@@ -35,7 +35,7 @@
               </div>
               <div v-else-if="debugFrom.debugType == '特殊消息'" style="padding-top: 15px;display: flex;flex-direction: column;align-items: center;">
                 <div style="width: 80%">
-                  <el-button @click="onSendBind" type="primary" style="width: 100%">发送产品升级</el-button>
+                  <el-button @click="onSendBind" type="primary" style="width: 100%">发送协议升级</el-button>
                 </div>
                 <div style="margin-top: 15px; width: 80%">
                   <el-button @click="onSendICCID" type="primary" style="width: 100%">发送绑定物联卡</el-button>

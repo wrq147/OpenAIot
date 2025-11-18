@@ -16,7 +16,7 @@ namespace IoTRulesService.Flow.Node
     public class RedirectProps
     {
         /// <summary>
-        /// 转发后的产品Id
+        /// 转发后的协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
@@ -24,7 +24,7 @@ namespace IoTRulesService.Flow.Node
         /// </summary>
         public string[] TargetDtuIdsList { get; set; }
         /// <summary>
-        /// 属性消息、事件消息与转发的产品标识符映射
+        /// 属性消息、事件消息与转发的协议标识符映射
         /// </summary>
         public Dictionary<string, string> Maping { get; set; }
     }

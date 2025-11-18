@@ -58,7 +58,7 @@ namespace IoTService
         }
 
         /// <summary>
-        /// 更新产品缓存物模型信息
+        /// 更新协议缓存物模型信息
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
@@ -270,7 +270,7 @@ namespace IoTService
 
             if (channelConfig.CanBind && device.ProductVer < targetVersion)
             {
-                //判断设备ProductVer，小于产品版本时，发送设备绑定
+                //判断设备ProductVer，小于协议版本时，发送设备绑定
                 DeviceBindMessage msg = new DeviceBindMessage();
                 msg.DeviceId = device.DeviceId;
                 msg.ProductId = device.ProductId;

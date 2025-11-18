@@ -31,7 +31,7 @@ namespace IoTService.Models
         /// </summary>
         public bool? IsNet { get; set; }
         /// <summary>
-        /// 过滤产品Id数组
+        /// 过滤协议Id数组
         /// </summary>
         public string[] Ids { get; set; }
     }

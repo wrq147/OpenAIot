@@ -142,7 +142,7 @@ export default {
       },
       deviceAddRules: {
         productId: [
-          { required: true, trigger: "change", message: "请选择产品" }
+          { required: true, trigger: "change", message: "请选择协议" }
         ],
         name: [{ required: true, trigger: "blur", message: "请输入设备名称" }],
         Price: [

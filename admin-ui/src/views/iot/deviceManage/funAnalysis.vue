@@ -301,8 +301,8 @@
            */
            ShowMsg(msg:String):void;
            /**
-           * 获取当前设备的源产品Id
-           * @returns {String} 返回产品Id
+           * 获取当前设备的源协议Id
+           * @returns {String} 返回协议Id
            */
            RawProductId():String;
            /**
@@ -315,8 +315,8 @@
            */
            Refresh():void;
            /**
-           * 变更所属产品
-           * @param {String} targetId - 产品编号
+           * 变更所属协议
+           * @param {String} targetId - 协议编号
            */
            ChangeProduct(targetId:String):void;
            /**

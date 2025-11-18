@@ -4,7 +4,7 @@
     {
 
         //参数MasterKey: 类型String, 参数不可以为空
-        //  描述:MasterKey在该设备所属产品的概况中可以查看
+        //  描述:MasterKey在该设备所属协议的概况中可以查看
         //参数body: 类型json, 参数不可以为空
         //  描述:body,具体参考平台api说明
         public static string CreateCommand(string appKey, string appSecret, string MasterKey, string body)
@@ -25,9 +25,9 @@
             return null;
         }
         //参数MasterKey: 类型String, 参数不可以为空
-        //  描述:MasterKey在该设备所属产品的概况中可以查看
+        //  描述:MasterKey在该设备所属协议的概况中可以查看
         //参数productId: 类型long, 参数不可以为空
-        //  描述:产品ID，必填
+        //  描述:协议ID，必填
         //参数deviceId: 类型String, 参数不可以为空
         //  描述:设备ID，必填
         //参数startTime: 类型String, 参数可以为空
@@ -64,7 +64,7 @@
             return null;
         }
         //参数MasterKey: 类型String, 参数不可以为空
-        //  描述:MasterKey在该设备所属产品的概况中可以查看
+        //  描述:MasterKey在该设备所属协议的概况中可以查看
         //参数commandId: 类型String, 参数不可以为空
         //  描述:创建指令成功响应中返回的id，
         //参数productId: 类型long, 参数不可以为空

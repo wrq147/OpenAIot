@@ -89,7 +89,7 @@ export const EXCEPT_PROPS = {
 
 //转发节点默认属性
 export const REDIRECT_PROPS = {
-    ProductId: "", //产品id
+    ProductId: "", //协议id
     TargetDtuIdsList: [], //转发后的设备通信Id
     Maping: '' //格式是:{"原标识符":"目标标识符","原标识符":"目标标识符"}，只有属性消息和事件消息有
 }

@@ -538,9 +538,9 @@ let topicList = () => import("@/views/iot/deviceManage/topicList.vue")
 let deviceManage = () => import("@/views/iot/deviceManage/deviceCom.vue")
 let onlineDebug = () => import("@/views/iot/deviceManage/onlineDebug.vue")
 let dataAnalysis = () => import("@/views/iot/physicalModel/dataAnalysis.vue")
-let ProductInfo = () => import("./components/productInfo")//产品详情表格
-let EditProductInfo = () => import("./components/editProductInfo")//编辑产品详情弹窗
-let TypeForm = () => import("./components/typeForm")//类型的表单
+let ProductInfo = () => import("./components/productInfo")
+let EditProductInfo = () => import("./components/editProductInfo")
+let TypeForm = () => import("./components/typeForm")
 let warnList = () => import("@/views/iot/physicalModel/warnList.vue")
 let noticeList = () => import("@/views/iot/physicalModel/noticeList.vue")
 let firmwareFiles = () => import("@/views/iot/physicalModel/components/firmwareFiles.vue")
@@ -668,7 +668,7 @@ export default {
       configLoading: false, //配置信息是否处于
       productInfos: {
         PhotoUrl: null
-      }, //产品详情
+      },
       tableData: [], //表格数据
       attrTableData: [], //属性定义表格数据
       funcTableData: [], //功能定义表格数据
@@ -792,12 +792,12 @@ export default {
       // 日期范围
       dateRange: [],
       typeListMap: new Map(),
-      productId: "", //产品编号
-      classId: "", //协议分类编号
+      productId: "",
+      classId: "",
       className: "",
       activeModelLine: -1, //当前修改的行是
       activeParamsLine: -1, //当前修改的参数是哪一行
-      isFirstGet: true, //是不是第一次获取产品数据
+      isFirstGet: true, //是不是第一次获取协议数据
       ChannelData:null,
       fileType: ["png", "jpg", "jpeg", "gif"],
       // 大小限制(MB)
@@ -1189,7 +1189,7 @@ export default {
       // console.log("设置的值", this.typeListMap);
     },
     saveInfo(classId) {
-      //产品详情编辑组件
+      //协议详情编辑组件
       this.classId = classId;
       this.getProductClassInfo();
       this.getProductInfo();
@@ -1271,7 +1271,7 @@ export default {
     },
 
     openEditProductDrawer() {
-      //打开产品修改编辑弹出层
+      //打开协议修改编辑弹出层
       // this.editProductDrawer = true;
 
       this.$refs["editProduct"].openEditProductDrawer();
@@ -1721,7 +1721,7 @@ export default {
       });
     },
     saveProductInfo() {
-      //保存产品信息
+      //保存协议信息
       if (this.funcFrom.downway == 1) {
         this.$refs.funRef.setInputData();
       }
@@ -1762,7 +1762,6 @@ export default {
     },
 
     getProductInfo() {
-      //获取指定产品信息
       this.configLoading = true;
 
       productInfo({ id: this.productId }).then(rsp => {
@@ -1777,7 +1776,6 @@ export default {
           }
      
           let jsonLis = JSON.parse(this.productInfos.ModelTSL);
-          // console.log("产品的ModelTSL", jsonLis,this.productInfos);
 
           if (jsonLis.properties) {
             this.attrTableData = jsonLis.properties;

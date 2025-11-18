@@ -62,7 +62,7 @@ namespace ChannelUtility.Js
             res.Wait();
         }
         /// <summary>
-        /// 获取当前设备的源产品Id
+        /// 获取当前设备的源协议Id
         /// </summary>
         /// <returns></returns>
         public string RawProductId()
@@ -80,9 +80,9 @@ namespace ChannelUtility.Js
             return res.Result;
         }
         /// <summary>
-        /// 变更所属产品
+        /// 变更所属协议
         /// </summary>
-        /// <param name="targetId">产品编号</param>
+        /// <param name="targetId">协议编号</param>
         public void ChangeProduct(string targetId)
         {
             ChangeProductMessage msg = new ChangeProductMessage();

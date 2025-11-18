@@ -318,11 +318,9 @@ export default {
         { alabel: "时间", label: "时间型(Date)", value: "date" },
         { alabel: "布尔", label: "布尔型(Boolean)", value: "boolean" },
         { alabel: "枚举", label: "枚举型(Enum)", value: "enum" },
-      ], //数据类型列表
-      //产品过滤条件
+      ],
+      //协议过滤条件
       triggerLs: [], //选择的设备
-
-      // rulesFrom:{},
       statusList: [
         { label: "正常", value: 0 },
         { label: "暂停", value: 1 },
@@ -357,7 +355,7 @@ export default {
         GroupId: "",
         TriggerWay: 0, //触发方式
         device: [], //选中的设备
-        product: "", //订阅的设备 产品
+        product: "",
         TopicMsg: "", //订阅的消息类型
         HttpParams: [],
         process: {
@@ -373,7 +371,7 @@ export default {
       rules: {
         name: [{ required: true, trigger: "blur", message: "请输入名称" }],
         sort: [{ required: true, trigger: "blur", message: "请输入优先级" }],
-        product: [{ required: true, trigger: "change", message: "请选择产品" }],
+        product: [{ required: true, trigger: "change", message: "请选择协议" }],
         device: [{ required: true, trigger: "change", message: "请选择设备" }],
         topicMsg: [
           {
@@ -387,11 +385,11 @@ export default {
         ],
       },
       addRulesDialog: false, //添加规则的弹出层
-      productLists: [], //产品列表
+      productLists: [], //协议列表
       // device: [], //选中的设备
       productParams: {
         showAll: true,
-      }, //产品列表查询form
+      }, //协议列表查询form
       // 传入的表达式
       timerCron: "",
       proEvt: [],
@@ -435,8 +433,8 @@ export default {
       ],
       groupFormDisable: false, //是否是查看详情
       rulesJsonName: "",
-      productmap: new Map(), //产品map类型数据
-      triggerProduct:'',//产品
+      productmap: new Map(), //协议map类型数据
+      triggerProduct:'',
     };
   },
   created() {
@@ -497,7 +495,7 @@ export default {
       this.$refs.addForm.selectDeviceList(list);
     },
     selectProduct(list) {
-      //选择完产品后
+      //选择完协议后
       this.$refs.addForm.selectProduct(list);
     },
     selectTopicMsg(node) {
@@ -509,7 +507,7 @@ export default {
       this.$refs.addForm.joinParams(paramList);
     },
     async initProEvts() {
-      //获取产品的事件
+      //获取协议的事件
       await this.$refs.addForm.initProEvts();
     },
     setAddForm(formVal) {
@@ -924,7 +922,7 @@ export default {
         GroupId: "",
         TriggerWay: 0, //触发方式
         device: [], //选中的设备
-        product: "", //订阅的设备 产品
+        product: "",
         TopicMsg: "", //订阅的消息类型
         HttpParams: [],
         process: {

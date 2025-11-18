@@ -2,7 +2,6 @@
   <div style="padding: 20px 20px 0 20px" id="big_con">
     <div>
       <el-row :gutter="20">
-        <!--产品数据-->
         <el-col :span="24" :xs="24">
           <div class="from_con" id="from_con">
             <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
@@ -144,7 +143,7 @@
               <el-form-item label="物模型初始化json" prop="remark">
                 <div class="daoru_con">
                   <div class="rulesjson" v-if="initModelTSLName">{{ initModelTSLName }}</div>
-                  <el-tooltip class="item" effect="dark" content="导入的json格式需和开发产品一致" placement="top-start">
+                  <el-tooltip class="item" effect="dark" content="导入的json格式需和开发协议一致" placement="top-start">
                     <el-button type="primary" class="putbutton">物模型初始化json<input type="file" @change="importProcess" id="putbuttonFile"/></el-button>
                   </el-tooltip>
                 </div>

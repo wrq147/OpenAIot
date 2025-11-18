@@ -9,10 +9,10 @@ namespace IotService.Migrations
     {
         public override void Up()
         {
-            Create.Table("mz_iot_product").WithDescription("Iot产品")
+            Create.Table("mz_iot_product").WithDescription("Iot协议")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
                 .WithColumn("OrgId").AsInt64().Indexed("IotProductOrgId").WithColumnDescription("所属组织ID")
-                .WithColumn("Name").AsString(50).WithColumnDescription("产品名称")
+                .WithColumn("Name").AsString(50).WithColumnDescription("协议名称")
                 .WithColumn("PhotoUrl").AsString(255).WithColumnDescription("图片地址")
                 .WithColumn("Remark").AsString(500).WithColumnDescription("备注说明")
                 .WithColumn("ClassifiedId").AsString(128).Indexed("IDXClassifiedId").WithColumnDescription("所属品类ID")
@@ -33,7 +33,7 @@ namespace IotService.Migrations
        .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
 
-            Create.Table("mz_iot_class").WithDescription("Iot产品分类")
+            Create.Table("mz_iot_class").WithDescription("Iot协议分类")
     .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
     .WithColumn("OrgId").AsInt64().Indexed("IotClassOrgId").WithColumnDescription("所属组织ID")
     .WithColumn("Name").AsString(50).WithColumnDescription("分类名称")
@@ -71,7 +71,7 @@ namespace IotService.Migrations
 .WithColumn("UseUserId").AsInt64().Indexed("IotDeviceUseUserId").WithColumnDescription("当前使用者")
 .WithColumn("PhotoUrl").AsString(255).WithColumnDescription("图片地址")
 .WithColumn("DeviceNumber").AsString(50).Unique().WithColumnDescription("设备唯一编号")
-.WithColumn("ProductId").AsString(128).Indexed().WithColumnDescription("所属产品Id")
+.WithColumn("ProductId").AsString(128).Indexed().WithColumnDescription("所属协议Id")
 .WithColumn("GroupId").AsString(128).Indexed().WithColumnDescription("分组Id")
 .WithColumn("Online").AsByte().WithColumnDescription("联网状态：0为离线，1为在线，2为未初始化")
 .WithColumn("DState").AsString(50).Indexed().WithDefaultValue("").WithColumnDescription("运行状态")
@@ -84,7 +84,7 @@ namespace IotService.Migrations
 .WithColumn("CreateOn").AsDateTime().WithColumnDescription("创建时间")
 .WithColumn("LastOnline").AsDateTime().Nullable().WithColumnDescription("最后在线时间")
 .WithColumn("FirmwareVer").AsInt32().WithDefaultValue(0).WithColumnDescription("固件版本")
-.WithColumn("ProductVer").AsInt32().WithDefaultValue(0).WithColumnDescription("产品版本")
+.WithColumn("ProductVer").AsInt32().WithDefaultValue(0).WithColumnDescription("协议版本")
                 .WithColumn("Remark").AsString(5000).WithColumnDescription("备注说明")
                 .WithColumn("OwnerOrgPath").AsString(500).WithColumnDescription("设备经过的组织路径")
                 .WithColumn("DeviceUpIdx").AsInt32().Indexed().WithDefaultValue(0).WithColumnDescription("设备所属处理节点索引")
@@ -132,7 +132,7 @@ namespace IotService.Migrations
             }).Row(new
             {
                 menu_id = 4204,
-                menu_name = "开发产品",
+                menu_name = "开发协议",
                 parent_id = 4000,
                 order_num = 1,
                 path = "physicalModel/productList",
@@ -153,7 +153,7 @@ namespace IotService.Migrations
             }).Row(new
             {
                 menu_id = 4205,
-                menu_name = "产品分类",
+                menu_name = "协议分类",
                 parent_id = 4000,
                 order_num = 2,
                 path = "physicalModel/productClass",

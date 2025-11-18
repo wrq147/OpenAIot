@@ -20,7 +20,7 @@ namespace FlowService.Model
         /// </summary>
         public string DeviceNumber { get; set; }
         /// <summary>
-        /// 所属产品Id
+        /// 所属协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>

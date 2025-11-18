@@ -190,7 +190,7 @@ export default {
         {'alabel': "枚举", 'label': "枚举型(Enum)", 'value': "enum"}],//数据类型列表
       onLoading: false, //是否正在加载数据
       devicemap: new Map(), //设备
-      productmap: new Map(), //产品
+      productmap: new Map(),
       isConnent: false,
       // isShowNodeList: false,
       showConsole: false, //是否显示调试框
@@ -201,7 +201,7 @@ export default {
       showConfig: false,
       device: [], //选中的设备
       allDevice: "全部设备", //全部设备
-      product: "", //订阅的设备 产品
+      product: "", 
       productLabel: "product",
       // 是否显示Cron表达式弹出层
       openCron: false,
@@ -568,7 +568,7 @@ export default {
         this.initDeviceMap();
 
         if(this.deviceForm.ProductId&&this.deviceForm.ProductId!='-1'){
-          tmptsl = await this.getProductAttr(this.deviceForm.ProductId); //根据产品进行筛选
+          tmptsl = await this.getProductAttr(this.deviceForm.ProductId);
         }
         
       } else {

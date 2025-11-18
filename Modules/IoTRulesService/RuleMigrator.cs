@@ -31,7 +31,7 @@ namespace IoTRulesService
             Create.Table("mz_rule_trigger").WithDescription("规则模板的触发方式")
     .WithColumn("Id").AsInt64().PrimaryKey().Identity().WithColumnDescription("编号")
     .WithColumn("RuleId").AsInt64().Indexed("TrRuleId").WithColumnDescription("规则模板Id")
-    .WithColumn("TopicDevice").AsString(255).WithColumnDescription("订阅的设备：/Product/为指定产品，/Device/为指定设备")
+    .WithColumn("TopicDevice").AsString(255).WithColumnDescription("订阅的设备：/Product/为指定协议，/Device/为指定设备")
     .WithColumn("TopicMsg").AsString(80).WithColumnDescription("订阅的消息类型：参考JsonMessageConverter里的");
 
             Create.Index("IDXTopicDevice").OnTable("mz_rule_trigger").OnColumn("TopicDevice").Ascending().OnColumn("TopicMsg").Ascending();

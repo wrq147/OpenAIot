@@ -40,9 +40,7 @@
     <el-dialog title="选择脚本模板" :close-on-click-modal="false" :visible.sync="scriptTemVisible" width="1000px"
       append-to-body>
       <el-row :gutter="20">
-        <!--产品数据-->
         <el-col :span="24" :xs="24">
-          <!-- <div class="from_con" id="from_con"> -->
           <el-form class="biaodan" :model="scriptQueryParams" ref="scriptQueryForm" :inline="true"
             style="margin-bottom:0">
             <el-form-item label="搜索关键词" prop="SearchKey">
@@ -59,7 +57,6 @@
               <el-button type="primary" icon="el-icon-search" @click="handleScriptQuery">搜索</el-button>
             </el-form-item>
           </el-form>
-          <!-- </div> -->
           <el-row :gutter="10" justify="start">
             <el-col :span="8" v-for="item in iotScriptDataArr" :key="item.Id" style="margin-bottom: 20px">
               <div class="script_li" @click="choiceOneTemplete(item)">

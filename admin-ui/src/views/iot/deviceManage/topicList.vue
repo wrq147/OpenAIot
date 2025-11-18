@@ -61,7 +61,7 @@
           }],
           msgData:[
             {Type:'ReadPropertyReply',Content:'',Info:'设备属性上报'},
-            {Type:'Bind',Content:'',Info:'产品发布时下发的固件升级消息'},
+            {Type:'Bind',Content:'',Info:'协议发布时下发的固件升级消息'},
             {Type:'BindReply',Content:'',Info:'固件升级消息的回复'},
             {Type:'QueryICCID',Content:'',Info:'请求查询ICCID'},
             {Type:'QueryICCIDReply',Content:'',Info:'查询ICCID的回复消息（平台通过ICCID管理物联卡）'},

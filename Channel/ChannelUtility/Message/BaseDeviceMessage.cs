@@ -8,7 +8,7 @@ namespace ChannelUtility.Message
         /// </summary>
         public string MsgType { get; set; }
         /// <summary>
-        /// 产品Id
+        /// 协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>

@@ -101,12 +101,12 @@ namespace IoTService.Business
             var product = await productDAL.Select(device.ProductId);
             if (string.IsNullOrEmpty(product.StorageConfig))
             {
-                throw new Exception("请配置产品的存储方式");
+                throw new Exception("请配置协议的存储方式");
             }
             var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
             if (string.IsNullOrEmpty(storageConfig.url))
             {
-                throw new Exception("请配置产品的存储方式");
+                throw new Exception("请配置协议的存储方式");
             }
             using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
             var queryApi = client.GetQueryApi();
@@ -258,12 +258,12 @@ namespace IoTService.Business
             var product = await productDAL.Select(device.ProductId);
             if (string.IsNullOrEmpty(product.StorageConfig))
             {
-                return BusResponse<string>.Error(102, "请配置产品的存储方式");
+                return BusResponse<string>.Error(102, "请配置协议的存储方式");
             }
             var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
             if (string.IsNullOrEmpty(storageConfig.url))
             {
-                return BusResponse<string>.Error(103, "请配置产品的存储方式");
+                return BusResponse<string>.Error(103, "请配置协议的存储方式");
             }
             string pred = "_measurement=\"device\" AND DxId=\"" + device.Id + "\"";
             using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
@@ -310,11 +310,11 @@ namespace IoTService.Business
                 var products = await productDAL.SelectList(x => pids.Contains(x.Id));
                 if (products.Count > 1)
                 {
-                    return BusResponse<List<Out_MergeItem>>.Error(112, "无法操作多个产品");
+                    return BusResponse<List<Out_MergeItem>>.Error(112, "无法操作多个协议");
                 }
                 if (products.Count == 0)
                 {
-                    return BusResponse<List<Out_MergeItem>>.Error(101, "产品不存在");
+                    return BusResponse<List<Out_MergeItem>>.Error(101, "协议不存在");
                 }
                 prod = products[0];
             }
@@ -655,13 +655,13 @@ namespace IoTService.Business
 
             if (string.IsNullOrEmpty(product.StorageConfig))
             {
-                throw new Exception("请配置产品的存储方式");
+                throw new Exception("请配置协议的存储方式");
             }
 
             var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
             if (string.IsNullOrEmpty(storageConfig.url))
             {
-                throw new Exception("请配置产品的存储方式");
+                throw new Exception("请配置协议的存储方式");
             }
             using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
             var queryApi = client.GetQueryApi();

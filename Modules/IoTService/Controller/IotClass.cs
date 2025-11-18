@@ -63,7 +63,7 @@ namespace IoTService.Controller
         /// <returns></returns>
         [HttpPost]
         [About("/IoTService/IotClass/ListTree")]
-        [Des("添加一条产品分类记录")]
+        [Des("添加一条协议分类记录")]
         public async Task<AjaxResult> Add(MZ_IotClass data)
         {
             return (await _classBLL.Insert(data)).ToAjaxResult();
@@ -86,7 +86,7 @@ namespace IoTService.Controller
         /// <returns></returns>
         [HttpGet]
         [About("/IoTService/IotClass/ListTree")]
-        [Des("删除一条产品分类记录")]
+        [Des("删除一条协议分类记录")]
         public async Task<AjaxResult> Remove(string id)
         {
             return (await _classBLL.Remove(id)).ToAjaxResult();

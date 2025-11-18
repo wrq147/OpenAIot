@@ -257,9 +257,9 @@ namespace IoTService.Controller
             return this.Success(await _deviceBLL.SelectTagsByDevice(device));
         }
         /// <summary>
-        /// 查询产品的标签默认值列表
+        /// 查询协议的标签默认值列表
         /// </summary>
-        /// <param name="id">产品id</param>
+        /// <param name="id">协议id</param>
         /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<List<Out_DeviceTagItem>>> TagListByProduct(string id)
@@ -390,7 +390,7 @@ namespace IoTService.Controller
             FiedNames.Add("图片地址", new ParamImportToList("PhotoUrl"));
             FiedNames.Add("设备名称", new ParamImportToList("Name"));
             FiedNames.Add("设备的DtuId", new ParamImportToList("DeviceId"));
-            FiedNames.Add("产品Id", new ParamImportToList("ProductId"));
+            FiedNames.Add("协议Id", new ParamImportToList("ProductId"));
             FiedNames.Add("分组Id", new ParamImportToList("GroupId"));
             FiedNames.Add("原价", new ParamImportToList("Price", val => Convert.ToDecimal(val)));
             FiedNames.Add("备注", new ParamImportToList("Remark"));
@@ -413,7 +413,7 @@ namespace IoTService.Controller
                 FiedNames.Add("PhotoUrl", new ParamRenderToExcel<MZ_IotDevice>("图片地址"));
                 FiedNames.Add("Name", new ParamRenderToExcel<MZ_IotDevice>("设备名称"));
                 FiedNames.Add("DeviceId", new ParamRenderToExcel<MZ_IotDevice>("设备的DtuId"));
-                FiedNames.Add("ProductId", new ParamRenderToExcel<MZ_IotDevice>("产品Id"));
+                FiedNames.Add("ProductId", new ParamRenderToExcel<MZ_IotDevice>("协议Id"));
                 FiedNames.Add("GroupId", new ParamRenderToExcel<MZ_IotDevice>("分组Id"));
                 FiedNames.Add("Price", new ParamRenderToExcel<MZ_IotDevice>("原价"));
                 FiedNames.Add("Remark", new ParamRenderToExcel<MZ_IotDevice>("备注"));

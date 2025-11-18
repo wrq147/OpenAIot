@@ -199,7 +199,7 @@ namespace IoTService.Business
                 var devIds = devpage.List.Select(x => x.Id).ToList();
                 if (productIds.Count > 0 && devIds.Count > 0)
                 {
-                    //获取物联产品
+                    //获取物联协议
                     var productList = await this._provider.GetService<IotProductDAL>().SelectList(x => productIds.Contains(x.Id));
                     //获取设备标签值
                     var tagvalues = await this._provider.GetService<IotDeviceTagDAL>().SelectList(x => devIds.Contains(x.Id));
@@ -637,7 +637,7 @@ namespace IoTService.Business
             }
             if (string.IsNullOrEmpty(device.ProductId))
             {
-                return BusResponse<IDictionary<string, object>>.Error(113, "设备未绑定产品");
+                return BusResponse<IDictionary<string, object>>.Error(113, "设备未绑定协议");
             }
 
             var model = await TslCache.GetTslModel(device.ProductId, _provider);
@@ -1099,7 +1099,7 @@ namespace IoTService.Business
                                     nt.OrgId = device.OrgId.Value;
                                     nt.TargetType = "DeviceUpdate";
                                     nt.TargetUrl = "/iot/deviceManage/updateList";
-                                    nt.Content = $"设备{device.Name}[{device.DeviceNumber}]下发产品更新失败，请尽快处理";
+                                    nt.Content = $"设备{device.Name}[{device.DeviceNumber}]下发协议更新失败，请尽快处理";
                                     nt.Label = "物联设备消息";
                                     await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
                                     continue;
@@ -1310,7 +1310,7 @@ namespace IoTService.Business
 
             if (string.IsNullOrEmpty(data.ProductId))
             {
-                return BusResponse<string>.Error(116, "产品Id不能为空");
+                return BusResponse<string>.Error(116, "协议Id不能为空");
             }
 
             if (string.IsNullOrEmpty(data.DeviceNumber))
@@ -1343,7 +1343,7 @@ namespace IoTService.Business
             MZ_IotProduct product = await _provider.GetService<IotProductDAL>().SelectProductView(data.ProductId);
             if (product == null)
             {
-                return BusResponse<string>.Error(118, "产品Id不存在");
+                return BusResponse<string>.Error(118, "协议Id不存在");
             }
 
             data.Id = _snowflake.NextId().ToString();

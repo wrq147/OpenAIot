@@ -2,7 +2,6 @@
   <div :style="{padding:(!isComponent?'20px 20px 0 20px':'0')}" id="big_con">
     <div>
       <el-row :gutter="20">
-        <!--产品数据-->
         <el-col :span="24" :xs="24">
           <div class="from_con" id="from_con" v-show="showSearch" style="margin-bottom: 0px;">
             <el-form
@@ -11,15 +10,6 @@
               ref="queryForm"
               :inline="true"
             >
-              <!-- <el-form-item label="搜索关键词" prop="Name">
-                <el-input
-                  class="set_radius"
-                  v-model="queryParams.Name"
-                  placeholder="请输入产品名称"
-                  clearable
-                  @keyup.enter.native="handleQuery"
-                />
-              </el-form-item>-->
               <el-form-item label="过滤名称" prop="ProductId">
                 <el-input
                   class="set_radius"

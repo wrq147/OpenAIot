@@ -66,7 +66,7 @@ namespace HttpChannel.Services
                     }
                 }
 
-                #region 获取产品信息
+                #region 获取协议信息
                 string productStr = Aep_product_management.QueryProduct(httpOption.Value.appKey, httpOption.Value.appSecrete, aepInput.ProductId);
                 var productResult = JsonConvert.DeserializeObject<ProductResult>(productStr);
 

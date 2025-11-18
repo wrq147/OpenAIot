@@ -35,7 +35,7 @@ namespace IoTService.Business
             var channels = await redis.HashGetAllAsync<string>("IotChannels");
             List<Out_ChannelInfo> outlist = new List<Out_ChannelInfo>();
             string defaultImgUrl = _provider.GetService<IOptions<GeneralOption>>().Value.default_imgurl;
-            outlist.Add(new Out_ChannelInfo("无", string.Empty, defaultImgUrl, "非物联产品选择这个"));
+            outlist.Add(new Out_ChannelInfo("无", string.Empty, defaultImgUrl, "非物联协议选择这个"));
             foreach (var kvp in channels)
             {
                 var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ChannelConfig>(kvp.Value);
@@ -131,7 +131,7 @@ namespace IoTService.Business
             var old = await _productDAL.Select(data.Id);
             if (old == null)
             {
-                return BusResponse<int>.Error(114, "产品不存在");
+                return BusResponse<int>.Error(114, "协议不存在");
             }
 
             if (data.ModelTSL != null)
@@ -211,7 +211,7 @@ namespace IoTService.Business
             }
             int rs = await _productDAL.Update(data);
 
-            //更新产品物模型缓存
+            //更新协议物模型缓存
             var product = new MZ_IotProduct();
             product.Version = data.Version != null ? data.Version : old.Version;
             product.ModelTSL = data.ModelTSL != null ? data.ModelTSL : old.ModelTSL;
@@ -260,7 +260,7 @@ namespace IoTService.Business
             var user = Data_ServerTokenInfo.From(context);
             if (user.OrgId <= 0)
             {
-                return BusResponse<string>.Error(111, "非企业用户无法添加产品");
+                return BusResponse<string>.Error(111, "非企业用户无法添加协议");
             }
             if (string.IsNullOrEmpty(data.ModelTSL))
             {
@@ -308,7 +308,7 @@ namespace IoTService.Business
             }
             await _productDAL.Insert(data);
 
-            //更新产品物模型缓存
+            //更新协议物模型缓存
             await _provider.GetService<ServerBusProxy>().DownUpdateProductSys(data);
 
             return BusResponse<string>.Success(data.Id);
@@ -319,11 +319,11 @@ namespace IoTService.Business
             var old = await _productDAL.Select(id);
             if (old == null)
             {
-                return BusResponse<int>.Error(114, "产品不存在");
+                return BusResponse<int>.Error(114, "协议不存在");
             }
             if (await _deviceDAL.Some(x => x.ProductId == id))
             {
-                return BusResponse<int>.Error(115, "无法删除存在设备的产品");
+                return BusResponse<int>.Error(115, "无法删除存在设备的协议");
             }
             IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
             int rs = await _productDAL.Delete(id);
@@ -337,7 +337,7 @@ namespace IoTService.Business
             var old = await _productDAL.Select(id);
             if (old == null)
             {
-                return BusResponse<string>.Error(114, "产品不存在");
+                return BusResponse<string>.Error(114, "协议不存在");
             }
             var newProduct = old.Copy();
             if (newProduct == null)
@@ -353,7 +353,7 @@ namespace IoTService.Business
             newProduct.Version = 0;
             newProduct.PublicTime = null;
             await _productDAL.Insert(newProduct);
-            //更新产品物模型缓存
+            //更新协议物模型缓存
             await _provider.GetService<ServerBusProxy>().DownUpdateProductSys(newProduct);
 
             //拷贝属性规则

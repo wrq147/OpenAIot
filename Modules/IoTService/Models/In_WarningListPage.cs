@@ -18,11 +18,11 @@ namespace IoTService.Models
         /// </summary>
         public string DeviceNumber { get; set; }
         /// <summary>
-        /// 过滤产品Id
+        /// 过滤协议Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
-        /// 过滤报警名称、设备名称、产品名称
+        /// 过滤报警名称、设备名称、协议名称
         /// </summary>
         public string Name { get; set; }
         /// <summary>

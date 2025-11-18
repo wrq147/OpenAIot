@@ -80,7 +80,7 @@
             <div class="form_list" v-if="setup.TriggerWay == 0">
               <el-form-item label="触发设备" prop="selectDevic" style="width: 100%" v-if="isEdit">
                 <div class="select_devic_list" v-if="setup.TriggerList.length > 0">
-                  <span>{{ productmap.get(product) ? productmap.get(product).Name : "该产品不存在" }}</span>
+                  <span>{{ productmap.get(product) ? productmap.get(product).Name : "该协议不存在" }}</span>
                   <span class="devic_lis">
                     <span v-for="its in device" :key="its">{{ its == "-1" ? "全部设备" : (devicemap.get(its) ? (devicemap.get(its).Name ? devicemap.get(its).Name + "、" : "该设备不存在") : "该设备不存在") }}</span>
                   </span>
@@ -141,8 +141,8 @@
               </el-form-item>
             </div>
             <div class="form_list" v-if="setup.TriggerWay == 2">
-              <el-form-item style="width: 100%" label="定时产品" :class="{ 'is-not-require': true }">
-                <el-select v-model="selProduct" filterable remote reserve-keyword placeholder="请选择定时产品"
+              <el-form-item style="width: 100%" label="定时协议" :class="{ 'is-not-require': true }">
+                <el-select v-model="selProduct" filterable remote reserve-keyword placeholder="请选择定时协议"
                   :remote-method="remoteMethod" :loading="prodloading" :disabled="isEdit">
                   <el-option v-for="item in productLists" :key="item.Id" :label="item.Name" :value="item.Id">
                   </el-option>
@@ -223,7 +223,7 @@ export default {
                 Sort: 0,
                 TriggerWay: 0, //触发方式
                 device: [], //选中的设备
-                product: "", //订阅的设备 产品
+                product: "", 
                 TopicMsg: "", //订阅的消息类型
                 HttpParams: [],
                 GroupId:null,
@@ -254,7 +254,7 @@ export default {
     device:{
         type:[Array,Object]
     },
-    product:{//订阅的设备 产品
+    product:{
         type:String
     },
   },
@@ -266,7 +266,7 @@ export default {
       evtCode:'',
       proEvt: [],//事件属性列表
       selDevList:[],
-      selProList: [], //选中的产品
+      selProList: [], //选中的协议
       selTopMsg: {}, //选中的触发类型
       //http触发相关参数
       typeListMap: new Map(),
@@ -282,7 +282,7 @@ export default {
         Name: [{ required: true, trigger: "blur", message: "请输入名称" }],
         sort: [{ required: true, trigger: "blur", message: "请输入优先级" }],
         Sort: [{ required: true, trigger: "blur", message: "请输入优先级" }],
-        product: [{ required: true, trigger: "change", message: "请选择产品" }],
+        product: [{ required: true, trigger: "change", message: "请选择协议" }],
         device: [{ required: true, trigger: "change", message: "请选择设备" }],
         topicMsg: [
           {
@@ -336,7 +336,7 @@ export default {
       if (response.code == 0) {
         if (response.data && response.data.List) {
           this.productLists = response.data.List;
-          this.productLists.push({Id:null,Name:'【取消产品选择】'})
+          this.productLists.push({Id:null,Name:'【取消协议选择】'})
           this.$forceUpdate()
         }
       }
@@ -406,7 +406,8 @@ export default {
         }
       });
     },
-    async initProEvts() {//过滤设备产品事件列表
+    async initProEvts() {
+      //过滤设备协议事件列表
       if (this.selProList == null || this.selProList.length == 0) {
         this.proEvt = [];
         return;
@@ -414,7 +415,6 @@ export default {
       let pinfo = (await productInfo({ id: this.selProList[0].Id })).data;
       let tsl = JSON.parse(pinfo.ModelTSL);
       this.proEvt = tsl.events;
-      // console.log(this.selProList,this.selDevList,this.selTopMsg,'this.selProList');
       this.$forceUpdate()
     },
     finishTimeChoice(val){

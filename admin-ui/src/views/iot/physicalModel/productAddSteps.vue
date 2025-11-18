@@ -77,16 +77,16 @@
                 </div>
               </el-step>
 
-              <el-step title="完善产品信息">
+              <el-step title="完善协议信息">
                 <div slot="title">
-                  <span>完善产品信息</span>
+                  <span>完善协议信息</span>
                 </div>
                 <div slot="description" style="padding: 20px 10px 32px" v-if="addActive == 2">
                   <el-card style="width: 100%; margin-bottom: -15px">
                     <el-row>
                       <el-col :span="24">
-                        <el-form-item label="产品名称" prop="name">
-                          <el-input v-model="addData.name" @input.native="inputName" placeholder="请输入产品名称"
+                        <el-form-item label="协议名称" prop="name">
+                          <el-input v-model="addData.name" @input.native="inputName" placeholder="请输入协议名称"
                             maxlength="20" />
                         </el-form-item>
                       </el-col>
@@ -115,7 +115,7 @@
                     </el-row>
                     <el-row>
                       <el-col :span="24">
-                        <el-form-item label="产品图片" prop="productImageUrl" class="is-required">
+                        <el-form-item label="协议图片" prop="productImageUrl" class="is-required">
                           <image-upload v-model="addData.productImageUrl" :limit="1"></image-upload>
                         </el-form-item>
                       </el-col>
@@ -136,7 +136,7 @@
       </div>
     </div>
     <div class="save_con">
-      <el-button type="primary" @click="saveAddProduct" :disabled="addActive != 2">创建产品</el-button>
+      <el-button type="primary" @click="saveAddProduct" :disabled="addActive != 2">创建协议</el-button>
     </div>
   </div>
 </template>
@@ -168,7 +168,7 @@ export default {
         interScripts: "",
       },
       addRules: {
-        name: [{ required: true, trigger: "blur", message: "请输入产品名称" }],
+        name: [{ required: true, trigger: "blur", message: "请输入协议名称" }],
         productImageUrl: [{ validator: fileMustUpload, trigger: "change" }],
       },
       isStorageConfig: false,
@@ -194,7 +194,7 @@ export default {
       networkWay: null, //设备接入方式
       workWayList: [], //设备接入方式列表
 
-      productImageUrl: null, //产品照片
+      productImageUrl: null, //协议照片
       cardLoading: true, //判断卡片展示的分类列表内容是否在加载中
       parClassId: 0, //当前展示的分类父级id
       activeClassList: [], //展示的分类列表
@@ -326,7 +326,6 @@ export default {
       });
     },
     inputName() {
-      //输入产品名称
       if (this.addData.name) {
         this.canAddDone = false;
       } else {
@@ -381,9 +380,8 @@ export default {
 
       addProduct(addData)
         .then((response) => {
-          // console.log("创建产品成功", response);
           if (response.code == 0) {
-            this.$message.success("创建产品成功");
+            this.$message.success("创建协议成功");
             this.$store.dispatch("tagsView/delView", this.$route);
             this.$router.push({
               path: "/iot/physicalModel/productAdd/" + response.data,
@@ -399,7 +397,7 @@ export default {
         });
     },
     saveAddProduct() {
-      //创建产品
+      //创建协议
       if (this.$refs["addParams"]) {
         this.$refs["addParams"].validate((val) => {
           if (this.networkWay.Code != "" && this.$refs["StorageConfig"]) {
