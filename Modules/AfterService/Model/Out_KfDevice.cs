@@ -1,18 +1,17 @@
 ﻿using Common.Attr;
+using IoTService.Models;
 using MyAccess.DB.Attr;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace IoTService.Models
+namespace AfterService.Model
 {
-    [TableName("mz_iot_device")]
-    public class MZ_IotDevice
+    public class Out_KfDevice
     {
-        /// <summary>
-        /// 编码Id
-        /// </summary>
-        [ID(false)]
         public string Id { get; set; }
         /// <summary>
         /// 来源组织ID
@@ -40,13 +39,12 @@ namespace IoTService.Models
         /// </summary>
         public string DeviceNumber { get; set; }
         /// <summary>
-        /// 所属协议Id
+        /// 产品Id
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
-        /// 协议名称
+        /// 产品名称
         /// </summary>
-        [DataIgnore]
         public string ProductName { get; set; }
         /// <summary>
         /// 0为离线，1为在线，2为未初始化

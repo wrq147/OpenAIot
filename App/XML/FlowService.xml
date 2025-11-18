@@ -967,7 +967,7 @@
         </member>
         <member name="P:FlowService.FlowNode.FormFields.DeviceProps.limit_product">
             <summary>
-            限制的产品
+            限制的协议
             </summary>
         </member>
         <member name="P:FlowService.FlowNode.FormFields.DeviceProps.synclist">
@@ -977,7 +977,7 @@
         </member>
         <member name="P:FlowService.FlowNode.FormFields.SelectSyncItem.code">
             <summary>
-            产品物模型的属性标识
+            物模型的属性标识
             </summary>
         </member>
         <member name="P:FlowService.FlowNode.FormFields.SelectSyncItem.field_id">
@@ -1133,12 +1133,12 @@
         </member>
         <member name="P:FlowService.FlowNode.FuncExeItem.ProductId">
             <summary>
-            匹配的产品Id
+            匹配的协议Id
             </summary>
         </member>
         <member name="P:FlowService.FlowNode.FuncExeItem.ProductName">
             <summary>
-            匹配的产品名称
+            匹配的协议名称
             </summary>
         </member>
         <member name="P:FlowService.FlowNode.FuncExeItem.FunctionId">
@@ -2332,7 +2332,7 @@
         </member>
         <member name="P:FlowService.Model.Out_FlowDevice.ProductId">
             <summary>
-            所属产品Id
+            所属协议Id
             </summary>
         </member>
         <member name="P:FlowService.Model.Out_FlowDevice.Name">

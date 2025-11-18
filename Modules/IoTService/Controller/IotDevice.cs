@@ -391,7 +391,6 @@ namespace IoTService.Controller
             FiedNames.Add("设备名称", new ParamImportToList("Name"));
             FiedNames.Add("设备的DtuId", new ParamImportToList("DeviceId"));
             FiedNames.Add("协议Id", new ParamImportToList("ProductId"));
-            FiedNames.Add("分组Id", new ParamImportToList("GroupId"));
             FiedNames.Add("原价", new ParamImportToList("Price", val => Convert.ToDecimal(val)));
             FiedNames.Add("备注", new ParamImportToList("Remark"));
             List<MZ_IotDevice> list = Context.Application.ServiceProvider.GetService<ExcelHelper>().ExcelToList<MZ_IotDevice>(st, FiedNames);
@@ -414,7 +413,6 @@ namespace IoTService.Controller
                 FiedNames.Add("Name", new ParamRenderToExcel<MZ_IotDevice>("设备名称"));
                 FiedNames.Add("DeviceId", new ParamRenderToExcel<MZ_IotDevice>("设备的DtuId"));
                 FiedNames.Add("ProductId", new ParamRenderToExcel<MZ_IotDevice>("协议Id"));
-                FiedNames.Add("GroupId", new ParamRenderToExcel<MZ_IotDevice>("分组Id"));
                 FiedNames.Add("Price", new ParamRenderToExcel<MZ_IotDevice>("原价"));
                 FiedNames.Add("Remark", new ParamRenderToExcel<MZ_IotDevice>("备注"));
                 byte[] data = Context.Application.ServiceProvider.GetService<ExcelHelper>().ExportToBuffer<MZ_IotDevice>("设备表", new List<MZ_IotDevice>(), FiedNames);

@@ -103,7 +103,7 @@
 
 <script>
 import { getItems } from "../../utlity"
-import { myProductList } from "@/api/after/dev";
+import { myProtocalList } from "@/api/after/dev";
 import { productInfo } from "@/api/rules/productModel";
 import paramItem from "../../paramItem.vue";
 export default {
@@ -279,7 +279,7 @@ export default {
       this.prodloading = true;
       this.queryform.Name = query;
       try {
-        let rsp = await myProductList(this.queryform);
+        let rsp = await myProtocalList(this.queryform);
         if (rsp.code == 0) {
           this.productLists = rsp.data.List;
         }

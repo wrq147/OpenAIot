@@ -9,6 +9,14 @@ export function myDeviceList(params) {
     })
 }
 //协议列表
+export function myProtocalList(params) {
+    return request({
+        url: '/AfterService/Dev/ProtocalList',
+        method: 'get',
+        params: params
+    })
+}
+//产品列表
 export function myProductList(params) {
     return request({
         url: '/AfterService/Dev/ProductList',

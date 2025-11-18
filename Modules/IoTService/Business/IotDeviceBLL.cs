@@ -172,16 +172,7 @@ namespace IoTService.Business
         }
         public virtual async Task<PageObject<MZ_IotDevice>> ListPage(In_DeviceListPage query, IUserInfo user)
         {
-            string groupPath = null;
             string classPath = null;
-            if (query.GroupId != null)
-            {
-                MZ_IotGroup groupItem = await this._provider.GetService<IotGroupDAL>().Select(query.GroupId);
-                if (groupItem != null)
-                {
-                    groupPath = groupItem.Path;
-                }
-            }
             if (query.ClassId != null)
             {
                 MZ_IotClass classItem = await this._provider.GetService<IotClassDAL>().Select(query.ClassId);
@@ -191,7 +182,7 @@ namespace IoTService.Business
                 }
             }
 
-            var devpage = await _deviceDAL.SelectWithGroupPage(query, groupPath, classPath, user);
+            var devpage = await _deviceDAL.SelectWithGroupPage(query, classPath, user);
             if (query.ShowTags == true)
             {
                 var tagBLL = this._provider.GetService<IotTagBLL>();
@@ -246,11 +237,6 @@ namespace IoTService.Business
         }
         private async Task<MZ_IotDevice> _InitDevice(MZ_IotDevice device)
         {
-            var group = await this._provider.GetService<IotGroupDAL>().Select(device.GroupId);
-            if (group != null)
-            {
-                device.GroupName = group.GroupName;
-            }
             var product = await _provider.GetService<IotProductDAL>().Select(device.ProductId);
             if (product != null)
             {
@@ -1306,7 +1292,6 @@ namespace IoTService.Business
             {
                 return BusResponse<string>.Error(111, "非企业用户无法添加设备");
             }
-            var context = _provider.GetService<ITAContext>();
 
             if (string.IsNullOrEmpty(data.ProductId))
             {
@@ -1335,11 +1320,6 @@ namespace IoTService.Business
 
             var serverBus = _provider.GetService<ServerBusProxy>();
             data.DeviceUpIdx = serverBus.GetUpIdx(data.DeviceId);
-
-            if (data.GroupId == null)
-            {
-                data.GroupId = string.Empty;
-            }
             MZ_IotProduct product = await _provider.GetService<IotProductDAL>().SelectProductView(data.ProductId);
             if (product == null)
             {

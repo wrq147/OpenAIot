@@ -12,9 +12,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="设备分组" prop="groupId">
-                  <treeselect v-model="deviceAddFrom.groupId" :options="groupTreeList" :show-count="true"
-                    :normalizer="normalizer" placeholder="请选择设备分组" />
+                <el-form-item label="通讯编码" prop="deviceId">
+                  <el-input type="text" v-model="deviceAddFrom.deviceId" placeholder="请输入通讯编码"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -36,13 +35,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="10">
-              <el-col :span="12">
-                <el-form-item label="通讯编码" prop="deviceId">
-                  <el-input type="text" v-model="deviceAddFrom.deviceId" placeholder="请输入通讯编码"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
+
             <el-row :gutter="10"
               v-if="deviceAddFrom.productId && stateoptions && stateoptions.length > 0 || deviceAddFrom.productId && isOpendevPosition">
               <el-col :span="12">
@@ -96,20 +89,12 @@ import {
 import {
   productInfo
 } from "@/api/rules/productModel";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import mapSelectCompt from "@/views/iot/deviceManage/mapSelectCompt";
 import { productList } from "@/api/rules/productModel";
 export default {
   name: 'AdminUiDeviceAddDialog',
-  components: { Treeselect, mapSelectCompt },
+  components: { mapSelectCompt },
   props: {
-    groupTreeList: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
     isProductDev: {
       type: Boolean,
       default: false
@@ -124,7 +109,6 @@ export default {
         productId: null,
         productName: "",
         dState: '',
-        groupId: null,
         name: "",
         deviceId: "",
         PhotoUrl: '',
@@ -229,7 +213,6 @@ export default {
         productName: "",
         dState: '',
         DeviceNumber: rsp.data,
-        groupId: null,
         name: "",
         deviceId: "",
         PhotoUrl: '',
@@ -259,7 +242,6 @@ export default {
         productId: row.ProductId,
         productName: row.ProductName,
         dState: row.DState,
-        groupId: row.GroupId,
         name: row.Name,
         deviceId: row.DeviceId,
         PhotoUrl: row.PhotoUrl,
@@ -285,11 +267,6 @@ export default {
           let submitForm = JSON.parse(JSON.stringify(this.deviceAddFrom))
           delete submitForm.addressName
           delete submitForm.productName
-          if (this.deviceAddFrom.groupId) {
-            submitForm.groupId = this.deviceAddFrom.groupId
-          } else {
-            submitForm.groupId = ''
-          }
           this.saveDeviceLoading = true;
           if (this.deviceAddFrom.id) {
             editDevice(submitForm).then(response => {

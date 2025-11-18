@@ -48,7 +48,7 @@ export function delRusel(id) {
         params: { id }
     })
 }
-// 获取设备分组树
+// 获取规则分组树
 export function groupTree() {
     return request({
         url: '/IoTRulesService/RuleGroup/ListTree',

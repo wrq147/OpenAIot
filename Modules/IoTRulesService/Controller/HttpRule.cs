@@ -151,54 +151,7 @@ namespace IoTRulesService.Controller
             return (await deviceBLL.Live(_develper.ToUserInfo(), id, needTag, sendWay, waitProps)).ToAjaxResult();
         }
 
-        /// <summary>
-        /// 按分组查询实时数据（离线返回null）
-        /// </summary>
-        /// <param name="groupId">分组Id</param>
-        /// <param name="needTag">是否需要显示同步到标签的属性</param>
-        /// <param name="needSend">是否同时发送读取属性消息</param>
-        /// <param name="needWait">是否同时等待数据</param>
-        /// <returns></returns>
-        [HttpGet]
-        [ShareCheck]
-        public async Task<DefaultAjaxResult<List<Out_GroupLive>>> GroupLive(string groupId, bool needTag = false, bool needSend = false, bool needWait = true)
-        {
-            List<Out_GroupLive> glives = new List<Out_GroupLive>();
-            var deviceBLL = this.ServiceProvider.GetService<IotDeviceBLL>();
-            In_DeviceListPage query = new In_DeviceListPage();
-            query.showAll = true;
-            query.GroupId = groupId;
-            var deveuser = _develper.ToUserInfo();
-            var tlist = await deviceBLL.ListPage(query, deveuser);
-            foreach (var dev in tlist.List)
-            {
-                Out_GroupLive tlive = new Out_GroupLive();
-                tlive.Id = dev.Id;
-                tlive.DeviceName = dev.Name;
-                tlive.DeviceNumber = dev.DeviceNumber;
-                tlive.DeviceId = dev.DeviceId;
-                int sendWay = 0;
-                if (needSend)
-                {
-                    if (needWait)
-                    {
-                        sendWay = 2;
-                    }
-                    else
-                    {
-                        sendWay = 1;
-                    }
-                }
-                var tproplist = await deviceBLL.Live(deveuser, dev.DeviceId, needTag, sendWay);
-                if (!tproplist.IsSuccess())
-                {
-                    continue;
-                }
-                tlive.PropertyList = tproplist.Data;
-                glives.Add(tlive);
-            }
-            return this.Success(glives);
-        }
+    
         /// <summary>
         /// 批量获取设备的实时数据
         /// </summary>
@@ -239,18 +192,6 @@ namespace IoTRulesService.Controller
                 }
             }
             return this.Success(glives);
-        }
-        /// <summary>
-        /// 查询开发者的所有设备分组
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [ShareCheck]
-        public async Task<DefaultAjaxResult<List<MZ_IotGroup>>> SelectGroups()
-        {
-            var groupBLL = ServiceProvider.GetService<IotGroupBLL>();
-            var allcls = await groupBLL.SelectAllOfOrg(_develper.ToUserInfo());
-            return this.Success(MZ_IotGroup.BuildTree(allcls));
         }
         /// <summary>
         /// 统计设备数据，并返回

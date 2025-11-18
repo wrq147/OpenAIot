@@ -19,14 +19,21 @@ namespace AfterService.Business
     {
         private ITAServiceProvider _provider;
         private KFDeviceDAL _deviceDAL;
-        private IotGroupDAL _groupDAL;
-        public KFDeviceBLL(KFDeviceDAL deviceDAL, IotGroupDAL groupDAL, ITAServiceProvider serviceProvider)
+        public KFDeviceBLL(KFDeviceDAL deviceDAL, ITAServiceProvider serviceProvider)
         {
             _deviceDAL = deviceDAL;
-            _groupDAL = groupDAL;
             _provider = serviceProvider;
         }
-        public virtual async Task<PageObject<Out_KFProductName>> SelectKFProductList(OutKFProductPage query)
+        public virtual async Task<PageObject<Out_KFProtocalName>> SelectKFProtocalList(In_KFProtocalPage query)
+        {
+            var user = _provider.GetUser();
+            if (user.OrgId <= 0)
+            {
+                return new PageObject<Out_KFProtocalName>();
+            }
+            return await _deviceDAL.SelectKFProtocalList(user.OrgId, query);
+        }
+        public virtual async Task<PageObject<Out_KFProductName>> SelectKFProductList(In_KFProductPage query)
         {
             var user = _provider.GetUser();
             if (user.OrgId <= 0)
@@ -143,23 +150,13 @@ namespace AfterService.Business
             }
             return tareaList;
         }
-        public virtual async Task<List<MZ_IotDevice>> SelectKFDeviceListByRange(In_DevRangeList query, IUserInfo user, DataScope scope)
+        public virtual async Task<List<Out_KfDevice>> SelectKFDeviceListByRange(In_DevRangeList query, IUserInfo user, DataScope scope)
         {
             return await _deviceDAL.SelectKFDeviceListByRange(query, user, scope);
         }
-        public virtual async Task<PageObject<MZ_IotDevice>> ListPage(In_KFDevListPage query, IUserInfo user, DataScope scope)
+        public virtual async Task<PageObject<Out_KfDevice>> ListPage(In_KFDevListPage query, IUserInfo user, DataScope scope)
         {
-            string classPath = null;
-            if (query.ClassId != null)
-            {
-                MZ_IotClass cls = await this._provider.GetService<IotClassDAL>().Select(query.ClassId);
-                if (cls != null)
-                {
-                    classPath = cls.Path;
-                }
-            }
-
-            var tpageList = await _deviceDAL.SelectWithGroupPage(query, classPath, user, scope);
+            var tpageList = await _deviceDAL.SelectWithGroupPage(query, user, scope);
             var ids = tpageList.List.Select(x => x.Id).ToList();
             if (ids.Count > 0)
             {

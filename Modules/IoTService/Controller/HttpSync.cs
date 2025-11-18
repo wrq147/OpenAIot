@@ -235,7 +235,7 @@ namespace IoTService.Controller
         /// <returns></returns>
         [HttpGet]
         [ShareCheck]
-        public async Task<DefaultAjaxResult<PageObject<Out_ProductName>>> ProductNames(In_ProductNamePage query)
+        public async Task<DefaultAjaxResult<PageObject<Out_ProductName>>> ProtocalNames(In_ProductNamePage query)
         {
             var user = _develper.ToUserInfo();
             IotProductBLL productBLL = this.ServiceProvider.GetService<IotProductBLL>();
@@ -249,7 +249,7 @@ namespace IoTService.Controller
         /// <returns></returns>
         [HttpGet]
         [ShareCheck]
-        public async Task<DefaultAjaxResult<MZ_IotProduct>> ProductInfo(string id)
+        public async Task<DefaultAjaxResult<MZ_IotProduct>> ProtocalInfo(string id)
         {
             var user = _develper.ToUserInfo();
             IotProductBLL productBLL = this.ServiceProvider.GetService<IotProductBLL>();

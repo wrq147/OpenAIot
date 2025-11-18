@@ -61,10 +61,9 @@ namespace IoTService.DAL
             return await new SqlBuilder(help).Query<Out_DevStatus>().Append("select sum(A) as TotalCount,sum(B) as OnlineCount,sum(C) as OfflineCount,sum(D) as UnknowCount from (select 1 as A,case when d.Online=1 then 1 else 0 end as B,case when d.Online=0 then 1 else 0 end as C,case when d.Online=2 then 1 else 0 end as D from mz_iot_device d left join mz_room_device_v rd on d.Id=rd.TargetId where (d.UseUserId=" + user.UserId + " or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", tmpsss).Append(" or d.UseOrgId=" + user.OrgId + ") and (")
                 .FullSearch("d.OwnerOrgPath", keys).Append(" or rd.TargetOrgId='" + orgId + "')" + scopestr + ") as ss").ToFirstAsync();
         }
-        public virtual async Task<PageObject<MZ_IotDevice>> SelectWithGroupPage(In_DeviceListPage query, string groupPath, string classPath, IUserInfo user)
+        public virtual async Task<PageObject<MZ_IotDevice>> SelectWithGroupPage(In_DeviceListPage query, string classPath, IUserInfo user)
         {
-            return await new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,g.GroupName,p.Name as ProductName from mz_iot_device d left join mz_iot_group g on d.GroupId = g.Id left join mz_iot_product_v p on d.ProductId=p.Id where d.OrgId=").AppendParam(user.OrgId)
-            .Then(!string.IsNullOrEmpty(groupPath), sq => sq.Append(" and g.Path like ").AppendParam(groupPath + "%"))
+            return await new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,p.Name as ProductName from mz_iot_device d left join mz_iot_product_v p on d.ProductId=p.Id where d.OrgId=").AppendParam(user.OrgId)
             .Then(!string.IsNullOrEmpty(classPath), sq => sq.Append(" and p.Path like ").AppendParam(classPath + "%"))
             .Then(query.Online != null, sq => sq.Append(" and d.Online=").AppendParam(query.Online))
             .Then(!string.IsNullOrEmpty(query.DState), sq => sq.Append(" and d.DState=").AppendParam(query.DState))
@@ -281,17 +280,6 @@ namespace IoTService.DAL
         public virtual async Task<List<string>> SelectDtuIdListByOnline(string productId)
         {
             return (await new SqlBuilder(help).Append("select DeviceId from mz_iot_device where Online=1 and ProductId=").AppendParam(productId).DoAsync<DoQuerySql<string>>()).ToList();
-        }
-        /// <summary>
-        /// 指定分组路径下面是否有设备
-        /// </summary>
-        /// <param name="groupPath"></param>
-        /// <returns></returns>
-        public virtual async Task<bool> ExistDevice(string groupPath)
-        {
-            var rs = await new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.Id from mz_iot_device d left join mz_iot_group g on d.GroupId = g.Id where g.Path like ")
-       .AppendParam(groupPath + '%').Append(" limit 1").ToFirstAsync();
-            return rs != null ? true : false;
         }
 
 

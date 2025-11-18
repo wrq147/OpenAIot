@@ -49,19 +49,6 @@ namespace IotService.Migrations
 
 
 
-            Create.Table("mz_iot_group").WithDescription("Iot设备分组")
-.WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
-.WithColumn("OrgId").AsInt64().Indexed("IotGroupOrgId").WithColumnDescription("所属组织ID")
-.WithColumn("GroupName").AsString(50).WithColumnDescription("分组名称")
-.WithColumn("Sort").AsInt32().WithColumnDescription("排序值：越小越前面")
-.WithColumn("Remark").AsString(255).WithColumnDescription("备注说明")
-.WithColumn("ParentId").AsString(128).WithColumnDescription("父分组Id")
-.WithColumn("Path").AsString(800).Indexed().WithColumnDescription("分组层级")
-       .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
-       .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
-       .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
-       .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
-
 
             Create.Table("mz_iot_device").WithDescription("Iot设备")
 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
@@ -72,7 +59,6 @@ namespace IotService.Migrations
 .WithColumn("PhotoUrl").AsString(255).WithColumnDescription("图片地址")
 .WithColumn("DeviceNumber").AsString(50).Unique().WithColumnDescription("设备唯一编号")
 .WithColumn("ProductId").AsString(128).Indexed().WithColumnDescription("所属协议Id")
-.WithColumn("GroupId").AsString(128).Indexed().WithColumnDescription("分组Id")
 .WithColumn("Online").AsByte().WithColumnDescription("联网状态：0为离线，1为在线，2为未初始化")
 .WithColumn("DState").AsString(50).Indexed().WithDefaultValue("").WithColumnDescription("运行状态")
 .WithColumn("Name").AsString(50).WithColumnDescription("设备名称")
@@ -93,7 +79,7 @@ namespace IotService.Migrations
                 .WithColumn("dBm").AsFloat().Nullable().WithDefaultValue(0).WithColumnDescription("信号强度");
 
 
-            Create.Index("MZ_dev_group_pid_orgid_Key").OnTable("mz_iot_device").OnColumn("GroupId").Ascending().OnColumn("ProductId").Ascending().OnColumn("OrgId").Ascending();
+            Create.Index().OnTable("mz_iot_device").OnColumn("ProductId").Ascending().OnColumn("OrgId").Ascending();
 
             if (Constants.General.sqltype != "Sqlite")
             {

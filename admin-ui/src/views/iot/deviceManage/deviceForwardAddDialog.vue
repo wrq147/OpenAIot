@@ -19,20 +19,6 @@
               </el-col>
             </el-row>
             <el-row :gutter="10">
-              <el-col :span="12" style="padding-right:20px;">
-                <el-form-item label="设备分组" prop="groupId">
-                  <treeselect style="width:100%" v-model="deviceAddFrom.groupId" :options="groupTreeList" :show-count="true"
-                    :normalizer="normalizer" placeholder="请选择设备分组" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12" style="padding-right:20px;">
-                <el-form-item label="转发的分组" prop="groupId2">
-                  <treeselect style="width:100%" v-model="deviceAddFrom.groupId2" :options="groupTreeList" :show-count="true"
-                    :normalizer="normalizer" placeholder="请选择转发设备分组" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="10">
               <el-col :span="12">
                 <el-form-item label="设备名称" prop="name">
                   <el-input type="text" v-model="deviceAddFrom.name" placeholder="请输入设备名称"></el-input>
@@ -95,22 +81,13 @@
 <script>
 import {
   addDevice,
-  GenerateDeviceNumber,
-  DeviceInfo
+  GenerateDeviceNumber
 } from "@/api/rules/device";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { productList } from "@/api/rules/productModel";
 export default {
   name: 'AdminUiDeviceAddDialog',
-  components: { Treeselect },
+  components: { },
   props: {
-    groupTreeList: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
     isProductDev: {
       type: Boolean,
       default: false
@@ -127,8 +104,6 @@ export default {
         productId2: null,
         productName2: "",
         dState: '',
-        groupId: null,
-        groupId2: null,
         name: "",
         name2: "",
         deviceId: "",
@@ -238,8 +213,6 @@ export default {
         dState: '',
         DeviceNumber: rsp.data,
         DeviceNumber2: rsp2.data,
-        groupId: null,
-        groupId2: null,
         name: "",
         name2: "",
         deviceId: "",
@@ -270,7 +243,6 @@ export default {
         productId: row.ProductId,
         productName: row.ProductName,
         dState: row.DState,
-        groupId: row.GroupId,
         name: row.Name,
         deviceId: row.DeviceId,
         PhotoUrl: row.PhotoUrl,
@@ -292,7 +264,6 @@ export default {
             productName: this.deviceAddFrom.productName,
             dState: this.deviceAddFrom.dState,
             DeviceNumber: this.deviceAddFrom.DeviceNumber,
-            groupId: this.deviceAddFrom.groupId,
             name: this.deviceAddFrom.name,
             deviceId: this.deviceAddFrom.deviceId,
             PhotoUrl: this.deviceAddFrom.PhotoUrl,
@@ -304,7 +275,6 @@ export default {
             productName: this.deviceAddFrom.productName2,
             dState: this.deviceAddFrom.dState,
             DeviceNumber: this.deviceAddFrom.DeviceNumber2,
-            groupId: this.deviceAddFrom.groupId2,
             name: this.deviceAddFrom.name2,
             deviceId: this.deviceAddFrom.deviceId2,
             PhotoUrl: this.deviceAddFrom.PhotoUrl,
@@ -314,16 +284,6 @@ export default {
 
           delete submitForm.productName
           delete submitForm2.productName
-          if (this.deviceAddFrom.groupId) {
-            submitForm.groupId = this.deviceAddFrom.groupId
-          } else {
-            submitForm.groupId = ''
-          }
-          if (this.deviceAddFrom.groupId2) {
-            submitForm2.groupId = this.deviceAddFrom.groupId2
-          } else {
-            submitForm2.groupId = ''
-          }
           this.saveDeviceLoading = true;
           addDevice(submitForm).then(response => {
             if (response.code == 0) {

@@ -131,7 +131,7 @@
         </member>
         <member name="M:IoTService.Controller.HttpSync.RefreshAllProductCache">
             <summary>
-            刷新所属所有产品的缓存
+            刷新所属所有协议的缓存
             </summary>
             <returns></returns>
         </member>
@@ -198,15 +198,15 @@
             <param name="number">批次编号</param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.Controller.HttpSync.ProductNames(IoTService.Models.In_ProductNamePage)">
+        <member name="M:IoTService.Controller.HttpSync.ProtocalNames(IoTService.Models.In_ProductNamePage)">
             <summary>
-            获取产品名称列表
+            获取协议名称列表
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IoTService.Controller.HttpSync.ProductInfo(System.String)">
+        <member name="M:IoTService.Controller.HttpSync.ProtocalInfo(System.String)">
             <summary>
-            获取产品信息
+            获取协议信息
             </summary>
             <param name="id"></param>
             <param name="notsl"></param>
@@ -513,9 +513,9 @@
         </member>
         <member name="M:IoTService.Controller.IotDevice.TagListByProduct(System.String)">
             <summary>
-            查询产品的标签默认值列表
+            查询协议的标签默认值列表
             </summary>
-            <param name="id">产品id</param>
+            <param name="id">协议id</param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.IotDevice.SaveTags(IoTService.Models.In_SaveTags)">
@@ -579,54 +579,14 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IoTService.Controller.IotGroup.ListTree">
-            <summary>
-            设备分组树
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Controller.IotGroup.TreeSelect">
-            <summary>
-            设备分组选择树
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Controller.IotGroup.Info(System.String)">
-            <summary>
-            获取指定分组信息
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Controller.IotGroup.Add(IoTService.Models.MZ_IotGroup)">
-            <summary>
-            添加分组
-            </summary>
-            <param name="data"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Controller.IotGroup.Edit(IoTService.Models.MZ_IotGroup)">
-            <summary>
-            编辑分组
-            </summary>
-            <param name="data"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Controller.IotGroup.Remove(System.String)">
-            <summary>
-            删除分组
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
         <member name="T:IoTService.Controller.IotProduct">
             <summary>
-            物联产品接口
+            物联协议接口
             </summary>
         </member>
         <member name="M:IoTService.Controller.IotProduct.ProductNames(IoTService.Models.In_ProductNamePage)">
             <summary>
-            获取产品名称列表
+            获取协议名称列表
             </summary>
             <param name="query"></param>
             <returns></returns>
@@ -695,7 +655,7 @@
         </member>
         <member name="M:IoTService.Controller.IotProduct.ListPage(IoTService.Models.In_ProductListPage)">
             <summary>
-            产品列表
+            协议列表
             </summary>
             <param name="query"></param>
             <returns></returns>
@@ -709,7 +669,7 @@
         </member>
         <member name="M:IoTService.Controller.IotProduct.Info(System.String,System.Boolean)">
             <summary>
-            获取指定产品信息
+            获取指定协议信息
             </summary>
             <param name="id"></param>
             <param name="notsl">是否不返回物模型信息（加速用）</param>
@@ -717,28 +677,28 @@
         </member>
         <member name="M:IoTService.Controller.IotProduct.Add(IoTService.Models.MZ_IotProduct)">
             <summary>
-            添加产品
+            添加协议
             </summary>
             <param name="data"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.IotProduct.Edit(IoTService.Models.MZ_IotProduct)">
             <summary>
-            编辑产品
+            编辑协议
             </summary>
             <param name="data"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.IotProduct.Remove(System.String)">
             <summary>
-            删除产品
+            删除协议
             </summary>
             <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.IotProduct.Copy(System.String)">
             <summary>
-            拷贝产品
+            拷贝协议
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -892,7 +852,7 @@
         </member>
         <member name="M:IoTService.Controller.IotUpdate.ListPage(IoTService.Models.In_UpdatePage)">
             <summary>
-            产品升级列表
+            协议升级列表
             </summary>
             <param name="query"></param>
             <returns></returns>
@@ -968,23 +928,16 @@
         </member>
         <member name="M:IoTService.DAL.IotDeviceDAL.SelectIdList(System.String)">
             <summary>
-            查询指定产品的所有设备Id列表
+            查询指定协议的所有设备Id列表
             </summary>
             <param name="productId"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.DAL.IotDeviceDAL.SelectDtuIdListByOnline(System.String)">
             <summary>
-            查询指定产品的所有在线设备
+            查询指定协议的所有在线设备
             </summary>
             <param name="productId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.DAL.IotDeviceDAL.ExistDevice(System.String)">
-            <summary>
-            指定分组路径下面是否有设备
-            </summary>
-            <param name="groupPath"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.DAL.IotDeviceDAL.UpdateBatchOwnerOrgId(System.Collections.Generic.List{System.String},System.Int64,System.Boolean)">
@@ -1179,14 +1132,9 @@
             是否需要显示同步到标签的属性
             </summary>
         </member>
-        <member name="P:IoTService.Models.In_DeviceListPage.GroupId">
-            <summary>
-            分组过滤
-            </summary>
-        </member>
         <member name="P:IoTService.Models.In_DeviceListPage.ClassId">
             <summary>
-            过滤物联产品分类
+            过滤物联协议分类
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.Online">
@@ -1201,12 +1149,12 @@
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.ProductId">
             <summary>
-            过滤产品Id
+            过滤协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.ProductList">
             <summary>
-            过滤多个产品Id
+            过滤多个协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DeviceListPage.Ids">
@@ -1561,7 +1509,7 @@
         </member>
         <member name="P:IoTService.Models.In_ProductListPage.Ids">
             <summary>
-            过滤产品Id数组
+            过滤协议Id数组
             </summary>
         </member>
         <member name="P:IoTService.Models.In_ProductNamePage.ClassId">
@@ -1626,7 +1574,7 @@
         </member>
         <member name="P:IoTService.Models.In_SyncDevice.ProductId">
             <summary>
-            所属产品Id
+            所属协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.In_SyncDevice.Name">
@@ -1706,7 +1654,7 @@
         </member>
         <member name="P:IoTService.Models.In_UpdatePage.ProductId">
             <summary>
-            过滤产品Id
+            过滤协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.In_UsingDevice.Id">
@@ -1731,12 +1679,12 @@
         </member>
         <member name="P:IoTService.Models.In_WarningListPage.ProductId">
             <summary>
-            过滤产品Id
+            过滤协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.In_WarningListPage.Name">
             <summary>
-            过滤报警名称、设备名称、产品名称
+            过滤报警名称、设备名称、协议名称
             </summary>
         </member>
         <member name="P:IoTService.Models.In_WarningListPage.WarnCode">
@@ -1866,7 +1814,7 @@
         </member>
         <member name="T:IoTService.Models.MZ_IotClass">
             <summary>
-            物联网产品分类
+            物联网协议分类
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotClass.Id">
@@ -2046,7 +1994,7 @@
         </member>
         <member name="P:IoTService.Models.UnicomOption.tenantId">
             <summary>
-            产品Id
+            协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.UnicomOption.expire_month">
@@ -2096,22 +2044,12 @@
         </member>
         <member name="P:IoTService.Models.MZ_IotDevice.ProductId">
             <summary>
-            所属产品Id
+            所属协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotDevice.ProductName">
             <summary>
-            产品名称
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotDevice.GroupId">
-            <summary>
-            分组Id
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotDevice.GroupName">
-            <summary>
-            分组名称
+            协议名称
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotDevice.Online">
@@ -2171,7 +2109,7 @@
         </member>
         <member name="P:IoTService.Models.MZ_IotDevice.ProductVer">
             <summary>
-            产品版本
+            协议版本
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotDevice.Remark">
@@ -2259,68 +2197,6 @@
             扩展信息值（数值存储）
             </summary>
         </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.Id">
-            <summary>
-            编码
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.OrgId">
-            <summary>
-            所属组织ID
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.GroupName">
-            <summary>
-            分组名称
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.Sort">
-            <summary>
-            排序值：越小越前面
-            </summary> 
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.Remark">
-            <summary>
-            备注说明
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.ParentId">
-            <summary>
-            父分组Id
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.Path">
-            <summary>
-            分组层级
-            </summary>
-        </member>
-        <member name="P:IoTService.Models.MZ_IotGroup.Children">
-            <summary>
-            子分组
-            </summary>
-        </member>
-        <member name="M:IoTService.Models.MZ_IotGroup._RecursionFn(System.Collections.Generic.List{IoTService.Models.MZ_IotGroup},IoTService.Models.MZ_IotGroup)">
-            <summary>
-            递归列表
-            </summary>
-            <param name="list"></param>
-            <param name="t"></param>
-        </member>
-        <member name="M:IoTService.Models.MZ_IotGroup._GetChildList(System.Collections.Generic.List{IoTService.Models.MZ_IotGroup},IoTService.Models.MZ_IotGroup)">
-            <summary>
-            得到子节点列表
-            </summary>
-            <param name="list"></param>
-            <param name="t"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Models.MZ_IotGroup.GroupList2Tree(System.Collections.Generic.List{IoTService.Models.MZ_IotGroup})">
-            <summary>
-            分组树转选择树
-            </summary>
-            <param name="groupTree"></param>
-            <returns></returns>
-        </member>
         <member name="T:IoTService.Models.MZ_IotHisSource">
             <summary>
             历史数据存储源
@@ -2358,7 +2234,7 @@
         </member>
         <member name="T:IoTService.Models.MZ_IotProduct">
             <summary>
-            物联网产品
+            物联网协议
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotProduct.OrgId">
@@ -2368,7 +2244,7 @@
         </member>
         <member name="P:IoTService.Models.MZ_IotProduct.Name">
             <summary>
-            产品名称
+            协议名称
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotProduct.PhotoUrl">
@@ -2543,7 +2419,7 @@
         </member>
         <member name="P:IoTService.Models.MZ_IotWarnConfig.ProductId">
             <summary>
-            所属物联产品Id
+            所属物联协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotWarnConfig.WarnFlowId">
@@ -2653,7 +2529,7 @@
         </member>
         <member name="P:IoTService.Models.MZ_IotWarning.ProductName">
             <summary>
-            产品名称
+            协议名称
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotWarning.ClearUser">
@@ -2663,12 +2539,12 @@
         </member>
         <member name="T:IoTService.Models.MZ_IotWinRule">
             <summary>
-            物联产品的属性规则
+            物联协议的属性规则
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotWinRule.ProductId">
             <summary>
-            所属产品Id
+            所属协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotWinRule.PropCode">
@@ -2859,7 +2735,7 @@
         </member>
         <member name="T:IoTService.Models.Out_ProductName">
             <summary>
-            产品名称
+            协议名称
             </summary>
         </member>
         <member name="P:IoTService.Models.Out_TagItem.Name">
@@ -2879,12 +2755,12 @@
         </member>
         <member name="P:IoTService.Models.Out_UpdateItem.ProductId">
             <summary>
-            产品Id
+            协议Id
             </summary>
         </member>
         <member name="P:IoTService.Models.Out_UpdateItem.ProductName">
             <summary>
-            产品名称
+            协议名称
             </summary>
         </member>
         <member name="T:IoTService.Models.WarningNoticeItem">
@@ -2914,7 +2790,7 @@
         </member>
         <member name="M:IoTService.ServerBusProxy.DownUpdateProductSys(IoTService.Models.MZ_IotProduct)">
             <summary>
-            更新产品缓存物模型信息
+            更新协议缓存物模型信息
             </summary>
             <param name="product"></param>
             <returns></returns>

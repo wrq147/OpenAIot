@@ -933,7 +933,7 @@
         </member>
         <member name="P:ProducerService.Model.MZ_Product.IOTProductId">
             <summary>
-            关联的物联产品Id
+            关联的物联协议Id
             </summary>
         </member>
         <member name="P:ProducerService.Model.MZ_Product.IOTProductName">
@@ -1794,7 +1794,7 @@
         </member>
         <member name="P:ProducerService.Model.T_IotDevice.ProductId">
             <summary>
-            所属物联产品Id
+            所属物联协议Id
             </summary>
         </member>
         <member name="P:ProducerService.Model.T_IotDevice.Name">

@@ -10,10 +10,6 @@ namespace IoTService.Models
     public class In_DeviceListPage : BaseQueryParam
     {
         /// <summary>
-        /// 分组过滤
-        /// </summary>
-        public string GroupId { get; set; }
-        /// <summary>
         /// 过滤物联协议分类
         /// </summary>
         public string ClassId { get; set; }

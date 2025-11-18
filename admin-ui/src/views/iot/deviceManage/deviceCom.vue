@@ -6,10 +6,6 @@
         <div>
           <div class="from_con" id="from_con" style="margin-bottom:0;padding-bottom:0" v-show="showSearch">
             <el-form :model="deviceForm" ref="deviceForm" :inline="true" class="biaodan">
-              <el-form-item label="设备分组" prop="GroupId">
-                <treeselect class="set_radius groupSet" v-model="deviceForm.GroupId" :options="groupTreeList"
-                  :show-count="true" :normalizer="normalizer" placeholder="请选择设备分组" />
-              </el-form-item>
               <el-form-item label="关键字" prop="Key">
                 <el-input v-model="deviceForm.Key" placeholder="请输入关键字" />
               </el-form-item>
@@ -90,23 +86,20 @@
       </div>
     </div>
 
-    <deviceAddDialog ref="deviceAddDialog" @loadDeviceList="loadDeviceList" :groupTreeList="groupTreeList" :isProductDev="true"></deviceAddDialog>
+    <deviceAddDialog ref="deviceAddDialog" @loadDeviceList="loadDeviceList" :isProductDev="true"></deviceAddDialog>
   </div>
 </template>
 <script>
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 import {
-  groupTree,
   DeviceList,
   removeDevice,
 } from "@/api/rules/device";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import deviceAddDialog from './deviceAddDialog.vue';
 export default {
   mixins: [resizeTableCon],
   props: ["activeSelect", "productInfos"],
-  components: { Treeselect,deviceAddDialog },
+  components: { deviceAddDialog },
   data() {
     const fileMustUpload = (rule, value, callback) => {
       if (this.deviceAddFrom.PhotoUrl == null||this.deviceAddFrom.PhotoUrl == '') {
@@ -119,7 +112,6 @@ export default {
       //设备
       saveDeviceLoading: false,
       pageSizes: [9, 18, 27, 36],
-      groupTreeList: [],
       total: 0,
       queryParams: {
         pageNum: 1,
@@ -156,7 +148,6 @@ export default {
         ProductId: 0,
         pageNum: 1,
         pageSize: 9,
-        GroupId: null,
         Online: null,
         Name: "",
         DeviceId:'',
@@ -168,7 +159,6 @@ export default {
       ],
       tableData: [],
       deviceTableData: [],
-      groupTableData: [],
       // 重新渲染表格状态
       refreshTable: true,
       // 是否展开，默认全部折叠
@@ -203,7 +193,6 @@ export default {
   },
   async mounted() {
     this.configLoading = true;
-    this.getGroupList();
     this.getDeviceList();
     this.configLoading = false;
   },
@@ -234,7 +223,6 @@ export default {
 
     refreshData() {
       this.getDeviceList();
-      this.getGroupList();
     },
     getDeviceList() {
       //获取设备列表
@@ -246,20 +234,6 @@ export default {
         this.total = response.data.Total;
         this.tableData = this.deviceTableData;
         this.configLoading = false;
-      });
-    },
-    getGroupList() {
-      //获取设备分组列表
-      this.configLoading = true;
-      groupTree().then(res => {
-        if (res.code == 0) {
-          this.groupTableData = res.data;
-          let lists = [];
-          lists = JSON.parse(JSON.stringify(res.data));
-          this.groupTreeList = lists;
-
-          this.configLoading = false;
-        }
       });
     },
     normalizer(node) {

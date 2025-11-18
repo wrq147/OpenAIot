@@ -70,8 +70,6 @@
             </el-form>
           </div>
           
-          <!--新修改的样式-->
-          <!-- <dev_piece :configLoading="configLoading" :tableData="tableData" @toDeviceDetails="toDeviceDetails"></dev_piece> -->
           <dev_table :configLoading="configLoading2" :tableData="tableData" @toDeviceDetails="toDeviceDetails"></dev_table>
 
           <pagination v-show="total > 0" :total="total" :page.sync="deviceForm.pageNum" :limit.sync="deviceForm.pageSize" :pageSizes="pageSizes" @pagination="getDeviceList"/>

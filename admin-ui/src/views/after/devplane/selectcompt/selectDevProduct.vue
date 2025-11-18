@@ -22,7 +22,7 @@
         </div>
         </template>
     </el-table-column>
-    <el-table-column prop="Name" label="产品名称"> </el-table-column>
+    <el-table-column prop="ProductName" label="产品名称" align="center"> </el-table-column>
     </el-table>
     <pagination v-show="devProductTotal > 0" :total="devProductTotal" :page.sync="productQuery2.pageNum" :limit.sync="productQuery2.pageSize" @pagination="getproductList2()" />
     <div slot="footer" class="dialog-footer">
@@ -115,19 +115,18 @@ export default {
       this.productQuery2.pageNum = 1
       this.getproductList2()
     },
-    addPlaneDevProduct(planeTargetData){
+    addPlaneDevProduct(){
       //添加计划的产品
       let sellist=this.afterSelectProduct.map(row=>{
         let obj={
           TargetId:row.Id,
           TargetType:1,
           PhotoUrl:row.PhotoUrl,
-          TargetName:row.Name,
+          TargetName:row.ProductName,
         }
         return obj
       })
       this.$emit('addPlaneDevProduct',sellist)
-      // this.selectDevProduct = JSON.parse(JSON.stringify(this.afterSelectProduct))
       this.productOpen = false
     },
     async getproductList2() {

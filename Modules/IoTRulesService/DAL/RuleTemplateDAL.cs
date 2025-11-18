@@ -21,7 +21,7 @@ namespace IoTRulesService.DAL
         /// <returns></returns>
         public virtual async Task<bool> ExistRule(string groupPath)
         {
-            var rs = await new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.Id from mz_rule_template d left join mz_iot_group g on d.GroupId = g.Id where g.Path like ")
+            var rs = await new SqlBuilder(help).Query<MZ_RuleTemplate>().Append("select d.Id from mz_rule_template d left join mz_rule_group g on d.GroupId = g.Id where g.Path like ")
        .AppendParam(groupPath + '%').Append(" limit 1").ToFirstAsync();
             return rs != null ? true : false;
         }

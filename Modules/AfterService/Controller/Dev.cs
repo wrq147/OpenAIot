@@ -28,11 +28,21 @@ namespace AfterService.Controller
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<DefaultAjaxResult<PageObject<MZ_IotDevice>>> List(In_KFDevListPage query)
+        public async Task<DefaultAjaxResult<PageObject<Out_KfDevice>>> List(In_KFDevListPage query)
         {
             var user = GetUser();
             var scope = await user.GetScope(this.ServiceProvider, "/AfterService/Room/List");
             return this.Success(await _deviceBLL.ListPage(query, user, scope));
+        }
+        /// <summary>
+        /// 客户协议列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<PageObject<Out_KFProtocalName>>> ProtocalList(In_KFProtocalPage query)
+        {
+            return this.Success(await _deviceBLL.SelectKFProtocalList(query));
         }
         /// <summary>
         /// 客户产品列表
@@ -40,11 +50,10 @@ namespace AfterService.Controller
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<DefaultAjaxResult<PageObject<Out_KFProductName>>> ProductList(OutKFProductPage query)
+        public async Task<DefaultAjaxResult<PageObject<Out_KFProductName>>> ProductList(In_KFProductPage query)
         {
             return this.Success(await _deviceBLL.SelectKFProductList(query));
         }
-
         /// <summary>
         /// 客户修改设备名称
         /// </summary>

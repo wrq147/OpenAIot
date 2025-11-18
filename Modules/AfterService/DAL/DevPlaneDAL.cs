@@ -24,9 +24,9 @@ namespace AfterService.DAL
         {
             return await new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.* from mz_plane_target t left join mz_iot_device d on t.TargetId=d.Id where t.TargetType=0 and t.PlaneId=").AppendParam(id).ToListAsync();
         }
-        public virtual async Task<List<Out_KFProductName>> SelectPlaneProductList(string id)
+        public virtual async Task<List<Out_KFProtocalName>> SelectPlaneProductList(string id)
         {
-            return await new SqlBuilder(help).Query<Out_KFProductName>().Append("select p.Id,p.OrgId,p.Name,p.PhotoUrl from mz_plane_target t left join mz_iot_product p  on t.TargetId=p.Id where t.TargetType=1 and t.PlaneId=").AppendParam(id).ToListAsync();
+            return await new SqlBuilder(help).Query<Out_KFProtocalName>().Append("select p.Id,p.OrgId,p.Name,p.PhotoUrl from mz_plane_target t left join mz_product p  on t.TargetId=p.Id where t.TargetType=1 and t.PlaneId=").AppendParam(id).ToListAsync();
         }
         public virtual async Task<List<MZ_Room>> SelectPlaneRoomList(string id)
         {
@@ -82,7 +82,7 @@ namespace AfterService.DAL
         }
         public virtual async Task<PageObject<MZ_IotDevice>> DevListPage(In_PlaneDevList query)
         {
-            var tsql = new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,g.GroupName,p.Name as ProductName,rd.Name as RoomName from mz_iot_device d left join mz_iot_group g on d.GroupId = g.Id left join mz_iot_product p on d.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId");
+            var tsql = new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,p.Name as ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId");
             tsql = tsql.Append(" where (");
             var targets = await QueryPlaneTargets(query.Id);
             var tdevIds = targets.Where(x => x.TargetType == 0).Select(x => x.TargetId).ToList();

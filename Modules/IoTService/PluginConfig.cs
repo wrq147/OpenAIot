@@ -10,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
-using MyAccess.Core;
-using NPOI.HSSF.Util;
 using System;
 using System.Collections.Generic;
 using TemplateAction.Core;
@@ -28,7 +26,6 @@ namespace IoTService
         {
             services.AddBLL<IotProductBLL>();
             services.AddBLL<IotClassBLL>();
-            services.AddBLL<IotGroupBLL>();
             services.AddBLL<IotDeviceBLL>();
             services.AddBLL<IotUpdateBLL>();
             services.AddBLL<IotWarningBLL>();
@@ -47,7 +44,6 @@ namespace IoTService
             services.AddDAL<IotClassDAL>();
             services.AddDAL<IotProductDAL>();
             services.AddDAL<IotDeviceDAL>();
-            services.AddDAL<IotGroupDAL>();
             services.AddDAL<IotDeviceTagDAL>();
             services.AddDAL<IotUpdateDAL>();
             services.AddDAL<IotWarningDAL>();

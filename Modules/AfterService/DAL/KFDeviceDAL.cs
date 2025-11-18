@@ -15,11 +15,11 @@ namespace AfterService.DAL
 {
     public class KFDeviceDAL : BaseRepository<MZ_IotDevice>
     {
-        public virtual async Task<PageObject<Out_KFProductName>> SelectKFProductList(long kfOrgId, OutKFProductPage query)
+        public virtual async Task<PageObject<Out_KFProtocalName>> SelectKFProtocalList(long kfOrgId, In_KFProtocalPage query)
         {
             List<string> keys = new List<string>();
             keys.Add(kfOrgId.ToString());
-            return await new SqlBuilder(help).Query<Out_KFProductName>()
+            return await new SqlBuilder(help).Query<Out_KFProtocalName>()
                 .Append("select Id,OrgId,Name,PhotoUrl from mz_iot_product where EXISTS(select 1 from mz_iot_device where mz_iot_product.Id=ProductId and (OrgId=" + kfOrgId + " or ").FullSearch("OwnerOrgPath", keys).Append(" or UseOrgId=" + kfOrgId + "))")
                 .Then(!string.IsNullOrEmpty(query.Name), x =>
                 {
@@ -29,7 +29,23 @@ namespace AfterService.DAL
                 {
                     x.Append(" and Id in (").AppendParam(query.Pids).Append(")");
                 })
-                .GeneratePageObjectAsync(query, ""); ;
+                .GeneratePageObjectAsync(query, "");
+        }
+        public virtual async Task<PageObject<Out_KFProductName>> SelectKFProductList(long kfOrgId, In_KFProductPage query)
+        {
+            List<string> keys = new List<string>();
+            keys.Add(kfOrgId.ToString());
+            return await new SqlBuilder(help).Query<Out_KFProductName>()
+                .Append("select Id,OrgId,ProductName,PhotoUrl from mz_product where EXISTS(select 1 from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id where mz_product.Id=b.ProductId and (d.OrgId=" + kfOrgId + " or ").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + kfOrgId + "))")
+                .Then(!string.IsNullOrEmpty(query.Name), x =>
+                {
+                    x.Append(" and Name like ").AppendParam("%" + query.Name.SqlLikeFilter() + "%");
+                })
+                .Then(query.Pids != null && query.Pids.Length > 0, x =>
+                {
+                    x.Append(" and Id in (").AppendParam(query.Pids).Append(")");
+                })
+                .GeneratePageObjectAsync(query, "");
         }
         public virtual async Task<List<MZ_IotDevice>> SelectKFDeviceList(Data_ServerTokenInfo user, long kfOrgId)
         {
@@ -39,7 +55,7 @@ namespace AfterService.DAL
             keystwo.Add(user.OrgId.ToString());
             return await new SqlBuilder(help).Query<MZ_IotDevice>().Append("select * from mz_iot_device where ").FullSearch("OwnerOrgPath", keys).Append(" and (OrgId=" + user.OrgId + " or ").FullSearch("OwnerOrgPath", keystwo).Append(" or UseOrgId=" + user.OrgId + ")").ToListAsync();
         }
-        public virtual async Task<List<MZ_IotDevice>> SelectKFDeviceListByRange(In_DevRangeList query, IUserInfo user, DataScope scope)
+        public virtual async Task<List<Out_KfDevice>> SelectKFDeviceListByRange(In_DevRangeList query, IUserInfo user, DataScope scope)
         {
             string geohash = GeoHash.Encode(query.Lat, query.Lng, query.level);
             string geolikestr = $"d.GeoHash like '{geohash}%'";
@@ -79,7 +95,7 @@ namespace AfterService.DAL
             }
 
             tsql.Append(" and (" + geolikestr + ")");
-            return (await tsql.DoAsync<DoQuerySql<MZ_IotDevice>>()).ToList();
+            return (await tsql.DoAsync<DoQuerySql<Out_KfDevice>>()).ToList();
         }
         public virtual async Task<List<Out_DevAreaData>> SelectKFDevAreaDataListByRange(In_DevRangeAreaList query, IUserInfo user, DataScope scope)
         {
@@ -269,7 +285,7 @@ namespace AfterService.DAL
             }
             return (await tsql.DoAsync<DoQuerySql<Out_DevAreaInfo>>()).ToFirst();
         }
-        public virtual async Task<PageObject<MZ_IotDevice>> SelectWithGroupPage(In_KFDevListPage query, string classPath, IUserInfo user, DataScope scope)
+        public virtual async Task<PageObject<Out_KfDevice>> SelectWithGroupPage(In_KFDevListPage query, IUserInfo user, DataScope scope)
         {
 
             MZ_RoomCategory curcategory = null;
@@ -277,7 +293,7 @@ namespace AfterService.DAL
             {
                 curcategory = await new SqlBuilder(help).Query<MZ_RoomCategory>().Where(x => x.Id == query.RoomCategory).ToFirstAsync();
             }
-            var tsql = new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,p.Name as ProductName,rd.Name as RoomName from mz_iot_device d left join mz_iot_product_v p on d.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId where ");
+            var tsql = new SqlBuilder(help).Query<Out_KfDevice>().Append("select d.*,p.Name as ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId where ");
             tsql.Append("(d.UseUserId=" + user.UserId);
 
             if (user.OrgId > 0)
@@ -304,10 +320,9 @@ namespace AfterService.DAL
                 tsql.Append(scopestr);
             }
 
-            return await tsql.Then(classPath != null, sq => sq.Append(" and p.Path like ").AppendParam(classPath + "%"))
-            .Then(query.Online != null, sq => sq.Append(" and d.Online=").AppendParam(query.Online))
-            .Then(query.ProductId != null, sq => sq.Append(" and d.ProductId=").AppendParam(query.ProductId))
-            .Then(query.ProductList != null && query.ProductList.Length > 0, sq => sq.Append(" and d.ProductId in (").AppendParam(query.ProductList).Append(")"))
+            return await tsql.Then(query.Online != null, sq => sq.Append(" and d.Online=").AppendParam(query.Online))
+            .Then(query.ProductId != null, sq => sq.Append(" and b.ProductId=").AppendParam(query.ProductId))
+            .Then(query.ProductList != null && query.ProductList.Length > 0, sq => sq.Append(" and b.ProductId in (").AppendParam(query.ProductList).Append(")"))
             .Then(!string.IsNullOrEmpty(query.Key), sq =>
             {
                 var tmpkey = query.Key.SqlLikeFilter();

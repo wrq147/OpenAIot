@@ -20,7 +20,7 @@
             <el-select :disabled="isReadonly || isViewInfo" v-model="devplaneFrom.targetProductId" filterable remote
               reserve-keyword :clearable="true" placeholder="请输入关键词" :remote-method="remoteMethod" :loading="prodloading"
               @change="chgProd">
-              <el-option v-for="item in productLists" :key="item.Id" :label="item.Name" :value="item.Id">
+              <el-option v-for="item in productLists" :key="item.Id" :label="item.ProductName" :value="item.Id">
               </el-option>
             </el-select>
           </el-form-item>

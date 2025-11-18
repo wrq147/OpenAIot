@@ -80,7 +80,7 @@
 
 <script>
 import { getItems } from "../../utlity.js";
-import { myProductList } from "@/api/after/dev";
+import { myProtocalList } from "@/api/after/dev";
 import { productInfo } from "@/api/rules/productModel";
 export default {
   name: "DevicPicker",
@@ -201,7 +201,7 @@ export default {
     },
     async getproductList() {
       this.prodloading = true;
-      let response = await myProductList(this.queryform)
+      let response = await myProtocalList(this.queryform)
       if (response.code == 0) {
         if (response.data && response.data.List) {
           this.productLists = response.data.List;

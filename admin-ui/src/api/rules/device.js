@@ -1,53 +1,6 @@
 import request from '@/utils/request'
 import download from '@/plugins/download'
-// 获取设备分组树
-export function groupTree() {
-    return request({
-        url: '/IoTService/IotGroup/ListTree',
-        method: 'get',
-    })
-}
-// 获取设备分组树
-export function groupSelectTree() {
-    return request({
-        url: '/IoTService/IotGroup/TreeSelect',
-        method: 'get',
-    })
-}
-// 获取在指定分组信息
-export function groupInfo(query) {
-    return request({
-        url: '/IoTService/IotGroup/Info',
-        method: 'get',
-        params: query
-    })
-}
-// 删除分组
-export function removeGroup(query) {
-    return request({
-        url: '/IoTService/IotGroup/Remove',
-        method: 'get',
-        params: query
-    })
-}
 
-//添加设备分组
-export function addGroup(data) {
-    return request({
-        url: '/IoTService/IotGroup/Add',
-        method: 'post',
-        data: data
-    })
-}
-
-//编辑设备分组
-export function editGroup(data) {
-    return request({
-        url: '/IoTService/IotGroup/Edit',
-        method: 'post',
-        data: data
-    })
-}
 //添加设备
 export function addDevice(data) {
     return request({
@@ -180,7 +133,7 @@ export function DeviceTagList(query) {
         params: query
     })
 }
-//添加设备时获取设备对应产品标签信息
+//添加设备时获取设备对应协议标签信息
 export function productTagList(query) {
     return request({
         url: '/IoTService/IotDevice/TagListByProduct',

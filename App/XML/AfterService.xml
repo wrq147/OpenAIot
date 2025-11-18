@@ -22,7 +22,14 @@
             <param name="query"></param>
             <returns></returns>
         </member>
-        <member name="M:AfterService.Controller.Dev.ProductList(AfterService.Model.OutKFProductPage)">
+        <member name="M:AfterService.Controller.Dev.ProtocalList(AfterService.Model.In_KFProtocalPage)">
+            <summary>
+            客户协议列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AfterService.Controller.Dev.ProductList(AfterService.Model.In_KFProductPage)">
             <summary>
             客户产品列表
             </summary>
@@ -497,11 +504,6 @@
         <member name="P:AfterService.Model.In_DevRangeList.DState">
             <summary>
             过滤运行状态
-            </summary>
-        </member>
-        <member name="P:AfterService.Model.In_KFDevListPage.ClassId">
-            <summary>
-            过滤物联产品分类
             </summary>
         </member>
         <member name="P:AfterService.Model.In_KFDevListPage.Online">
@@ -1249,6 +1251,166 @@
             协作者
             </summary>
         </member>
+        <member name="P:AfterService.Model.Out_KfDevice.OrgId">
+            <summary>
+            来源组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.OwnerOrgId">
+            <summary>
+            拥有者组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.UseOrgId">
+            <summary>
+            使用者组织ID（使用者为组织）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.UseUserId">
+            <summary>
+            当前使用者（使用者为个人）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.DeviceNumber">
+            <summary>
+            设备唯一编号
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.ProductId">
+            <summary>
+            产品Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.ProductName">
+            <summary>
+            产品名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.Online">
+            <summary>
+            0为离线，1为在线，2为未初始化
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.DState">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.DeviceId">
+            <summary>
+            设备通讯编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.AreaCode">
+            <summary>
+            设备所在区域代码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.GeoHash">
+            <summary>
+            经纬度对应geohash码值(传入经纬度后由后台计算出此值）
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.CreateOn">
+            <summary>
+            设备创建时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.LastOnline">
+            <summary>
+            最后在线时间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.FirmwareVer">
+            <summary>
+            固件版本
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.ProductVer">
+            <summary>
+            协议版本
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.Remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.OwnerOrgPath">
+            <summary>
+            设备经过的拥有者组织路径
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.DeviceUpIdx">
+            <summary>
+            设备所属处理节点索引
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.KeyWords">
+            <summary>
+            设备的关键词
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.NeedUpdateKey">
+            <summary>
+            设备是否需要更新关键词
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.dBm">
+            <summary>
+            信号强度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.Tags">
+            <summary>
+            标签列表
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.TagsView">
+            <summary>
+            列表展示标签用
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.HavWarn">
+            <summary>
+            是否存在报警
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.OwnerOrgName">
+            <summary>
+            当前拥有者组织
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.RoomName">
+            <summary>
+            房间名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KfDevice.AreaCodeName">
+            <summary>
+            区域代码地址名称
+            </summary>
+        </member>
         <member name="P:AfterService.Model.Out_KFProductName.Id">
             <summary>
             产品Id
@@ -1259,12 +1421,32 @@
             所属组织ID
             </summary>
         </member>
-        <member name="P:AfterService.Model.Out_KFProductName.Name">
+        <member name="P:AfterService.Model.Out_KFProductName.ProductName">
             <summary>
             产品名称
             </summary>
         </member>
         <member name="P:AfterService.Model.Out_KFProductName.PhotoUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProtocalName.Id">
+            <summary>
+            协议Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProtocalName.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProtocalName.Name">
+            <summary>
+            协议名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_KFProtocalName.PhotoUrl">
             <summary>
             图片地址
             </summary>

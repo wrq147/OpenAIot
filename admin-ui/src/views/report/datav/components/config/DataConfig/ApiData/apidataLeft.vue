@@ -95,7 +95,7 @@ export default {
         {
           label: "获取产品名称列表",
           value: "Api04",
-          url: "/IoTService/HttpSync/ProductNames",
+          url: "/IoTService/HttpSync/ProtocalNames",
           method: "GET",
           needEnterprise: true,
           typename:'开发者接口'

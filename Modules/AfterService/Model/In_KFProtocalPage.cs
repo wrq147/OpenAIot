@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AfterService.Model
 {
-    public class OutKFProductPage : BaseQueryParam
+    public class In_KFProtocalPage : BaseQueryParam
     {
         public string Name { get; set; }
         public string[] Pids { get; set; }

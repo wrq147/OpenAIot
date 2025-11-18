@@ -180,11 +180,12 @@ namespace AfterService.Controller
         /// <returns></returns>
         [HttpGet]
         [ShareCheck]
-        public async Task<DefaultAjaxResult<List<MZ_IotDevice>>> RangeList(In_DevRangeList query)
+        public async Task<DefaultAjaxResult<List<Out_KfDevice>>> RangeList(In_DevRangeList query)
         {
             var deviceBLL = this.ServiceProvider.GetService<KFDeviceBLL>();
             var user = _develper.ToUserInfo();
             return this.Success(await deviceBLL.SelectKFDeviceListByRange(query, user, null));
         }
+
     }
 }

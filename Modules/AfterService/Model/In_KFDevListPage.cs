@@ -10,10 +10,6 @@ namespace AfterService.Model
     public class In_KFDevListPage : BaseQueryParam
     {
         /// <summary>
-        /// 过滤物联产品分类
-        /// </summary>
-        public string ClassId { get; set; }
-        /// <summary>
         /// 0为离线，1为在线，2为未知
         /// </summary>
         public byte? Online { get; set; }

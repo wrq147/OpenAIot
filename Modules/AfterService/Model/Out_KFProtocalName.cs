@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AfterService.Model
 {
-    public class Out_KFProductName
+    public class Out_KFProtocalName
     {
         /// <summary>
-        /// 产品Id
+        /// 协议Id
         /// </summary>
         public string Id { get; set; }
         /// <summary>
@@ -17,9 +17,9 @@ namespace AfterService.Model
         /// </summary>
         public long? OrgId { get; set; }
         /// <summary>
-        /// 产品名称
+        /// 协议名称
         /// </summary>
-        public string ProductName { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 图片地址
         /// </summary>

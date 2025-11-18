@@ -74,7 +74,7 @@ namespace AfterService.Controller
         /// <returns></returns>
         [HttpGet]
         [About("/AfterService/DevMap/List")]
-        public async Task<DefaultAjaxResult<List<MZ_IotDevice>>> RangeList(In_DevRangeList query)
+        public async Task<DefaultAjaxResult<List<Out_KfDevice>>> RangeList(In_DevRangeList query)
         {
             var user = GetUser();
             var scope = await user.GetScope(this.ServiceProvider, "/AfterService/Room/List");

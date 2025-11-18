@@ -908,7 +908,7 @@
         </member>
         <member name="P:StorageService.Model.In_PileItem.TargetNumber">
             <summary>
-            产品批次编号
+            批次编号
             </summary>
         </member>
         <member name="P:StorageService.Model.In_PileItem.Quantity">

@@ -89,27 +89,11 @@
             <param name="waitProps">需要等待的属性（不传则等待全部，多个用逗号隔开）</param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.Controller.HttpRule.GroupLive(System.String,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-            按分组查询实时数据（离线返回null）
-            </summary>
-            <param name="groupId">分组Id</param>
-            <param name="needTag">是否需要显示同步到标签的属性</param>
-            <param name="needSend">是否同时发送读取属性消息</param>
-            <param name="needWait">是否同时等待数据</param>
-            <returns></returns>
-        </member>
         <member name="M:IoTRulesService.Controller.HttpRule.BatchLive(IoTService.Models.In_DevBatchList)">
             <summary>
             批量获取设备的实时数据
             </summary>
             <param name="data"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTRulesService.Controller.HttpRule.SelectGroups">
-            <summary>
-            查询开发者的所有设备分组
-            </summary>
             <returns></returns>
         </member>
         <member name="M:IoTRulesService.Controller.HttpRule.SelectMergeList(IoTService.Models.In_HistoryMergeListSync)">
@@ -863,12 +847,12 @@
         </member>
         <member name="P:IoTRulesService.Flow.Node.RewriteProps.TargetType">
             <summary>
-            目标类型：0为当前设备、1为选择设备、2为选择产品
+            目标类型：0为当前设备、1为选择设备、2为选择协议
             </summary>
         </member>
         <member name="P:IoTRulesService.Flow.Node.RewriteProps.TargetId">
             <summary>
-            目标设备Id、目标产品
+            目标设备Id、目标协议
             </summary>
         </member>
         <member name="P:IoTRulesService.Flow.Node.RewriteProps.FunctionId">
@@ -988,7 +972,7 @@
         </member>
         <member name="P:IoTRulesService.Flow.Node.RedirectProps.ProductId">
             <summary>
-            转发后的产品Id
+            转发后的协议Id
             </summary>
         </member>
         <member name="P:IoTRulesService.Flow.Node.RedirectProps.TargetDtuIdsList">
@@ -998,7 +982,7 @@
         </member>
         <member name="P:IoTRulesService.Flow.Node.RedirectProps.Maping">
             <summary>
-            属性消息、事件消息与转发的产品标识符映射
+            属性消息、事件消息与转发的协议标识符映射
             </summary>
         </member>
         <member name="P:IoTRulesService.Flow.Node.RuleBaseNode.id">
@@ -1413,31 +1397,6 @@
         <member name="P:IoTRulesService.Model.MZ_RuleTrigger.TopicMsg">
             <summary>
             订阅的消息类型：参考JsonMessageConverter里的（当触发方式为0时使用）
-            </summary>
-        </member>
-        <member name="P:IoTRulesService.Model.Out_GroupLive.Id">
-            <summary>
-            设备Id
-            </summary>
-        </member>
-        <member name="P:IoTRulesService.Model.Out_GroupLive.DeviceName">
-            <summary>
-            设备名称
-            </summary>
-        </member>
-        <member name="P:IoTRulesService.Model.Out_GroupLive.DeviceNumber">
-            <summary>
-            第三方设备编码
-            </summary>
-        </member>
-        <member name="P:IoTRulesService.Model.Out_GroupLive.DeviceId">
-            <summary>
-            设备通讯编码
-            </summary>
-        </member>
-        <member name="P:IoTRulesService.Model.Out_GroupLive.PropertyList">
-            <summary>
-            设备实时数据
             </summary>
         </member>
         <member name="M:IoTRulesService.PluginConfig.UpMsgExe(System.String,System.Threading.CancellationToken)">

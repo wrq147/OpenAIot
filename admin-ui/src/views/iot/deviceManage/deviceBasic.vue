@@ -56,22 +56,9 @@
               </el-form-item>
             </div>
           </td>
-          <th colspan="1"><span>设备类型</span></th>
+          <th colspan="1"><span>运行状态</span></th>
           <td colspan="1" style="width: 21.5%">
-            <span v-if="!isInfoEdit">{{ deviceBasicInfos.GroupName }}</span>
-            <div v-if="isInfoEdit">
-              <el-form-item style="margin-bottom: 0" prop="GroupId">
-                <treeselect
-                  class="groupSet"
-                  v-model="deviceBasicInfos.GroupId"
-                  :options="groupTreeList"
-                  :show-count="true"
-                  :normalizer="normalizer"
-                  placeholder="请选择设备类型"
-                  style="width: 202px"
-                />
-              </el-form-item>
-            </div>
+            <span>{{ deviceBasicInfos.DState }}</span>
           </td>
         </tr>
         <tr>
@@ -136,13 +123,11 @@
 <script>
 import { editDevice, groupTree } from "@/api/rules/device";
 import { productList, classTree, channelList } from "@/api/rules/productModel";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import exportHistory from "./exportHistory.vue"
 import { checkPermi } from "@/utils/permission";
 export default {
   name: "deviceBasic",
-  components: { Treeselect,exportHistory },
+  components: { exportHistory },
   props: {
     deviceInfos: {
       type: Object,
@@ -169,8 +154,6 @@ export default {
   data() {
     return {
       exportLoading:false,//是否处于导出状态
-      groupmap: new Map(),
-      groupTreeList: [],
       workWayList: [], //设备接入方式列表
       productClassMap: new Map(),
       productClassList: [],
@@ -276,7 +259,6 @@ export default {
       if (this.canChangeDevice) {
         this.getProductClassList(); //协议分类列表
         this.getchannelList(); //设备接入方式列表
-        this.getGroupList(); //设备分组列表
       }else{
         this.configisLoading = false;
       }
@@ -306,31 +288,6 @@ export default {
         }
       }
     },
-    normalizer(node) {
-      //设备分组使用selectTree数据转换
-      if (node.Children == null || !node.Children.length) {
-        delete node.Children;
-      }
-      return {
-        id: node.Id,
-        label: node.GroupName,
-        children: node.Children,
-      };
-    },
-    getGroupList() {
-      //获取设备分组列表
-      this.configisLoading = true;
-      groupTree().then((res) => {
-        // console.log("设备分组列表", res);
-        if (res.code == 0) {
-          this.initClassMap(res.data);
-          let lists = [];
-          lists = JSON.parse(JSON.stringify(res.data));
-          this.groupTreeList = lists;
-          this.configisLoading = false;
-        }
-      });
-    },
     getchannelList() {
       //获取设备接入方式
       channelList().then((rsp) => {
@@ -345,21 +302,6 @@ export default {
         let curnode = node[idx];
         // console.log("设备接入方式列表", curnode);
         this.channelmap.set(node[idx].Code, curnode);
-      }
-    },
-    initClassMap(node) {
-      //设置设备分组列表为Map类型数据，方便根据id获取name
-      for (let idx = 0; idx < node.length; idx++) {
-        let curnode = node[idx];
-        // console.log("设备分组", curnode);
-        this.groupmap.set(node[idx].Id, curnode);
-        if (
-          curnode.hasOwnProperty("Children") &&
-          curnode.Children &&
-          curnode.Children.length > 0
-        ) {
-          this.initClassMap(curnode.Children);
-        }
       }
     },
   },
