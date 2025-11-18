@@ -97,7 +97,6 @@ namespace IoTService.Models
         /// <summary>
         /// 协议版本
         /// </summary>
-        [JsonConverter(typeof(OnlyDeserialize))]
         public int? ProductVer { get; set; }
         /// <summary>
         /// 备注说明

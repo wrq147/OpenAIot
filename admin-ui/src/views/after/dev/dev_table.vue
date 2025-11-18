@@ -44,11 +44,6 @@
           <span>{{ scope.row.ProductName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="分组" align="center" key="GroupName" prop="GroupName">
-        <template slot-scope="scope">
-          <span>{{ scope.row.GroupName }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="创建日期" align="center" prop="CreateOn" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.CreateOn) }}</span>
@@ -67,14 +62,11 @@
 </template>
 
 <script>
-// import { resizeTableCon } from "@/mixins/resizeTableCon";
-// import EmbedPrint from "../../report/print/EmbedPrint";
 import EmbedPrint2 from "@/views/report/print/EmbedMultiplePrint";
 import print_list from "./print_list";
 import dev_Analysis from './dev_Analysis'
 export default {
   name: "AdminUiDevTable",
-  // mixins: [resizeTableCon],
   components: { print_list,EmbedPrint2,dev_Analysis },
   data() {
     return {
@@ -105,7 +97,6 @@ export default {
 
   methods: {
     cellSty({ row, rowIndex }) {
-        // console.log(row, rowIndex);
         if (rowIndex == 0) {
             let obj = {
                 'color': '#78829D',
@@ -161,7 +152,6 @@ export default {
     },
     isRed({ row }) {
       let checkIdList = this.ids;
-      // console.log("选中的",checkIdList,this.ids,row);
       if (checkIdList.includes(row.Id)) {
         return {
           backgroundColor: "#F6F9FF"

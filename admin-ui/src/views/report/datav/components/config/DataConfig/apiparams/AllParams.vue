@@ -4,12 +4,6 @@
             <template v-for="(item,inx) in activeComponentParams.formKey">
                 <el-form-item :label="activeComponentParams[item].text" :key="'param'+item+inx" v-if="activeComponentParams[item]" :prop="item">
 
-                    <el-cascader v-if="activeComponentParams[item].type=='cascader'&&activeComponentParams[item].name=='groupOptions'"
-                        :loading="loading" :placeholder="activeComponentParams[item].placeholder" :options="groupOptions"
-                        :props="{value: activeComponentParams[item].value, label: activeComponentParams[item].label, children: activeComponentParams[item].children, checkStrictly: true}"
-                        clearable filterable @change="cascaderChange($event,item)">
-                    </el-cascader>
-
                     <el-select v-if="activeComponentParams[item].type=='remoteSelect'&&activeComponentParams[item].name=='deviceOptions'"
                      @change="onDeviceChange($event,item)" v-model="form[item]" clearable filterable remote reserve-keyword :placeholder="activeComponentParams[item].placeholder"
                       :remote-method="deviceRemoteMethod" @clear="deviceRemoteMethod('')" @remove-tag="deviceRemoteMethod('')" :loading="loading">
@@ -67,7 +61,7 @@
 </template>
       
 <script>
-import { DeviceList,groupTree } from "@/api/rules/device";
+import { DeviceList } from "@/api/rules/device";
 import {
     productInfo
 } from "@/api/rules/productModel";
@@ -100,7 +94,6 @@ export default {
             filterParams: {},//执行获取列表的相关函数时的过滤参数
             deviceOptions: [],//设备的下拉选项
             propOptions: [],//属性的下拉选项
-            groupOptions:[],//设备分组的下拉选项
             rulesOptions:[],//规则列表的下拉选项
             planeOptions:[],//规则列表的下拉选项
             // 日期范围
@@ -170,9 +163,6 @@ export default {
                 if(params.filterType=='deviceList'){
                     this.deviceRemoteMethod('')
                 }
-                if(params.filterType=='deviceGroup'){
-                    this.loadDeviceGroupTree('')
-                }
                 if(params.filterType=='rulesList'){
                     this.loadRulesList('')
                 }
@@ -226,18 +216,6 @@ export default {
                 this.propOptions = msl.properties;
             }
             
-        },
-        loadDeviceGroupTree() {
-            this.loading = true;
-            
-            groupTree(this.filterParams).then(rsp => {
-                this.loading = false;
-                this.groupOptions = rsp.data;
-            })
-            .catch(err => {
-                this.loading = false;
-                this.$message.error("接口异常");
-            });
         },
         loadRulesList(query) {
             this.loading = true;

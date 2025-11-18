@@ -1,15 +1,5 @@
 <template>
   <div>
-    <!-- <el-row :gutter="10" class="mb8 button_row" style="display:flex;justify-content:flex-end;align-items:center">
-      <div>
-        <el-col :span="1.5">
-          <el-button type="warning" plain :loading="exportLoading" @click="handleExport">
-          <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
-            <span style="margin-left:6px">查询与导出历史报表</span>
-          </el-button>
-        </el-col>
-      </div>
-    </el-row> -->
     <div class="info_title">
       <h3>设备信息</h3>
       <div class="edit_class" @click="onEditClick" v-if="!isInfoEdit && canChangeDevice">
@@ -29,15 +19,9 @@
       <table border="1" class="configInfo" v-loading="configisLoading">
         <tr>
           <th colspan="1"><span>批次编号</span></th>
-          <td class colspan="3">
+          <td class colspan="1">
             <span>{{ deviceBasicInfos.DeviceNumber ? deviceBasicInfos.DeviceNumber : "" }}</span>
           </td>
-          <th colspan="1"><span>归属企业</span></th>
-          <td colspan="1" style="width: 21.5%">
-            <div v-if="!isInfoEdit">{{ deviceBasicInfos.OwnerOrgName || "" }}</div>
-          </td>
-        </tr>
-        <tr>
           <th colspan="1"><span>通讯编码</span></th>
           <td colspan="1" style="width: 21.5%">
             <div v-if="isInfoEdit">
@@ -47,6 +31,12 @@
             </div>
             <div v-else>{{ deviceBasicInfos.DeviceId ? deviceBasicInfos.DeviceId : "" }}</div>
           </td>
+          <th colspan="1"><span>归属企业</span></th>
+          <td colspan="1" style="width: 21.5%">
+            <div v-if="!isInfoEdit">{{ deviceBasicInfos.OwnerOrgName || "" }}</div>
+          </td>
+        </tr>
+        <tr>
           <th colspan="1"><span>设备名称</span></th>
           <td colspan="1" style="width: 21.5%">
             <div v-if="!isInfoEdit">{{ deviceBasicInfos.Name ? deviceBasicInfos.Name : "" }}</div>
@@ -56,9 +46,13 @@
               </el-form-item>
             </div>
           </td>
-          <th colspan="1"><span>运行状态</span></th>
+          <th colspan="1"><span>协议版本</span></th>
           <td colspan="1" style="width: 21.5%">
-            <span>{{ deviceBasicInfos.DState }}</span>
+            <span>{{ deviceBasicInfos.ProductVer }}</span>
+          </td>
+          <td colspan="1">
+          </td>
+          <td colspan="1">
           </td>
         </tr>
         <tr>
@@ -69,7 +63,8 @@
             </div>
             <div v-if="isInfoEdit">
               <el-form-item style="margin-bottom: 0" prop="Remark">
-                <el-input style="width: 450px" type="textarea" :rows="2" v-model="deviceBasicInfos.Remark" placeholder="请输入备注信息" maxlength="500"></el-input>
+                <el-input style="width: 450px" type="textarea" :rows="2" v-model="deviceBasicInfos.Remark"
+                  placeholder="请输入备注信息" maxlength="500"></el-input>
               </el-form-item>
             </div>
           </td>
@@ -77,37 +72,46 @@
         <tr>
           <th colspan="1"><span>协议名称</span></th>
           <td colspan="1" style="width: 21.5%">
-            <div v-if="!isInfoEdit&&!isCheckPermi(['/IoTService/IotProduct/ListPage'])" style="width: 90%">{{ productInfos.Name ? productInfos.Name : "" }}</div>
-            <div v-if="!isInfoEdit&&isCheckPermi(['/IoTService/IotProduct/ListPage'])" style="width: 90%;cursor: pointer;" @click="jumpToProduct">{{ productInfos.Name ? productInfos.Name : "" }}</div>
+            <div v-if="!isInfoEdit && !isCheckPermi(['/IoTService/IotProduct/ListPage'])" style="width: 90%">{{
+              productInfos.Name ? productInfos.Name : "" }}</div>
+            <div v-if="!isInfoEdit && isCheckPermi(['/IoTService/IotProduct/ListPage'])"
+              style="width: 90%;cursor: pointer;" @click="jumpToProduct">{{ productInfos.Name ? productInfos.Name : ""
+              }}</div>
             <div v-if="isInfoEdit">
               <el-form-item style="margin-bottom: 0" prop="ProductId">
-                <el-select v-model="deviceBasicInfos.ProductId" placeholder="请选择" @change="changeDeviceProduct" style="width: 202px">
-                  <el-option v-for="item in productLists" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
+                <el-select v-model="deviceBasicInfos.ProductId" placeholder="请选择" @change="changeDeviceProduct"
+                  style="width: 202px">
+                  <el-option v-for="item in productLists" :key="item.Id" :label="item.Name"
+                    :value="item.Id"></el-option>
                 </el-select>
               </el-form-item>
             </div>
           </td>
           <th colspan="1"><span>协议分类</span></th>
           <td colspan="1" style="width: 21.5%">
-            <span>{{ productInfos.ClassifiedId ? (productClassMap.get(productInfos.ClassifiedId) ? productClassMap.get(productInfos.ClassifiedId).Name : "" ): "" }}</span>
+            <span>{{ productInfos.ClassifiedId ? (productClassMap.get(productInfos.ClassifiedId) ?
+              productClassMap.get(productInfos.ClassifiedId).Name : "") : "" }}</span>
           </td>
           <th colspan="1" v-if="this.canChangeDevice"><span>接入方式</span></th>
           <td colspan="1" style="width: 21.5%" v-if="this.canChangeDevice">
-            <span>{{ productInfos.NetworkWay ? (channelmap.get(productInfos.NetworkWay) ? channelmap.get(productInfos.NetworkWay).Name : "" ): "" }}</span>
+            <span>{{ productInfos.NetworkWay ? (channelmap.get(productInfos.NetworkWay) ?
+              channelmap.get(productInfos.NetworkWay).Name : "") : "" }}</span>
           </td>
         </tr>
         <tr>
-          <th colspan="1"><span>固件版本</span></th>
-          <td colspan="1" style="width: 21.5%">
-            <span>{{ deviceBasicInfos.FirmwareVer}}</span>
-          </td>
+
           <th colspan="1"><span>创建时间</span></th>
           <td colspan="1" style="width: 21.5%">
             <span>{{ deviceBasicInfos.CreateOn ? deviceBasicInfos.CreateOn : "" }}</span>
           </td>
           <th colspan="1"><span>离线时间</span></th>
           <td colspan="1" style="width: 21.5%">
-            <span>{{ deviceBasicInfos.Online == 0 ? deviceBasicInfos.LastOnline : (deviceBasicInfos.Online == 1 ? "在线中" : "") }}</span>
+            <span>{{ deviceBasicInfos.Online == 0 ? deviceBasicInfos.LastOnline : (deviceBasicInfos.Online == 1 ? "在线中"
+              : "") }}</span>
+          </td>
+          <td colspan="1">
+          </td>
+          <td colspan="1">
           </td>
         </tr>
         <tr>
@@ -121,7 +125,7 @@
 </template>
 
 <script>
-import { editDevice, groupTree } from "@/api/rules/device";
+import { editDevice } from "@/api/rules/device";
 import { productList, classTree, channelList } from "@/api/rules/productModel";
 import exportHistory from "./exportHistory.vue"
 import { checkPermi } from "@/utils/permission";
@@ -145,21 +149,17 @@ export default {
       type: Boolean,
       default: true,
     },
-    configLoading: {
-      type: Boolean,
-      default: true,
-    },
   },
 
   data() {
     return {
-      exportLoading:false,//是否处于导出状态
+      exportLoading: false,//是否处于导出状态
       workWayList: [], //设备接入方式列表
       productClassMap: new Map(),
       productClassList: [],
       channelmap: new Map(),
       productLists: [],
-      configisLoading: this.configLoading,
+      configisLoading: true,
       deviceBasicInfos: this.deviceInfos,
       isInfoEdit: false,
       saveLoading: false,
@@ -181,16 +181,16 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(()=>{
+    this.$nextTick(() => {
       this.loadData();
     })
   },
   watch: {
     deviceInfos(to, from) {
-    //   console.log("变化的", to);
+      //   console.log("变化的", to);
       this.deviceBasicInfos = to;
     },
-    canChangeDevice(to){
+    canChangeDevice(to) {
       // console.log('是否可以编辑',to);
     }
   },
@@ -198,14 +198,14 @@ export default {
     isCheckPermi(val) {
       return checkPermi(val)
     },
-    jumpToProduct(){
+    jumpToProduct() {
       //跳转到设备详情
       this.$router.push({
-        path: "/iot/physicalModel/productAdd/"+this.productInfos.Id,
+        path: "/iot/physicalModel/productAdd/" + this.productInfos.Id,
         query: { classId: this.productInfos.ClassifiedId }
       });
     },
-    handleExport(){
+    handleExport() {
       //导出历史报表
       this.$refs.exportHistoryForm.openDialog()
     },
@@ -239,8 +239,8 @@ export default {
         }
       });
     },
-    getDeviceInfos(){
-        this.$emit('reloadDevice')
+    getDeviceInfos() {
+      this.$emit('reloadDevice')
     },
     onEditClick() {
       //修改设备信息
@@ -255,13 +255,11 @@ export default {
       });
     },
     loadData() {
-      // console.log("loadData",this.canChangeDevice);
       if (this.canChangeDevice) {
         this.getProductClassList(); //协议分类列表
         this.getchannelList(); //设备接入方式列表
-      }else{
-        this.configisLoading = false;
       }
+      this.configisLoading = false;
     },
     getProductClassList() {
       //获取协议分类信息
@@ -288,6 +286,7 @@ export default {
         }
       }
     },
+
     getchannelList() {
       //获取设备接入方式
       channelList().then((rsp) => {
@@ -308,17 +307,21 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-::v-deep .vue-treeselect__menu{
+::v-deep .vue-treeselect__menu {
   overflow: auto;
   width: 100%;
 }
-::v-deep .vue-treeselect__label{
+
+::v-deep .vue-treeselect__label {
   overflow: unset;
   text-overflow: unset;
 }
-::v-deep .vue-treeselect div, .vue-treeselect span{
-  box-sizing:content-box;
+
+::v-deep .vue-treeselect div,
+.vue-treeselect span {
+  box-sizing: content-box;
 }
+
 .edit_class {
   font-size: 16px;
   color: #bfbfbf;

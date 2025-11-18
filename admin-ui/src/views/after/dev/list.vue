@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 20px 20px 0 20px" id="big_con">
     <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 136px)' }">
-      <div class="device_con" v-if="!configLoading">
+      <div class="device_con">
         <div class="device_con_left">
           <div class="left_top">
             <div class="name">{{ activeOrginfo.OrgName }}</div>
@@ -15,50 +15,43 @@
               <img class="logo" :src="activeOrginfo.Logo" alt="" />
             </div>
             <div class="custom_name hui">
-              {{ activeOrginfo.Creator ? activeOrginfo.Creator.RealName : "" }}{{ activeOrginfo.Creator&&activeOrginfo.Creator.Mobile ? '（'+activeOrginfo.Creator.Mobile+'）' : "" }}
+              {{ activeOrginfo.Creator ? activeOrginfo.Creator.RealName : "" }}{{
+                activeOrginfo.Creator && activeOrginfo.Creator.Mobile ? '（' + activeOrginfo.Creator.Mobile +'）' : "" }}
             </div>
             <div class="custom_name hui">{{ activeOrginfo.AddressName }}</div>
             <div class="custom_name hui">{{ activeOrginfo.AddressDetail }}</div>
             <div class="line"></div>
           </div>
           <div class="device_total">
-            <div class="total_li" v-for="(item,inx) in totalDeviceInfo" :key="'state'+inx">
+            <div class="total_li" v-for="(item, inx) in totalDeviceInfo" :key="'state' + inx">
               <div class="li_top">
                 <div class="samll_block green"></div>
-                <span>{{item.state}}</span>
+                <span>{{ item.state }}</span>
               </div>
               <div class="li_bottom">
-                <span class="num">{{item.count}}</span><span class="unit">台</span>
+                <span class="num">{{ item.count }}</span><span class="unit">台</span>
               </div>
             </div>
-            <!-- <div class="total_li">
-              <div class="li_top">
-                <div class="samll_block"></div>
-                <span>离线</span>
-              </div>
-              <div class="li_bottom">
-                <span class="num">{{totalDeviceInfo.OfflineCount}}</span><span class="unit">台</span>
-              </div>
-            </div> -->
           </div>
         </div>
         <div class="PlanList-table">
           <div class="from_con" id="from_con" style="margin-bottom: 0; padding-bottom: 0; padding-left: 0">
             <el-form :model="deviceForm" ref="deviceForm" :inline="true" class="biaodan">
               <el-form-item label="车间">
-                <select_tree ref="selectTree" class="set_radius groupSet" :defaultProps="defaultProps" nodeKey="TreeId" :treeData='roomTreeList' @select="selectRoomCatetoryTree"/>
+                <select_tree ref="selectTree" class="set_radius groupSet" :defaultProps="defaultProps" nodeKey="TreeId"
+                  :treeData='roomTreeList' @select="selectRoomCatetoryTree" />
               </el-form-item>
               <el-form-item label="关键字" prop="Key">
-                <el-input v-model="deviceForm.Key" placeholder="请输入关键字" clearable/>
+                <el-input v-model="deviceForm.Key" placeholder="请输入关键字" clearable />
               </el-form-item>
               <el-form-item label="联网状态" prop="Online">
                 <el-select style="width:100px;" v-model="deviceForm.Online" placeholder="联网状态" clearable>
-                  <el-option v-for="dict in statusList" :key="dict.value" :label="dict.label" :value="dict.value"/>
+                  <el-option v-for="dict in statusList" :key="dict.value" :label="dict.label" :value="dict.value" />
                 </el-select>
               </el-form-item>
-             <el-form-item label="运行状态" prop="DState" v-if="isShowDStateSerch">
-               <el-select v-model="deviceForm.DState" style="width:100px;" filterable reserve-keyword allow-create
-                :clearable="true" placeholder="运行状态">
+              <el-form-item label="运行状态" prop="DState" v-if="isShowDStateSerch">
+                <el-select v-model="deviceForm.DState" style="width:100px;" filterable reserve-keyword allow-create
+                  :clearable="true" placeholder="运行状态">
                   <el-option v-for="item in DStatelist" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -69,21 +62,17 @@
               </el-form-item>
             </el-form>
           </div>
-          
-          <dev_table :configLoading="configLoading2" :tableData="tableData" @toDeviceDetails="toDeviceDetails"></dev_table>
 
-          <pagination v-show="total > 0" :total="total" :page.sync="deviceForm.pageNum" :limit.sync="deviceForm.pageSize" :pageSizes="pageSizes" @pagination="getDeviceList"/>
+          <dev_table :configLoading="configLoading2" :tableData="tableData" @toDeviceDetails="toDeviceDetails">
+          </dev_table>
+
+          <pagination v-show="total > 0" :total="total" :page.sync="deviceForm.pageNum"
+            :limit.sync="deviceForm.pageSize" :pageSizes="pageSizes" @pagination="getDeviceList" />
         </div>
       </div>
     </div>
-    <KfSelecter
-      ref="kfDlg"
-      @ok="onTargetChange"
-      :isFilterInvite="true"
-      :IsInvite="true"
-      title="请选择切换的企业"
-    ></KfSelecter>
-    
+    <KfSelecter ref="kfDlg" @ok="onTargetChange" :isFilterInvite="true" :IsInvite="true" title="请选择切换的企业"></KfSelecter>
+
   </div>
 </template>
 <script>
@@ -99,12 +88,12 @@ import dev_table from "./dev_table";
 import { getConfigKey } from "@/api/system/config.js";
 export default {
   name: "deviceList",
-  components: { KfSelecter,select_tree,dev_table },
+  components: { KfSelecter, select_tree, dev_table },
   dicts: ["device_run"],
   data() {
     return {
       //设备
-      defaultProps:{
+      defaultProps: {
         children: "Children",
         label: "TreeName",
       },
@@ -128,13 +117,13 @@ export default {
       ],
       tableData: [], //我的设备列表
       configLoading: true, //配置信息是否处于
-      configLoading2:true,
+      configLoading2: true,
       activeOrgId: "",
       activeOrginfo: {}, //活动的企业信息
-      myOrgInfo:{},//我的登录企业信息
-      totalDeviceInfo:{},//设备统计信息
-      DStatelist:[],
-      isShowDStateSerch:false
+      myOrgInfo: {},//我的登录企业信息
+      totalDeviceInfo: {},//设备统计信息
+      DStatelist: [],
+      isShowDStateSerch: false
     };
   },
   watch: {
@@ -144,36 +133,35 @@ export default {
         this.deviceForm.Online = id ? Number(id) : this.deviceForm.Online;
       },
       deep: true,
-      immediate: true 
+      immediate: true
     },
   },
   async mounted() {
     this.configLoading = true;
-    let Configres = await getConfigKey("device.runstate");
-    if(Configres.data&&Configres.data!=='false'){
-      this.isShowDStateSerch=Configres.data
-      if(this.dict.type&&this.dict.type.device_run){
-        this.DStatelist=this.dict.type.device_run
-      }
-    }else{
-      this.isShowDStateSerch=false
-    }
+
     try {
-      // this.activeOrgId = this.$store.getters.orgId;
       let res = await orgInfo({ id: this.myOrgId });
-      // console.log("我的企业信息", res);
-      this.myOrgInfo= res.data
+      this.myOrgInfo = res.data
       this.activeOrginfo = res.data;
     } catch (error) {
-      
+
     }
     await this.getCatetoryList();
     this.getDeviceStatistics()
     this.getDeviceList();
-    
+    getConfigKey("device.runstate").then(Configres => {
+      if (Configres.data && Configres.data !== 'false') {
+        this.isShowDStateSerch = Configres.data
+        if (this.dict.type && this.dict.type.device_run) {
+          this.DStatelist = this.dict.type.device_run
+        }
+      } else {
+        this.isShowDStateSerch = false
+      }
+    })
   },
-  computed:{
-    myOrgId(){
+  computed: {
+    myOrgId() {
       return this.$store.getters.orgId
     }
   },
@@ -185,34 +173,34 @@ export default {
       this.deviceForm.RoomCategory = '';
       this.deviceForm.RoomId = '';
       this.resetForm("deviceForm");
-      this.deviceForm.pageNum=1
+      this.deviceForm.pageNum = 1
       this.deviceForm.Online = undefined
       this.deviceForm.DState = undefined
       this.getDeviceList();
     },
     getDeviceStatistics(orgId) {
       //获取设备统计信息
-      let query={}
-      if(orgId){
-        query.orgId=orgId
-      }else{
-        query.orgId=this.myOrgId
+      let query = {}
+      if (orgId) {
+        query.orgId = orgId
+      } else {
+        query.orgId = this.myOrgId
       }
-      if(this.isShowDStateSerch&&this.dict.type.device_run&&this.dict.type.device_run.length>0){
-        query.StateList=this.dict.type.device_run.map(row=>row.value)
+      if (this.isShowDStateSerch && this.dict.type.device_run && this.dict.type.device_run.length > 0) {
+        query.StateList = this.dict.type.device_run.map(row => row.value)
       }
       devRunStatisticsInfo(query).then((res) => {
         // console.log("设备统计信息res", res);
         let data = res.data;
-        this.totalDeviceInfo=res.data
+        this.totalDeviceInfo = res.data
         // this.totalDeviceInfo = JSON.parse(JSON.stringify(data))
       });
     },
-    selectRoomCatetoryTree(val){//选择车间分类或者车间后
-      this.roomval=JSON.parse(JSON.stringify(val))
+    selectRoomCatetoryTree(val) {//选择车间分类或者车间后
+      this.roomval = JSON.parse(JSON.stringify(val))
     },
-    async switchMyOrgers(){
-      this.activeOrginfo=JSON.parse(JSON.stringify(this.myOrgInfo))
+    async switchMyOrgers() {
+      this.activeOrginfo = JSON.parse(JSON.stringify(this.myOrgInfo))
       this.getDeviceStatistics(this.activeOrginfo.Id)
       await this.getCatetoryList();
       this.getDeviceList()
@@ -236,32 +224,32 @@ export default {
         if (res.code == 0) {
           let lists = [];
           lists = JSON.parse(JSON.stringify(res.data));
-          let allroom=await this.loadDeviceRoomList({ TargetOrgId: this.activeOrginfo.Id })
-          let nocateRoom=allroom.filter(row=>row.CategoryId==''||row.CategoryId==null)
-          this.roomTreeList = await this.initCatetoryRoomTree(lists,allroom,nocateRoom); //选择分类时分类树
+          let allroom = await this.loadDeviceRoomList({ TargetOrgId: this.activeOrginfo.Id })
+          let nocateRoom = allroom.filter(row => row.CategoryId == '' || row.CategoryId == null)
+          this.roomTreeList = await this.initCatetoryRoomTree(lists, allroom, nocateRoom); //选择分类时分类树
           this.configLoading = false;
         }
       } catch (error) {
         // console.log("error报错了",error);
       }
     },
-    async initCatetoryRoomTree(nodes,allroom,nocateRoom) {
+    async initCatetoryRoomTree(nodes, allroom, nocateRoom) {
       for (let idx = 0; idx < nodes.length; idx++) {
         let curnode = nodes[idx];
         nodes[idx].TreeId = curnode.Id;
         nodes[idx].TreeName = curnode.Name;
         nodes[idx].TreeType = "catetory";
-        let rooms = allroom.filter(row=>row.CategoryId==curnode.Id);
-        if (curnode.hasOwnProperty("Children") &&curnode.Children &&curnode.Children.length > 0) {
+        let rooms = allroom.filter(row => row.CategoryId == curnode.Id);
+        if (curnode.hasOwnProperty("Children") && curnode.Children && curnode.Children.length > 0) {
           let curnodeChildren = JSON.parse(JSON.stringify(curnode.Children));
-          curnode.Children = await this.initCatetoryRoomTree(curnodeChildren,allroom);
+          curnode.Children = await this.initCatetoryRoomTree(curnodeChildren, allroom);
           curnode.Children = [...curnode.Children, ...rooms];
-        }else{
-          curnode.Children =rooms
+        } else {
+          curnode.Children = rooms
         }
       }
-      if(nocateRoom&&nocateRoom.length>0){
-        nodes=[...nodes,...nocateRoom]
+      if (nocateRoom && nocateRoom.length > 0) {
+        nodes = [...nodes, ...nocateRoom]
       }
       return nodes;
     },
@@ -272,10 +260,10 @@ export default {
           TargetOrgId: activeCategoryInfo.TargetOrgId,
         });
         if (response.data && response.data.length > 0) {
-          let roomTableData=response.data.map(row=>{
-            row.TreeId= row.Id
-            row.TreeName= row.Name
-            row.TreeType= "room"
+          let roomTableData = response.data.map(row => {
+            row.TreeId = row.Id
+            row.TreeName = row.Name
+            row.TreeType = "room"
             return row
           })
           return roomTableData;
@@ -290,23 +278,23 @@ export default {
     getDeviceList() {
       //获取设备列表
       this.configLoading2 = true;
-      if(this.activeOrginfo.Id==this.$store.getters.orgId){
+      if (this.activeOrginfo.Id == this.$store.getters.orgId) {
         delete this.deviceForm.TargetOrgId
-      }else{
-        this.deviceForm.TargetOrgId=this.activeOrginfo.Id
+      } else {
+        this.deviceForm.TargetOrgId = this.activeOrginfo.Id
       }
-      if(this.roomval.TreeId){
-        if(this.roomval.TreeType=="catetory"){
+      if (this.roomval.TreeId) {
+        if (this.roomval.TreeType == "catetory") {
           delete this.deviceForm.RoomId
-          this.deviceForm.RoomCategory=this.roomval.TreeId
-          this.deviceForm.TargetOrgId=this.roomval.TargetOrgId
+          this.deviceForm.RoomCategory = this.roomval.TreeId
+          this.deviceForm.TargetOrgId = this.roomval.TargetOrgId
         }
-        if(this.roomval.TreeType=="room"){
-          this.deviceForm.RoomId=this.roomval.TreeId
-          this.deviceForm.RoomCategory=this.roomval.CategoryId
-          this.deviceForm.TargetOrgId=this.roomval.TargetOrgId
+        if (this.roomval.TreeType == "room") {
+          this.deviceForm.RoomId = this.roomval.TreeId
+          this.deviceForm.RoomCategory = this.roomval.CategoryId
+          this.deviceForm.TargetOrgId = this.roomval.TargetOrgId
         }
-      }else{
+      } else {
         delete this.deviceForm.RoomCategory
         delete this.deviceForm.RoomId
       }
@@ -336,6 +324,7 @@ export default {
 .device_con {
   display: flex;
   justify-content: space-between;
+
   .device_con_left {
     width: 20%;
     display: flex;
@@ -344,6 +333,7 @@ export default {
     align-items: center;
     border: 1px solid #f6f6f6;
     font-size: 14px;
+
     .left_top {
       display: flex;
       justify-content: space-between;
@@ -354,10 +344,12 @@ export default {
       color: #333333;
       height: 50px;
       background: #f6f9ff;
-      .top_btn{
+
+      .top_btn {
         display: flex;
         justify-content: flex-end;
         align-items: center;
+
         .handle_my {
           font-size: 14px;
           margin-right: 10px;
@@ -365,6 +357,7 @@ export default {
           cursor: pointer;
         }
       }
+
       .change_btn {
         width: 50px;
         height: 28px;
@@ -377,12 +370,14 @@ export default {
         line-height: 28px;
       }
     }
+
     .expand {
       width: 100%;
       text-align: right;
       color: #96a0a2;
       padding: 12px 10px 0;
     }
+
     .custom_info {
       display: flex;
       flex-direction: column;
@@ -391,36 +386,40 @@ export default {
       padding: 0 5px;
       box-sizing: border-box;
       padding-top: 12px;
+
       .custom_logo {
         width: 120px;
         height: 120px;
         border-radius: 50%;
+
         .logo {
           width: 120px;
           height: 120px;
           border-radius: 50%;
         }
       }
+
       .custom_name {
         margin-top: 20px;
         color: #333;
+
         &.hui {
           color: #4b4b4b;
           margin-top: 10px;
         }
       }
+
       .line {
         margin-top: 30px;
         width: 100%;
         height: 1px;
-        background: -webkit-linear-gradient(
-          left,
-          #fff 0%,
-          #dddddd 50%,
-          #fff 100%
-        );
+        background: -webkit-linear-gradient(left,
+            #fff 0%,
+            #dddddd 50%,
+            #fff 100%);
       }
     }
+
     .device_total {
       display: flex;
       justify-content: flex-start;
@@ -428,6 +427,7 @@ export default {
       flex-wrap: wrap;
       margin-top: 20px;
       width: 100%;
+
       .total_li {
         display: flex;
         flex-direction: column;
@@ -436,29 +436,36 @@ export default {
         color: #333;
         width: 50%;
         margin-bottom: 10px;
+
         .li_top {
           display: flex;
           justify-content: center;
           align-items: center;
+
           .samll_block {
             width: 8px;
             height: 8px;
             border-radius: 2px;
             background: #9e9e9e;
             margin-right: 2px;
+
             &.green {
               background: #00afaa;
             }
+
             &.red {
               background: #e93030;
             }
+
             &.yellow {
               background: #e0b309;
             }
           }
         }
+
         .li_bottom {
           margin-top: 3px;
+
           .unit {
             color: #9a9acf;
             margin-left: 2px;
@@ -468,6 +475,7 @@ export default {
     }
   }
 }
+
 .PlanList-table {
   width: 80%;
   padding: 0 0 0 20px;

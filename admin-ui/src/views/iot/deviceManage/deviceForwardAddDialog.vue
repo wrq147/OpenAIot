@@ -35,7 +35,7 @@
                 <el-form-item label="协议名称" prop="productId">
                   <el-input type="text" v-model="deviceAddFrom.productName" placeholder="请输入协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
-                  <el-select @change="getproductTagList" style="width:100%" v-model="deviceAddFrom.productId" placeholder="请选择" v-else
+                  <el-select style="width:100%" v-model="deviceAddFrom.productId" placeholder="请选择" v-else
                     :clearable="true" filterable remote reserve-keyword :remote-method="remoteMethod">
                     <el-option v-for="item in productLists" :key="item.Id" :label="item.Name"
                       :value="item.Id"></el-option>
@@ -46,7 +46,7 @@
                 <el-form-item label="转发设备协议名称" prop="productId2">
                   <el-input type="text" v-model="deviceAddFrom.productName2" placeholder="请输入转发设备协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
-                  <el-select @change="getproductTagList2" style="width:100%" v-model="deviceAddFrom.productId2" placeholder="请选择" v-else
+                  <el-select style="width:100%" v-model="deviceAddFrom.productId2" placeholder="请选择" v-else
                     :clearable="true" filterable remote reserve-keyword :remote-method="remoteMethod2">
                     <el-option v-for="item in productLists2" :key="item.Id" :label="item.Name"
                       :value="item.Id"></el-option>

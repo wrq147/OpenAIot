@@ -139,11 +139,7 @@
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 import { DeviceInfo, deviceFuncList, deviceExeFunc } from "@/api/rules/device";
 import { productInfo } from "@/api/rules/productModel";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-
 import { initMap } from "@/utils/amap";
-import warnList from "@/views/iot/physicalModel/warnList.vue";
 import InfiniteLoading from "vue-infinite-loading";
 
 import paramItem from "../funInput/paramItem.vue";
@@ -155,15 +151,11 @@ import abnormalData from "./abnormalData.vue";
 import devicePlane from "./devicePlane.vue";
 import customFunc from "./customFunc.vue";
 import deviceOnlineDebug from "./deviceOnlineDebug.vue";
-// import workScheduleInfo from "./workScheduleInfo.vue";
-// import sequenceChart from "./sequenceChart.vue";
 import { getConfigKey } from "@/api/system/config.js";
 import { checkPermi } from "@/utils/permission"; 
 export default {
   mixins: [resizeTableCon],
   components: {
-    Treeselect,
-    warnList,
     InfiniteLoading,
     paramItem,
     oldHistory,
@@ -670,12 +662,6 @@ export default {
 };
 </script>
 <style lang="less">
-.groupSet {
-  .vue-treeselect__input-container {
-    display: flex;
-    align-items: center;
-  }
-}
 
 .info_card {
   display: inline-block;

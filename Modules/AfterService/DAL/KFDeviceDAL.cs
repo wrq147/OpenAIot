@@ -293,7 +293,7 @@ namespace AfterService.DAL
             {
                 curcategory = await new SqlBuilder(help).Query<MZ_RoomCategory>().Where(x => x.Id == query.RoomCategory).ToFirstAsync();
             }
-            var tsql = new SqlBuilder(help).Query<Out_KfDevice>().Append("select d.*,p.Name as ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId where ");
+            var tsql = new SqlBuilder(help).Query<Out_KfDevice>().Append("select d.*,p.ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId where ");
             tsql.Append("(d.UseUserId=" + user.UserId);
 
             if (user.OrgId > 0)
