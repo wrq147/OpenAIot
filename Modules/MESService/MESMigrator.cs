@@ -209,6 +209,7 @@ namespace MESService
                 .WithColumn("WorkTime").AsDecimal(10, 2).WithColumnDescription("预计工时(分钟)")
                 .WithColumn("PriceMethod").AsString(6).WithColumnDescription("计件、计时")
                 .WithColumn("UnitPrice").AsDecimal(10, 2).WithColumnDescription("工资单价")
+                .WithColumn("DefectJson").AsString(20000).WithColumnDescription("不良品项列表")
                 .WithColumn("ReportFields").AsString(20000).WithColumnDescription("工序的报工表单权限")
                 .WithColumn("FieldsInit").AsString(20000).WithColumnDescription("报工表单初始化配置")
                            .WithColumn("StrExt1").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段1")
@@ -416,6 +417,7 @@ namespace MESService
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id编号")
                 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                 .WithColumn("PlanId").AsString(128).Indexed().WithColumnDescription("生产计划Id")
+                .WithColumn("WorkNumber").AsString(50).Unique().WithColumnDescription("唯一编号")
                 .WithColumn("ParentWorkOrderId").AsString(128).Indexed().WithColumnDescription("父工单Id")
                 .WithColumn("Status").AsInt32().Indexed().WithColumnDescription("状态：0、待生产；1、生产中；2、已完成；3、已取消；")
                 .WithColumn("Priority").AsInt32().WithColumnDescription("优先级：1、优先安排；2、加急处理；3、正常排产")
@@ -571,12 +573,11 @@ namespace MESService
                 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                 .WithColumn("WorkOrderId").AsString(128).Indexed().WithColumnDescription("关联的工单Id")
                 .WithColumn("WorkTaskId").AsString(128).Indexed().WithColumnDescription("关联的任务Id")
-                .WithColumn("OperId").AsString(128).WithColumnDescription("关联的工序Id")
+                .WithColumn("OperId").AsString(128).Indexed().WithColumnDescription("关联的工序Id")
                 .WithColumn("Number").AsString(50).Unique().WithColumnDescription("唯一编号")
                 .WithColumn("BatchNo").AsString(50).Indexed().WithColumnDescription("批次编号")
                 .WithColumn("GoodNum").AsDecimal(10, 2).WithColumnDescription("良品数")
-                .WithColumn("DefectNum").AsDecimal(10, 2).WithColumnDescription("不良品数")
-                .WithColumn("DefectStr").AsString(2000).WithColumnDescription("不良品项：多个逗号分隔")
+                .WithColumn("DefectNum").AsDecimal(10, 2).WithColumnDescription("总不良品数")
                 .WithColumn("StartWork").AsDateTime().Nullable().WithColumnDescription("开始时间")
                 .WithColumn("EndWork").AsDateTime().Nullable().WithColumnDescription("结束时间")
                 .WithColumn("WorkTime").AsDecimal(10, 2).WithColumnDescription("报工时长(分钟)")
@@ -587,10 +588,21 @@ namespace MESService
                 .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
                 .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                 .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
-            if (Constants.General.sqltype != "Sqlite")
-            {
-                Execute.Sql("ALTER TABLE mz_work_report ADD FULLTEXT INDEX DefectStrNames (DefectStr);");
-            }
+
+
+            Execute.Sql("DROP TABLE IF EXISTS mz_work_defect");
+            Create.Table("mz_work_defect").WithDescription("报工不良品表")
+                .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id编号")
+                .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
+                .WithColumn("WorkOrderId").AsString(128).Indexed().WithColumnDescription("关联的工单Id")
+                .WithColumn("WorkTaskId").AsString(128).Indexed().WithColumnDescription("关联的任务Id")
+                .WithColumn("OperId").AsString(128).Indexed().WithColumnDescription("关联的工序Id")
+                .WithColumn("ReportId").AsString(128).Indexed().WithColumnDescription("报工Id")
+                .WithColumn("DefectId").AsString(128).WithColumnDescription("不良品编号")
+                .WithColumn("DefectName").AsString(50).WithColumnDescription("不良品项名称")
+                .WithColumn("DefectCategory").AsString(50).WithColumnDescription("不良类别(外观/功能/性能/其它等)")
+                .WithColumn("DefectNum").AsDecimal(10, 2).WithColumnDescription("不良品数");
+
         }
         public override void Down()
         {

@@ -60,18 +60,6 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center">
-          <template #header>
-            <span>
-              <span style="color: #f56c6c;">*</span>百分比(%)
-            </span>
-          </template>
-          <template slot-scope="scope">
-            <div>
-              <el-input type="number" v-model="scope.row.Proportion" placeholder="请输入百分比(%)" />
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column v-for="(item, index) in filedTableList" :key="index" align="center">
           <template #header>
             <span>
@@ -258,7 +246,6 @@
           PropOf: "",
           WorkTime: '',
           Sequence: '',
-          Proportion:null,
           // 添加所有mapid作为属性，初始值为空字符串
           ...this.filedTableList.reduce((acc, item) => {
               acc[item.mapid] = ''; // 初始化为空值
@@ -283,7 +270,6 @@
           OperId: !row || !row.OperId,
           PropOf: !row || (!row.PropOf && row.PropOf !== 0),
           WorkTime: !row || (!row.WorkTime && row.WorkTime !== 0),
-          Proportion: !row || (!row.WorkTime && row.WorkTime !== 0)
         };
         
         // 再添加动态字段的验证（根据filedTableList）

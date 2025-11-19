@@ -336,6 +336,7 @@ export default {
           unitPrice: "",
           reportFields: "",
           fieldsInit: "",
+          DefectObject:[]
         };
         this.$refs["addOper"].employees = [];
         this.$refs["addOper"].equipment = [];
@@ -354,6 +355,7 @@ export default {
           unitPrice: data.UnitPrice,
           reportFields: data.ReportFields,
           fieldsInit: data.FieldsInit,
+          DefectObject:data.DefectJson==''?[]:JSON.parse(data.DefectJson)
         };
 
         this.$refs["addOper"].employees =

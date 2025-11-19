@@ -28,15 +28,15 @@
             <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
               <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
                 <el-table-column label="计划名称" align="center" prop="PlanName" :show-overflow-tooltip="true" />
-                <el-table-column label="物料名称" align="center" prop="PlanId" :show-overflow-tooltip="true" >
+                <el-table-column label="产品名称" align="center" :show-overflow-tooltip="true" >
                   <template slot-scope="scope">
                     <span>{{scope.row.ProdInfo?scope.row.ProdInfo.ProductName:''}}</span>
                   </template>
                 </el-table-column>
-                <!-- <el-table-column label="父工单Id" align="center" prop="ParentWorkOrderId" /> -->
-                <el-table-column label="是否子级" align="center" prop="PlanNameSub" :show-overflow-tooltip="true" >
+                <el-table-column label="工单编号" align="center" prop="WorkNumber" />
+                <el-table-column label="父工单" align="center">
                   <template slot-scope="scope">
-                    <span>{{scope.row.PlanNameSub}}</span>
+                    <span>{{scope.row.ParentWorkInfo!=null?scope.row.ParentWorkInfo.WorkNumber:''}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="优先级" align="center" prop="priority" >

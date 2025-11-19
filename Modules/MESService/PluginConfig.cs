@@ -49,6 +49,7 @@ namespace MESService
             services.AddDAL<WorkBatchDAL>();
             services.AddDAL<WorkTaskDAL>();
             services.AddDAL<BatchDevHisDAL>();
+            services.AddDAL<WorkDefectDAL>();
         }
         private DA_Table tb1;
         private DA_Table tb2;

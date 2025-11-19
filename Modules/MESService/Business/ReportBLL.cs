@@ -102,6 +102,25 @@ namespace MESService.Business
                 await _provider.GetService<WorkBatchDAL>().CreateOrUpdate(data.RepBat);
             }
             data.SetUpdateBy(user);
+            data.DefectNum = 0;
+            var workDefectDAL = _provider.GetService<WorkDefectDAL>();
+            if (data.DefectList != null && data.DefectList.Count > 0)
+            {
+                await workDefectDAL.Delete(x => x.ReportId == data.Id);
+                var snowflake = _provider.GetService<SnowflakeHelper>();
+                foreach (var defect in data.DefectList)
+                {
+                    defect.Id = snowflake.NextId().ToString();
+                    defect.OrgId = data.OrgId;
+                    defect.WorkOrderId = data.WorkOrderId;
+                    defect.WorkTaskId = data.WorkTaskId;
+                    defect.OperId = data.OperId;
+                    defect.ReportId = data.Id;
+                    data.DefectNum += defect.DefectNum;
+                }
+                await workDefectDAL.Insert(data.DefectList);
+            }
+
             return BusResponse<int>.Success(await reportDAL.Update(data));
         }
         public virtual async Task<BusResponse<string>> Insert(MZ_WorkReport data, IUserInfo user, TAAction action)
@@ -110,16 +129,21 @@ namespace MESService.Business
             {
                 return BusResponse<string>.Error(111, "非企业用户无法添加生产报工");
             }
-
-            if (string.IsNullOrEmpty(data.OperId))
+            if (string.IsNullOrEmpty(data.WorkTaskId))
             {
-                return BusResponse<string>.Error(121, "工序不能为空");
+                return BusResponse<string>.Error(121, "生产任务不能为空");
             }
 
+            var task = await _provider.GetService<WorkTaskDAL>().Select(data.WorkTaskId);
+            if (task == null)
+            {
+                return BusResponse<string>.Error(122, "生产任务不存在");
+            }
+   
             var tmpOper = await _provider.GetService<OperDAL>().Select(data.OperId);
             if (tmpOper == null)
             {
-                return BusResponse<string>.Error(122, "工序不存在");
+                return BusResponse<string>.Error(124, "工序不存在");
             }
 
             WorkReportDAL reportDAL = _provider.GetService<WorkReportDAL>();
@@ -127,8 +151,6 @@ namespace MESService.Business
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
             data.FlowId = 0;
-
-
 
 
             #region 校验发布权限
@@ -198,7 +220,24 @@ namespace MESService.Business
             }
             data.SetCreateBy(user);
             data.Status = 0;
+            data.DefectNum = 0;
+            if (data.DefectList != null && data.DefectList.Count > 0)
+            {
+                foreach (var defect in data.DefectList)
+                {
+                    defect.Id = snowflake.NextId().ToString();
+                    defect.OrgId = data.OrgId;
+                    defect.WorkOrderId = data.WorkOrderId;
+                    defect.WorkTaskId = data.WorkTaskId;
+                    defect.OperId = data.OperId;
+                    defect.ReportId = data.Id;
+                    data.DefectNum += defect.DefectNum;
+                }
+                await _provider.GetService<WorkDefectDAL>().Insert(data.DefectList);
+            }
+
             await reportDAL.Insert(data);
+
             return BusResponse<string>.Success(data.Id);
         }
         public virtual async Task<BusResponse<int>> Delete(string id, IUserInfo user)
@@ -222,6 +261,7 @@ namespace MESService.Business
             {
                 await _provider.GetService<WorkflowExecutor>().TerminateWorkflow(old.FlowId.Value);
             }
+            await _provider.GetService<WorkDefectDAL>().Delete(x => x.ReportId == id);
             return BusResponse<int>.Success(rs);
         }
 

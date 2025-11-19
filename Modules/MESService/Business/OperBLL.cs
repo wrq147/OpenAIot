@@ -50,6 +50,9 @@ namespace MESService.Business
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
             data.DeviceIds ??= string.Empty;
+            data.DefectJson ??= string.Empty;
+            data.ReportFields ??= string.Empty;
+            data.FieldsInit ??= string.Empty;
             data.SetCreateBy(user);
             await _operDAL.Insert(data);
             return BusResponse<string>.Success(data.Id);

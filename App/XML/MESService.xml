@@ -772,6 +772,11 @@
             工资单价
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_ProductOper.DefectJson">
+            <summary>
+            不良品项列表
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_ProductOper.ReportFields">
             <summary>
             工序的报工表单权限，存储json格式（[{"id":"自定义报工字段Id","title":"字段名称","perm":"R只读.E可编辑,H隐藏"}]）
@@ -1632,6 +1637,56 @@
             单个用量
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.Id">
+            <summary>
+            Id编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.WorkOrderId">
+            <summary>
+            关联的工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.WorkTaskId">
+            <summary>
+            关联的任务Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.OperId">
+            <summary>
+            关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.ReportId">
+            <summary>
+            报工Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.DefectId">
+            <summary>
+            不良品编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.DefectName">
+            <summary>
+            不良品项名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.DefectCategory">
+            <summary>
+            不良类别(外观/功能/性能/其它等)
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkDefect.DefectNum">
+            <summary>
+            不良品数
+            </summary>
+        </member>
         <member name="T:MESService.Model.MZ_WorkOrder">
             <summary>
             生产工单
@@ -1774,12 +1829,7 @@
         </member>
         <member name="P:MESService.Model.MZ_WorkReport.DefectNum">
             <summary>
-            不良品数
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkReport.DefectStr">
-            <summary>
-            不良品项：多个逗号分隔
+            总不良品数
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkReport.StartWork">
@@ -1815,6 +1865,11 @@
         <member name="P:MESService.Model.MZ_WorkReport.RepBat">
             <summary>
             报工的批次
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.DefectList">
+            <summary>
+            不良品项
             </summary>
         </member>
         <member name="T:MESService.Model.MZ_WorkTask">

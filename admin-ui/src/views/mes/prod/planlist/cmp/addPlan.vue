@@ -30,15 +30,15 @@
             </el-row>
         </el-form>
       <div style="margin: 10px 0">
-        <el-button type="primary" icon="el-icon-plus" plain @click="deviceOpen = true;">添加物料</el-button>
+        <el-button type="primary" icon="el-icon-plus" plain @click="deviceOpen = true;">添加产品</el-button>
       </div>
       <el-table :data="ruleForm.items" border tooltip-effect="dark" style="width: 100%">
         <el-table-column type="index" label="序号" align="center" width="50" />
-        <el-table-column label="物料编号" prop="ProductId" align="center"></el-table-column>
-        <el-table-column label="物料名称" prop="ProductName" align="center"></el-table-column>
+        <el-table-column label="产品编号" prop="ProductId" align="center"></el-table-column>
+        <el-table-column label="产品名称" prop="ProductName" align="center"></el-table-column>
         <el-table-column label="规格" prop="Specs" align="center"></el-table-column>
         <el-table-column label="单位" prop="Unit" align="center" width="80"></el-table-column>
-        <el-table-column label="物料属性" prop="ProductFrom" align="center"></el-table-column>
+        <el-table-column label="产品属性" prop="ProductFrom" align="center"></el-table-column>
         <el-table-column align="center">
           <template #header>
             <span>

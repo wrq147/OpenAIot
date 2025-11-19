@@ -26,6 +26,22 @@ namespace MESService.Business
         public virtual async Task<PageObject<MZ_ProductRoute>> SelectList(In_RouteList query, IUserInfo user)
         {
             var pagelist = await _routeDAL.SelectByPage(query, user.OrgId);
+            UserDAL userDAL = _provider.GetService<UserDAL>();
+            var userDict1 = await userDAL.NavigateDict(pagelist.List, x => true, x => x.createId.Value);
+            var userDict2 = await userDAL.NavigateDict(pagelist.List, x => true, x => x.updateId.Value);
+            foreach (var iotPro in pagelist.List)
+            {
+                MZ_AdminInfo user1;
+                if (userDict1.TryGetValue(iotPro.createId.Value, out user1))
+                {
+                    iotPro.createName = user1.RealName;
+                }
+                MZ_AdminInfo user2;
+                if (userDict2.TryGetValue(iotPro.updateId.Value, out user2))
+                {
+                    iotPro.updateName = user2.RealName;
+                }
+            }
             var ids = pagelist.List.Select(x => x.Id).ToList();
             if (ids.Count > 0)
             {

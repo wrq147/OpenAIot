@@ -3,6 +3,7 @@ using Common.Share;
 using MyAccess.DB.Attr;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 
 namespace MESService.Model
@@ -48,13 +49,9 @@ namespace MESService.Model
         /// </summary>
         public decimal? GoodNum { get; set; }
         /// <summary>
-        /// 不良品数
+        /// 总不良品数
         /// </summary>
         public decimal? DefectNum { get; set; }
-        /// <summary>
-        /// 不良品项：多个逗号分隔
-        /// </summary>
-        public string DefectStr { get; set; }
         /// <summary>
         /// 开始时间
         /// </summary>
@@ -85,5 +82,9 @@ namespace MESService.Model
         /// </summary>
         [DataIgnore]
         public MZ_WorkBatch RepBat { get; set; }
+        /// <summary>
+        /// 不良品项
+        /// </summary>
+        public List<MZ_WorkDefect> DefectList { get; set; }
     }
 }

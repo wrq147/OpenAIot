@@ -27,9 +27,19 @@ namespace MESService.Model
         /// </summary>
         public string PlanId { get; set; }
         /// <summary>
+        /// 工单编号
+        /// </summary>
+        public string WorkNumber { get; set; }
+        /// <summary>
+        /// 生产计划名称
+        /// </summary>
+        [DataIgnore]
+        public string PlanName { get; set; }
+        /// <summary>
         /// 父工单Id
         /// </summary>
         public string ParentWorkOrderId { get; set; }
+
         /// <summary>
         /// 状态：0、待生产；1、生产中；2、已完成；3、已取消；
         /// </summary>
@@ -88,5 +98,10 @@ namespace MESService.Model
         /// </summary>
         [DataIgnore]
         public MZ_Product ProdInfo { get; set; }
+        /// <summary>
+        /// 父工单信息
+        /// </summary>
+        [DataIgnore]
+        public Out_ParentWordInfo ParentWorkInfo { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Common.IdGenerator;
+﻿using AuthService;
+using Common;
+using Common.IdGenerator;
 using Common.Share;
 using FluentMigrator.Builders.Alter.Table;
 using MESService.DAL;
@@ -42,9 +44,31 @@ namespace MESService.Business
 
         public virtual async Task<PageObject<MZ_WorkOrder>> SelectList(In_WorkOrderList query, IUserInfo user)
         {
-            return await _workOrderDAL.SelectByPage(query, user.OrgId);
-        }
+            var pagelist = await _workOrderDAL.SelectByPage(query, user.OrgId);
+            var parentOrderIds = pagelist.List.Where(x => !string.IsNullOrEmpty(x.ParentWorkOrderId)).Select(x => x.ParentWorkOrderId).ToList();
+            if (parentOrderIds.Count > 0)
+            {
+                var parentOrders = (await _workOrderDAL.SelectListByIds(parentOrderIds)).ToDictionary(x => x.Id);
+                foreach (var order in pagelist.List)
+                {
+                    if (!string.IsNullOrEmpty(order.ParentWorkOrderId))
+                    {
+                        if (parentOrders.TryGetValue(order.ParentWorkOrderId, out var parentOrder))
+                        {
+                            order.ParentWorkInfo = parentOrder;
+                        }
+                    }
+                }
+            }
 
+
+            return pagelist;
+        }
+        public virtual async Task<string> GenerateNumber()
+        {
+            GeneralRedisHelper tmpredis = _provider.GetService<GeneralRedisHelper>();
+            return await tmpredis.GenerateNumber("GD");
+        }
         /// <summary>
         /// 通过生产计划生成生产工单
         /// </summary>
@@ -82,6 +106,7 @@ namespace MESService.Business
                 order.ParentWorkOrderId = parentWorkId ?? string.Empty;
                 order.Id = _snowflake.NextId().ToString();
                 order.OrgId = product.OrgId;
+                order.WorkNumber = await GenerateNumber();
                 order.PlanId = planItem.PlanId;
                 order.Status = 0;
                 order.Priority = plan.Priority;

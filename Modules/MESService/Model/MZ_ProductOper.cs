@@ -52,6 +52,10 @@ namespace MESService.Model
         /// </summary>
         public decimal? UnitPrice { get; set; }
         /// <summary>
+        /// 不良品项列表
+        /// </summary>
+        public string DefectJson { get; set; }
+        /// <summary>
         /// 工序的报工表单权限，存储json格式（[{"id":"自定义报工字段Id","title":"字段名称","perm":"R只读.E可编辑,H隐藏"}]）
         /// </summary>
         public string ReportFields { get; set; }

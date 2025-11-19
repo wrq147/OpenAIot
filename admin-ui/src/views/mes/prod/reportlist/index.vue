@@ -149,8 +149,7 @@ export default {
       this.taskDialogVisible=false
     },
     taskSelect(val){
-      //生产计划选择
-      console.log("选择的生产计划",val);
+      //生产任务选择
       this.$refs.reportAdd.setTaskSelect(val)
     },
     onOpenWorkTask(){
