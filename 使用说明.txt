@@ -43,6 +43,7 @@ Modules：中台后端各个模块
 MyAccess：中台后端的ORM
 TemplateAction和TemplateAction.NetCore：中台后端的模块化MVC框架
 Third：第三方模板
+autoexe.sh 为linux用的自启动脚本
 
 四、各个模块说明：
 AfterService：设备中台模块
