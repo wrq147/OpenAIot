@@ -6,15 +6,10 @@
           <el-col :span="24" :xs="24">
             <div class="from_con" id="from_con">
               <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
-                <el-form-item label="状态" prop="status">
-                    <el-select v-model="queryParams.status" placeholder="请选择状态">
-                        <el-option label="待提交" :value="0" />
-                        <el-option label="待审批" :value="1" />
-                        <el-option label="待执行" :value="2" />
-                        <el-option label="执行中" :value="3" />
-                        <el-option label="已完成" :value="4" />
-                        <el-option label="已取消" :value="5" />
-                        <el-option label="已驳回" :value="6" />
+                <el-form-item label="状态" prop="Status">
+                    <el-select v-model="queryParams.Status" clearable placeholder="请选择状态">
+                        <el-option label="进行中" :value="0" />
+                        <el-option label="已完成" :value="1" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="创建日期">
@@ -29,34 +24,45 @@
             </div>
             <div class="elbiaoge_elform">
               <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
-                <!-- <el-table-column label="唯一编号" align="center" prop="Number" :show-overflow-tooltip="true" /> -->
-                <el-table-column label="计划编号" align="center" prop="Number" :show-overflow-tooltip="true"/>
-                <el-table-column label="计划名称" align="center" prop="PlanName" :show-overflow-tooltip="true"/>
-                <el-table-column label="工序名称" align="center" prop="OperName" :show-overflow-tooltip="true"/>
-                <el-table-column label="良品数" align="center" prop="GoodNum" />
-                <el-table-column label="不良品数" align="center" prop="DefectNum" :show-overflow-tooltip="true"/>
-                <el-table-column label="不良品项" align="center" prop="DefectStr" :show-overflow-tooltip="true"/>
-                <el-table-column label="状态" align="center">
+                <el-table-column label="工单编号" align="center">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.Status == 0">待提交</span>
-                    <span v-if="scope.row.Status == 1">待审批</span>
-                    <span v-if="scope.row.Status == 2">待执行</span>
-                    <span v-if="scope.row.Status == 3">执行中</span>
-                    <span v-if="scope.row.Status == 4">已完成</span>
-                    <span v-if="scope.row.Status == 5">已取消</span>
-                    <span v-if="scope.row.Status == 6">已驳回</span>
+                    <span>{{ scope.row.WorkNumber }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="报工时长(分钟)" align="center" prop="WorkTime" />
-                <el-table-column label="超时原因" align="center" prop="OverReason" :show-overflow-tooltip="true"/>
-                <el-table-column label="开始时间" align="center" prop="StartWork" :show-overflow-tooltip="true"/>
-                <el-table-column label="结束时间" align="center" prop="EndWork" :show-overflow-tooltip="true"/>
-                
-                <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
+                <el-table-column label="产品编号" align="center">
                   <template slot-scope="scope">
-                    <el-button type="text" icon="el-icon-edit" @click="handleAdd(scope.row)">编辑</el-button>
+                    <span>{{ scope.row.SkuNumber }}</span>
                   </template>
-                </el-table-column> -->
+                </el-table-column>
+                <el-table-column label="产品名称" align="center" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.ProductName }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="工序名称" align="center" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.OperName }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="可报工人员" align="center" prop="DefectNum" :show-overflow-tooltip="true"/>
+                <el-table-column label="报工数配比" align="center" prop="WorkTime" />
+                <el-table-column label="工时(分钟)" align="center" prop="WorkTime" />
+                <el-table-column label="总工时(分钟)" align="center" prop="WorkTime" />
+                <el-table-column label="计划数" align="center" prop="DefectStr" :show-overflow-tooltip="true"/>
+                <el-table-column label="良品数" align="center" prop="WorkTime" />
+                <el-table-column label="不良品数" align="center" prop="OverReason" :show-overflow-tooltip="true"/>
+                <el-table-column label="状态" align="center">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.IsFinish == true">已完成</span>
+                    <span v-else>进行中</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
+                  <template slot-scope="scope">
+                    <el-button type="text" icon="el-icon-notebook-2" @click="handleDetail(scope.row)">详情</el-button>
+                    <el-button type="text" icon="el-icon-document-add" @click="handleReport(scope.row)">报工</el-button>
+                  </template>
+                </el-table-column>
               </el-table>
               <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
                 :limit.sync="queryParams.pageSize" @pagination="getList" />
@@ -76,7 +82,7 @@
         loading: false,
         // 查询参数
         queryParams: {
-          status: '',
+          Status: -1,
           pageNum: 1,
           pageSize: 20,
           beginTime: '',
@@ -97,6 +103,10 @@
         if(this.time.length > 0) {
           this.queryParams.beginTime = this.time[0];
           this.queryParams.endTime = this.time[1];
+        }
+        else{
+          this.queryParams.beginTime = '';
+          this.queryParams.endTime = ''; 
         }
         taskList(this.queryParams).then(response => {
           this.taskList = response.data.List;

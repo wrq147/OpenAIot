@@ -89,7 +89,7 @@ namespace MyAccess.DB.Builder.WhereToSql
             return conditionBuilder.Result;
         }
         /// <summary>
-        /// 生成SQL的On条件
+        /// 生成SQL的On条件A,B
         /// </summary>
         /// <typeparam name="A"></typeparam>
         /// <typeparam name="B"></typeparam>
@@ -97,6 +97,57 @@ namespace MyAccess.DB.Builder.WhereToSql
         /// <param name="expression"></param>
         /// <returns></returns>
         public static string GetOnByLambda<A, B>(this SqlBuilder sqlbuilder, Expression<Func<A, B, bool>> expression)
+        {
+            ConditionBuilder conditionBuilder = new ConditionBuilder();
+            conditionBuilder.builder = sqlbuilder;
+            conditionBuilder.Build(expression);
+            return conditionBuilder.Result;
+        }
+        /// <summary>
+        /// 生成SQL的On条件A,B,C
+        /// </summary>
+        /// <typeparam name="A"></typeparam>
+        /// <typeparam name="B"></typeparam>
+        /// <typeparam name="C"></typeparam>
+        /// <param name="sqlbuilder"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static string GetOnByLambda<A, B, C>(this SqlBuilder sqlbuilder, Expression<Func<A, B, C, bool>> expression)
+        {
+            ConditionBuilder conditionBuilder = new ConditionBuilder();
+            conditionBuilder.builder = sqlbuilder;
+            conditionBuilder.Build(expression);
+            return conditionBuilder.Result;
+        }
+        /// <summary>
+        /// 生成SQL的On条件A,B,C,D
+        /// </summary>
+        /// <typeparam name="A"></typeparam>
+        /// <typeparam name="B"></typeparam>
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="D"></typeparam>
+        /// <param name="sqlbuilder"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static string GetOnByLambda<A, B, C, D>(this SqlBuilder sqlbuilder, Expression<Func<A, B, C, D, bool>> expression)
+        {
+            ConditionBuilder conditionBuilder = new ConditionBuilder();
+            conditionBuilder.builder = sqlbuilder;
+            conditionBuilder.Build(expression);
+            return conditionBuilder.Result;
+        }
+        /// <summary>
+        /// 生成SQL的On条件A,B,C,D,E
+        /// </summary>
+        /// <typeparam name="A"></typeparam>
+        /// <typeparam name="B"></typeparam>
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="D"></typeparam>
+        /// <typeparam name="E"></typeparam>
+        /// <param name="sqlbuilder"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static string GetOnByLambda<A, B, C, D, E>(this SqlBuilder sqlbuilder, Expression<Func<A, B, C, D, E, bool>> expression)
         {
             ConditionBuilder conditionBuilder = new ConditionBuilder();
             conditionBuilder.builder = sqlbuilder;

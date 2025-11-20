@@ -31,11 +31,6 @@ namespace MESService.Model
         /// </summary>
         public string WorkNumber { get; set; }
         /// <summary>
-        /// 生产计划名称
-        /// </summary>
-        [DataIgnore]
-        public string PlanName { get; set; }
-        /// <summary>
         /// 父工单Id
         /// </summary>
         public string ParentWorkOrderId { get; set; }
@@ -98,6 +93,11 @@ namespace MESService.Model
         /// </summary>
         [DataIgnore]
         public MZ_Product ProdInfo { get; set; }
+        /// <summary>
+        /// 生产计划
+        /// </summary>
+        [DataIgnore]
+        public MZ_ProductPlan PlanInfo { get; set; }
         /// <summary>
         /// 父工单信息
         /// </summary>

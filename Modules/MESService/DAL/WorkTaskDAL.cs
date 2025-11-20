@@ -2,6 +2,8 @@
 using Common.Share;
 using MESService.Model;
 using MyAccess.DB;
+using MyAccess.DB.Builder.WhereToSql;
+using ProducerService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +17,18 @@ namespace MESService.DAL
     {
         public virtual async Task<PageObject<MZ_WorkTask>> SelectByPage(In_WorkTaskList query, long orgId)
         {
-            Expression<Func<MZ_WorkTask, bool>> expression = (a) => a.OrgId == orgId;
-            var tmpSql = new SqlBuilder(help).Query<MZ_WorkTask>().Where(expression);
-            if (query.Items != null && query.Items.Length > 0)
+            Expression<Func<MZ_WorkTask, MZ_WorkOrder, MZ_ProductOper, MZ_Product, bool>> expression = (a, b, c, d) => a.OrgId == orgId;
+            if (query.Status == 0)
             {
-                //过滤扩展字段
-                foreach (var item in query.Items)
-                {
-                    item.AppendFilter(tmpSql, string.Empty);
-                }
+                expression = expression.And((a, b, c, d) => a.IsFinish == false);
             }
+            else if (query.Status == 1)
+            {
+                expression = expression.And((a, b, c, d) => a.IsFinish == true);
+            }
+            var tmpSql = new SqlBuilder(help).Query<MZ_WorkTask>()
+                .LeftJoin<MZ_WorkOrder>((a, b) => a.WorkOrderId == b.Id).LeftJoin<MZ_ProductOper>((a, b, c) => a.OperId == c.Id).LeftJoin<MZ_Product>((a, b, c, d) => a.ProductId == d.Id)
+                .Where(expression, "a.*,b.WorkNumber,c.OperName,d.SkuNumber,d.ProductName");
             return await tmpSql.GeneratePageObjectAsync(query, "StartOn desc");
         }
         public virtual async Task<List<string>> SelectTaskByOrgId(long orgId)

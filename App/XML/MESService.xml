@@ -517,9 +517,9 @@
             状态：0、待排产；1、待生产；2、生产中；3、已完成；4、已取消
             </summary>
         </member>
-        <member name="P:MESService.Model.In_WorkTaskList.Items">
+        <member name="P:MESService.Model.In_WorkTaskList.Status">
             <summary>
-            过滤扩展字段
+            0为进行中，1为已完成
             </summary>
         </member>
         <member name="T:MESService.Model.MZ_BatchDevHis">
@@ -1707,6 +1707,11 @@
             生产计划Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.WorkNumber">
+            <summary>
+            工单编号
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkOrder.ParentWorkOrderId">
             <summary>
             父工单Id
@@ -1780,6 +1785,16 @@
         <member name="P:MESService.Model.MZ_WorkOrder.ProdInfo">
             <summary>
             产品信息
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.PlanInfo">
+            <summary>
+            生产计划
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.ParentWorkInfo">
+            <summary>
+            父工单信息
             </summary>
         </member>
         <member name="T:MESService.Model.MZ_WorkReport">
@@ -1897,9 +1912,19 @@
             关联的工单Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkTask.ProductId">
+            <summary>
+            所属产品ID
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkTask.OperId">
             <summary>
             关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.RouteOperId">
+            <summary>
+            关联的工艺路线明细Id
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkTask.StartOn">
@@ -1962,209 +1987,29 @@
             工序顺序序号
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt1">
+        <member name="P:MESService.Model.MZ_WorkTask.Remark">
             <summary>
-            扩展字符串字段1
+            任务说明
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt2">
+        <member name="P:MESService.Model.MZ_WorkTask.WorkNumber">
             <summary>
-            扩展字符串字段2
+            工单编号
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt3">
+        <member name="P:MESService.Model.MZ_WorkTask.OperName">
             <summary>
-            扩展字符串字段3
+            工序名称
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt4">
+        <member name="P:MESService.Model.MZ_WorkTask.SkuNumber">
             <summary>
-            扩展字符串字段4
+            产品编号
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt5">
+        <member name="P:MESService.Model.MZ_WorkTask.ProductName">
             <summary>
-            扩展字符串字段5
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt6">
-            <summary>
-            扩展字符串字段6
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt7">
-            <summary>
-            扩展字符串字段7
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt8">
-            <summary>
-            扩展字符串字段8
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt9">
-            <summary>
-            扩展字符串字段9
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt10">
-            <summary>
-            扩展字符串字段10
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt11">
-            <summary>
-            扩展字符串字段11
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt12">
-            <summary>
-            扩展字符串字段12
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt13">
-            <summary>
-            扩展字符串字段13
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt14">
-            <summary>
-            扩展字符串字段14
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt15">
-            <summary>
-            扩展字符串字段15
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt16">
-            <summary>
-            扩展字符串字段16
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt17">
-            <summary>
-            扩展字符串字段17
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt18">
-            <summary>
-            扩展字符串字段18
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt19">
-            <summary>
-            扩展字符串字段19
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt20">
-            <summary>
-            扩展字符串字段20
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt21">
-            <summary>
-            扩展字符串字段21
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt22">
-            <summary>
-            扩展字符串字段22
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt23">
-            <summary>
-            扩展字符串字段23
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt24">
-            <summary>
-            扩展字符串字段24
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt25">
-            <summary>
-            扩展字符串字段25
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt26">
-            <summary>
-            扩展字符串字段26
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt27">
-            <summary>
-            扩展字符串字段27
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt28">
-            <summary>
-            扩展字符串字段28
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt29">
-            <summary>
-            扩展字符串字段29
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.StrExt30">
-            <summary>
-            扩展字符串字段30
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt1">
-            <summary>
-            扩展数字字段1
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt2">
-            <summary>
-            扩展数字字段2
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt3">
-            <summary>
-            扩展数字字段3
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt4">
-            <summary>
-            扩展数字字段4
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt5">
-            <summary>
-            扩展数字字段5
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt6">
-            <summary>
-            扩展数字字段6
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt7">
-            <summary>
-            扩展数字字段7
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt8">
-            <summary>
-            扩展数字字段8
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt9">
-            <summary>
-            扩展数字字段9
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.NumExt10">
-            <summary>
-            扩展数字字段10
-            </summary>
-        </member>
-        <member name="P:MESService.Model.MZ_WorkTask.ExtObjects">
-            <summary>
-            扩展的关联对象
+            产品名称
             </summary>
         </member>
         <member name="T:MESService.Model.Out_BomTreeItem">
@@ -2206,6 +2051,16 @@
             <param name="list"></param>
             <param name="t"></param>
             <returns></returns>
+        </member>
+        <member name="P:MESService.Model.Out_ParentWordInfo.PlannedStartOn">
+            <summary>
+            计划开始时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.Out_ParentWordInfo.PlannedEndOn">
+            <summary>
+            计划结束时间
+            </summary>
         </member>
         <member name="P:MESService.Model.Out_WorkTaskInfo.TotalGoodNum">
             <summary>

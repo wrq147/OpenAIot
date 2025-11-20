@@ -936,11 +936,6 @@
             关联的物联协议Id
             </summary>
         </member>
-        <member name="P:ProducerService.Model.MZ_Product.IOTProductName">
-            <summary>
-            关联的物联产品名称
-            </summary>
-        </member>
         <member name="P:ProducerService.Model.MZ_Product.ProductLabel">
             <summary>
             产品标签：U半成品，F成品

@@ -19,126 +19,49 @@ namespace MyAccess.DB.Builder
         }
 
         /// <summary>
-        /// A与E左链接
+        /// A、B、C、D、E左链接
         /// </summary>
         /// <typeparam name="E"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> LeftJoin<E>(Expression<Func<A, E, bool>> onCondi)
+        public JoinFiveBuilder<A, B, C, D, E> LeftJoin<E>(Expression<Func<A, B, C, D, E, bool>> onCondi)
         {
             Type bEntityType = typeof(E);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<A, E>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C, D, E>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
         }
 
         /// <summary>
-        /// B与E左链接
+        /// A、B、C、D、E内链接
         /// </summary>
         /// <typeparam name="E"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> LeftJoin<E>(Expression<Func<B, E, bool>> onCondi)
-        {
-            Type bEntityType = typeof(E);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<B, E>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
-        }
-
-        /// <summary>
-        /// C与E左链接
-        /// </summary>
-        /// <typeparam name="E"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> LeftJoin<E>(Expression<Func<C, E, bool>> onCondi)
-        {
-            Type bEntityType = typeof(E);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<C, E>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
-        }
-
-
-        /// <summary>
-        /// D与E左链接
-        /// </summary>
-        /// <typeparam name="E"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> LeftJoin<E>(Expression<Func<D, E, bool>> onCondi)
-        {
-            Type bEntityType = typeof(E);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<D, E>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
-        }
-
-        /// <summary>
-        /// A与E内链接
-        /// </summary>
-        /// <typeparam name="E"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> InnerJoin<E>(Expression<Func<A, E, bool>> onCondi)
+        public JoinFiveBuilder<A, B, C, D, E> InnerJoin<E>(Expression<Func<A, B, C, D, E, bool>> onCondi)
         {
             Type bEntityType = typeof(E);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, E>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C, D, E>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
         }
 
         /// <summary>
-        /// B与E内链接
+        /// A、B、C、D、E全连接
         /// </summary>
         /// <typeparam name="E"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> InnerJoin<E>(Expression<Func<B, E, bool>> onCondi)
+        public JoinFiveBuilder<A, B, C, D, E> FullJoin<E>(Expression<Func<A, B, C, D, E, bool>> onCondi)
         {
             Type bEntityType = typeof(E);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<B, E>(onCondi);
+            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "full join");
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C, D, E>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
         }
-
-        /// <summary>
-        /// C与E内链接
-        /// </summary>
-        /// <typeparam name="E"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> InnerJoin<E>(Expression<Func<C, E, bool>> onCondi)
-        {
-            Type bEntityType = typeof(E);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<C, E>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
-        }
-
-        /// <summary>
-        /// D与E内链接
-        /// </summary>
-        /// <typeparam name="E"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFiveBuilder<A, B, C, D, E> InnerJoin<E>(Expression<Func<D, E, bool>> onCondi)
-        {
-            Type bEntityType = typeof(E);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<D, E>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFiveBuilder<A, B, C, D, E>(this._sqlBuilder);
-        }
-
         /// <summary>
         /// 查询数量
         /// </summary>

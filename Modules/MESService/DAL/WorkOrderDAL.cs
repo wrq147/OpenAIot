@@ -18,20 +18,20 @@ namespace MESService.DAL
     {
         public virtual async Task<PageObject<MZ_WorkOrder>> SelectByPage(In_WorkOrderList query, long orgId)
         {
-            Expression<Func<MZ_WorkOrder, MZ_ProductPlan, bool>> expression = (a, c) => a.OrgId == orgId;
+            Expression<Func<MZ_WorkOrder, bool>> expression = (a) => a.OrgId == orgId;
             if (query.beginTime != null)
             {
-                expression = expression.And((a, c) => a.CreatedOn >= query.beginTime);
+                expression = expression.And((a) => a.CreatedOn >= query.beginTime);
             }
             if (query.endTime != null)
             {
-                expression = expression.And((a, c) => a.CreatedOn <= query.endTime);
+                expression = expression.And((a) => a.CreatedOn <= query.endTime);
             }
             if (query.Status != null)
             {
-                expression = expression.And((a, c) => a.Status == query.Status);
+                expression = expression.And((a) => a.Status == query.Status);
             }
-            var tmpSql = new SqlBuilder(help).Query<MZ_WorkOrder>().Include(x => x.ProdInfo, x => x.ProductId).LeftJoin<MZ_ProductPlan>((a, c) => a.PlanId == c.Id).Where(expression);
+            var tmpSql = new SqlBuilder(help).Query<MZ_WorkOrder>().Include(x => x.ProdInfo, x => x.ProductId).Include(x => x.PlanInfo, x => x.PlanId).Where(expression);
             return await tmpSql.GeneratePageObjectAsync(query, "CreatedOn desc");
         }
         public virtual async Task<List<Out_ParentWordInfo>> SelectListByIds(List<string> ids)

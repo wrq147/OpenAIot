@@ -1,78 +1,19 @@
 ﻿using MyAccess.DB.Attr;
 using MyAccess.DB.Builder.WhereToSql;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace MyAccess.DB.Builder
 {
-    /// <summary>
-    /// Query直接调用
-    /// </summary>
-    /// <typeparam name="A"></typeparam>
-    public class QueryBuilder<A> : AbstractQueryBuilder<QueryOneBuilder<A>>
+    public class QueryIncludeBuilder<A> : AbstractQueryBuilder<QueryOneBuilder<A>>
     {
-        public QueryBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
+        public QueryIncludeBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
-        }
-        /// <summary>
-        /// 左链接
-        /// </summary>
-        /// <typeparam name="B"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinTwoBuilder<A, B> LeftJoin<B>(Expression<Func<A, B, bool>> onCondi)
-        {
-            Type bEntityType = typeof(B);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<A, B>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinTwoBuilder<A, B>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// 右链接
-        /// </summary>
-        /// <typeparam name="B"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinTwoBuilder<A, B> RightJoin<B>(Expression<Func<A, B, bool>> onCondi)
-        {
-            Type bEntityType = typeof(B);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "right join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, B>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinTwoBuilder<A, B>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// 内连接
-        /// </summary>
-        /// <typeparam name="B"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinTwoBuilder<A, B> InnerJoin<B>(Expression<Func<A, B, bool>> onCondi)
-        {
-            Type bEntityType = typeof(B);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, B>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinTwoBuilder<A, B>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// 全连接
-        /// </summary>
-        /// <typeparam name="B"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinTwoBuilder<A, B> FullJoin<B>(Expression<Func<A, B, bool>> onCondi)
-        {
-            Type bEntityType = typeof(B);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "full join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, B>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinTwoBuilder<A, B>(this._sqlBuilder);
         }
         /// <summary>
         /// 添加子对象映射
@@ -87,7 +28,7 @@ namespace MyAccess.DB.Builder
             string name = ExpressionTool.GetMemberName(obj);
             string idname = ExpressionTool.GetMemberName(id);
             _sqlBuilder.AddJoin(name, null, idname);
-            return new QueryIncludeBuilder<A>(_sqlBuilder);
+            return this;
         }
 
         /// <summary>

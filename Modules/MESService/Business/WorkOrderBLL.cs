@@ -147,8 +147,8 @@ namespace MESService.Business
         /// <returns></returns>
         public async Task OrderToTask()
         {
-            //提前6个小时生成任务
-            var orderlist = await _workOrderDAL.SelectList(x => x.Status == 0 && DateTime.Now.AddHours(6) > x.PlannedStartOn);
+            //计划开始时生成任务
+            var orderlist = await _workOrderDAL.SelectList(x => x.Status == 0 && DateTime.Now > x.PlannedStartOn);
             foreach (var order in orderlist)
             {
                 MZ_WorkOrder neworder = new MZ_WorkOrder();
@@ -178,8 +178,10 @@ namespace MESService.Business
                     task.OrgId = order.OrgId;
                     task.PlanId = order.PlanId;
                     task.WorkOrderId = order.Id;
+                    task.ProductId = order.ProductId;
                     task.OperId = oper.OperId;
-                    task.StartOn = order.PlannedStartOn;
+                    task.RouteOperId = oper.Id;
+                    task.StartOn = DateTime.Now;
                     task.FinishOn = null;
                     task.IsFinish = false;
                     task.Priority = order.Priority;
@@ -191,46 +193,7 @@ namespace MESService.Business
                     task.GoodNum = 0;
                     task.DefectNum = 0;
                     task.Sequence = oper.Sequence;
-                    task.StrExt1 = oper.StrExt1;
-                    task.StrExt2 = oper.StrExt2;
-                    task.StrExt3 = oper.StrExt3;
-                    task.StrExt4 = oper.StrExt4;
-                    task.StrExt5 = oper.StrExt5;
-                    task.StrExt6 = oper.StrExt6;
-                    task.StrExt7 = oper.StrExt7;
-                    task.StrExt8 = oper.StrExt8;
-                    task.StrExt9 = oper.StrExt9;
-                    task.StrExt10 = oper.StrExt10;
-                    task.StrExt11 = oper.StrExt11;
-                    task.StrExt12 = oper.StrExt12;
-                    task.StrExt13 = oper.StrExt13;
-                    task.StrExt14 = oper.StrExt14;
-                    task.StrExt15 = oper.StrExt15;
-                    task.StrExt16 = oper.StrExt16;
-                    task.StrExt17 = oper.StrExt17;
-                    task.StrExt18 = oper.StrExt18;
-                    task.StrExt19 = oper.StrExt19;
-                    task.StrExt20 = oper.StrExt20;
-                    task.StrExt21 = oper.StrExt21;
-                    task.StrExt22 = oper.StrExt22;
-                    task.StrExt23 = oper.StrExt23;
-                    task.StrExt24 = oper.StrExt24;
-                    task.StrExt25 = oper.StrExt25;
-                    task.StrExt26 = oper.StrExt26;
-                    task.StrExt27 = oper.StrExt27;
-                    task.StrExt28 = oper.StrExt28;
-                    task.StrExt29 = oper.StrExt29;
-                    task.StrExt30 = oper.StrExt30;
-                    task.NumExt1 = oper.NumExt1;
-                    task.NumExt2 = oper.NumExt2;
-                    task.NumExt3 = oper.NumExt3;
-                    task.NumExt4 = oper.NumExt4;
-                    task.NumExt5 = oper.NumExt5;
-                    task.NumExt6 = oper.NumExt6;
-                    task.NumExt7 = oper.NumExt7;
-                    task.NumExt8 = oper.NumExt8;
-                    task.NumExt9 = oper.NumExt9;
-                    task.NumExt10 = oper.NumExt10;
+                    task.Remark = string.Empty;
                     tasks.Add(task);
                 }
 

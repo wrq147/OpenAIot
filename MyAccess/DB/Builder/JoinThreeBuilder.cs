@@ -18,86 +18,46 @@ namespace MyAccess.DB.Builder
             return new QueryOneBuilder<A>(this._sqlBuilder);
         }
         /// <summary>
-        /// A与D左链接
+        /// A、B、C、D左链接
         /// </summary>
         /// <typeparam name="D"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinFourBuilder<A, B, C, D> LeftJoin<D>(Expression<Func<A, D, bool>> onCondi)
+        public JoinFourBuilder<A, B, C, D> LeftJoin<D>(Expression<Func<A, B, C, D, bool>> onCondi)
         {
             Type bEntityType = typeof(D);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<A, D>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C, D>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinFourBuilder<A, B, C, D>(this._sqlBuilder);
         }
+
         /// <summary>
-        /// B与D左链接
+        /// A、B、C、D内链接
         /// </summary>
         /// <typeparam name="D"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinFourBuilder<A, B, C, D> LeftJoin<D>(Expression<Func<B, D, bool>> onCondi)
-        {
-            Type bEntityType = typeof(D);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<B, D>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFourBuilder<A, B, C, D>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// C与D左链接
-        /// </summary>
-        /// <typeparam name="D"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFourBuilder<A, B, C, D> LeftJoin<D>(Expression<Func<C, D, bool>> onCondi)
-        {
-            Type bEntityType = typeof(D);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<C, D>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFourBuilder<A, B, C, D>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// A与D内链接
-        /// </summary>
-        /// <typeparam name="D"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFourBuilder<A, B, C, D> InnerJoin<D>(Expression<Func<A, D, bool>> onCondi)
+        public JoinFourBuilder<A, B, C, D> InnerJoin<D>(Expression<Func<A, B, C, D, bool>> onCondi)
         {
             Type bEntityType = typeof(D);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, D>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C, D>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinFourBuilder<A, B, C, D>(this._sqlBuilder);
         }
+
         /// <summary>
-        /// B与D内链接
+        /// A、B、C、D全连接
         /// </summary>
-        /// <typeparam name="D"></typeparam>
+        /// <typeparam name="C"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinFourBuilder<A, B, C, D> InnerJoin<D>(Expression<Func<B, D, bool>> onCondi)
+        public JoinFourBuilder<A, B, C, D> FullJoin<D>(Expression<Func<A, B, C, D, bool>> onCondi)
         {
             Type bEntityType = typeof(D);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<B, D>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinFourBuilder<A, B, C, D>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// C与D内链接
-        /// </summary>
-        /// <typeparam name="D"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinFourBuilder<A, B, C, D> InnerJoin<D>(Expression<Func<C, D, bool>> onCondi)
-        {
-            Type bEntityType = typeof(D);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<C, D>(onCondi);
+            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "full join");
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C, D>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinFourBuilder<A, B, C, D>(this._sqlBuilder);
         }

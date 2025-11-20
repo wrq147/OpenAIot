@@ -11,8 +11,8 @@ namespace MESService.Model
     public class In_WorkTaskList : BaseQueryParam
     {
         /// <summary>
-        /// 过滤扩展字段
+        /// 0为进行中，1为已完成
         /// </summary>
-        public FieldFilterItem[] Items { get; set; }
+        public int? Status { get; set; }
     }
 }

@@ -19,91 +19,67 @@ namespace MyAccess.DB.Builder
             return new QueryOneBuilder<A>(this._sqlBuilder);
         }
 
+
         /// <summary>
-        /// A与C左链接
+        /// A、B、C左链接
         /// </summary>
         /// <typeparam name="C"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinThreeBuilder<A, B, C> LeftJoin<C>(Expression<Func<A, C, bool>> onCondi)
+        public JoinThreeBuilder<A, B, C> LeftJoin<C>(Expression<Func<A, B, C, bool>> onCondi)
         {
             Type bEntityType = typeof(C);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<A, C>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
         }
 
         /// <summary>
-        /// B与C左链接
+        /// A、B、C右链接
         /// </summary>
         /// <typeparam name="C"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinThreeBuilder<A, B, C> LeftJoin<C>(Expression<Func<B, C, bool>> onCondi)
-        {
-            Type bEntityType = typeof(C);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty);
-            string cc = this._sqlBuilder.GetOnByLambda<B, C>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// A与C右链接
-        /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinThreeBuilder<A, B, C> RightJoin<C>(Expression<Func<A, C, bool>> onCondi)
+        public JoinThreeBuilder<A, B, C> RightJoin<C>(Expression<Func<A, B, C, bool>> onCondi)
         {
             Type bEntityType = typeof(C);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "right join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, C>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
         }
+
         /// <summary>
-        /// B与C右链接
+        /// A、B、C内链接
         /// </summary>
         /// <typeparam name="C"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinThreeBuilder<A, B, C> RightJoin<C>(Expression<Func<B, C, bool>> onCondi)
-        {
-            Type bEntityType = typeof(C);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "right join");
-            string cc = this._sqlBuilder.GetOnByLambda<B, C>(onCondi);
-            _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
-            return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
-        }
-        /// <summary>
-        /// A与C内链接
-        /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <param name="onCondi"></param>
-        /// <returns></returns>
-        public JoinThreeBuilder<A, B, C> InnerJoin<C>(Expression<Func<A, C, bool>> onCondi)
+        public JoinThreeBuilder<A, B, C> InnerJoin<C>(Expression<Func<A, B, C, bool>> onCondi)
         {
             Type bEntityType = typeof(C);
             _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<A, C>(onCondi);
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
         }
+
         /// <summary>
-        /// B与C内链接
+        /// A、B、C全连接
         /// </summary>
         /// <typeparam name="C"></typeparam>
         /// <param name="onCondi"></param>
         /// <returns></returns>
-        public JoinThreeBuilder<A, B, C> InnerJoin<C>(Expression<Func<B, C, bool>> onCondi)
+        public JoinThreeBuilder<A, B, C> FullJoin<C>(Expression<Func<A, B, C, bool>> onCondi)
         {
             Type bEntityType = typeof(C);
-            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "inner join");
-            string cc = this._sqlBuilder.GetOnByLambda<B, C>(onCondi);
+            _sqlBuilder.AddJoin(SqlBuilder.NullSub, bEntityType, string.Empty, "full join");
+            string cc = this._sqlBuilder.GetOnByLambda<A, B, C>(onCondi);
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
         }
+
         /// <summary>
         /// 查询数量
         /// </summary>
