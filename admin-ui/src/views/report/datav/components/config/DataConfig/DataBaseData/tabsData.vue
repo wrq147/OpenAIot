@@ -63,6 +63,7 @@ import DataEditor from "../../runcode/DataEditor";
 import JsonView from "vue-json-views";
 import tableData from "./tableData";
 import {jslist,jsObject} from './general'
+var dayjs = require('@/utils/day.js')
 export default {
   components: {
     JsonView,
@@ -435,6 +436,7 @@ export default {
       });
       this.resultPreName = "";
       this.editableTabsValue = newTabName;
+      this.$forceUpdate()
     }
   },
 };

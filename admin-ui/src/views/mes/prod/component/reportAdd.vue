@@ -35,15 +35,10 @@
             <div style="display: flex; align-items: center">
               <el-input :disabled="isOnlyRead" class="houseipt" v-model="form.WorkTaskNumber" readonly
                 placeholder="请选择生产任务" @focus="onOpenWorkTask">
-                <i slot="suffix" @click="onTaskClear" v-if="form.WorkTaskId != null" class="el-icon-circle-close"
+                <i slot="suffix" @click="onTaskClear" v-if="form.WorkTaskId != ''" class="el-icon-circle-close"
                   style="font-size: 22px;cursor: pointer;vertical-align: middle;"></i>
               </el-input>
             </div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12" v-if="form.WorkTaskId && form.OperId">
-          <el-form-item label="工序" prop="OperName" v-if="form.OperName">
-            <el-input v-model="form.OperName" placeholder="请选择工序" :disabled="true"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -51,18 +46,19 @@
             <el-input-number :disabled="isOnlyRead" v-model="form.GoodNum" :min="0"></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="form.DefectNum > 0">
-          <el-form-item label="不良品项" prop="DefectList">
+        <el-col :span="24" v-if="form.DefectList != null && form.DefectList.length > 0">
+          <div style="margin-bottom:20px;">
+            <div style="padding-bottom: 10px;color: #333333;">不良品项列表</div>
             <el-table :data="form.DefectList" border style="width: 100%;">
-              <el-table-column label="不良品名称" prop="DefectName" width="200"></el-table-column>
-              <el-table-column label="数量" prop="DefectNum" width="120">
+              <el-table-column label="不良品名称" align="center" prop="DefectName" width="450"></el-table-column>
+              <el-table-column label="数量" align="center" prop="DefectNum">
                 <template slot-scope="scope">
                   <el-input-number :disabled="isOnlyRead" v-model="scope.row.DefectNum" :min="0">
                   </el-input-number>
                 </template>
               </el-table-column>
             </el-table>
-          </el-form-item>
+          </div>
         </el-col>
         <el-col :span="12">
           <el-form-item label="开始时间" prop="StartWork">
@@ -258,9 +254,6 @@ export default {
         WorkTime: [
           { required: true, trigger: "change", message: "请输入报工时长" },
         ],
-        // OverReason: [
-        //   { required: true, trigger: "blur", message: "请输入超时原因" },
-        // ],
         WorkTaskId: [
           { required: true, trigger: "change", message: "请选择生产任务" },
         ],
@@ -289,17 +282,16 @@ export default {
   methods: {
     async setTaskSelect(val) {
       //完成生产任务的选择
-      this.form.WorkTaskNumber = val.Number
+      this.form.WorkTaskNumber = val.WorkNumber + "-" + val.OperName;
       this.form.WorkOrderId = val.WorkOrderId
       this.form.WorkTaskId = val.Id
       this.form.OperId = val.OperId
-      this.form.OperName = val.OperName
-      let operRes = await operInfo(val.OperId);
+      let operRes = await operInfo({ "id": val.OperId });
       this.form.DefectList = [];
       if (operRes.data.DefectJson != '') {
         let tmpdflist = JSON.parse(operRes.data.DefectJson);
         for (let i = 0; i < tmpdflist.length; i++) {
-          this.form.DefectList.push({"DefectId":tmpdflist[i].Id,"DefectName":tmpdflist[i].DefectName,"DefectCategory":tmpdflist[i].DefectCategory,"DefectNum":0})
+          this.form.DefectList.push({ "DefectId": tmpdflist[i].Id, "DefectName": tmpdflist[i].DefectName, "DefectCategory": tmpdflist[i].DefectCategory, "DefectNum": 0 })
         }
       }
       this.$forceUpdate()
@@ -310,7 +302,7 @@ export default {
       this.$emit('onOpenWorkTask')
     },
     onTaskClear() {
-      this.form.WorkTaskNumber = null
+      this.form.WorkTaskNumber = ''
       this.form.WorkOrderId = ''
       this.form.WorkTaskId = ''
       this.form.OperId = ''
@@ -655,11 +647,10 @@ export default {
           OverReason: reportInfo.OverReason, //备注
           FlowId: reportInfo.FlowId, //流程表单id
           PhotoUrl: reportInfo.PhotoUrl,
-          WorkTaskNumber: reportInfo.Number,
+          WorkTaskNumber: "",
           WorkOrderId: reportInfo.WorkOrderId,
           WorkTaskId: reportInfo.WorkTaskId,
-          OperId: reportInfo.OperId,
-          OperName: reportInfo.OperName,
+          OperId: reportInfo.OperId
         };
         this.resetForm("form");
         this.setCustomDefaultValue(reportInfo);
@@ -681,7 +672,6 @@ export default {
           WorkOrderId: '',
           WorkTaskId: '',
           OperId: '',
-          OperName: '',
         }
         this.resetForm("form");
         let numres = await GeneratePlaneNumber()//获取报工编号
@@ -743,9 +733,7 @@ export default {
             submitForm.RepBat[row.mapid] = submitForm[row.mapid]
             delete submitForm[row.mapid]
           }
-          // console.log("提交的数据", submitForm);
           delete submitForm.WorkTaskNumber
-          delete submitForm.OperName
           // if(st==0){
           submitForm.Status = 0
           // }else{
@@ -821,10 +809,6 @@ export default {
 }
 
 .report_add_dialog {
-
-  // ::v-deep .el-dialog__body{
-  //   padding-top: 30px;
-  // }
   ::v-deep .el-form-item__label {
     line-height: 14px;
   }

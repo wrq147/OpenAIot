@@ -77,16 +77,7 @@ export const GetDeviceList = { //查询设备列表
         Online: '',
         showTotal: false
     },
-    formKey: ['GroupId', 'pageNum', 'pageSize', 'Online', 'showTotal'], //接口查询的所有参数
-    GroupId: {
-        type: 'cascader',
-        name: 'groupOptions',
-        value: 'Id',
-        label: 'GroupName',
-        children: 'Children',
-        placeholder: '请输入分组的搜索关键词',
-        text: '设备分组',
-    },
+    formKey: ['pageNum', 'pageSize', 'Online', 'showTotal'], //接口查询的所有参数
     Online: {
         type: 'radio', //排列单选按钮类型
         list: [{ label: "", text: '全部' }, { label: "0", text: '离线' }, { label: "1", text: '在线', hasmargin: true }, { label: "2", text: '未知', hasmargin: true }],
@@ -358,23 +349,23 @@ export const GetDeviceTagList = { //获取设备的标签列表//通过第三方
     }
 }
 
-export const GetTimeData = { //按分组查询实时数据
+export const GetTimeData = { //按房间查询实时数据
     interfaceName: 'GetTimeData',
     form: { //接口查询的所有参数
-        GroupId: null,
+        roomId: null,
         needTag: false,
         needSend: false,
         needWait: false
     },
-    formKey: ['GroupId', 'needTag', 'needSend', 'needWait'], //接口查询的所有参数
-    GroupId: {
-        type: 'cascader',
-        name: 'groupOptions',
-        value: 'Id',
-        label: 'GroupName',
-        children: 'Children',
-        placeholder: '请输入分组的搜索关键词',
-        text: '设备分组',
+    formKey: ['roomId', 'needTag', 'needSend', 'needWait'], //接口查询的所有参数
+    roomId: {
+        type: 'remoteSelect', //远程搜索下拉框
+        key: 'Id',
+        label: 'Name',
+        value: 'DeviceNumber',
+        name: 'roomOptions', //下拉列表数组名称
+        text: '目标车间',
+        placeholder: '请输入车间的搜索关键词'
     },
     needTag: {
         type: 'radio', //排列单选按钮类型
@@ -392,15 +383,15 @@ export const GetTimeData = { //按分组查询实时数据
         text: '同时等待数据',
     },
     isshowfilterParams: true,
-    filterType: 'deviceGroup',
+    filterType: 'deviceRoom',
     filterParams: {
         HasDeviceId: true,
         pageNum: 1,
         pageSize: 30,
     },
     rules: {
-        GroupId: [
-            { required: true, message: '请选择分组', trigger: 'change' },
+        roomId: [
+            { required: true, message: '请选择房间', trigger: 'change' },
         ],
     }
 }
@@ -470,6 +461,85 @@ export const DeviceHistory = { //查询设备历史数据
     },
     rules: {
         Number: [
+            { required: true, message: '请选择设备', trigger: 'change' },
+        ],
+        Code: [
+            { required: true, message: '请选择属性标识', trigger: 'change' },
+        ],
+    }
+}
+export const SelectMergeList = { //查询设备SelectMergeList历史数据统计数据
+    interfaceName: 'SelectMergeList',
+    form: { //接口查询的所有参数
+        mergeWay: undefined,
+        windowWay: undefined,
+        Numbers: undefined,
+        Code: undefined,
+    },
+    formKey: ['mergeWay', 'windowWay', 'Numbers', 'Code', 'dateRange'], //接口查询的所有参数
+    mergeWay: {
+        type: 'optionselect', //排列单选按钮类型
+        key: 'value',
+        label: 'label',
+        value: 'value',
+        name: 'mergeWayOptions', //下拉列表数组名称
+        optionsArr: [{ label: '最大值', value: 'max' }, { label: '最小值', value: 'min' }, { label: '平均值', value: 'mean' }, { label: '合计', value: 'sum' }, { label: '期初值', value: 'first' }, { label: '期末值', value: 'last' }],
+        text: '统计方式',
+        placeholder: '请选择',
+        multiple: true,
+    },
+    windowWay: {
+        type: 'optionselect', //排列单选按钮类型
+        key: 'value',
+        label: 'label',
+        value: 'value',
+        name: 'windowWayOptions', //下拉列表数组名称
+        optionsArr: [{ label: '按日', value: '0' }, { label: '按月', value: '1' }, { label: '按时', value: '2' }, { label: '按分', value: '3' }, { label: '按15分', value: '4' }],
+        text: '展示方式',
+        placeholder: '请选择'
+    },
+    Numbers: { //参数设置分别进行设置
+        type: 'remoteSelect', //远程搜索下拉框
+        key: 'Id',
+        label: 'Name',
+        value: 'DeviceNumber',
+        name: 'deviceOptions', //下拉列表数组名称
+        text: '目标设备',
+        placeholder: '请输入设备的搜索关键词',
+        // changeFunc: 'properties', //选择完设备后是否需要执行切换设备的方法
+        multiple: true,
+    },
+    IsGroup: { //是否多个
+        type: 'radio', //排列单选按钮类型
+        list: [{ label: true, text: '多个' }, { label: false, text: '单个' }],
+        text: '是否多个',
+    },
+    Code: {
+        type: 'inputText',
+        text: '属性标识',
+        placeholder: '请输入属性标识',
+    },
+    dateParams: {
+        isShow: true, //是否显示时间范围选择
+        type: 'datetimerange',
+        timeParams: ['BeginTime', 'EndTime'],
+        timeText: ['开始日期', '结束日期'],
+        text: '时间范围',
+
+    },
+    isshowfilterParams: true,
+    filterType: 'deviceList',
+    filterParams: {
+        HasDeviceId: true,
+        pageNum: 1,
+        pageSize: 30,
+        Key: ""
+    },
+    dateRange: {
+        text: '时间范围'
+    },
+    rules: {
+        Numbers: [
             { required: true, message: '请选择设备', trigger: 'change' },
         ],
         Code: [

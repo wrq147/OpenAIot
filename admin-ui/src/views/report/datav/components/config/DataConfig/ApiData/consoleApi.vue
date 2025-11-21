@@ -43,14 +43,13 @@
           <div v-for="(param, index) in apiRequestParameters" :key="'b' + index" style="margin-bottom: 10px">
             <el-input placeholder="参数名" size="small" style="width: 100px" v-model="param.name"/>
             <span style="padding: 0 10px">-</span>
-            <el-autocomplete
-              size="small"
-              v-model="param.value"
-              :fetch-suggestions="querySearch"
-              placeholder="请设置字段值"
-              @select="handleSelect($event, param.name)"
-              style="width: 180px"
-            ></el-autocomplete>
+            <!-- <el-autocomplete size="small" v-model="param.value" :fetch-suggestions="querySearch" placeholder="请设置字段值"
+              @select="handleSelect($event, param.name)" style="width: 180px" :multiple="true"></el-autocomplete> -->
+            <el-select @change="handleSelect($event, param.name)" v-if="Array.isArray(param.value)" v-model="param.value" multiple filterable allow-create default-first-option placeholder="请设置字段值">
+              <el-option v-for="item in returnQuerySearch('')" :key="item.value+item.id" :label="item.value" :value="item.id"></el-option>
+            </el-select>
+            <el-autocomplete v-else size="small" v-model="param.value" :fetch-suggestions="querySearch" placeholder="请设置字段值"
+              @select="handleSelect($event, param.name)" style="width: 180px"></el-autocomplete>
             <el-button style="margin-left: 10px" size="mini" @click="delDataItem(index)" type="danger" icon="el-icon-delete" circle></el-button>
           </div>
         </div>
@@ -67,14 +66,14 @@
             <div v-for="(val, key) in apiRequestJson" :key="key" style="margin-bottom: 10px">
               <span style="width: 100px; display: inline-block; text-align: center">{{ key }}</span>
               <span style="padding: 0 10px">-</span>
-              <el-autocomplete
-                size="small"
-                v-model="apiRequestJson[key]"
-                :fetch-suggestions="querySearch"
-                placeholder="请设置字段值"
-                @select="handleSelect($event, key)"
-                style="width: 180px"
-              ></el-autocomplete>
+              <!-- <el-autocomplete size="small" v-model="apiRequestJson[key]" :fetch-suggestions="querySearch" placeholder="请设置字段值"
+                @select="handleSelect($event, key)" style="width: 180px" :multiple="true"></el-autocomplete> -->
+              <el-select v-if="Array.isArray(apiRequestJson[key])" @change="handleSelect($event, key)" v-model="apiRequestJson[key]"
+               multiple filterable allow-create default-first-option placeholder="请设置字段值">
+               <el-option v-for="item in returnQuerySearch('')" :key="item.value+item.id" :label="item.value" :value="item.id"></el-option>
+              </el-select>
+              <el-autocomplete v-else size="small" v-model="apiRequestJson[key]" :fetch-suggestions="querySearch" placeholder="请设置字段值"
+                @select="handleSelect($event, key)" style="width: 180px" :multiple="false"></el-autocomplete>
               <el-button style="margin-left: 10px" size="mini" @click="delDataItem(key)" type="danger" icon="el-icon-delete" circle></el-button>
             </div>
           </div>
@@ -83,7 +82,12 @@
           <div v-for="(param, index) in apiRequestForm" :key="'c' + index" style="margin-bottom: 10px">
             <el-input placeholder="参数名" size="small" style="width: 100px" v-model="param.name"/>
             <span style="padding: 0 10px">-</span>
-            <el-autocomplete size="small" v-model="param.value" :fetch-suggestions="querySearch" placeholder="请设置字段值" @select="handleSelect($event, param.name)" style="width: 180px"
+            <!-- <el-autocomplete v-if="Array.isArray(param.value)" :multiple="true" size="small" v-model="param.value" :fetch-suggestions="querySearch" placeholder="请设置字段值" @select="handleSelect($event, param.name)" style="width: 180px"
+            ></el-autocomplete> -->
+            <el-select v-if="Array.isArray(param.value)" @change="handleSelect($event, param.name)" v-model="param.value" multiple filterable allow-create default-first-option placeholder="请设置字段值">
+              <el-option v-for="item in returnQuerySearch('')" :key="item.value+item.id" :label="item.value" :value="item.id"></el-option>
+            </el-select>
+            <el-autocomplete v-else :multiple="false" size="small" v-model="param.value" :fetch-suggestions="querySearch" placeholder="请设置字段值" @select="handleSelect($event, param.name)" style="width: 180px"
             ></el-autocomplete>
             <el-button style="margin-left: 10px" size="mini" @click="delDataItem(index)" type="danger" icon="el-icon-delete" circle></el-button>
           </div>
@@ -209,6 +213,7 @@ export default {
           paramsDataObj[key] = String(paramsDataObj[key]);
         }
       }
+      // console.log(paramsDataObj,'paramsDataObjparamsDataObj');
       this.apiRequestParameters = paramsDataObj;
       this.apiRequestJson = paramsDataObj;
       this.apiRequestForm = paramsDataObj;
@@ -225,6 +230,34 @@ export default {
       this.apiRequestParameters = [];
       this.apiRequestJson = {};
       this.apiRequestForm = [];
+    },
+    returnQuerySearch(queryString) {
+      let newArr = []
+      if (this.tableType === 'spreadSheet') {
+        let searchTableData = JSON.parse(localStorage.getItem("searchTableData"))
+        if (searchTableData === null) return
+        newArr = searchTableData.map((x) => {
+          return { value: x.fieldName, id: x.formatDefault };
+        });
+      } else {
+        let drawArr = getLinkChart(this.drawingList);
+        // console.log(drawArr,'drawArr');
+        newArr = drawArr.map((x) => {
+          // console.log("单个",x);
+          if(x.chartType=='timeFrame'){
+            return [{ value: x.layerName+'#0', id: x.customId },{ value: x.layerName+'#1', id: x.customId }];
+          }else{
+            return [{ value: x.layerName, id: x.customId }];
+          }
+          
+        }).flat();
+        this.drawingList.map(item => {
+          if (item.chartOption.pageSize !==undefined) {
+            newArr.push({ value: item.chartOption.pageSize, id: item.customId })
+          }
+        })
+      }
+      return newArr;
     },
     querySearch(queryString, cb) {
       let newArr = []

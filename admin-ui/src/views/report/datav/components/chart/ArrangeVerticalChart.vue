@@ -61,7 +61,9 @@ export default {
           {cnName:'昨日累计电能',value:4410,unit:'kwh'},
         ],
         currentlist:[{cnName:'A相电流',value:272.40,unit:'A'},{cnName:'B相电流',value:270,unit:'A'},{cnName:'C相电流',value:246,unit:'A'}]
-      }
+      },
+      activeOptiocy:1,
+      bgStatusVal:null
     };
   },
   watch: {
@@ -96,14 +98,24 @@ export default {
         'border-width': this.chartOption.cotStyle.borderWidth+'px',
         'border-color': this.chartOption.cotStyle.borderColor+'px'
       }
+      let activeBgStyle=this.chartOption.cotStyle.containerBgImage
+      let activeBgColor=this.chartOption.cotStyle.containerColor
+      if(this.chartOption.cotStyle&&this.chartOption.cotStyle.containerBg&&this.chartOption.cotStyle.containerBg.length>0){
+        let finrow=this.chartOption.cotStyle.containerBg.find(rw=>rw.value==this.bgStatusVal)
+        if(finrow){
+          activeBgStyle=finrow.image
+          activeBgColor=finrow.color
+        }
+      }
       if(this.chartOption.cotStyle.bgType=='img'){
+
         objSty={...objSty,
         backgroundColor: 'transparent',
-        backgroundImage :  `url(${this.chartOption.cotStyle.containerBgImage}) `,
+        backgroundImage :  `url(${activeBgStyle}) `,
         backgroundSize :  "cover",
         backgroundRepeat :  "no-repeat",}
       }else{
-        objSty.backgroundColor=this.chartOption.cotStyle.containerColor
+        objSty.backgroundColor=activeBgColor
       }
       return objSty
     },
@@ -357,9 +369,13 @@ export default {
         }else{
           result = this.chartOption.staticDataValue;
         }
-        // console.log(result,'resultresultresult');
+        // console.log(result,'纵向resultresultresult');
         if(result&&result[0]){
           let resultRow=JSON.parse(JSON.stringify(result[0]))
+          if(result[0]&&result[0].bgstatus!=undefined||result[0]&&result[0].bgstatus!=null){
+            this.bgStatusVal=result[0].bgstatus;
+            this.$forceUpdate()
+          }
           this.dataObj={
             title:resultRow.title,
             xuhao:resultRow.xuhao,
@@ -369,7 +385,7 @@ export default {
         }
         
       } catch (error) {
-        console.log("真的报错了",error);
+        // console.log("真的报错了",error);
       }
     },
     

@@ -80,16 +80,24 @@
                 </template>
               </el-table-column>
               <el-table-column label="超期时间" align="center" prop="OverTime" />
-              <el-table-column label="计划产量" align="center" prop="Quantity" />
               <el-table-column label="计划开始时间" align="center" prop="PlannedStartOn" />
               <el-table-column label="计划结束时间" align="center" prop="PlannedEndOn" />
               <el-table-column label="实际开始时间" align="center" prop="StartOn" />
               <el-table-column label="实际结束时间" align="center" prop="EndOn" />
-              <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
-                  <template slot-scope="scope">
-                    <el-button type="text" icon="el-icon-edit" @click="handleAdd(scope.row)">编辑</el-button>
+              <el-table-column label="当前进度" align="center">
+                <template slot-scope="scope">
+                  <template v-if="scope.row.Status == 1">
+                    <el-progress type="line" :percentage="Math.round((scope.row.BatchCount / scope.row.Quantity) * 100)"
+                      :text-inside="true" :stroke-width="10" status="success" />
+                    <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                      {{ scope.row.BatchCount }}/{{ scope.row.Quantity }}
+                    </div>
                   </template>
-                </el-table-column> -->
+                  <template v-else>
+                    <span style="color: #999;">无数据</span>
+                  </template>
+                </template>
+              </el-table-column>
             </el-table>
             <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
               :limit.sync="queryParams.pageSize" @pagination="getList" />

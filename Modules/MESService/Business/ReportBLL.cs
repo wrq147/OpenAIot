@@ -11,6 +11,7 @@ using FlowService.FlowNode.FormFields;
 using MESService.DAL;
 using MESService.Model;
 using Newtonsoft.Json;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,20 @@ namespace MESService.Business
             if (old == null)
             {
                 return BusResponse<int>.Error(112, "生产报工不存在");
+            }
+            if (data.WorkTaskId != null)
+            {
+                var task = await _provider.GetService<WorkTaskDAL>().Select(data.WorkTaskId);
+                if (task != null)
+                {
+                    data.WorkOrderId = task.WorkOrderId;
+                    data.OperId = task.OperId;
+                    data.RouteOperId = task.RouteOperId;
+                }
+                else
+                {
+                    return BusResponse<int>.Error(122, "生产任务不存在");
+                }
             }
 
 
@@ -139,7 +154,7 @@ namespace MESService.Business
             {
                 return BusResponse<string>.Error(122, "生产任务不存在");
             }
-   
+
             var tmpOper = await _provider.GetService<OperDAL>().Select(data.OperId);
             if (tmpOper == null)
             {
@@ -151,6 +166,9 @@ namespace MESService.Business
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
             data.FlowId = 0;
+            data.WorkOrderId = task.WorkOrderId;
+            data.OperId = task.OperId;
+            data.RouteOperId = task.RouteOperId;
 
 
             #region 校验发布权限
@@ -286,6 +304,16 @@ namespace MESService.Business
             if (operInfo == null)
             {
                 return BusResponse<string>.Error(126, "工序不存在");
+            }
+            MZ_ProductRouteOper routeOper = await _provider.GetService<RouteOperDAL>().Select(old.RouteOperId);
+            if (routeOper == null)
+            {
+                return BusResponse<string>.Error(127, "工艺路线未指定正确工序");
+            }
+            var needWorkTime = routeOper.WorkTime.Value * routeOper.PropOf.Value * (old.GoodNum.Value + old.DefectNum.Value);
+            if (needWorkTime < old.WorkTime && string.IsNullOrEmpty(old.OverReason))
+            {
+                return BusResponse<string>.Error(128, $"报工时长超过标准时间{old.WorkTime - needWorkTime}分钟，请填写超时原因");
             }
             var mesConfig = await _provider.GetService<FactoryMesDAL>().Select(user.OrgId);
             if (mesConfig != null && mesConfig.PlanTemplateId > 0)

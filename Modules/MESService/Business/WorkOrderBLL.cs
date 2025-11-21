@@ -118,7 +118,9 @@ namespace MESService.Business
                 order.PlannedStartOn = planItem.PlannedStartOn;
                 order.PlannedEndOn = planItem.PlannedEndOn;
                 order.CancelReason = string.Empty;
+                order.BatchCount = 0;
                 await _workOrderDAL.Insert(order);
+                await OrderToTask(order);
 
                 var tbomLineList = await _bomLineDAL.SelectList(x => x.ParentProductId == productId);
                 foreach (var item in tbomLineList)
@@ -142,66 +144,60 @@ namespace MESService.Business
         }
 
         /// <summary>
-        /// 定时生成工单任务
+        /// 生成工单任务
         /// </summary>
         /// <returns></returns>
-        public async Task OrderToTask()
+        private async Task OrderToTask(MZ_WorkOrder order)
         {
-            //计划开始时生成任务
-            var orderlist = await _workOrderDAL.SelectList(x => x.Status == 0 && DateTime.Now > x.PlannedStartOn);
-            foreach (var order in orderlist)
+            var product = await _productDAL.Select(order.ProductId);
+            if (product == null)
             {
                 MZ_WorkOrder neworder = new MZ_WorkOrder();
-                var product = await _productDAL.Select(order.ProductId);
-                if (product == null)
-                {
-                    neworder.Id = order.Id;
-                    neworder.Status = 3;
-                    neworder.CancelReason = $"工单的产品未关联任何工艺路线";
-                    await _workOrderDAL.Update(neworder);
-                    continue;
-                }
-                var routeOpers = await _routeOperDAL.SelectList(x => x.RouteId == product.Route);
-                if (routeOpers.Count == 0)
-                {
-                    neworder.Id = order.Id;
-                    neworder.Status = 3;
-                    neworder.CancelReason = $"工单的工序未关联任何工艺路线";
-                    await _workOrderDAL.Update(neworder);
-                    continue;
-                }
-                List<MZ_WorkTask> tasks = new List<MZ_WorkTask>();
-                foreach (var oper in routeOpers)
-                {
-                    MZ_WorkTask task = new MZ_WorkTask();
-                    task.Id = _snowflake.NextId().ToString();
-                    task.OrgId = order.OrgId;
-                    task.PlanId = order.PlanId;
-                    task.WorkOrderId = order.Id;
-                    task.ProductId = order.ProductId;
-                    task.OperId = oper.OperId;
-                    task.RouteOperId = oper.Id;
-                    task.StartOn = DateTime.Now;
-                    task.FinishOn = null;
-                    task.IsFinish = false;
-                    task.Priority = order.Priority;
-                    task.OverTime = order.OverTime;
-                    task.PropOf = oper.PropOf;
-                    task.WorkTime = oper.WorkTime;
-                    task.WorkTimeTotal = 0;
-                    task.PlanNum = oper.PropOf * order.Quantity;
-                    task.GoodNum = 0;
-                    task.DefectNum = 0;
-                    task.Sequence = oper.Sequence;
-                    task.Remark = string.Empty;
-                    tasks.Add(task);
-                }
-
-                await _workTaskDAL.Insert(tasks);
                 neworder.Id = order.Id;
-                neworder.Status = 1;
+                neworder.Status = 3;
+                neworder.CancelReason = $"工单的产品未关联任何工艺路线";
                 await _workOrderDAL.Update(neworder);
+                return;
             }
+            var routeOpers = await _routeOperDAL.SelectList(x => x.RouteId == product.Route);
+            if (routeOpers.Count == 0)
+            {
+                MZ_WorkOrder neworder = new MZ_WorkOrder();
+                neworder.Id = order.Id;
+                neworder.Status = 3;
+                neworder.CancelReason = $"工单的工序未关联任何工艺路线";
+                await _workOrderDAL.Update(neworder);
+                return;
+            }
+            List<MZ_WorkTask> tasks = new List<MZ_WorkTask>();
+            foreach (var oper in routeOpers)
+            {
+                MZ_WorkTask task = new MZ_WorkTask();
+                task.Id = _snowflake.NextId().ToString();
+                task.OrgId = order.OrgId;
+                task.PlanId = order.PlanId;
+                task.WorkOrderId = order.Id;
+                task.ProductId = order.ProductId;
+                task.OperId = oper.OperId;
+                task.RouteOperId = oper.Id;
+                task.CreatedOn = DateTime.Now;
+                task.StartOn = null;
+                task.FinishOn = null;
+                task.IsFinish = false;
+                task.Priority = order.Priority;
+                task.OverTime = order.OverTime;
+                task.PropOf = oper.PropOf;
+                task.WorkTime = oper.WorkTime;
+                task.WorkTimeTotal = 0;
+                task.PlanNum = oper.PropOf * order.Quantity;
+                task.GoodNum = 0;
+                task.DefectNum = 0;
+                task.Sequence = oper.Sequence;
+                task.Remark = string.Empty;
+                tasks.Add(task);
+            }
+
+            await _workTaskDAL.Insert(tasks);
         }
     }
 }

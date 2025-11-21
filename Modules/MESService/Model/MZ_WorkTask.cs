@@ -47,6 +47,10 @@ namespace MESService.Model
         /// </summary>
         public string RouteOperId { get; set; }
         /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreatedOn { get; set; }
+        /// <summary>
         /// 开始时间
         /// </summary>
         public DateTime? StartOn { get; set; }
@@ -108,6 +112,11 @@ namespace MESService.Model
         /// </summary>
         [DataIgnore]
         public string OperName { get; set; }
+        /// <summary>
+        /// 允许提交的人员
+        /// </summary>
+        [DataIgnore]
+        public string AssignedUser { get; set; }
         /// <summary>
         /// 产品编号
         /// </summary>

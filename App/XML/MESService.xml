@@ -19,9 +19,9 @@
             <param name="plan"></param>
             <returns></returns>
         </member>
-        <member name="M:MESService.Business.WorkOrderBLL.OrderToTask">
+        <member name="M:MESService.Business.WorkOrderBLL.OrderToTask(MESService.Model.MZ_WorkOrder)">
             <summary>
-            定时生成工单任务
+            生成工单任务
             </summary>
             <returns></returns>
         </member>
@@ -1767,6 +1767,11 @@
             实际结束时间
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.BatchCount">
+            <summary>
+            实际产量
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkOrder.CancelReason">
             <summary>
             取消原因
@@ -1825,6 +1830,11 @@
         <member name="P:MESService.Model.MZ_WorkReport.OperId">
             <summary>
             关联的工序Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.RouteOperId">
+            <summary>
+            关联的工艺路线明细Id
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkReport.Number">
@@ -1927,6 +1937,11 @@
             关联的工艺路线明细Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkTask.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkTask.StartOn">
             <summary>
             开始时间
@@ -2000,6 +2015,11 @@
         <member name="P:MESService.Model.MZ_WorkTask.OperName">
             <summary>
             工序名称
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.AssignedUser">
+            <summary>
+            允许提交的人员
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkTask.SkuNumber">

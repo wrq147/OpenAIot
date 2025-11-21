@@ -7,7 +7,7 @@
           <div class="cot_li" :key="it.Name" v-if="it && inx < 4" :style="cotLiStyle">
             <template v-if="it">
               <div class="num" :style="cotLiNumStyle">{{ formatNumber(it.Value, 2, true) }}</div>
-              <div class="label" :style="cotLiLabelStyle">{{ it.Name }}<span v-if="it.Unit" :style="cotLiNumStyle">({{ it.Unit }})</span></div>
+              <div class="label" :style="cotLiLabelStyle">{{ it.Name }}<span v-if="it.Unit" :style="cotLiUnitStyle">({{ it.Unit }})</span></div>
             </template>
           </div>
         </template>
@@ -139,6 +139,8 @@ export default {
           ],
         },
       },
+      bgStatusVal:null,
+      activeOptiocy:1,
     };
   },
   watch: {
@@ -176,14 +178,23 @@ export default {
         'border-width': this.chartOption.cotStyle.borderWidth+'px',
         'border-color': this.chartOption.cotStyle.borderColor+'px'
       }
+      let activeBgStyle=this.chartOption.cotStyle.containerBgImage
+      let activeBgColor=this.chartOption.cotStyle.containerColor
+      if(this.chartOption.cotStyle&&this.chartOption.cotStyle.containerBg&&this.chartOption.cotStyle.containerBg.length>0){
+        let finrow=this.chartOption.cotStyle.containerBg.find(rw=>rw.value==this.bgStatusVal)
+        if(finrow){
+          activeBgStyle=finrow.image
+          activeBgColor=finrow.color
+        }
+      }
       if(this.chartOption.cotStyle.bgType=='img'){
         objSty={...objSty,
         backgroundColor: 'transparent',
-        backgroundImage :  `url(${this.chartOption.cotStyle.containerBgImage}) `,
+        backgroundImage :  `url(${activeBgStyle}) `,
         backgroundSize :  "cover",
         backgroundRepeat :  "no-repeat",}
       }else{
-        objSty.backgroundColor=this.chartOption.cotStyle.containerColor
+        objSty.backgroundColor=activeBgColor
       }
       return objSty
     },
@@ -436,6 +447,7 @@ export default {
     },
   },
   methods: {
+    
     formatNumber(num, cent, isThousand) {
       if(num==null||num==undefined) return ''
       num = num.toString().replace(/\$|\,/g, "");
@@ -471,7 +483,6 @@ export default {
     },
     setChartVal(resData, rowGlobal) {
       // this.dataArr = result;
-      // console.log(rowGlobal,'rowGlobalrowGlobal');
       try {
         let result=[]
         if(this.chartOption&&this.chartOption.dataSourceType=="gobal"&&this.chartOption.globalData&&this.chartOption.globalProcessor){
@@ -479,21 +490,26 @@ export default {
         }else{
           result = this.chartOption.staticDataValue;
         }
-        // console.log(result,'result');
+        // console.log(result,'横向resultresultresult');
         if(result&&result[0]){
           let resultRow=JSON.parse(JSON.stringify(result[0]))
+          if(result[0]&&result[0].bgstatus!=undefined||result[0]&&result[0].bgstatus!=null){
+            this.bgStatusVal=result[0].bgstatus;
+            this.$forceUpdate()
+          }
           this.dataObj={
             title:resultRow.title,
             currentList:resultRow.currentList?resultRow.currentList:resultRow.currentlist,
             rowListObj:{
-              title:resultRow.rowtitle?resultRow.rowtitle:resultRow.rowListObj.title,
-              list:resultRow.list?resultRow.list:resultRow.rowListObj.list,
+              title:resultRow.rowtitle?resultRow.rowtitle:(resultRow.rowListObj?resultRow.rowListObj.title:[]),
+              list:resultRow.list?resultRow.list:(resultRow.rowListObj?resultRow.rowListObj.list:[]),
             },
           }
         }
         
+        
       } catch (error) {
-        console.log("真的报错了",error);
+        // console.log("真的报错了",error);
       }
     },
   },

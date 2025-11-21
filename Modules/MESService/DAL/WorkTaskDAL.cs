@@ -26,9 +26,17 @@ namespace MESService.DAL
             {
                 expression = expression.And((a, b, c, d) => a.IsFinish == true);
             }
+            if (query.beginTime != null)
+            {
+                expression = expression.And((a, b, c, d) => a.CreatedOn >= query.beginTime);
+            }
+            if (query.endTime != null)
+            {
+                expression = expression.And((a, b, c, d) => a.CreatedOn <= query.endTime);
+            }
             var tmpSql = new SqlBuilder(help).Query<MZ_WorkTask>()
                 .LeftJoin<MZ_WorkOrder>((a, b) => a.WorkOrderId == b.Id).LeftJoin<MZ_ProductOper>((a, b, c) => a.OperId == c.Id).LeftJoin<MZ_Product>((a, b, c, d) => a.ProductId == d.Id)
-                .Where(expression, "a.*,b.WorkNumber,c.OperName,d.SkuNumber,d.ProductName");
+                .Where(expression, "a.*,b.WorkNumber,c.OperName,c.AssignedUser,d.SkuNumber,d.ProductName");
             return await tmpSql.GeneratePageObjectAsync(query, "StartOn desc");
         }
         public virtual async Task<List<string>> SelectTaskByOrgId(long orgId)

@@ -45,7 +45,6 @@ namespace MESService.Model
         /// 工序顺序
         /// </summary>
         public int? Sequence { get; set; }
-
         /// <summary>
         /// 扩展字符串字段1
         /// </summary>

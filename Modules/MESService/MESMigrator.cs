@@ -1,5 +1,6 @@
 ﻿using Common;
 using FluentMigrator;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -429,6 +430,7 @@ namespace MESService
                 .WithColumn("PlannedEndOn").AsDateTime().WithColumnDescription("计划结束时间")
                 .WithColumn("StartOn").AsDateTime().Nullable().WithColumnDescription("实际开始时间")
                 .WithColumn("EndOn").AsDateTime().Nullable().WithColumnDescription("实际结束时间")
+                .WithColumn("BatchCount").AsDecimal(10, 2).WithColumnDescription("实际产量")
                 .WithColumn("CancelReason").AsString(500).WithColumnDescription("取消原因")
                 .WithColumn("CreatedOn").AsDateTime().WithColumnDescription("创建时间")
                 .WithColumn("UpdatedOn").AsDateTime().WithColumnDescription("更新时间");
@@ -454,7 +456,8 @@ namespace MESService
                 .WithColumn("ProductId").AsString(128).Indexed().WithColumnDescription("所属产品ID")
                 .WithColumn("OperId").AsString(128).WithColumnDescription("关联的工序Id")
                 .WithColumn("RouteOperId").AsString(128).WithColumnDescription("关联的工艺路线明细Id")
-                .WithColumn("StartOn").AsDateTime().WithColumnDescription("开始时间")
+                .WithColumn("CreatedOn").AsDateTime().WithColumnDescription("创建时间")
+                .WithColumn("StartOn").AsDateTime().Nullable().WithColumnDescription("开始时间")
                 .WithColumn("FinishOn").AsDateTime().Nullable().WithColumnDescription("完成时间")
                 .WithColumn("IsFinish").AsBoolean().Indexed().WithColumnDescription("任务是否完成")
                 .WithColumn("Priority").AsInt32().WithColumnDescription("优先级：1、优先安排；2、加急处理；3、正常排产")
@@ -537,6 +540,7 @@ namespace MESService
                 .WithColumn("WorkOrderId").AsString(128).Indexed().WithColumnDescription("关联的工单Id")
                 .WithColumn("WorkTaskId").AsString(128).Indexed().WithColumnDescription("关联的任务Id")
                 .WithColumn("OperId").AsString(128).Indexed().WithColumnDescription("关联的工序Id")
+                .WithColumn("RouteOperId").AsString(128).WithColumnDescription("关联的工艺路线明细Id")
                 .WithColumn("Number").AsString(50).Unique().WithColumnDescription("唯一编号")
                 .WithColumn("BatchNo").AsString(50).Indexed().WithColumnDescription("批次编号")
                 .WithColumn("GoodNum").AsDecimal(10, 2).WithColumnDescription("良品数")

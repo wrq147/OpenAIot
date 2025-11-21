@@ -47,9 +47,13 @@ namespace MESService.Business
             newTask.GoodNum = reportTotalInfo.TotalGoodNum;
             newTask.DefectNum = reportTotalInfo.TotalDefectNum;
             newTask.WorkTimeTotal = reportTotalInfo.TotalWorkTime;
+            if (oldTask.StartOn == null)
+            {
+                newTask.StartOn = report.StartWork;
+            }
             if (reportTotalInfo.TotalGoodNum >= oldTask.PlanNum)
             {
-                newTask.FinishOn = DateTime.Now;
+                newTask.FinishOn = report.EndWork;
                 newTask.IsFinish = true;
             }
             await _workTaskDAL.Update(newTask);
@@ -60,11 +64,22 @@ namespace MESService.Business
             await workBomDAL.UpdateUsedQuantity(report.WorkOrderId, report.OperId, proNum.Value);
 
 
-            var workOrder = await _provider.GetService<WorkOrderDAL>().Select(report.WorkOrderId);
+            var workOrderDAL = _provider.GetService<WorkOrderDAL>();
+            var workOrder = await workOrderDAL.Select(report.WorkOrderId);
             if (workOrder == null)
             {
                 return;
             }
+            if (workOrder.Status == 0)
+            {            
+                //变更工单状态
+                MZ_WorkOrder neworder = new MZ_WorkOrder();
+                neworder.Id = workOrder.Id;
+                neworder.Status = 1;
+                neworder.StartOn = report.StartWork;
+                await workOrderDAL.Update(neworder);
+            }
+
             var route = await _provider.GetService<RouteDAL>().Select(workOrder.RouteId);
             if (route == null)
             {
@@ -139,6 +154,17 @@ namespace MESService.Business
                 {
                     return;
                 }
+            }
+
+            var rawcc = await workOrderDAL.IncreaseProgress(workOrder.Id, report.GoodNum.Value);
+            if (rawcc < workOrder.Quantity && (rawcc + report.GoodNum.Value) >= workOrder.Quantity)
+            {
+                //结束工单
+                MZ_WorkOrder neworder = new MZ_WorkOrder();
+                neworder.Id = workOrder.Id;
+                neworder.Status = 2;
+                neworder.EndOn = report.EndWork;
+                await workOrderDAL.Update(neworder);
             }
 
             if (!string.IsNullOrEmpty(route.ToHouseId))

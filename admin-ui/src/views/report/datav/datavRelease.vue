@@ -182,11 +182,11 @@ export default {
           let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
           // console.log(name,'namenamename',tmpOption.name);
           let findShould=this.shouldLoadData.find(rwo=>rwo.name==tmpOption.name)
-          if (name.includes(tmpOption.name)&&!findShould) {
+          if (name&&name.length>0&&name.includes(tmpOption.name)&&!findShould) {
             this.shouldLoadData.push(tmpOption)
             optionArr.push(tmpOption)
             
-          }else if (name.includes(tmpOption.name)){
+          }else if (name&&name.length>0&&name.includes(tmpOption.name)){
             optionAloadArr.push(tmpOption)
           }
         }
@@ -203,15 +203,15 @@ export default {
           if (name&&tmpOption.name == name&&!findShould) {
             this.shouldLoadData.push(tmpOption)
             // if(tmpOption&&tmpOption.dataSourceType!="combination"){
-              if(this.finishFirstLoad){
+              // if(this.finishFirstLoad){
                 this.initDataName(tmpOption,isNotLoad);
-              }
+              // }
             // }
             
           }else if (name&&tmpOption.name == name){
-            if(this.finishFirstLoad){
+            // if(this.finishFirstLoad){
               this.initDataName(tmpOption,true);
-            }
+            // }
           }
         }
         

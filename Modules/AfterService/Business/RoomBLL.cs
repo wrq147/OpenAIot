@@ -32,7 +32,10 @@ namespace AfterService.Business
             {
                 expression = expression.And(x => x.TargetOrgId == query.TargetOrgId);
             }
-
+            if (!string.IsNullOrEmpty(query.Name))
+            {
+                expression = expression.And(x => x.Name.Contains(query.Name));
+            }
             if (!string.IsNullOrEmpty(query.CategoryId))
             {
                 var categorydata = await _provider.GetService<RoomCategoryDAL>().Select(query.CategoryId);

@@ -145,7 +145,7 @@ export default {
         isFixed: false,
       },
       {
-        field: "Update_time",
+        field: "updateTime",
         fieldName: "更新时间",
         type: "时间",
         isShow: true,
@@ -274,7 +274,7 @@ export default {
             isFixed: false,
           },
           {
-            field: "Update_time",
+            field: "updateTime",
             fieldName: "更新时间",
             type: "时间",
             isShow: true,

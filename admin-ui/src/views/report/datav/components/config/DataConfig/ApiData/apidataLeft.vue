@@ -32,7 +32,8 @@
             devValue == 'Api11' ||
             devValue == 'Api12' ||
             devValue == 'Api13' ||
-            devValue == 'Api15'
+            devValue == 'Api15' ||
+            devValue == 'Api16'
           "
         >
           <all-params :devValue="devValue" @cancel="open = false" @ok="developerImport"></all-params>
@@ -95,7 +96,7 @@ export default {
         {
           label: "获取产品名称列表",
           value: "Api04",
-          url: "/IoTService/HttpSync/ProtocalNames",
+          url: "/IoTService/HttpSync/ProductNames",
           method: "GET",
           needEnterprise: true,
           typename:'开发者接口'
@@ -141,9 +142,9 @@ export default {
           typename:'开发者接口'
         },
         {
-          label: "按分组查询实时数据",
+          label: "按房间查询实时数据",
           value: "Api10",
-          url: "/IoTRulesService/HttpRule/GroupLive",
+          url: "/AfterService/HttpSync/RoomLive",
           method: "GET",
           needEnterprise: true,
           typename:'开发者接口'
@@ -185,7 +186,14 @@ export default {
           needEnterprise: true,
           typename:'开发者接口'
         },
-
+        {
+          label: "查询设备历史统计数据",
+          value: "Api16",
+          url: "/IoTRulesService/HttpRule/SelectMergeList",
+          method: "POST",
+          needEnterprise: true,
+          typename:'开发者接口'
+        },
       ],
       DeveloperInfo: null,
     };

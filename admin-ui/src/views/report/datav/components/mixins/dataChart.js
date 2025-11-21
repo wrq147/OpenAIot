@@ -128,7 +128,7 @@ export default {
                         } else {
                             if (this.chartOption.configProcessorTabs && this.chartOption.configProcessorTabs.length > 0) {
                                 let arr = this.chartOption.configProcessorTabs.map(row => row.globalData)
-                                if (isNotArrload) {
+                                if (isNotArrload && arr.includes(option.name)) {
                                     this.lastData = option;
                                     this.initSourceCode(option);
                                 } else {

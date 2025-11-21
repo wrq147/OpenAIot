@@ -9823,6 +9823,12 @@ export const otherComponents = [{
         },
         cotStyle: {
             bgType: 'img',
+            containerBg: [{
+                color: '',
+                image: '',
+                value: '',
+                opacity: 1,
+            }],
             containerBgImage: '', //背景图片
             containerColor: 'rgba(27,43,138, 1)',
             paddingLeft: 0,
@@ -10042,6 +10048,12 @@ export const otherComponents = [{
         },
         cotStyle: {
             bgType: 'img',
+            containerBg: [{
+                color: '',
+                image: '',
+                value: '',
+                opacity: 1,
+            }],
             containerBgImage: '', //背景图片
             containerColor: 'rgba(27,43,138, 1)',
             paddingLeft: 0,

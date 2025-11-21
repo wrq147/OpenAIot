@@ -76,6 +76,10 @@ namespace MESService.Model
         /// </summary>
         public DateTime? EndOn { get; set; }
         /// <summary>
+        /// 实际产量
+        /// </summary>
+        public decimal? BatchCount { get; set; }
+        /// <summary>
         /// 取消原因
         /// </summary>
         public string CancelReason { get; set; }

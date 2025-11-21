@@ -2,6 +2,8 @@ import { isFunction } from '../util/fns'
 import { replaceLinkParam } from "../util/LinkageChart";
 import { chartApi } from "@/api/report/chartApi";
 import { chartBIanalysis } from "@/api/report/sourse";
+var dayjs = require('@/utils/day.js')
+
 // 将选择器与父元素匹配
 export function matchesSelectorToParentElements(el, selector, baseNode) {
     let node = el

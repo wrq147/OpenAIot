@@ -1,4 +1,5 @@
 import { parseTime } from '@/utils/common'
+var dayjs = require('@/utils/day.js')
 
 // 获取可绑定的组件
 export function getLinkChart(drawingList) {

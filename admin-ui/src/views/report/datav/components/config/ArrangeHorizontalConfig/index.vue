@@ -267,10 +267,15 @@ export default {
               filed: "",
             },
             {
+              key: "bgstatus",
+              filed: "",
+            },
+            {
               key: "rowtitle",
               // parentIdKey: "rowListObj",
               filed: "",
             },
+            
             {
               key: "currentList",
               filed: "",

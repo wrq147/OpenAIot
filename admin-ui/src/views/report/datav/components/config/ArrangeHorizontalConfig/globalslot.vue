@@ -114,19 +114,23 @@ export default {
       defaultKeyList: [
         {
           key: "title",
-          filed: "标题",
+          name: "标题",
+        },
+        {
+          key: "bgstatus",
+          name: "背景设置字段",
         },
         {
           key: "rowtitle",
-          filed: "统计标题",
+          name: "统计标题",
         },
         {
           key: "currentList",
-          filed: "数据列表",
+          name: "数据列表",
         },
         {
           key: "list",
-          filed: "统计列表",
+          name: "统计列表",
         },
       ],
       rowtitleDetail: [

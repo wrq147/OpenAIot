@@ -37,6 +37,10 @@ namespace MESService.Model
         /// </summary>
         public string OperId { get; set; }
         /// <summary>
+        /// 关联的工艺路线明细Id
+        /// </summary>
+        public string RouteOperId { get; set; }
+        /// <summary>
         /// 唯一编号
         /// </summary>
         public string Number { get; set; }

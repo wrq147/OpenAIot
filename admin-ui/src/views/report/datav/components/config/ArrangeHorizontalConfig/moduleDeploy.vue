@@ -17,11 +17,26 @@
                 <el-radio label="img">背景图片</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="容器背景图片" v-if="configData.chartOption.cotStyle.bgType=='img'">
+            <el-form-item label="容器背景图片" v-if="!isShowBgAct&&configData.chartOption.cotStyle.bgType=='img'">
               <image-upload v-model="configData.chartOption.cotStyle.containerBgImage" :limit="1"></image-upload>
             </el-form-item>
-            <el-form-item v-if="configData.chartOption.cotStyle.bgType=='color'" label="背景颜色">
+            <el-form-item v-if="!isShowBgAct&&configData.chartOption.cotStyle.bgType=='color'" label="背景颜色">
               <el-color-picker v-model="configData.chartOption.cotStyle.containerColor" show-alpha></el-color-picker>
+            </el-form-item>
+            <el-form-item v-if="isShowBgAct&&configData.chartOption.cotStyle.containerBg!==undefined">
+              <div slot="label">
+                <span style="margin-right: 10px">容器背景</span>
+              </div>
+              <div style="margin-top: -10px">
+                <el-button type="text" @click="addConBgItem()">+ 添加</el-button>
+              </div>
+              <div v-for="(tmpitem, index) in configData.chartOption.cotStyle.containerBg" :key="'a' + index" style="margin-bottom: 10px;display:flex;align-items:center;">
+                <el-input style="width:110px;margin-right:10px;" v-model="configData.chartOption.cotStyle.containerBg[index].value" placeholder="请输入对应颜色的值"/>
+                <image-upload isShowlabel="none" fontPlus="14px" :isShowTip="false" width="66px" height="50px" lineHeight="50px" v-model="configData.chartOption.cotStyle.containerBg[index].image" :limit="1" v-if="configData.chartOption.cotStyle.bgType&&configData.chartOption.cotStyle.bgType=='img'"></image-upload>
+                <el-color-picker v-model="configData.chartOption.cotStyle.containerBg[index].color" show-alpha style="width: 32px;" v-else></el-color-picker>
+                <el-input-number style="width:110px;margin-left:10px;" v-model="configData.chartOption.cotStyle.containerBg[index].opacity" :precision="1" :step="0.1" :max="1" :min="0"></el-input-number>
+                <el-button style="margin-left: 10px" size="mini" @click="delConBgItem(index)" type="danger" icon="el-icon-delete" circle></el-button>
+              </div>
             </el-form-item>
             <el-form-item v-if="configData.chartOption.cotStyle.paddingLeft !== undefined" label="左内边距">
               <el-slider v-model="configData.chartOption.cotStyle.paddingLeft" :min="0" :step="1" :max="200" show-input></el-slider>
@@ -657,9 +672,38 @@ export default {
     };
   },
   //页面加载完执行
-  mounted() {},
-  computed: {},
-  methods: {},
+  mounted() {
+  },
+  computed: {
+    isShowBgAct(){
+      if(this.configData.chartOption&&this.configData.chartOption.tableSelectLine&&this.configData.chartOption.tableSelectLine.main){
+        let mainList=JSON.parse(JSON.stringify(this.configData.chartOption.tableSelectLine.main))
+        let bgstatus=mainList.find(row=>row.key=="bgstatus")
+        if(bgstatus&&bgstatus.filed){
+          return true
+        }else{
+          return false
+        }
+      }
+    }
+  },
+
+  methods: {
+    addConBgItem(){
+      if(this.configData.chartOption.cotStyle.containerBg){}else{
+        this.configData.chartOption.cotStyle.containerBg=[]
+      }
+      this.configData.chartOption.cotStyle.containerBg.push({
+        color: '',
+        image: '',
+        value: '',
+        opacity: 1,
+      })
+    },
+    delConBgItem(inx){
+      this.configData.chartOption.cotStyle.containerBg.splice(inx, 1);
+    }
+  },
 };
 </script>
 

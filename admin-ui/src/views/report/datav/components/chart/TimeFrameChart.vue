@@ -103,6 +103,8 @@ export default {
         if(pars[this.chartOption.params]){
           this.value=pars[this.chartOption.params]
         }
+      }else{
+        this.value=result
       }
     },
     renderChart(val){

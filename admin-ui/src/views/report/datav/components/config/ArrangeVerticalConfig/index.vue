@@ -251,6 +251,10 @@ export default {
               filed: "",
             },
             {
+              key: "bgstatus",
+              filed: "",
+            },
+            {
               key: "xuhao",
               filed: "",
             },

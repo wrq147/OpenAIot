@@ -12,5 +12,9 @@ namespace AfterService.Model
         /// 过滤分类Id
         /// </summary>
         public string CategoryId { get; set; }
+        /// <summary>
+        /// 过滤房间名称
+        /// </summary>
+        public string Name { get; set; }
     }
 }

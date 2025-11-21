@@ -29,7 +29,6 @@ namespace AfterService.Controller
         /// 获取房间列表
         /// </summary>
         /// <returns></returns>
-        [About]
         [HttpGet]
         public async Task<DefaultAjaxResult<List<MZ_Room>>> List(In_RoomList query)
         {

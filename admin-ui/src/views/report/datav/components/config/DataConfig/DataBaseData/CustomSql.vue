@@ -34,6 +34,7 @@ import { listSourse, chartBIanalysis, TableNames, AllTableStruct } from '@/api/r
 import monacoTemplate from "./monacoTemplate";
 import addParameter from "./addParameter";
 import tabsData from "./tabsData";
+var dayjs = require('@/utils/day.js')
 export default {
   props:["dataBase","staticValue", 'costomData', 'sourseList', 'drawingList', 'tableType'],//, 'apiTimeout'
   components: { 

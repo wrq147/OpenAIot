@@ -135,7 +135,7 @@ export function cardDataHandle(result, chartOption) { //卡片组件的数据处
                     if (rowLine && keysArr.includes(rowLine.key)) { //判断该字段是否是数组类型，是数组类型需要重新选表
                         let selectKeyDataName = chartOption.configProcessorTabs.find(row => row.name == rowLine.filed)
                         if (selectKeyDataName && selectKeyDataName.globalData && selectKeyDataName.globalProcessor) {
-                            let rowData = (result.find(row => row.name == selectKeyDataName.globalData)) ? JSON.parse((result.find(row => row.name == selectKeyDataName.globalData)).rawData) : undefined
+                            let rowData = JSON.parse((result.find(row => row.name == selectKeyDataName.globalData)).rawData)
                             if (rowData) {
                                 let rowProcessor = rowData.find(row => row.title == selectKeyDataName.globalProcessor)
                                 if (rowProcessor.content && rowProcessor.content.length > 0) {

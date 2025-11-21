@@ -127,11 +127,6 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="工艺路线" prop="Route">
-            <!-- <el-select clearable v-model="form.Route" placeholder="请选择工艺路线" style="width: 100%">
-              <template v-for="it in typeList">
-                <el-option :label="it" :value="it" :key="it"></el-option>
-              </template>
-            </el-select> -->
             <el-select clearable style="width: 100%" v-model="form.Route" filterable remote reserve-keyword
               placeholder="请输入工艺路线" :remote-method="routeRemoteMethod" :loading="Routeloading">
               <el-option v-for="item in Routeoptions" :key="item.Id" :label="item.RouteName" :value="item.Id">{{item.RouteName}}</el-option>
@@ -330,7 +325,9 @@ export default {
       }
       await this.getUnitList()//单位
     }
-    
+    await this.IOTProductRemoteMethod("");
+    await this.routeRemoteMethod("");
+    await this.supplierRemoteMethod("");
   },
 
   methods: {
