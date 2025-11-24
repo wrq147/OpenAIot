@@ -30,7 +30,32 @@ namespace MESService.Business
         {
             return await _workTaskDAL.SelectByPage(query, user.OrgId);
         }
-
+        public virtual async Task<BusResponse<MZ_WorkTask>> Info(string id)
+        {
+            var info = await _workTaskDAL.Select(id);
+            if (info == null)
+            {
+                return BusResponse<MZ_WorkTask>.Error(111, "生产任务不存在");
+            }
+            var wkorder = await _provider.GetService<WorkOrderDAL>().Select(info.WorkOrderId);
+            if (wkorder != null)
+            {
+                info.WorkNumber = wkorder.WorkNumber;
+            }
+            var wkoper = await _provider.GetService<OperDAL>().Select(info.OperId);
+            if (wkoper != null)
+            {
+                info.OperName = wkoper.OperName;
+                info.AssignedUser = wkoper.AssignedUser;
+            }
+            var wkpro = await _provider.GetService<ProductDAL>().Select(info.ProductId);
+            if (wkpro != null)
+            {
+                info.SkuNumber = wkpro.SkuNumber;
+                info.ProductName = wkpro.ProductName;
+            }
+            return BusResponse<MZ_WorkTask>.Success(info);
+        }
         public virtual async Task ResetTaskInfo(string taskId, MZ_WorkReport report)
         {
             var oldTask = await _workTaskDAL.Select(taskId);

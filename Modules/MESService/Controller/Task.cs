@@ -34,5 +34,15 @@ namespace MESService.Controller
         {
             return this.Success(await _workTaskBLL.SelectList(query, GetUser()));
         }
+        /// <summary>
+        /// 获取生产任务信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<MZ_WorkTask>> Info(string id)
+        {
+            return (await _workTaskBLL.Info(id)).ToAjaxResult();
+        }
     }
 }

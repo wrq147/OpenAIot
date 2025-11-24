@@ -1,7 +1,7 @@
 <template>
   <el-dialog :visible.sync="dialogVisible" width="800px" :show-close="false" class="report_add_dialog">
     <div slot="title" class="dialog_slot_title">
-      <div class="title_text">添加报工</div>
+      <div class="title_text">{{ isOnlyRead ? "编辑报工" : "添加报工" }}</div>
       <el-tabs v-model="dialogName" tab-position="top" :stretch="true"
         v-if="filedTableList && filedTableList.length > 0">
         <el-tab-pane name="null1" :disabled="true"><span slot="label"></span></el-tab-pane>
@@ -78,23 +78,6 @@
               style="width: 100%"></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="图片" prop="PhotoUrl">
-            <div class="avatar_con">
-              <image-upload :disabled="isOnlyRead" ref="logoupload" v-model="form.PhotoUrl" :limit="1"
-                :isShowLeft="true">
-                <template #tip>
-                  <div class="label_tip">
-                    <div class="label_text">　　</div>
-                    <div class="tip_con">
-                      <span style="margin-left:6px">请上传图片</span>
-                    </div>
-                  </div>
-                </template>
-              </image-upload>
-            </div>
-          </el-form-item>
-        </el-col>
 
         <el-col :span="24">
           <el-form-item label="备注" prop="OverReason">
@@ -145,24 +128,14 @@
                 <image-upload :disabled="isOnlyRead" @input="customValChange($event, item)" v-model="form[item.mapid]"
                   :limit="1" :isShowLeft="true">
                   <template #tip>
-                    <div class="label_tip">
-                      <div class="label_text">　　</div>
-                      <div class="tip_con">
-                        <span style="margin-left:6px">请上传</span>
-                      </div>
-                    </div>
+                    <span></span>
                   </template>
                 </image-upload>
               </div>
               <file-upload :disabled="isOnlyRead" @input="customValChange($event, item)" v-model="form[item.mapid]"
                 :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
                 <template #tip>
-                  <div class="label_tip">
-                    <div class="label_text">　　</div>
-                    <div class="tip_con">
-                      <span style="margin-left:6px">请上传</span>
-                    </div>
-                  </div>
+                  <span></span>
                 </template>
               </file-upload>
               <el-select :disabled="isOnlyRead" @focus="afterValSearch(form[item.mapid], item)" :clearable="true"
@@ -204,7 +177,7 @@ import {
   factoryMesConfig,
 } from "@/api/mes/config";
 import { orgField } from "@/api/factory/customFields";
-import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit } from '@/api/mes/report'
+import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
 import { operInfo } from "@/api/mes/oper";
 export default {
   name: 'AdminUiReportAdd',
@@ -247,6 +220,9 @@ export default {
         ],
         DefectNum: [
           { required: true, trigger: "change", message: "请输入不良品数" },
+        ],
+        BatchNo:[
+          { required: true, trigger: 'blur', message: '批次编号不能为空' }
         ],
         StartWork: [
           { required: true, trigger: "change", message: "请选择开始时间" },
@@ -623,37 +599,35 @@ export default {
         this.filedTableList = [];
       }
     },
-    async openDialog(item, isOnlyRead) {
+    async openDialog(id, isOnlyRead) {
       await this.getCustomFiled();
       if (isOnlyRead) {
         this.isOnlyRead = isOnlyRead
       } else {
         this.isOnlyRead = false
       }
-      if (item) {
-        // let res = await factoryreportInfo({ id: id });
-        console.log("item,报工详情", item, this.filedTableList);
-        let reportInfo = item;
+      if (id != null && id != "") {
+        let res = await reportInfo({ id: id });
         this.form = {
-          Id: reportInfo.Id,
-          Number: reportInfo.Number,//唯一编号
-          BatchNo: reportInfo.BatchNo,//批次编号
-          GoodNum: reportInfo.GoodNum, //良品数
-          DefectNum: reportInfo.DefectNum,//不良品数
-          DefectList: reportInfo.DefectList,//不良品项
-          StartWork: reportInfo.StartWork,//开始时间
-          EndWork: reportInfo.EndWork,//结束时间
-          WorkTime: reportInfo.WorkTime, //报工时长
-          OverReason: reportInfo.OverReason, //备注
-          FlowId: reportInfo.FlowId, //流程表单id
-          PhotoUrl: reportInfo.PhotoUrl,
-          WorkTaskNumber: "",
-          WorkOrderId: reportInfo.WorkOrderId,
-          WorkTaskId: reportInfo.WorkTaskId,
-          OperId: reportInfo.OperId
+          Id: res.data.Id,
+          Number: res.data.Number,//唯一编号
+          BatchNo: res.data.BatchNo,//批次编号
+          GoodNum: res.data.GoodNum, //良品数
+          DefectNum: res.data.DefectNum,//不良品数
+          DefectList: res.data.DefectList,//不良品项
+          StartWork: res.data.StartWork,//开始时间
+          EndWork: res.data.EndWork,//结束时间
+          WorkTime: res.data.WorkTime, //报工时长
+          OverReason: res.data.OverReason, //备注
+          FlowId: res.data.FlowId, //流程表单id
+          PhotoUrl: res.data.PhotoUrl,
+          WorkTaskNumber: res.data.WorkNumber + "-" + res.data.OperName,
+          WorkOrderId: res.data.WorkOrderId,
+          WorkTaskId: res.data.WorkTaskId,
+          OperId: res.data.OperId
         };
         this.resetForm("form");
-        this.setCustomDefaultValue(reportInfo);
+        this.setCustomDefaultValue(res.data);
       } else {
         this.form = {
           Id: null,

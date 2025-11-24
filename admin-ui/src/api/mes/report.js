@@ -68,3 +68,11 @@ export function reportFormData(data) {
         data: data
     })
 }
+
+export function reportInfo(params) {
+    return request({
+        url: '/MESService/Report/Info',
+        method: 'get',
+        params: params
+    })
+}

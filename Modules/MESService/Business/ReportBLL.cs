@@ -12,6 +12,7 @@ using MESService.DAL;
 using MESService.Model;
 using Newtonsoft.Json;
 using NPOI.SS.Formula.Functions;
+using ProducerService.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,28 @@ namespace MESService.Business
                 }
             }
             return await reportDAL.SelectByPage(query, user);
+        }
+        public virtual async Task<BusResponse<MZ_WorkReport>> Info(string id)
+        {
+            WorkReportDAL reportDAL = _provider.GetService<WorkReportDAL>();
+            var info = await reportDAL.Select(id);
+            if (info == null)
+            {
+                return BusResponse<MZ_WorkReport>.Error(111, "报工单不存在");
+            }
+            var wkorder = await _provider.GetService<WorkOrderDAL>().Select(info.WorkOrderId);
+            if (wkorder != null)
+            {
+                info.WorkNumber = wkorder.WorkNumber;
+            }
+            var wkoper = await _provider.GetService<OperDAL>().Select(info.OperId);
+            if (wkoper != null)
+            {
+                info.OperName = wkoper.OperName;
+            }
+            var workDefectDAL = _provider.GetService<WorkDefectDAL>();
+            info.DefectList = await workDefectDAL.SelectList(x => x.ReportId == id);
+            return BusResponse<MZ_WorkReport>.Success(info);
         }
         public virtual async Task<string> GenerateNumber()
         {
@@ -126,10 +149,10 @@ namespace MESService.Business
                 foreach (var defect in data.DefectList)
                 {
                     defect.Id = snowflake.NextId().ToString();
-                    defect.OrgId = data.OrgId;
-                    defect.WorkOrderId = data.WorkOrderId;
-                    defect.WorkTaskId = data.WorkTaskId;
-                    defect.OperId = data.OperId;
+                    defect.OrgId = old.OrgId;
+                    defect.WorkOrderId = data.WorkOrderId ?? old.WorkOrderId;
+                    defect.WorkTaskId = data.WorkTaskId ?? old.WorkTaskId;
+                    defect.OperId = data.OperId ?? old.OperId;
                     defect.ReportId = data.Id;
                     data.DefectNum += defect.DefectNum;
                 }

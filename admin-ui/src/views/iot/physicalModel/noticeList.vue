@@ -168,8 +168,7 @@ export default {
     },
     async mounted() {
         this.loadingTable = true;
-        await this.getUserList();
-        await this.getRoleList();
+        await Promise.all([this.getUserList(), this.getRoleList()]);
         this.initNoticeMap(this.noticeList);
         this.initTypeMap();
 

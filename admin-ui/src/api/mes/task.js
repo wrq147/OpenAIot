@@ -8,3 +8,12 @@ export function taskList(params) {
         params: params
     })
 }
+
+
+export function taskInfo(params) {
+    return request({
+        url: '/MESService/Task/Info',
+        method: 'get',
+        params: params
+    })
+}

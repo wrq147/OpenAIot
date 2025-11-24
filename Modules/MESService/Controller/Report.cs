@@ -54,7 +54,16 @@ namespace MESService.Controller
         {
             return (await _reportBLL.Insert(data, GetUser(), this.IntentAction)).ToAjaxResult();
         }
-
+        /// <summary>
+        /// 获取报工信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<MZ_WorkReport>> Info(string id)
+        {
+            return (await _reportBLL.Info(id)).ToAjaxResult();
+        }
         /// <summary>
         /// 修改生产报工
         /// </summary>

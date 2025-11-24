@@ -1,6 +1,6 @@
 <template>
   <div class="component-upload-image" :class="isFlexStart?'component-upload-flex':(isShowLeft?'component-upload-flexleft':'')">
-    <div class="upload_con" :style="{'--width':width,'--height':height,'--lineheight':lineHeight,'--fontSize':fontPlus,'--isShow':isShowlabel,'--margin':limit==1?'0':'0 8px 8px 0'}">
+    <div class="upload_con">
       <div class="el-upload__tip" v-if="showTip&&isShowLeft">
         <slot name="tip">
           请上传
@@ -93,26 +93,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false
-    },
-    isShowlabel:{
-      type: String,
-      default: 'block'
-    },
-    fontPlus: {
-      type: String,
-      default: '28px',
-    },
-    width: {
-      type: String,
-      default: '148px',
-    },
-    height: {
-      type: String,
-      default: '148px',
-    },
-    lineHeight: {
-      type: String,
-      default: '148px',
     },
   },
   data() {
@@ -261,41 +241,11 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    
     .hide{
       height: 100%;
     }
     .el-upload__tip{
       margin-left: 20px;
-    }
-    
-  }
-  
-}
-.component-upload-image{
-  .upload_con{
-    --width: 148px;
-    --height: 148px;
-    --lineheight: 148px;
-    --fontSize: 148px;
-    --isShow:'block';
-    --margin:0 8px 8px 0;
-    ::v-deep .el-upload--picture-card{
-      width: var(--width);
-      height: var(--height);
-      line-height: var(--lineheight);
-      i{
-        font-size: var(--fontSize);
-      }
-    }
-    ::v-deep .el-upload-list--picture-card .el-upload-list__item{
-      width: var(--width);
-      height: var(--height);
-      line-height: var(--lineheight);
-      margin: var(--margin);
-    }
-    ::v-deep .el-upload-list__item.is-success .el-upload-list__item-status-label{
-      display: var(--isShow);
     }
   }
   
@@ -306,12 +256,10 @@ export default {
       flex-direction: row;
       align-items: flex-start;
       justify-content: flex-start;
-      
       .el-upload__tip{
         margin-right: 10px;
         margin-left: 0;
       }
-      
     }
     
   }

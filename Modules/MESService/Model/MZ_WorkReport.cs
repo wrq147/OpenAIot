@@ -86,9 +86,21 @@ namespace MESService.Model
         /// </summary>
         [DataIgnore]
         public MZ_WorkBatch RepBat { get; set; }
+
+        /// <summary>
+        /// 工单编号
+        /// </summary>
+        [DataIgnore]
+        public string WorkNumber { get; set; }
+        /// <summary>
+        /// 工序名称
+        /// </summary>
+        [DataIgnore]
+        public string OperName { get; set; }
         /// <summary>
         /// 不良品项
         /// </summary>
+        [DataIgnore]
         public List<MZ_WorkDefect> DefectList { get; set; }
     }
 }

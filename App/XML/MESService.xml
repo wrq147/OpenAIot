@@ -295,6 +295,13 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:MESService.Controller.Report.Info(System.String)">
+            <summary>
+            获取报工信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:MESService.Controller.Report.Edit(MESService.Model.MZ_WorkReport)">
             <summary>
             修改生产报工
@@ -380,6 +387,13 @@
             生产任务列表
             </summary>
             <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MESService.Controller.Task.Info(System.String)">
+            <summary>
+            获取生产任务信息
+            </summary>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="T:MESService.Model.FieldPermsItem">
@@ -1890,6 +1904,16 @@
         <member name="P:MESService.Model.MZ_WorkReport.RepBat">
             <summary>
             报工的批次
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.WorkNumber">
+            <summary>
+            工单编号
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.OperName">
+            <summary>
+            工序名称
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkReport.DefectList">
