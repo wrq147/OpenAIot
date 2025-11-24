@@ -59,6 +59,7 @@ namespace IotService.Migrations
 .WithColumn("PhotoUrl").AsString(255).WithColumnDescription("图片地址")
 .WithColumn("DeviceNumber").AsString(50).Unique().WithColumnDescription("设备唯一编号")
 .WithColumn("ProductId").AsString(128).Indexed().WithColumnDescription("所属协议Id")
+.WithColumn("MesProductId").AsString(128).Indexed().WithColumnDescription("产品Id：为1表示物联产品")
 .WithColumn("Online").AsByte().WithColumnDescription("联网状态：0为离线，1为在线，2为未初始化")
 .WithColumn("DState").AsString(50).Indexed().WithDefaultValue("").WithColumnDescription("运行状态")
 .WithColumn("Name").AsString(50).WithColumnDescription("设备名称")

@@ -44,6 +44,10 @@ namespace IoTService.Models
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
+        /// 产品Id：为1表示物联产品
+        /// </summary>
+        public string MesProductId { get; set; }
+        /// <summary>
         /// 协议名称
         /// </summary>
         [DataIgnore]

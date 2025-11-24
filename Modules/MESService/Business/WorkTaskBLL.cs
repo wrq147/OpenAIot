@@ -71,7 +71,7 @@ namespace MESService.Business
                 return;
             }
             if (workOrder.Status == 0)
-            {            
+            {
                 //变更工单状态
                 MZ_WorkOrder neworder = new MZ_WorkOrder();
                 neworder.Id = workOrder.Id;
@@ -114,13 +114,14 @@ namespace MESService.Business
                     else
                     {
                         //关联了物联产品，则生成对应的物联设备
-                        var tmprsp = await BusUtility.Call("SaveIotDevice", new
+                        var tmprsp = await BusUtility.Call("FromMesBatch", new
                         {
                             UserId = 2,
                             OrgId = product.OrgId,
                             PhotoUrl = product.PhotoUrl,
                             DeviceNumber = report.BatchNo,
                             ProductId = product.IOTProductId,
+                            MesProductId = product.Id,
                             DeviceId = workBatch.LNumber,
                             Name = proBatch.BatchName
                         });

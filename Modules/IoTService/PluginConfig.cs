@@ -307,7 +307,7 @@ namespace IoTService
                     IotRedisHelper iotredis = app.ServiceProvider.GetService<IotRedisHelper>();
                     await iotredis.HashDeleteAsync("Device:" + tmpdtuid, "$DeviceOrgIds");
                 }
-             
+
             });
 
 
@@ -344,14 +344,15 @@ namespace IoTService
             });
 
 
-            //同步物联设备
-            plg.RegisterCall("SaveIotDevice", async (bs) =>
+            //同步Mes批次
+            plg.RegisterCall("FromMesBatch", async (bs) =>
             {
                 var tUserId = bs.GetLong("UserId");
                 var tOrgId = bs.GetLong("OrgId");
                 var tPhotoUrl = bs.GetValue("PhotoUrl");
                 var tDeviceNumber = bs.GetValue("DeviceNumber");
                 var tProductId = bs.GetValue("ProductId");
+                var tMesProductId = bs.GetValue("MesProductId");
                 var tDeviceId = bs.GetValue("DeviceId");
                 var tName = bs.GetValue("Name");
                 ArtificialUser artificialUser = new ArtificialUser(tUserId, tOrgId);
@@ -362,6 +363,7 @@ namespace IoTService
                     dev.Id = tdevlist[0].Id;
                     dev.PhotoUrl = tPhotoUrl;
                     dev.ProductId = tProductId;
+                    dev.MesProductId = tMesProductId;
                     dev.DeviceId = tDeviceId;
                     dev.Name = tName;
                     await app.ServiceProvider.GetService<IotDeviceBLL>().Update(dev, artificialUser, tdevlist[0], false);
@@ -373,6 +375,7 @@ namespace IoTService
                     dev.PhotoUrl = tPhotoUrl;
                     dev.DeviceNumber = tDeviceNumber;
                     dev.ProductId = tProductId;
+                    dev.MesProductId = tMesProductId;
                     dev.DeviceId = tDeviceId;
                     dev.Name = tName;
                     var res = await app.ServiceProvider.GetService<IotDeviceBLL>().Insert(dev, artificialUser, false);

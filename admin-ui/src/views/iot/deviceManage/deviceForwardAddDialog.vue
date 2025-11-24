@@ -30,8 +30,30 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="10">
+            <el-row :gutter="10" v-if="enableMes">
               <el-col :span="12">
+                <el-form-item label="所属产品" prop="MesProductInfo">
+                  <el-select v-model="deviceAddFrom.MesProductInfo" style="width:100%;" value-key="Id" filterable remote
+                    reserve-keyword placeholder="请选择产品" :clearable="true" @clear="clearEvt"
+                    :remote-method="remoteProductList" :loading="mesloading">
+                    <el-option v-for="item in MesProList" :key="item.Id" :label="item.ProductName" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="转发设备所属产品" prop="MesProductInfo2">
+                  <el-select v-model="deviceAddFrom.MesProductInfo2" style="width:100%;" value-key="Id" filterable
+                    remote reserve-keyword placeholder="请选择产品" :clearable="true" @clear="clearEvt2"
+                    :remote-method="remoteProductList2" :loading="mesloading2">
+                    <el-option v-for="item in MesProList2" :key="item.Id" :label="item.ProductName" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="12" v-if="deviceAddFrom.MesProductInfo == null || deviceAddFrom.MesProductInfo.Id == '1'">
                 <el-form-item label="协议名称" prop="productId">
                   <el-input type="text" v-model="deviceAddFrom.productName" placeholder="请输入协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
@@ -42,7 +64,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="12" v-if="deviceAddFrom.MesProductInfo2 == null || deviceAddFrom.MesProductInfo2.Id == '1'">
                 <el-form-item label="转发设备协议名称" prop="productId2">
                   <el-input type="text" v-model="deviceAddFrom.productName2" placeholder="请输入转发设备协议名称" :disabled="true"
                     v-if="isProductDev"></el-input>
@@ -67,12 +89,13 @@
               </el-col>
             </el-row>
           </div>
-          
+
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="deviceAddOpen = false">取 消</el-button>
-        <el-button type="primary" @click="saveDevice" :loading="saveDeviceLoading">{{saveDeviceLoading ? '提交中 ...' : '确定'}}</el-button>
+        <el-button type="primary" @click="saveDevice" :loading="saveDeviceLoading">{{ saveDeviceLoading ? '提交中 ...' :
+          '确定' }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -84,9 +107,11 @@ import {
   GenerateDeviceNumber
 } from "@/api/rules/device";
 import { productList } from "@/api/rules/productModel";
+import { factoryProductListPost } from '@/api/factory/product'
+import { checkPermi } from "@/utils/permission";
 export default {
   name: 'AdminUiDeviceAddDialog',
-  components: { },
+  components: {},
   props: {
     isProductDev: {
       type: Boolean,
@@ -95,6 +120,11 @@ export default {
   },
   data() {
     return {
+      MesProList: [],
+      MesProList2: [],
+      mesloading: false,
+      mesloading2: false,
+      enableMes: false,
       deviceAddDialogTitle: '',
       saveDeviceLoading: false,
       deviceAddOpen: false, //添加设备弹窗
@@ -114,6 +144,12 @@ export default {
         Remark: ""
       },
       deviceAddRules: {
+        MesProductInfo: [
+          { required: true, message: '请选择所属产品', trigger: 'change' }
+        ],
+        MesProductInfo2: [
+          { required: true, message: '请选择所属产品', trigger: 'change' }
+        ],
         productId: [
           { required: true, trigger: "change", message: "请选择协议" }
         ],
@@ -125,7 +161,7 @@ export default {
       },
       addloading: false,
       productLists: [],
-      productLists2:[],
+      productLists2: [],
       stateoptions: [],//设备运行状态列表
       isOpendevPosition: false,//是否可以修改位置
     };
@@ -134,10 +170,58 @@ export default {
   mounted() {
     this.getproductList();
     this.getproductList2();
+    if (checkPermi(["/ProducerService/Product/List"])) {
+      this.remoteProductList("");
+      this.remoteProductList2("");
+      this.enableMes = true;
+    }
   },
 
   methods: {
-  
+    clearEvt() {
+      this.deviceAddFrom.MesProductInfo = null;
+    },
+    clearEvt2() {
+      this.deviceAddFrom.MesProductInfo2 = null;
+    },
+    async remoteProductList(query) {
+      this.mesloading = true
+      let obj = {
+        IsIot: true,
+        pageNum: 1,
+        pageSize: 30
+      }
+      if (query == "") {
+        let res = await factoryProductListPost(obj);
+        this.MesProList = res.data.List;
+        this.MesProList.unshift({ "Id": "1", "ProductName": "物联设备" });
+      }
+      else {
+        obj.Key = query;
+        let res = await factoryProductListPost(obj);
+        this.MesProList = res.data.List;
+      }
+      this.mesloading = false
+    },
+    async remoteProductList2(query) {
+      this.mesloading2 = true
+      let obj = {
+        IsIot: true,
+        pageNum: 1,
+        pageSize: 30
+      }
+      if (query == "") {
+        let res = await factoryProductListPost(obj);
+        this.MesProList2 = res.data.List;
+        this.MesProList2.unshift({ "Id": "1", "ProductName": "物联设备" });
+      }
+      else {
+        obj.Key = query;
+        let res = await factoryProductListPost(obj);
+        this.MesProList2 = res.data.List;
+      }
+      this.mesloading2 = false
+    },
     remoteMethod(query) {
       if (query !== "") {
         this.loading = true;
@@ -208,6 +292,8 @@ export default {
       this.deviceAddFrom = {
         productId: null,
         productName: "",
+        MesProductInfo: { "Id": "1", "ProductName": "物联设备" },
+        MesProductInfo2: { "Id": "1", "ProductName": "物联设备" },
         productId2: null,
         productName2: "",
         dState: '',
@@ -230,37 +316,13 @@ export default {
       this.deviceAddOpen = true;
 
     },
-    async editRowData(row) {
-      //修改一行的数据
-      // console.log(row, 'rowrowrow');
-      this.stateoptions = []
-      this.isOpendevPosition = false
-      this.resetForm("deviceAddFrom");
-      this.addloading = true;
-      this.deviceAddDialogTitle = '编辑设备'
-      this.deviceAddFrom = {
-        id: row.Id,
-        productId: row.ProductId,
-        productName: row.ProductName,
-        dState: row.DState,
-        name: row.Name,
-        deviceId: row.DeviceId,
-        PhotoUrl: row.PhotoUrl,
-        DeviceNumber: row.DeviceNumber,
-        SkuNumber: row.SkuNumber,
-        Remark: row.Remark,
-        addressName: ''
-      };
-      this.$forceUpdate()
-      this.addloading = false;
-      this.deviceAddOpen = true;
-    },
     saveDevice() {
       this.$refs["deviceAddFrom"].validate(valid => {
         if (valid) {
 
-          let submitForm={
+          let submitForm = {
             productId: this.deviceAddFrom.productId,
+            MesProductInfo: this.deviceAddFrom.MesProductInfo,
             productName: this.deviceAddFrom.productName,
             dState: this.deviceAddFrom.dState,
             DeviceNumber: this.deviceAddFrom.DeviceNumber,
@@ -268,10 +330,11 @@ export default {
             deviceId: this.deviceAddFrom.deviceId,
             PhotoUrl: this.deviceAddFrom.PhotoUrl,
             Remark: this.deviceAddFrom.Remark,
-            addressName:this.deviceAddFrom.addressName
+            addressName: this.deviceAddFrom.addressName
           }
-          let submitForm2={
+          let submitForm2 = {
             productId: this.deviceAddFrom.productId2,
+            MesProductInfo: this.deviceAddFrom.MesProductInfo2,
             productName: this.deviceAddFrom.productName2,
             dState: this.deviceAddFrom.dState,
             DeviceNumber: this.deviceAddFrom.DeviceNumber2,
@@ -279,11 +342,23 @@ export default {
             deviceId: this.deviceAddFrom.deviceId2,
             PhotoUrl: this.deviceAddFrom.PhotoUrl,
             Remark: this.deviceAddFrom.Remark,
-            addressName:this.deviceAddFrom.addressName
+            addressName: this.deviceAddFrom.addressName
           }
 
-          delete submitForm.productName
-          delete submitForm2.productName
+          if (submitForm.MesProductInfo != null && submitForm.MesProductInfo.Id != "1") {
+            submitForm.ProductId = submitForm.MesProductInfo.IOTProductId;
+            submitForm.MesProductId = submitForm.MesProductInfo.Id;
+          }
+          else {
+            submitForm.MesProductId = "1";
+          }
+          if (submitForm2.MesProductInfo != null && submitForm2.MesProductInfo.Id != "1") {
+            submitForm2.ProductId = submitForm2.MesProductInfo.IOTProductId;
+            submitForm2.MesProductId = submitForm2.MesProductInfo.Id;
+          }
+          else {
+            submitForm2.MesProductId = "1";
+          }
           this.saveDeviceLoading = true;
           addDevice(submitForm).then(response => {
             if (response.code == 0) {
@@ -298,7 +373,7 @@ export default {
                 this.$message.warning("添加转发设备失败");
                 this.saveDeviceLoading = false;
               });
-              
+
             }
           }).catch(err => {
             this.saveDeviceLoading = false;
@@ -310,10 +385,11 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.deviceForwardAddDialog{
-  ::v-deep .el-form-item{
+.deviceForwardAddDialog {
+  ::v-deep .el-form-item {
     margin-bottom: 12px;
-    .el-form-item__label{
+
+    .el-form-item__label {
       padding-bottom: 0;
     }
   }

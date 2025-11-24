@@ -46,6 +46,10 @@ namespace ProducerService.DAL
             {
                 expression = expression.And((a, b) => a.Route != "");
             }
+            if (query.IsIot == true)
+            {
+                expression = expression.And((a, b) => a.IOTProductId != "");
+            }
             if (query.beginTime != null)
             {
                 expression = expression.And((a, b) => a.create_time >= query.beginTime);

@@ -145,7 +145,7 @@ export default {
     handleAdd(data) {
       if (data === '') {
         this.title = '新增批次';
-        this.$refs['addBatch'].enableDtuId=true;
+        this.$refs['addBatch'].isEdit=false;
         this.$refs['addBatch'].ruleForm = {
           Number: '',
           ProductId: '',
@@ -154,7 +154,7 @@ export default {
         };
       } else {
         this.title = '编辑批次';
-        this.$refs['addBatch'].enableDtuId=false;
+        this.$refs['addBatch'].isEdit=true;
         this.$refs['addBatch'].ruleForm = {
           Id: data.Id,
           Number: data.Number,

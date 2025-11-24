@@ -298,7 +298,7 @@
             <param name="query"></param>
             <returns></returns>
         </member>
-        <member name="M:ProducerService.Controller.ProductBatch.Edit(ProducerService.Model.MZ_ProductBatch)">
+        <member name="M:ProducerService.Controller.ProductBatch.Edit(ProducerService.Model.In_EditProductBatch)">
             <summary>
             编辑产品批次
             </summary>
@@ -571,6 +571,16 @@
             物联网产品Id
             </summary>
         </member>
+        <member name="P:ProducerService.Model.In_EditProductBatch.ProductId">
+            <summary>
+            所属产品Id
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_EditProductBatch.DtuId">
+            <summary>
+            通讯编码
+            </summary>
+        </member>
         <member name="P:ProducerService.Model.In_FactoryList.FactoryName">
             <summary>
             过滤生产商名称
@@ -634,6 +644,11 @@
         <member name="P:ProducerService.Model.In_ProductList.IsRoute">
             <summary>
             是否过滤包含工艺路线的产品
+            </summary>
+        </member>
+        <member name="P:ProducerService.Model.In_ProductList.IsIot">
+            <summary>
+            是否过滤绑定了协议的产品
             </summary>
         </member>
         <member name="P:ProducerService.Model.In_ProductList.Items">

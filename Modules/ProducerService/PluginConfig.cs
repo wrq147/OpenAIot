@@ -190,7 +190,8 @@ namespace ProducerService
 
             });
 
-            plg.RegisterBus("AddIOTDevice", async (bs) =>
+            //同步物联设备
+            plg.RegisterBus("FromIOTDevice", async (bs) =>
             {
                 //生成产品批次
                 string tId = bs.GetValue("Id");
@@ -198,12 +199,11 @@ namespace ProducerService
                 string tName = bs.GetValue("Name");
                 string tNumber = bs.GetValue("Number");
                 string tPhotoUrl = bs.GetValue("PhotoUrl");
-                string tProductId = bs.GetValue("ProductId");
+                string tMesProductId = bs.GetValue("MesProductId");
 
-                var productDAL = app.ServiceProvider.GetService<ProductDAL>();
                 var productBatchDAL = app.ServiceProvider.GetService<ProductBatchDAL>();
-                var tprolist = await productDAL.SelectList(x => x.OrgId == tOrgId && x.IOTProductId == tProductId);
-                if (tprolist.Count == 1)
+                var pb = await productBatchDAL.Select(tId);
+                if (pb == null)
                 {
                     //新增
                     MZ_ProductBatch probb = new MZ_ProductBatch();
@@ -212,45 +212,19 @@ namespace ProducerService
                     probb.BatchName = tName;
                     probb.OrgId = tOrgId;
                     probb.PhotoUrl = tPhotoUrl;
-                    probb.ProductId = tprolist[0].Id;
+                    probb.ProductId = tMesProductId;
                     await productBatchDAL.Insert(probb);
                 }
                 else
                 {
                     MZ_ProductBatch probb = new MZ_ProductBatch();
                     probb.Id = tId;
-                    probb.Number = tNumber;
                     probb.BatchName = tName;
-                    probb.OrgId = tOrgId;
                     probb.PhotoUrl = tPhotoUrl;
-                    probb.ProductId = "1";
-                    await productBatchDAL.Insert(probb);
+                    probb.Number = tNumber;
+                    probb.ProductId = tMesProductId;
+                    await productBatchDAL.Update(probb);
                 }
-            });
-
-
-            plg.RegisterBus("UpdateIOTDevice", async (bs) =>
-            {
-                try
-                {
-                    string tId = bs.GetValue("Id");
-                    string tNumber = bs.GetValue("Number");
-                    string tName = bs.GetValue("Name");
-                    string tPhotoUrl = bs.GetValue("PhotoUrl");
-                    var productBatchDAL = app.ServiceProvider.GetService<ProductBatchDAL>();
-                    var pb = await productBatchDAL.Select(tId);
-                    if (pb != null)
-                    {
-                        MZ_ProductBatch probb = new MZ_ProductBatch();
-                        probb.Id = tId;
-                        probb.BatchName = tName;
-                        probb.PhotoUrl = tPhotoUrl;
-                        probb.Number = tNumber;
-                        await productBatchDAL.Update(probb);
-                    }
-                }
-                catch { }
-
             });
 
 

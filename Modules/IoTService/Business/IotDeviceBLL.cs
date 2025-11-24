@@ -1272,13 +1272,15 @@ namespace IoTService.Business
 
             if (enableEvt)
             {
-                //触发修改编码事件
-                await BusUtility.Dispatch("UpdateIOTDevice", new
+                //触发事件
+                await BusUtility.Dispatch("FromIOTDevice", new
                 {
                     Id = data.Id,
+                    OrgId = old.OrgId,
                     Number = data.DeviceNumber ?? old.DeviceNumber,
                     Name = data.Name ?? old.Name,
-                    PhotoUrl = data.PhotoUrl ?? old.PhotoUrl
+                    PhotoUrl = data.PhotoUrl ?? old.PhotoUrl,
+                    MesProductId = data.MesProductId ?? old.MesProductId
                 });
             }
 
@@ -1292,7 +1294,10 @@ namespace IoTService.Business
             {
                 return BusResponse<string>.Error(111, "非企业用户无法添加设备");
             }
-
+            if (string.IsNullOrEmpty(data.MesProductId))
+            {
+                return BusResponse<string>.Error(133, "请选择产品");
+            }
             if (string.IsNullOrEmpty(data.ProductId))
             {
                 return BusResponse<string>.Error(116, "协议Id不能为空");
@@ -1367,16 +1372,15 @@ namespace IoTService.Business
 
             if (enableEvt)
             {
-                //触发新增事件
-                await BusUtility.Dispatch("AddIOTDevice", new
+                //触发事件
+                await BusUtility.Dispatch("FromIOTDevice", new
                 {
                     Id = data.Id,
                     OrgId = user.OrgId,
                     Number = data.DeviceNumber,
-                    LNumber = data.DeviceId,
                     Name = data.Name,
                     PhotoUrl = data.PhotoUrl,
-                    ProductId = data.ProductId
+                    MesProductId = data.MesProductId
                 });
 
             }

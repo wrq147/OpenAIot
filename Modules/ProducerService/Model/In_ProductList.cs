@@ -27,6 +27,10 @@ namespace ProducerService.Model
         /// </summary>
         public bool? IsRoute { get; set; }
         /// <summary>
+        /// 是否过滤绑定了协议的产品
+        /// </summary>
+        public bool? IsIot { get; set; }
+        /// <summary>
         /// 过滤扩展字段
         /// </summary>
         public FieldFilterItem[] Items { get; set; }

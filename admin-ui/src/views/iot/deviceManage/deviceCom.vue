@@ -56,7 +56,7 @@
                     <div class="device_name">{{ its.Name }}</div>
                     <div class="device_name deviceId">通讯编码：{{ its.DeviceId }}</div>
                     <div class="device_name pro_name">协议：{{ its.ProductName }}</div>
-                    <div class="device_group_name">{{ its.GroupName }}</div>
+                    <div class="device_group_name">{{ its.CreateOn }}</div>
                   </div>
                 </div>
                 <div class="device_lis_bottom">

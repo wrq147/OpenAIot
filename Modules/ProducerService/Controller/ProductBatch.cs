@@ -76,7 +76,7 @@ namespace ProducerService.Controller
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<DefaultAjaxResult<int>> Edit(MZ_ProductBatch data)
+        public async Task<DefaultAjaxResult<int>> Edit(In_EditProductBatch data)
         {
             return (await _batchBLL.Edit(data, GetUser())).ToAjaxResult();
         }

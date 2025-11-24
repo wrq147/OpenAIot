@@ -616,6 +616,11 @@
             过滤分类Id
             </summary>
         </member>
+        <member name="P:AfterService.Model.In_RoomList.Name">
+            <summary>
+            过滤房间名称
+            </summary>
+        </member>
         <member name="P:AfterService.Model.In_TransferTo.DeviceId">
             <summary>
             设备Id

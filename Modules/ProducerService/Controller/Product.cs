@@ -24,7 +24,6 @@ namespace ProducerService.Controller
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [About]
         [HttpGet]
         [HttpPost]
         public async Task<DefaultAjaxResult<PageObject<MZ_Product>>> List(In_ProductList query)

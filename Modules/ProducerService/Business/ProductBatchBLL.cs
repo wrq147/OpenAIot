@@ -160,13 +160,14 @@ namespace ProducerService.Business
                 else
                 {
 
-                    var tmprsp = await BusUtility.Call("SaveIotDevice", new
+                    var tmprsp = await BusUtility.Call("FromMesBatch", new
                     {
                         UserId = 2,
                         OrgId = pro.OrgId,
                         PhotoUrl = pro.PhotoUrl,
                         DeviceNumber = data.Number,
                         ProductId = pro.IOTProductId,
+                        MesProductId = pro.Id,
                         DeviceId = addData.DtuId,
                         Name = data.BatchName
                     });
@@ -188,7 +189,7 @@ namespace ProducerService.Business
 
             return BusResponse<int>.Success(await _productBatchDAL.Insert(data));
         }
-        public virtual async Task<BusResponse<int>> Edit(MZ_ProductBatch data, IUserInfo user)
+        public virtual async Task<BusResponse<int>> Edit(In_EditProductBatch data, IUserInfo user)
         {
             var old = await _productBatchDAL.Select(data.Id);
             if (old == null)
@@ -203,32 +204,36 @@ namespace ProducerService.Business
             {
                 data.ProductId = null;
             }
-            data.OrgId = null;
-
-            if (!string.IsNullOrEmpty(data.Number))
-            {
-                var iotdev = await _productBatchDAL.SelectIOTNumber(old.OrgId.Value, data.Number);
-                if (iotdev != null)
-                {
-                    data.BatchName = iotdev.Name;
-                    data.PhotoUrl = iotdev.PhotoUrl;
-                }
-            }
             else
             {
-                if (!string.IsNullOrEmpty(data.ProductId))
+                var pro = await _provider.GetService<ProductDAL>().Select(data.ProductId);
+                if (!string.IsNullOrEmpty(pro.IOTProductId))
                 {
-                    var pro = await _provider.GetService<ProductDAL>().Select(data.ProductId);
-                    if (pro == null)
+                    var tmprsp = await BusUtility.Call("FromMesBatch", new
                     {
-                        return BusResponse<int>.Error(134, "产品不存在");
+                        UserId = 2,
+                        OrgId = pro.OrgId,
+                        DeviceNumber = old.Number,
+                        ProductId = pro.IOTProductId,
+                        MesProductId = pro.Id,
+                        DeviceId = data.DtuId
+                    });
+                    var brs = tmprsp.GetResult<BusResponse<string>>();
+                    if (brs.IsSuccess())
+                    {
+                        data.Id = brs.Data;
                     }
-                    data.BatchName = pro.ProductName;
-                    data.PhotoUrl = pro.PhotoUrl;
+                    else
+                    {
+                        return BusResponse<int>.Error(brs.Code, brs.Message);
+                    }
                 }
             }
 
-            return BusResponse<int>.Success(await _productBatchDAL.Update(data));
+            MZ_ProductBatch newdata = new MZ_ProductBatch();
+            newdata.Id = data.Id;
+            newdata.ProductId = data.ProductId;
+            return BusResponse<int>.Success(await _productBatchDAL.Update(newdata));
         }
         public virtual async Task<BusResponse<int>> Remove(string id, IUserInfo user)
         {

@@ -1572,9 +1572,14 @@
             图片地址
             </summary>
         </member>
-        <member name="P:IoTService.Models.In_SyncDevice.ProductId">
+        <member name="P:IoTService.Models.In_SyncDevice.ProtocalId">
             <summary>
             所属协议Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_SyncDevice.ProductId">
+            <summary>
+            产品Id
             </summary>
         </member>
         <member name="P:IoTService.Models.In_SyncDevice.Name">
@@ -2045,6 +2050,11 @@
         <member name="P:IoTService.Models.MZ_IotDevice.ProductId">
             <summary>
             所属协议Id
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.MesProductId">
+            <summary>
+            产品Id：为1表示物联产品
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotDevice.ProductName">

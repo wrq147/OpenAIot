@@ -279,7 +279,8 @@ namespace IoTService.Controller
             IotDeviceBLL deviceBLL = this.ServiceProvider.GetService<IotDeviceBLL>();
             MZ_IotDevice dev = new MZ_IotDevice();
             dev.PhotoUrl = data.PhotoUrl;
-            dev.ProductId = data.ProductId;
+            dev.ProductId = data.ProtocalId;
+            dev.MesProductId = data.ProductId;
             dev.Name = data.Name;
             dev.DeviceId = data.DeviceId;
             dev.Tags = data.Tags;
@@ -306,9 +307,13 @@ namespace IoTService.Controller
             {
                 dev.PhotoUrl = data.PhotoUrl;
             }
+            if (!string.IsNullOrEmpty(data.ProtocalId))
+            {
+                dev.ProductId = data.ProtocalId;
+            }
             if (!string.IsNullOrEmpty(data.ProductId))
             {
-                dev.ProductId = data.ProductId;
+                dev.MesProductId = data.ProductId;
             }
             if (!string.IsNullOrEmpty(data.Name))
             {
@@ -351,7 +356,8 @@ namespace IoTService.Controller
             {
                 MZ_IotDevice dev = new MZ_IotDevice();
                 dev.PhotoUrl = data.PhotoUrl;
-                dev.ProductId = data.ProductId;
+                dev.ProductId = data.ProtocalId;
+                dev.MesProductId = data.ProductId;
                 dev.Name = data.Name;
                 dev.DeviceId = data.DeviceId;
                 dev.Tags = data.Tags;
@@ -366,9 +372,13 @@ namespace IoTService.Controller
                 {
                     dev.PhotoUrl = data.PhotoUrl;
                 }
+                if (!string.IsNullOrEmpty(data.ProtocalId))
+                {
+                    dev.ProductId = data.ProtocalId;
+                }
                 if (!string.IsNullOrEmpty(data.ProductId))
                 {
-                    dev.ProductId = data.ProductId;
+                    dev.MesProductId = data.ProductId;
                 }
                 if (!string.IsNullOrEmpty(data.Name))
                 {

@@ -16,7 +16,11 @@ namespace IoTService.Models
         /// <summary>
         /// 所属协议Id
         /// </summary>
-        public string ProductId { get; set; }
+        public string ProtocalId { get; set; }
+        /// <summary>
+        /// 产品Id
+        /// </summary>
+        public string ProductId { get; set; } = "1";
         /// <summary>
         /// 设备名称
         /// </summary>

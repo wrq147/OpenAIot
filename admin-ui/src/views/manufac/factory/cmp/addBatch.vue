@@ -3,9 +3,9 @@
     width="700px" top="2vh" @close="cancel">
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="addPeople">
       <el-form-item label="批次编号" prop="Number">
-        <el-input v-model="ruleForm.Number" placeholder="请输入批次编号" />
+        <el-input v-model="ruleForm.Number" :disabled="isEdit" placeholder="请输入批次编号" />
       </el-form-item>
-      <el-form-item v-if="enableDtuId" label="通讯编码" prop="DtuId">
+      <el-form-item label="通讯编码" prop="DtuId">
         <el-input v-model="ruleForm.DtuId" placeholder="请输入通讯编码" />
       </el-form-item>
       <el-form-item label="所属产品" prop="ProductId">
@@ -43,7 +43,7 @@ export default {
     return {
       dialogFlag: false,
       deviceOpen: false,
-      enableDtuId:false,
+      isEdit:false,
       // 表单
       ruleForm: {
       },
