@@ -215,35 +215,6 @@ namespace MESService
             });
 
 
-            TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
-            {
-                if (Constants.General.quick_init != true)
-                {
-                    //添加定时生成工单任务
-                    string tjobname = "OrderToTask";
-                    string tgroup = "SYSTEM";
-                    var jobBLL = app.ServiceProvider.GetService<JobBLL>();
-                    if (!await jobBLL.ExistJob(tjobname, tgroup))
-                    {
-                        MZ_Job devjob = new MZ_Job();
-                        devjob.concurrent = "1";
-                        devjob.createId = 0;
-                        devjob.create_time = DateTime.Now;
-                        devjob.updateId = 0;
-                        devjob.update_time = DateTime.Now;
-                        devjob.cron_expression = "0 5 0/1 * * ?";
-                        devjob.invoke_target = typeof(WorkOrderBLL).FullName + ".OrderToTask()";
-                        devjob.job_group = tgroup;
-                        devjob.job_name = tjobname;
-                        devjob.misfire_policy = "2";
-                        devjob.status = "0";
-
-                        await jobBLL.InsertJob(devjob);
-                    }
-                }
-            });
-
-
         }
     }
 }
