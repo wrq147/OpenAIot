@@ -84,19 +84,23 @@
         </el-col>
       </el-row>
     </div>
+
+    <reportAdd ref="reportAdd" @reloadData="getList"></reportAdd>
   </div>
 </template>
 
 <script>
+import reportAdd from '@/views/mes/prod/component/reportAdd'
 import { taskList } from "@/api/mes/task";
 export default {
   name: "taskList",
+  components: { reportAdd },
   data() {
     return {
       loading: false,
       // 查询参数
       queryParams: {
-        Status: -1,
+        Status: null,
         pageNum: 1,
         pageSize: 20,
         beginTime: '',
@@ -148,6 +152,13 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
+    handleDetail(row) {
+
+    },
+    async handleReport(row) {
+      await this.$refs.reportAdd.openDialog();
+      this.$refs.reportAdd.setTaskSelect(row);
+    }
   }
 }
 </script>

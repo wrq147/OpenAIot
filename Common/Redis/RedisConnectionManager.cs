@@ -382,7 +382,17 @@ namespace Common.Redis
             }
 
 
-            _connectionLock.EnterWriteLock();
+            bool lockAcquired = false;
+            try
+            {
+                _connectionLock.EnterWriteLock();
+                lockAcquired = true;
+            }
+            catch (LockRecursionException)
+            {
+                Console.WriteLine("Redis 异步重连时获取写锁失败，可能存在递归调用");
+                return;
+            }
             try
             {
                 now = DateTime.UtcNow;
@@ -428,7 +438,10 @@ namespace Common.Redis
             }
             finally
             {
-                _connectionLock.ExitWriteLock();
+                if (lockAcquired && _connectionLock.IsWriteLockHeld)
+                {
+                    _connectionLock.ExitWriteLock();
+                }
             }
         }
         /// <summary>
@@ -523,7 +536,11 @@ namespace Common.Redis
                 Console.WriteLine($"Redis 连接失败: {args.Exception.Message}，类型: {args.FailureType}");
                 _isConnectionHealthy = false;
                 LogConnectionError(args.Exception, $"连接失败，类型: {args.FailureType}");
-                Task.Run(() => ForceReconnect());
+                Task.Run(async () =>
+                {
+                    await Task.Delay(100);
+                    await ForceReconnectAsync();
+                });
             };
 
             _connection.ConnectionRestored += (sender, args) =>
@@ -550,15 +567,15 @@ namespace Common.Redis
         /// <summary>
         /// 安全释放 Redis 连接
         /// </summary>
-        private async void DisposeConnection()
+        private void DisposeConnection()
         {
             try
             {
                 Console.WriteLine("正在释放 Redis 连接...");
                 if (_connection != null)
                 {
-                    await _connection.CloseAsync();
-                    await _connection.DisposeAsync();
+                    _connection.Close();
+                    _connection.Dispose();
                 }
 
             }

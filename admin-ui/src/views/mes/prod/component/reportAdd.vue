@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="dialogVisible" width="800px" :show-close="false" class="report_add_dialog">
+  <el-dialog :visible.sync="dialogVisible" width="800px" top="5vh" :show-close="false" class="report_add_dialog">
     <div slot="title" class="dialog_slot_title">
       <div class="title_text">{{ isOnlyRead ? "编辑报工" : "添加报工" }}</div>
       <el-tabs v-model="dialogName" tab-position="top" :stretch="true"
