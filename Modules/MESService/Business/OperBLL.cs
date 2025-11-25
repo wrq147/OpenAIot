@@ -35,6 +35,16 @@ namespace MESService.Business
             }
             return BusResponse<MZ_ProductOper>.Success(info);
         }
+        public virtual async Task<BusResponse<MZ_ProductRouteOper>> RouteInfo(string id)
+        {
+            var info = await _provider.GetService<RouteOperDAL>().Select(id);
+            if (info == null)
+            {
+                return BusResponse<MZ_ProductRouteOper>.Error(111, "工艺路线明细不存在");
+            }
+            return BusResponse<MZ_ProductRouteOper>.Success(info);
+        }
+
         public virtual async Task<BusResponse<string>> Add(MZ_ProductOper data, IUserInfo user, TAAction action)
         {
             if (user.OrgId <= 0)

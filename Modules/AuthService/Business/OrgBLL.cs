@@ -708,7 +708,12 @@ namespace AuthService
             {
                 return torgextlist[0];
             }
-            return null;
+            return new MZ_OrgExt()
+            {
+                OrgId = orgId,
+                ExtField = field,
+                ExtValue = "[]"
+            };
         }
         public virtual async Task<BusResponse<int>> DeleteOrgExt(long orgId, string field)
         {

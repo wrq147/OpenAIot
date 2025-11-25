@@ -31,12 +31,12 @@
                 <el-table-column label="状态" align="center">
                   <template slot-scope="scope">
                     <span v-if="scope.row.Status == 0">待提交</span>
-                    <span v-if="scope.row.Status == 1">待审批</span>
-                    <span v-if="scope.row.Status == 2">待执行</span>
-                    <span v-if="scope.row.Status == 3">执行中</span>
-                    <span v-if="scope.row.Status == 4">已完成</span>
-                    <span v-if="scope.row.Status == 5">已取消</span>
-                    <span v-if="scope.row.Status == 6">已驳回</span>
+                    <el-tag v-if="scope.row.Status == 1" type="warning">待审批</el-tag>
+                    <el-tag v-if="scope.row.Status == 2" type="warning">待执行</el-tag>
+                    <el-tag v-if="scope.row.Status == 3">执行中</el-tag>
+                    <el-tag v-if="scope.row.Status == 4" type="success">已完成</el-tag>
+                    <el-tag v-if="scope.row.Status == 5" type="info">已取消</el-tag>
+                    <el-tag v-if="scope.row.Status == 6" type="danger">已驳回</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column label="优先级" align="center">

@@ -31,7 +31,8 @@ namespace MESService.DAL
             {
                 expression = expression.And((a) => a.create_time <= query.endTime);
             }
-            var tmpSql = new SqlBuilder(help).Query<MZ_WorkReport>().Include(a => a.RepBat, x => x.BatchNo).Where(expression);
+            var tmpSql = new SqlBuilder(help).Query<MZ_WorkReport>()
+                .Include(a => a.RepBat, x => x.BatchNo).Include(a => a.WorkOrder, x => x.WorkOrderId).Include(a => a.Oper, x => x.OperId).Where(expression);
             if (query.Items != null && query.Items.Length > 0)
             {
                 //过滤扩展字段

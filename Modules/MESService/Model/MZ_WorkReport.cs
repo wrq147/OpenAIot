@@ -88,15 +88,20 @@ namespace MESService.Model
         public MZ_WorkBatch RepBat { get; set; }
 
         /// <summary>
-        /// 工单编号
+        /// 工单
         /// </summary>
         [DataIgnore]
-        public string WorkNumber { get; set; }
+        public MZ_WorkOrder WorkOrder { get; set; }
         /// <summary>
-        /// 工序名称
+        /// 工序
         /// </summary>
         [DataIgnore]
-        public string OperName { get; set; }
+        public MZ_ProductOper Oper { get; set; }
+        /// <summary>
+        /// 工艺路线的工序
+        /// </summary>
+        [DataIgnore]
+        public MZ_ProductRouteOper RouteOper { get; set; }
         /// <summary>
         /// 不良品项
         /// </summary>

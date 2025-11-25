@@ -80,7 +80,9 @@
         </el-col>
 
         <el-col :span="24">
-          <el-form-item label="备注" prop="OverReason">
+          <el-form-item label="超时原因" prop="OverReason">
+            <el-alert v-if="NeedReason" title="报工时长超过预计时长，请填写超时原因" :closable="false" type="error" show-icon>
+            </el-alert>
             <el-input :disabled="isOnlyRead" type="textarea" v-model="form.OverReason" placeholder="请输入备注"></el-input>
           </el-form-item>
         </el-col>
@@ -92,7 +94,7 @@
             <el-form-item :label="item.name" :prop="item.mapid">
               <el-select @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
                 :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
-                v-model="form[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+                v-model="form.RepBat[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
                 style="width: 100%"
                 v-if="(item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉')">
                 <template v-for="it in item.optionals">
@@ -100,47 +102,47 @@
                 </template>
               </el-select>
               <el-radio-group @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
-                v-model="form[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
+                v-model="form.RepBat[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
                 <template v-for="it in item.optionals">
                   <el-radio :label="it" :key="it + ix">{{ it }}</el-radio>
                 </template>
               </el-radio-group>
               <el-checkbox-group @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
-                v-model="form[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
+                v-model="form.RepBat[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
                 <template v-for="it in item.optionals">
                   <el-checkbox :label="it" :key="it + ix">{{ it }}</el-checkbox>
                 </template>
               </el-checkbox-group>
               <el-date-picker @blur="customValChange" @change="customValChange"
-                :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '时间'" v-model="form[item.mapid]"
+                :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '时间'" v-model="form.RepBat[item.mapid]"
                 type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
                 :value-format="item.format" :format="item.format"></el-date-picker>
               <el-input @input="customValChange" :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '文本'"
                 :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
-                :type="item.is_multiple ? 'textarea' : 'text'" v-model="form[item.mapid]"></el-input>
+                :type="item.is_multiple ? 'textarea' : 'text'" v-model="form.RepBat[item.mapid]"></el-input>
               <el-input @input="customValChange" :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '数字'"
-                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number" v-model="form[item.mapid]"
-                :precision="item.decimals"></el-input>
+                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number"
+                v-model="form.RepBat[item.mapid]" :precision="item.decimals"></el-input>
               <el-link :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '超链接'" href="#" target="_blank">{{
                 item.describe_text }}</el-link>
               <!-- <image-upload @input="customValChange" v-model="form[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
               <div class="avatar_con" v-if="item.type == '图片'">
-                <image-upload :disabled="isOnlyRead" @input="customValChange($event, item)" v-model="form[item.mapid]"
-                  :limit="1" :isShowLeft="true">
+                <image-upload :disabled="isOnlyRead" @input="customValChange($event, item)"
+                  v-model="form.RepBat[item.mapid]" :limit="1" :isShowLeft="true">
                   <template #tip>
                     <span></span>
                   </template>
                 </image-upload>
               </div>
-              <file-upload :disabled="isOnlyRead" @input="customValChange($event, item)" v-model="form[item.mapid]"
-                :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
+              <file-upload :disabled="isOnlyRead" @input="customValChange($event, item)"
+                v-model="form.RepBat[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
                 <template #tip>
                   <span></span>
                 </template>
               </file-upload>
-              <el-select :disabled="isOnlyRead" @focus="afterValSearch(form[item.mapid], item)" :clearable="true"
-                @change="customValChange2($event, item)" style="width: 100%" v-model="form[item.mapid]" filterable
-                remote reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+              <el-select :disabled="isOnlyRead" @focus="afterValSearch(form.RepBat[item.mapid], item)" :clearable="true"
+                @change="customValChange2($event, item)" style="width: 100%" v-model="form.RepBat[item.mapid]"
+                filterable remote reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
                 :remote-method="(query) => associationMethod(query, item)" :loading="objectLoading"
                 v-if="item.type == '关联对象'">
                 <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name"
@@ -178,7 +180,7 @@ import {
 } from "@/api/mes/config";
 import { orgField } from "@/api/factory/customFields";
 import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
-import { operInfo } from "@/api/mes/oper";
+import { operInfo, routeOperInfo } from "@/api/mes/oper";
 export default {
   name: 'AdminUiReportAdd',
   components: { AddEmbed, OrgPicker },
@@ -205,7 +207,7 @@ export default {
         DefectList: [],
         StartWork: "",//开始时间
         EndWork: "",//结束时间
-        WorkTime: "", //报工时长
+        WorkTime: 0, //报工时长
         OverReason: "", //超时原因改备注
         // FlowId: 0, //流程表单id
         RepBat: {},
@@ -221,7 +223,7 @@ export default {
         DefectNum: [
           { required: true, trigger: "change", message: "请输入不良品数" },
         ],
-        BatchNo:[
+        BatchNo: [
           { required: true, trigger: 'blur', message: '批次编号不能为空' }
         ],
         StartWork: [
@@ -250,6 +252,16 @@ export default {
         "@fromtype": "生产报工",
       };
     },
+    NeedReason() {
+      if (this.form.RouteOper == null) {
+        return false;
+      }
+      let needWorkTime = this.form.RouteOper.WorkTime * this.form.RouteOper.PropOf * (this.form.GoodNum + this.form.DefectNum);
+      if (needWorkTime < this.form.WorkTime && this.form.OverReason == "") {
+        return true;
+      }
+      return false;
+    }
   },
   mounted() {
 
@@ -270,9 +282,9 @@ export default {
           this.form.DefectList.push({ "DefectId": tmpdflist[i].Id, "DefectName": tmpdflist[i].DefectName, "DefectCategory": tmpdflist[i].DefectCategory, "DefectNum": 0 })
         }
       }
+      let routeRes = await routeOperInfo({ "id": val.RouteOperId });
+      this.form.RouteOper = routeRes.data;
       this.$forceUpdate()
-      let form = JSON.parse(JSON.stringify(this.form))
-      this.form = JSON.parse(JSON.stringify(form))
     },
     onOpenWorkTask() {
       this.$emit('onOpenWorkTask')
@@ -297,101 +309,101 @@ export default {
       let result = true;
       switch (compare) {
         case "=":
-          result = this.form[field] == val;
+          result = this.form.RepBat[field] == val;
           break;
         case "!=":
-          result = this.form[field] != val;
+          result = this.form.RepBat[field] != val;
           break;
         case "IN":
-          result = this.form[field] && this.form[field].indexOf(val) > -1;
+          result = this.form.RepBat[field] && this.form.RepBat[field].indexOf(val) > -1;
           break;
         case "NOTIN":
           result =
-            !this.form[field] ||
-            (this.form[field] && this.form[field].indexOf(val) == -1);
+            !this.form.RepBat[field] ||
+            (this.form.RepBat[field] && this.form.RepBat[field].indexOf(val) == -1);
           break;
         case "ISNULL":
-          result = this.form[field] == "" || this.form[field] == null;
+          result = this.form.RepBat[field] == "" || this.form.RepBat[field] == null;
           break;
         case "NOTNULL":
-          result = this.form[field] != "" && this.form[field] != null;
+          result = this.form.RepBat[field] != "" && this.form.RepBat[field] != null;
           break;
         case ">":
           if (type && type == "时间") {
             result =
               val.timeValue &&
-              dayjs(this.form[field]).valueOf() >
+              dayjs(this.form.RepBat[field]).valueOf() >
               dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
-            result = this.form[field] > val;
+            result = this.form.RepBat[field] > val;
           }
           break;
         case "<":
           if (type && type == "时间") {
             result =
               val.timeValue &&
-              dayjs(this.form[field]).valueOf() <
+              dayjs(this.form.RepBat[field]).valueOf() <
               dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
-            result = this.form[field] < val;
+            result = this.form.RepBat[field] < val;
           }
           break;
         case "==":
           if (type && type == "时间") {
             result =
               val.timeValue &&
-              dayjs(this.form[field]).valueOf() ==
+              dayjs(this.form.RepBat[field]).valueOf() ==
               dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
-            result = this.form[field] == val;
+            result = this.form.RepBat[field] == val;
           }
           break;
         case "><":
           if (type && type == "时间") {
             result =
               val.timeValue &&
-              dayjs(this.form[field]).valueOf() !=
+              dayjs(this.form.RepBat[field]).valueOf() !=
               dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
-            result = this.form[field] != val;
+            result = this.form.RepBat[field] != val;
           }
           break;
         case ">=":
           if (type && type == "时间") {
             result =
               val.timeValue &&
-              dayjs(this.form[field]).valueOf() >=
+              dayjs(this.form.RepBat[field]).valueOf() >=
               dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
-            result = this.form[field] >= val;
+            result = this.form.RepBat[field] >= val;
           }
           break;
         case "<=":
           if (type && type == "时间") {
             result =
               val.timeValue &&
-              dayjs(this.form[field]).valueOf() <=
+              dayjs(this.form.RepBat[field]).valueOf() <=
               dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
-            result = this.form[field] <= val;
+            result = this.form.RepBat[field] <= val;
           }
           break;
         case "INRANGE":
           if (type && type == "数字") {
             if (val.min && val.max) {
-              if (this.form[field] >= val.min && this.form[field] <= val.max) {
+              if (this.form.RepBat[field] >= val.min && this.form.RepBat[field] <= val.max) {
                 result = true;
               } else {
                 result = false;
               }
             }
           }
-          result = this.form[field] != "" && this.form[field] != null;
+          result = this.form.RepBat[field] != "" && this.form.RepBat[field] != null;
           break;
         case "NOTINRANGE":
           if (type && type == "数字") {
             if (val.min && val.max) {
-              if (this.form[field] < val.min && this.form[field] > val.max) {
+              if (this.form.RepBat[field] < val.min && this.form.RepBat[field] > val.max) {
                 result = true;
               } else {
                 result = false;
@@ -404,7 +416,7 @@ export default {
             if (val[0] && val[1]) {
               let max = Math.max(...val);
               let min = Math.min(...val);
-              if (this.form[field] >= min && this.form[field] <= max) {
+              if (this.form.RepBat[field] >= min && this.form.RepBat[field] <= max) {
                 result = true;
               } else {
                 result = false;
@@ -417,7 +429,7 @@ export default {
             if (val[0] && val[1]) {
               let max = Math.max(...val);
               let min = Math.min(...val);
-              if (this.form[field] >= min && this.form[field] <= max) {
+              if (this.form.RepBat[field] >= min && this.form.RepBat[field] <= max) {
                 result = true;
               } else {
                 result = false;
@@ -590,11 +602,8 @@ export default {
       let orgId = this.$store.state.user.orgId;
       let res = await orgField({ orgId: orgId, field: "报工" });
       if (res.data) {
-        if (res.data.ExtValue) {
-          let filedList = JSON.parse(res.data.ExtValue);
-          this.filedTableList = filedList; //排序处理，并且数字字段排前面
-          // console.log("自定义字段",this.filedTableList);
-        }
+        let filedList = JSON.parse(res.data.ExtValue);
+        this.filedTableList = filedList;
       } else {
         this.filedTableList = [];
       }
@@ -621,13 +630,15 @@ export default {
           OverReason: res.data.OverReason, //备注
           FlowId: res.data.FlowId, //流程表单id
           PhotoUrl: res.data.PhotoUrl,
-          WorkTaskNumber: res.data.WorkNumber + "-" + res.data.OperName,
+          WorkTaskNumber: res.data.WorkOrder.WorkNumber + "-" + res.data.Oper.OperName,
           WorkOrderId: res.data.WorkOrderId,
           WorkTaskId: res.data.WorkTaskId,
-          OperId: res.data.OperId
+          OperId: res.data.OperId,
+          RouteOper: res.data.RouteOper,
+          RepBat: res.data.RepBat
         };
-        this.resetForm("form");
-        this.setCustomDefaultValue(res.data);
+
+        this.setCustomDefaultValue(res.data.RouteOper);
       } else {
         this.form = {
           Id: null,
@@ -646,17 +657,15 @@ export default {
           WorkOrderId: '',
           WorkTaskId: '',
           OperId: '',
+          RepBat: { "Id": "" }
         }
-        this.resetForm("form");
+
         let numres = await GeneratePlaneNumber()//获取报工编号
         this.form.Number = numres.data
         this.setCustomDefaultValue();
         let response = await factoryMesConfig();//获取生产报工相关配置
-        // console.log("初始化配置信息",response);
         this.mesform.ReportTemplateName = response.data.ReportTemplateName;
         this.mesform.ReportTemplateId = response.data.ReportTemplateId;
-        // this.form.FlowId=response.data.ReportTemplateId
-        // console.log("表单初始化",this.form);
       }
       this.dialogVisible = true;
       if (this.mesform.ReportTemplateId > 0) {
@@ -682,52 +691,36 @@ export default {
         // console.log("检验");
         if (valid) {
           let submitForm = JSON.parse(JSON.stringify(this.form));
-
           for (let i = 0; i < this.filedTableList.length; i++) {
             let row = this.filedTableList[i];
             if (row.type == "数字") {
-              if (submitForm[row.mapid]) {
+              if (submitForm.RepBat[row.mapid]) {
               } else {
-                submitForm[row.mapid] = Number(submitForm[row.mapid]);
+                submitForm.RepBat[row.mapid] = Number(submitForm.RepBat[row.mapid]);
               }
             } else if (row.type == "时间") {
-              submitForm[row.mapid] = dayjs(submitForm[row.mapid]).valueOf();
+              submitForm.RepBat[row.mapid] = dayjs(submitForm.RepBat[row.mapid]).valueOf();
             } else if (row.type == "复选框") {
-              if (submitForm[row.mapid] && submitForm[row.mapid].length > 0) {
-                submitForm[row.mapid] = submitForm[row.mapid].join(",");
+              if (submitForm.RepBat[row.mapid] && submitForm.RepBat[row.mapid].length > 0) {
+                submitForm.RepBat[row.mapid] = submitForm.RepBat[row.mapid].join(",");
               } else {
-                submitForm[row.mapid] = "";
+                submitForm.RepBat[row.mapid] = "";
               }
             } else {
-              if (submitForm[row.mapid]) {
+              if (submitForm.RepBat[row.mapid]) {
               } else {
-                submitForm[row.mapid] = "";
+                submitForm.RepBat[row.mapid] = "";
               }
             }
-            submitForm.RepBat[row.mapid] = submitForm[row.mapid]
-            delete submitForm[row.mapid]
           }
-          delete submitForm.WorkTaskNumber
-          // if(st==0){
           submitForm.Status = 0
-          // }else{
-          //   delete submitForm.Status
-          // }
           delete submitForm.FlowId
           let response;
           if (submitForm.Id) {
             response = await reportEdit(submitForm);
-            // console.log("修改执行结果", response);
             response.data = submitForm.Id
-            this.$modal.msgSuccess("修改成功");
-            this.dialogVisible = false;
-            this.$emit("reloadData");
           } else {
             response = await reportAdd(submitForm);
-            // console.log("添加执行结果", response);
-            this.$modal.msgSuccess("添加成功");
-            this.dialogVisible = false;
-            this.$emit("reloadData");
           }
           if (this.mesform.ReportTemplateId > 0) {
             if (st == 2) {
@@ -750,6 +743,9 @@ export default {
             }
 
           }
+          this.dialogVisible = false;
+          this.$emit("reloadData");
+          this.$modal.msgSuccess("操作成功");
         } else {
           let errKey = Object.keys(validateResult)
           if (errKey && errKey[0]) {

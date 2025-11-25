@@ -75,7 +75,6 @@ namespace MESService.Business
             return BusResponse<MZ_ProductRoute>.Success(info);
         }
 
-
         public virtual async Task<BusResponse<string>> Add(MZ_ProductRoute data, IUserInfo user)
         {
             if (user.OrgId <= 0)

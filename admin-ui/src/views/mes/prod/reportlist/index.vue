@@ -44,15 +44,16 @@
                 <el-table-column :fixed="ite.isFixed ? 'left' : false" v-if="ite.isShow" :key="ite.field"
                   :label="ite.fieldName" align="center" :prop="ite.field" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
-                    <span v-if="ite.type == '时间'">{{ parseTime(scope.row[ite.field]) }}</span>
+                    <span v-if="ite.type == '时间'">{{ parseTime(getRowItem(scope.row, ite.field)) }}</span>
                     <span v-else-if="ite.type == '图片'">
-                      <el-image fit="cover" style="width:54px;height:54px" :src="scope.row[ite.field] + '?wh=500x500'">
+                      <el-image fit="cover" style="width:54px;height:54px"
+                        :src="getRowItem(scope.row, ite.field) + '?wh=500x500'">
                         <div slot="error" class="image-slot">
                           <i class="el-icon-picture-outline"></i>
                         </div>
                       </el-image>
                     </span>
-                    <span v-else-if="ite.type == '关联对象'">{{ returnObjectName(scope.row[ite.field]) }}</span>
+                    <span v-else-if="ite.type == '关联对象'">{{ returnObjectName(getRowItem(scope.row, ite.field)) }}</span>
 
                     <template slot-scope="scope" v-else-if="ite.field == 'Status'">
                       <el-tag v-if="scope.row.Status == 0" type="warning">待提交</el-tag>
@@ -61,10 +62,7 @@
                       <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
                       <el-tag v-if="scope.row.Status == 4" type="danger">已驳回</el-tag>
                     </template>
-                    <template slot-scope="scope" v-else-if="ite.field == 'LNumber'">
-                      <span>{{ scope.row.RepBat.LNumber }}</span>
-                    </template>
-                    <span v-else>{{ scope.row[ite.field] }}</span>
+                    <span v-else>{{ getRowItem(scope.row, ite.field) }}</span>
                   </template>
                 </el-table-column>
               </template>
@@ -124,28 +122,30 @@ export default {
       activeFiledList: [],//字段列表
       beforefilterProp: null,
       dateRange: [],//过滤开始时间和结束时间
-      taskDialogVisible: false
+      taskDialogVisible: false,
+      DefaultFields: [
+        { "field": "WorkOrderId", "fieldName": "关联的工单Id", "type": "文本", "isShow": false, "isFixed": false },
+        { "field": "WorkTaskId", "fieldName": "关联的任务Id", "type": "文本", "isShow": false, "isFixed": false },
+        { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
+        { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "Oper.OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "WorkOrder.WorkNumber", "fieldName": "工单编号", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
+        { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },
+        { "field": "StartWork", "fieldName": "开始时间", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "EndWork", "fieldName": "结束时间", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "WorkTime", "fieldName": "报工时长（分）", "type": "数字", "isShow": true, "isFixed": false },
+        { "field": "Status", "fieldName": "状态", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "updateTime", "fieldName": "更新时间", "type": "时间", "isShow": true, "isFixed": false },
+        { "field": "OverReason", "fieldName": "超时原因", "type": "文本", "isShow": true, "isFixed": false },
+        { "field": "flowId", "fieldName": "关联的审核流程Id", "type": "文本", "isShow": false, "isFixed": false },
+      ]
     };
   },
 
   mounted() {
-    this.activeFiledList = [
-      { "field": "WorkOrderId", "fieldName": "关联的工单Id", "type": "文本", "isShow": false, "isFixed": false },
-      { "field": "WorkTaskId", "fieldName": "关联的任务Id", "type": "文本", "isShow": false, "isFixed": false },
-      { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
-      { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
-      { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },
-      { "field": "startWork", "fieldName": "开始时间", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "endWork", "fieldName": "结束时间", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "workTime", "fieldName": "报工时长", "type": "数字", "isShow": true, "isFixed": false },
-      { "field": "Status", "fieldName": "状态", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "updateTime", "fieldName": "更新时间", "type": "时间", "isShow": true, "isFixed": false },
-      { "field": "overReason", "fieldName": "超时原因", "type": "文本", "isShow": true, "isFixed": false },
-      { "field": "flowId", "fieldName": "关联的审核流程Id", "type": "文本", "isShow": false, "isFixed": false },
-    ]
+    this.activeFiledList = JSON.parse(JSON.stringify(this.DefaultFields));
     this.getList()
     this.loadOrgFormFields('报工', true)
     this.$nextTick(() => {
@@ -154,6 +154,15 @@ export default {
   },
 
   methods: {
+    getRowItem(row, field) {
+      let sparr = field.split('.');
+      if (sparr.length == 1) {
+        return row[field];
+      }
+      else {
+        return row[sparr[0]][sparr[1]];
+      }
+    },
     taskCancelForm() {
       this.taskDialogVisible = false
     },
@@ -230,23 +239,7 @@ export default {
         this.queryParams.pageNum = 1
         this.getList()
       } else {
-        this.activeFiledList = [
-          { "field": "WorkOrderId", "fieldName": "关联的工单Id", "type": "文本", "isShow": false, "isFixed": false },
-          { "field": "WorkTaskId", "fieldName": "关联的任务Id", "type": "文本", "isShow": false, "isFixed": false },
-          { "field": "OperId", "fieldName": "关联的工序Id", "type": "文本", "isShow": false, "isFixed": false },
-          { "field": "Number", "fieldName": "唯一编号", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "BatchNo", "fieldName": "批次编号", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "OperName", "fieldName": "工序", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "GoodNum", "fieldName": "良品数", "type": "数字", "isShow": true, "isFixed": false },
-          { "field": "DefectNum", "fieldName": "不良品数", "type": "数字", "isShow": true, "isFixed": false },
-          { "field": "startWork", "fieldName": "开始时间", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "endWork", "fieldName": "结束时间", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "workTime", "fieldName": "报工时长", "type": "数字", "isShow": true, "isFixed": false },
-          { "field": "Status", "fieldName": "状态", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "updateTime", "fieldName": "更新时间", "type": "时间", "isShow": true, "isFixed": false },
-          { "field": "overReason", "fieldName": "超时原因", "type": "文本", "isShow": true, "isFixed": false },
-          { "field": "flowId", "fieldName": "关联的审核流程Id", "type": "文本", "isShow": false, "isFixed": false },
-        ]
+        this.activeFiledList = JSON.parse(JSON.stringify(this.DefaultFields));
         this.groupConditionJson = []
         // delete this.queryParams.typeId
         if (this.activeFilter && this.activeFilter.length > 0) {

@@ -157,6 +157,7 @@ namespace MESService.Business
                 neworder.Status = 3;
                 neworder.CancelReason = $"工单的产品未关联任何工艺路线";
                 await _workOrderDAL.Update(neworder);
+                await _provider.GetService<ProductPlanDAL>().CancelPlane(order.PlanId);
                 return;
             }
             var routeOpers = await _routeOperDAL.SelectList(x => x.RouteId == product.Route);
@@ -167,6 +168,7 @@ namespace MESService.Business
                 neworder.Status = 3;
                 neworder.CancelReason = $"工单的工序未关联任何工艺路线";
                 await _workOrderDAL.Update(neworder);
+                await _provider.GetService<ProductPlanDAL>().CancelPlane(order.PlanId);
                 return;
             }
             List<MZ_WorkTask> tasks = new List<MZ_WorkTask>();

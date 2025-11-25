@@ -1,4 +1,5 @@
 ﻿using Minio.DataModel;
+using MyAccess.DB;
 using MyAccess.DB.Builder;
 using System;
 
@@ -14,7 +15,7 @@ namespace AuthService.Fields
         /// 比较符号：大于、小于、大于等于、小于等于、不等于、等于、包含、不包含、关联
         /// </summary>
         public string compare { get; set; }
-        public void AppendFilter<A>(QueryOneBuilder<A> sql, string prefix = "")
+        public void AppendFilter<A>(ISqlBuilder<A> sql, string prefix = "") where A : ISqlBuilder<A>
         {
             if (val_num != null)
             {

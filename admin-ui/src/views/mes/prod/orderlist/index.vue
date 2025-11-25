@@ -71,27 +71,32 @@
                   <span v-if="scope.row.Priority == 3">正常排产</span>
                 </template>
               </el-table-column>
+              <el-table-column label="超期时间" align="center" prop="OverTime" :show-overflow-tooltip="true" />
+              <el-table-column label="计划开始时间" align="center" prop="PlannedStartOn" :show-overflow-tooltip="true" />
+              <el-table-column label="计划结束时间" align="center" prop="PlannedEndOn" :show-overflow-tooltip="true" />
+              <el-table-column label="实际开始时间" align="center" prop="StartOn" :show-overflow-tooltip="true" />
+              <el-table-column label="实际结束时间" align="center" prop="EndOn" :show-overflow-tooltip="true" />
+              <el-table-column label="生产数量/计划数量" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.BatchCount }}/{{ scope.row.Quantity }}
+                </template>
+              </el-table-column>
               <el-table-column label="状态" align="center">
                 <template slot-scope="scope">
                   <el-tag v-if="scope.row.Status == 0" type="warning">待生产</el-tag>
-                  <el-tag v-if="scope.row.Status == 1" type="warning">生产中</el-tag>
+                  <el-tag v-if="scope.row.Status == 1">生产中</el-tag>
                   <el-tag v-if="scope.row.Status == 2" type="success">已完成</el-tag>
                   <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="超期时间" align="center" prop="OverTime" />
-              <el-table-column label="计划开始时间" align="center" prop="PlannedStartOn" />
-              <el-table-column label="计划结束时间" align="center" prop="PlannedEndOn" />
-              <el-table-column label="实际开始时间" align="center" prop="StartOn" />
-              <el-table-column label="实际结束时间" align="center" prop="EndOn" />
               <el-table-column label="当前进度" align="center">
                 <template slot-scope="scope">
                   <template v-if="scope.row.Status == 1">
                     <el-progress type="line" :percentage="Math.round((scope.row.BatchCount / scope.row.Quantity) * 100)"
-                      :text-inside="true" :stroke-width="10" status="success" />
-                    <div style="font-size: 12px; color: #666; margin-top: 4px;">
-                      {{ scope.row.BatchCount }}/{{ scope.row.Quantity }}
-                    </div>
+                      :text-inside="true" :stroke-width="24" />
+                  </template>
+                  <template v-else-if="scope.row.Status == 2">
+                    <el-progress type="line" :percentage="100" :text-inside="true" :stroke-width="24" status="success" />
                   </template>
                   <template v-else>
                     <span style="color: #999;">无数据</span>

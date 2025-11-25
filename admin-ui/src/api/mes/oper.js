@@ -17,6 +17,13 @@ export function operInfo(params) {
         params
     })
 }
+export function routeOperInfo(params) {
+    return request({
+        url: '/MESService/Oper/RouteInfo',
+        method: 'get',
+        params
+    })
+}
 
 // 添加生产工序
 export function operAdd(data) {

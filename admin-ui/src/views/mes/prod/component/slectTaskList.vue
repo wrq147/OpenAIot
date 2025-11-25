@@ -2,12 +2,6 @@
   <el-dialog v-if="planOpen" title="请选择生产任务" :visible.sync="planOpen" :close-on-click-modal="false" append-to-body
     width="980px" top="2vh" @close="cancel">
     <el-form class="biaodan" :model="queryParams" ref="taskForm" :inline="true">
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.Status" placeholder="请选择状态">
-          <el-option label="进行中" :value="0" />
-          <el-option label="已完成" :value="1" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="创建日期">
         <el-date-picker class="set_radius" v-model="time" style="width:232px" value-format="yyyy-MM-dd" type="daterange"
           range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" />
@@ -67,7 +61,7 @@ export default {
       loading: false,
       // 查询参数
       queryParams: {
-        Status: '',
+        Status: 0,
         pageNum: 1,
         pageSize: 20,
         beginTime: '',

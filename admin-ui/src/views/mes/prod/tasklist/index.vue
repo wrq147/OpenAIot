@@ -67,8 +67,8 @@
               <el-table-column label="不良品数" align="center" prop="DefectNum" />
               <el-table-column label="状态" align="center">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.IsFinish == true">已完成</span>
-                  <span v-else>进行中</span>
+                  <el-tag v-if="scope.row.IsFinish == true" type="success">已完成</el-tag>
+                  <el-tag v-else>进行中</el-tag>
                 </template>
               </el-table-column>
               <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">

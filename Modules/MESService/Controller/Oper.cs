@@ -46,6 +46,16 @@ namespace MESService.Controller
             return (await _operBLL.Info(id)).ToAjaxResult();
         }
         /// <summary>
+        /// 获取工艺路线明细
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<MZ_ProductRouteOper>> RouteInfo(string id)
+        {
+            return (await _operBLL.RouteInfo(id)).ToAjaxResult();
+        }
+        /// <summary>
         /// 添加工序
         /// </summary>
         /// <param name="data"></param>

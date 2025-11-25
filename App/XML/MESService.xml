@@ -175,6 +175,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:MESService.Controller.Oper.RouteInfo(System.String)">
+            <summary>
+            获取工艺路线明细
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:MESService.Controller.Oper.Add(MESService.Model.MZ_ProductOper)">
             <summary>
             添加工序
@@ -1906,14 +1913,19 @@
             报工的批次
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkReport.WorkNumber">
+        <member name="P:MESService.Model.MZ_WorkReport.WorkOrder">
             <summary>
-            工单编号
+            工单
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkReport.OperName">
+        <member name="P:MESService.Model.MZ_WorkReport.Oper">
             <summary>
-            工序名称
+            工序
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkReport.RouteOper">
+            <summary>
+            工艺路线的工序
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkReport.DefectList">

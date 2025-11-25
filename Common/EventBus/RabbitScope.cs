@@ -30,12 +30,28 @@ namespace Common.EventBus
                             {
                                 x.Register<IConsumerErrorStrategy, AlwaysRequeueErrorStrategy>();
                             });
+                            _bus.Advanced.Connected += Rabbit_Connected;
                         }
                     }
                 }
                 return _bus;
             }
         }
+
+        private bool _isConnected = false;
+        private void Rabbit_Connected(object? sender, ConnectedEventArgs e)
+        {
+            if (!_isConnected)
+            {
+                Console.WriteLine("RabbitMQ 创建成功");
+                _isConnected = true;
+            }
+            else
+            {
+                Console.WriteLine("RabbitMQ 连接成功");
+            }
+        }
+
         public RabbitScope(ITAServiceProvider provider)
         {
             _provider = provider;

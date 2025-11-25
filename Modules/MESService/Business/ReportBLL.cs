@@ -11,6 +11,7 @@ using FlowService.FlowNode.FormFields;
 using MESService.DAL;
 using MESService.Model;
 using Newtonsoft.Json;
+using NPOI.HSSF.Record;
 using NPOI.SS.Formula.Functions;
 using ProducerService.DAL;
 using System;
@@ -52,15 +53,21 @@ namespace MESService.Business
             {
                 return BusResponse<MZ_WorkReport>.Error(111, "报工单不存在");
             }
+            info.RepBat = await _provider.GetService<WorkBatchDAL>().Select(info.BatchNo);
             var wkorder = await _provider.GetService<WorkOrderDAL>().Select(info.WorkOrderId);
             if (wkorder != null)
             {
-                info.WorkNumber = wkorder.WorkNumber;
+                info.WorkOrder = wkorder;
             }
             var wkoper = await _provider.GetService<OperDAL>().Select(info.OperId);
             if (wkoper != null)
             {
-                info.OperName = wkoper.OperName;
+                info.Oper = wkoper;
+            }
+            var routeroper = await _provider.GetService<RouteOperDAL>().Select(info.RouteOperId);
+            if (routeroper != null)
+            {
+                info.RouteOper = routeroper;
             }
             var workDefectDAL = _provider.GetService<WorkDefectDAL>();
             info.DefectList = await workDefectDAL.SelectList(x => x.ReportId == id);
@@ -81,24 +88,47 @@ namespace MESService.Business
             {
                 return BusResponse<int>.Error(121, "状态错误，无法修改");
             }
+
             WorkReportDAL reportDAL = _provider.GetService<WorkReportDAL>();
             var old = await reportDAL.Select(data.Id);
             if (old == null)
             {
                 return BusResponse<int>.Error(112, "生产报工不存在");
             }
+
+
+
             if (data.WorkTaskId != null)
             {
                 var task = await _provider.GetService<WorkTaskDAL>().Select(data.WorkTaskId);
-                if (task != null)
+                if (task == null)
+                {
+                    return BusResponse<int>.Error(122, "生产任务不存在");
+                }
+                else
                 {
                     data.WorkOrderId = task.WorkOrderId;
                     data.OperId = task.OperId;
                     data.RouteOperId = task.RouteOperId;
+                    if (task.IsFinish == true)
+                    {
+                        return BusResponse<int>.Error(153, "已完成的任务，无法报工");
+                    }
+                }
+            }
+            else
+            {
+                var task = await _provider.GetService<WorkTaskDAL>().Select(old.WorkTaskId);
+                if (task == null)
+                {
+                    return BusResponse<int>.Error(122, "生产任务不存在");
                 }
                 else
                 {
-                    return BusResponse<int>.Error(122, "生产任务不存在");
+                    if (task.IsFinish == true)
+                    {
+                        return BusResponse<int>.Error(153, "已完成的任务，无法报工");
+                    }
                 }
             }
 
@@ -177,6 +207,10 @@ namespace MESService.Business
             {
                 return BusResponse<string>.Error(122, "生产任务不存在");
             }
+            if (task.IsFinish == true)
+            {
+                return BusResponse<string>.Error(123, "已完成的任务，无法报工");
+            }
 
             var tmpOper = await _provider.GetService<OperDAL>().Select(data.OperId);
             if (tmpOper == null)
@@ -253,12 +287,15 @@ namespace MESService.Business
                 {
                     return checkRsp;
                 }
-
-                data.RepBat.Id = data.BatchNo;
-                data.RepBat.WorkOrderId = data.WorkOrderId;
-                data.RepBat.OrgId = user.OrgId;
-                await _provider.GetService<WorkBatchDAL>().CreateOrUpdate(data.RepBat);
             }
+            else
+            {
+                data.RepBat = new MZ_WorkBatch();
+            }
+            data.RepBat.Id = data.BatchNo;
+            data.RepBat.WorkOrderId = data.WorkOrderId;
+            data.RepBat.OrgId = user.OrgId;
+            await _provider.GetService<WorkBatchDAL>().CreateOrUpdate(data.RepBat);
             data.SetCreateBy(user);
             data.Status = 0;
             data.DefectNum = 0;
@@ -323,6 +360,7 @@ namespace MESService.Business
             {
                 return BusResponse<string>.Error(125, "状态错误");
             }
+
             MZ_ProductOper operInfo = await _provider.GetService<OperDAL>().Select(old.OperId);
             if (operInfo == null)
             {

@@ -103,7 +103,21 @@ namespace MESService.Business
                 neworder.Status = 1;
                 neworder.StartOn = report.StartWork;
                 await workOrderDAL.Update(neworder);
+                await _provider.GetService<ProductPlanDAL>().StartPlane(workOrder.PlanId);
             }
+
+            var rawcc = await workOrderDAL.IncreaseProgress(workOrder.Id, report.GoodNum.Value);
+            if (rawcc < workOrder.Quantity && (rawcc + report.GoodNum.Value) >= workOrder.Quantity)
+            {
+                //结束工单
+                MZ_WorkOrder neworder = new MZ_WorkOrder();
+                neworder.Id = workOrder.Id;
+                neworder.Status = 2;
+                neworder.EndOn = report.EndWork;
+                await workOrderDAL.Update(neworder);
+                await _provider.GetService<ProductPlanDAL>().FinishPlane(workOrder.PlanId);
+            }
+
 
             var route = await _provider.GetService<RouteDAL>().Select(workOrder.RouteId);
             if (route == null)
@@ -182,16 +196,6 @@ namespace MESService.Business
                 }
             }
 
-            var rawcc = await workOrderDAL.IncreaseProgress(workOrder.Id, report.GoodNum.Value);
-            if (rawcc < workOrder.Quantity && (rawcc + report.GoodNum.Value) >= workOrder.Quantity)
-            {
-                //结束工单
-                MZ_WorkOrder neworder = new MZ_WorkOrder();
-                neworder.Id = workOrder.Id;
-                neworder.Status = 2;
-                neworder.EndOn = report.EndWork;
-                await workOrderDAL.Update(neworder);
-            }
 
             if (!string.IsNullOrEmpty(route.ToHouseId))
             {
