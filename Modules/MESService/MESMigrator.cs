@@ -554,7 +554,8 @@ namespace MESService
                 .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                 .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
                 .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
-                .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
+                .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间")
+                .WithColumn("submitTime").AsDateTime().Nullable().WithColumnDescription("提交时间");
 
 
             Execute.Sql("DROP TABLE IF EXISTS mz_work_defect");

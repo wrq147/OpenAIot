@@ -43,7 +43,19 @@ namespace MESService.Business
                     batchNoItem.field = "Id";
                 }
             }
-            return await reportDAL.SelectByPage(query, user);
+            var tmppage = await reportDAL.SelectByPage(query, user);
+            if (tmppage.List.Count > 0)
+            {
+                var repIds = tmppage.List.Select(x => x.Id).ToList();
+                var defectDAL = _provider.GetService<WorkDefectDAL>();
+                var tmpDefects = await defectDAL.SelectList(x => repIds.Contains(x.ReportId));
+                foreach (var tmpitem in tmppage.List)
+                {
+                    tmpitem.DefectList = tmpDefects.Where(x => x.ReportId == tmpitem.Id).ToList();
+                }
+            }
+
+            return tmppage;
         }
         public virtual async Task<BusResponse<MZ_WorkReport>> Info(string id)
         {
@@ -439,6 +451,7 @@ namespace MESService.Business
                     newReport.Id = old.Id;
                     newReport.FlowId = old.FlowId;
                     newReport.Status = 1;
+                    newReport.submitTime = DateTime.Now;
                     await reportDAL.Update(newReport);
                 }
                 else
@@ -446,6 +459,7 @@ namespace MESService.Business
                     MZ_WorkReport newReport = new MZ_WorkReport();
                     newReport.Id = old.Id;
                     newReport.Status = 2;
+                    newReport.submitTime = DateTime.Now;
                     await reportDAL.Update(newReport);
 
                     //报工成功，计算任务进度

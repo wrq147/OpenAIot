@@ -1918,6 +1918,11 @@
             关联的审核流程Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkReport.submitTime">
+            <summary>
+            提交时间
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkReport.ReportMem">
             <summary>
             报工人

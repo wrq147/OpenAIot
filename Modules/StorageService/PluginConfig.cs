@@ -289,8 +289,10 @@ namespace StorageService
                 {
                     return;
                 }
+                var stockBLL = app.ServiceProvider.GetService<StockBLL>();
                 ArtificialUser artificialUser = new ArtificialUser(tUserId, tOrgId);
                 In_ManualStock manualParam = new In_ManualStock();
+                manualParam.StockNumber = await stockBLL.GenerateRKNumber();
                 manualParam.InDate = DateTime.Now;
                 manualParam.HouseId = targetHouseId;
                 manualParam.Remark = string.Empty;
@@ -306,7 +308,8 @@ namespace StorageService
                     manualParam.List.Add(detail);
                 }
 
-                await app.ServiceProvider.GetService<StockBLL>().ManualPile(manualParam, artificialUser);
+                await stockBLL.ManualPile(manualParam, artificialUser);
+
             });
         }
     }

@@ -137,7 +137,7 @@ export default {
         { "field": "EndWork", "fieldName": "结束时间", "type": "文本", "isShow": true, "isFixed": false },
         { "field": "WorkTime", "fieldName": "报工时长（分）", "type": "数字", "isShow": true, "isFixed": false },
         { "field": "Status", "fieldName": "状态", "type": "文本", "isShow": true, "isFixed": false },
-        { "field": "updateTime", "fieldName": "更新时间", "type": "时间", "isShow": true, "isFixed": false },
+        { "field": "createTime", "fieldName": "创建时间", "type": "时间", "isShow": true, "isFixed": false },
         { "field": "OverReason", "fieldName": "超时原因", "type": "文本", "isShow": true, "isFixed": false },
         { "field": "flowId", "fieldName": "关联的审核流程Id", "type": "文本", "isShow": false, "isFixed": false },
       ]

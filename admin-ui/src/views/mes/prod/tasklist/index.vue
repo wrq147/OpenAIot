@@ -88,7 +88,7 @@
                 width="150">
                 <template slot-scope="scope">
                   <el-button type="text" icon="el-icon-notebook-2" @click="handleDetail(scope.row)">详情</el-button>
-                  <el-button type="text" icon="el-icon-document-add" @click="handleReport(scope.row)">报工</el-button>
+                  <el-button type="text" icon="el-icon-document-add" @click="handleReport(scope.row)" v-if="scope.row.IsFinish==false">报工</el-button>
                 </template>
               </el-table-column>
             </el-table>

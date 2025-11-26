@@ -82,6 +82,10 @@ namespace MESService.Model
         /// </summary>
         public long? FlowId { get; set; }
         /// <summary>
+        /// 提交时间
+        /// </summary>
+        public DateTime? submitTime { get; set; }
+        /// <summary>
         /// 报工人
         /// </summary>
         [DataIgnore]

@@ -12,7 +12,8 @@
         <el-tab-pane name="baseinfo"><span slot="label">基本信息</span></el-tab-pane>
         <el-tab-pane name="custominfo"><span slot="label"
             v-if="filedTableList && filedTableList.length > 0">自定义信息</span></el-tab-pane>
-        <el-tab-pane name="approveinfo" v-if="mesform.ReportTemplateId !== ''"><span slot="label">报工审批</span></el-tab-pane>
+        <el-tab-pane name="approveinfo" v-if="mesform.ReportTemplateId !== ''"><span
+            slot="label">报工审批</span></el-tab-pane>
         <el-tab-pane name="null3" :disabled="true"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="null4" :disabled="true"><span slot="label"></span></el-tab-pane>
       </el-tabs>
@@ -242,7 +243,8 @@ export default {
       mesform: {},
       associationObject: {},//所有关联对象对应的下拉的参数列表
       objectLoading: true,
-      isOnlyRead: false,//是否只读
+      isOnlyRead: false,
+      NeedReason: false
     };
   },
   computed: {
@@ -251,16 +253,6 @@ export default {
         "@from": this.form.Number,
         "@fromtype": "生产报工",
       };
-    },
-    NeedReason() {
-      if (this.form.TaskInfo == null) {
-        return false;
-      }
-      let needWorkTime = this.form.TaskInfo.WorkTime * this.form.TaskInfo.PropOf * (this.form.GoodNum + this.form.DefectNum);
-      if (needWorkTime < this.form.WorkTime && this.form.OverReason == "") {
-        return true;
-      }
-      return false;
     }
   },
   mounted() {
@@ -268,6 +260,19 @@ export default {
   },
 
   methods: {
+    resetNeedReason() {
+      if (!this.form.TaskInfo || !this.form.GoodNum || this.form.WorkTime === undefined) {
+        this.NeedReason = false;
+        return;
+      }
+      let needWorkTime = this.form.TaskInfo.WorkTime * this.form.TaskInfo.PropOf * (this.form.GoodNum + this.form.DefectNum);
+      if (needWorkTime < this.form.WorkTime && this.form.OverReason == "") {
+        this.NeedReason = true;
+      }
+      else {
+        this.NeedReason = false;
+      }
+    },
     async setTaskSelect(val) {
       //完成生产任务的选择
       this.form.WorkTaskNumber = val.WorkNumber + "-" + val.OperName;
@@ -284,6 +289,7 @@ export default {
       }
       this.form.TaskInfo = val;
       this.$forceUpdate()
+      this.resetNeedReason();
     },
     onOpenWorkTask() {
       this.$emit('onOpenWorkTask')
@@ -303,6 +309,8 @@ export default {
         let end = dayjs(this.form.StartWork).add(this.form.WorkTime, 'minute')
         this.$set(this.form, 'EndWork', dayjs(end).format('YYYY-MM-DD HH:mm:ss'))
       }
+      this.$forceUpdate();
+      this.resetNeedReason();
     },
     returnCompareResult(field, compare, val, type) {
       let result = true;
@@ -638,6 +646,7 @@ export default {
         };
 
         this.setCustomDefaultValue(res.data.RepBat);
+        this.resetNeedReason();
       } else {
         this.form = {
           Id: null,

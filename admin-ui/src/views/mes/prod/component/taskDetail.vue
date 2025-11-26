@@ -1,5 +1,6 @@
 <template>
-    <el-dialog title="工单详情" :visible.sync="detailDialogVisible" width="80%" append-to-body @close="handleClose">
+    <el-dialog title="工单详情" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
+        @close="handleClose">
         <el-tabs v-if="taskData" v-model="activeTab" type="card">
             <!-- 基本信息标签页 -->
             <el-tab-pane label="基本信息" name="baseInfo">
@@ -63,7 +64,7 @@
                             <el-input v-model="reportQueryParams.UserName" placeholder="请输入报工人员" clearable
                                 style="width: 180px;"></el-input>
                         </el-form-item>
-                        <el-form-item label="报工时间">
+                        <el-form-item label="创建时间">
                             <el-date-picker v-model="reportQueryParams.dateRange" type="daterange" range-separator="至"
                                 start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd"
                                 style="width: 240px;" clearable></el-date-picker>
@@ -77,28 +78,40 @@
                     <!-- 报工记录表格 -->
                     <el-table :data="reportRecords" border stripe style="width: 100%;" v-loading="recordLoading">
                         <el-table-column label="序号" type="index" width="60" align="center" />
-                        <el-table-column label="报工单号" prop="ReportNumber" align="center" min-width="120" />
-                        <el-table-column label="报工人员" prop="ReportUserName" align="center" min-width="100" />
-                        <el-table-column label="报工数量" prop="ReportNum" align="center" width="100">
+                        <el-table-column label="报工编码" prop="Number" align="center" width="160" />
+                        <el-table-column label="批次编号" prop="BatchNo" align="center" width="160" />
+                        <el-table-column label="报工人员" prop="ReportUserName" align="center" width="100">
                             <template slot-scope="scope">
-                                <span style="color: #1989fa; font-weight: bold;">{{ scope.row.ReportNum }}</span>
+                                <span>{{ scope.row.ReportMem.RealName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="良品数" prop="GoodNum" align="center" width="100">
+                        <el-table-column label="报工状态" align="center">
                             <template slot-scope="scope">
-                                <span style="color: #52c41a;">{{ scope.row.GoodNum }}</span>
+                                <el-tag v-if="scope.row.Status == 0" type="warning">待提交</el-tag>
+                                <el-tag v-if="scope.row.Status == 1" type="warning">待审核</el-tag>
+                                <el-tag v-if="scope.row.Status == 2" type="success">已审核</el-tag>
+                                <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
+                                <el-tag v-if="scope.row.Status == 4" type="danger">已驳回</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column label="不良品数" prop="DefectNum" align="center" width="100">
+                        <el-table-column label="良品数" prop="GoodNum" align="center" width="100" />
+                        <el-table-column label="不良品数" prop="DefectNum" align="center" width="100" />
+                        <el-table-column label="不良品项" align="center" width="300">
                             <template slot-scope="scope">
-                                <span style="color: #f5222d;">{{ scope.row.DefectNum }}</span>
+                                <el-tag v-for="(item, idx) in getValidDefects(scope.row.DefectList)"
+                                    :key="item.id || idx" size="small" style="margin-right: 5px; margin-bottom: 5px;"
+                                    type="danger">
+                                    {{ item.DefectName }} ({{ item.DefectNum }})
+                                </el-tag>
+
+                                <span v-if="!hasValidDefects(scope.row.DefectList)">无</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="不良原因" prop="DefectReason" align="center" min-width="120"
-                            show-overflow-tooltip />
-                        <el-table-column label="报工时间" prop="ReportTime" align="center" min-width="180" />
-                        <el-table-column label="备注" prop="Remark" align="center" min-width="150"
-                            show-overflow-tooltip />
+                        <el-table-column label="超时原因" prop="OverReason" min-width="150" show-overflow-tooltip />
+                        <el-table-column label="创建时间" prop="createTime" align="center" width="110"
+                            :show-overflow-tooltip="true" />
+                        <el-table-column label="提交时间" prop="submitTime" align="center" width="110"
+                            :show-overflow-tooltip="true" />
                     </el-table>
 
                     <!-- 分页控件 -->
@@ -157,6 +170,15 @@ export default {
         }
     },
     methods: {
+        getValidDefects(defectList) {
+            if (!defectList || !Array.isArray(defectList)) {
+                return [];
+            }
+            return defectList.filter(item => item.DefectNum > 0);
+        },
+        hasValidDefects(defectList) {
+            return this.getValidDefects(defectList).length > 0;
+        },
         async getCustomFiled() {
             //获取自定义的字段
             this.filedTableList = [];
@@ -255,12 +277,15 @@ export default {
     margin-top: 10px;
 }
 
-::v-deep .detail-descriptions .el-descriptions__label {
+::v-deep .detail-descriptions .el-descriptions-item__label {
     font-weight: bold;
+    width: 150px !important;
+    flex: none !important;
 }
 
-::v-deep .detail-descriptions .el-descriptions__content {
+::v-deep .detail-descriptions .el-descriptions-item__content {
     word-break: break-all;
+    padding-left: 15px;
 }
 
 /* 标签页样式 */

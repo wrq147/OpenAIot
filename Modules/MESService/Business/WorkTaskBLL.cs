@@ -198,7 +198,14 @@ namespace MESService.Business
                 }
                 else
                 {
-                    return;
+                    proBatch = new MZ_ProductBatch();
+                    proBatch.OrgId = product.OrgId;
+                    proBatch.BatchName = product.ProductName + "【" + report.BatchNo + "】";
+                    proBatch.PhotoUrl = product.PhotoUrl;
+                    proBatch.Number = report.BatchNo;
+                    proBatch.ProductId = product.Id;
+                    proBatch.Id = _snowflakeHelper.NextId().ToString();
+                    await proBatchDAL.Insert(proBatch);
                 }
             }
 

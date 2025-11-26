@@ -53,7 +53,7 @@ namespace MESService.DAL
         }
         public virtual async Task<Out_WorkTaskInfo> SelectTotal(string taskId)
         {
-            var tmpSql = new SqlBuilder(help).Append("select sum(GoodNum) as TotalGoodNum,sum(DefectNum),sum(WorkTime) as TotalDefectNum from mz_work_report where WorkTaskId=").AppendParam(taskId).Append(" and Status=2");
+            var tmpSql = new SqlBuilder(help).Append("select sum(GoodNum) as TotalGoodNum,sum(DefectNum) as TotalDefectNum,sum(WorkTime) as TotalWorkTime from mz_work_report where WorkTaskId=").AppendParam(taskId).Append(" and Status=2");
             return (await tmpSql.DoAsync<DoQuerySql<Out_WorkTaskInfo>>()).ToFirst();
         }
     }
