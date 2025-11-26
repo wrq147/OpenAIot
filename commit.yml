@@ -3,117 +3,87 @@ branches: {
   }
 fileChange:
   /App:
-    newFile: !uuid 'a4d4c58d861d132b83d771f2085c4b017ff4e216'
-    oldFile: !uuid 'f80273fb1fae9748b104ca88f06d9c431186a845'
+    newFile: !uuid 'a1b715955a4cc312a653c4e70291ef867aad5422'
+    oldFile: !uuid 'a4d4c58d861d132b83d771f2085c4b017ff4e216'
   /App/XML:
-    newFile: !uuid '5481d8d6a1b84385cce93b157b15bdaa4049fe4c'
-    oldFile: !uuid 'ecf29040da3019347398dd4626b8e417f71d60fa'
+    newFile: !uuid '7d893b678e55c4767c5baa0e55ef63caf68d8c02'
+    oldFile: !uuid '5481d8d6a1b84385cce93b157b15bdaa4049fe4c'
   /App/XML/MESService.xml:
-    newFile: !uuid 'b0068ebc2b8d94837ddb076e55953d716684aeef'
-    oldFile: !uuid '18b328612040ee6b98873f5152181f80c7adfaa3'
+    newFile: !uuid 'a2d834cc9305f7da0afbf17e4782866486a567ec'
+    oldFile: !uuid 'b0068ebc2b8d94837ddb076e55953d716684aeef'
   /Modules:
-    newFile: !uuid '34eb144400d9201b0cdb410a4d0c03d5dfc88815'
-    oldFile: !uuid '56e0c081b71cbce92844924bb7aa43cba03ac46f'
+    newFile: !uuid 'e1473877bf9815767c72303cac3ed94d2a0597d0'
+    oldFile: !uuid '34eb144400d9201b0cdb410a4d0c03d5dfc88815'
   /Modules/MESService:
-    newFile: !uuid '52b764cac17f4e22de1a7b8eece141f618b02612'
-    oldFile: !uuid '84543f9caecf9ae9aa0ad69e550bf8d79d7e4ec0'
+    newFile: !uuid '2f344e47bfd5b8c861a8e82e7648469961b3c074'
+    oldFile: !uuid '52b764cac17f4e22de1a7b8eece141f618b02612'
   /Modules/MESService/Business:
-    newFile: !uuid '5816006dec3cd9baff678716e24df0c16c2624ec'
-    oldFile: !uuid 'b52b87851085c1c7114fe86d8fad55979c43ebd7'
-  /Modules/MESService/Business/PlanBLL.cs:
-    newFile: !uuid '45175e285b5e37059c507031fb0cdbd940930d3b'
-    oldFile: !uuid '4090011aeb0d1a6c9a456ded8bced6556b7be109'
+    newFile: !uuid '5b19e88791f5f1f7eb3d5861f30c4e22a2015aa9'
+    oldFile: !uuid '5816006dec3cd9baff678716e24df0c16c2624ec'
   /Modules/MESService/Business/ReportBLL.cs:
-    newFile: !uuid '1e5c6cffff9dca5a808e6091edf5ab5d5ec47c64'
-    oldFile: !uuid '89eb66bc8707d398e1f0c73fb8f5f49ab81f551a'
+    newFile: !uuid 'bf6addbf1085779dac38237bf52714890b185ff2'
+    oldFile: !uuid '1e5c6cffff9dca5a808e6091edf5ab5d5ec47c64'
   /Modules/MESService/Business/WorkTaskBLL.cs:
-    newFile: !uuid '728cb9430cfa38c5eabf21509cd501d7f9e3c5e5'
-    oldFile: !uuid 'e362f49def183a844cc5344d917ee031fad59200'
+    newFile: !uuid '649b90dd896aca7be16c3c8f712b4609d00a85ab'
+    oldFile: !uuid '728cb9430cfa38c5eabf21509cd501d7f9e3c5e5'
   /Modules/MESService/DAL:
-    newFile: !uuid '50321ef5efb7b26f980e1d9b57098408920b120f'
-    oldFile: !uuid '7b258cd0d11bea7f17741febde4985cbe7a853d4'
+    newFile: !uuid 'c823f2b133ea91726392ad9bea1c6a6f191c005a'
+    oldFile: !uuid '50321ef5efb7b26f980e1d9b57098408920b120f'
   /Modules/MESService/DAL/WorkReportDAL.cs:
-    newFile: !uuid '84a6a073df15ee6c2894c2059ceb466ee9116df8'
-    oldFile: !uuid '69d430a7eafa95c6ad6a996f2c64a74d2aaf4245'
+    newFile: !uuid '86eec8f7c3f809a2ed81f7a5511eefe6562cdee5'
+    oldFile: !uuid '84a6a073df15ee6c2894c2059ceb466ee9116df8'
+  /Modules/MESService/MESMigrator.cs:
+    newFile: !uuid '1d8f806787848eecb739b8d0aae832834f4dcd22'
+    oldFile: !uuid '648e91267ff3a10db6bdfca98fe9b9488804716a'
   /Modules/MESService/Model:
-    newFile: !uuid '6749d26a57a334a790debf0c155f05eb36aba635'
-    oldFile: !uuid '870ad7c12a6f590e60ebcfc6c0a6120edf2be957'
-  /Modules/MESService/Model/In_ReportList.cs:
-    newFile: !uuid 'e2439af0cf71789e52a6cfcf457c05b8170346a8'
-    oldFile: !uuid 'e258338fd409b5f3b8cb4a402b7602d610a337e7'
+    newFile: !uuid '80520c54e2f113b83ea4dc0365ce0f2248cd6039'
+    oldFile: !uuid '6749d26a57a334a790debf0c155f05eb36aba635'
   /Modules/MESService/Model/MZ_WorkReport.cs:
-    newFile: !uuid '108752e69bdcb3b12edd7107593c2634cc389ab5'
-    oldFile: !uuid 'd0b7fef7413084e50878695e5582c0a8c2a3a3a8'
-  /Modules/MESService/Model/MZ_WorkTask.cs:
-    newFile: !uuid '538cf5d9bf92ce6b146ac6a9203c4617de41adad'
-    oldFile: !uuid 'd19a6038d6f946678db2811c242b197cf1c20eb1'
+    newFile: !uuid '7d80f81a6373f9c4993e83cd402360463717e6b5'
+    oldFile: !uuid '108752e69bdcb3b12edd7107593c2634cc389ab5'
+  /Modules/StorageService:
+    newFile: !uuid 'e0c54ab5aec105a6189e666b27827e57df5e2d48'
+    oldFile: !uuid '54758c45c92f0009cb048e8902c8677910b34f29'
+  /Modules/StorageService/PluginConfig.cs:
+    newFile: !uuid '2c1a065200cc11a85a96132f2c805be377dd777c'
+    oldFile: !uuid 'd28f21ceece5a0e631459b33c752867c0a46c4df'
   /admin-ui:
-    newFile: !uuid '0bebb80d0b75fe45219368e8aa7df685e5c0851e'
-    oldFile: !uuid 'b3e5d9080dddcef55d354d2083af6c756ac8b897'
+    newFile: !uuid '474844bf8433323d6b421bda900c3fb11accb0fa'
+    oldFile: !uuid '0bebb80d0b75fe45219368e8aa7df685e5c0851e'
   /admin-ui/src:
-    newFile: !uuid 'aa17851a759079b1309fca63cb2885b01fc35418'
-    oldFile: !uuid '09713078b5b0d08209b807f951e6f9b11d86ba57'
-  /admin-ui/src/utils:
-    newFile: !uuid 'c40458d130a0c2c2631b7399d96cd0106e0c2d8f'
-    oldFile: !uuid '439f6c65397b80110f604d823cfefc2eaa7f3398'
-  /admin-ui/src/utils/field.js:
-    newFile: !uuid '98cfbbb0782aa1e0f4ffaeac4e2c85953c8e4ac6'
-    oldFile: null
+    newFile: !uuid '9351c5f8d2245d6539e87dc05c8cdbbb55eeb01f'
+    oldFile: !uuid 'aa17851a759079b1309fca63cb2885b01fc35418'
   /admin-ui/src/views:
-    newFile: !uuid 'a6215afc4681e1b9304a009d1c0b960780b655cd'
-    oldFile: !uuid 'bfd06ca52018dc69bf619e54e53177931d72d01c'
+    newFile: !uuid 'b37b9778633f118ab6ef3c6a880c5aefc3fb2b0c'
+    oldFile: !uuid 'a6215afc4681e1b9304a009d1c0b960780b655cd'
   /admin-ui/src/views/mes:
-    newFile: !uuid '674deed143307fd0d1c59c87ba1ebdbc4b9d2341'
-    oldFile: !uuid '7570764bbabb022c490afb789f65e11bfc78f012'
+    newFile: !uuid '113a092a7db93694e08484d75e9ddc1670cdb372'
+    oldFile: !uuid '674deed143307fd0d1c59c87ba1ebdbc4b9d2341'
   /admin-ui/src/views/mes/prod:
-    newFile: !uuid 'bc41006364521de6dddf3e377eaff2421ad4c989'
-    oldFile: !uuid 'ae680c6effedefc0787fadbe16a0d6555b4fd2b3'
+    newFile: !uuid '51f16d712bea851450a68fce4071249d2241761a'
+    oldFile: !uuid 'bc41006364521de6dddf3e377eaff2421ad4c989'
   /admin-ui/src/views/mes/prod/component:
-    newFile: !uuid '250bd9a64732bfc96f67ed0ca89b8009c0e3b53a'
-    oldFile: !uuid '64e6d90a197e9740c32d88ef203d172ac796709e'
+    newFile: !uuid 'f8cbb48489fc8c0a55d3eae7a22b54aad35b55bf'
+    oldFile: !uuid '250bd9a64732bfc96f67ed0ca89b8009c0e3b53a'
   /admin-ui/src/views/mes/prod/component/reportAdd.vue:
-    newFile: !uuid 'e661cd44bc145679b70baa5cce7f572e20a3ad26'
-    oldFile: !uuid '8816ac5a079f4aed7d005f61f0fd749e19c792f3'
+    newFile: !uuid '1cd54358a33ceec111529edd45b37c38e7e8e236'
+    oldFile: !uuid 'e661cd44bc145679b70baa5cce7f572e20a3ad26'
   /admin-ui/src/views/mes/prod/component/taskDetail.vue:
-    newFile: !uuid 'a9c12a192943a753757c0b80f580cd7adf623209'
-    oldFile: null
-  /admin-ui/src/views/mes/prod/orderlist:
-    newFile: !uuid '7417b180aab562f0ca91722de31344e36c44e298'
-    oldFile: !uuid 'c6fa6be7344da595fde87a40b5ed777947ec79f8'
-  /admin-ui/src/views/mes/prod/orderlist/index.vue:
-    newFile: !uuid '2430e3ea168da5ff25565ab5d1d29d82185f3244'
-    oldFile: !uuid '2a9764c99a220a56e7976f97877a45839ff4e805'
-  /admin-ui/src/views/mes/prod/planlist:
-    newFile: !uuid '6554c034321a0255c73628c2010ad684240cb4cf'
-    oldFile: !uuid '78e90d99dc2c55fbacfc1ad9592ee5e4e8c1df61'
-  /admin-ui/src/views/mes/prod/planlist/cmp:
-    newFile: !uuid 'c97c0de9eff62b1215e7546edf79386d73fca775'
-    oldFile: !uuid 'bbe9c32e2a7ec0edebb4feaddf68f94a9519f318'
-  /admin-ui/src/views/mes/prod/planlist/cmp/addPlan.vue:
-    newFile: !uuid 'b7c7df8d4dd6a4d39ec532a0d4ce1e8b7dc376e2'
-    oldFile: !uuid '01941eeab890dfe3bc95593b7d4a5157667005e1'
-  /admin-ui/src/views/mes/prod/planlist/cmp/detailPlan.vue:
-    newFile: !uuid 'c566abbc44ce8247daaf3ac92b00ae95aca7701b'
-    oldFile: !uuid 'cc4de61ff58367a018a57e578a6455524da0e1d7'
-  /admin-ui/src/views/mes/prod/planlist/cmp/slectProductList.vue:
-    newFile: !uuid '80807ef993e740c7fe4314c6346f78d3454d9787'
-    oldFile: !uuid 'fdbddee58a2c85800ce9224ba1a0e106c04af900'
-  /admin-ui/src/views/mes/prod/planlist/index.vue:
-    newFile: !uuid '4077d5574d4624a55f3e79388c85763ffd8fbd40'
-    oldFile: !uuid '157cf57cd98da7c8da5729f4d1350fbc95c5714f'
+    newFile: !uuid '5ea1d6b6f6dccc518194eb16c1a703e876e82708'
+    oldFile: !uuid 'a9c12a192943a753757c0b80f580cd7adf623209'
   /admin-ui/src/views/mes/prod/reportlist:
-    newFile: !uuid '23faa38bea525b96ed23460cc143163477bffc1e'
-    oldFile: !uuid 'c75847b79abf0deccd948cca744c39ea7f27ed16'
+    newFile: !uuid 'ec30e3715494526235eeed164654ed0072347528'
+    oldFile: !uuid '23faa38bea525b96ed23460cc143163477bffc1e'
   /admin-ui/src/views/mes/prod/reportlist/index.vue:
-    newFile: !uuid '33dec5a17332dc13676c9b6fd5a1791b3c251271'
-    oldFile: !uuid 'd62d4f973f005583c5da32a4e0e0daadb0e2bab2'
+    newFile: !uuid '956fe5da2dae33f59305a21c99285f23552d4959'
+    oldFile: !uuid '33dec5a17332dc13676c9b6fd5a1791b3c251271'
   /admin-ui/src/views/mes/prod/tasklist:
-    newFile: !uuid 'fd398e4095de5f23ec2826e8e9f746871ab17870'
-    oldFile: !uuid '6bd6901d05230ac7ec69ebf81eeaea626a5f1e9f'
+    newFile: !uuid '546d7258fedbb02e50ed4653c758ac1de4adcdba'
+    oldFile: !uuid 'fd398e4095de5f23ec2826e8e9f746871ab17870'
   /admin-ui/src/views/mes/prod/tasklist/index.vue:
-    newFile: !uuid 'add7846336e41fd8d7760faa28d9ccdbaa556206'
-    oldFile: !uuid '59d3277e6d7dd67b4e06dec99bd945929b57239f'
-gitCommitId: !uuid '5f1396b9c0fe3636c268f8f83499756c0adce7cd'
+    newFile: !uuid '524fcb2d1e6cfcf3bb93a73dd9ec483337abba16'
+    oldFile: !uuid 'add7846336e41fd8d7760faa28d9ccdbaa556206'
+gitCommitId: !uuid 'c354572f8c43d6c362b3a809717d3e13c2d3dc06'
 renames: {
   }
-revisionId: 34
+revisionId: 35
