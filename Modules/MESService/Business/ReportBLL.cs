@@ -64,10 +64,10 @@ namespace MESService.Business
             {
                 info.Oper = wkoper;
             }
-            var routeroper = await _provider.GetService<RouteOperDAL>().Select(info.RouteOperId);
-            if (routeroper != null)
+            var wktask = await _provider.GetService<WorkTaskDAL>().Select(info.WorkTaskId);
+            if (wktask != null)
             {
-                info.RouteOper = routeroper;
+                info.TaskInfo = wktask;
             }
             var workDefectDAL = _provider.GetService<WorkDefectDAL>();
             info.DefectList = await workDefectDAL.SelectList(x => x.ReportId == id);

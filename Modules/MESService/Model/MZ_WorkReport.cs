@@ -1,4 +1,5 @@
-﻿using Common.Attr;
+﻿using AuthService;
+using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
 using Newtonsoft.Json;
@@ -80,7 +81,11 @@ namespace MESService.Model
         /// 关联的审核流程Id
         /// </summary>
         public long? FlowId { get; set; }
-
+        /// <summary>
+        /// 报工人
+        /// </summary>
+        [DataIgnore]
+        public MZ_AdminInfo ReportMem { get; set; }
         /// <summary>
         /// 报工的批次
         /// </summary>
@@ -98,10 +103,10 @@ namespace MESService.Model
         [DataIgnore]
         public MZ_ProductOper Oper { get; set; }
         /// <summary>
-        /// 工艺路线的工序
+        /// 任务
         /// </summary>
         [DataIgnore]
-        public MZ_ProductRouteOper RouteOper { get; set; }
+        public MZ_WorkTask TaskInfo { get; set; }
         /// <summary>
         /// 不良品项
         /// </summary>

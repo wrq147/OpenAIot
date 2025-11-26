@@ -38,8 +38,8 @@
               </div>
             </el-row>
             <el-table v-loading="loading" border :data="dateTableList" :row-style="isRed"
-              @selection-change="handleSelectionChange" class="data_table" :header-cell-style="cellSty"
-              style="width:100%" :fit="true">
+              @selection-change="handleSelectionChange" :header-cell-style="cellSty"
+              style="width:100%" >
               <template v-for="ite in activeFiledList">
                 <el-table-column :fixed="ite.isFixed ? 'left' : false" v-if="ite.isShow" :key="ite.field"
                   :label="ite.fieldName" align="center" :prop="ite.field" :show-overflow-tooltip="true">
@@ -66,7 +66,7 @@
                   </template>
                 </el-table-column>
               </template>
-              <el-table-column label="操作" align="center" width="168" class-name="small-padding fixed-width">
+              <el-table-column label="操作" align="center" width="168" fixed="right" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
                   <el-button class="table_btn" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
                     v-if="scope.row.Status == 0">修改</el-button>

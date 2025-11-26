@@ -20,7 +20,7 @@
         </DetailEmbed>
       <el-table :data="ruleForm.items" border tooltip-effect="dark" style="width: 100%;">
         <el-table-column type="index" label="序号" align="center" width="50" />
-        <el-table-column label="产品编号" prop="ProductId" align="center"></el-table-column>
+        <el-table-column label="产品编号" prop="ProdInfo.SkuNumber" align="center"></el-table-column>
         <el-table-column label="产品名称" prop="ProdInfo.ProductName" align="center"></el-table-column>
         <el-table-column label="规格" prop="ProdInfo.Specs" align="center"></el-table-column>
         <el-table-column label="单位" prop="ProdInfo.Unit" align="center" width="80"></el-table-column>

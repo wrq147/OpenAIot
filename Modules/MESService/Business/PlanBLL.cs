@@ -116,6 +116,14 @@ namespace MESService.Business
                     item.OrgId = user.OrgId;
                     item.Id = snowflake.NextId().ToString();
                     item.PlanId = data.Id;
+                    if (item.PlannedStartOn == null)
+                    {
+                        return BusResponse<string>.Error(121, "计划开始时间不能为空");
+                    }
+                    if (item.PlannedEndOn == null)
+                    {
+                        return BusResponse<string>.Error(121, "计划结束时间不能为空");
+                    }
                 }
                 await productPlanItemDAL.Insert(data.Items);
             }

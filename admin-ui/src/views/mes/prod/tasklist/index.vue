@@ -23,13 +23,13 @@
             </el-form>
           </div>
           <div class="elbiaoge_elform">
-            <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
-              <el-table-column label="工单编号" align="center">
+            <el-table v-loading="loading" :data="taskList" border :header-cell-style="cellSty" style="width:100%">
+              <el-table-column label="工单编号" align="center" width="160">
                 <template slot-scope="scope">
                   <span>{{ scope.row.WorkNumber }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="产品编号" align="center">
+              <el-table-column label="产品编号" align="center" width="160">
                 <template slot-scope="scope">
                   <span>{{ scope.row.SkuNumber }}</span>
                 </template>
@@ -60,8 +60,21 @@
                 </template>
               </el-table-column>
               <el-table-column label="报工数配比" align="center" prop="PropOf" />
-              <el-table-column label="工时(分钟)" align="center" prop="WorkTime" />
-              <el-table-column label="总工时(分钟)" align="center" prop="WorkTimeTotal" />
+              <el-table-column label="预计平均工时" align="center" width="120">
+                <template slot-scope="scope">
+                  {{ scope.row.WorkTime + "分钟" }}
+                </template>
+              </el-table-column>
+              <el-table-column label="预计总工时" align="center" width="120">
+                <template slot-scope="scope">
+                  {{ (scope.row.WorkTime * scope.row.PlanNum) + "分钟" }}
+                </template>
+              </el-table-column>
+              <el-table-column label="实际总工时" align="center" width="120">
+                <template slot-scope="scope">
+                  {{ scope.row.WorkTimeTotal + "分钟" }}
+                </template>
+              </el-table-column>
               <el-table-column label="计划数" align="center" prop="PlanNum" />
               <el-table-column label="良品数" align="center" prop="GoodNum" />
               <el-table-column label="不良品数" align="center" prop="DefectNum" />
@@ -71,7 +84,8 @@
                   <el-tag v-else>进行中</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
+              <el-table-column label="操作" align="center" fixed="right" class-name="small-padding fixed-width"
+                width="150">
                 <template slot-scope="scope">
                   <el-button type="text" icon="el-icon-notebook-2" @click="handleDetail(scope.row)">详情</el-button>
                   <el-button type="text" icon="el-icon-document-add" @click="handleReport(scope.row)">报工</el-button>
@@ -86,15 +100,19 @@
     </div>
 
     <reportAdd ref="reportAdd" @reloadData="getList"></reportAdd>
+    <taskDetail ref="taskDetail" />
   </div>
 </template>
 
 <script>
+import { resizeTableCon } from "@/mixins/resizeTableCon";
 import reportAdd from '@/views/mes/prod/component/reportAdd'
+import taskDetail from '@/views/mes/prod/component/taskDetail'
 import { taskList } from "@/api/mes/task";
 export default {
   name: "taskList",
-  components: { reportAdd },
+  mixins: [resizeTableCon],
+  components: { reportAdd, taskDetail },
   data() {
     return {
       loading: false,
@@ -153,7 +171,7 @@ export default {
       this.handleQuery();
     },
     handleDetail(row) {
-
+      this.$refs.taskDetail.openDialog(row.Id);
     },
     async handleReport(row) {
       await this.$refs.reportAdd.openDialog();

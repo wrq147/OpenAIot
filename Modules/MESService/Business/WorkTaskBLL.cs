@@ -54,6 +54,12 @@ namespace MESService.Business
                 info.SkuNumber = wkpro.SkuNumber;
                 info.ProductName = wkpro.ProductName;
             }
+
+            var rtoper = await _provider.GetService<RouteOperDAL>().Select(info.RouteOperId);
+            if(rtoper != null)
+            {
+                info.RouteOper = rtoper;
+            }
             return BusResponse<MZ_WorkTask>.Success(info);
         }
         public virtual async Task ResetTaskInfo(string taskId, MZ_WorkReport report)

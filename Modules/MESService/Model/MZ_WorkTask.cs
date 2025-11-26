@@ -118,6 +118,11 @@ namespace MESService.Model
         [DataIgnore]
         public string AssignedUser { get; set; }
         /// <summary>
+        /// 工艺信息
+        /// </summary>
+        [DataIgnore]
+        public MZ_ProductRouteOper RouteOper { get; set; }
+        /// <summary>
         /// 产品编号
         /// </summary>
         [DataIgnore]

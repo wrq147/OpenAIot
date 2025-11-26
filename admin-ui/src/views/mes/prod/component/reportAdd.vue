@@ -12,7 +12,7 @@
         <el-tab-pane name="baseinfo"><span slot="label">基本信息</span></el-tab-pane>
         <el-tab-pane name="custominfo"><span slot="label"
             v-if="filedTableList && filedTableList.length > 0">自定义信息</span></el-tab-pane>
-        <!-- <el-tab-pane name="approveinfo"><span slot="label" >报工审批</span></el-tab-pane> -->
+        <el-tab-pane name="approveinfo" v-if="mesform.ReportTemplateId !== ''"><span slot="label">报工审批</span></el-tab-pane>
         <el-tab-pane name="null3" :disabled="true"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="null4" :disabled="true"><span slot="label"></span></el-tab-pane>
       </el-tabs>
@@ -152,7 +152,7 @@
           </el-col>
         </template>
       </el-row>
-      <div v-show="mesform.ReportTemplateId !== ''">
+      <div v-show="dialogName == 'approveinfo' && mesform.ReportTemplateId !== ''">
         <AddEmbed ref="flowForm" class="flow_con">
           <div class="flow-title" style="font-size: 16px; color: #333">
             审批信息
@@ -180,7 +180,7 @@ import {
 } from "@/api/mes/config";
 import { orgField } from "@/api/factory/customFields";
 import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
-import { operInfo, routeOperInfo } from "@/api/mes/oper";
+import { operInfo } from "@/api/mes/oper";
 export default {
   name: 'AdminUiReportAdd',
   components: { AddEmbed, OrgPicker },
@@ -253,10 +253,10 @@ export default {
       };
     },
     NeedReason() {
-      if (this.form.RouteOper == null) {
+      if (this.form.TaskInfo == null) {
         return false;
       }
-      let needWorkTime = this.form.RouteOper.WorkTime * this.form.RouteOper.PropOf * (this.form.GoodNum + this.form.DefectNum);
+      let needWorkTime = this.form.TaskInfo.WorkTime * this.form.TaskInfo.PropOf * (this.form.GoodNum + this.form.DefectNum);
       if (needWorkTime < this.form.WorkTime && this.form.OverReason == "") {
         return true;
       }
@@ -282,8 +282,7 @@ export default {
           this.form.DefectList.push({ "DefectId": tmpdflist[i].Id, "DefectName": tmpdflist[i].DefectName, "DefectCategory": tmpdflist[i].DefectCategory, "DefectNum": 0 })
         }
       }
-      let routeRes = await routeOperInfo({ "id": val.RouteOperId });
-      this.form.RouteOper = routeRes.data;
+      this.form.TaskInfo = val;
       this.$forceUpdate()
     },
     onOpenWorkTask() {
@@ -634,11 +633,11 @@ export default {
           WorkOrderId: res.data.WorkOrderId,
           WorkTaskId: res.data.WorkTaskId,
           OperId: res.data.OperId,
-          RouteOper: res.data.RouteOper,
+          TaskInfo: res.data.TaskInfo,
           RepBat: res.data.RepBat
         };
 
-        this.setCustomDefaultValue(res.data.RouteOper);
+        this.setCustomDefaultValue(res.data.RepBat);
       } else {
         this.form = {
           Id: null,
@@ -694,8 +693,7 @@ export default {
           for (let i = 0; i < this.filedTableList.length; i++) {
             let row = this.filedTableList[i];
             if (row.type == "数字") {
-              if (submitForm.RepBat[row.mapid]) {
-              } else {
+              if (!submitForm.RepBat[row.mapid]) {
                 submitForm.RepBat[row.mapid] = Number(submitForm.RepBat[row.mapid]);
               }
             } else if (row.type == "时间") {
@@ -707,8 +705,7 @@ export default {
                 submitForm.RepBat[row.mapid] = "";
               }
             } else {
-              if (submitForm.RepBat[row.mapid]) {
-              } else {
+              if (!submitForm.RepBat[row.mapid]) {
                 submitForm.RepBat[row.mapid] = "";
               }
             }

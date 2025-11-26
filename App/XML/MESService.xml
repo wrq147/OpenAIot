@@ -478,9 +478,19 @@
             过滤扩展字段
             </summary>
         </member>
+        <member name="P:MESService.Model.In_ReportList.TaskId">
+            <summary>
+            过滤指定任务
+            </summary>
+        </member>
         <member name="P:MESService.Model.In_ReportList.OnlyMy">
             <summary>
             是否只显示我的报工
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_ReportList.UserName">
+            <summary>
+            过滤报工人员
             </summary>
         </member>
         <member name="P:MESService.Model.In_ReportList.Items">
@@ -1908,6 +1918,11 @@
             关联的审核流程Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkReport.ReportMem">
+            <summary>
+            报工人
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkReport.RepBat">
             <summary>
             报工的批次
@@ -1923,9 +1938,9 @@
             工序
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkReport.RouteOper">
+        <member name="P:MESService.Model.MZ_WorkReport.TaskInfo">
             <summary>
-            工艺路线的工序
+            任务
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkReport.DefectList">
@@ -2056,6 +2071,11 @@
         <member name="P:MESService.Model.MZ_WorkTask.AssignedUser">
             <summary>
             允许提交的人员
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkTask.RouteOper">
+            <summary>
+            工艺信息
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkTask.SkuNumber">

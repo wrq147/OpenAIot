@@ -27,7 +27,7 @@
             </el-form>
           </div>
           <div class="elbiaoge_elform" :style="{ 'min-height': tableConHeight + 'px' }">
-            <el-table v-loading="loading" :data="taskList" class="data_table" style="width:100%">
+            <el-table v-loading="loading" :data="taskList" border :header-cell-style="cellSty" style="width:100%">
               <el-table-column label="计划名称" align="center" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <span>{{ scope.row.PlanInfo ? scope.row.PlanInfo.PlanName : '' }}</span>
@@ -38,8 +38,8 @@
                   <span>{{ scope.row.ProdInfo ? scope.row.ProdInfo.ProductName : '' }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="工单编号" align="center" prop="WorkNumber" />
-              <el-table-column label="父工单" align="center">
+              <el-table-column label="工单编号" align="center" prop="WorkNumber" width="160" />
+              <el-table-column label="父工单" align="center" width="160">
                 <template slot-scope="scope">
                   <el-tooltip placement="top" effect="dark" :disabled="!scope.row.ParentWorkInfo">
                     <div slot="reference" style="cursor: pointer;">
@@ -76,7 +76,7 @@
               <el-table-column label="计划结束时间" align="center" prop="PlannedEndOn" :show-overflow-tooltip="true" />
               <el-table-column label="实际开始时间" align="center" prop="StartOn" :show-overflow-tooltip="true" />
               <el-table-column label="实际结束时间" align="center" prop="EndOn" :show-overflow-tooltip="true" />
-              <el-table-column label="生产数量/计划数量" align="center">
+              <el-table-column label="生产数量/计划数量" align="center" width="160">
                 <template slot-scope="scope">
                   {{ scope.row.BatchCount }}/{{ scope.row.Quantity }}
                 </template>
@@ -89,7 +89,7 @@
                   <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="当前进度" align="center">
+              <el-table-column label="当前进度" align="center" width="120">
                 <template slot-scope="scope">
                   <template v-if="scope.row.Status == 1">
                     <el-progress type="line" :percentage="Math.round((scope.row.BatchCount / scope.row.Quantity) * 100)"

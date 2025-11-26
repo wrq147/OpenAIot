@@ -27,7 +27,7 @@
           @current-change="onDeviceChange"
           row-key="Id"
         >
-          <el-table-column prop="Id" label="产品编号" align="center" width="150" />
+          <el-table-column prop="SkuNumber" label="产品编号" align="center" width="150" />
           <el-table-column label="产品标签" align="center">
             <template slot-scope="scope">
                 <div>{{ scope.row.ProductLabel == "F" ? "成品" : (scope.row.ProductLabel == "M"?'原材料':"半成品") }}</div>
