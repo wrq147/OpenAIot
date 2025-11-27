@@ -1,7 +1,7 @@
 <template>
     <el-form ref="form" :model="formData" label-width="80px" :rules="formRules">
         <!-- 自动渲染所有表单项 -->
-        <el-form-item v-for="(config, key) in apiConfig.params" :key="key" :label="config.label" :prop="key">
+        <el-form-item v-for="(config, key) in apiConfig.params" label-width="120px" :key="key" :label="config.label" :prop="key">
 
             <!-- 输入框 -->
             <el-input v-if="config.type === 'input' || config.type === 'inputText'" v-model="formData[key]"
@@ -44,7 +44,7 @@
         </el-form-item>
 
         <div style="margin-top: 20px; text-align: right;">
-            <el-button type="primary" @click="submitForm">导 入</el-button>
+            <el-button type="primary" @click="submitForm">确 定</el-button>
         </div>
     </el-form>
 </template>

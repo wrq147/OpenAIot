@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-height: 620px;overflow-y: auto;">
     <el-form size="small" label-width="90px">
       <el-form-item label="接口地址">
         <el-input placeholder="请输入接口地址" v-model="apiInterfaceUrl">

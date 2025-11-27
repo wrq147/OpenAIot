@@ -44,8 +44,8 @@
         <div v-if="activeTab === 'system'" class="tab-panel">
           <!-- 添加固定高度和滚动条 -->
           <div class="system-table-container">
-            <el-table ref="systemTable" :data="systemApiList" style="width: 100%" highlight-current-row :row-class-name="systemTableRowClassName"
-              :cell-style="systemTableCellStyle" :height="tableHeight">
+            <el-table ref="systemTable" :data="systemApiList" style="width: 100%" highlight-current-row
+              :row-class-name="systemTableRowClassName" :cell-style="systemTableCellStyle" :height="tableHeight">
               <el-table-column prop="label" label="接口名称" align="center">
                 <template slot-scope="scope">
                   <span>{{ scope.row.label }}</span>
@@ -69,12 +69,10 @@
           </div>
 
           <!-- 系统接口导入弹窗 -->
-          <el-dialog title="系统接口参数配置" :visible.sync="systemApiDialogVisible" width="600px" @close="resetDeveloperForm">
-            <smart-form v-if="developerConfig" :api-config="developerConfig" ref="systemApiForm" />
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="systemApiDialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="confirmImportDeveloperApi">确 定</el-button>
-            </div>
+          <el-dialog title="系统接口参数配置" :append-to-body="true" :visible.sync="systemApiDialogVisible" width="600px"
+            @close="resetDeveloperForm">
+            <smart-form v-if="developerConfig" :api-config="developerConfig" @ok="confirmImportDeveloperApi"
+              ref="systemApiForm" />
           </el-dialog>
         </div>
       </div>
@@ -106,7 +104,7 @@ export default {
       systemApiList: API_LIST, // 系统接口列表固定
       currentSystemRow: null,
       systemApiDialogVisible: false, // 系统接口导入弹窗
-      tableHeight: 450, // 表格固定高度
+      tableHeight: 550, // 表格固定高度
 
       developerInfo: null,
       developerConfig: null
@@ -132,7 +130,7 @@ export default {
     calculateTableHeight() {
       // 如果接口数量超过10个，设置固定高度；否则自适应
       if (this.systemApiList.length > 10) {
-        this.tableHeight = 450;
+        this.tableHeight = 550;
       } else {
         this.tableHeight = 'auto';
       }
@@ -231,37 +229,31 @@ export default {
     },
 
     // 确认导入开发者接口
-    confirmImportDeveloperApi() {
-      try {
-        if (!this.developerInfo) {
-          this.$message.warning('开发者信息未获取，请刷新重试');
-          return;
-        }
-
-        if (!this.currentSystemRow || !this.developerConfig) {
-          this.$message.warning('请先选择有效的系统接口');
-          return;
-        }
-
-        // 获取表单数据
-        const params = this.$refs.systemApiForm?.getFormData() || {};
-
-        this.$emit('import', {
-          type: 'system',
-          name: this.currentSystemRow.label,
-          Url: this.developerConfig.url,
-          Method: this.developerConfig.method,
-          Header: [{ name: "token", value: this.developerInfo.SecKey }],
-          ParamType: "JSON",
-          ParamData: params
-        });
-
-        this.systemApiDialogVisible = false;
-        this.$message.success('系统接口导入成功');
-
-      } catch (error) {
-        this.$message.error('导入失败，请检查接口配置');
+    confirmImportDeveloperApi(data) {
+      if (!this.developerInfo) {
+        this.$message.warning('开发者信息未获取，请刷新重试');
+        return;
       }
+
+      if (!this.currentSystemRow || !this.developerConfig) {
+        this.$message.warning('请先选择有效的系统接口');
+        return;
+      }
+
+      // 获取表单数据
+      const params = data || {};
+
+      this.$emit('import', {
+        type: 'system',
+        name: this.currentSystemRow.label,
+        Url: this.developerConfig.url,
+        Method: this.developerConfig.method,
+        Header: [{ name: "token", value: this.developerInfo.SecKey }],
+        ParamType: "JSON",
+        ParamData: params
+      });
+
+      this.systemApiDialogVisible = false;
     },
 
     // 导入数据源接口（自定义接口直接导入）
@@ -385,7 +377,7 @@ export default {
 
 /* 系统接口表格容器 - 添加滚动条 */
 .system-table-container {
-  max-height: 550px;
+  max-height: 620px;
   overflow-y: auto;
   border: 1px solid #e9ecef;
   border-radius: 4px;
