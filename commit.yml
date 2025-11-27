@@ -2,88 +2,229 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid 'a1b715955a4cc312a653c4e70291ef867aad5422'
-    oldFile: !uuid 'a4d4c58d861d132b83d771f2085c4b017ff4e216'
-  /App/XML:
-    newFile: !uuid '7d893b678e55c4767c5baa0e55ef63caf68d8c02'
-    oldFile: !uuid '5481d8d6a1b84385cce93b157b15bdaa4049fe4c'
-  /App/XML/MESService.xml:
-    newFile: !uuid 'a2d834cc9305f7da0afbf17e4782866486a567ec'
-    oldFile: !uuid 'b0068ebc2b8d94837ddb076e55953d716684aeef'
-  /Modules:
-    newFile: !uuid 'e1473877bf9815767c72303cac3ed94d2a0597d0'
-    oldFile: !uuid '34eb144400d9201b0cdb410a4d0c03d5dfc88815'
-  /Modules/MESService:
-    newFile: !uuid '2f344e47bfd5b8c861a8e82e7648469961b3c074'
-    oldFile: !uuid '52b764cac17f4e22de1a7b8eece141f618b02612'
-  /Modules/MESService/Business:
-    newFile: !uuid '5b19e88791f5f1f7eb3d5861f30c4e22a2015aa9'
-    oldFile: !uuid '5816006dec3cd9baff678716e24df0c16c2624ec'
-  /Modules/MESService/Business/ReportBLL.cs:
-    newFile: !uuid 'bf6addbf1085779dac38237bf52714890b185ff2'
-    oldFile: !uuid '1e5c6cffff9dca5a808e6091edf5ab5d5ec47c64'
-  /Modules/MESService/Business/WorkTaskBLL.cs:
-    newFile: !uuid '649b90dd896aca7be16c3c8f712b4609d00a85ab'
-    oldFile: !uuid '728cb9430cfa38c5eabf21509cd501d7f9e3c5e5'
-  /Modules/MESService/DAL:
-    newFile: !uuid 'c823f2b133ea91726392ad9bea1c6a6f191c005a'
-    oldFile: !uuid '50321ef5efb7b26f980e1d9b57098408920b120f'
-  /Modules/MESService/DAL/WorkReportDAL.cs:
-    newFile: !uuid '86eec8f7c3f809a2ed81f7a5511eefe6562cdee5'
-    oldFile: !uuid '84a6a073df15ee6c2894c2059ceb466ee9116df8'
-  /Modules/MESService/MESMigrator.cs:
-    newFile: !uuid '1d8f806787848eecb739b8d0aae832834f4dcd22'
-    oldFile: !uuid '648e91267ff3a10db6bdfca98fe9b9488804716a'
-  /Modules/MESService/Model:
-    newFile: !uuid '80520c54e2f113b83ea4dc0365ce0f2248cd6039'
-    oldFile: !uuid '6749d26a57a334a790debf0c155f05eb36aba635'
-  /Modules/MESService/Model/MZ_WorkReport.cs:
-    newFile: !uuid '7d80f81a6373f9c4993e83cd402360463717e6b5'
-    oldFile: !uuid '108752e69bdcb3b12edd7107593c2634cc389ab5'
-  /Modules/StorageService:
-    newFile: !uuid 'e0c54ab5aec105a6189e666b27827e57df5e2d48'
-    oldFile: !uuid '54758c45c92f0009cb048e8902c8677910b34f29'
-  /Modules/StorageService/PluginConfig.cs:
-    newFile: !uuid '2c1a065200cc11a85a96132f2c805be377dd777c'
-    oldFile: !uuid 'd28f21ceece5a0e631459b33c752867c0a46c4df'
   /admin-ui:
-    newFile: !uuid '474844bf8433323d6b421bda900c3fb11accb0fa'
-    oldFile: !uuid '0bebb80d0b75fe45219368e8aa7df685e5c0851e'
+    newFile: !uuid '53d70da0357076d41b98d7fac77a937bf7f7f34c'
+    oldFile: !uuid '474844bf8433323d6b421bda900c3fb11accb0fa'
+  /admin-ui/package.json:
+    newFile: !uuid 'a13cb989b144167a02927991852c391fa359cf32'
+    oldFile: !uuid 'c00b76cb7d6e5e81c71a9e59001920b861472bca'
   /admin-ui/src:
-    newFile: !uuid '9351c5f8d2245d6539e87dc05c8cdbbb55eeb01f'
-    oldFile: !uuid 'aa17851a759079b1309fca63cb2885b01fc35418'
+    newFile: !uuid '178cbfcad547db9d5b57ba360b1931c626ec5eec'
+    oldFile: !uuid '9351c5f8d2245d6539e87dc05c8cdbbb55eeb01f'
   /admin-ui/src/views:
-    newFile: !uuid 'b37b9778633f118ab6ef3c6a880c5aefc3fb2b0c'
-    oldFile: !uuid 'a6215afc4681e1b9304a009d1c0b960780b655cd'
-  /admin-ui/src/views/mes:
-    newFile: !uuid '113a092a7db93694e08484d75e9ddc1670cdb372'
-    oldFile: !uuid '674deed143307fd0d1c59c87ba1ebdbc4b9d2341'
-  /admin-ui/src/views/mes/prod:
-    newFile: !uuid '51f16d712bea851450a68fce4071249d2241761a'
-    oldFile: !uuid 'bc41006364521de6dddf3e377eaff2421ad4c989'
-  /admin-ui/src/views/mes/prod/component:
-    newFile: !uuid 'f8cbb48489fc8c0a55d3eae7a22b54aad35b55bf'
-    oldFile: !uuid '250bd9a64732bfc96f67ed0ca89b8009c0e3b53a'
-  /admin-ui/src/views/mes/prod/component/reportAdd.vue:
-    newFile: !uuid '1cd54358a33ceec111529edd45b37c38e7e8e236'
-    oldFile: !uuid 'e661cd44bc145679b70baa5cce7f572e20a3ad26'
-  /admin-ui/src/views/mes/prod/component/taskDetail.vue:
-    newFile: !uuid '5ea1d6b6f6dccc518194eb16c1a703e876e82708'
-    oldFile: !uuid 'a9c12a192943a753757c0b80f580cd7adf623209'
-  /admin-ui/src/views/mes/prod/reportlist:
-    newFile: !uuid 'ec30e3715494526235eeed164654ed0072347528'
-    oldFile: !uuid '23faa38bea525b96ed23460cc143163477bffc1e'
-  /admin-ui/src/views/mes/prod/reportlist/index.vue:
-    newFile: !uuid '956fe5da2dae33f59305a21c99285f23552d4959'
-    oldFile: !uuid '33dec5a17332dc13676c9b6fd5a1791b3c251271'
-  /admin-ui/src/views/mes/prod/tasklist:
-    newFile: !uuid '546d7258fedbb02e50ed4653c758ac1de4adcdba'
-    oldFile: !uuid 'fd398e4095de5f23ec2826e8e9f746871ab17870'
-  /admin-ui/src/views/mes/prod/tasklist/index.vue:
-    newFile: !uuid '524fcb2d1e6cfcf3bb93a73dd9ec483337abba16'
-    oldFile: !uuid 'add7846336e41fd8d7760faa28d9ccdbaa556206'
-gitCommitId: !uuid 'c354572f8c43d6c362b3a809717d3e13c2d3dc06'
+    newFile: !uuid 'b34d324482703eaab9a17805d3785ba5f4d2cd80'
+    oldFile: !uuid 'b37b9778633f118ab6ef3c6a880c5aefc3fb2b0c'
+  /admin-ui/src/views/report:
+    newFile: !uuid '5ddc09c05f9337ecb225d2e79b8ab1e64a7c7fcf'
+    oldFile: !uuid '7ad38a94a15b560f1a9b0bc0fcca30f163ee5193'
+  /admin-ui/src/views/report/datav:
+    newFile: !uuid 'b0f5e6814560adc72fe518edc04cd2017d596091'
+    oldFile: !uuid 'd5b11ddcb896c12aa34cf2c15acd429db51bb3e3'
+  /admin-ui/src/views/report/datav/codegen:
+    newFile: null
+    oldFile: !uuid 'c3c4e2ac19819f2f8b5204af8d9115a23749f650'
+  /admin-ui/src/views/report/datav/codegen/codegen.js:
+    newFile: null
+    oldFile: !uuid '3b63593ba098a2f059c7ff7ba02c3ffec83f5cfc'
+  /admin-ui/src/views/report/datav/components:
+    newFile: !uuid '65c99766e7499faa68bc81d3644077f6ee06eded'
+    oldFile: !uuid '7aa772bac922aad7393b627bddf6f84fec49833b'
+  /admin-ui/src/views/report/datav/components/chart:
+    newFile: !uuid '141f72dbe283dc41402d9857edf7037982c75144'
+    oldFile: !uuid 'ef6243db1d9ff260392d09e97d6822afd09d0968'
+  /admin-ui/src/views/report/datav/components/chart/BarChart.vue:
+    newFile: !uuid '56f48255b2d9a060fee35be7cd4c879845ff9838'
+    oldFile: !uuid 'f8cd9409514a23bccc75f5fae34af58617b0d0f1'
+  /admin-ui/src/views/report/datav/components/chart/BarPieChart.vue:
+    newFile: !uuid '1574605469ed539938e73271e2a299f77562e962'
+    oldFile: !uuid 'e515103b9e3b19b6ee9f7f2a6f4e5f0a0be0e23c'
+  /admin-ui/src/views/report/datav/components/chart/BoxlineChart.vue:
+    newFile: !uuid 'd5efc0c7f863fc099b8e4c985e6237a1a747d421'
+    oldFile: !uuid '770f87bc21d25d73c058dada407a21de18836f8c'
+  /admin-ui/src/views/report/datav/components/chart/CircleChart.vue:
+    newFile: !uuid '613292d9c1bcc2cd4fe90a4f841246afa030c6fe'
+    oldFile: !uuid '077e2bc663215c2cc44920e712a2e33dcc9793ec'
+  /admin-ui/src/views/report/datav/components/chart/CustomThreeDBarChart.vue:
+    newFile: !uuid '80fcf2694cb61d312b7cd6add224d8cedb1192b8'
+    oldFile: !uuid 'f6cf88781ce866d1d97a08981bd8d2fde23d5007'
+  /admin-ui/src/views/report/datav/components/chart/CustomWaterBallChart.vue:
+    newFile: !uuid '0d38f8aec4ef8942cd3663360511d8c69674335c'
+    oldFile: !uuid '4e5081734717ee60c0fd513ef47df4a4e53f6f6a'
+  /admin-ui/src/views/report/datav/components/chart/CylinderChart.vue:
+    newFile: !uuid '32e2ad15c6bb45a285b91c0f6649ecb4fa81bc06'
+    oldFile: !uuid 'b353e20d45945d8190e344bce5f55bb10bd8e3da'
+  /admin-ui/src/views/report/datav/components/chart/DoubleBarChart.vue:
+    newFile: !uuid 'dfe9844bc5fa9b9ca568d29246ff140e8afc2743'
+    oldFile: !uuid 'd338e9e8d1c6107a552cddb57dcbcfc83b5465a4'
+  /admin-ui/src/views/report/datav/components/chart/DoubleBarTimeChart.vue:
+    newFile: !uuid '54941f546323b4c794721b80b82f79af389a076b'
+    oldFile: !uuid '87f2ad19f6ffc6dd39b7833fb3b1b0eac523819c'
+  /admin-ui/src/views/report/datav/components/chart/DoubleBarXChart.vue:
+    newFile: !uuid '4b062d516302e5625e1b70314e2d6824fd6abff7'
+    oldFile: !uuid '708acac872f69129be2bad3fbfc6622c06b96616'
+  /admin-ui/src/views/report/datav/components/chart/DoubleDirectionBarChart.vue:
+    newFile: !uuid 'bdb48c2f6d0166a8c14016b78c898723693b1d3c'
+    oldFile: !uuid '7461244649f502da02539b8c146d293d4f8188fa'
+  /admin-ui/src/views/report/datav/components/chart/DoubleParalleBarChart.vue:
+    newFile: !uuid '57ec0b58e13d7ae08cd96d2f1ea07ed1ee5912e2'
+    oldFile: !uuid '6523914e9cf865d157e795ac38e4f73fdc190cad'
+  /admin-ui/src/views/report/datav/components/chart/DoubleyAxisChart.vue:
+    newFile: !uuid '7d29f30ec1283afd911ed6b56d3863f0e86d7da9'
+    oldFile: !uuid '97e1c478a64ed6591ace86dc7662f7332722b66b'
+  /admin-ui/src/views/report/datav/components/chart/FunnelChart.vue:
+    newFile: !uuid '6d94d4d8cda4dbcdf65f6a955cb1302645ccdbee'
+    oldFile: !uuid '958baf1d23c99e5f677380134320d42b5713f88d'
+  /admin-ui/src/views/report/datav/components/chart/GaugeChart.vue:
+    newFile: !uuid 'df5c12b20c0732f92e2ed240f642f9b3930d0709'
+    oldFile: !uuid 'b6d5d28216873c01aa17d2bfcfdd51bfe7698047'
+  /admin-ui/src/views/report/datav/components/chart/HeatMapChart.vue:
+    newFile: !uuid '80c894a9a9be1f06ee5fd00f98e9a503e421dd89'
+    oldFile: !uuid 'af5a8cd612726dea4d212b12646dc21cb2c1cfb8'
+  /admin-ui/src/views/report/datav/components/chart/KeygaugeChart.vue:
+    newFile: !uuid 'b105a0b43190da4c991f00dcbea50437ddf9f316'
+    oldFile: !uuid 'a91cabcd246e8fc3504c67b797037b3c64ff0506'
+  /admin-ui/src/views/report/datav/components/chart/KnowledgeChart.vue:
+    newFile: !uuid '93711610d0f09dc467ec27906f391090616633a3'
+    oldFile: !uuid '1f950595e63a66b8abd75d896cbb69455ca05400'
+  /admin-ui/src/views/report/datav/components/chart/LineBarChart.vue:
+    newFile: !uuid '88978caff2321b2dc214de32b97838035612e874'
+    oldFile: !uuid '4fcf7be0877e3d0224bfcafc8d1fc3604b4bc471'
+  /admin-ui/src/views/report/datav/components/chart/LineChart.vue:
+    newFile: !uuid 'ded20fc2924a4d2d1bba1cfee0e98f80b935ae62'
+    oldFile: !uuid 'bf401c7de8307767faecd1946b0985226f3b7d56'
+  /admin-ui/src/views/report/datav/components/chart/MapBarChart.vue:
+    newFile: !uuid '735bba214d99bd7029d66b642a25293888069e64'
+    oldFile: !uuid '558587fbf4696188cb4a6586cb3a4efc7c81e189'
+  /admin-ui/src/views/report/datav/components/chart/MapChart.vue:
+    newFile: !uuid '840a8f0ff692938945a141e0dd348490073220fe'
+    oldFile: !uuid '23f3b378b491598e045984703956e51e211e08f4'
+  /admin-ui/src/views/report/datav/components/chart/MapLineChart.vue:
+    newFile: !uuid '74891bb806b36e0ced735540ae29d952fc512a3c'
+    oldFile: !uuid '411d746030a6bfd62c928b16c18cb2457aa94f9d'
+  /admin-ui/src/views/report/datav/components/chart/MapMoreChart.vue:
+    newFile: !uuid '389b89e97ab4f99c54b2227a278b56beaa458e3b'
+    oldFile: !uuid 'ccf4af03e377d60a00cebd2032ca92e2ccfa3842'
+  /admin-ui/src/views/report/datav/components/chart/ParalleBarChart.vue:
+    newFile: !uuid 'a4d0fd4fd1dd41562bb300d7210d7193e2237027'
+    oldFile: !uuid 'd7b66be9a178e0a616db3ae27f9d2b8fec4c3c9b'
+  /admin-ui/src/views/report/datav/components/chart/PictorialBarChart.vue:
+    newFile: !uuid 'f20d178eefd3a11d099474e8aa58e2167e92420d'
+    oldFile: !uuid '726c2f6ae101230b1b03c97c11a1f3fb0a3246c4'
+  /admin-ui/src/views/report/datav/components/chart/PieChart.vue:
+    newFile: !uuid '701d65c552c5dfc574dabc519658ef629ad19053'
+    oldFile: !uuid 'ac541906598a16f9fe19723ef13e9eb4cc044f2a'
+  /admin-ui/src/views/report/datav/components/chart/PieLineChart.vue:
+    newFile: !uuid '9081660bdab9edafe0b41013ad2fa4f49b15cd50'
+    oldFile: !uuid 'a07e58cae7faaaf195aaae4f8e412f4820b4a9b4'
+  /admin-ui/src/views/report/datav/components/chart/PieMoreChart.vue:
+    newFile: !uuid '6fc57ff8ffab7d54ce4d38b45cf6dfa9384539ba'
+    oldFile: !uuid 'd31be3449261c2de132be94b87c848fda27ff348'
+  /admin-ui/src/views/report/datav/components/chart/PopsChart.vue:
+    newFile: !uuid '30bb65a6e9d25d3f24519c5ac7f0942b1f006169'
+    oldFile: !uuid '39dda174e44f6bea489b05531373671328e9a852'
+  /admin-ui/src/views/report/datav/components/chart/ProgressChart.vue:
+    newFile: !uuid '1116c3cf1e5f92f3194a77e212fa7f38c34329ed'
+    oldFile: !uuid '82f76593cf106ab3589cb2eb9c8a10cf1e8f05fe'
+  /admin-ui/src/views/report/datav/components/chart/ProgressGaugeChart.vue:
+    newFile: !uuid '15e4ddecafae3f1636e293df2f1eff67239b8f65'
+    oldFile: !uuid 'e48a2cf7f0da6f36bb4052861087678c3f9089e8'
+  /admin-ui/src/views/report/datav/components/chart/RadarChart.vue:
+    newFile: !uuid '46d25e86f60da5cfbb97a56fff7302bee16a75e2'
+    oldFile: !uuid 'adeac0a1ebb3b6593be700b1ecad0d24e5785f0c'
+  /admin-ui/src/views/report/datav/components/chart/RainChart.vue:
+    newFile: !uuid '675f7f8ce02fa9dd4802b463b08bb1c81c1b7cd4'
+    oldFile: !uuid 'cdd71859792b7753467c24fcc5a4f46df9295d36'
+  /admin-ui/src/views/report/datav/components/chart/RateBarChart.vue:
+    newFile: !uuid '760aa72d484aea890efcd536369e36f5d58521b8'
+    oldFile: !uuid 'b6b8e3d6b168d10ef108703e452c0863712c032c'
+  /admin-ui/src/views/report/datav/components/chart/RingPieChart.vue:
+    newFile: !uuid 'de45327333cede28d6818babacb8f66df3f4fe74'
+    oldFile: !uuid 'bee3a455d509f8684bd6b4bcfc257a977a9a082e'
+  /admin-ui/src/views/report/datav/components/chart/SankeyChart.vue:
+    newFile: !uuid 'a95b4d408c826e0c83148c8320316de08e6cd6fa'
+    oldFile: !uuid 'f454c9147af2a425cf23024360da039c9ee4586e'
+  /admin-ui/src/views/report/datav/components/chart/ScatterChart.vue:
+    newFile: !uuid '76d8d936ebbc550c7c669192a08645274cd2c556'
+    oldFile: !uuid 'aca042f0ea07c2420c43e674f675594841cdc19b'
+  /admin-ui/src/views/report/datav/components/chart/ShadowLineChart.vue:
+    newFile: !uuid '86728c1914e786d83396c6020582aa475ecedbde'
+    oldFile: !uuid '82b59d4e64935f31771c65fcc9d0ceb0ad72690a'
+  /admin-ui/src/views/report/datav/components/chart/SingleColumnChart.vue:
+    newFile: !uuid '0d70eca6016cf96e9fe6f57205d87219484db6ec'
+    oldFile: !uuid '447edadab7a0a415bf32649531fa67d140677e54'
+  /admin-ui/src/views/report/datav/components/chart/StackedBarChart.vue:
+    newFile: !uuid '5b446d4b5736c56b1f62c2b2b19853c8fb79081c'
+    oldFile: !uuid 'c6f9c7cf0d4528be6b25b01069adae7ab811d2ce'
+  /admin-ui/src/views/report/datav/components/chart/StaggeredLabelChart.vue:
+    newFile: !uuid '83b960a12be42d671443ad57c7d7b86127970a33'
+    oldFile: !uuid '1ab502eca83c0a6668807accf04bb6411d1ab736'
+  /admin-ui/src/views/report/datav/components/chart/SunburstChart.vue:
+    newFile: !uuid '2d7e3db432b0e5b7abdb677b9e2292446cd916a9'
+    oldFile: !uuid 'c4ccaed07d74242271baeb98e38e486eae0a0036'
+  /admin-ui/src/views/report/datav/components/chart/ThreeDBarChart.vue:
+    newFile: !uuid 'aafdf5b929e03665bb031cd1facff6315dff3d81'
+    oldFile: !uuid '3744ceec07ba18a51f4efaa0e0fe89f58746098b'
+  /admin-ui/src/views/report/datav/components/chart/ThreeDMapBarChart.vue:
+    newFile: !uuid '2e7216843d1438b216c8db5729ca9b82667257d0'
+    oldFile: !uuid '87d4f904ec99cdafbb0082d6da79e3530d76a24b'
+  /admin-ui/src/views/report/datav/components/chart/ThreeDMapChart.vue:
+    newFile: !uuid 'da2cdadc0f073fb649817a0298ec6ab0269154bf'
+    oldFile: !uuid '09fe5c60af960519aa044b3640d1811285766dcd'
+  /admin-ui/src/views/report/datav/components/chart/TimelineChart.vue:
+    newFile: !uuid '90c4ef99541034c1a6fc13f5fd15aa96733ed076'
+    oldFile: !uuid '6bb8f6032ce80bde1215f413f70761846b42c91c'
+  /admin-ui/src/views/report/datav/components/chart/TopBarChart.vue:
+    newFile: !uuid '9a9dc94ff37c0f26aebfd87072694b58dd549eb0'
+    oldFile: !uuid '03414d949f5ea67ffdea3502d93f3aa74762eb0c'
+  /admin-ui/src/views/report/datav/components/chart/WaterBallChart.vue:
+    newFile: !uuid '4f015f343487ec5bbb2b58e1084e63d4c5f07fdc'
+    oldFile: !uuid '425c18ab1ead04b6951de2f8a27ebe93f7e961c3'
+  /admin-ui/src/views/report/datav/components/chart/WaterBallLineChart.vue:
+    newFile: !uuid 'e653ab336e4f27f208f930f510a731cfb56b83a1'
+    oldFile: !uuid '7e4a304d2131131d11a2c152bb014de3040d0b04'
+  /admin-ui/src/views/report/datav/components/chart/WordCloudChart.vue:
+    newFile: !uuid '9cedeab24f221fa0fa99f867371e056db0420e23'
+    oldFile: !uuid '0fab1da62c0c9e8031dc0cc4a9c635bc39d6ee7e'
+  /admin-ui/src/views/report/datav/components/config:
+    newFile: !uuid '8e0887a3201e32d1d46972fe44301ff59efa528f'
+    oldFile: !uuid '3c03ef435787583b086d9d674428e7db2a08fe14'
+  /admin-ui/src/views/report/datav/components/config/DataConfig:
+    newFile: !uuid 'd0f1b483bfb4e2b62565cfc85982768e1183b673'
+    oldFile: !uuid 'd777624138e12e38b09fcf53155f0cafec6e5906'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData:
+    newFile: !uuid '73d32cc0cc20d994c6ab50d90d03778a1eb84871'
+    oldFile: !uuid '02d78c3cda82b3898434b5f0d43d72f13be407d7'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/SmartForm.vue:
+    newFile: !uuid '29c0d3c49bfb62c73b7046aced5094e61d2ae4ad'
+    oldFile: null
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/apiConfigs.js:
+    newFile: !uuid 'c472bcba232171a9e5da5c68286a7ead43cb954a'
+    oldFile: null
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/apidataLeft.vue:
+    newFile: !uuid '9635c0753e59f998fadb96164698ed2acf6e3e82'
+    oldFile: !uuid '8b3d51a76ff087627dcd4ee51ae63d0d8e3cf0ef'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/consoleApi.vue:
+    newFile: !uuid 'd8bcbf9a116d841717d1c9199890b8ee70d6aaa5'
+    oldFile: !uuid 'b29e25712c1e42ba1ca40e440a83cf9d1ba1ee02'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/index.vue:
+    newFile: !uuid '8ba90473ed0273903ff814f233b20da112ddfb0c'
+    oldFile: !uuid 'f1acd923d2cbcd5c7ae655903208432b3ead99f3'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/ApiData/serviceFactory.js:
+    newFile: !uuid 'aaa1480a6ec9a6b8b27b6b95d22ef12ad39e20af'
+    oldFile: null
+  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams:
+    newFile: null
+    oldFile: !uuid 'a132802aa362d0b19e3c8720cdb6aee95964c73b'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams/AllParams.js:
+    newFile: null
+    oldFile: !uuid '93bc60224a63e77164f263273ac38f398ebeaf98'
+  /admin-ui/src/views/report/datav/components/config/DataConfig/apiparams/AllParams.vue:
+    newFile: null
+    oldFile: !uuid 'fd48b4c1a93be308b2a92d629e6bc3274dc93373'
+  /admin-ui/src/views/report/datav/datavDraw.vue:
+    newFile: !uuid '3cf0665c086e6396e8f1f6582af1026478a21d97'
+    oldFile: !uuid 'af7afef1a33f47e077c82b189988303b4d80d914'
+gitCommitId: !uuid '61df73431f6b8bc77bfd7728f81643f4afc066a9'
 renames: {
   }
-revisionId: 35
+revisionId: 36
