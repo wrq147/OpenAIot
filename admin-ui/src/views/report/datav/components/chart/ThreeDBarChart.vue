@@ -13,7 +13,6 @@ require("echarts/theme/macarons"); // echarts theme
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
 import VueEvent from "../../VueEvent";
 import dataChart from '../mixins/dataChart.js'
 
@@ -500,8 +499,6 @@ export default {
         param1: dataOption.barSpacing,
         param2: dataOption.maxHeight * projectResult[2]
       };
-
-      addOption(dataOption.bindingDiv, setting);
 
       //开启图表联动
       if (dataOption.isLink == true) {

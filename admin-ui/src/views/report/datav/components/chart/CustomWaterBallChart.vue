@@ -15,8 +15,6 @@ import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 import "echarts-liquidfill";
 
-
-import { addOption } from "../../codegen/codegen";
 import dataChart from '../mixins/dataChart.js'
 
 export default {
@@ -132,7 +130,6 @@ export default {
      
       this.chart.setOption(option, true);
 
-      addOption(dataOption.bindingDiv, option);
     },
   
   }

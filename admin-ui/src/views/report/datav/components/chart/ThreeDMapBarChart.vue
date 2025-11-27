@@ -14,7 +14,6 @@ require("echarts/theme/macarons"); // echarts theme
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
 import VueEvent from "../../VueEvent";
 import dataChart from '../mixins/dataChart.js'
 //加载json文件
@@ -343,8 +342,6 @@ export default {
       }
 
       this.chart.setOption(option, true);
-
-      addOption(dataOption.bindingDiv, option);
 
       if (dataOption.isLink == true) {
         this.chart.off("click");

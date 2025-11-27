@@ -5,9 +5,9 @@
     "author": "mz",
     "license": "MIT",
     "scripts": {
-        "dev": "set NODE_OPTIONS=--max_old_space_size=8192 & set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
-        "build:chinese": "set NODE_OPTIONS=--max_old_space_size=8192 & set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build --mode chinese",
-        "build:english": "set NODE_OPTIONS=--max_old_space_size=8192 & set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build --mode english",
+        "dev": "set NODE_OPTIONS=--max_old_space_size=4096 & set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
+        "build:chinese": "set NODE_OPTIONS=--max_old_space_size=4096 & set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build --mode chinese",
+        "build:english": "set NODE_OPTIONS=--max_old_space_size=4096 & set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build --mode english",
         "preview": "node build/index.js --preview",
         "lint": "eslint --ext .js,.vue src"
     },

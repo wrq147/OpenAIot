@@ -12,7 +12,6 @@ import echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
-import { addOption } from "../../codegen/codegen";
 import dataChart from '../mixins/dataChart.js'
 import {stringArrayDataHandle} from '../../util/commonChartChange'
 export default {
@@ -245,7 +244,6 @@ export default {
         });
       }
 
-      addOption(dataOption.bindingDiv, option);
     },
    
   }

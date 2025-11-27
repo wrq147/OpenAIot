@@ -325,8 +325,6 @@ import { GetDataSourceByIds } from "@/api/report/sourse";
 // import { chartBIanalysis } from "@/api/report/sourse";
 // import { chartApi } from "@/api/report/chartApi";
 // import { replaceLinkParam } from "./util/LinkageChart";
-
-import { getOption, deleteOption, emptyOption } from "./codegen/codegen";
 import pptxgen from "pptxgenjs";
 
 import Vue from "vue";
@@ -526,8 +524,6 @@ export default {
     //设置快照组件数据为空
     this.$store.commit("getComponentData", []);
     this.$store.commit("resetSnapshotIndex", []);
-    //设置下载图表集合为空
-    emptyOption();
     // await this.getRptList(); // 获取数据库列表
     await this.initDataDraw();
     // await this.loadInitalData();
@@ -960,7 +956,6 @@ export default {
             this.drawingList.some((chart, j) => {
               if (chart.customId == element.customId) {
                 this.drawingList.splice(j, 1);
-                deleteOption(chart.customId);
               }
             });
           });
@@ -1010,8 +1005,6 @@ export default {
           this.activeId = this.themeForm.customId;
           this.activeData = this.themeForm;
         });
-        //删除optionMap对应图表
-        deleteOption(comId);
       }
     },
     //置顶
@@ -1250,9 +1243,6 @@ export default {
         this.form.ThemeOption = JSON.stringify(themeForm);
       }
       let optionObj = Object.create(null);
-      for (let [k, v] of getOption()) {
-        optionObj[k] = v;
-      }
       let optionJson = JSON.stringify(optionObj);
       this.form.MapOption = optionJson;
       // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
@@ -1305,10 +1295,6 @@ export default {
         type: "warning",
       })
         .then(() => {
-          for (let item of this.drawingList) {
-            //删除optionMap对应图表
-            deleteOption(item.customId);
-          }
           this.drawingList = [];
           this.activeData = this.themeForm;
           this.$message({
@@ -1535,9 +1521,6 @@ export default {
         this.form.ThemeOption = JSON.stringify(themeForm);
       }
       let optionObj = Object.create(null);
-      for (let [k, v] of getOption()) {
-        optionObj[k] = v;
-      }
       let optionJson = JSON.stringify(optionObj);
       this.form.MapOption = optionJson;
       let josnForm={

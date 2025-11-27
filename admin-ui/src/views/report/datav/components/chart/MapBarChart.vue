@@ -16,7 +16,6 @@ import "../../animate/animate.css";
 import cityMap from "../../json/chinacity.json";
 
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
 import VueEvent from "../../VueEvent";
 import dataChart from '../mixins/dataChart.js'
 let convertedData;
@@ -338,9 +337,6 @@ export default {
      
       this.chart.setOption(option, true);
       this.chart.on("brushselected", this.renderBrushed);
-
-      addOption(dataOption.bindingDiv, option);
-
       //开启图表联动
       if (dataOption.isLink == true) {
         this.chart.off("click");

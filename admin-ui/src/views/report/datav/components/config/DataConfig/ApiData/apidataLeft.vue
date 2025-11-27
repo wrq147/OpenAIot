@@ -1,314 +1,454 @@
 <template>
-  <div style="padding: 10px 10px 0 10px; height: 100%">
-    <div style="font-size: 16px;line-height: 45px;background-color: #f5f5f5;color: #333;text-align:center;font-weight:bold;">
-        接口模板
-    </div>
-    <el-table ref="apiTable" :data="apiList" tooltip-effect="dark" style="width: 100%" highlight-current-row @current-change="onItemChange">
-      <el-table-column align="center" prop="label" label="接口名称">
-      </el-table-column>
-      <el-table-column align="center" prop="typename" label="接口类型">
-      </el-table-column>
-    </el-table>
-    <pagination :pageSizes="pageSizes" v-show="apiTotal > 0" :total="apiTotal" :page.sync="apiQuery.pageNum" :limit.sync="apiQuery.pageSize" @pagination="initApiList"/>
+  <div style="height: 100%">
+    <!-- 自定义样式的页签切换 -->
+    <div class="tab-container">
+      <div class="tab-header">
+        <div class="tab-item" :class="{ active: activeTab === 'system' }"
+          @click="activeTab = 'system'; handleTabChange('system')">
+          <i class="el-icon-setting"></i>
+          <span>系统接口</span>
+        </div>
+        <div class="tab-item" :class="{ active: activeTab === 'custom' }"
+          @click="activeTab = 'custom'; handleTabChange('custom')">
+          <i class="el-icon-menu"></i>
+          <span>自定义接口</span>
+        </div>
 
-    <div style="margin-top: 20px;display: flex;flex-direction: row;justify-content: right;" v-if="currentRow&&currentRow.typename=='数据源接口'">
-      <el-button plain type="primary" @click="apiImport">导 入</el-button>
+      </div>
+      <div class="tab-content">
+        <!-- 自定义接口内容 -->
+        <div v-if="activeTab === 'custom'" class="tab-panel">
+          <div class="custom-table-container">
+            <el-table ref="customTable" :data="customApiList" style="width: 100%" highlight-current-row>
+              <el-table-column prop="label" label="接口名称" align="center">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.label }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="80">
+                <template slot-scope="scope">
+                  <el-button type="primary" size="mini" icon="el-icon-download"
+                    @click="handleCustomRowClick(scope.row)">导入</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+
+          <!-- 分页 -->
+          <pagination v-show="customTotal > 0" :total="customTotal" :page.sync="customPageNum"
+            :limit.sync="customPageSize" @pagination="loadCustomApiList" layout="prev, pager, next" />
+        </div>
+
+        <!-- 系统接口内容 -->
+        <div v-if="activeTab === 'system'" class="tab-panel">
+          <!-- 添加固定高度和滚动条 -->
+          <div class="system-table-container">
+            <el-table ref="systemTable" :data="systemApiList" style="width: 100%" highlight-current-row :row-class-name="systemTableRowClassName"
+              :cell-style="systemTableCellStyle" :height="tableHeight">
+              <el-table-column prop="label" label="接口名称" align="center">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.label }}</span>
+                  <el-tag v-if="!developerInfo" type="danger" size="mini" style="margin-left: 8px;">
+                    未认证
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="80">
+                <template slot-scope="scope">
+                  <el-button type="primary" size="mini" icon="el-icon-download"
+                    @click="handleSystemRowChange(scope.row)">导入</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+          <!-- 开发者认证提示 -->
+          <div v-if="!developerInfo" class="auth-tip">
+            <el-alert title="开发者接口未激活" type="warning" description="请先完成开发者认证，才能使用系统接口功能。" show-icon :closable="false" />
+          </div>
+
+          <!-- 系统接口导入弹窗 -->
+          <el-dialog title="系统接口参数配置" :visible.sync="systemApiDialogVisible" width="600px" @close="resetDeveloperForm">
+            <smart-form v-if="developerConfig" :api-config="developerConfig" ref="systemApiForm" />
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="systemApiDialogVisible = false">取 消</el-button>
+              <el-button type="primary" @click="confirmImportDeveloperApi">确 定</el-button>
+            </div>
+          </el-dialog>
+        </div>
+      </div>
     </div>
-    <el-form ref="form" label-width="80px" v-if="currentRow&&currentRow.typename=='开发者接口'&&DeveloperInfo != null">
-      <div style="font-size: 14px;line-height: 45px;background-color: #f5f5f5;padding: 0 15px;margin-bottom: 20px;color: #999;">
-        设置接口参数
-      </div>
-      <div>
-        <template
-          v-if="
-            devValue == 'Api01' ||
-            devValue == 'Api04' ||
-            devValue == 'Api05' ||
-            devValue == 'Api06' ||
-            devValue == 'Api07' ||
-            devValue == 'Api08' ||
-            devValue == 'Api09' ||
-            devValue == 'Api10' ||
-            devValue == 'Api11' ||
-            devValue == 'Api12' ||
-            devValue == 'Api13' ||
-            devValue == 'Api15' ||
-            devValue == 'Api16'
-          "
-        >
-          <all-params :devValue="devValue" @cancel="open = false" @ok="developerImport"></all-params>
-        </template>
-        <template v-else>
-          <div v-if="devValue == ''" style="text-align: center; color: #999; margin-bottom: 30px">
-            请先选择接口类型
-          </div>
-          <div v-else style="text-align: center; color: #999; margin-bottom: 30px">
-            当前接口不需要传参
-          </div>
-          <div style="margin-top: 20px;display: flex;flex-direction: row;justify-content: right;">
-            <el-button plain type="primary" @click="developerImport({})">导 入</el-button>
-          </div>
-        </template>
-      </div>
-    </el-form>
   </div>
 </template>
 
 <script>
 import { listApiSource } from "@/api/report/apisource";
 import { devProfile } from "@/api/dev";
-import AllParams from "../apiparams/AllParams.vue";
+import SmartForm from "./SmartForm.vue";
+import { API_PARAMS, API_LIST } from "./apiConfigs";
+
 export default {
-  components: {AllParams},
-  name: "ApiImport",
+  components: { SmartForm },
   data() {
     return {
-      open: false,
-      allloading: false,
-      activeName: "first",
-      apiQuery: {
-        pageNum: 1,
-        pageSize: 5,
-        Name: "",
-      },
-      apiTotal: 0,
-      apiList: [],
-      pageSizes:[2,5,10, 20, 30, 50],
-      currentRow: null,
-      devValue: "",
-      paramArray: [
-        {
-          label: "获取物联实时数据",
-          value: "Api01",
-          url: "/IoTRulesService/HttpRule/Live",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "查询所有设备分组",
-          value: "Api02",
-          url: "/IoTRulesService/HttpRule/SelectGroups",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "获取产品名称列表",
-          value: "Api04",
-          url: "/IoTService/HttpSync/ProductNames",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "查询设备列表",
-          value: "Api05",
-          url: "/IoTService/HttpSync/ListPage",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "获取指定设备的实时属性数据",
-          value: "Api06",
-          url: "/IoTRulesService/HttpRule/Live",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "查询设备历史数据",
-          value: "Api07",
-          url: "/IoTRulesService/HttpRule/SelectHistory",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "查询规则列表",
-          value: "Api08",
-          url: "/IoTRulesService/HttpRule/RuleListPage",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "查询规则模板详情",
-          value: "Api09",
-          url: "/IoTRulesService/HttpRule/RuleInfo",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "按房间查询实时数据",
-          value: "Api10",
-          url: "/AfterService/HttpSync/RoomLive",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "获取设备的标签列表",
-          value: "Api11",
-          url: "/IoTService/HttpSync/TagList",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "通过第三方编号查询设备",
-          value: "Api12",
-          url: "/IoTService/HttpSync/DeviceByNumber",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },{
-          label: "计划任务汇总",
-          value: "Api13",
-          url: "/AfterService/HttpSync/PlaneTaskStatis",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },{
-          label: "计划类型列表",
-          value: "Api14",
-          url: "/AfterService/HttpSync/PlaneTaskTypeList",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },{
-          label: "计划任务列表",
-          value: "Api15",
-          url: "/AfterService/HttpSync/PlaneTaskStatisList",
-          method: "GET",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-        {
-          label: "查询设备历史统计数据",
-          value: "Api16",
-          url: "/IoTRulesService/HttpRule/SelectMergeList",
-          method: "POST",
-          needEnterprise: true,
-          typename:'开发者接口'
-        },
-      ],
-      DeveloperInfo: null,
+      activeTab: 'system', // 默认显示自定义接口页签
+
+      // 自定义接口相关
+      customApiList: [],
+      customTotal: 0,
+      customPageNum: 1,
+      customPageSize: 5,
+      currentCustomRow: null,
+      dataSourceApis: [],
+
+      // 系统接口相关
+      systemApiList: API_LIST, // 系统接口列表固定
+      currentSystemRow: null,
+      systemApiDialogVisible: false, // 系统接口导入弹窗
+      tableHeight: 450, // 表格固定高度
+
+      developerInfo: null,
+      developerConfig: null
     };
   },
-  computed: {},
   async created() {
-    let rsp = await devProfile();
-    this.DeveloperInfo = rsp.data;
-    if(this.DeveloperInfo){}else{
-      this.paramArray=[]
+    // 获取开发者信息
+    try {
+      const rsp = await devProfile();
+      this.developerInfo = rsp.data;
+    } catch (error) {
+      this.developerInfo = null;
     }
+
+    // 加载自定义接口列表
+    this.loadCustomApiList();
+
+    // 根据接口数量动态调整表格高度（可选）
+    this.calculateTableHeight();
   },
   methods: {
-    async openImport() {
-      this.activeName = "first";
-      this.apiQuery.pageNum = 1;
-      this.currentRow = null;
-      this.devValue = "";
-      this.open = true;
-      await this.initApiList();
+    // 计算表格高度
+    calculateTableHeight() {
+      // 如果接口数量超过10个，设置固定高度；否则自适应
+      if (this.systemApiList.length > 10) {
+        this.tableHeight = 450;
+      } else {
+        this.tableHeight = 'auto';
+      }
     },
-    async initApiList() {
-      this.allloading = true;
-      this.apiQuery.ApiType = "0";
-      let rsp = await listApiSource(this.apiQuery);
-      this.apiList = rsp.data.List.map(row=>{
-        row.label=row.InterfaceName
-        row.typename='数据源接口'
-        return row
+
+    // 页签切换处理
+    handleTabChange(tab) {
+      // 清除当前选择
+      this.currentCustomRow = null;
+      this.currentSystemRow = null;
+      this.developerConfig = null;
+      this.systemApiDialogVisible = false;
+
+      // 如果切换到自定义接口页签，确保数据已加载
+      if (tab === 'custom' && this.customApiList.length === 0) {
+        this.loadCustomApiList();
+      }
+    },
+
+    // 加载自定义接口列表
+    async loadCustomApiList() {
+      const rsp = await listApiSource({
+        pageNum: this.customPageNum,
+        pageSize: this.customPageSize,
+        ApiType: "0"
       });
-      if(this.apiList&&this.apiList.length==this.apiQuery.pageSize){
-        
-      }else if(!this.apiList||this.apiList.length<this.apiQuery.pageSize){
-        // if(this.apiQuery.pageNum==1){
-        //   let len=this.apiList.length
-        //   let arr=this.paramArray.filter((row,inx)=>inx<this.apiQuery.pageSize-len)
-        //   this.apiList=[...this.apiList,...arr]
-        //   console.log(this.apiList,'this.apiList');
-        // }else{
-          let tolpagenum=Math.ceil(rsp.data.Total/this.apiQuery.pageSize)
-          let yushu=rsp.data.Total%this.apiQuery.pageSize
-          if(this.apiQuery.pageNum==tolpagenum){
-            let arr=this.paramArray.filter((row,inx)=>inx<this.apiQuery.pageSize-this.apiList.length)
-            this.apiList=[...this.apiList,...arr]
-          }else{
-            let otherTotal=tolpagenum*this.apiQuery.pageSize-yushu
-            if(yushu==0){
-              otherTotal=0
-            }
-            let chanum=this.apiQuery.pageNum-tolpagenum
-            let arr=this.paramArray.filter((row,inx)=>inx>=otherTotal+this.apiQuery.pageSize*(chanum-1)&&inx<otherTotal+this.apiQuery.pageSize*chanum)
-            this.apiList=[...this.apiList,...arr]
-            
+
+      this.customApiList = rsp.data.List.map(item => ({
+        ...item,
+        label: item.InterfaceName,
+        typename: '自定义'
+      }));
+
+      this.customTotal = rsp.data.Total;
+      this.dataSourceApis = rsp.data.List;
+    },
+
+    // 自定义接口行点击
+    handleCustomRowClick(row) {
+      this.currentCustomRow = row;
+      if (row) {
+        this.importDataSource();
+      }
+    },
+
+    // 系统接口行样式
+    systemTableRowClassName({ row }) {
+      if (!this.developerInfo) {
+        return 'disabled-row';
+      }
+      return '';
+    },
+
+    // 系统接口单元格样式
+    systemTableCellStyle({ row }) {
+      if (!this.developerInfo) {
+        return {
+          color: '#999',
+          backgroundColor: '#f9f9f9',
+          position: 'relative'
+        };
+      }
+      return {};
+    },
+
+    // 系统接口行选择变化 - 直接弹窗
+    handleSystemRowChange(row) {
+      if (row && !this.developerInfo) {
+        // 清除当前选择
+        this.$nextTick(() => {
+          this.$refs.systemTable?.clearSelection();
+          this.$refs.systemTable?.setCurrentRow(null);
+        });
+        this.currentSystemRow = null;
+        this.developerConfig = null;
+        this.$message.warning('请先完成开发者认证，才能使用系统接口');
+        return;
+      }
+
+      this.currentSystemRow = row;
+      if (row == null) {
+        this.systemApiDialogVisible = false;
+        return;
+      }
+
+      this.developerConfig = API_PARAMS[row.value] || null;
+      // 选择后直接打开弹窗
+      if (this.developerConfig && this.developerInfo) {
+        this.systemApiDialogVisible = true;
+      }
+    },
+
+    // 重置开发者表单
+    resetDeveloperForm() {
+      this.$refs.systemApiForm?.resetForm();
+    },
+
+    // 确认导入开发者接口
+    confirmImportDeveloperApi() {
+      try {
+        if (!this.developerInfo) {
+          this.$message.warning('开发者信息未获取，请刷新重试');
+          return;
+        }
+
+        if (!this.currentSystemRow || !this.developerConfig) {
+          this.$message.warning('请先选择有效的系统接口');
+          return;
+        }
+
+        // 获取表单数据
+        const params = this.$refs.systemApiForm?.getFormData() || {};
+
+        this.$emit('import', {
+          type: 'system',
+          name: this.currentSystemRow.label,
+          Url: this.developerConfig.url,
+          Method: this.developerConfig.method,
+          Header: [{ name: "token", value: this.developerInfo.SecKey }],
+          ParamType: "JSON",
+          ParamData: params
+        });
+
+        this.systemApiDialogVisible = false;
+        this.$message.success('系统接口导入成功');
+
+      } catch (error) {
+        this.$message.error('导入失败，请检查接口配置');
+      }
+    },
+
+    // 导入数据源接口（自定义接口直接导入）
+    importDataSource() {
+      try {
+        if (!this.currentCustomRow) return;
+
+        const api = this.dataSourceApis.find(item => item.Id === this.currentCustomRow.Id);
+        if (!api) {
+          this.$message.warning('未找到对应的接口配置');
+          return;
+        }
+
+        this.$emit('import', {
+          type: 'dataSource',
+          name: this.currentCustomRow.label,
+          data: {
+            Url: api.Url,
+            Method: api.Method,
+            Header: JSON.parse(api.HeaderJson || '[]'),
+            ParamType: api.ParamType,
+            ParamData: JSON.parse(api.ParamJson || '{}')
           }
-        // }
-        
+        });
+
+        this.$message.success('自定义接口导入成功');
+
+      } catch (error) {
+        console.error('导入数据源接口失败:', error);
+        this.$message.error('导入失败，请检查接口配置');
       }
-      
-      this.apiTotal = rsp.data.Total+this.paramArray.length;
-      this.allloading = false;
-    },
-    onItemChange(val) {
-      this.currentRow = val;
-      // console.log(val,'val');
-      if(val&&val.typename=="开发者接口"){
-        this.devValue=val.value
-      }
-      
-    },
-    apiImport() {
-      if (this.currentRow == null) {
-        this.$message.error("请选择要导入的数据源接口");
-        return;
-      }
-      let importOjb = {
-        Url: this.currentRow.Url,
-        Method: this.currentRow.Method,
-        Header: JSON.parse(this.currentRow.HeaderJson),
-        ParamType: this.currentRow.ParamType,
-        ParamData: JSON.parse(this.currentRow.ParamJson),
-      };
-      this.$emit("import", importOjb);
-      this.open = false;
-    },
-    developerImport(apiParams) {
-      if (this.devValue == "") {
-        this.$message.error("请选择要导入的开发者接口");
-        return;
-      }
-      let curdata = this.paramArray.filter((x) => x.value == this.devValue)[0];
-      let importOjb = {
-        Url: curdata.url,
-        Method: curdata.method,
-        Header: [{ name: "token", value: this.DeveloperInfo.SecKey }],
-        ParamType: "JSON",
-        ParamData: apiParams,
-      };
-      this.$emit("import", importOjb);
-      this.open = false;
-    },
-  },
+    }
+  }
 };
 </script>
-<style lang="scss" scoped>
-::v-deep .center-tabs .el-tabs__item {
-  width: 50%;
-  text-align: center;
+
+<style scoped>
+.auth-tip {
+  margin-top: 15px;
 }
-::v-deep {
-  .el-dialog__header {
-    border-bottom: 1px solid #ccc;
+
+/* 自定义页签样式 */
+.tab-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 15px;
+}
+
+.tab-header {
+  display: flex;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #6c757d;
+  position: relative;
+}
+
+.tab-item i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.tab-item.active {
+  color: #409eff;
+  background-color: #fff;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #409eff;
+  border-radius: 3px 3px 0 0;
+}
+
+.tab-item:hover:not(.active) {
+  color: #409eff;
+  background-color: #f0f7ff;
+}
+
+.tab-content {
+  padding: 20px;
+  background-color: #fff;
+}
+
+.tab-panel {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  .el-input.inputText {
-    width: 100%;
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+.custom-table-container {
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* 系统接口表格容器 - 添加滚动条 */
+.system-table-container {
+  max-height: 550px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* 自定义滚动条样式 */
+::v-deep .system-table-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+::v-deep .system-table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::v-deep .system-table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::v-deep .system-table-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 禁用行的样式 */
+::v-deep .disabled-row {
+  cursor: not-allowed !important;
+  position: relative;
+}
+
+/* 禁用行的遮罩效果 */
+::v-deep .disabled-row::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 禁用行的hover效果 */
+::v-deep .disabled-row:hover>td {
+  background-color: #f9f9f9 !important;
+}
+
+/* 禁用当前行高亮 */
+::v-deep .disabled-row.current-row>td {
+  background-color: #f9f9f9 !important;
+  color: #999 !important;
+}
+
+/* 表格样式优化 */
+::v-deep .el-table {
+  --el-table-header-text-color: #333;
+  --el-table-row-hover-bg-color: #f5f5f5;
+  --el-table-current-row-bg-color: #e8f4fc;
+}
+
+::v-deep .el-table th {
+  background-color: #f8f9fa !important;
+}
 </style>

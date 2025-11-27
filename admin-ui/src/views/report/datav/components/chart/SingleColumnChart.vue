@@ -13,7 +13,6 @@ require("echarts/theme/macarons"); // echarts theme
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
 import VueEvent from "../../VueEvent";
 import dataChart from '../mixins/dataChart.js'
 
@@ -173,11 +172,8 @@ export default {
           return;
         }
       });
-      console.log(44444444444444)
-      console.log(option)
-      this.chart.setOption(option, true);
 
-      addOption(dataOption.bindingDiv, option);
+      this.chart.setOption(option, true);
 
       //开启图表联动
       if (dataOption.isLink == true) {

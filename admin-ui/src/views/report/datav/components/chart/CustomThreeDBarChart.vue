@@ -10,12 +10,8 @@ import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
-
-
 import VueEvent from "../../VueEvent";
 import dataChart from '../mixins/dataChart.js'
-import { forEach } from 'jszip';
 
 const CubeLeft = echarts.graphic.extendShape({
   shape: {},
@@ -358,7 +354,6 @@ export default {
         param1: dataOption.threeDBarWidth,
         param2: dataOption.threeDBarHeight
       };
-      addOption(dataOption.bindingDiv, setting);
 
       //开启图表联动
       if (dataOption.isLink == true) {

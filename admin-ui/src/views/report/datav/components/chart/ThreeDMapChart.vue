@@ -14,7 +14,6 @@ require("echarts/theme/macarons"); // echarts theme
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
 import dataChart from '../mixins/dataChart.js'
 import VueEvent from "../../VueEvent";
 //加载json文件
@@ -358,7 +357,6 @@ export default {
       }
 
       this.chart.setOption(option, true);
-      addOption(dataOption.bindingDiv, option);
       //单击切换到省级地图，当mapCode有值,说明可以切换到下级地图
       // let timeFn = null;
       // this.chart.on("click", (params)=> {

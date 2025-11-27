@@ -12,7 +12,6 @@ import echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
-import { addOption } from "../../codegen/codegen";
 
 //加载json文件
 const chinaJson=require("../../map_json/data-1527045631990-r1dZ0IM1X.json");
@@ -294,7 +293,6 @@ export default {
         this.area = "china"; //地区name
       });
 
-      addOption(dataOption.bindingDiv, option);
     },
    
   }

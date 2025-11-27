@@ -10,8 +10,6 @@ import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
-
 import VueEvent from "../../VueEvent";
 import dataChart from '../mixins/dataChart.js'
 
@@ -329,8 +327,6 @@ export default {
         };
         console.log("echarts属性",option);
         this.chart.setOption(option, true);
-
-        addOption(dataOption.bindingDiv, option);
         //开启图表联动
         if (dataOption.isLink == true) {
           this.chart.off("click");

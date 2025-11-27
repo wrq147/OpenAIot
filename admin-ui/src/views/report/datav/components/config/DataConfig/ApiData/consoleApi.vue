@@ -96,7 +96,7 @@
 
       <el-form-item label="刷新时间">
         <div style="display:flex;">
-          <el-input-number @change="confirmValue" v-model="apiTimeout" :min="0" controls-position="right" :step="1000"></el-input-number>秒
+          <el-input-number style="width:200px;" @change="confirmValue" v-model="apiTimeout" :min="0" controls-position="right" :step="1000"></el-input-number>秒
         </div>
       </el-form-item>
 
@@ -436,6 +436,7 @@ export default {
       this.$refs.iptDlg.openImport();
     },
     importApi(data) {
+
       this.apiInterfaceUrl = data.Url;
       this.apiRequestMethod = data.Method;
       this.apiRequestHeader = data.Header;
@@ -443,6 +444,7 @@ export default {
       this.numberTypeArr = [];
       this.booleanTypeArr = [];
       let paramsDataObj = JSON.parse(JSON.stringify(data.ParamData));
+ 
       for (let key in paramsDataObj) {
         if (typeof paramsDataObj[key] === "number") {
           this.numberTypeArr.push(key);

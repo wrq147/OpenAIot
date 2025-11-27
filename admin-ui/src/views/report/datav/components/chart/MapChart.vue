@@ -54,7 +54,6 @@ import "echarts/map/js/province/hainan";
 
 
 import { getLinkChart } from "../../util/LinkageChart";
-import { addOption } from "../../codegen/codegen";
 import dataChart from '../mixins/dataChart.js'
 import VueEvent from "../../VueEvent";
 
@@ -345,8 +344,6 @@ export default {
       };
 
       this.chart.setOption(option, true);
-
-      addOption(dataOption.bindingDiv, option);
 
       //开启图表联动
       if (dataOption.isLink == true) {

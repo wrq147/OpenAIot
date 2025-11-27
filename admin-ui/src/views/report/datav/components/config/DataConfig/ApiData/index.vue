@@ -71,7 +71,6 @@ export default {
     initCom(option) {
       setTimeout(()=>{
         this.$refs.consoleapi.initCom(option);
-        this.$refs.apidataLeft.openImport();
       },100)
     },
     changeconfirmValue(val){
@@ -102,14 +101,11 @@ export default {
   justify-content: space-between;
   width: 100%;
   .api_box_left {
-    width: 320px;
-    border-radius: 10px;
-    background: #fff;
-    padding-bottom: 10px;
+    width: 360px;
     box-sizing: border-box;
   }
   .api_box_right {
-    width: calc(100% - 340px);
+    width: calc(100% - 380px);
     border-radius: 10px;
     background: #fff;
     padding: 10px;
