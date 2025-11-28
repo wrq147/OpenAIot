@@ -46,7 +46,7 @@ namespace ChannelUtility
                 CacheJsEngine newcache = new CacheJsEngine();
                 newcache.Engine = new Engine(option =>
                 {
-                    option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(5));
+                    option.LimitRecursion(5).LimitMemory(10 * 1024 * 1024).TimeoutInterval(TimeSpan.FromMinutes(5));
                 });
                 newcache.Engine = newcache.Engine.Execute(script);
                 newcache.Script = script;
@@ -58,7 +58,7 @@ namespace ChannelUtility
                 CacheJsEngine newcache = new CacheJsEngine();
                 newcache.Engine = new Engine(option =>
                 {
-                    option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(5));
+                    option.LimitRecursion(5).LimitMemory(10 * 1024 * 1024).TimeoutInterval(TimeSpan.FromMinutes(5));
                 });
                 newcache.Engine = newcache.Engine.Execute(script);
                 newcache.Script = script;
