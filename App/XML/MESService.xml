@@ -215,6 +215,13 @@
             <param name="query"></param>
             <returns></returns>
         </member>
+        <member name="M:MESService.Controller.Order.Info(System.String)">
+            <summary>
+            获取生产工单信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:MESService.Controller.Plan">
             <summary>
             生产计划API
@@ -546,6 +553,11 @@
         <member name="P:MESService.Model.In_WorkOrderList.Status">
             <summary>
             状态：0、待排产；1、待生产；2、生产中；3、已完成；4、已取消
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkOrderList.ParentId">
+            <summary>
+            过滤父工单
             </summary>
         </member>
         <member name="P:MESService.Model.In_WorkTaskList.Status">
@@ -1746,6 +1758,11 @@
         <member name="P:MESService.Model.MZ_WorkOrder.ParentWorkOrderId">
             <summary>
             父工单Id
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkOrder.ParentPath">
+            <summary>
+            父层级
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkOrder.Status">

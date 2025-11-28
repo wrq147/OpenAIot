@@ -1,9 +1,12 @@
 <template>
   <div :class="[isdialog ? '' : 'elbiaoge_elform']" :style="{ 'min-height': isdialog ? '' : 'calc(100vh - 194px' }">
-    <el-tabs type="card" @tab-click="tagChange">
-      <el-tab-pane label="脚本解释器" v-if="ChannelData.CanScript"></el-tab-pane>
-      <el-tab-pane label="Modbus解释器" v-if="ChannelData.CanModbus"></el-tab-pane>
-    </el-tabs>
+    <div class="tabs-wrapper">
+      <el-tabs type="card" @tab-click="tagChange">
+        <el-tab-pane label="Modbus解释器" v-if="ChannelData.CanModbus"></el-tab-pane>
+        <el-tab-pane label="脚本解释器" v-if="ChannelData.CanScript"></el-tab-pane>
+      </el-tabs>
+      <div class="tabs-tip">【提示：设备上报数据从左到右经过解释器，平台下发数据从右到左经过解释器】</div>
+    </div>
     <div v-show="curtag == '脚本解释器'" class="js_con" :style="{ 'margin-top': '0px' }">
       <div class="button_con">
         <div>
@@ -174,11 +177,11 @@ export default {
     }
   },
   mounted() {
-    if (this.ChannelData.CanScript == true) {
-      this.curtag = "脚本解释器";
-    }
-    else if (this.ChannelData.CanModbus == true) {
+    if (this.ChannelData.CanModbus == true) {
       this.curtag = "Modbus解释器";
+    }
+    else if (this.ChannelData.CanScript == true) {
+      this.curtag = "脚本解释器";
     }
 
     if (this.content == null || this.content == "") {
@@ -770,6 +773,18 @@ export default {
 </script>
 
 <style lang="less">
+.tabs-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+  
+  .tabs-tip {
+    position: absolute;
+    top: 10px;
+    left: 300px;
+    color: #c40001;
+    font-size: 16px;
+  }
+}
 .js_con {
   margin-top: 20px;
   border: 1px solid #dddddd;

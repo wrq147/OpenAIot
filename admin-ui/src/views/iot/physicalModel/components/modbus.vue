@@ -83,7 +83,7 @@
         </el-col>
         <el-col :span="14"
           style="padding-left: 10px;padding-right: 10px;box-sizing: border-box;background-color: #f0f2f5;min-height: calc(100vh - 272px);">
-          <h2>匹配规则：<span style="color:#c40001;font-size: 16px;">(注意：请确保匹配规则的数据长度不一致)</span></h2>
+          <h2>匹配规则：<span style="color:#c40001;font-size: 16px;">【注意：请确保匹配规则的数据长度不一致】</span></h2>
           <el-form-item label="规则匹配">
 
             <div v-if="modbussForm.Matches && modbussForm.Matches.length > 0" class="param_list_con">

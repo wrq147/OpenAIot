@@ -6,6 +6,7 @@ using FluentMigrator.Builders.Alter.Table;
 using MESService.DAL;
 using MESService.Model;
 using Microsoft.Extensions.Logging;
+using NPOI.POIFS.Properties;
 using ProducerService.DAL;
 using ProducerService.Model;
 using System;
@@ -41,10 +42,30 @@ namespace MESService.Business
             _snowflake = snowflake;
             _logger = factory.CreateLogger<WorkOrderBLL>();
         }
-
+        public virtual async Task<BusResponse<MZ_WorkOrder>> Info(string id)
+        {
+            var info = await _workOrderDAL.Select(id);
+            if (info == null)
+            {
+                return BusResponse<MZ_WorkOrder>.Error(111, "生产工单不存在");
+            }
+            info.ProdInfo = await _provider.GetService<ProductDAL>().Select(info.ProductId);
+            info.PlanInfo = await _provider.GetService<ProductPlanDAL>().Select(info.PlanId);
+            return BusResponse<MZ_WorkOrder>.Success(info);
+        }
         public virtual async Task<PageObject<MZ_WorkOrder>> SelectList(In_WorkOrderList query, IUserInfo user)
         {
-            var pagelist = await _workOrderDAL.SelectByPage(query, user.OrgId);
+            string parentPath = string.Empty;
+            if (!string.IsNullOrEmpty(query.ParentId))
+            {
+                MZ_WorkOrder parentOrder = await _workOrderDAL.Select(query.ParentId);
+                if (parentOrder != null)
+                {
+                    parentPath = parentOrder.ParentPath;
+                }
+            }
+
+            var pagelist = await _workOrderDAL.SelectByPage(query, user.OrgId, parentPath);
             var parentOrderIds = pagelist.List.Where(x => !string.IsNullOrEmpty(x.ParentWorkOrderId)).Select(x => x.ParentWorkOrderId).ToList();
             if (parentOrderIds.Count > 0)
             {
@@ -82,7 +103,7 @@ namespace MESService.Business
                 {
                     var product = await _productDAL.Select(item.ProductId);
                     var need = product.Total.Value * item.Quantity.Value;
-                    await RecursiveProduct(item.ProductId, need, item, plan, null, product);
+                    await RecursiveProduct(item.ProductId, need, item, plan, product, null);
                 }
             }
             catch (Exception ex)
@@ -91,7 +112,7 @@ namespace MESService.Business
             }
         }
 
-        private async Task RecursiveProduct(string productId, decimal num, MZ_ProductPlanItem planItem, MZ_ProductPlan plan, string parentWorkId, MZ_Product product)
+        private async Task RecursiveProduct(string productId, decimal num, MZ_ProductPlanItem planItem, MZ_ProductPlan plan, MZ_Product product, MZ_WorkOrder parentWorkOrder)
         {
             var snowflake = _provider.GetService<SnowflakeHelper>();
             var routeBLL = _provider.GetService<RouteBLL>();
@@ -103,8 +124,17 @@ namespace MESService.Business
             {
                 //生成工单
                 MZ_WorkOrder order = new MZ_WorkOrder();
-                order.ParentWorkOrderId = parentWorkId ?? string.Empty;
                 order.Id = _snowflake.NextId().ToString();
+                if (parentWorkOrder == null)
+                {
+                    order.ParentWorkOrderId = string.Empty;
+                    order.ParentPath = order.Id + ",";
+                }
+                else
+                {
+                    order.ParentWorkOrderId = parentWorkOrder.Id;
+                    order.ParentPath = parentWorkOrder.ParentPath + order.Id + ",";
+                }
                 order.OrgId = product.OrgId;
                 order.WorkNumber = await GenerateNumber();
                 order.PlanId = planItem.PlanId;
@@ -138,7 +168,7 @@ namespace MESService.Business
                     await _workBomDAL.Insert(workBom);
 
                     //生成子工单
-                    await RecursiveProduct(item.ProductId, need, planItem, plan, order.Id, null);
+                    await RecursiveProduct(item.ProductId, need, planItem, plan, null, order);
                 }
             }
         }

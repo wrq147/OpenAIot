@@ -13,5 +13,9 @@ namespace MESService.Model
         /// 状态：0、待排产；1、待生产；2、生产中；3、已完成；4、已取消
         /// </summary>
         public int? Status { get; set; }
+        /// <summary>
+        /// 过滤父工单
+        /// </summary>
+        public string ParentId { get; set; }
     }
 }

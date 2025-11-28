@@ -17,7 +17,7 @@ namespace MESService.DAL
 {
     public class WorkOrderDAL : BaseRepository<MZ_WorkOrder>
     {
-        public virtual async Task<PageObject<MZ_WorkOrder>> SelectByPage(In_WorkOrderList query, long orgId)
+        public virtual async Task<PageObject<MZ_WorkOrder>> SelectByPage(In_WorkOrderList query, long orgId, string parentPath)
         {
             Expression<Func<MZ_WorkOrder, bool>> expression = (a) => a.OrgId == orgId;
             if (query.beginTime != null)
@@ -31,6 +31,10 @@ namespace MESService.DAL
             if (query.Status != null)
             {
                 expression = expression.And((a) => a.Status == query.Status);
+            }
+            if (!string.IsNullOrEmpty(parentPath))
+            {
+                expression = expression.And((a) => a.ParentPath.StartsWith(parentPath));
             }
             var tmpSql = new SqlBuilder(help).Query<MZ_WorkOrder>().Include(x => x.ProdInfo, x => x.ProductId).Include(x => x.PlanInfo, x => x.PlanId).Where(expression);
             return await tmpSql.GeneratePageObjectAsync(query, "CreatedOn desc");

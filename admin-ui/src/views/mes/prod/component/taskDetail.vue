@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="工单详情" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
+    <el-dialog title="任务详情" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
         @close="handleClose">
         <el-tabs v-if="taskData" v-model="activeTab" type="card">
             <!-- 基本信息标签页 -->
@@ -25,7 +25,7 @@
                                 <i
                                     :class="['el-icon', user.type === 'user' ? 'el-icon-user' : 'el-icon-office-building']"></i>
                                 <span class="tag-text">{{ user.name || (user.type === "user" ? "未知人员" : "未知部门")
-                                }}</span>
+                                    }}</span>
                             </div>
                             <span
                                 v-if="!taskData.AssignedUser || parseAssignedUsers(taskData.AssignedUser).length === 0"
@@ -46,10 +46,10 @@
                     <el-descriptions-item label="预计平均工时">{{ taskData.WorkTime + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="实际总工时">{{ taskData.WorkTimeTotal + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="预计总工时">{{ (taskData.WorkTime * taskData.PlanNum) + "分钟"
-                    }}</el-descriptions-item>
+                        }}</el-descriptions-item>
                     <template v-for="(item, ix) in filedTableList">
                         <el-descriptions-item :label="item.name" :key="'custom_des' + ix">
-                            <div v-html="getFieldShow(taskData.RouteOper, item)"></div>
+                            <div v-html="ingetFieldShow(taskData.RouteOper, item)"></div>
                         </el-descriptions-item>
                     </template>
                 </el-descriptions>
@@ -170,6 +170,9 @@ export default {
         }
     },
     methods: {
+        ingetFieldShow(obj, field) {
+            return getFieldShow(obj, field);
+        },
         getValidDefects(defectList) {
             if (!defectList || !Array.isArray(defectList)) {
                 return [];
@@ -238,7 +241,7 @@ export default {
             this.reportQueryParams = {
                 pageNum: 1,
                 pageSize: 10,
-                taskId: this.taskData.id || this.taskData.WorkNumber,
+                taskId: this.taskData.Id,
                 UserName: '',
                 dateRange: []
             };

@@ -420,6 +420,7 @@ namespace MESService
                 .WithColumn("PlanId").AsString(128).Indexed().WithColumnDescription("生产计划Id")
                 .WithColumn("WorkNumber").AsString(50).Unique().WithColumnDescription("唯一编号")
                 .WithColumn("ParentWorkOrderId").AsString(128).Indexed().WithColumnDescription("父工单Id")
+                .WithColumn("ParentPath").AsString(800).Indexed().WithColumnDescription("父层级")
                 .WithColumn("Status").AsInt32().Indexed().WithColumnDescription("状态：0、待生产；1、生产中；2、已完成；3、已取消；")
                 .WithColumn("Priority").AsInt32().WithColumnDescription("优先级：1、优先安排；2、加急处理；3、正常排产")
                 .WithColumn("OverTime").AsDateTime().WithColumnDescription("超期时间")

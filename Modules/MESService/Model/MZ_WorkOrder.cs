@@ -34,6 +34,10 @@ namespace MESService.Model
         /// 父工单Id
         /// </summary>
         public string ParentWorkOrderId { get; set; }
+        /// <summary>
+        /// 父层级
+        /// </summary>
+        public string ParentPath { get; set; }
 
         /// <summary>
         /// 状态：0、待生产；1、生产中；2、已完成；3、已取消；

@@ -1,4 +1,14 @@
 import request from '@/utils/request'
+
+// 获取生产批次列表
+export function WorkBatchList(params) {
+    return request({
+        url: '/MESService/Batch/List',
+        method: 'get',
+        params: params
+    })
+}
+
 // 获取生产工单列表
 export function mesOrderList(params) {
     return request({
@@ -7,6 +17,16 @@ export function mesOrderList(params) {
         params: params
     })
 }
+
+//获取生产工单信息
+export function mesOrderInfo(params) {
+    return request({
+        url: '/MESService/Order/Info',
+        method: 'get',
+        params: params
+    })
+}
+
 // 获取报工列表
 export function ReportList(params) {
     return request({
