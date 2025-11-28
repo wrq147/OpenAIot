@@ -33,7 +33,46 @@ namespace ChannelUtility
         /// </summary>
         public event SubProductMessage OnSubProductMessage;
         private IBus _bus;
+        private ConcurrentDictionary<string, CacheJsEngine> _scriptEngine = new ConcurrentDictionary<string, CacheJsEngine>();
+        public class CacheJsEngine
+        {
+            public Engine Engine { get; set; }
+            public string Script { get; set; }
+        }
+        private Engine GetJsEngine(string deviceId, string script)
+        {
+            var tmpcache = _scriptEngine.GetOrAdd(deviceId, (k) =>
+            {
+                CacheJsEngine newcache = new CacheJsEngine();
+                newcache.Engine = new Engine(option =>
+                {
+                    option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(5));
+                });
+                newcache.Engine = newcache.Engine.Execute(script);
+                newcache.Script = script;
+                return newcache;
+            });
 
+            if (!string.Equals(script, tmpcache.Script))
+            {
+                CacheJsEngine newcache = new CacheJsEngine();
+                newcache.Engine = new Engine(option =>
+                {
+                    option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(5));
+                });
+                newcache.Engine = newcache.Engine.Execute(script);
+                newcache.Script = script;
+                _scriptEngine.AddOrUpdate(deviceId, newcache, (key, oldValue) =>
+                {
+                    return newcache;
+                });
+                return newcache.Engine;
+            }
+            else
+            {
+                return tmpcache.Engine;
+            }
+        }
         public ClientBusProxy(IServiceProvider provider) : base(provider)
         {
             _provider = provider;
@@ -76,7 +115,7 @@ namespace ChannelUtility
 
                     //清除待处理包
                     _lastReaderDict.TryRemove(devid, out FastReader tmpout);
-                    _readerCache.TryRemove(devid, out ConcurrentDictionary<string, string> tmpcache);
+                    _scriptEngine.TryRemove(devid, out CacheJsEngine tmpcache);
                 }
                 else
                 {
@@ -512,11 +551,8 @@ namespace ChannelUtility
                 {
                     var tmp = await Task.Run(() =>
                     {
-                        var jsEngine = new Engine(option =>
-                        {
-                            option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(5));
-                        });
-                        return jsEngine.Execute(script).Invoke("toRawData", JsValue.FromObject(jsEngine, context));
+                        var jsEngine = this.GetJsEngine(msg.DeviceId, script);
+                        return jsEngine.Invoke("toRawData", JsValue.FromObject(jsEngine, context));
                     });
 
                     if (tmp.IsNull()) return null;
@@ -661,12 +697,9 @@ namespace ChannelUtility
                 var datacontext = new DataContext(msg, input, productId, deviceId, this, model, codeprefix);
                 var func = await Task.Run(() =>
                 {
-                    var jsEngine = new Engine(option =>
-                    {
-                        option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(5));
-                    });
+                    var jsEngine = this.GetJsEngine(deviceId, script);
                     var context = JsValue.FromObject(jsEngine, datacontext);
-                    return jsEngine.Execute(script).Invoke("rawDataTo", context);
+                    return jsEngine.Invoke("rawDataTo", context);
                 });
 
                 if (func.IsNull())
@@ -748,7 +781,7 @@ namespace ChannelUtility
 
             //清除待处理包
             _lastReaderDict.TryRemove(deviceId, out FastReader tmpout);
-            _readerCache.TryRemove(deviceId, out ConcurrentDictionary<string, string> tmpcache);
+            _scriptEngine.TryRemove(deviceId, out CacheJsEngine tmpcache);
         }
 
 

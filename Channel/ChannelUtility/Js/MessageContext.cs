@@ -51,34 +51,7 @@ namespace ChannelUtility.Js
         {
             var res = _client.Print(_msg.DeviceId, "下发解释", msg);
         }
-        public void SetCache(string key, string value)
-        {
-            ConcurrentDictionary<string, string> dict = _client.GetReaderCache(_msg.DeviceId);
-            if (value == null)
-            {
-                dict.Remove(key, out string delvalue);
-            }
-            else
-            {
-                dict.AddOrUpdate(key, value, (k, v) =>
-                {
-                    return value;
-                });
-            }
-        }
-        public string GetCache(string key)
-        {
-            ConcurrentDictionary<string, string> dict = _client.GetReaderCache(_msg.DeviceId);
-            string res;
-            if (dict.TryGetValue(key, out res))
-            {
-                return res;
-            }
-            else
-            {
-                return null;
-            }
-        }
+    
         public long Now()
         {
             DateTimeOffset dto = new DateTimeOffset(DateTime.Now);
@@ -93,27 +66,6 @@ namespace ChannelUtility.Js
         {
             var res = _client.GetProps(_msg.DeviceId);
             return res.Result;
-        }
-        /// <summary>
-        /// 获取在缓存里的当前设备的指定属性信息
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public object GetPropsCache(string key)
-        {
-            var tmpstr = GetCache(key);
-            if (tmpstr == null)
-            {
-                var tmpsss = _client.GetPropOfCode(_msg.DeviceId, key);
-                tmpstr = tmpsss.Result;
-                if (string.IsNullOrEmpty(tmpstr))
-                {
-                    return null;
-                }
-                SetCache(key, tmpstr);
-            }
-            var dpv = System.Text.Json.JsonSerializer.Deserialize<DevicePropertyValue>(tmpstr, JsonMessageSerializerConfig.ObjectOptions);
-            return dpv.val;
         }
         /// <summary>
         /// 创建绑定回复包

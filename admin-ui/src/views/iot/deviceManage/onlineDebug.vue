@@ -444,14 +444,12 @@ export default {
     carryAction() {
       if (this.$refs["implementParamsForm"]) {
         this.$refs["implementParamsForm"].validate((valid) => {
-          console.log(valid);
           if (valid) {
             this.matchesLoading = true;
             let obj = {};
             this.implementParamsForm.inputsData.forEach((its) => {
               obj[its.code] = its.codeVal;
             });
-            console.info(obj)
             implementFunc({
               deviceId: this.debugFrom.debugDevice,
               functionId: this.implementParamsForm.functionId,

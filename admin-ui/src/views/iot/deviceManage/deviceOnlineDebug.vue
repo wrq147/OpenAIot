@@ -246,7 +246,6 @@ export default {
     carryAction() {
       if (this.$refs["implementParamsForm"]) {
         this.$refs["implementParamsForm"].validate((valid) => {
-          console.log(valid);
           if (valid) {
             this.matchesLoading = true;
             let obj = {};

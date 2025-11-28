@@ -153,18 +153,6 @@
            */
           SetChannelInfo(info:String):void;
           /**
-           * 缓存键值对
-           * @param {String} key - 键
-           * @param {String} value - 值
-           */
-          SetCache(key:String,value:String):void;
-          /**
-           * 获取缓存的值
-           * @param {String} key - 键
-           * @returns {String} 返回值
-           */
-          GetCache(key:String):String;
-          /**
            * 获取当前设备的所有属性信息
            * @returns {Object} 设备属性信息
            */

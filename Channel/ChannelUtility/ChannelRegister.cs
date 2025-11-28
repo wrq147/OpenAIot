@@ -10,6 +10,7 @@ using ChannelUtility.Config;
 using ChannelUtility.Redis;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Jint;
 namespace ChannelUtility
 {
     public class ChannelRegister : IDisposable
@@ -27,11 +28,6 @@ namespace ChannelUtility
         /// 拆包、拼包用
         /// </summary>
         protected ConcurrentDictionary<string, FastReader> _lastReaderDict = new ConcurrentDictionary<string, FastReader>();
-        protected ConcurrentDictionary<string, ConcurrentDictionary<string, string>> _readerCache = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
-        public ConcurrentDictionary<string, string> GetReaderCache(string deviceId)
-        {
-            return _readerCache.GetOrAdd(deviceId, (k) => new ConcurrentDictionary<string, string>());
-        }
         public void SetChannelInfo(string info)
         {
             if (_option.config.CanModify == true)

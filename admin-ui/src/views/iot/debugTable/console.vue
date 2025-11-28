@@ -72,7 +72,7 @@ export default {
     },
     hexToStr(str) {
       if (str.length % 2 != 0) {
-        return console.log('必须为偶数');
+        return str;
       }
       let buf = [];
       for (let i = 0; i < str.length; i += 2) {
@@ -113,6 +113,7 @@ export default {
   
                     if (tmpstr.match(/^[0-9a-f]+$/i)) {
                       try {
+                        console.info("sss")
                         constr += that.hexToStr(tmpstr);
                       }
                       catch {

@@ -238,23 +238,6 @@ export default {
          * @returns {String} Hex字符串
          */
         ToHex(bytes:ArrayBuffer,space:Boolean):String;
-        /**
-         * 缓存键值对
-         * @param {String} key - 键
-         * @param {String} value - 值
-         */
-        SetCache(key:String,value:String):void;
-        /**
-         * 获取缓存的值
-         * @param {String} key - 键
-         * @returns {String} 返回值
-         */
-        GetCache(key:String):String;
-        /**
-         * json字符串转对象
-         * @param {String} json - json字符串
-         * @returns {Object} 对象
-         */
         ToObject(json:String):Object;
         /**
          * 转成IEEE标准的浮点数
@@ -273,12 +256,6 @@ export default {
          * @returns {Object} 设备属性信息
          */
         GetProps():Object;
-        /**
-         * 获取在缓存里的当前设备的指定属性信息
-         * @param {String} key - 键
-         * @returns {Object} 设备属性信息
-         */
-        GetPropsCache(key:String):Object;
         /**
          * 创建属性回复包
          */
@@ -332,18 +309,6 @@ export default {
          */
         SetChannelInfo(info:String):void;
         /**
-         * 缓存键值对
-         * @param {String} key - 键
-         * @param {String} value - 值
-         */
-        SetCache(key:String,value:String):void;
-        /**
-         * 获取缓存的值
-         * @param {String} key - 键
-         * @returns {String} 返回值
-         */
-        GetCache(key:String):String;
-        /**
          * 获取指定属性定义
          * @param {String} code - 属性标识
          * @returns {String} 返回值
@@ -354,12 +319,6 @@ export default {
          * @returns {Object} 设备属性信息
          */
         GetProps():Object;
-        /**
-         * 获取在缓存里的当前设备的指定属性信息
-         * @param {String} key - 键
-         * @returns {Object} 设备属性信息
-         */
-        GetPropsCache(key:String):Object;
         /**
          * 获取当前下发消息
          * @returns {RequestMessage} 返回请求消息

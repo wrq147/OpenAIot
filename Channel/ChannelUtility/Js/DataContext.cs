@@ -63,34 +63,7 @@ namespace ChannelUtility.Js
         {
             return FastBufferHelper.ByteToHexStr(bytes, space);
         }
-        public void SetCache(string key, string value)
-        {
-            ConcurrentDictionary<string, string> dict = _client.GetReaderCache(_deviceId);
-            if (value == null)
-            {
-                dict.Remove(key, out string delvalue);
-            }
-            else
-            {
-                dict.AddOrUpdate(key, value, (k, v) =>
-                {
-                    return value;
-                });
-            }
-        }
-        public string GetCache(string key)
-        {
-            ConcurrentDictionary<string, string> dict = _client.GetReaderCache(_deviceId);
-            string res;
-            if (dict.TryGetValue(key, out res))
-            {
-                return res;
-            }
-            else
-            {
-                return null;
-            }
-        }
+
         public object ToObject(string json)
         {
             try
@@ -124,27 +97,7 @@ namespace ChannelUtility.Js
         {
             return _model.properties.Where(x => x.code == code).FirstOrDefault();
         }
-        /// <summary>
-        /// 获取在缓存里的当前设备的指定属性信息
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public object GetPropsCache(string key)
-        {
-            var tmpstr = GetCache(key);
-            if (tmpstr == null)
-            {
-                var tmpres = _client.GetPropOfCode(_deviceId, key);
-                tmpstr = tmpres.Result;
-                if (string.IsNullOrEmpty(tmpstr))
-                {
-                    return null;
-                }
-                SetCache(key, tmpstr);
-            }
-            var dpv = System.Text.Json.JsonSerializer.Deserialize<DevicePropertyValue>(tmpstr, JsonMessageSerializerConfig.ObjectOptions);
-            return dpv.val;
-        }
+  
         /// <summary>
         /// 获取当前设备的所有属性信息
         /// </summary>
