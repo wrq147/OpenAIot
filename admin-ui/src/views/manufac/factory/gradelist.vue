@@ -1,6 +1,6 @@
 <template>
   <div class="conf-container">
-    <div style="background-color: #fff;padding: 10px;">
+    <div style="background-color: #fff;padding: 10px 20px;">
       <el-tabs v-model="activeTab">
         <el-tab-pane label="代理配置" name="gradeMan">
           <el-row :gutter="20">
@@ -249,7 +249,6 @@ export default {
     },
     async initMesConfig() {
       let response = await factoryMesConfig();
-      // console.log("初始化配置信息",response);
       this.mesform.PlanTemplateName = response.data.PlanTemplateName;
       this.mesform.PlanTemplateId = response.data.PlanTemplateId;
 

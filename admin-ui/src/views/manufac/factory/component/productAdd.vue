@@ -2,19 +2,21 @@
   <el-dialog :visible.sync="dialogVisible" width="800px" :show-close="false" top="3vh">
     <div slot="title" class="dialog_slot_title">
       <div class="title_text">添加产品</div>
-      <el-tabs v-model="dialogName" tab-position="top" :stretch="true" v-if="filedTableList&&filedTableList.length>0">
+      <el-tabs v-model="dialogName" tab-position="top" :stretch="true" v-if="filedTableList && filedTableList.length > 0">
         <el-tab-pane name="null1" :disabled="true"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="null2" :disabled="true"><span slot="label"></span></el-tab-pane>
-        <el-tab-pane name="custominfonull" :disabled="true" v-if="!filedTableList||filedTableList&&filedTableList.length==0"><span slot="label"></span></el-tab-pane>
+        <el-tab-pane name="custominfonull" :disabled="true"
+          v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="baseinfo"><span slot="label">基本信息</span></el-tab-pane>
-        <el-tab-pane name="custominfo" v-if="filedTableList&&filedTableList.length>0"><span slot="label">自定义信息</span></el-tab-pane>
+        <el-tab-pane name="custominfo" v-if="filedTableList && filedTableList.length > 0"><span
+            slot="label">自定义信息</span></el-tab-pane>
         <el-tab-pane name="null3" :disabled="true"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="null4" :disabled="true"><span slot="label"></span></el-tab-pane>
       </el-tabs>
       <div @click="handleClose" class="icon_con"><i class="el-icon-close" style="color: #93969b"></i></div>
     </div>
-    <el-form ref="form" :model="form" label-width="100px" :rules="rules" :key="'proform'+formKey">
-      <el-row :gutter="10" v-show="dialogName=='baseinfo'">
+    <el-form ref="form" :model="form" label-width="100px" :rules="rules" :key="'proform' + formKey">
+      <el-row :gutter="10" v-show="dialogName == 'baseinfo'">
         <el-col :span="12">
           <el-form-item label="产品编码" prop="SkuNumber">
             <el-input v-model="form.SkuNumber" placeholder="请输入产品编码" :disabled="true"></el-input>
@@ -36,7 +38,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="产品标签" prop="ProductLabel">
-            <el-select clearable v-model="form.ProductLabel" placeholder="请选择产品标签" style="width: 100%" :disabled="!!form.Id">
+            <el-select clearable v-model="form.ProductLabel" placeholder="请选择产品标签" style="width: 100%"
+              :disabled="!!form.Id">
               <template v-for="it in labelList">
                 <el-option :label="it.label" :value="it.value" :key="it.value"></el-option>
               </template>
@@ -45,7 +48,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="产品分组" prop="TypeId">
-            <el-select @change="productTypeChange" clearable v-model="form.TypeId" placeholder="请选择产品分组" style="width: 100%">
+            <el-select @change="productTypeChange" clearable v-model="form.TypeId" placeholder="请选择产品分组"
+              style="width: 100%">
               <template v-for="it in productTypeList">
                 <el-option :label="it.Name" :value="it.Id" :key="it.Id"></el-option>
               </template>
@@ -101,11 +105,12 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="isCheckPermi(['/IoTService/IotProduct/ListPage'])&&form.ProductLabel=='F'">
+        <el-col :span="12" v-if="isCheckPermi(['/IoTService/IotProduct/ListPage']) && form.ProductLabel == 'F'">
           <el-form-item label="绑定协议" prop="IOTProductId">
             <el-select clearable style="width: 100%" v-model="form.IOTProductId" filterable remote reserve-keyword
               placeholder="请输入需要关联的协议名称" :remote-method="IOTProductRemoteMethod" :loading="IOTProductloading">
-              <el-option v-for="item in IOTProductoptions" :key="item.Id" :label="item.Name" :value="item.Id">{{item.Name}}</el-option>
+              <el-option v-for="item in IOTProductoptions" :key="item.Id" :label="item.Name"
+                :value="item.Id">{{ item.Name }}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -129,7 +134,8 @@
           <el-form-item label="工艺路线" prop="Route">
             <el-select clearable style="width: 100%" v-model="form.Route" filterable remote reserve-keyword
               placeholder="请输入工艺路线" :remote-method="routeRemoteMethod" :loading="Routeloading">
-              <el-option v-for="item in Routeoptions" :key="item.Id" :label="item.RouteName" :value="item.Id">{{item.RouteName}}</el-option>
+              <el-option v-for="item in Routeoptions" :key="item.Id" :label="item.RouteName"
+                :value="item.Id">{{ item.RouteName }}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -137,7 +143,8 @@
           <el-form-item label="供应商" prop="Supplier">
             <el-select clearable style="width: 100%" v-model="form.Supplier" filterable remote reserve-keyword
               placeholder="请输入关键词" :remote-method="supplierRemoteMethod" :loading="Supplierloading">
-              <el-option v-for="item in Supplieroptions" :key="item.Id" :label="item.SupplierName" :value="item.Id">{{item.SupplierName}}</el-option>
+              <el-option v-for="item in Supplieroptions" :key="item.Id" :label="item.SupplierName"
+                :value="item.Id">{{ item.SupplierName }}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -147,39 +154,47 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="10" v-show="dialogName=='custominfo'">
+      <el-row :gutter="10" v-show="dialogName == 'custominfo'">
         <template v-for="(item, ix) in filedTableList">
           <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item)">
             <el-form-item :label="item.name" :prop="item.mapid">
-              <el-select  @change="customValChange($event,item)" :disabled="item.is_readonly" :filterable="item.is_add" :allow-create="item.is_add" :multiple="item.type == '复选框'"
-                :clearable="!item.is_required" v-model="form[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
-                style="width: 100%" v-if=" (item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉') ">
+              <el-select @change="customValChange($event, item)" :disabled="item.is_readonly" :filterable="item.is_add"
+                :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
+                v-model="form[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+                style="width: 100%"
+                v-if="(item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉')">
                 <template v-for="it in item.optionals">
                   <el-option :label="it" :value="it" :key="it + ix"></el-option>
                 </template>
               </el-select>
-              <el-radio-group @change="customValChange($event,item)" :disabled="item.is_readonly"
+              <el-radio-group @change="customValChange($event, item)" :disabled="item.is_readonly"
                 v-model="form[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
                 <template v-for="it in item.optionals">
                   <el-radio :label="it" :key="it + ix">{{ it }}</el-radio>
                 </template>
               </el-radio-group>
-              <el-checkbox-group @change="customValChange($event,item)" :disabled="item.is_readonly"
+              <el-checkbox-group @change="customValChange($event, item)" :disabled="item.is_readonly"
                 v-model="form[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
                 <template v-for="it in item.optionals">
                   <el-checkbox :label="it" :key="it + ix">{{ it }}</el-checkbox>
                 </template>
               </el-checkbox-group>
-              <el-date-picker @blur="customValChange($event,item)" @change="customValChange($event,item)" :disabled="item.is_readonly" v-if="item.type == '时间'" v-model="form[item.mapid]"
-                type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%" :value-format="item.format" :format="item.format"></el-date-picker>
-              <el-input @input="customValChange($event,item)" :disabled="item.is_readonly" v-if="item.type == '文本'"
-                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" :type="item.is_multiple ? 'textarea' : 'text'" v-model="form[item.mapid]"></el-input>
-              <el-input @input="customValChange($event,item)" :disabled="item.is_readonly" v-if="item.type == '数字'"
-                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number" v-model="form[item.mapid]" :precision="item.decimals"></el-input>
-              <el-link style="line-height:30px;height:35px" :disabled="item.is_readonly" v-if="item.type == '超链接'" href="#" target="_blank">{{ item.describe_text }}</el-link>
+              <el-date-picker @blur="customValChange($event, item)" @change="customValChange($event, item)"
+                :disabled="item.is_readonly" v-if="item.type == '时间'" v-model="form[item.mapid]" type="datetime"
+                :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
+                :value-format="item.format" :format="item.format"></el-date-picker>
+              <el-input @input="customValChange($event, item)" :disabled="item.is_readonly" v-if="item.type == '文本'"
+                :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
+                :type="item.is_multiple ? 'textarea' : 'text'" v-model="form[item.mapid]"></el-input>
+              <el-input @input="customValChange($event, item)" :disabled="item.is_readonly" v-if="item.type == '数字'"
+                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number" v-model="form[item.mapid]"
+                :precision="item.decimals"></el-input>
+              <el-link style="line-height:30px;height:35px" :disabled="item.is_readonly" v-if="item.type == '超链接'"
+                href="#" target="_blank">{{ item.describe_text }}</el-link>
               <!-- <image-upload @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
               <div class="avatar_con" v-if="item.type == '图片'">
-                <image-upload @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" :isShowLeft="true">
+                <image-upload @input="customValChange($event, item)" v-model="form[item.mapid]" :limit="1"
+                  :isShowLeft="true">
                   <template #tip>
                     <div class="label_tip">
                       <div class="label_text">　　</div>
@@ -190,7 +205,8 @@
                   </template>
                 </image-upload>
               </div>
-              <file-upload @input="customValChange($event,item)" v-model="form[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
+              <file-upload @input="customValChange($event, item)" v-model="form[item.mapid]" :limit="1"
+                v-if="item.type == '附件'" :isShowLeft="true">
                 <template #tip>
                   <div class="label_tip">
                     <div class="label_text">　　</div>
@@ -200,9 +216,13 @@
                   </div>
                 </template>
               </file-upload>
-              <el-select @focus="afterValSearch(form[item.mapid],item)" :clearable="true" @change="customValChange($event,item)" style="width: 100%" v-model="form[item.mapid]" filterable remote reserve-keyword
-                :placeholder="item.prompt_text ? item.prompt_text : '请选择'" :remote-method="(query)=>associationMethod(query,item)" :loading="Supplierloading" v-if="item.type == '关联对象'">
-                <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name" :value="ite.Value+','+ite.ValueName">{{ite.Name}}</el-option>
+              <el-select @focus="afterValSearch(form[item.mapid], item)" :clearable="true"
+                @change="customValChange($event, item)" style="width: 100%" v-model="form[item.mapid]" filterable remote
+                reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+                :remote-method="(query) => associationMethod(query, item)" :loading="Supplierloading"
+                v-if="item.type == '关联对象'">
+                <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name"
+                  :value="ite.Value + ',' + ite.ValueName">{{ ite.Name }}</el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -226,39 +246,39 @@ import {
   editProductSave,
   factorySearchObject
 } from "@/api/factory/product";
-import {factorySupplierListGet} from '@/api/factory/supplier'
+import { factorySupplierListGet } from '@/api/factory/supplier'
 import { factoryUnitListGet } from "@/api/factory/unit";
 import { routeList } from "@/api/mes/processRoute";
 import {
   productList
 } from "@/api/rules/productModel";
-import { checkPermi } from "@/utils/permission"; 
+import { checkPermi } from "@/utils/permission";
 import dayjs from 'dayjs';
 export default {
   name: "AdminUiProductAdd",
-  props:{
-    productTypeList:{
-      type:Array,
-      default:()=>{
+  props: {
+    productTypeList: {
+      type: Array,
+      default: () => {
         return []
       }
     }
   },
   data() {
     return {
-      formKey:1,
-      RouteoptionsList:[],
-      Routeoptions:[],//供应商列表
-      Routeloading:false,//供应商加载
-      SupplieroptionsList:[],
-      Supplieroptions:[],//供应商列表
-      Supplierloading:false,//供应商加载
-      IOTProductoptionsList:[],
-      IOTProductoptions:[],//物联网产品列表
-      IOTProductloading:false,//物联网产品加载
-      Unitoptions:[],//单位列表
+      formKey: 1,
+      RouteoptionsList: [],
+      Routeoptions: [],//供应商列表
+      Routeloading: false,//供应商加载
+      SupplieroptionsList: [],
+      Supplieroptions: [],//供应商列表
+      Supplierloading: false,//供应商加载
+      IOTProductoptionsList: [],
+      IOTProductoptions: [],//物联网产品列表
+      IOTProductloading: false,//物联网产品加载
+      Unitoptions: [],//单位列表
       dialogName: "baseinfo",
-      labelList: [{label: "半成品",value: "U"},{label: "成品",value: "F"}],
+      labelList: [{ label: "半成品", value: "U" }, { label: "成品", value: "F" }],
       typeList: [],
       dialogVisible: false,
       form: {
@@ -286,41 +306,33 @@ export default {
         Unit: [{ required: true, trigger: "change", message: "包装单位不能为空" },],
       },
       filedTableList: [], //产品自定义列表
-      supplierQueryParams:{
-        key:'',
+      supplierQueryParams: {
+        key: '',
         pageNum: 1,
         pageSize: 2,
       },
-      routeQueryParams:{
-        key:'',
+      routeQueryParams: {
+        key: '',
         pageNum: 1,
         pageSize: 10,
       },
-      IOTProductQueryParams:{
+      IOTProductQueryParams: {
         pageNum: 1,
         pageSize: 10,
         Name: null,
       },
-      propertiesData:[],//产品分组属性
-      associationObject:{},//所有关联对象对应的下拉的参数列表
-      isWatch:false
+      propertiesData: [],//产品分组属性
+      associationObject: {},//所有关联对象对应的下拉的参数列表
+      isWatch: false
     };
   },
-  watch: {
-    $route(to, from) {
-      this.isWatch=true
-      this.$nextTick(async ()=>{
-        await this.getUnitList()//单位
-      })
-    }
-  },
-  computed:{
+  computed: {
 
   },
   async mounted() {
-    if(!this.isWatch){
+    if (!this.isWatch) {
       await this.getSupplierList()//供应商
-      if(this.isCheckPermi(['/IoTService/IotProduct/ListPage'])){
+      if (this.isCheckPermi(['/IoTService/IotProduct/ListPage'])) {
         await this.getIOTProductList()//物联网产品
       }
       await this.getUnitList()//单位
@@ -334,122 +346,114 @@ export default {
     isCheckPermi(val) {
       return checkPermi(val)
     },
-    routeSearch(){
-      let keyVal=this.form.RouteName
-        // console.log(keyVal[1],'keyVal[1]');
-        this.routeRemoteMethod(keyVal)
+    routeSearch() {
+      let keyVal = this.form.RouteName
+      this.routeRemoteMethod(keyVal)
     },
-    async routeRemoteMethod(query){//工艺路线动态加载
-      if (query !== ""&&query) {
-        console.log(query,'query');
+    async routeRemoteMethod(query) {//工艺路线动态加载
+      if (query !== "" && query) {
         this.Routeloading = true;
         setTimeout(async () => {
-          this.routeQueryParams.key=query
+          this.routeQueryParams.key = query
           await this.getRouteList()
           this.Routeloading = false;
           this.Routeoptions = this.RouteoptionsList.filter((item) => {
             return item.RouteName.toLowerCase().indexOf(query.toLowerCase()) > -1;
           });
-          console.log(this.Routeoptions,'this.Routeoptions',this.RouteoptionsList);
+          console.log(this.Routeoptions, 'this.Routeoptions', this.RouteoptionsList);
           this.$forceUpdate()
         }, 200);
       } else {
         delete this.routeQueryParams.key
         await this.getRouteList()
         this.Routeoptions = JSON.parse(JSON.stringify(this.RouteoptionsList));
-        
+
         this.$forceUpdate()
       }
     },
-    async getRouteList(){//获取供应商列表接口
-      let res=await routeList(this.routeQueryParams)
-      //  console.log("查询到供应商",res);
-      if(!this.routeQueryParams.key){
-        this.Routeoptions=JSON.parse(JSON.stringify(res.data.List))
-          
-      }
+    async getRouteList() {//获取供应商列表接口
+      let res = await routeList(this.routeQueryParams)
       this.RouteoptionsList = JSON.parse(JSON.stringify(res.data.List));
     },
-    supplierSearch(){
-      let keyVal=this.form.SupplierName
-        // console.log(keyVal[1],'keyVal[1]');
-        this.supplierRemoteMethod(keyVal)
+    supplierSearch() {
+      let keyVal = this.form.SupplierName
+      // console.log(keyVal[1],'keyVal[1]');
+      this.supplierRemoteMethod(keyVal)
     },
-    iOTProductSearch(){
-      let keyVal=this.form.IOTProductName
+    iOTProductSearch() {
+      let keyVal = this.form.IOTProductName
       this.IOTProductRemoteMethod(keyVal)
     },
-    afterValSearch(val,item){//关联对象回显时获取列表
-      if(val&&val.indexOf(',')>-1){
-        let keyVal=val.split(',')
-        this.associationMethod(keyVal[1],item)
-      }else{
-        this.associationMethod('',item)
+    afterValSearch(val, item) {//关联对象回显时获取列表
+      if (val && val.indexOf(',') > -1) {
+        let keyVal = val.split(',')
+        this.associationMethod(keyVal[1], item)
+      } else {
+        this.associationMethod('', item)
       }
     },
-    associationMethod(query,item){//关联对象的远程搜索事件
+    associationMethod(query, item) {//关联对象的远程搜索事件
       // console.log("关联对象",item);
-      this.getFactorySearchObject(query,item.object_type,item.mapid)
+      this.getFactorySearchObject(query, item.object_type, item.mapid)
     },
-    async getFactorySearchObject(key,objtype,mapid){
+    async getFactorySearchObject(key, objtype, mapid) {
       //根据不同的关联对象获取对象的列表
-      let obj={
-        key:key,
-        objtype:objtype,
-        pageNum:1,
-        pageSize:10
+      let obj = {
+        key: key,
+        objtype: objtype,
+        pageNum: 1,
+        pageSize: 10
       }
-      let res=await factorySearchObject(obj)
-      if(res.data.List){
+      let res = await factorySearchObject(obj)
+      if (res.data.List) {
         // console.log("res.data.List",res.data.List);
-        this.associationObject[mapid]=JSON.parse(JSON.stringify(res.data.List))
+        this.associationObject[mapid] = JSON.parse(JSON.stringify(res.data.List))
       }
       this.$forceUpdate()
       // console.log(res,'resres');
     },
     async getUnitList() {//获取单位列表
-      let res=await factoryUnitListGet()
-      // console.log("查询到单位", res);
+      let res = await factoryUnitListGet()
       this.Unitoptions = res.data;
     },
-    async supplierRemoteMethod(query){//供应商动态加载
-      if (query !== ""&&query) {
-        console.log(query,'query');
+    async supplierRemoteMethod(query) {//供应商动态加载
+      if (query !== "" && query) {
+        console.log(query, 'query');
         this.Supplierloading = true;
         setTimeout(async () => {
-          this.supplierQueryParams.key=query
+          this.supplierQueryParams.key = query
           await this.getSupplierList()
           this.Supplierloading = false;
           this.Supplieroptions = this.SupplieroptionsList.filter((item) => {
             return item.SupplierName.toLowerCase().indexOf(query.toLowerCase()) > -1;
           });
-          console.log(this.Supplieroptions,'this.Supplieroptions',this.SupplieroptionsList);
+          console.log(this.Supplieroptions, 'this.Supplieroptions', this.SupplieroptionsList);
           this.$forceUpdate()
         }, 200);
       } else {
         delete this.supplierQueryParams.key
         await this.getSupplierList()
         this.Supplieroptions = JSON.parse(JSON.stringify(this.SupplieroptionsList));
-        
+
         this.$forceUpdate()
       }
     },
-   async getSupplierList(){//获取供应商列表接口
-     let res=await factorySupplierListGet(this.supplierQueryParams)
-    //  console.log("查询到供应商",res);
-     if(!this.supplierQueryParams.key){
-      this.Supplieroptions=JSON.parse(JSON.stringify(res.data.List))
-        
-    }
-     this.SupplieroptionsList = JSON.parse(JSON.stringify(res.data.List));
+    async getSupplierList() {//获取供应商列表接口
+      let res = await factorySupplierListGet(this.supplierQueryParams)
+      //  console.log("查询到供应商",res);
+      if (!this.supplierQueryParams.key) {
+        this.Supplieroptions = JSON.parse(JSON.stringify(res.data.List))
+
+      }
+      this.SupplieroptionsList = JSON.parse(JSON.stringify(res.data.List));
     },
-    async IOTProductRemoteMethod(query){//物联网产品动态加载
-      
-      if (query !== ""&&query !== null&&query) {
+    async IOTProductRemoteMethod(query) {//物联网产品动态加载
+
+      if (query !== "" && query !== null && query) {
         // console.log(query,'query物联产品');
         this.IOTProductloading = true;
         setTimeout(async () => {
-          this.IOTProductQueryParams.Name=query
+          this.IOTProductQueryParams.Name = query
           await this.getIOTProductList()
           this.IOTProductloading = false;
           this.IOTProductoptions = this.IOTProductoptionsList.filter((item) => {
@@ -462,31 +466,31 @@ export default {
         this.IOTProductoptions = JSON.parse(JSON.stringify(this.IOTProductoptionsList));
       }
     },
-   async getIOTProductList(){//获取物联网产品列表接口
-     let res=await productList(this.IOTProductQueryParams)
-    //  console.log("查询到物联网产品",res);
-     if(!this.IOTProductQueryParams.Name){
-        this.IOTProductoptions=res.data.List
+    async getIOTProductList() {//获取物联网产品列表接口
+      let res = await productList(this.IOTProductQueryParams)
+      //  console.log("查询到物联网产品",res);
+      if (!this.IOTProductQueryParams.Name) {
+        this.IOTProductoptions = res.data.List
       }
       this.IOTProductoptionsList = res.data.List;
-     
+
     },
-    productTypeChange(val){
-      if(val){//当属于手动切换产品分组时，属性要清空
-        this.form.Prop=''
+    productTypeChange(val) {
+      if (val) {//当属于手动切换产品分组时，属性要清空
+        this.form.Prop = ''
       }
-      
-      if(this.form.TypeId){//产品分组属性
-        factoryProductTypeInfo({id:this.form.TypeId}).then(res=>{
+
+      if (this.form.TypeId) {//产品分组属性
+        factoryProductTypeInfo({ id: this.form.TypeId }).then(res => {
           // console.log('产品分组属性',res);
           if (res.data.PropList) {
             this.propertiesData = res.data.PropList.split(',');
           }
         })
-      }else{
-        this.propertiesData=[]
+      } else {
+        this.propertiesData = []
       }
-      
+
     },
     setFormItemHide(item) {//判断字段是否隐藏
       if (item.conditions && item.conditions.length > 0) {
@@ -546,7 +550,7 @@ export default {
           break;
         case ">":
           if (type && type == "时间") {
-            result =val.timeValue &&dayjs(this.form[field]).valueOf()>dayjs(val.timeValue).valueOf();
+            result = val.timeValue && dayjs(this.form[field]).valueOf() > dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
             result = this.form[field] > val;
           }
@@ -556,7 +560,7 @@ export default {
             result =
               val.timeValue &&
               dayjs(this.form[field]).valueOf() <
-                dayjs(val.timeValue).valueOf();
+              dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
             result = this.form[field] < val;
           }
@@ -566,7 +570,7 @@ export default {
             result =
               val.timeValue &&
               dayjs(this.form[field]).valueOf() ==
-                dayjs(val.timeValue).valueOf();
+              dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
             result = this.form[field] == val;
           }
@@ -576,7 +580,7 @@ export default {
             result =
               val.timeValue &&
               dayjs(this.form[field]).valueOf() !=
-                dayjs(val.timeValue).valueOf();
+              dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
             result = this.form[field] != val;
           }
@@ -586,7 +590,7 @@ export default {
             result =
               val.timeValue &&
               dayjs(this.form[field]).valueOf() >=
-                dayjs(val.timeValue).valueOf();
+              dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
             result = this.form[field] >= val;
           }
@@ -596,14 +600,14 @@ export default {
             result =
               val.timeValue &&
               dayjs(this.form[field]).valueOf() <=
-                dayjs(val.timeValue).valueOf();
+              dayjs(val.timeValue).valueOf();
           } else if (type && type == "数字") {
             result = this.form[field] <= val;
           }
           break;
         case "INRANGE":
           if (type && type == "数字") {
-            
+
             if (val.min && val.max) {
               if (this.form[field] >= val.min && this.form[field] <= val.max) {
                 result = true;
@@ -612,7 +616,7 @@ export default {
               }
             }
           }
-          
+
           break;
         case "NOTINRANGE":
           if (type && type == "数字") {
@@ -654,25 +658,25 @@ export default {
       }
       return result;
     },
-    customValChange(val,fidItem) {//数据发生变化后刷新，并验证表单
+    customValChange(val, fidItem) {//数据发生变化后刷新，并验证表单
       // console.log("看看关联对象选择后有没有出现",fidItem);
       let form = JSON.parse(JSON.stringify(this.form));
       this.form = JSON.parse(JSON.stringify(form));
-      if(fidItem&&fidItem.type=='关联对象'&&this.form[fidItem.mapid]){
-        if(fidItem.items&&fidItem.items.length>0){
-          let fieldMapidVal=this.form[fidItem.mapid].split(',')
-          let findObj=this.associationObject[fidItem.mapid].find(row=>row.Value==fieldMapidVal[0])
-          for(let i=0;i<fidItem.items.length;i++){
-            let item=fidItem.items[i]
-            this.form[item.field]=findObj.Obj[item.source_obj]
+      if (fidItem && fidItem.type == '关联对象' && this.form[fidItem.mapid]) {
+        if (fidItem.items && fidItem.items.length > 0) {
+          let fieldMapidVal = this.form[fidItem.mapid].split(',')
+          let findObj = this.associationObject[fidItem.mapid].find(row => row.Value == fieldMapidVal[0])
+          for (let i = 0; i < fidItem.items.length; i++) {
+            let item = fidItem.items[i]
+            this.form[item.field] = findObj.Obj[item.source_obj]
           }
         }
       }
       let form2 = JSON.parse(JSON.stringify(this.form));
       this.form = JSON.parse(JSON.stringify(form2));
-      this.$nextTick(()=>{
-        if(fidItem&&fidItem.type=='关联对象'||fidItem.type == '图片'){
-          this.$refs["form"].validate((valid) => {});
+      this.$nextTick(() => {
+        if (fidItem && fidItem.type == '关联对象' || fidItem.type == '图片') {
+          this.$refs["form"].validate((valid) => { });
         }
         // this.$refs["form"].validate((valid) => {});
         this.$forceUpdate();
@@ -680,9 +684,9 @@ export default {
     },
     async openDialog(id) {//添加弹窗打开
       try {
-        this.propertiesData=[]
+        this.propertiesData = []
         // this.associationObject={}
-        
+
         await this.getProductCustomFiled();
         if (id) {
           let res = await factoryProductInfo({ id: id });
@@ -691,24 +695,24 @@ export default {
           this.form = {
             Id: productinfo.Id,
             ProductName: productinfo.ProductName,
-            ProductFrom:productinfo.ProductFrom,
+            ProductFrom: productinfo.ProductFrom,
             TypeId: productinfo.TypeId,
             SkuNumber: productinfo.SkuNumber, //产品编码
             IOTProductId: productinfo.IOTProductId, //物联网编码
-            IOTProductName:productinfo.IOTProductName,
+            IOTProductName: productinfo.IOTProductName,
             ProductLabel: productinfo.ProductLabel, //产品标签
             Prop: productinfo.Prop, //产品属性
             PhotoUrl: productinfo.PhotoUrl, //产品图片
             Unit: productinfo.Unit, //单位
-            MinUnit:productinfo.MinUnit,
+            MinUnit: productinfo.MinUnit,
             Specs: productinfo.Specs, //产品规格
             Price: productinfo.Price, //成本单价
             Total: productinfo.Total, //总计量
             SalesPrice: productinfo.SalesPrice, //销售单价
             Route: productinfo.Route, //工艺路线，
-            RouteName:productinfo.RouteName,
+            RouteName: productinfo.RouteName,
             Supplier: productinfo.Supplier, //供应商，
-            SupplierName:productinfo.SupplierName,
+            SupplierName: productinfo.SupplierName,
             Remark: productinfo.Remark, //备注说明
           };
           this.resetForm("form");
@@ -718,9 +722,9 @@ export default {
           this.routeSearch()//工艺路线
           this.iOTProductSearch()
         } else {
-          this.form={
+          this.form = {
             ProductName: "",
-            ProductFrom:'',
+            ProductFrom: '',
             TypeId: "",
             SkuNumber: "", //产品编码
             IOTProductId: "", //物联网编码
@@ -734,9 +738,9 @@ export default {
             Total: 1, //总计量
             SalesPrice: 0, //销售单价
             Route: "", //工艺路线，
-            RouteName:"",
+            RouteName: "",
             Supplier: "", //供应商，
-            SupplierName:"",
+            SupplierName: "",
             Remark: "", //备注说明
           }
           this.resetForm("form");
@@ -744,17 +748,17 @@ export default {
           // console.log("表单初始化",this.form);
           await this.getFactoryProductNumber();
         }
-        let form=JSON.parse(JSON.stringify(this.form))
-        this.form=JSON.parse(JSON.stringify(form))
+        let form = JSON.parse(JSON.stringify(this.form))
+        this.form = JSON.parse(JSON.stringify(form))
         this.dialogVisible = true;
-        
+
       } catch (error) {
-        console.log("出错",error);
+        console.log("出错", error);
       }
     },
     setCustomDefaultValue(afterForm) {
       //设置自定义的变量初始化
-     let res =this.filedTableList.map((rw) => {
+      let res = this.filedTableList.map((rw) => {
         if (afterForm) {
           this.form[rw.mapid] = afterForm[rw.mapid];
           if (rw.type == "时间") {
@@ -768,8 +772,8 @@ export default {
               this.form[rw.mapid] = afterForm[rw.mapid].split(",");
             } else {
               this.form[rw.mapid] = afterForm[rw.mapid];
-              if(rw.type=='关联对象'){
-                this.afterValSearch(afterForm[rw.mapid],rw)//用于处理编辑时关联对象的回显
+              if (rw.type == '关联对象') {
+                this.afterValSearch(afterForm[rw.mapid], rw)//用于处理编辑时关联对象的回显
               }
             }
           }
@@ -837,8 +841,8 @@ export default {
     submitFiledAdd() {
       //提交数据
       this.formKey++
-      this.$nextTick(()=>{
-        this.$refs["form"].validate((valid,validateResult) => {
+      this.$nextTick(() => {
+        this.$refs["form"].validate((valid, validateResult) => {
           // console.log("检验",valid);
           if (valid) {
             let submitForm = JSON.parse(JSON.stringify(this.form));
@@ -883,20 +887,20 @@ export default {
                 this.$emit("reloadData");
               });
             }
-          }else{
-            let errKey=Object.keys(validateResult)
-            if(errKey&&errKey[0]){
-              let findObj=this.filedTableList.find(row=>row.mapid==errKey[0])
-              if(findObj){
-                this.dialogName='custominfo'
-              }else{
-                this.dialogName='baseinfo'
+          } else {
+            let errKey = Object.keys(validateResult)
+            if (errKey && errKey[0]) {
+              let findObj = this.filedTableList.find(row => row.mapid == errKey[0])
+              if (findObj) {
+                this.dialogName = 'custominfo'
+              } else {
+                this.dialogName = 'baseinfo'
               }
             }
           }
         });
       })
-      
+
     },
     handleClose() {//关闭弹窗的方法
       this.dialogVisible = false;
@@ -912,14 +916,17 @@ export default {
   align-items: flex-start;
   width: 100%;
   position: relative;
+
   .el-tabs {
     width: 100%;
   }
+
   .title_text {
     position: absolute;
     left: 0px;
     z-index: 9;
   }
+
   .icon_con {
     position: absolute;
     right: 0px;
@@ -927,19 +934,23 @@ export default {
     z-index: 9;
   }
 }
+
 .avatar_con {
   width: 100%;
   text-align: center;
   display: flex;
   align-items: flex-start;
-  .label_tip{
+
+  .label_tip {
     height: 40px;
     text-align: left;
-    .label_text{
+
+    .label_text {
       height: 8px;
     }
   }
-  .tip_con{
+
+  .tip_con {
     width: 182px;
     height: 30px;
     border: 1px solid rgba(223, 226, 234, 1);
@@ -948,30 +959,37 @@ export default {
     margin-right: 10px;
     text-align: center;
     border-radius: 4px;
-    .zhongtaiiconfont{
+
+    .zhongtaiiconfont {
       font-size: 10px;
     }
   }
+
   .el-upload--picture-card {
     background-color: #202e57;
     border: none;
   }
-  ::v-deep .el-upload--picture-card i{
+
+  ::v-deep .el-upload--picture-card i {
     font-size: 16px;
   }
-  ::v-deep .el-upload.el-upload--picture-card{
+
+  ::v-deep .el-upload.el-upload--picture-card {
     width: 70px;
     height: 40px;
     line-height: 40px;
   }
-  ::v-deep .component-upload-image{
+
+  ::v-deep .component-upload-image {
     height: 40px;
+
     // margin-bottom: 20px;
-    .el-upload__tip{
+    .el-upload__tip {
       margin-top: 0;
     }
   }
-  ::v-deep .el-upload-list--picture-card .el-upload-list__item{
+
+  ::v-deep .el-upload-list--picture-card .el-upload-list__item {
     width: 70px;
     height: 40px;
   }

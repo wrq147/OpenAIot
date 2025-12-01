@@ -1430,6 +1430,16 @@
             关联的工单Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkBatch.StrExt1">
             <summary>
             扩展字符串字段1

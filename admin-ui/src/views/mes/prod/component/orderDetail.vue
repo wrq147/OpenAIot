@@ -1,34 +1,49 @@
 <template>
-    <el-dialog title="工单详情" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
-        @close="handleClose">
-        <el-tabs v-if="orderData" v-model="activeTab" type="card">
-            <!-- 基本信息标签页 -->
-            <el-tab-pane label="基本信息" name="baseInfo">
-                <el-descriptions :column="2" border :span="16" class="detail-descriptions">
-                    <el-descriptions-item label="工单编号">{{ orderData.WorkNumber }}</el-descriptions-item>
-                    <el-descriptions-item label="计划名称">{{ orderData.PlanInfo ? orderData.PlanInfo.PlanName : ''
-                        }}</el-descriptions-item>
-                    <el-descriptions-item label="产品名称">{{ orderData.ProdInfo ? orderData.ProductName : ''
-                        }}</el-descriptions-item>
-                    <el-descriptions-item label="状态">
-                        <el-tag v-if="orderData.Status == 0" type="warning">待生产</el-tag>
-                        <el-tag v-if="orderData.Status == 1">生产中</el-tag>
-                        <el-tag v-if="orderData.Status == 2" type="success">已完成</el-tag>
-                        <el-tag v-if="orderData.Status == 3" type="danger">已取消</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="优先级">
-                        <span v-if="orderData.Priority == 1">优先安排</span>
-                        <span v-if="orderData.Priority == 2">加急处理</span>
-                        <span v-if="orderData.Priority == 3">正常排产</span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="超期时间">{{ orderData.OverTime }}</el-descriptions-item>
-                    <el-descriptions-item label="计划开始时间">{{ orderData.PlannedStartOn }}</el-descriptions-item>
-                    <el-descriptions-item label="计划结束时间">{{ orderData.PlannedEndOn }}</el-descriptions-item>
-                    <el-descriptions-item label="实际开始时间">{{ orderData.StartOn }}</el-descriptions-item>
-                    <el-descriptions-item label="实际结束时间">{{ orderData.EndOn }}</el-descriptions-item>
-                </el-descriptions>
-            </el-tab-pane>
+    <el-dialog title="工单详情" v-if="detailDialogVisible" top="2vh" :visible.sync="detailDialogVisible" width="70%"
+        append-to-body @close="handleClose">
+        <div style="margin-bottom: 20px;">
+            <el-descriptions :column="2" border :span="16" class="detail-descriptions">
+                <el-descriptions-item label="工单编号">{{ orderData.WorkNumber }}</el-descriptions-item>
+                <el-descriptions-item label="计划名称">{{ orderData.PlanInfo ? orderData.PlanInfo.PlanName : ''
+                }}</el-descriptions-item>
+                <el-descriptions-item label="产品名称">{{ orderData.ProdInfo ? orderData.ProdInfo.ProductName : ''
+                }}</el-descriptions-item>
+                <el-descriptions-item label="状态">
+                    <el-tag v-if="orderData.Status == 0" type="warning">待生产</el-tag>
+                    <el-tag v-if="orderData.Status == 1">生产中</el-tag>
+                    <el-tag v-if="orderData.Status == 2" type="success">已完成</el-tag>
+                    <el-tag v-if="orderData.Status == 3" type="danger">已取消</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="生产数量/计划数量">{{ orderData.BatchCount }}/{{ orderData.Quantity
+                }}</el-descriptions-item>
+                <el-descriptions-item label="当前进度">
+                    <template v-if="orderData.Status == 1">
+                        <el-progress type="line"
+                            :percentage="Math.round((orderData.BatchCount / orderData.Quantity) * 100)"
+                            :text-inside="true" :stroke-width="24" />
+                    </template>
+                    <template v-else-if="orderData.Status == 2">
+                        <el-progress type="line" :percentage="100" :text-inside="true" :stroke-width="24"
+                            status="success" />
+                    </template>
+                    <template v-else>
+                        <span style="color: #999;">无数据</span>
+                    </template>
+                </el-descriptions-item>
+                <el-descriptions-item label="优先级">
+                    <span v-if="orderData.Priority == 1">优先安排</span>
+                    <span v-if="orderData.Priority == 2">加急处理</span>
+                    <span v-if="orderData.Priority == 3">正常排产</span>
+                </el-descriptions-item>
+                <el-descriptions-item label="超期时间">{{ orderData.OverTime }}</el-descriptions-item>
+                <el-descriptions-item label="计划开始时间">{{ orderData.PlannedStartOn }}</el-descriptions-item>
+                <el-descriptions-item label="计划结束时间">{{ orderData.PlannedEndOn }}</el-descriptions-item>
+                <el-descriptions-item label="实际开始时间">{{ orderData.StartOn }}</el-descriptions-item>
+                <el-descriptions-item label="实际结束时间">{{ orderData.EndOn }}</el-descriptions-item>
 
+            </el-descriptions>
+        </div>
+        <el-tabs v-if="orderData" v-model="activeTab" type="card">
             <!-- 子工单标签页 -->
             <el-tab-pane label="子工单" name="subOrderList">
                 <div>
@@ -56,9 +71,13 @@
                     <!-- 子工单表格 -->
                     <el-table :data="subOrders" border stripe style="width: 100%;" v-loading="subOrderLoading">
                         <el-table-column label="子工单编号" prop="WorkNumber" align="center" width="160" />
-                        <el-table-column label="产品名称" prop="ProductName" align="center" min-width="180" />
-                        <el-table-column label="计划数量" prop="PlanQty" align="center" width="100" />
-                        <el-table-column label="完成数量" prop="FinishQty" align="center" width="100" />
+                        <el-table-column label="产品名称" align="center" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                <span>{{ scope.row.ProdInfo ? scope.row.ProdInfo.ProductName : '' }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="计划数量" prop="Quantity" align="center" width="100" />
+                        <el-table-column label="完成数量" prop="BatchCount" align="center" width="100" />
                         <el-table-column label="状态" align="center" width="100">
                             <template slot-scope="scope">
                                 <el-tag v-if="scope.row.Status == 0" type="warning">待生产</el-tag>
@@ -74,7 +93,7 @@
                                 <span v-if="scope.row.Priority == 3">正常排产</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="创建时间" prop="CreateTime" align="center" width="180" />
+                        <el-table-column label="创建时间" prop="CreatedOn" align="center" width="180" />
                     </el-table>
 
                     <!-- 分页控件 -->
@@ -118,6 +137,8 @@
                                 </template>
                             </el-table-column>
                         </template>
+                        <el-table-column label="创建时间" prop="CreatedOn" align="center" />
+                        <el-table-column label="更新时间" prop="UpdatedOn" align="center" />
                     </el-table>
 
                     <!-- 分页控件 -->
@@ -146,7 +167,7 @@ export default {
     data() {
         return {
             detailDialogVisible: false,
-            activeTab: 'baseInfo',
+            activeTab: 'subOrderList',
 
             // 生产记录查询参数
             workQueryParams: {
@@ -181,18 +202,23 @@ export default {
         }
     },
     watch: {
-        activeTab(newVal) {
-            if (newVal === 'workRecord' && this.detailDialogVisible) {
-                this.initWorkQuery();
-                this.loadWorkRecords();
-            }
-            if (newVal === 'subOrderList' && this.detailDialogVisible) {
-                this.initSubOrderQuery();
-                this.loadSubOrders();
+        activeTab: {
+            handler(newVal) {
+                this.tabInit(newVal);
             }
         }
     },
     methods: {
+        tabInit(tabval) {
+            if (tabval === 'workRecord') {
+                this.initWorkQuery();
+                this.loadWorkRecords();
+            }
+            if (tabval === 'subOrderList') {
+                this.initSubOrderQuery();
+                this.loadSubOrders();
+            }
+        },
         ingetFieldShow(obj, field) {
             return getFieldShow(obj, field);
         },
@@ -216,8 +242,6 @@ export default {
 
         // 加载生产记录数据
         async loadWorkRecords() {
-            if (!this.workQueryParams.WorkOrderId) return;
-
             this.workLoading = true;
             try {
                 // 构建查询参数
@@ -316,10 +340,12 @@ export default {
         },
 
         async openDialog(id) {
+            await this.getCustomFiled();
             let res = await mesOrderInfo({ "id": id });
             this.orderData = res.data;
             this.detailDialogVisible = true;
             this.subOrderQueryParams.ParentId = id;
+            await this.tabInit(this.activeTab);
         },
         // 关闭弹窗
         handleClose() {

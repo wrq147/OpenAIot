@@ -6,8 +6,8 @@
         <el-col :span="24" :xs="24">
           <div class="from_con" id="from_con">
             <el-form class="biaodan" :model="queryParams" ref="queryForm" :inline="true">
-              <el-form-item label="状态" prop="status">
-                <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+              <el-form-item label="状态" prop="Status">
+                <el-select v-model="queryParams.Status" placeholder="请选择状态" clearable>
                   <el-option label="待排产" :value="0" />
                   <el-option label="待生产" :value="1" />
                   <el-option label="生产中" :value="2" />
@@ -27,7 +27,7 @@
             </el-form>
           </div>
           <div class="elbiaoge_elform" :style="{ 'min-height': tableConHeight + 'px' }">
-            <el-table v-loading="loading" :data="taskList" border :header-cell-style="cellSty" style="width:100%">
+            <el-table v-loading="loading" :data="workList" border :header-cell-style="cellSty" style="width:100%">
               <el-table-column label="计划名称" align="center" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <span>{{ scope.row.PlanInfo ? scope.row.PlanInfo.PlanName : '' }}</span>
@@ -96,11 +96,18 @@
                       :text-inside="true" :stroke-width="24" />
                   </template>
                   <template v-else-if="scope.row.Status == 2">
-                    <el-progress type="line" :percentage="100" :text-inside="true" :stroke-width="24" status="success" />
+                    <el-progress type="line" :percentage="100" :text-inside="true" :stroke-width="24"
+                      status="success" />
                   </template>
                   <template v-else>
                     <span style="color: #999;">无数据</span>
                   </template>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" fixed="right" class-name="small-padding fixed-width"
+                width="80">
+                <template slot-scope="scope">
+                  <el-button type="text" icon="el-icon-notebook-2" @click="handleDetail(scope.row)">详情</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -110,21 +117,24 @@
         </el-col>
       </el-row>
     </div>
+    <orderDetail ref="orderDetail" />
   </div>
 </template>
 
 <script>
 import { mesOrderList } from "@/api/mes/report";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
+import orderDetail from '@/views/mes/prod/component/orderDetail'
 export default {
   name: "OrderList",
   mixins: [resizeTableCon],
+  components: { orderDetail },
   data() {
     return {
       loading: false,
       // 查询参数
       queryParams: {
-        status: '',
+        Status: '',
         pageNum: 1,
         pageSize: 20,
         beginTime: '',
@@ -132,7 +142,7 @@ export default {
       },
       dateRange: [],
       total: 0,
-      taskList: []
+      workList: []
     }
   },
   created() {
@@ -142,19 +152,14 @@ export default {
     getList() {
       this.open = false;
       this.loading = true;
-      // if(this.dateRange.length > 0) {
-      //   this.queryParams.beginTime = this.dateRange[0];
-      //   this.queryParams.endTime = this.dateRange[1];
-      // }
-      if (this.queryParams.status != null && this.queryParams.status != undefined) { } else {
-        delete this.queryParams.status
-      }
       mesOrderList(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-        console.log("生产工单", response);
-        this.taskList = response.data.List;
+        this.workList = response.data.List;
         this.total = response.data.Total;
         this.loading = false;
       })
+    },
+    handleDetail(row) {
+      this.$refs.orderDetail.openDialog(row.Id);
     },
     /** 搜索按钮操作 */
     handleQuery() {

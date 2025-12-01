@@ -476,9 +476,11 @@ namespace MESService
             Execute.Sql("DROP TABLE IF EXISTS mz_work_batch");
             Create.Table("mz_work_batch").WithDescription("生产批次表")
                 .WithColumn("Id").AsString(50).PrimaryKey().WithColumnDescription("批次编号")
+                .WithColumn("OrgId").AsInt64().PrimaryKey().WithColumnDescription("所属组织ID")
                 .WithColumn("LNumber").AsString(50).Nullable().WithColumnDescription("通讯编号")
-                .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                 .WithColumn("WorkOrderId").AsString(128).Indexed().WithColumnDescription("关联的工单Id")
+                .WithColumn("CreatedOn").AsDateTime().WithColumnDescription("创建时间")
+                .WithColumn("UpdatedOn").AsDateTime().WithColumnDescription("更新时间")
                               .WithColumn("StrExt1").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段1")
                               .WithColumn("StrExt2").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段2")
                               .WithColumn("StrExt3").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段3")

@@ -56,7 +56,7 @@ namespace MESService.Business
             }
 
             var rtoper = await _provider.GetService<RouteOperDAL>().Select(info.RouteOperId);
-            if(rtoper != null)
+            if (rtoper != null)
             {
                 info.RouteOper = rtoper;
             }
@@ -136,11 +136,12 @@ namespace MESService.Business
                 return;
             }
             var proBatchDAL = _provider.GetService<ProductBatchDAL>();
-            var workBatch = await _provider.GetService<WorkBatchDAL>().Select(report.BatchNo);
+            var workBatchList = await _provider.GetService<WorkBatchDAL>().SelectList(x => x.Id == report.BatchNo && x.OrgId == report.OrgId);
             MZ_ProductBatch proBatch = null;
             //判断是否为首次绑定通讯编码
-            if (workBatch != null && !string.IsNullOrEmpty(workBatch.LNumber))
+            if (workBatchList.Count > 0 && !string.IsNullOrEmpty(workBatchList[0].LNumber))
             {
+                var workBatch = workBatchList[0];
                 if (!await proBatchDAL.Some(x => x.Number == workBatch.Id))
                 {
                     proBatch = new MZ_ProductBatch();
@@ -191,7 +192,7 @@ namespace MESService.Business
             }
             if (proBatch == null)
             {
-                var tmpbatchlist = await proBatchDAL.SelectList(x => x.Number == report.BatchNo);
+                var tmpbatchlist = await proBatchDAL.SelectList(x => x.Number == report.BatchNo && x.OrgId == report.OrgId);
                 if (tmpbatchlist.Count > 0)
                 {
                     proBatch = tmpbatchlist[0];

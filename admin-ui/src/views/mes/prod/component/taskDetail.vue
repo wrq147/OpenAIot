@@ -1,42 +1,39 @@
 <template>
-    <el-dialog title="任务详情" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
+    <el-dialog title="任务详情" v-if="detailDialogVisible" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
         @close="handleClose">
-        <el-tabs v-if="taskData" v-model="activeTab" type="card">
-            <!-- 基本信息标签页 -->
-            <el-tab-pane label="基本信息" name="baseInfo">
-                <el-descriptions :column="2" border :span="16" class="detail-descriptions">
-                    <el-descriptions-item label="工单编号">{{ taskData.WorkNumber }}</el-descriptions-item>
-                    <el-descriptions-item label="产品编号">{{ taskData.SkuNumber }}</el-descriptions-item>
-                    <el-descriptions-item label="产品名称">{{ taskData.ProductName }}</el-descriptions-item>
-                    <el-descriptions-item label="状态">
-                        <el-tag v-if="taskData.IsFinish == true" type="success">已完成</el-tag>
-                        <el-tag v-else>进行中</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="计划数">{{ taskData.PlanNum }}</el-descriptions-item>
-                    <el-descriptions-item label="良品数">{{ taskData.GoodNum }}</el-descriptions-item>
-                    <el-descriptions-item label="不良品数">{{ taskData.DefectNum }}</el-descriptions-item>
-                    <el-descriptions-item label="完成率">
-                        {{ taskData.PlanNum ? ((taskData.GoodNum / taskData.PlanNum) * 100).toFixed(2) + '%' : '0%' }}
-                    </el-descriptions-item>
-                    <el-descriptions-item label="允许报工人员" :span="2">
-                        <div class="assigned-users-container">
-                            <div v-for="(user, index) in parseAssignedUsers(taskData.AssignedUser)" :key="index"
-                                :class="['assigned-user-tag', user.type === 'user' ? 'user-tag' : 'dept-tag']">
-                                <i
-                                    :class="['el-icon', user.type === 'user' ? 'el-icon-user' : 'el-icon-office-building']"></i>
-                                <span class="tag-text">{{ user.name || (user.type === "user" ? "未知人员" : "未知部门")
-                                    }}</span>
-                            </div>
-                            <span
-                                v-if="!taskData.AssignedUser || parseAssignedUsers(taskData.AssignedUser).length === 0"
-                                class="no-user-text">
-                                无指定人员
-                            </span>
+        <div style="margin-bottom: 20px;">
+            <el-descriptions :column="2" border :span="16" class="detail-descriptions">
+                <el-descriptions-item label="工单编号">{{ taskData.WorkNumber }}</el-descriptions-item>
+                <el-descriptions-item label="产品编号">{{ taskData.SkuNumber }}</el-descriptions-item>
+                <el-descriptions-item label="产品名称">{{ taskData.ProductName }}</el-descriptions-item>
+                <el-descriptions-item label="状态">
+                    <el-tag v-if="taskData.IsFinish == true" type="success">已完成</el-tag>
+                    <el-tag v-else>进行中</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="计划数">{{ taskData.PlanNum }}</el-descriptions-item>
+                <el-descriptions-item label="良品数">{{ taskData.GoodNum }}</el-descriptions-item>
+                <el-descriptions-item label="不良品数">{{ taskData.DefectNum }}</el-descriptions-item>
+                <el-descriptions-item label="完成率">
+                    {{ taskData.PlanNum ? ((taskData.GoodNum / taskData.PlanNum) * 100).toFixed(2) + '%' : '0%' }}
+                </el-descriptions-item>
+                <el-descriptions-item label="允许报工人员" :span="2">
+                    <div class="assigned-users-container">
+                        <div v-for="(user, index) in parseAssignedUsers(taskData.AssignedUser)" :key="index"
+                            :class="['assigned-user-tag', user.type === 'user' ? 'user-tag' : 'dept-tag']">
+                            <i
+                                :class="['el-icon', user.type === 'user' ? 'el-icon-user' : 'el-icon-office-building']"></i>
+                            <span class="tag-text">{{ user.name || (user.type === "user" ? "未知人员" : "未知部门")
+                            }}</span>
                         </div>
-                    </el-descriptions-item>
-                </el-descriptions>
-            </el-tab-pane>
-
+                        <span v-if="!taskData.AssignedUser || parseAssignedUsers(taskData.AssignedUser).length === 0"
+                            class="no-user-text">
+                            无指定人员
+                        </span>
+                    </div>
+                </el-descriptions-item>
+            </el-descriptions>
+        </div>
+        <el-tabs v-if="taskData" v-model="activeTab" type="card">
             <!-- 工艺信息标签页 -->
             <el-tab-pane label="工艺信息" name="processInfo">
                 <el-descriptions :column="2" border :span="16" class="detail-descriptions">
@@ -46,7 +43,7 @@
                     <el-descriptions-item label="预计平均工时">{{ taskData.WorkTime + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="实际总工时">{{ taskData.WorkTimeTotal + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="预计总工时">{{ (taskData.WorkTime * taskData.PlanNum) + "分钟"
-                        }}</el-descriptions-item>
+                    }}</el-descriptions-item>
                     <template v-for="(item, ix) in filedTableList">
                         <el-descriptions-item :label="item.name" :key="'custom_des' + ix">
                             <div v-html="ingetFieldShow(taskData.RouteOper, item)"></div>
@@ -141,7 +138,7 @@ export default {
     data() {
         return {
             detailDialogVisible: false,
-            activeTab: 'baseInfo',
+            activeTab: 'processInfo',
 
             // 报工记录查询参数
             reportQueryParams: {

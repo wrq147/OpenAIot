@@ -33,6 +33,14 @@ namespace MESService.Model
         /// 关联的工单Id
         /// </summary>
         public string WorkOrderId { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreatedOn { get; set; }
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
         /// 扩展字符串字段1

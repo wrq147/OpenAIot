@@ -1,98 +1,93 @@
 <template>
-  <el-dialog :visible.sync="dialogVisible" width="800px" top="5vh" :show-close="false" class="report_add_dialog">
-    <div slot="title" class="dialog_slot_title">
-      <div class="title_text">{{ isOnlyRead ? "编辑报工" : "添加报工" }}</div>
-      <el-tabs v-model="dialogName" tab-position="top" :stretch="true"
-        v-if="filedTableList && filedTableList.length > 0">
-        <el-tab-pane name="null1" :disabled="true"><span slot="label"></span></el-tab-pane>
-        <el-tab-pane name="null2" :disabled="true"><span slot="label"></span></el-tab-pane>
-        <el-tab-pane name="custominfonull" :disabled="true"
-          v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span
-            slot="label"></span></el-tab-pane>
-        <el-tab-pane name="baseinfo"><span slot="label">基本信息</span></el-tab-pane>
-        <el-tab-pane name="custominfo"><span slot="label"
-            v-if="filedTableList && filedTableList.length > 0">自定义信息</span></el-tab-pane>
-        <el-tab-pane name="approveinfo" v-if="mesform.ReportTemplateId !== ''"><span
-            slot="label">报工审批</span></el-tab-pane>
-        <el-tab-pane name="null3" :disabled="true"><span slot="label"></span></el-tab-pane>
-        <el-tab-pane name="null4" :disabled="true"><span slot="label"></span></el-tab-pane>
-      </el-tabs>
-      <div @click="handleClose" class="icon_con"><i class="el-icon-close" style="color: #93969b"></i></div>
-    </div>
-    <el-form ref="form" :model="form" label-width="100px" :rules="rules" label-position="top">
-      <el-row :gutter="10" v-show="dialogName == 'baseinfo'">
-        <el-col :span="12">
-          <el-form-item label="报工编码" prop="Number" v-if="form.Number">
-            <el-input v-model="form.Number" placeholder="请输入报工编码" :disabled="true"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="批次编号" prop="BatchNo">
-            <el-input v-model="form.BatchNo" placeholder="请输入批次编号" :disabled="isOnlyRead"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="生产任务" prop="WorkTaskId">
-            <div style="display: flex; align-items: center">
-              <el-input :disabled="isOnlyRead" class="houseipt" v-model="form.WorkTaskNumber" readonly
-                placeholder="请选择生产任务" @focus="onOpenWorkTask">
-                <i slot="suffix" @click="onTaskClear" v-if="form.WorkTaskId != ''" class="el-icon-circle-close"
-                  style="font-size: 22px;cursor: pointer;vertical-align: middle;"></i>
-              </el-input>
+  <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="900px" top="2vh">
+    <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+      <div>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="报工编码" prop="Number" v-if="form.Number">
+              <el-input v-model="form.Number" placeholder="请输入报工编码" :disabled="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="批次编号" prop="BatchNo">
+              <el-input v-model="form.BatchNo" placeholder="请输入批次编号" :disabled="isOnlyRead"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="生产任务" prop="WorkTaskId">
+              <div style="display: flex; align-items: center">
+                <el-input :disabled="isOnlyRead" class="houseipt" v-model="form.WorkTaskNumber" readonly
+                  placeholder="请选择生产任务" @focus="onOpenWorkTask">
+                  <i slot="suffix" @click="onTaskClear" v-if="form.WorkTaskId != ''" class="el-icon-circle-close"
+                    style="font-size: 22px;cursor: pointer;vertical-align: middle;"></i>
+                </el-input>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="良品数" prop="GoodNum">
+              <el-input-number :disabled="isOnlyRead" v-model="form.GoodNum" :min="0"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24" v-if="form.DefectList != null && form.DefectList.length > 0">
+            <div style="margin-bottom:20px;">
+              <div style="padding-bottom: 10px;color: #333333;">不良品项列表</div>
+              <el-table :data="form.DefectList" border style="width: 100%;">
+                <el-table-column label="不良品名称" align="center" prop="DefectName" width="450"></el-table-column>
+                <el-table-column label="数量" align="center" prop="DefectNum">
+                  <template slot-scope="scope">
+                    <el-input-number :disabled="isOnlyRead" v-model="scope.row.DefectNum" :min="0">
+                    </el-input-number>
+                  </template>
+                </el-table-column>
+              </el-table>
             </div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="良品数" prop="GoodNum">
-            <el-input-number :disabled="isOnlyRead" v-model="form.GoodNum" :min="0"></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24" v-if="form.DefectList != null && form.DefectList.length > 0">
-          <div style="margin-bottom:20px;">
-            <div style="padding-bottom: 10px;color: #333333;">不良品项列表</div>
-            <el-table :data="form.DefectList" border style="width: 100%;">
-              <el-table-column label="不良品名称" align="center" prop="DefectName" width="450"></el-table-column>
-              <el-table-column label="数量" align="center" prop="DefectNum">
-                <template slot-scope="scope">
-                  <el-input-number :disabled="isOnlyRead" v-model="scope.row.DefectNum" :min="0">
-                  </el-input-number>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="开始时间" prop="StartWork">
-            <el-date-picker :disabled="isOnlyRead" @change="workTimeChange" v-model="form.StartWork" type="datetime"
-              placeholder="开始时间" style="width: 100%"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="报工时长" prop="WorkTime">
-            <el-input-number :disabled="isOnlyRead" @change="workTimeChange" v-model="form.WorkTime"
-              :min="0"></el-input-number><span>分钟</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="结束时间" prop="EndWork">
-            <el-date-picker disabled v-model="form.EndWork" type="datetime" placeholder="结束时间"
-              style="width: 100%"></el-date-picker>
-          </el-form-item>
-        </el-col>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="StartWork">
+              <el-date-picker :disabled="isOnlyRead" @change="workTimeChange" v-model="form.StartWork" type="datetime"
+                placeholder="开始时间" style="width: 100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="报工时长" prop="WorkTime">
+              <el-input-number :disabled="isOnlyRead" @change="workTimeChange" v-model="form.WorkTime"
+                :min="0"></el-input-number><span>分钟</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="结束时间" prop="EndWork">
+              <el-date-picker disabled v-model="form.EndWork" type="datetime" placeholder="结束时间"
+                style="width: 100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
 
-        <el-col :span="24">
-          <el-form-item label="超时原因" prop="OverReason">
-            <el-alert v-if="NeedReason" title="报工时长超过预计时长，请填写超时原因" :closable="false" type="error" show-icon>
-            </el-alert>
-            <el-input :disabled="isOnlyRead" type="textarea" v-model="form.OverReason" placeholder="请输入备注"></el-input>
-          </el-form-item>
-        </el-col>
+          <el-col :span="24">
+            <el-form-item label="超时原因" prop="OverReason">
+              <el-alert v-if="NeedReason" title="报工时长超过预计时长，请填写超时原因" :closable="false" type="error" show-icon>
+              </el-alert>
+              <el-input :disabled="isOnlyRead" type="textarea" v-model="form.OverReason" placeholder="请输入备注"></el-input>
+            </el-form-item>
+          </el-col>
 
-      </el-row>
+        </el-row>
+      </div>
+      <div class="dialog_slot_title">
+        <el-tabs v-model="dialogName" type="card" v-if="filedTableList && filedTableList.length > 0">
+          <el-tab-pane name="custominfonull" :disabled="true"
+            v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span
+              slot="label"></span></el-tab-pane>
+          <el-tab-pane name="custominfo"><span slot="label"
+              v-if="filedTableList && filedTableList.length > 0">自定义信息</span></el-tab-pane>
+          <el-tab-pane name="approveinfo"
+            v-if="mesform.ReportTemplateId != null && mesform.ReportTemplateId !== 0"><span
+              slot="label">报工审批</span></el-tab-pane>
+        </el-tabs>
+      </div>
       <el-row :gutter="10" v-show="dialogName == 'custominfo'">
         <template v-for="(item, ix) in filedTableList">
           <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item)">
-            <el-form-item :label="item.name" :prop="item.mapid">
+            <el-form-item :label="item.name" :prop="'RepBat.' + item.mapid">
               <el-select @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
                 :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
                 v-model="form.RepBat[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
@@ -153,7 +148,7 @@
           </el-col>
         </template>
       </el-row>
-      <div v-show="dialogName == 'approveinfo' && mesform.ReportTemplateId !== ''">
+      <div v-show="dialogName == 'approveinfo' && mesform.ReportTemplateId !== 0">
         <AddEmbed ref="flowForm" class="flow_con">
           <div class="flow-title" style="font-size: 16px; color: #333">
             审批信息
@@ -176,18 +171,17 @@ import {
 var dayjs = require("@/utils/day.js");
 import AddEmbed from "@/views/flowable/task/record/AddEmbed";
 import OrgPicker from "@/views/flowable/common/OrgPicker";
-import {
-  factoryMesConfig,
-} from "@/api/mes/config";
 import { orgField } from "@/api/factory/customFields";
 import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
 import { operInfo } from "@/api/mes/oper";
+import { factoryMesConfig } from "@/api/mes/config";
+import { setCustomDefaultValue, checkBeforeSave } from '@/utils/field.js'
 export default {
   name: 'AdminUiReportAdd',
   components: { AddEmbed, OrgPicker },
   data() {
     return {
-      dialogName: "baseinfo",
+      dialogName: "custominfo",
       labelList: [
         {
           label: "停用",
@@ -253,6 +247,9 @@ export default {
         "@from": this.form.Number,
         "@fromtype": "生产报工",
       };
+    },
+    dialogTitle: function () {
+      return this.isOnlyRead ? "编辑报工" : "添加报工";
     }
   },
   mounted() {
@@ -530,79 +527,18 @@ export default {
         if (fidItem && fidItem.type == '关联对象' || fidItem.type == '图片') {
           this.$refs["form"].validate((valid) => { });
         }
-        // this.$refs["form"].validate((valid) => {});
         this.$forceUpdate();
       })
     },
     customValChange() {
       let form = JSON.parse(JSON.stringify(this.form));
-      // console.log('form',form);
       this.$nextTick(() => {
         this.form = JSON.parse(JSON.stringify(form));
         this.$refs["form"].validate((valid) => { });
         this.$forceUpdate();
       })
     },
-    setCustomDefaultValue(afterForm) {
-      //设置自定义的变量初始化
-      this.filedTableList.map((rw) => {
-        if (afterForm) {
-          this.form[rw.mapid] = afterForm[rw.mapid];
-          if (rw.type == "时间") {
-            let newStr = rw.format.replace(/y/g, "Y");
-            newStr = newStr.replace(/d/g, "D");
-            this.form[rw.mapid] = dayjs(afterForm[rw.mapid]).format(newStr);
-          } else {
-            if (rw.type == "数字") {
-              this.form[rw.mapid] = Number(afterForm[rw.mapid]);
-            } else if (rw.type == "复选框") {
-              this.form[rw.mapid] = afterForm[rw.mapid].split(",");
-            } else {
-              this.form[rw.mapid] = afterForm[rw.mapid];
-            }
-          }
-        } else {
-          this.form[rw.mapid] = null;
-          if (rw.defval != "" && rw.defval != undefined && rw.defval != null) {
-            if (rw.type == "时间") {
-              let newStr = rw.format.replace(/y/g, "Y");
-              newStr = newStr.replace(/d/g, "D");
-              this.form[rw.mapid] = dayjs(rw.defval).format(newStr);
-            } else {
-              if (rw.type == "数字") {
-                this.form[rw.mapid] = Number(rw.defval);
-              } else {
-                this.form[rw.mapid] = rw.defval;
-              }
-            }
-          } else {
-            if (rw.type == "复选框") {
-              this.form[rw.mapid] = [];
-            } else if (rw.type == "时间") {
-              this.form[rw.mapid] = '';
-            }
-          }
-        }
-        if (rw.is_required) {
-          if (rw.type == "单选框" || rw.type == "复选框" || rw.type == "时间") {
-            let rowRules = [
-              {
-                required: true,
-                trigger: "change",
-                message: "请选择" + rw.name,
-              },
-            ];
-            this.rules[rw.mapid] = rowRules;
-          } else {
-            let rowRules = [
-              { required: true, trigger: "blur", message: "请输入" + rw.name },
-            ];
-            this.rules[rw.mapid] = rowRules;
-          }
-        }
-      });
-      // console.log("this.rules", this.rules);
-    },
+
     async getCustomFiled() {
       //获取自定义的字段
       this.filedTableList = [];
@@ -645,7 +581,7 @@ export default {
           RepBat: res.data.RepBat
         };
 
-        this.setCustomDefaultValue(res.data.RepBat);
+        setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules, res.data.RepBat);
         this.resetNeedReason();
       } else {
         this.form = {
@@ -670,17 +606,16 @@ export default {
 
         let numres = await GeneratePlaneNumber()//获取报工编号
         this.form.Number = numres.data
-        this.setCustomDefaultValue();
-        let response = await factoryMesConfig();//获取生产报工相关配置
-        this.mesform.ReportTemplateName = response.data.ReportTemplateName;
-        this.mesform.ReportTemplateId = response.data.ReportTemplateId;
+        setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules);
       }
+      let response = await factoryMesConfig();//获取生产报工相关配置
+      this.mesform.ReportTemplateName = response.data.ReportTemplateName;
+      this.mesform.ReportTemplateId = response.data.ReportTemplateId;
       this.dialogVisible = true;
       if (this.mesform.ReportTemplateId > 0) {
         let fromInfo = await reportFormData({
           "Number": this.form.Number,
         })
-        console.log(fromInfo, 'fromInfo', this.$refs.flowForm);
         this.$nextTick(async () => {
           await this.$refs.flowForm.InitData(
             this.mesform.ReportTemplateId,
@@ -690,8 +625,6 @@ export default {
           );
         })
       }
-      let form = JSON.parse(JSON.stringify(this.form));
-      this.form = JSON.parse(JSON.stringify(form));
     },
     submitFiledAdd(st) {
       //提交数据
@@ -699,26 +632,7 @@ export default {
         // console.log("检验");
         if (valid) {
           let submitForm = JSON.parse(JSON.stringify(this.form));
-          for (let i = 0; i < this.filedTableList.length; i++) {
-            let row = this.filedTableList[i];
-            if (row.type == "数字") {
-              if (!submitForm.RepBat[row.mapid]) {
-                submitForm.RepBat[row.mapid] = Number(submitForm.RepBat[row.mapid]);
-              }
-            } else if (row.type == "时间") {
-              submitForm.RepBat[row.mapid] = dayjs(submitForm.RepBat[row.mapid]).valueOf();
-            } else if (row.type == "复选框") {
-              if (submitForm.RepBat[row.mapid] && submitForm.RepBat[row.mapid].length > 0) {
-                submitForm.RepBat[row.mapid] = submitForm.RepBat[row.mapid].join(",");
-              } else {
-                submitForm.RepBat[row.mapid] = "";
-              }
-            } else {
-              if (!submitForm.RepBat[row.mapid]) {
-                submitForm.RepBat[row.mapid] = "";
-              }
-            }
-          }
+          checkBeforeSave(this.filedTableList, submitForm.RepBat)
           submitForm.Status = 0
           delete submitForm.FlowId
           let response;
@@ -758,15 +672,10 @@ export default {
             let findObj = this.filedTableList.find(row => row.mapid == errKey[0])
             if (findObj) {
               this.dialogName = 'custominfo'
-            } else {
-              this.dialogName = 'baseinfo'
             }
           }
         }
       });
-    },
-    handleClose() {
-      this.dialogVisible = false;
     },
   },
 };
@@ -784,17 +693,6 @@ export default {
   margin-bottom: 5px;
 }
 
-.report_add_dialog {
-  ::v-deep .el-form-item__label {
-    line-height: 14px;
-  }
-
-  .flow_con {
-    ::v-deep .el-form-item__label {
-      margin-bottom: 10px;
-    }
-  }
-}
 
 .dialog_slot_title {
   display: flex;
@@ -807,11 +705,6 @@ export default {
     width: 100%;
   }
 
-  .title_text {
-    position: absolute;
-    left: 0px;
-    z-index: 9;
-  }
 
   .icon_con {
     position: absolute;
@@ -885,5 +778,6 @@ export default {
     width: 70px;
     height: 40px;
   }
+
 }
 </style>

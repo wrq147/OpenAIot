@@ -32,6 +32,7 @@ namespace MESService
             services.AddBLL<WorkOrderBLL>();
             services.AddBLL<WorkTaskBLL>();
             services.AddBLL<BatchDevHisBLL>();
+            services.AddBLL<WorkBatchBLL>();
 
             services.AddDAL<BomHeaderDAL>();
             services.AddDAL<BomLineDAL>();

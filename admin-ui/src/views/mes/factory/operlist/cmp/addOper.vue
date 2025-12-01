@@ -149,7 +149,7 @@
                             <el-checkbox-group @change="customValChange" :disabled="item.is_readonly"
                                 v-model="ruleForm[item.mapid]" v-if="item.type === '复选框' && item.show_way === '平铺'">
                                 <el-checkbox v-for="it in item.optionals" :label="it" :key="it + ix">{{ it
-                                    }}</el-checkbox>
+                                }}</el-checkbox>
                             </el-checkbox-group>
                             <el-date-picker @change="customValChange" :disabled="item.is_readonly"
                                 v-if="item.type === '时间'" v-model="ruleForm[item.mapid]" type="datetime"
@@ -788,6 +788,10 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep {
+    .data_table.el-table .el-table__header-wrapper thead th {
+        padding: 5px 0px;
+    }
+
     .el-dialog__body {
         padding-top: 10px;
     }

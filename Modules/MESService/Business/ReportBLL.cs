@@ -178,8 +178,9 @@ namespace MESService.Business
                 }
 
                 data.RepBat.WorkOrderId = old.WorkOrderId;
-                data.RepBat.OrgId = old.OrgId;
-                await _provider.GetService<WorkBatchDAL>().CreateOrUpdate(data.RepBat);
+                data.RepBat.OrgId = null;
+                data.RepBat.UpdatedOn = DateTime.Now;
+                await _provider.GetService<WorkBatchDAL>().Update(data.RepBat);
             }
             data.SetUpdateBy(user);
             data.DefectNum = 0;
@@ -303,11 +304,23 @@ namespace MESService.Business
             else
             {
                 data.RepBat = new MZ_WorkBatch();
+
             }
             data.RepBat.Id = data.BatchNo;
             data.RepBat.WorkOrderId = data.WorkOrderId;
             data.RepBat.OrgId = user.OrgId;
-            await _provider.GetService<WorkBatchDAL>().CreateOrUpdate(data.RepBat);
+            var wkbatchDAL = _provider.GetService<WorkBatchDAL>();
+            if (await wkbatchDAL.Some(x => x.Id == data.BatchNo && x.OrgId == data.RepBat.OrgId))
+            {
+                data.RepBat.UpdatedOn = DateTime.Now;
+                await wkbatchDAL.Update(data.RepBat);
+            }
+            else
+            {
+                data.RepBat.CreatedOn = DateTime.Now;
+                data.RepBat.UpdatedOn = data.RepBat.CreatedOn;
+                await wkbatchDAL.Insert(data.RepBat);
+            }
             data.SetCreateBy(user);
             data.Status = 0;
             data.DefectNum = 0;
