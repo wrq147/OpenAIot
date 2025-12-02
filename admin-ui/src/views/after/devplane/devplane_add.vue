@@ -53,7 +53,7 @@
               <el-col :span="1.5">
                 <el-button type="primary" plain @click="openAddRoom">
                   <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
-                  <span style="margin-left: 6px">加入车间</span>
+                  <span style="margin-left: 6px">加入房间</span>
                 </el-button>
               </el-col>
             </el-row>
@@ -68,7 +68,7 @@
               <el-table-column label="名称" prop="TargetName" align="center" :show-overflow-tooltip="true" ></el-table-column>
               <el-table-column label="类型" prop="TargetType" align="center" :show-overflow-tooltip="true" >
                 <template slot-scope="scope">
-                  <div>{{scope.row.TargetType==0?'设备':(scope.row.TargetType==1?'产品':(scope.row.TargetType==2?'车间':''))}}</div>
+                  <div>{{scope.row.TargetType==0?'设备':(scope.row.TargetType==1?'产品':(scope.row.TargetType==2?'房间':''))}}</div>
                 </template>
               </el-table-column>
               <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200" v-if="!isViewInfo">
@@ -219,9 +219,9 @@
                       v-if="scope.row.eltype == 'TextInput' || scope.row.eltype == 'TextareaInput'"></el-option>
                       <el-option label="提交人姓名" value="提交人姓名"
                       v-if="scope.row.eltype == 'TextInput' || scope.row.eltype == 'TextareaInput'"></el-option>
-                      <el-option label="车间名称" value="车间名称"
+                      <el-option label="房间名称" value="房间名称"
                       v-if="scope.row.eltype == 'TextInput' || scope.row.eltype == 'TextareaInput'"></el-option>
-                      <el-option label="车间分类名" value="车间分类名"
+                      <el-option label="房间分类名" value="房间分类名"
                       v-if="scope.row.eltype == 'TextInput' || scope.row.eltype == 'TextareaInput'"></el-option>
                       <el-option label="设备责任人" value="设备责任人" v-if="scope.row.eltype == 'UserPicker'"></el-option>
                       <el-option label="设备责任与协作人" value="设备责任与协作人" v-if="scope.row.eltype == 'UserPicker'"></el-option>
@@ -428,7 +428,7 @@ export default {
       this.productOpen = false
     },
     addDevRoom(sellist){
-      //添加计划的设备车间
+      //添加计划的设备房间
       let beforeSel=JSON.parse(JSON.stringify(this.planeTargetData))
       this.planeTargetData=beforeSel.filter(row=>row.TargetType!=2)
       this.planeTargetData=[...this.planeTargetData,...sellist]

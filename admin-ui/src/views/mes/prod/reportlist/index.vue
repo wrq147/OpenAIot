@@ -72,7 +72,7 @@
                     v-if="scope.row.Status == 0">修改</el-button>
                   <el-button class="table_btn" type="text" icon="el-icon-tickets" @click="handleUpdate(scope.row, true)"
                     v-if="scope.row.Status != 0">详情</el-button>
-                  <el-button style="color:#F56C6C" class="table_btn" type="text" icon="el-icon-delete"
+                  <el-button v-if="scope.row.Status==0||scope.row.Status>2" style="color:#F56C6C" class="table_btn" type="text" icon="el-icon-delete"
                     @click="handleDelete(scope.row)">删除</el-button>
                 </template>
               </el-table-column>

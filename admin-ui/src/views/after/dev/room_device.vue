@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="车间内的设备列表" :visible.sync="roomDeviceOpen" center width="1000px" :close-on-click-modal="false">
+    <el-dialog title="房间内的设备列表" :visible.sync="roomDeviceOpen" center width="1000px" :close-on-click-modal="false">
       <div>
         <div class="from_con" id="from_con" style="margin-bottom: 0; padding-bottom: 0; padding-left: 0">
           <el-form :model="deviceForm" ref="deviceForm" :inline="true" class="biaodan">
@@ -130,7 +130,7 @@ export default {
         children: "Children",
         label: "TreeName",
       },
-      tableData: [],//车间里的设备
+      tableData: [],//房间里的设备
       total: 0,
       configLoading: false,
       roomDeviceOpen: false,
@@ -193,7 +193,7 @@ export default {
       }
     },
     openAddDevice() {
-      //添加设备进车间
+      //添加设备进房间
       this.deviceOpen=true
       this.deviceQuery={
         pageNum: 1,
@@ -204,7 +204,7 @@ export default {
     toDeleteDevice(row) {
         let that=this
       this.$modal
-        .confirm('是否确认删除名为"' + row.Name + '"的车间？')
+        .confirm('是否确认删除名为"' + row.Name + '"的房间？')
         .then(function (res) {
             let data2=[{roomId:that.roomval.Id,deviceId:row.Id}]
           return removeRoomDevice(data2);
@@ -232,7 +232,7 @@ export default {
         this.getDeviceList(true);
     },
     addRoomDevice() {
-      //添加车间的设备
+      //添加房间的设备
       let addParams=[]
     //   this.afterSelectDevice.map(row=>{
     //     let obj={

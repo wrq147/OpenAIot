@@ -37,7 +37,7 @@
         <div class="PlanList-table">
           <div class="from_con" id="from_con" style="margin-bottom: 0; padding-bottom: 0; padding-left: 0">
             <el-form :model="deviceForm" ref="deviceForm" :inline="true" class="biaodan">
-              <el-form-item label="车间">
+              <el-form-item label="房间">
                 <select_tree ref="selectTree" class="set_radius groupSet" :defaultProps="defaultProps" nodeKey="TreeId"
                   :treeData='roomTreeList' @select="selectRoomCatetoryTree" />
               </el-form-item>
@@ -97,7 +97,7 @@ export default {
         children: "Children",
         label: "TreeName",
       },
-      roomTreeList: [], //车间树结构
+      roomTreeList: [], //房间树结构
       roomval: {},
       pageSizes: [10, 20, 30, 50, 100],//增大每页数据量，方便批量打印设备二维码
       total: 0,
@@ -196,7 +196,7 @@ export default {
         // this.totalDeviceInfo = JSON.parse(JSON.stringify(data))
       });
     },
-    selectRoomCatetoryTree(val) {//选择车间分类或者车间后
+    selectRoomCatetoryTree(val) {//选择房间分类或者房间后
       this.roomval = JSON.parse(JSON.stringify(val))
     },
     async switchMyOrgers() {
@@ -254,7 +254,7 @@ export default {
       return nodes;
     },
     async loadDeviceRoomList(activeCategoryInfo) {
-      //加载车间列表
+      //加载房间列表
       try {
         let response = await deviceRoomList({
           TargetOrgId: activeCategoryInfo.TargetOrgId,

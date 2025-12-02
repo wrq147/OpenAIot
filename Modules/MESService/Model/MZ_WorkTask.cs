@@ -99,10 +99,6 @@ namespace MESService.Model
         /// </summary>
         public int? Sequence { get; set; }
         /// <summary>
-        /// 任务说明
-        /// </summary>
-        public string Remark { get; set; }
-        /// <summary>
         /// 工单编号
         /// </summary>
         [DataIgnore]

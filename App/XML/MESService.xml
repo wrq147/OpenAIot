@@ -2085,11 +2085,6 @@
             工序顺序序号
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkTask.Remark">
-            <summary>
-            任务说明
-            </summary>
-        </member>
         <member name="P:MESService.Model.MZ_WorkTask.WorkNumber">
             <summary>
             工单编号

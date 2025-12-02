@@ -3,7 +3,7 @@
       <el-table ref="devRoomTable" :data="devRoomList" tooltip-effect="dark" v-loading="devRoomLoading" style="width: 100%"
         @selection-change="onRoomChange" @row-click="clickRoomRow" @select="roomBoxSelect" :row-key="getRowKeys">
         <el-table-column type="selection" width="55" :reserve-selection="true"> </el-table-column>
-        <el-table-column label="车间名称" align="center" key="Name" prop="Name"></el-table-column>
+        <el-table-column label="房间名称" align="center" key="Name" prop="Name"></el-table-column>
         <el-table-column label="所属分类" align="center" key="CategoryName" prop="CategoryName" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="负责人" align="center" key="LeaderId" prop="LeaderId" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -95,7 +95,7 @@
         //获取设备列表
         this.devRoomLoading = true;
         deviceRoomList().then((response) => {
-          // console.log("车间列表",response);
+          // console.log("房间列表",response);
             this.devRoomList = response.data;
             this.devRoomLoading = false;
           })

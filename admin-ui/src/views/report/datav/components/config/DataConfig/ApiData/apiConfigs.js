@@ -264,7 +264,7 @@ export const API_PARAMS = {
     method: 'GET',
     params: {
       roomId: { 
-        label: '目标车间', 
+        label: '目标房间', 
         type: 'room-select', 
         required: true 
       },

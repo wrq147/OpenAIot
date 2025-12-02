@@ -285,7 +285,7 @@ export default {
     deleteRowData(node, data) {
       //删除表格中的一行的数据
       this.$modal
-        .confirm('是否确认移除名为"' + data.Name + '"的车间分类？')
+        .confirm('是否确认移除名为"' + data.Name + '"的房间分类？')
         .then(function () {
           return removeRoomCatetory({ id: data.Id });
         })

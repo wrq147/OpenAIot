@@ -9505,29 +9505,19 @@ export const configurationComponents = [{
     icon: "el-icon-datav-line-iot",
     customId: "",
     width: 400,
-    height: 100,
+    height: 25,
     x: 50,
     y: 100,
     zindex: 0,
     isShow: true,
     chartOption: {
-        start: {
-            cx: 50,
-            cy: 50,
-        },
-        mid1: {
-            cx: 150,
-            cy: 50,
-        },
-        mid2: {
-            cx: 250,
-            cy: 50,
-        },
-        end: {
-            cx: 350,
-            cy: 50,
-        },
-        isAnimation: true, //是否是动画
+        points:[{
+            cx: 10,
+            cy: 10,
+        },{
+            cx: 390,
+            cy: 10,
+        }],
         animateType: 'droplet', //动画类型，线有三种动画：电流，水珠，轨迹
         delayTime: 10, //延迟时间s
         lineColor: '#999',

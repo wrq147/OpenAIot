@@ -154,67 +154,6 @@
           <!-- 顶部右侧导航 -->
           <div style="width: 45%">
             <topHandleNav :undoStyle="undoStyle" :redoStyle="redoStyle" :justifywidth="justifywidth" :key="topHandleNavKey" @returnHandleSelect="returnHandleSelect" @importFile="importFile"></topHandleNav>
-            <!-- <el-button
-            icon="el-icon-arrow-left"
-            type="text"
-            @click="undo"
-            :disabled="undoStyle"
-            style="margin-left: 2px"
-          >
-            撤销
-          </el-button>
-          <el-button
-            icon="el-icon-arrow-right"
-            type="text"
-            @click="redo"
-            :disabled="redoStyle"
-            style="margin-left: 2px"
-          >
-            还原
-          </el-button>
-          <el-button
-            icon="el-icon-view"
-            type="text"
-            @click="view"
-            style="margin-left: 2px"
-          >
-            预览
-          </el-button>
-
-          <el-dropdown
-            trigger="click"
-            @command="handleCommand"
-            style="padding: 0px 2px"
-          >
-            <el-button icon="el-icon-edit-outline" type="text">
-              导出
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="image">导出图片</el-dropdown-item>
-              <el-dropdown-item command="word">导出word</el-dropdown-item>
-              <el-dropdown-item command="ppt">导出ppt</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-
-          <el-button
-            class="delete-btn"
-            icon="el-icon-delete"
-            type="text"
-            @click="clear"
-            style="margin-left: 2px"
-          >
-            清空
-          </el-button>
-
-          <el-button
-            class="copy-btn-main"
-            icon="el-icon-document"
-            type="text"
-            @click="saveScreen"
-            style="margin-left: 2px"
-          >
-            保存
-          </el-button> -->
           </div>
         </div>
 

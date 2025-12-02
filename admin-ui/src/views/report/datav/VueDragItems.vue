@@ -1,16 +1,16 @@
 <template>
   <div class="grid-style" ref="dragcontnet" @mousedown.left="onmousedownClick" @mouseup.stop="handMouseUp">
 
-    <drag-chart v-for="item in notConfigurationDraw" :key="'ch' + item.customId" :dragchartdata="item" v-if="item.isShow"
-      :scale="scale" :activeId="activeId" :drawingList="notConfigurationDraw" :onCtrl="onCtrl" :ctrlSelectArr="ctrlSelectArr"
-      :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging" @dragstop="dragstop"
-      @actived="onActived"></drag-chart>
+    <drag-chart v-for="item in notConfigurationDraw" :key="'ch' + item.customId" :dragchartdata="item"
+      v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="notConfigurationDraw" :onCtrl="onCtrl"
+      :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
+      @dragstop="dragstop" @actived="onActived"></drag-chart>
     <div id="configurationDraw">
       <!-- <svg id="svg" overflow="visible" width="400" height="400" > -->
-      <drag-chart-config v-for="item in configurationDraw" :key="'kch' + item.customId" :dragchartdata="item" v-if="item.isShow"
-        :scale="scale" :activeId="activeId" :drawingList="configurationDraw" :onCtrl="onCtrl" :ctrlSelectArr="ctrlSelectArr"
-        :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging" @dragstop="dragstop"
-        @actived="onActived" ref="zutaiconfig"></drag-chart-config>
+      <drag-chart-config v-for="item in configurationDraw" :key="'kch' + item.customId" :dragchartdata="item"
+        v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="configurationDraw" :onCtrl="onCtrl"
+        :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
+        @dragstop="dragstop" @actived="onActived" ref="zutaiconfig"></drag-chart-config>
       <!-- </svg> -->
     </div>
     <!--辅助线-->
@@ -56,38 +56,23 @@ export default {
       isClickMove: false,
       moveId: 0,
       container: null,
-      path:null,
-      img:null,
-      isDrawing:false,
+      path: null,
+      img: null,
+      isDrawing: false,
     };
   },
   created() {
-    // console.log('中间画布内容')
     this.resetMouseState();
   },
   mounted() {
-    // this.$nextTick(() => {
-    //   this.watchKeyEvent();
-    // });
-
-    // VueEvent.$on("click_ctrl", data=>{
-    //   //先判断数组中是否存在，如果存在则删除
-    //   if (this.ctrlSelectArr.indexOf(data) > -1) {
-    //     let index = this.ctrlSelectArr.indexOf(data);
-    //     this.ctrlSelectArr.splice(index, 1);
-    //   } else {
-    //     this.ctrlSelectArr.push(data);
-    //   }
-    //   // console.log(this.ctrlSelectArr);
-    // });
     VueEvent.$on("clear_ctrl", data => {
-      
+
       this.ctrlSelectArr = [];
       this.resetMouseState();
     });
   },
   methods: {
-     //右键菜单
+    //右键菜单
     onContextmenu(event) {
       this.$contextmenu({
         items: [
@@ -95,11 +80,11 @@ export default {
             label: "删除图层",
             icon: "el-icon-delete",
             onClick: () => {
-              this.$refs['com'+this.customId].removeSprite()
-              if(this.ctrlSelectArr.length==0){
+              this.$refs['com' + this.customId].removeSprite()
+              if (this.ctrlSelectArr.length == 0) {
                 VueEvent.$emit("delete_component", this.customId);
               }
-              else{
+              else {
                 VueEvent.$emit("delete_component", this.activeId);
               }
 
@@ -107,8 +92,6 @@ export default {
           },
         ],
         event,
-        //x: event.clientX,
-        //y: event.clientY,
         customClass: "custom-class",
         zIndex: 3,
         minWidth: 230
@@ -450,8 +433,8 @@ export default {
           let tarNode = this.drawingList.filter((item) => {
             return item.customId == id;
           })[0];
-          // console.log("tarNodetarNode",tarNode);
-          if (tarNode.chartType == 'group') {
+
+          if (tarNode == null || tarNode.chartType == 'group') {
             continue;
           }
 
@@ -604,12 +587,12 @@ export default {
       if (!this.draggingId) return;
       return this.drawingList.find(el => el.customId === this.draggingId);
     },
-    configurationDraw(){//组态组件
-      let list=this.drawingList.filter(row=>row.chartTypeGroup&&row.chartTypeGroup=='configuration')
+    configurationDraw() {//组态组件
+      let list = this.drawingList.filter(row => row.chartTypeGroup && row.chartTypeGroup == 'configuration')
       return list
     },
-    notConfigurationDraw(){//非组态组件
-      let list=this.drawingList.filter(row=>!row.chartTypeGroup||row.chartTypeGroup&&row.chartTypeGroup!='configuration')
+    notConfigurationDraw() {//非组态组件
+      let list = this.drawingList.filter(row => !row.chartTypeGroup || row.chartTypeGroup && row.chartTypeGroup != 'configuration')
       return list
     },
   },
@@ -626,10 +609,12 @@ export default {
   width: 100%;
   background: linear-gradient(-90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px, linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px;
 }
-#configurationDraw{
+
+#configurationDraw {
   height: 100%;
   width: 100%;
 }
+
 #rectangular {
   background-color: rgba(235, 239, 243, 0.45);
   position: fixed;

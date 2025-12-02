@@ -469,8 +469,7 @@ namespace MESService
                 .WithColumn("PlanNum").AsDecimal(10, 2).WithColumnDescription("计划数")
                 .WithColumn("GoodNum").AsDecimal(10, 2).WithColumnDescription("良品数")
                 .WithColumn("DefectNum").AsDecimal(10, 2).WithColumnDescription("不良品数")
-                .WithColumn("Sequence").AsInt32().WithColumnDescription("工序顺序序号")
-                .WithColumn("Remark").AsString(5000).WithColumnDescription("任务说明");
+                .WithColumn("Sequence").AsInt32().WithColumnDescription("工序顺序序号");
 
 
             Execute.Sql("DROP TABLE IF EXISTS mz_work_batch");

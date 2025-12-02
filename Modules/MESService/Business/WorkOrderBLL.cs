@@ -225,7 +225,6 @@ namespace MESService.Business
                 task.GoodNum = 0;
                 task.DefectNum = 0;
                 task.Sequence = oper.Sequence;
-                task.Remark = string.Empty;
                 tasks.Add(task);
             }
 

@@ -2,7 +2,7 @@
   <div>
     <el-table ref="tableRef" v-loading="loading" :data="tbList" border :header-cell-style="cellSty" style="width:100%" row-key="keyId" :span-method="arraySpanMethod">
       <el-table-column label="设备名称" align="center" prop="DeviceName" width="160" key="DeviceName"></el-table-column>
-      <el-table-column label="所属车间" align="center" key="RoomNames">
+      <el-table-column label="所属房间" align="center" key="RoomNames">
           <template slot-scope="scope" v-if="scope.row.RoomNames&&scope.row.RoomNames.length>0">
               <span>{{ scope.row.RoomNames.join(',') }}</span>
           </template>

@@ -28,7 +28,7 @@
               <el-option v-for="(op, idx) in formd" :label="op.title" :value="op.id" :key="idx"></el-option>
             </el-select>
           </el-form-item>
-          <div class="item-desc">设备拥有者的设备所属车间的责任人，如不存在则是设备拥有者的管理员</div>
+          <div class="item-desc">设备拥有者的设备所属房间的责任人，如不存在则是设备拥有者的管理员</div>
         </div>
         <div v-else>
           <span class="item-desc">发起人自己作为办理人</span>

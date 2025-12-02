@@ -28,7 +28,7 @@
           <span>{{ scope.row.Name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="车间" align="center" key="RoomName" prop="RoomName" :show-overflow-tooltip="true">
+      <el-table-column label="房间" align="center" key="RoomName" prop="RoomName" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ scope.row.RoomName }}</span>
         </template>

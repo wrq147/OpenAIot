@@ -14,14 +14,14 @@
               <el-col :span="1.5">
                 <el-button type="primary" plain @click="openAddRoom">
                   <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
-                  <span style="margin-left: 6px">添加车间</span>
+                  <span style="margin-left: 6px">添加房间</span>
                 </el-button>
               </el-col>
             </div>
             <right-toolbar :isShowSearch="false" @queryTable="refreshData" :columns="columns"></right-toolbar>
           </el-row>
           <el-table ref="agentTable" v-loading="roomLoading" :data="roomTableData" tooltip-effect="dark" style="width: 100%">
-            <el-table-column label="车间名称" align="center" key="Name" prop="Name" v-if="columns[0].visible"/>
+            <el-table-column label="房间名称" align="center" key="Name" prop="Name" v-if="columns[0].visible"/>
             <el-table-column label="所属客户" align="center" key="CategoryId" prop="CategoryId" :show-overflow-tooltip="true" v-if="columns[1].visible">
               <template>
                 <div>{{activeCategoryInfo.activeOrg?activeCategoryInfo.activeOrg:''}}</div>
@@ -55,11 +55,11 @@
 
     <el-dialog :title="title" top="2vh" :visible.sync="roomOpen" center width="900px" :close-on-click-modal="false">
       <el-form :model="roomForm" ref="roomForm" :rules="roomRules" label-position="left" class="groupFrom" :inline="true" label-width="80px">
-        <el-form-item label="车间名称" prop="name">
-          <el-input type="text" v-model="roomForm.name" placeholder="请输入车间名称" :disabled="isReadonly"></el-input>
+        <el-form-item label="房间名称" prop="name">
+          <el-input type="text" v-model="roomForm.name" placeholder="请输入房间名称" :disabled="isReadonly"></el-input>
         </el-form-item>
         <el-form-item label="所属分类" prop="categoryId">
-          <treeselect class="groupSet" v-model="roomForm.categoryId" :options="catetoryTableData" :show-count="true" :normalizer="normalizer" placeholder="请选择车间分类"/>
+          <treeselect class="groupSet" v-model="roomForm.categoryId" :options="catetoryTableData" :show-count="true" :normalizer="normalizer" placeholder="请选择房间分类"/>
         </el-form-item>
         <el-form-item label="所属客户" prop="targetOrgId">
           <el-select v-model="roomForm.targetOrgId" placeholder="请选择" :disabled="true">
@@ -67,7 +67,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="负责人" prop="leaderId">
-          <!-- <el-input type="number" v-model.number="roomForm.leaderId" placeholder="请选择车间负责人" :disabled="isReadonly"></el-input> -->
+          <!-- <el-input type="number" v-model.number="roomForm.leaderId" placeholder="请选择房间负责人" :disabled="isReadonly"></el-input> -->
           <el-select v-model="roomForm.leaderId" placeholder="请选择" :disabled="true" v-if="roomForm.customerId">
             <el-option v-for="item in leaderIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -79,11 +79,11 @@
           <org-picker :multiple="true" ref="userPicker" :selected="helperUserInfo" @ok="selectUsersed"/>
         </el-form-item>
         <el-form-item label="排序序号" prop="Sort">
-          <el-input type="number" v-model.number="roomForm.Sort" placeholder="请输入车间序号" :disabled="isReadonly"></el-input>
+          <el-input type="number" v-model.number="roomForm.Sort" placeholder="请输入房间序号" :disabled="isReadonly"></el-input>
         </el-form-item>
         <el-form-item label="关联客户" prop="autoAdd">
           <el-switch v-model="roomForm.autoAdd" active-color="#13ce66" inactive-color="#DCDFE6"></el-switch>
-          <span style="margin-left: 10px; color: #999; font-size: 12px">是否自动同步关联客户的设备到车间</span>
+          <span style="margin-left: 10px; color: #999; font-size: 12px">是否自动同步关联客户的设备到房间</span>
         </el-form-item>
         <el-form-item label="监控报表">
           <el-button type="primary" @click="addBoardData">添加</el-button>
@@ -148,16 +148,16 @@ export default {
       configLoading: true, //配置信息是否处于
       // 列信息
       columns: [
-        { key: 0, label: `车间名称`, visible: true },
+        { key: 0, label: `房间名称`, visible: true },
         { key: 1, label: `所属分类`, visible: true },
         { key: 2, label: `所属客户`, visible: true },
         // { key: 3, label: `分类路径`, visible: true },
         { key: 3, label: `负责人`, visible: true },
       ],
-      //车间相关参数
+      //房间相关参数
       roomOpen: false,
-      roomLoading: false, //车间列表是否在加载
-      roomTableData: [], //车间表格数据
+      roomLoading: false, //房间列表是否在加载
+      roomTableData: [], //房间表格数据
       roomForm: {
         name: "",
         targetOrgId: "",
@@ -171,17 +171,17 @@ export default {
       targetOrgIdOptions: [], //所属客户下拉列表
       leaderIdOptions: [], //负责人下拉列表
       roomRules: {
-        name: [{ required: true, trigger: "blur", message: "请输入车间名称" }],
+        name: [{ required: true, trigger: "blur", message: "请输入房间名称" }],
         targetOrgId: [
-          { required: true, trigger: "blur", message: "请选择车间所属客户" },
+          { required: true, trigger: "blur", message: "请选择房间所属客户" },
         ],
         leaderId: [
-          { required: true, trigger: "blur", message: "请选择车间负责人" },
+          { required: true, trigger: "blur", message: "请选择房间负责人" },
         ],
       },
       helperUserInfo:[],//协作人列表
       leaderUserInfo:[],
-      title: '添加车间',
+      title: '添加房间',
       boardData: [{name: '', url: ''}], // 监控报表数据
     };
   },
@@ -306,12 +306,12 @@ export default {
     setcatetoryTableData(table) {
       this.catetoryTableData = JSON.parse(JSON.stringify(table));
     },
-    // 修改车间弹窗
+    // 修改房间弹窗
     handleUpdate(row) {
-      this.title = '修改车间';
-      //修改车间
+      this.title = '修改房间';
+      //修改房间
       deviceRoomInfo({ id: row.Id }).then((res) => {
-        console.log('车间详情',res);
+        console.log('房间详情',res);
         let data = res.data;
         this.roomForm = {
           id: data.Id,
@@ -367,13 +367,13 @@ export default {
     },
 
     async loadDeviceRoomList() {
-      //加载车间列表
+      //加载房间列表
         try {
           let response = await deviceRoomList({
             TargetOrgId: this.activeCategoryInfo.TargetOrgId,
             CategoryId: this.activeCategoryInfo.Id,
           });
-          // console.log("车间列表", response);
+          // console.log("房间列表", response);
           this.roomTableData = response.data;
           this.$forceUpdate()
         } catch (error) {}
@@ -388,7 +388,7 @@ export default {
 
     async openAddRoom() {
       this.resetForm("roomForm");
-      this.title = '添加车间';
+      this.title = '添加房间';
       this.boardData = [{name: '', url: ''}];
       this.roomForm = {
           name: "",
@@ -440,7 +440,7 @@ export default {
 
         this.roomOpen = true;
       // } else {
-      //   this.$message.error("请先选择车间分类");
+      //   this.$message.error("请先选择房间分类");
       // }
     },
     async viewInfo(val) {
@@ -472,7 +472,7 @@ export default {
           if (this.roomForm.id) {
             editDeviceRoom(submitform)
               .then((response) => {
-                this.$message.success("修改车间成功");
+                this.$message.success("修改房间成功");
                 if (response.code == 0) {
                   this.loadDeviceRoomList();
                 }
@@ -486,7 +486,7 @@ export default {
           } else {
             addDeviceRoom(submitform)
               .then((response) => {
-                this.$message.success("创建车间成功");
+                this.$message.success("创建房间成功");
                 if (response.code == 0) {
                   this.loadDeviceRoomList();
                 }
@@ -519,7 +519,7 @@ export default {
     deleteRoomRowData(data) {
       //删除表格中的一行的数据
       this.$modal
-        .confirm('是否确认删除名为"' + data.Name + '"的车间？')
+        .confirm('是否确认删除名为"' + data.Name + '"的房间？')
         .then(function () {
           return removeDeviceRoom({ id: data.Id });
         })

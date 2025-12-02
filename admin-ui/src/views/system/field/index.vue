@@ -1,6 +1,6 @@
 <template>
   <div style="padding:20px 20px;">
-    <div style="background-color: #fff;">
+    <div style="background-color: #fff;padding-top:10px;">
       <el-tabs v-model="customFiledType" tab-position="top" @tab-click="getFiledList" style="padding:0 20px;">
         <el-tab-pane name="产品">
           <span slot="label"><i class="el-icon-date"></i> 产品</span>
@@ -13,9 +13,6 @@
         </el-tab-pane>
         <el-tab-pane name="报工" v-if="isCheckPermi(['/MES/'])">
           <span slot="label"><i class="el-icon-timer"></i>报工</span>
-        </el-tab-pane>
-        <el-tab-pane name="工艺路线" v-if="isCheckPermi(['/MES/'])">
-          <span slot="label"><i class="zhongtaiiconfont zhongtai-icon-xiansuo"></i>工艺路线</span>
         </el-tab-pane>
       </el-tabs>
       <div class="elbiaoge_elform" :style="{ 'min-height': tableConHeight + 'px' }">

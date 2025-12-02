@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-//移除车间设备
+//移除房间设备
 export function removeRoomDevice(data) {
     return request({
         url: '/AfterService/RoomDevice/Remove',
@@ -8,7 +8,7 @@ export function removeRoomDevice(data) {
         data: data
     })
 }
-//添加车间设备
+//添加房间设备
 export function addRoomDevice(data) {
     return request({
         url: 'AfterService/RoomDevice/Add',
@@ -16,7 +16,7 @@ export function addRoomDevice(data) {
         data: data
     })
 }
-// 获取车间分类树
+// 获取房间分类树
 export function roomCatetoryTree(query) {
     return request({
         url: '/AfterService/RoomCategory/ListTree',
@@ -24,7 +24,7 @@ export function roomCatetoryTree(query) {
         params: query
     })
 }
-// 获取在指定车间分类信息
+// 获取在指定房间分类信息
 export function roomCatetoryInfo(query) {
     return request({
         url: '/AfterService/RoomCategory/Info',
@@ -32,7 +32,7 @@ export function roomCatetoryInfo(query) {
         params: query
     })
 }
-// 删除车间分类
+// 删除房间分类
 export function removeRoomCatetory(query) {
     return request({
         url: '/AfterService/RoomCategory/Remove',
@@ -41,7 +41,7 @@ export function removeRoomCatetory(query) {
     })
 }
 
-//添加车间分类
+//添加房间分类
 export function addRoomCatetory(data) {
     return request({
         url: '/AfterService/RoomCategory/Add',
@@ -50,7 +50,7 @@ export function addRoomCatetory(data) {
     })
 }
 
-//编辑车间分类
+//编辑房间分类
 export function editRoomCatetory(data) {
     return request({
         url: '/AfterService/RoomCategory/Edit',
@@ -58,7 +58,7 @@ export function editRoomCatetory(data) {
         data: data
     })
 }
-// 获取车间
+// 获取房间
 export function deviceRoomList(query) {
     return request({
         url: '/AfterService/Room/List',
@@ -66,7 +66,7 @@ export function deviceRoomList(query) {
         params: query
     })
 }
-// 获取在指定车间
+// 获取在指定房间
 export function deviceRoomInfo(query) {
     return request({
         url: '/AfterService/Room/Info',
@@ -74,7 +74,7 @@ export function deviceRoomInfo(query) {
         params: query
     })
 }
-// 删除车间
+// 删除房间
 export function removeDeviceRoom(query) {
     return request({
         url: '/AfterService/Room/Remove',
@@ -83,7 +83,7 @@ export function removeDeviceRoom(query) {
     })
 }
 
-//添加车间
+//添加房间
 export function addDeviceRoom(data) {
     return request({
         url: '/AfterService/Room/Add',
@@ -92,7 +92,7 @@ export function addDeviceRoom(data) {
     })
 }
 
-//编辑车间
+//编辑房间
 export function editDeviceRoom(data) {
     return request({
         url: '/AfterService/Room/Edit',

@@ -1,61 +1,53 @@
 <template>
-  <!-- <div :class="animate" :style="{ height: height, width: width,}" :id="chartOption.bindingDiv" ref="chartDiv" style="z-index:999 !important"></div> -->
-  <svg v-if="chartOption.bindingDiv" :ref="'svg' + chartOption.bindingDiv" @mousemove.stop="drag" @mouseup.stop="endDrag"
-    :class="[animate, 'svg' + chartOption.bindingDiv,'svg_con']" :id="chartOption.bindingDiv" :width="width" :height="height">
-    <path
-      :id="'line' + chartOption.bindingDiv"
-      :d="'M ' +chartOption.start.cx +' ' +chartOption.start.cy +' L' +chartOption.mid1.cx +' ' +chartOption.mid1.cy +' L' +chartOption.mid2.cx +' ' +chartOption.mid2.cy +' L' +chartOption.end.cx +' ' +chartOption.end.cy"
-      :stroke="chartOption.lineColor"
-      :stroke-width="chartOption.lineWidth"
-      fill="none"
-      marker-end="url(#marker-end-849d8617-602c-404f-8b13-b8aa2b883ddd)"
-      stroke-dashoffset="0"
-      :stroke-dasharray="chartOption.animateType=='eleCurrent'?chartOption.dasharray:0"
-      stroke-linejoin="round"
-    >
-    <!-- stroke-linejoin="round"设置路径变得圆滑 //stroke-dasharray控制线缝隙间隔-->
-      <animate v-if="chartOption.isReverseAnimation" attributeName="stroke-dashoffset" from="0" to="1000" :dur="chartOption.delayTime+'s'" repeatCount="indefinite"></animate>
-      <!-- 正序运行动画 -->
-      <animate v-else attributeName="stroke-dashoffset" from="1000" to="0" :dur="chartOption.delayTime+'s'" repeatCount="indefinite"></animate>
-      <!-- 逆序运行动画 -->
-    </path>
-    <path
-      :id="'line2' + chartOption.bindingDiv"
-      :d="'M ' +chartOption.start.cx +' ' +chartOption.start.cy +' L' +chartOption.mid1.cx +' ' +chartOption.mid1.cy +' L' +chartOption.mid2.cx +' ' +chartOption.mid2.cy +' L' +chartOption.end.cx +' ' +chartOption.end.cy"
-      :stroke="chartOption.flowColor"
-      :stroke-width="chartOption.flowWidth"
-      fill-opacity="0"
-      fill="none"
-      :stroke-dasharray="chartOption.dasharray"
-      stroke-dashoffset="0"
-      stroke-linecap="round"
-      v-if="chartOption.animateType=='droplet'"
-      stroke-linejoin="round"
-    >
-      <animate v-if="chartOption.isReverseAnimation" attributeName="stroke-dashoffset" from="0" to="1000" :dur="chartOption.delayTime+'s'" repeatCount="indefinite"></animate>
-      <animate v-else attributeName="stroke-dashoffset" from="1000" to="0" :dur="chartOption.delayTime+'s'" repeatCount="indefinite"></animate>
-    </path>
-    <circle v-if="chartOption.animateType=='track'" cx="0" cy="0" :r="chartOption.radius" :fill="chartOption.radiusFillColor">
-      <animateMotion v-if="chartOption.isReverseAnimation" :path="'M ' +chartOption.end.cx +' ' +chartOption.end.cy +' L' +chartOption.mid2.cx +' ' +chartOption.mid2.cy +' L' +chartOption.mid1.cx +' ' +chartOption.mid1.cy +' L' +chartOption.start.cx +' ' +chartOption.start.cy" :dur="chartOption.delayTime+'s'" repeatCount="indefinite"></animateMotion>
-      <animateMotion v-else :path="'M ' +chartOption.start.cx +' ' +chartOption.start.cy +' L' +chartOption.mid1.cx +' ' +chartOption.mid1.cy +' L' +chartOption.mid2.cx +' ' +chartOption.mid2.cy +' L' +chartOption.end.cx +' ' +chartOption.end.cy" :dur="chartOption.delayTime+'s'" repeatCount="indefinite"></animateMotion>
-    </circle>
-    <!-- 四个点，改变点的位置可以改变线的走向 -->
-    <circle v-if="isDraw" @mousedown.stop="startDragStart" :id="'start' + chartOption.bindingDiv" :cx="chartOption.start.cx"
-      :cy="chartOption.start.cy" r="8" fill="white" stroke="black" stroke-width="2" class="circle"/>
-    <circle v-if="isDraw" @mousedown.stop="startDragMid1" :id="'mid1' + chartOption.bindingDiv" :cx="chartOption.mid1.cx" :cy="chartOption.mid1.cy"
-      r="8" fill="white" stroke="black" stroke-width="2" class="circle"/>
-    <circle v-if="isDraw" @mousedown.stop="startDragMid2" :id="'mid2' + chartOption.bindingDiv" :cx="chartOption.mid2.cx" :cy="chartOption.mid2.cy"
-      r="8" fill="white" stroke="black" stroke-width="2" class="circle"/>
-    <circle v-if="isDraw" @mousedown.stop="startDragEnd" :id="'end' + chartOption.bindingDiv" :cx="chartOption.end.cx"
-      :cy="chartOption.end.cy" r="8" fill="white" stroke="black" stroke-width="2" class="circle"/>
-  </svg>
+  <div :class="[animate, 'svg_container']" :style="{ width: width, height: height, position: 'relative' }">
+    <svg v-if="chartOption.bindingDiv" ref="svgRef" @mousemove.stop.passive="drag" @mouseup.stop="endDrag"
+      @mouseleave.stop="endDrag" :id="chartOption.bindingDiv" :width="svgWidth" :height="svgHeight"
+      preserveAspectRatio="none">
+      <!-- 主路径 -->
+      <path :id="'line' + chartOption.bindingDiv" :d="getPathData()" :stroke="chartOption.lineColor"
+        :stroke-width="chartOption.lineWidth" fill="none"
+        marker-end="url(#marker-end-849d8617-602c-404f-8b13-b8aa2b883ddd)" stroke-dashoffset="0"
+        :stroke-dasharray="chartOption.animateType == 'eleCurrent' ? chartOption.dasharray : 0" stroke-linejoin="round">
+        <animate v-if="chartOption.isReverseAnimation" attributeName="stroke-dashoffset" from="0" to="1000"
+          :dur="chartOption.delayTime + 's'" repeatCount="indefinite"></animate>
+        <animate v-else attributeName="stroke-dashoffset" from="1000" to="0" :dur="chartOption.delayTime + 's'"
+          repeatCount="indefinite"></animate>
+      </path>
+
+      <!-- 流动路径 -->
+      <path :id="'line2' + chartOption.bindingDiv" :d="getPathData()" :stroke="chartOption.flowColor"
+        :stroke-width="chartOption.flowWidth" fill-opacity="0" fill="none" :stroke-dasharray="chartOption.dasharray"
+        stroke-dashoffset="0" stroke-linecap="round" v-if="chartOption.animateType == 'droplet'" stroke-linejoin="round">
+        <animate v-if="chartOption.isReverseAnimation" attributeName="stroke-dashoffset" from="0" to="1000"
+          :dur="chartOption.delayTime + 's'" repeatCount="indefinite"></animate>
+        <animate v-else attributeName="stroke-dashoffset" from="1000" to="0" :dur="chartOption.delayTime + 's'"
+          repeatCount="indefinite"></animate>
+      </path>
+
+      <!-- 跟踪动画 -->
+      <circle v-if="chartOption.animateType == 'track'" cx="0" cy="0" :r="chartOption.radius"
+        :fill="chartOption.radiusFillColor">
+        <animateMotion v-if="chartOption.isReverseAnimation" :path="getReversePathData()"
+          :dur="chartOption.delayTime + 's'" repeatCount="indefinite"></animateMotion>
+        <animateMotion v-else :path="getPathData()" :dur="chartOption.delayTime + 's'" repeatCount="indefinite">
+        </animateMotion>
+      </circle>
+
+      <!-- 动态渲染控制点：用动态属性控制大小，替代CSS修改r -->
+      <circle v-for="(point, index) in chartOption.points" :key="`point${index}-${chartOption.bindingDiv}`"
+        v-if="isDraw" @mousedown.stop="startDrag(index, $event)" :id="`point${index}${chartOption.bindingDiv}`"
+        :cx="point.cx" :cy="point.cy" :r="isHoverPoint(index) ? 9 : 8" fill="white" stroke="black"
+        :stroke-width="isHoverPoint(index) ? 3 : 2" class="circle" @mouseenter="setHoverIndex(index)"
+        @mouseleave="clearHoverIndex()" />
+    </svg>
+  </div>
 </template>
 
 <script>
 import resize from "@/views/dashboard/mixins/resize";
 import "../../animate/animate.css";
 import dataChart from "../mixins/dataChart.js";
-// import { gsap } from "gsap";
+
 export default {
   mixins: [resize, dataChart],
   props: {
@@ -86,51 +78,56 @@ export default {
       chart: null,
       value: "",
       animate: this.className,
-      start: "",
-      end: "",
-      mid1: "",
-      mid2: "",
-      line: "",
-      svg: "",
-      // svgRect:'',
       svgPadding: 10,
-      startCoords: {
-        x: 0,
-        y: 0,
+      svgWidth: 0, // SVG实际宽度（实时更新）
+      svgHeight: 0, // SVG实际高度（实时更新）
+      dragState: {
+        index: -1,
+        startX: 0,
+        startY: 0
       },
-      endCoords: {
-        x: 100,
-        y: 0,
-      },
-      mid1Coords: {
-        x: 200,
-        y: 0,
-      },
-      mid2Coords: {
-        x: 300,
-        y: 0,
-      },
-      isDraggingStart: false,
-      isDraggingEnd: false,
-      isDraggingMid1: false,
-      isDraggingMid2: false,
-      createSVGPoint: null,
+      svgElement: null, // 缓存SVG元素
+      hoverPointIndex: -1, // 当前hover的点索引（用于动态控制大小）
     };
   },
   watch: {
     "chartOption.theme": {
-      handler() {},
+      handler() { },
     },
     className: {
       handler(value) {
         this.animate = value;
       },
     },
+    width: {
+      handler() {
+        this.updateSvgSize();
+      },
+      immediate: true,
+    },
+    height: {
+      handler() {
+        this.updateSvgSize();
+      },
+      immediate: true,
+    },
+    // 监听points数组，确保响应式
+    "chartOption.points": {
+      handler(newPoints) {
+        if (!Array.isArray(newPoints) || newPoints.length < 2) {
+          this.initPoints();
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
   },
   mounted() {
     this.valUpdate = this.setChartVal;
+    this.svgElement = this.$refs.svgRef;
+    this.updateSvgSize(); // 初始化SVG尺寸
+    this.initPoints();
   },
-  beforeDestroy() {},
   computed: {
     widNum() {
       if (this.width.indexOf("px") > -1) {
@@ -151,131 +148,228 @@ export default {
       }
     },
     svgRect() {
-      //范围
-      let obj = {
+      return {
         left: 0,
-        right: 0 + this.widNum,
+        right: this.widNum,
         top: 0,
-        bottom: 0 + this.heiNum,
+        bottom: this.heiNum,
       };
-      return obj;
     },
   },
   methods: {
-    removeSprite() {},
-    upActiveId() {},
-    setChartVal(result) {},
-    getMouseCoords(event) {
-      const svg = document.querySelector(".svg" + this.chartOption.bindingDiv);
-      const pt = svg.createSVGPoint();//用于创建一个空的SVGPoint对象，该对象表示二维平面上的一个点，可以用于进行坐标变换和计算‌‌
-      pt.x = event.clientX;
-      pt.y = event.clientY;
-      return pt.matrixTransform(svg.getScreenCTM().inverse());
+    removeSprite() { },
+    upActiveId() { },
+    setChartVal(result) { },
+
+    // 设置当前hover的点索引
+    setHoverIndex(index) {
+      this.hoverPointIndex = index;
     },
-    startDragStart(event) {//获取鼠标放下开始点的位置
-      this.isDraggingStart = true;
-      this.startCoords = this.getMouseCoords(event);
+
+    // 清除hover状态
+    clearHoverIndex() {
+      this.hoverPointIndex = -1;
     },
-    startDragEnd(event) {//获取鼠标放下结束点的位置
-      this.isDraggingEnd = true;
-      this.endCoords = this.getMouseCoords(event);
+
+    // 判断是否是当前hover的点
+    isHoverPoint(index) {
+      return this.hoverPointIndex === index;
     },
-    startDragMid1(event) {//获取鼠标放下中间点1的位置
-      this.isDraggingMid1 = true;
-      this.mid1Coords = this.getMouseCoords(event);
-    },
-    startDragMid2(event) {//获取鼠标放下中间点2的位置
-      this.isDraggingMid2 = true;
-      this.mid2Coords = this.getMouseCoords(event);
-    },
-    drag(event) {//鼠标拖动点的方法
-      if (this.isDraggingStart) {//判断拖动的点是哪一个
-        const coords = this.getMouseCoords(event);
-        const dx = coords.x - this.startCoords.x;
-        const dy = coords.y - this.startCoords.y;
-        this.startCoords = coords;
-        let x = parseFloat(this.chartOption.start.cx) + dx;
-        let y = parseFloat(this.chartOption.start.cy) + dy;
-        x = Math.min(
-          Math.max(x, this.svgRect.left + this.svgPadding),
-          this.svgRect.right - this.svgPadding
-        );
-        y = Math.min(
-          Math.max(y, this.svgRect.top + this.svgPadding),
-          this.svgRect.bottom - this.svgPadding
-        );
-        this.chartOption.start.cx = x;
-        this.chartOption.start.cy = y;
-      } else if (this.isDraggingEnd) {
-        const coords = this.getMouseCoords(event);
-        const dx = coords.x - this.endCoords.x;
-        const dy = coords.y - this.endCoords.y;
-        this.endCoords = coords;
-        let x = parseFloat(this.chartOption.end.cx) + dx;
-        let y = parseFloat(this.chartOption.end.cy) + dy;
-        x = Math.min(
-          Math.max(x, this.svgRect.left + this.svgPadding),
-          this.svgRect.right - this.svgPadding
-        );
-        y = Math.min(
-          Math.max(y, this.svgRect.top + this.svgPadding),
-          this.svgRect.bottom - this.svgPadding
-        );
-        this.chartOption.end.cx = x;
-        this.chartOption.end.cy = y;
-      } else if (this.isDraggingMid1) {
-        const coords = this.getMouseCoords(event);
-        const dx = coords.x - this.mid1Coords.x;
-        const dy = coords.y - this.mid1Coords.y;
-        this.mid1Coords = coords;
-        let x = parseFloat(this.chartOption.mid1.cx) + dx;
-        let y = parseFloat(this.chartOption.mid1.cy) + dy;
-        x = Math.min(
-          Math.max(x, this.svgRect.left + this.svgPadding),
-          this.svgRect.right - this.svgPadding
-        );
-        y = Math.min(
-          Math.max(y, this.svgRect.top + this.svgPadding),
-          this.svgRect.bottom - this.svgPadding
-        );
-        this.chartOption.mid1.cx = x;
-        this.chartOption.mid1.cy = y;
-      } else if (this.isDraggingMid2) {
-        const coords = this.getMouseCoords(event);
-        const dx = coords.x - this.mid2Coords.x;
-        const dy = coords.y - this.mid2Coords.y;
-        this.mid2Coords = coords;
-        let x = parseFloat(this.chartOption.mid2.cx) + dx;
-        let y = parseFloat(this.chartOption.mid2.cy) + dy;
-        x = Math.min(
-          Math.max(x, this.svgRect.left + this.svgPadding),
-          this.svgRect.right - this.svgPadding
-        );
-        y = Math.min(
-          Math.max(y, this.svgRect.top + this.svgPadding),
-          this.svgRect.bottom - this.svgPadding
-        );
-        this.chartOption.mid2.cx = x;
-        this.chartOption.mid2.cy = y;
+
+    // 实时更新SVG尺寸（解决组件缩放问题）
+    updateSvgSize() {
+      if (!this.$el) return;
+
+      // 获取容器实际尺寸（支持px/%/vw/vh等所有单位）
+      const container = this.$el;
+      const containerRect = container.getBoundingClientRect();
+
+      // 更新SVG尺寸（与容器完全一致）
+      this.svgWidth = containerRect.width;
+      this.svgHeight = containerRect.height;
+
+      // 同步更新SVG元素属性（确保坐标系正确）
+      if (this.svgElement) {
+        this.svgElement.setAttribute("width", this.svgWidth);
+        this.svgElement.setAttribute("height", this.svgHeight);
       }
     },
+
+    // 初始化点
+    initPoints() {
+      if (!this.svgWidth || !this.svgHeight) return;
+
+      const currentPoints = this.chartOption.points;
+      if (Array.isArray(currentPoints) && currentPoints.length >= 2) return;
+
+      const pointCount = 2;
+      const defaultPoints = [];
+      const stepX = this.svgWidth / (pointCount + 1);
+      const centerY = this.svgHeight / 2;
+
+      for (let i = 0; i < pointCount; i++) {
+        defaultPoints.push({
+          cx: stepX * (i + 1),
+          cy: centerY,
+        });
+      }
+
+      this.$set(this.chartOption, "points", defaultPoints);
+    },
+
+    // 可选：组件缩放后重新分布点（避免点聚集在角落）
+    redistributePoints() {
+      const points = this.chartOption.points;
+      if (points.length < 2) return;
+
+      const stepX = this.svgWidth / (points.length + 1);
+      const centerY = this.svgHeight / 2;
+
+      points.forEach((point, index) => {
+        this.$set(points, index, {
+          ...point,
+          cx: stepX * (index + 1),
+          cy: centerY,
+        });
+      });
+    },
+
+    // 精准获取SVG坐标系下的鼠标坐标（无延迟）
+    getMouseCoords(event) {
+      if (!this.svgElement) return { x: 0, y: 0 };
+
+      const pt = this.svgElement.createSVGPoint();
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+      // 实时获取CTM矩阵（组件缩放后坐标正确）
+      const ctm = this.svgElement.getScreenCTM();
+      if (!ctm) return { x: 0, y: 0 };
+      const svgCoords = pt.matrixTransform(ctm.inverse());
+      return {
+        x: svgCoords.x,
+        y: svgCoords.y
+      };
+    },
+
+    // 开始拖动：计算鼠标相对于点的偏移（解决点击位置不精准问题）
+    startDrag(index, event) {
+      const mouseCoords = this.getMouseCoords(event);
+      this.dragState = {
+        index,
+        startX: mouseCoords.x,
+        startY: mouseCoords.y
+      };
+
+      event.preventDefault();
+      // 提升拖动优先级
+      this.$el.style.pointerEvents = "auto";
+    },
+
+    // 拖动核心：实时更新，无延迟
+    drag(event) {
+      const { index, startX, startY } = this.dragState;
+      if (index === -1) return;
+
+      const points = this.chartOption.points;
+      const mouseCoords = this.getMouseCoords(event);
+
+      let newCx = mouseCoords.x;
+      let newCy = mouseCoords.y;
+
+      // 边界限制
+      newCx = Math.min(
+        Math.max(newCx, this.svgRect.left + this.svgPadding),
+        this.svgRect.right - this.svgPadding
+      );
+
+      newCy = Math.min(
+        Math.max(newCy, this.svgRect.top + this.svgPadding),
+        this.svgRect.bottom - this.svgPadding
+      );
+      // 强制响应式更新（解决拖动延迟）
+      this.$set(points, index, {
+        ...points[index],
+        cx: newCx,
+        cy: newCy
+      });
+
+      // 手动触发DOM更新（极端情况下的保障）
+      this.$forceUpdate();
+    },
+
+    // 结束拖动
     endDrag() {
-      this.isDraggingStart = false;
-      this.isDraggingEnd = false;
-      this.isDraggingMid1 = false;
-      this.isDraggingMid2 = false;
+      this.dragState = {
+        index: -1,
+        startX: 0,
+        startY: 0
+      };
+    },
+
+    // 构建路径数据（实时更新，无延迟）
+    getPathData() {
+      const { points } = this.chartOption;
+      if (!points || points.length < 2) return "";
+
+      // 不做精度限制，优先保证实时性
+      const pathSegments = points.map((point, i) =>
+        i === 0 ? `M ${point.cx} ${point.cy}` : `L ${point.cx} ${point.cy}`
+      );
+      return pathSegments.join(" ");
+    },
+
+    // 构建反向路径数据
+    getReversePathData() {
+      const { points } = this.chartOption;
+      if (!points || points.length < 2) return "";
+
+      const reversedPoints = [...points].reverse();
+      const pathSegments = reversedPoints.map((point, i) =>
+        i === 0 ? `M ${point.cx} ${point.cy}` : `L ${point.cx} ${point.cy}`
+      );
+      return pathSegments.join(" ");
     },
   },
 };
 </script>
 <style lang="less" scoped>
-path {
-  fill: none !important; //
+.svg_container {
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  /* 避免SVG超出容器 */
 }
-.svg_con .circle{
-  display:none;
-}
-.svg_con:hover .circle{
+
+svg {
   display: block;
+  width: 100%;
+  height: 100%;
+}
+
+path {
+  fill: none !important;
+  transition: none;
+  /* 禁用路径过渡，提升实时性 */
+}
+
+.circle {
+  display: none;
+  cursor: move;
+  pointer-events: all;
+  z-index: 1000;
+  /* 确保控制点在最上层 */
+  transition: fill 0.1s ease, stroke 0.1s ease;
+  /* 只保留颜色过渡 */
+}
+
+/* 鼠标悬浮在SVG上时显示所有控制点 */
+svg:hover .circle {
+  display: block;
+}
+
+/* hover状态的颜色变化（通过JS控制大小和边框宽度） */
+.circle:hover {
+  fill: #409eff;
+  stroke: #1890ff;
 }
 </style>
