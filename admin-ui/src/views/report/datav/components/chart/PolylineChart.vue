@@ -1,7 +1,7 @@
 <template>
   <div :class="[animate, 'svg_container']" :style="{ width: width, height: height, position: 'relative' }">
-    <svg v-if="chartOption.bindingDiv" ref="svgRef" @mousemove.stop.passive="drag" @mouseup.stop="endDrag"
-      @mouseleave.stop="endDrag" :id="chartOption.bindingDiv" :width="svgWidth" :height="svgHeight"
+    <svg v-if="chartOption.bindingDiv" ref="svgRef" @mousemove.passive="drag" @mouseup="endDrag"
+      @mouseleave="endDrag" :id="chartOption.bindingDiv" :width="svgWidth" :height="svgHeight"
       preserveAspectRatio="none">
       <!-- 主路径 -->
       <path :id="'line' + chartOption.bindingDiv" :d="getPathData()" :stroke="chartOption.lineColor"
@@ -233,6 +233,7 @@ export default {
       const points = this.chartOption.points;
       const mouseCoords = this.getMouseCoords(event);
 
+
       let newCx = mouseCoords.x;
       let newCy = mouseCoords.y;
 
@@ -252,6 +253,8 @@ export default {
         this.dragchartdata.height = this.dragchartdata.height + 20;
       }
 
+
+
       // 边界限制
       newCx = Math.min(
         Math.max(newCx, this.svgPadding),
@@ -267,6 +270,7 @@ export default {
         cx: newCx,
         cy: newCy
       });
+
 
     },
 

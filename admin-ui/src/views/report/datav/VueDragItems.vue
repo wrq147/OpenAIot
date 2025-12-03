@@ -6,12 +6,10 @@
       :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
       @dragstop="dragstop" @actived="onActived"></drag-chart>
     <div id="configurationDraw">
-      <!-- <svg id="svg" overflow="visible" width="400" height="400" > -->
       <drag-chart-config v-for="item in configurationDraw" :key="'kch' + item.customId" :dragchartdata="item"
         v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="configurationDraw" :onCtrl="onCtrl"
         :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
         @dragstop="dragstop" @actived="onActived" ref="zutaiconfig"></drag-chart-config>
-      <!-- </svg> -->
     </div>
     <!--辅助线-->
     <span class="ref-line v-line" v-for="(item, idx) in vLine" :key="'v' + idx" v-show="item.display" :style="{

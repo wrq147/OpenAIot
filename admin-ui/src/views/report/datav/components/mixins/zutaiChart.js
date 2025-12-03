@@ -57,6 +57,7 @@ export default {
 
     },
     beforeDestroy() {
+
         if (this.background) {
             this.background.remove();
         }
@@ -72,6 +73,9 @@ export default {
         if (this.point4) {
             this.point4.remove();
         }
+        if (this.spriteimg) {
+            this.spriteimg.remove();
+        }
     },
     mounted() {
 
@@ -86,7 +90,7 @@ export default {
                 preserveDrawingBuffer: true,
                 // useOffscreen: true,
             });
-            if (container) {} else {
+            if (container) { } else {
                 return;
             }
             this.layer = this.scene.layer();
@@ -118,9 +122,7 @@ export default {
             //元素上抬起鼠标
             this.$emit('clearSprite')
         },
-        removeSprite() {
-            this.spriteimg.remove();
-        },
+
         async sprite(imgUrl) {
             // console.log(this.layer, 'this.layerthis.layer');
             // console.log("组态相关配置", this.chartOption);

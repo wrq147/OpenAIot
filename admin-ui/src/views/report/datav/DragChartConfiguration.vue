@@ -8,8 +8,6 @@
     class="test3" class-name-dragging="my-dragging-class" class-name-resizing="my-resizing-class"
     class-name-active="my-active-class" class-name-selected="ctrlSelected"
     :style="{ 'background-color': chartType == 'polyline' ? 'transparent' : '' }">
-    <!-- 判断显示组件:handles="['tl','tr','bl','br']" -->
-    <!--{{x}}-{{y}}-{{customId}}-->
     <component :activeId="activeId" @finishPointDraw="finishPointDraw" @clearSprite="clearSprite"
       :ref="'com' + customId" :scene="scene" :layer="layer" :x="x" :y="y" :z="dragchartdata.zindex + 1"
       :is="ComponentName" :theme="theme" :isDraw="true" :width="width + 'px'" :height="height + 'px'"
@@ -49,22 +47,7 @@ export default {
   },
   computed: {
     ComponentName() {
-      console.log(this.chartType)
-      if (this.chartType == "text") {
-        return "NormalText";
-      }
-      else if (this.chartType == "lamp") {
-        return "LampText";
-      }
-      else if (this.chartType == "date") {
-        return "DateText";
-      }
-      else if (this.chartType == "textCheckBox") {
-        return "TextCheckBox";
-      }
-      else {
-        return this.chartType + "Chart";
-      }
+      return this.chartType + "Chart";
     }
   },
   watch: {
@@ -162,11 +145,6 @@ export default {
             label: "删除图层",
             icon: "el-icon-delete",
             onClick: () => {
-              let comid = 'com' + this.customId;
-              if (this.$refs[comid].removeSprite) {
-                this.$refs[comid].removeSprite();
-              }
-
               if (this.ctrlSelectArr.length == 0) {
                 VueEvent.$emit("delete_component", this.customId);
               }
@@ -213,8 +191,6 @@ export default {
           }
         ],
         event,
-        //x: event.clientX,
-        //y: event.clientY,
         customClass: "custom-class",
         zIndex: 3,
         minWidth: 230
@@ -258,9 +234,7 @@ export default {
     },
     // 辅助线回调事件
     getRefLineParams(params) {
-
       this.$emit("getRefLineParams", params);
-
     },
     //点击控件
     onActivated(customId) {
