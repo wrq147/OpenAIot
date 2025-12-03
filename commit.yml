@@ -3,42 +3,66 @@ branches: {
   }
 fileChange:
   /admin-ui:
-    newFile: !uuid '58e3dc7c0e277f46f1583207facc41577bcf73a7'
-    oldFile: !uuid '49a43c8bc1ce63dd686af622d76afd0fb0247706'
+    newFile: !uuid '5484ce559e6d3d410cb962527e79cf9fb9078362'
+    oldFile: !uuid '58e3dc7c0e277f46f1583207facc41577bcf73a7'
   /admin-ui/src:
-    newFile: !uuid '4ce330150fc7d864a9eb26e4b01b5d509109888d'
-    oldFile: !uuid '2ea3b3a409d5680e0b6051e8a4578a6fbe626f88'
+    newFile: !uuid '0b35b91e9fec2f8bf1fe22978bb1d1fe1876ca38'
+    oldFile: !uuid '4ce330150fc7d864a9eb26e4b01b5d509109888d'
   /admin-ui/src/views:
-    newFile: !uuid 'ed4b6863dcd1b1082394cf7f2cdda8e841a903f0'
-    oldFile: !uuid 'a109a57c200905933589960c909e1f6a68ad4322'
+    newFile: !uuid 'c5932c87d995dcdba3f199cb0cda80c0d33a2a28'
+    oldFile: !uuid 'ed4b6863dcd1b1082394cf7f2cdda8e841a903f0'
   /admin-ui/src/views/report:
-    newFile: !uuid 'c4a63ffe02cebdae60c8653cd2879f40f256c97f'
-    oldFile: !uuid 'a9feacfa7f6db6433b955dc1b54c0b40cf0eb16d'
+    newFile: !uuid '64aed5de1053894670ae0edc1d31e9560a733339'
+    oldFile: !uuid 'c4a63ffe02cebdae60c8653cd2879f40f256c97f'
   /admin-ui/src/views/report/datav:
-    newFile: !uuid '70adf4d3df096c688ebfc7e0443cb895bff10fe5'
-    oldFile: !uuid '7ff9b5b3e9085656f880b4e7dc7647d3945c8a6d'
+    newFile: !uuid '7b088e0e554426f973180ab1c3759aabc0834e1b'
+    oldFile: !uuid '70adf4d3df096c688ebfc7e0443cb895bff10fe5'
+  /admin-ui/src/views/report/datav/ComponentsConfig.js:
+    newFile: !uuid '8696f3f80252278347b5a65519197ca1f788b155'
+    oldFile: !uuid '114624f19f21fcb201d5fb5a02342048ca07ce14'
   /admin-ui/src/views/report/datav/DragChartConfiguration.vue:
-    newFile: !uuid '8165836b578252fad161ca22e2a9f4e1ad34eda7'
-    oldFile: !uuid '7b39b6a8e779f004fdb826a3a3afcea180ff39d3'
+    newFile: !uuid 'd17e2aabc3159044ab795d2bd7a4b1af0cd49a8b'
+    oldFile: !uuid '8165836b578252fad161ca22e2a9f4e1ad34eda7'
+  /admin-ui/src/views/report/datav/DragChartSvg.vue:
+    newFile: !uuid 'ee43dfff3bb06adb55546bbf22ea6f92957f5de7'
+    oldFile: null
   /admin-ui/src/views/report/datav/VueDragItems.vue:
-    newFile: !uuid 'd400e0c5a928ead2620959c52eb10f36b2cba374'
-    oldFile: !uuid '868c29484cdbe2e0d7af2b6e63e9db913999e6bd'
+    newFile: !uuid 'c093b5615709d61374eb008a1eac83e621436e0d'
+    oldFile: !uuid 'd400e0c5a928ead2620959c52eb10f36b2cba374'
   /admin-ui/src/views/report/datav/components:
-    newFile: !uuid '1a3bd994004d2782055f2a10052e97e73195a022'
-    oldFile: !uuid 'a368164fb71f358b893671bcac151887e6cbb0f4'
+    newFile: !uuid '4777cc38bc6def7db37f0893916102dee18a30b9'
+    oldFile: !uuid '1a3bd994004d2782055f2a10052e97e73195a022'
   /admin-ui/src/views/report/datav/components/chart:
-    newFile: !uuid 'e0f2359309a6987943ebc46db8dbc6afed61fbf8'
-    oldFile: !uuid 'f65d578cf7f4f4d25cd21f9d6530a916aff7925f'
+    newFile: !uuid '22f9a0c261d57804fcfb07a4694b5f1a1844d97e'
+    oldFile: !uuid 'e0f2359309a6987943ebc46db8dbc6afed61fbf8'
   /admin-ui/src/views/report/datav/components/chart/PolylineChart.vue:
-    newFile: !uuid '57ae2d63ea46da9386fa13e8cfd9427aba7f7410'
-    oldFile: !uuid '3b9eb69df0bcaebb543b8f023bf6e2664b21c48f'
-  /admin-ui/src/views/report/datav/components/mixins:
-    newFile: !uuid 'd9e9840006ba7ef0d39cc98dea7b51007539594e'
-    oldFile: !uuid '66aed01c419924155707253ad566165511b7c17a'
-  /admin-ui/src/views/report/datav/components/mixins/zutaiChart.js:
-    newFile: !uuid 'c05fd123f4291f4aec35b53f1f0873aa345f06ce'
-    oldFile: !uuid '488e42dd79b0b167915ea4da0a6b3c6c1e41bb76'
-gitCommitId: !uuid '4d94a232fdbf4d72b32f252ccb41e98360852d4a'
+    newFile: !uuid '707415e86180db00505150634f95b046a42754e4'
+    oldFile: !uuid '57ae2d63ea46da9386fa13e8cfd9427aba7f7410'
+  /admin-ui/src/views/report/datav/components/config:
+    newFile: !uuid '0d50ae9cac2d93c2f2ff280b3999c16b8c9db13c'
+    oldFile: !uuid 'cae275cbdcfe0d31d64e32e6460b8c075baa72d5'
+  /admin-ui/src/views/report/datav/components/config/PolylineConfig:
+    newFile: !uuid 'd951672c2fe1bbb77ec155f285f0990fb9df3330'
+    oldFile: !uuid '20f267ab0ab763dd713c64113e8526118488bb2d'
+  /admin-ui/src/views/report/datav/components/config/PolylineConfig/index.vue:
+    newFile: !uuid 'a6b6c7a78d4ec36fa7d4751d6747b5664dd773b0'
+    oldFile: !uuid '8be9f9de461853612d8426ba97258502cf128c41'
+  /admin-ui/src/views/report/datav/components/config/PolylineConfig/moduleDeploy.vue:
+    newFile: !uuid 'b68b92b650566ad84851157d5c8bf79081bf60b3'
+    oldFile: !uuid '48683cfc768dd5979ce86383c07eb7c9c4bfee7c'
+  /admin-ui/src/views/report/datav/components/config/PolylineConfig/modulePosition.vue:
+    newFile: null
+    oldFile: !uuid '612125fcc99f9d1de3f5bb98c1be5d8f67bdad57'
+  /admin-ui/src/views/report/datav/datavDraw.vue:
+    newFile: !uuid '84efc2cecbd307c676d7864d4ac2f2f61aedde6b'
+    oldFile: !uuid '356f9318084786cb72ad6f11ce13cbf3d2de335b'
+  /admin-ui/src/views/report/datav/datavRelease.vue:
+    newFile: !uuid '528c93c09a92743421689a7a3f0c390a909b37d3'
+    oldFile: !uuid '4547c419ccb6da868c3bac603b0002a84064f904'
+  /admin-ui/src/views/report/datav/datavView.vue:
+    newFile: !uuid '215843506cf6708b02c7133b6ec49582f0a1e460'
+    oldFile: !uuid '2ef2757a4132a49bc804833270b82a9a68fba7ab'
+gitCommitId: !uuid 'd49c070b5c7fbf0859dd0bc48e8e2f5813778d28'
 renames: {
   }
-revisionId: 45
+revisionId: 46
