@@ -1,12 +1,19 @@
 <template>
   <div style="width:100%;height:100vh;" :style="appContainerStyle">
     <div id="canvas" :style="canvasStyle">
-      <div v-for="(item, index) in viewData" :key="index" :style="chartStyle(item)" v-show="item.isShow == true">
+      <div v-for="(item, index) in noSvgGroupDraw" :key="index" :style="chartStyle(item)" v-show="item.isShow == true">
         <component :is="chartName(item)" :theme="viewTheme.themeColor" :isDraw="false" :width="item.width + 'px'"
           :height="item.height + 'px'" :chartOption="item.chartOption" :className="item.chartOption.animate"
-          :drawingList="viewData" :customId="item.customId" v-if="item.isShow == true" pageState="preview" :alLoadData="alLoadData" @setAlLoadData="setAlLoadData"></component>
+          :drawingList="viewData" :customId="item.customId" v-if="item.isShow == true" pageState="preview"
+          :alLoadData="alLoadData" @setAlLoadData="setAlLoadData"></component>
       </div>
-
+      <svg ref="svgChartRef" width="100%" height="100%" preserveAspectRatio="none">
+        <g v-for="(item, index) in svgGroupDraw" :key="index">
+          <component :is="chartName(item)" :theme="viewTheme.themeColor" :isDraw="false" :chartOption="item.chartOption"
+            :drawingList="viewData" :customId="item.customId" :dragchartdata="item">
+          </component>
+        </g>
+      </svg>
     </div>
   </div>
 </template>
@@ -46,7 +53,7 @@ export default {
       globalTimers: [],
       doubleThemeOption: {},
       doubleType: 'pc',
-      alLoadData:[]//
+      alLoadData: []//
     }
   },
   async created() {
@@ -96,21 +103,21 @@ export default {
     }.bind(this))
 
     //控制指定全局数据源刷新
-    VueEvent.$on('refreshGlobal', function (name,isNotLoad) {
-      if(Array.isArray(name)){
-        let optionArr=[]
+    VueEvent.$on('refreshGlobal', function (name, isNotLoad) {
+      if (Array.isArray(name)) {
+        let optionArr = []
         for (let i = 0; i < this.viewTheme.globalData.length; i++) {
           let tmpOption = this.viewTheme.globalData[i];
           if (name.includes(tmpOption.name)) {
             optionArr.push(tmpOption)
           }
         }
-        this.initDataName(optionArr,isNotLoad);
-      }else{
+        this.initDataName(optionArr, isNotLoad);
+      } else {
         for (let i = 0; i < this.viewTheme.globalData.length; i++) {
           let tmpOption = this.viewTheme.globalData[i];
-          if (name&&tmpOption.name == name) {
-            this.initDataName(tmpOption,isNotLoad);
+          if (name && tmpOption.name == name) {
+            this.initDataName(tmpOption, isNotLoad);
           }
         }
       }
@@ -118,23 +125,27 @@ export default {
 
   },
   computed: {
+    noSvgGroupDraw() {
+      let list = this.viewData.filter(row => row.chartTypeGroup != 'svgGroup')
+      return list
+    },
+    svgGroupDraw() {
+      let list = this.viewData.filter(row => row.chartTypeGroup == 'svgGroup')
+      return list
+    },
     canvasStyle() {
       let background = this.viewTheme.bgImage != '' ? `url(${this.viewTheme.bgImage}) no-repeat` : this.viewTheme.bgColor
-      // let background = this.viewTheme.bgImage != '' ? `url(${this.basePath + this.viewTheme.bgImage}) no-repeat` : this.viewTheme.bgColor
       return {
         width: this.viewTheme.isSelfAdaption ? this.screenWidth + "px" : this.viewTheme.panelWidth + "px",
         height: this.viewTheme.isSelfAdaption ? this.screenHeight + "px" : this.viewTheme.panelHeight + "px",
         background: background,
         position: 'relative',
         overflow: 'hidden',
-        // width: "100%",
-        // height: "100%",
-        // background: this.viewTheme.bgColor,
       };
     },
-    appContainerStyle(){
+    appContainerStyle() {
       let background = this.viewTheme.bgImage != '' ? `url(${this.viewTheme.bgImage}) no-repeat` : this.viewTheme.bgColor
-      return {background: background}
+      return { background: background }
     },
   },
   mounted() {
@@ -146,7 +157,7 @@ export default {
 
     //初始化数据源
     // setTimeout(()=>{
-      this.initDataSource();
+    this.initDataSource();
     // },200)
     this.checkDeviceType();
     window.addEventListener('resize', this.checkDeviceType);
@@ -158,8 +169,8 @@ export default {
     window.removeEventListener('resize', this.checkDeviceType);
   },
   methods: {
-    setAlLoadData(val){
-      this.alLoadData=val
+    setAlLoadData(val) {
+      this.alLoadData = val
     },
     async initTypeApply() {
       // let viewData = JSON.parse(localStorage.getItem("viewdata"));
@@ -182,7 +193,7 @@ export default {
       if (isSelfAdaption) {
         //全自适应
         if (viewData.DeviceType === 'double') {
-            if (typeof adaptionType == 'undefined' || adaptionType == '0') {
+          if (typeof adaptionType == 'undefined' || adaptionType == '0') {
             //遍历组件重新计算自适应宽高
             viewData.drawingList[this.doubleType].forEach(item => {
               item.width = (item.width / rectWidth) * this.screenWidth;
@@ -246,11 +257,11 @@ export default {
         let tmpOption = this.viewTheme.globalData[i];
         if (tmpOption.timeout > 0) {
           let timerTask = () => {
-            
+
             this.globalTimers.push(setInterval(() => {
               // timerTask();
               this.initDataName(tmpOption);
-            },Number(tmpOption.timeout)*1000));
+            }, Number(tmpOption.timeout) * 1000));
           };
           timerTask();
         } else {
@@ -259,24 +270,24 @@ export default {
         }
       }
     },
-    async initDataName(iptOption,isNotLoad) {
-      if(isNotLoad){
+    async initDataName(iptOption, isNotLoad) {
+      if (isNotLoad) {
         VueEvent.$emit("GlobalData", '', iptOption);
-      }else{
+      } else {
         let initResult = "";
-        let newiptOption=await everyOngetData(iptOption,this.viewTheme.globalData,this.viewData)
-        let curitem=null
+        let newiptOption = await everyOngetData(iptOption, this.viewTheme.globalData, this.viewData)
+        let curitem = null
         this.viewTheme.globalData.find((x, inx) => {
           if (x.name == newiptOption.name) {
             curitem = inx
           }
         });
-        if(curitem!=null){
+        if (curitem != null) {
           this.$set(this.viewTheme.globalData, curitem, newiptOption);
         }
         VueEvent.$emit("GlobalData", initResult, newiptOption);
       }
-      
+
     },
     chartName(item) {
       if (item.chartType == "text") {
@@ -328,4 +339,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#svgDraw {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+</style>

@@ -185,7 +185,6 @@ export default {
         cx: lastPoint.cx - 20,
         cy: lastPoint.cy,
       };
-
       // 响应式添加到数组
       this.configData.chartOption.points.splice(lastidx, 0, newPoint);
     },

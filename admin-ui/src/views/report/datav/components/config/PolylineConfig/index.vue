@@ -3,7 +3,6 @@
     <el-tabs v-model="currentTab" class="center-tabs" @tab-click="handleClick">
       <el-tab-pane label="配置" name="field" />
       <el-tab-pane label="数据" name="data" />
-      <el-tab-pane label="定位" name="location" />
     </el-tabs>
     <!-- 组件属性 -->
     <moduleDeploy
@@ -48,24 +47,17 @@
         </data-source-config>
       </el-scrollbar>
     </div>
-    <!-- 组件位置 -->
-    <modulePosition
-      v-if="currentTab === 'location'"
-      :costomData="configData"
-    ></modulePosition>
   </div>
 </template>
 
 <script>
 import DataSourceConfig from "../DataConfig/DataSourceConfig";
 import sourceConfig from "../../mixins/sourceConfig.js";
-import modulePosition from "./modulePosition";
 import moduleDeploy from "./moduleDeploy";
 export default {
   mixins: [sourceConfig],
   components: {
     DataSourceConfig,
-    modulePosition,
     moduleDeploy,
   },
   data() {

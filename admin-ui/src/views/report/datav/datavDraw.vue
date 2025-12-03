@@ -13,13 +13,7 @@
       </div>
 
       <!-- 左侧组件图层 -->
-
       <el-scrollbar class="left-scrollbar">
-        <!-- <draggable item-key="id" v-model="drawingList" ghostClass="ghost">
-          <template #item="{ element }">
-              <div>{{ element }}</div>
-          </template>
-        </draggable> -->
         <layer-items
           ref="leftTab"
           :isStartLoading="isStartLoading"

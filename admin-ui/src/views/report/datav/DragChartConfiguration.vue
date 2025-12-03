@@ -8,7 +8,7 @@
     class="test3" class-name-dragging="my-dragging-class" class-name-resizing="my-resizing-class"
     class-name-active="my-active-class" class-name-selected="ctrlSelected"
     :style="{ 'background-color': chartType == 'polyline' ? 'transparent' : '' }">
-    <component :activeId="activeId" @finishPointDraw="finishPointDraw" @clearSprite="clearSprite"
+    <component :activeId="activeId"
       :ref="'com' + customId" :scene="scene" :layer="layer" :x="x" :y="y" :z="dragchartdata.zindex + 1"
       :is="ComponentName" :theme="theme" :isDraw="true" :width="width + 'px'" :height="height + 'px'"
       :chartOption="chartOption" :className="chartOption.animate" :drawingList="drawingList" :customId="customId"
@@ -117,12 +117,6 @@ export default {
   },
 
   methods: {
-    finishPointDraw() {
-      this.$emit('finishPointDraw')
-    },
-    clearSprite() {
-      this.$emit('clearSprite')
-    },
     //右键菜单
     onContextmenu(event) {
       this.$contextmenu({

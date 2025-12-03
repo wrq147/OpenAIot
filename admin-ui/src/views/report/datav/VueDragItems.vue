@@ -2,15 +2,24 @@
   <div class="grid-style" ref="dragcontnet" @mousedown.left="onmousedownClick" @mouseup.stop="handMouseUp">
 
     <drag-chart v-for="item in notConfigurationDraw" :key="'ch' + item.customId" :dragchartdata="item"
-      v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="notConfigurationDraw" :onCtrl="onCtrl"
+      v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="drawingList" :onCtrl="onCtrl"
       :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
       @dragstop="dragstop" @actived="onActived"></drag-chart>
-    <div id="configurationDraw">
-      <drag-chart-config v-for="item in configurationDraw" :key="'kch' + item.customId" :dragchartdata="item"
-        v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="configurationDraw" :onCtrl="onCtrl"
-        :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
-        @dragstop="dragstop" @actived="onActived" ref="zutaiconfig"></drag-chart-config>
+
+    <drag-chart-config v-for="item in configurationDraw" :key="'kch' + item.customId" :dragchartdata="item"
+      v-if="item.isShow" :scale="scale" :activeId="activeId" :drawingList="drawingList" :onCtrl="onCtrl"
+      :ctrlSelectArr="ctrlSelectArr" :theme="theme" @getRefLineParams="getRefLineParams" @dragging="dragging"
+      @dragstop="dragstop" @actived="onActived" ref="zutaiconfig"></drag-chart-config>
+
+    <div id="svgDraw">
+      <svg ref="svgChartRef" @mousemove.passive="moveSvg" @mouseup="endMoveSvg" @mouseleave="endMoveSvg" width="100%" height="100%"
+        preserveAspectRatio="none">
+        <drag-chart-svg v-for="item in svgGroupDraw" :key="'vch' + item.customId" :dragchartdata="item" :scale="scale"
+          :activeId="activeId" :drawingList="drawingList" :theme="theme">
+        </drag-chart-svg>
+      </svg>
     </div>
+
     <!--辅助线-->
     <span class="ref-line v-line" v-for="(item, idx) in vLine" :key="'v' + idx" v-show="item.display" :style="{
       left: item.position,
@@ -32,12 +41,14 @@
 
 import DragChart from './DragChart'
 import DragChartConfig from './DragChartConfiguration'
+import DragChartSvg from './DragChartSvg'
 import VueEvent from './VueEvent'
 import { addEvent, removeEvent } from './util/dom'
 export default {
   components: {
     DragChart,
-    DragChartConfig
+    DragChartConfig,
+    DragChartSvg
   },
   props: ["drawingList", "scale", "activeId", "theme"],
   data() {
@@ -63,13 +74,17 @@ export default {
   },
   mounted() {
     VueEvent.$on("clear_ctrl", data => {
-
       this.ctrlSelectArr = [];
       this.resetMouseState();
     });
   },
   methods: {
-
+    moveSvg(event) {
+      VueEvent.$emit("SvgMove", event);
+    },
+    endMoveSvg(event) {
+      VueEvent.$emit("SvgEndMove", event);
+    },
     // 辅助线回调事件
     getRefLineParams(params) {
       const { vLine, hLine } = params;
@@ -85,7 +100,6 @@ export default {
 
     },
     onActived(activeId) {
-      // console.log("活动的",activeId);
       this.moveId = activeId;
     },
     // 在页面钩子 mounted() 处调用此函数，增加按键监听事件
@@ -259,9 +273,6 @@ export default {
     },
     dragging(id, left, top) {
       this.draggingId = id;
-
-      //if (! this.onCtrl) return;
-
       const offsetX = left - this.draggingElement.x;
       const offsetY = top - this.draggingElement.y;
 
@@ -269,18 +280,14 @@ export default {
       const deltaY = this.deltaY(offsetY);
 
       let elements = this.drawingList.filter((item) => {
-        //console.log(item.customId);
-        //console.log(this.ctrlSelectArr.indexOf(item.customId));
         return this.ctrlSelectArr.indexOf(item.customId) > -1;
       })
 
       elements.map(el => {
-        // console.log(el.customId,id,'idid');
         if (el.customId !== id) {
           el.x += deltaX;
           el.y += deltaY;
         }
-
         return el;
       });
     },
@@ -315,8 +322,7 @@ export default {
     //鼠标左键按下方法
     onmousedownClick(e) {
       this.$emit("bgClick");
-      //console.log("鼠标左键按下方法");
-      //console.log(e);
+      VueEvent.$emit("SvgBgClick");
       this.mouseClickPosition.mouseX = e.touches ? e.touches[0].pageX : e.pageX;
       this.mouseClickPosition.mouseY = e.touches ? e.touches[0].pageY : e.pageY;
       this.mouseClickPosition.mouseX = parseInt(this.mouseClickPosition.mouseX / 20) * 20;
@@ -560,13 +566,17 @@ export default {
       return this.drawingList.find(el => el.customId === this.draggingId);
     },
     configurationDraw() {//组态组件
-      let list = this.drawingList.filter(row => row.chartTypeGroup && row.chartTypeGroup == 'configuration')
+      let list = this.drawingList.filter(row => row.chartTypeGroup && row.chartTypeGroup == 'iotGroup')
       return list
     },
-    notConfigurationDraw() {//非组态组件
-      let list = this.drawingList.filter(row => !row.chartTypeGroup || row.chartTypeGroup && row.chartTypeGroup != 'configuration')
+    notConfigurationDraw() {
+      let list = this.drawingList.filter(row => !row.chartTypeGroup)
       return list
     },
+    svgGroupDraw() {
+      let list = this.drawingList.filter(row => row.chartTypeGroup && row.chartTypeGroup == 'svgGroup')
+      return list
+    }
   },
   beforeDestroy() {
     removeEvent(document.documentElement, "mousemove", this.boxSelecting)
@@ -582,7 +592,10 @@ export default {
   background: linear-gradient(-90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px, linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px;
 }
 
-#configurationDraw {
+#svgDraw {
+  position: absolute;
+  left: 0;
+  top: 0;
   height: 100%;
   width: 100%;
 }

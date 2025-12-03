@@ -9439,7 +9439,7 @@ export const factorComponents = [{
 ];
 export const configurationComponents = [{
     chartType: "iotCustom",
-    chartTypeGroup: 'configuration',
+    chartTypeGroup: 'iotGroup',
     layerName: "自定义组态",
     icon: "el-icon-datav-custom-iot",
     customId: "",
@@ -9500,16 +9500,10 @@ export const configurationComponents = [{
     },
 }, {
     chartType: "polyline",
-    chartTypeGroup: 'configuration',
+    chartTypeGroup: 'svgGroup',
     layerName: "连接线",
     icon: "el-icon-datav-line-iot",
     customId: "",
-    width: 400,
-    height: 25,
-    x: 50,
-    y: 100,
-    zindex: 0,
-    isShow: true,
     chartOption: {
         points:[{
             cx: 10,
@@ -9530,8 +9524,6 @@ export const configurationComponents = [{
         dasharray: 39, //线缝隙间隔
         aggrName: "fengji_dong_name",
         bindList: [],
-        //载入动画
-        animate: "",
         customData: "",
         interactData: [],
         //静态数据值
@@ -9541,7 +9533,6 @@ export const configurationComponents = [{
         theme: "",
         // 数据源类型：静态数据：static；接口数据：url;数据源：database
         dataSourceType: "static",
-        svgUrl: '@/views/report/datav/image/zutai/fengji1.svg',
         bi: null,
         // timeout: 0,
     },

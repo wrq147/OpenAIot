@@ -2,14 +2,19 @@
   <div style="width:100%;height:100vh;" :style="appContainerStyle">
     <div style="-webkit-overflow-scrolling: touch;" :key="loadKey" :style="constainstyle">
       <div id="canvas" v-if="showPanal" :style="canvasStyle">
-        <template v-for="(item, index) in viewData">
-          <div :key="index" :style="chartStyle(item)" v-show="item.isShow == true" >
-            <component :is="chartName(item)" :theme="viewTheme.themeColor" :isDraw="false" :width="item.width + 'px'"
-              :height="item.height + 'px'" :chartOption="item.chartOption" :className="item.chartOption.animate"
-              :drawingList="viewData" :customId="item.customId" v-if="item.isShow == true" :alLoadData="alLoadData"
-              @setAlLoadData="setAlLoadData" :globalData="viewTheme.globalData" @startload="startload"></component>
-          </div>
-        </template>
+        <div v-for="(item, index) in noSvgGroupDraw" :key="index" :style="chartStyle(item)" v-show="item.isShow == true">
+          <component :is="chartName(item)" :theme="viewTheme.themeColor" :isDraw="false" :width="item.width + 'px'"
+            :height="item.height + 'px'" :chartOption="item.chartOption" :className="item.chartOption.animate"
+            :drawingList="viewData" :customId="item.customId" v-if="item.isShow == true" :alLoadData="alLoadData"
+            @setAlLoadData="setAlLoadData" :globalData="viewTheme.globalData" @startload="startload"></component>
+        </div>
+        <svg ref="svgChartRef" width="100%" height="100%" preserveAspectRatio="none">
+          <g v-for="(item, index) in svgGroupDraw" :key="index">
+            <component :is="chartName(item)" :theme="viewTheme.themeColor" :isDraw="false"
+              :chartOption="item.chartOption" :drawingList="viewData" :customId="item.customId" :dragchartdata="item">
+            </component>
+          </g>
+        </svg>
       </div>
       <el-dialog v-if="codeFlag" :visible.sync="codeFlag" width="600px" append-to-body :close-on-click-modal="false">
         <div style="display:flex">
@@ -34,22 +39,17 @@ import './animate/animate.css'
 import VueEvent from './VueEvent'
 
 import AllComponents from './ComponentsExport'
-import { rptInfo, shareInfo, checkShare,reportUpdateTime } from "@/api/report/report";
+import { rptInfo, checkShare, reportUpdateTime } from "@/api/report/report";
 import { getToken, setShareToken, removeShareToken } from '@/utils/auth'
-import { replaceLinkParam } from "./util/LinkageChart"
 import Vue from 'vue'
 import dataV from '@jiaminghi/data-view'
 import { GetDataSourceByIds } from "@/api/report/sourse";
 Vue.use(dataV);
 const WIDTH = 500 // refer to Bootstrap's responsive design
 import {
-  confirmValue,
-  getbaseData,
-  combinationTableColum,
-  combinationConfirmValue,
   everyOngetData
 } from "@/views/report/datav/LayerItems/commonRuning";
-import * as spritejs from "spritejs";
+
 export default {
   components: AllComponents,
   data() {
@@ -70,37 +70,31 @@ export default {
       isMobileFlag: false,
       screenId: null,
       globalTimers: [],
-      tokenId:'',
-      loadKey:11,
+      tokenId: '',
+      loadKey: 11,
       doubleType: 'pc',
-      constainstyle:'',
-      alLoadData:[],//是否是初始化已经加载的数据集
+      constainstyle: '',
+      alLoadData: [],//是否是初始化已经加载的数据集
       sourseList: [], // 数据库列表
-      hasloadData:[],
-      loadDataRow:[],
-      loadComptNum:0,
-      shouldLoadData:[],
+      hasloadData: [],
+      loadDataRow: [],
+      loadComptNum: 0,
+      shouldLoadData: [],
       container: null,
       scene: null,
       layer: null,
-      reportUpTimer:null,//定时检验是否更新
-      firstLoadTime:null,
-      finishFirstLoad:false,//是否是第一次加载
+      reportUpTimer: null,//定时检验是否更新
+      firstLoadTime: null,
+      finishFirstLoad: false,//是否是第一次加载
     }
   },
-  // updated(){
-  //   //清除loading
-  //   this.$nextTick(() => {
-  //     document.getElementById('appLoading').style.display = 'none';
-  //   })
-  // },
   async created() {
     let tokenId = this.$route.query.tokenId;
-    if(this.$route.query.tokenid){
-      tokenId =this.$route.query.tokenid
+    if (this.$route.query.tokenid) {
+      tokenId = this.$route.query.tokenid
     }
     if (tokenId != null) {
-      this.tokenId=tokenId
+      this.tokenId = tokenId
       removeShareToken();
       //参数有tokenid 必须输入验证码
       checkShare(tokenId).then(response => {
@@ -113,8 +107,8 @@ export default {
         }
         this.initDatavRelease(response.data.Report);
 
-      }).catch(err=>{
-        if(err.code==1){
+      }).catch(err => {
+        if (err.code == 1) {
           this.codeFlag = true;
         }
       });
@@ -124,7 +118,7 @@ export default {
         this.initDatavRelease();
       }
       else {
-        
+
       }
     }
 
@@ -170,58 +164,64 @@ export default {
     }.bind(this))
 
     //控制指定全局数据源刷新
-    VueEvent.$on('refreshGlobal', function (name,isNotLoad) {
+    VueEvent.$on('refreshGlobal', function (name, isNotLoad) {
       // console.log(name, 'namename', this.shouldLoadData);
-      if(Array.isArray(name)){
-        let optionArr=[]
-        let optionAloadArr=[]
+      if (Array.isArray(name)) {
+        let optionArr = []
+        let optionAloadArr = []
         for (let i = 0; i < this.viewTheme.globalData.length; i++) {
           let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
           // console.log(name,'namenamename',tmpOption.name);
-          let findShould=this.shouldLoadData.find(rwo=>rwo.name==tmpOption.name)
-          if (name&&name.length>0&&name.includes(tmpOption.name)&&!findShould) {
+          let findShould = this.shouldLoadData.find(rwo => rwo.name == tmpOption.name)
+          if (name && name.length > 0 && name.includes(tmpOption.name) && !findShould) {
             this.shouldLoadData.push(tmpOption)
             optionArr.push(tmpOption)
-            
-          }else if (name&&name.length>0&&name.includes(tmpOption.name)){
+
+          } else if (name && name.length > 0 && name.includes(tmpOption.name)) {
             optionAloadArr.push(tmpOption)
           }
         }
-        if(optionArr&&optionArr.length>0){
-          this.initDataName(optionArr,isNotLoad);
-        }else if(optionAloadArr&&optionAloadArr.length>0){
-          this.initDataName(optionAloadArr,true);
+        if (optionArr && optionArr.length > 0) {
+          this.initDataName(optionArr, isNotLoad);
+        } else if (optionAloadArr && optionAloadArr.length > 0) {
+          this.initDataName(optionAloadArr, true);
         }
-        
-      }else{
+
+      } else {
         for (let i = 0; i < this.viewTheme.globalData.length; i++) {
           let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
-          let findShould=this.shouldLoadData.find(rwo=>rwo.name==tmpOption.name)
-          if (name&&tmpOption.name == name&&!findShould) {
+          let findShould = this.shouldLoadData.find(rwo => rwo.name == tmpOption.name)
+          if (name && tmpOption.name == name && !findShould) {
             this.shouldLoadData.push(tmpOption)
             // if(tmpOption&&tmpOption.dataSourceType!="combination"){
-              // if(this.finishFirstLoad){
-                this.initDataName(tmpOption,isNotLoad);
-              // }
-            // }
-            
-          }else if (name&&tmpOption.name == name){
             // if(this.finishFirstLoad){
-              this.initDataName(tmpOption,true);
+            this.initDataName(tmpOption, isNotLoad);
+            // }
+            // }
+
+          } else if (name && tmpOption.name == name) {
+            // if(this.finishFirstLoad){
+            this.initDataName(tmpOption, true);
             // }
           }
         }
-        
+
       }
     }.bind(this))
 
   },
   computed: {
+    noSvgGroupDraw() {
+      let list = this.viewData.filter(row => row.chartTypeGroup != 'svgGroup')
+      return list
+    },
+    svgGroupDraw() {
+      let list = this.viewData.filter(row => row.chartTypeGroup == 'svgGroup')
+      return list
+    },
     canvasStyle() {
       let background = this.viewTheme.bgImage != '' ? `url(${this.viewTheme.bgImage}) no-repeat` : this.viewTheme.bgColor
-      // let background = this.viewTheme.bgImage != '' ? `url(${this.basePath + this.viewTheme.bgImage}) no-repeat` : this.viewTheme.bgColor
-
-      if (this.isMobileFlag&&this.doubleType != 'phone') {
+      if (this.isMobileFlag && this.doubleType != 'phone') {
 
         return {
           background: background,
@@ -229,32 +229,27 @@ export default {
           flexDirection: 'column',
         }
       } else {
-        // let widthRatio=this.screenWidth/this.viewTheme.panelWidth
-        // let heightRatio=this.screenHeight/this.viewTheme.panelHeight
-        // console.log(widthRatio,heightRatio,'heightRatio');
         return {
-          // width: this.viewTheme.isSelfAdaption ? this.screenWidth + "px" : this.viewTheme.panelWidth + "px",
           width: this.viewTheme.panelWidth + "px",
-          // height: this.viewTheme.isSelfAdaption ? this.screenHeight + "px" : this.viewTheme.panelHeight + "px",
           height: this.viewTheme.panelHeight + "px",
           background: background,
           position: 'relative',
           overflow: 'hidden',
-          
+
         };
       }
 
 
     },
 
-    appContainerStyle(){
-      if(this.viewTheme){
+    appContainerStyle() {
+      if (this.viewTheme) {
         let background = this.viewTheme.bgImage != '' ? `url(${this.viewTheme.bgImage}) no-repeat` : this.viewTheme.bgColor
-        return {background: background}
-      }else{
-        return{}
+        return { background: background }
+      } else {
+        return {}
       }
-      
+
     },
   },
   mounted: function () {
@@ -267,7 +262,7 @@ export default {
     if (isMobile) {
       this.isMobileFlag = true;
     }
-    
+
 
   },
   beforeDestroy() {
@@ -276,34 +271,34 @@ export default {
     }
   },
   methods: {
-    loadReportUpdateTime(){
-      reportUpdateTime({id:this.screenId}).then(res=>{//大屏刷新
+    loadReportUpdateTime() {
+      reportUpdateTime({ id: this.screenId }).then(res => {//大屏刷新
         // console.log("更新时间",res);
-        if(this.firstLoadTime&&this.firstLoadTime!=res.data){
+        if (this.firstLoadTime && this.firstLoadTime != res.data) {
           for (let i = this.globalTimers.length; i >= 0; i--) {
-            if(this.globalTimers[i]){
+            if (this.globalTimers[i]) {
               clearInterval(this.globalTimers[i]);
             }
           }
-          
+
           window.location.reload(true)
-          if(this.reportUpTimer){
+          if (this.reportUpTimer) {
             clearInterval(this.reportUpTimer)
           }
         }
-        this.firstLoadTime=res.data
+        this.firstLoadTime = res.data
       })
     },
-    async startload(){
+    async startload() {
       //初始化数据
-      this.finishFirstLoad=false
+      this.finishFirstLoad = false
       this.loadComptNum++
-      let dataa=this.viewData.filter(row=>row.chartOption.dataSourceType == "gobal")
-      if(this.loadComptNum==dataa.length){
+      let dataa = this.viewData.filter(row => row.chartOption.dataSourceType == "gobal")
+      if (this.loadComptNum == dataa.length) {
         try {
           await this.dataSorting()
         } catch (error) {
-          this.$message('加载'+error);
+          this.$message('加载' + error);
         }
       }
     },
@@ -318,8 +313,8 @@ export default {
         this.sourseList = [];
       }
     },
-    setAlLoadData(val){
-      this.alLoadData=val
+    setAlLoadData(val) {
+      this.alLoadData = val
     },
     async initDataSource() {
       await this.getRptList(this.viewTheme.globalData);
@@ -328,11 +323,11 @@ export default {
         let tmpOption = JSON.parse(JSON.stringify(this.viewTheme.globalData[i]));
         if (tmpOption.timeout > 0) {
           let timerTask = () => {
-            
+
             this.globalTimers.push(setInterval(() => {
 
-              this.initDataName(tmpOption,false,true);
-            },Number(tmpOption.timeout)*1000));
+              this.initDataName(tmpOption, false, true);
+            }, Number(tmpOption.timeout) * 1000));
           };
           timerTask();
         }
@@ -359,49 +354,49 @@ export default {
       }
       return globalData
     },
-    async dataSorting(){//数据排序，将数据集的子数据排前面
-      let notcombination=[]
-      let combinationChild=[]
-      let combination=[]
+    async dataSorting() {//数据排序，将数据集的子数据排前面
+      let notcombination = []
+      let combinationChild = []
+      let combination = []
       // console.log(this.shouldLoadData.length,'this.shouldLoadData');
-      for(let i=0;i<this.shouldLoadData.length;i++){
-        let row=this.shouldLoadData[i]
-        if(row&&row.dataSourceType=="combination"){
+      for (let i = 0; i < this.shouldLoadData.length; i++) {
+        let row = this.shouldLoadData[i]
+        if (row && row.dataSourceType == "combination") {
           combination.push(row)
-          let arr=this.checkGlobalData2(row.combinationTable,[])
+          let arr = this.checkGlobalData2(row.combinationTable, [])
           // console.log(arr,'arrarrarr');
-          let notcombinationArr=arr.filter(r=>r.dataSourceType!="combination")
-          let combinationChildArr=arr.filter(r=>r.dataSourceType=="combination")
-          notcombination=[...notcombinationArr,...notcombination]
-          combinationChild=[...combinationChildArr,...combinationChild]
-        }else{
+          let notcombinationArr = arr.filter(r => r.dataSourceType != "combination")
+          let combinationChildArr = arr.filter(r => r.dataSourceType == "combination")
+          notcombination = [...notcombinationArr, ...notcombination]
+          combinationChild = [...combinationChildArr, ...combinationChild]
+        } else {
           notcombination.push(row)
         }
       }
-      let resArr=notcombination.concat(combinationChild, combination)
+      let resArr = notcombination.concat(combinationChild, combination)
       // console.log(resArr,'resArrresArr');
       const uniqueArray = resArr.reduce((acc, current) => {
-          const duplicate = acc.find(item => item.name === current.name);
-          if (!duplicate) {
-              acc.push(current);
-          }
-          return acc;
+        const duplicate = acc.find(item => item.name === current.name);
+        if (!duplicate) {
+          acc.push(current);
+        }
+        return acc;
       }, []);
-      for(let j=0;j<uniqueArray.length;j++){
+      for (let j = 0; j < uniqueArray.length; j++) {
         await this.initDataName(uniqueArray[j]);
       }
-      this.finishFirstLoad=true
+      this.finishFirstLoad = true
     },
-    checkGlobalData2(dataarr,joinArr){
-      for(let i=0;i<dataarr.length;i++){
-        let rw=dataarr[i]
-        let findrow=this.viewTheme.globalData.find(ro=>ro.name==rw.globalData)
-        if(findrow){
-          if(findrow.dataSourceType=="combination"){
+    checkGlobalData2(dataarr, joinArr) {
+      for (let i = 0; i < dataarr.length; i++) {
+        let rw = dataarr[i]
+        let findrow = this.viewTheme.globalData.find(ro => ro.name == rw.globalData)
+        if (findrow) {
+          if (findrow.dataSourceType == "combination") {
             joinArr.unshift(findrow)
-            let arr=this.checkGlobalData2(findrow.combinationTable,[])
-            joinArr=[...arr,...joinArr]
-          }else{
+            let arr = this.checkGlobalData2(findrow.combinationTable, [])
+            joinArr = [...arr, ...joinArr]
+          } else {
             joinArr.unshift(findrow)
           }
         }
@@ -409,45 +404,45 @@ export default {
       }
       return joinArr
     },
-    async initDataName(iptOption,isNotLoad,issetInterval,isNotArrload) {
-      if(isNotLoad){
-        VueEvent.$emit("GlobalData", '', iptOption,isNotArrload);
-      }else{
+    async initDataName(iptOption, isNotLoad, issetInterval, isNotArrload) {
+      if (isNotLoad) {
+        VueEvent.$emit("GlobalData", '', iptOption, isNotArrload);
+      } else {
         try {
           let initResult = "";
-          let newiptOption=await everyOngetData(iptOption,this.viewTheme.globalData,this.viewData)
-          let curitem=null
+          let newiptOption = await everyOngetData(iptOption, this.viewTheme.globalData, this.viewData)
+          let curitem = null
           this.viewTheme.globalData.find((x, inx) => {
             if (x.name == newiptOption.name) {
               curitem = inx
             }
           });
-          if(curitem!=null){
+          if (curitem != null) {
             this.$set(this.viewTheme.globalData, curitem, newiptOption);
           }
-          VueEvent.$emit("GlobalData", initResult, newiptOption,isNotArrload);
+          VueEvent.$emit("GlobalData", initResult, newiptOption, isNotArrload);
           // if(issetInterval&&!Array.isArray(iptOption)&&iptOption.dataSourceType!="combination"){
-          if(issetInterval&&!Array.isArray(iptOption)){
-            let filtarr=this.viewTheme.loadingGlobalDataObj[iptOption.name]
-            if(filtarr){
-              for(let i=0;i<filtarr.length;i++){
-                let index=this.viewTheme.globalData.findIndex(rw=>rw.name==filtarr[i].name)
-                if(index!=null&&index!=undefined){
-                  let newiptOption2=await everyOngetData(this.viewTheme.globalData[index],this.viewTheme.globalData,this.viewData)
+          if (issetInterval && !Array.isArray(iptOption)) {
+            let filtarr = this.viewTheme.loadingGlobalDataObj[iptOption.name]
+            if (filtarr) {
+              for (let i = 0; i < filtarr.length; i++) {
+                let index = this.viewTheme.globalData.findIndex(rw => rw.name == filtarr[i].name)
+                if (index != null && index != undefined) {
+                  let newiptOption2 = await everyOngetData(this.viewTheme.globalData[index], this.viewTheme.globalData, this.viewData)
                   this.$set(this.viewTheme.globalData, index, newiptOption2);
-                  VueEvent.$emit("GlobalData", '', newiptOption2,isNotArrload);
+                  VueEvent.$emit("GlobalData", '', newiptOption2, isNotArrload);
                 }
-                
+
               }
             }
-            
+
           }
         } catch (error) {
-          console.log("报错",error);
+          console.log("报错", error);
           this.$message(error);
         }
       }
-      
+
     },
     chartName(item) {
       if (item.chartType == "text") {
@@ -487,7 +482,7 @@ export default {
     },
     chartStyle(val) {
 
-      if (this.isMobileFlag&&this.doubleType != 'phone') {
+      if (this.isMobileFlag && this.doubleType != 'phone') {
         return {
           //transform: translate(val.x + "px", val.y + "px"),
           marginLeft: val.x + "px",
@@ -523,173 +518,173 @@ export default {
         }
 
         if (rreport.DrawOption != undefined) {
-            let drawingList = [];
-            if (rreport.DeviceType === 'double') {
-              drawingList = JSON.parse(rreport.DrawOption)[this.doubleType]
-              this.viewTheme =  JSON.parse(rreport.ThemeOption)[this.doubleType]
-              this.viewTheme.globalData =  JSON.parse(rreport.ThemeOption).globalData
-            } else {
-              drawingList = JSON.parse(rreport.DrawOption)
-              this.viewTheme =  JSON.parse(rreport.ThemeOption)
-            }
-            this.$nextTick(()=>{
-              this.viewTheme.loadingGlobalData=this.viewTheme.globalData.filter(rws=>rws.dataSourceType!="combination")
-              let combinationGlobalData=this.viewTheme.globalData.filter(rws=>rws.dataSourceType=="combination")
-              let loadingGlobalDataObj={}
-              for(let i=0;i<this.viewTheme.loadingGlobalData.length;i++){
-                loadingGlobalDataObj[this.viewTheme.loadingGlobalData[i].name]=[]
-                for(let j=0;j<combinationGlobalData.length;j++){
-                  let findSame=combinationGlobalData[j].combinationTable.find(row=>{
-                    if(row.globalData==this.viewTheme.loadingGlobalData[i].name){
-                      return true
-                    }else{
-                      return this.checkGlobalData(row.globalData,this.viewTheme.loadingGlobalData[i].name)
-                    }
-                  })
-                  if(findSame){
-                    loadingGlobalDataObj[this.viewTheme.loadingGlobalData[i].name].push(combinationGlobalData[j])
+          let drawingList = [];
+          if (rreport.DeviceType === 'double') {
+            drawingList = JSON.parse(rreport.DrawOption)[this.doubleType]
+            this.viewTheme = JSON.parse(rreport.ThemeOption)[this.doubleType]
+            this.viewTheme.globalData = JSON.parse(rreport.ThemeOption).globalData
+          } else {
+            drawingList = JSON.parse(rreport.DrawOption)
+            this.viewTheme = JSON.parse(rreport.ThemeOption)
+          }
+          this.$nextTick(() => {
+            this.viewTheme.loadingGlobalData = this.viewTheme.globalData.filter(rws => rws.dataSourceType != "combination")
+            let combinationGlobalData = this.viewTheme.globalData.filter(rws => rws.dataSourceType == "combination")
+            let loadingGlobalDataObj = {}
+            for (let i = 0; i < this.viewTheme.loadingGlobalData.length; i++) {
+              loadingGlobalDataObj[this.viewTheme.loadingGlobalData[i].name] = []
+              for (let j = 0; j < combinationGlobalData.length; j++) {
+                let findSame = combinationGlobalData[j].combinationTable.find(row => {
+                  if (row.globalData == this.viewTheme.loadingGlobalData[i].name) {
+                    return true
+                  } else {
+                    return this.checkGlobalData(row.globalData, this.viewTheme.loadingGlobalData[i].name)
                   }
+                })
+                if (findSame) {
+                  loadingGlobalDataObj[this.viewTheme.loadingGlobalData[i].name].push(combinationGlobalData[j])
                 }
               }
-              this.viewTheme.loadingGlobalDataObj=loadingGlobalDataObj
-            })
-            this.showPanal = true;
-            this.$nextTick(()=>{
-              this.reportUpTimer=setInterval(()=>{
-                this.loadReportUpdateTime()//
-              },5000)
-            })
-            //是否自适应
-            let isSelfAdaption = this.viewTheme.isSelfAdaption;
-            //自适应类型
-            let adaptionType = this.viewTheme.adaptionType;
-            //获取编辑页宽高
-            let rectWidth = this.viewTheme.panelWidth;
-            let rectHeight = this.viewTheme.panelHeight;
+            }
+            this.viewTheme.loadingGlobalDataObj = loadingGlobalDataObj
+          })
+          this.showPanal = true;
+          this.$nextTick(() => {
+            this.reportUpTimer = setInterval(() => {
+              this.loadReportUpdateTime()//
+            }, 5000)
+          })
+          //是否自适应
+          let isSelfAdaption = this.viewTheme.isSelfAdaption;
+          //自适应类型
+          let adaptionType = this.viewTheme.adaptionType;
+          //获取编辑页宽高
+          let rectWidth = this.viewTheme.panelWidth;
+          let rectHeight = this.viewTheme.panelHeight;
 
-            //是手机端页面
-            // console.log(this.isMobileFlag,this.doubleType != 'phone');
-            if (this.isMobileFlag&&this.doubleType != 'phone') {
-              //设置宽是屏幕宽度的90%
-              //高度按原图比例
-              drawingList.forEach(item => {
-                let originalWidth = item.width;
-                item.width = this.screenWidth * 0.95;
+          //是手机端页面
+          // console.log(this.isMobileFlag,this.doubleType != 'phone');
+          if (this.isMobileFlag && this.doubleType != 'phone') {
+            //设置宽是屏幕宽度的90%
+            //高度按原图比例
+            drawingList.forEach(item => {
+              let originalWidth = item.width;
+              item.width = this.screenWidth * 0.95;
 
-                if (originalWidth < this.screenWidth) {
+              if (originalWidth < this.screenWidth) {
 
-                  item.height = (item.height / originalWidth) * this.screenWidth * 0.95;
-                }
-                item.x = this.screenWidth * 0.025;
-                // item.y = (item.y/rectHeight) * this.screenHeight;
-              });
+                item.height = (item.height / originalWidth) * this.screenWidth * 0.95;
+              }
+              item.x = this.screenWidth * 0.025;
+              // item.y = (item.y/rectHeight) * this.screenHeight;
+            });
 
-            } else {
+          } else {
 
+            //是自适应
+            if (isSelfAdaption) {
+              //全自适应
+              if (typeof adaptionType == 'undefined' || adaptionType == '0') {
+                //遍历组件重新计算自适应宽高
+                // drawingList.forEach(item => {
+                //   item.width = (item.width / rectWidth) * this.screenWidth;
+                //   item.height = (item.height / rectHeight) * this.screenHeight;
+                //   item.x = (item.x / rectWidth) * this.screenWidth;
+                //   item.y = (item.y / rectHeight) * this.screenHeight;
+                // });
+              }
+              //宽度自适应
+              else if (adaptionType == '1') {
+                //遍历组件重新计算自适应宽高
+                // drawingList.forEach(item => {
+                //   item.width = (item.width / rectWidth) * this.screenWidth;
+                //   item.x = (item.x / rectWidth) * this.screenWidth;
+                // });
+              }
+              //高度自适应
+              else if (adaptionType == '2') {
+                //遍历组件重新计算自适应宽高
+                // drawingList.forEach(item => {
+                //   item.height = (item.height / rectHeight) * this.screenHeight;
+                //   item.y = (item.y / rectHeight) * this.screenHeight;
+                // });
+              }
+
+            }
+          }
+
+
+          this.viewData = drawingList;
+          this.$forceUpdate()
+          this.loadKey++
+          //初始化数据源
+          // this.$nextTick(() => {
+          this.initDataSource();
+          // });
+          if (this.viewTheme.isSelfAdaption) {
+            let widthRatio = this.screenWidth / this.viewTheme.panelWidth
+            let heightRatio = this.screenHeight / this.viewTheme.panelHeight
+            if (this.isMobileFlag && this.doubleType != 'phone') { } else {
               //是自适应
               if (isSelfAdaption) {
                 //全自适应
                 if (typeof adaptionType == 'undefined' || adaptionType == '0') {
                   //遍历组件重新计算自适应宽高
-                  // drawingList.forEach(item => {
-                  //   item.width = (item.width / rectWidth) * this.screenWidth;
-                  //   item.height = (item.height / rectHeight) * this.screenHeight;
-                  //   item.x = (item.x / rectWidth) * this.screenWidth;
-                  //   item.y = (item.y / rectHeight) * this.screenHeight;
-                  // });
+                  this.constainstyle = 'transform:scale(' + widthRatio + ',' + heightRatio + ');transform-origin:left top'
                 }
                 //宽度自适应
                 else if (adaptionType == '1') {
                   //遍历组件重新计算自适应宽高
-                  // drawingList.forEach(item => {
-                  //   item.width = (item.width / rectWidth) * this.screenWidth;
-                  //   item.x = (item.x / rectWidth) * this.screenWidth;
-                  // });
+                  this.constainstyle = 'transform:scale(' + widthRatio + ');transform-origin:left top'
                 }
                 //高度自适应
                 else if (adaptionType == '2') {
                   //遍历组件重新计算自适应宽高
-                  // drawingList.forEach(item => {
-                  //   item.height = (item.height / rectHeight) * this.screenHeight;
-                  //   item.y = (item.y / rectHeight) * this.screenHeight;
-                  // });
-                }
-
-              }
-            }
-            
-
-            this.viewData = drawingList;
-            this.$forceUpdate()
-            this.loadKey++
-            //初始化数据源
-            // this.$nextTick(() => {
-              this.initDataSource();
-            // });
-            if(this.viewTheme.isSelfAdaption){
-              let widthRatio=this.screenWidth/this.viewTheme.panelWidth
-              let heightRatio=this.screenHeight/this.viewTheme.panelHeight
-              if (this.isMobileFlag&&this.doubleType != 'phone'){}else{
-                //是自适应
-              if (isSelfAdaption) {
-                //全自适应
-                  if (typeof adaptionType == 'undefined' || adaptionType == '0') {
-                    //遍历组件重新计算自适应宽高
-                    this.constainstyle='transform:scale('+widthRatio+','+heightRatio+');transform-origin:left top'
-                  }
-                  //宽度自适应
-                  else if (adaptionType == '1') {
-                    //遍历组件重新计算自适应宽高
-                    this.constainstyle='transform:scale('+widthRatio+');transform-origin:left top'
-                  }
-                  //高度自适应
-                  else if (adaptionType == '2') {
-                    //遍历组件重新计算自适应宽高
-                    this.constainstyle='transform:scale('+heightRatio+');transform-origin:left top'
-                  }
+                  this.constainstyle = 'transform:scale(' + heightRatio + ');transform-origin:left top'
                 }
               }
-              
-              
             }
-          } else {
-            this.$message("数据初始化失败!");
+
+
           }
+        } else {
+          this.$message("数据初始化失败!");
+        }
       } else {
         console.log("sId===" + sId)
         this.$message("请刷新页面");
       }
     },
-    checkGlobalData(name,globalData){
-      let findrow=this.viewTheme.globalData.find(row=>row.name==name)
+    checkGlobalData(name, globalData) {
+      let findrow = this.viewTheme.globalData.find(row => row.name == name)
       // console.log("查找到的一行",findrow,findrow.name,globalData);
-      if(findrow){
-        if(findrow.name&&findrow.dataSourceType=="combination"){
-          let findSame=findrow.combinationTable.find(row=>{
+      if (findrow) {
+        if (findrow.name && findrow.dataSourceType == "combination") {
+          let findSame = findrow.combinationTable.find(row => {
             // console.log(row.globalData,globalData);
-            if(row.globalData==globalData){
+            if (row.globalData == globalData) {
               return true
-            }else{
-              return this.checkGlobalData(row.globalData,globalData)
+            } else {
+              return this.checkGlobalData(row.globalData, globalData)
             }
           })
-          if(findSame){
+          if (findSame) {
             return true
-          }else{
+          } else {
             return false
           }
-        }else{
-          return  findrow.name==globalData
+        } else {
+          return findrow.name == globalData
         }
-      }else{
+      } else {
         return false
       }
     },
     checkCode() {
-      if(this.tokenId&&this.code){
+      if (this.tokenId && this.code) {
         removeShareToken();
         //参数有tokenid 必须输入验证码
-        checkShare(this.tokenId,this.code).then(async response => {
+        checkShare(this.tokenId, this.code).then(async response => {
           this.codeFlag = false;
           this.screenId = response.data.Share.ReportId;
           this.tokenStr = response.data.Share.TokenStr;
@@ -699,14 +694,14 @@ export default {
           }
           await this.initDatavRelease(response.data.Report);
 
-        }).catch(err=>{
-          console.log(err,'errerr');
-          if(err.code==1){
+        }).catch(err => {
+          console.log(err, 'errerr');
+          if (err.code == 1) {
             this.codeFlag = true;
           }
         });
-      }else{
-        if(!this.code){
+      } else {
+        if (!this.code) {
           this.msgError("请输入查看密码")
         }
       }
