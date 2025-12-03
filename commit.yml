@@ -3,159 +3,42 @@ branches: {
   }
 fileChange:
   /admin-ui:
-    newFile: !uuid '49a43c8bc1ce63dd686af622d76afd0fb0247706'
-    oldFile: !uuid '93861b64abfb13c6cd869cde286494c10fdc0e0e'
+    newFile: !uuid '58e3dc7c0e277f46f1583207facc41577bcf73a7'
+    oldFile: !uuid '49a43c8bc1ce63dd686af622d76afd0fb0247706'
   /admin-ui/src:
-    newFile: !uuid '2ea3b3a409d5680e0b6051e8a4578a6fbe626f88'
-    oldFile: !uuid 'c5a92f45fc5e74905aecfaea154927c14278d2f5'
+    newFile: !uuid '4ce330150fc7d864a9eb26e4b01b5d509109888d'
+    oldFile: !uuid '2ea3b3a409d5680e0b6051e8a4578a6fbe626f88'
   /admin-ui/src/views:
-    newFile: !uuid 'a109a57c200905933589960c909e1f6a68ad4322'
-    oldFile: !uuid '7f09dd5eddf473d3f6d6f997e0ed4506ae229c65'
+    newFile: !uuid 'ed4b6863dcd1b1082394cf7f2cdda8e841a903f0'
+    oldFile: !uuid 'a109a57c200905933589960c909e1f6a68ad4322'
   /admin-ui/src/views/report:
-    newFile: !uuid 'a9feacfa7f6db6433b955dc1b54c0b40cf0eb16d'
-    oldFile: !uuid '5c8bb62258951d61021f4f749659a41defcf77ad'
+    newFile: !uuid 'c4a63ffe02cebdae60c8653cd2879f40f256c97f'
+    oldFile: !uuid 'a9feacfa7f6db6433b955dc1b54c0b40cf0eb16d'
   /admin-ui/src/views/report/datav:
-    newFile: !uuid '7ff9b5b3e9085656f880b4e7dc7647d3945c8a6d'
-    oldFile: !uuid '6c0ce4eede58401f1dcd6cb1106eadacb25c67f9'
+    newFile: !uuid '70adf4d3df096c688ebfc7e0443cb895bff10fe5'
+    oldFile: !uuid '7ff9b5b3e9085656f880b4e7dc7647d3945c8a6d'
   /admin-ui/src/views/report/datav/DragChartConfiguration.vue:
-    newFile: !uuid '7b39b6a8e779f004fdb826a3a3afcea180ff39d3'
-    oldFile: !uuid '698cd11bf942583e7c5d744067cdde02ab7fb769'
+    newFile: !uuid '8165836b578252fad161ca22e2a9f4e1ad34eda7'
+    oldFile: !uuid '7b39b6a8e779f004fdb826a3a3afcea180ff39d3'
   /admin-ui/src/views/report/datav/VueDragItems.vue:
-    newFile: !uuid '868c29484cdbe2e0d7af2b6e63e9db913999e6bd'
-    oldFile: !uuid 'bec13d3e4b5627bd7e0af080de45fc6a7f00a89b'
+    newFile: !uuid 'd400e0c5a928ead2620959c52eb10f36b2cba374'
+    oldFile: !uuid '868c29484cdbe2e0d7af2b6e63e9db913999e6bd'
   /admin-ui/src/views/report/datav/components:
-    newFile: !uuid 'a368164fb71f358b893671bcac151887e6cbb0f4'
-    oldFile: !uuid '402e59c8be7dd7cf7622fb02f1f8f9b2fe9dee76'
+    newFile: !uuid '1a3bd994004d2782055f2a10052e97e73195a022'
+    oldFile: !uuid 'a368164fb71f358b893671bcac151887e6cbb0f4'
   /admin-ui/src/views/report/datav/components/chart:
-    newFile: !uuid 'f65d578cf7f4f4d25cd21f9d6530a916aff7925f'
-    oldFile: !uuid '5b8cc095d810f834b2f3c8bd1d5e1770bb0316f3'
+    newFile: !uuid 'e0f2359309a6987943ebc46db8dbc6afed61fbf8'
+    oldFile: !uuid 'f65d578cf7f4f4d25cd21f9d6530a916aff7925f'
   /admin-ui/src/views/report/datav/components/chart/PolylineChart.vue:
-    newFile: !uuid '3b9eb69df0bcaebb543b8f023bf6e2664b21c48f'
-    oldFile: !uuid '9b37d42c4bafb820d75e932b3536cf0bb56cd360'
-  /admin-ui/src/views/report/datav/components/config:
-    newFile: !uuid 'cae275cbdcfe0d31d64e32e6460b8c075baa72d5'
-    oldFile: !uuid 'e80f8173f636806739bce905a20ded4219b37af3'
-  /admin-ui/src/views/report/datav/components/config/ArrangeHorizontalConfig:
-    newFile: !uuid '65f3ea0cf5aad3125201e317e965e3eebea9e31f'
-    oldFile: !uuid '1b3ca257b97cd87bfc52602488bf5ceae38a6349'
-  /admin-ui/src/views/report/datav/components/config/ArrangeHorizontalConfig/globalslot.vue:
-    newFile: !uuid '4977570742aa08f241c9fa7bb223899b9f3cfbc5'
-    oldFile: !uuid '217d257d7226e4e7c8ddae1e136eefb5787ee5df'
-  /admin-ui/src/views/report/datav/components/config/ArrangeVerticalConfig:
-    newFile: !uuid '2977a0e53a5e73541ad50a6dfd25728a9b6f401c'
-    oldFile: !uuid '4462c245c2002b43f4100340b18f9616b7a7b682'
-  /admin-ui/src/views/report/datav/components/config/ArrangeVerticalConfig/globalslot.vue:
-    newFile: !uuid '0e8cb227897c9e1794a5b787da3e8acb1a2b0c0b'
-    oldFile: !uuid '0826f230347755af117ffc0e58fe908023f876da'
-  /admin-ui/src/views/report/datav/components/config/CardConfig:
-    newFile: !uuid '00b4d86673cb95f904f45f5abd12ce2052daa211'
-    oldFile: !uuid 'b5ef6ecabafbd31652d566e30bb5e6ae9420c786'
-  /admin-ui/src/views/report/datav/components/config/CardConfig/globalslot.vue:
-    newFile: !uuid '355f764b507784ffde80390a38dc5ef5dd1f76b8'
-    oldFile: !uuid '1e3702ae30b5b822be3277f9fa7404e8a3965fc4'
-  /admin-ui/src/views/report/datav/components/config/CascadeConfig:
-    newFile: !uuid '19910f8888521c22bf694a889ec1272ac8bba1dd'
-    oldFile: !uuid '6157d3b71bc0819152e91bea8dfbcde1427ac5ac'
-  /admin-ui/src/views/report/datav/components/config/CascadeConfig/interaction.vue:
-    newFile: !uuid '0f439a4c13d6ecf504eeec2adb8268ef4f711004'
-    oldFile: !uuid '9cb9ce22c1db94791e0259a5d03b98b40b0ef8e2'
-  /admin-ui/src/views/report/datav/components/config/FlopConfig:
-    newFile: !uuid '42f6743c1788aa6da0816292366d258a3b942855'
-    oldFile: !uuid '54d59223f4651bf9c5bc4a1ba8dffafbd7ab87d6'
-  /admin-ui/src/views/report/datav/components/config/FlopConfig/index.vue:
-    newFile: !uuid '0d006e026da80cfc66c93fab2afbd82dd5ba1f78'
-    oldFile: !uuid '335739cd157e28f3419842da00cbd19e42e9a76f'
-  /admin-ui/src/views/report/datav/components/config/HeatMapConfig:
-    newFile: !uuid 'c892feb794c8ac6887da5f30cd079b5d2e12bfa9'
-    oldFile: !uuid 'a0d9c2e526a809b829b48d52fa3d6eae0ab2e59a'
-  /admin-ui/src/views/report/datav/components/config/HeatMapConfig/gobalSolt.vue:
-    newFile: !uuid '6f6ab86555d2c1370c0465f9a5139c5a60441bd3'
-    oldFile: !uuid 'd95eccffb11815f85f48734491db95a11e3bb374'
-  /admin-ui/src/views/report/datav/components/config/HeatMapConfig/staticSolt.vue:
-    newFile: !uuid '78dfede6ee41e3245e1eaac763c7b4da96062846'
-    oldFile: !uuid '3732d100bc3bf21d897a7802de417d3ac702b4af'
-  /admin-ui/src/views/report/datav/components/config/InteractConfig:
-    newFile: !uuid '501283ddaf2b77e15fdf01577f40172c9dd144f8'
-    oldFile: !uuid 'ea66e0065c6d29343b61b731a5d1f8934fe5abc9'
-  /admin-ui/src/views/report/datav/components/config/InteractConfig/interaction.vue:
-    newFile: !uuid 'd7b7b399ed75d4478fae93cc65354fea15f57873'
-    oldFile: !uuid '5f25e20e80bad2a9b8a8935b9f7e1f0b7a32a56d'
-  /admin-ui/src/views/report/datav/components/config/InteractConfig/moduleDeploy.vue:
-    newFile: !uuid '0fc620ee29c7652c9c0bd7af0454b14eb9f65f09'
-    oldFile: !uuid '5d29ca2d9a13aa96fb56b9ef170217029ecee680'
-  /admin-ui/src/views/report/datav/components/config/IotCustomConfig:
-    newFile: !uuid '3608fc6b967a66f9546ecc8c94117f2bd89e4647'
-    oldFile: !uuid 'fd8557b52d7f2813ce62411fb4d1dc6f8ace4c38'
-  /admin-ui/src/views/report/datav/components/config/IotCustomConfig/moduleDeploy.vue:
-    newFile: !uuid '355a0aa661716f913b3e4e2bde5939234b7e331e'
-    oldFile: !uuid 'efab5a1ffd131828d9580fb005be11408d7fb370'
-  /admin-ui/src/views/report/datav/components/config/LoginConfig:
-    newFile: !uuid '19c13846b10ec2cf0474cef70bfc9055c8f877da'
-    oldFile: !uuid '90e2f7cc1f2d5f1aa152e68906f7adfb0fea36d9'
-  /admin-ui/src/views/report/datav/components/config/LoginConfig/globalslot.vue:
-    newFile: !uuid '355f764b507784ffde80390a38dc5ef5dd1f76b8'
-    oldFile: !uuid '1e3702ae30b5b822be3277f9fa7404e8a3965fc4'
-  /admin-ui/src/views/report/datav/components/config/PolylineConfig:
-    newFile: !uuid '20f267ab0ab763dd713c64113e8526118488bb2d'
-    oldFile: !uuid 'ab04d932fd9663b28c1fbe5b103141df93ef8128'
-  /admin-ui/src/views/report/datav/components/config/PolylineConfig/moduleDeploy.vue:
-    newFile: !uuid '48683cfc768dd5979ce86383c07eb7c9c4bfee7c'
-    oldFile: !uuid '52d6af3c849875430b7a21ff68850cc905e626d7'
-  /admin-ui/src/views/report/datav/components/config/SelectConfig:
-    newFile: !uuid 'fa3bd4054cdb51cba7221f1d2cb5a13e3400362f'
-    oldFile: !uuid '9af18c87632808e92a86d34566a3bf7ecbf5b6ab'
-  /admin-ui/src/views/report/datav/components/config/SelectConfig/interaction.vue:
-    newFile: !uuid 'ec656f7ea2f61d87399dabc7c967999746ddb716'
-    oldFile: !uuid 'd25507ce7f4d50929294b8dad5813fcf62f1ae98'
-  /admin-ui/src/views/report/datav/components/config/TabConfig:
-    newFile: !uuid 'c4922016ac218cb19a1cbc7b60204bd1c9316014'
-    oldFile: !uuid '2f38eab3d4483e16ba98d5747b74f3b0058f17ec'
-  /admin-ui/src/views/report/datav/components/config/TabConfig/interaction.vue:
-    newFile: !uuid '3f5f8d39c46da77f80737d84dc293ec2028e4687'
-    oldFile: !uuid '5494d124fc4de00bb3f0054c438e00655ce9acc8'
-  /admin-ui/src/views/report/datav/components/config/TextCheckBoxConfig:
-    newFile: !uuid '91206b4644a310a43e4844e343cf6d37da129520'
-    oldFile: !uuid '80dc369f723d3d94346d8ebf9aca40751e2564a0'
-  /admin-ui/src/views/report/datav/components/config/TextCheckBoxConfig/interaction.vue:
-    newFile: !uuid '3f5f8d39c46da77f80737d84dc293ec2028e4687'
-    oldFile: !uuid '5494d124fc4de00bb3f0054c438e00655ce9acc8'
-  /admin-ui/src/views/report/datav/components/config/TextCheckBoxConfig/moduleDeploy.vue:
-    newFile: !uuid '539254586b0452021087e0202dfab97ed2f12bdb'
-    oldFile: !uuid 'aea570765feb89e640d6d9d9c0a2fb37152a014f'
-  /admin-ui/src/views/report/datav/components/config/TimelineConfig:
-    newFile: !uuid '04eac0eab5109e8613565cb2bb5ed72799c32ba6'
-    oldFile: !uuid 'b7b220a00823bcc09ca7ec338c66dabf483046ec'
-  /admin-ui/src/views/report/datav/components/config/TimelineConfig/moduleDeploy.vue:
-    newFile: !uuid 'f22ca7b6d667a7f5524d9064f0dccc21ce801b27'
-    oldFile: !uuid 'b5301246d9c966b66071153b42c120c849dcd805'
-  /admin-ui/src/views/report/datav/components/config/fengjiConfig:
-    newFile: !uuid 'fd8d11648194838bd13b679d9738e776cfd447fd'
-    oldFile: !uuid 'ca4c3513cb26c924ec89faa748503d242b7b792e'
-  /admin-ui/src/views/report/datav/components/config/fengjiConfig/moduleDeploy.vue:
-    newFile: !uuid '9ba53426f7ce9873ff1d289906b299b7b48bf4fb'
-    oldFile: !uuid 'de1bfc45ce8cd38973cdcfcb2cf3d8e4e54e382e'
-  /admin-ui/src/views/report/datav/components/config/fengjiDongConfig:
-    newFile: !uuid 'c21d5f51854b0ad078cf347aeb2b60c161b82c1e'
-    oldFile: !uuid '7fb6a1ea77a533b5bd36860e5402b5363767ada7'
-  /admin-ui/src/views/report/datav/components/config/fengjiDongConfig/moduleDeploy.vue:
-    newFile: !uuid '9ba53426f7ce9873ff1d289906b299b7b48bf4fb'
-    oldFile: !uuid 'de1bfc45ce8cd38973cdcfcb2cf3d8e4e54e382e'
-  /admin-ui/src/views/report/datav/components/config/normalTextConfig:
-    newFile: !uuid '8e98f234c17bcd87c255dbc29c930d90c24b3486'
-    oldFile: !uuid 'f6c8c8dee31ac8e888f728510d15de2b3ed1ea41'
-  /admin-ui/src/views/report/datav/components/config/normalTextConfig/index.vue:
-    newFile: !uuid '413d38dabda11733a289adea09b97f4a35428586'
-    oldFile: !uuid 'd9bb8f5b18a2365d9bc804dc59d6c448a99fa780'
+    newFile: !uuid '57ae2d63ea46da9386fa13e8cfd9427aba7f7410'
+    oldFile: !uuid '3b9eb69df0bcaebb543b8f023bf6e2664b21c48f'
   /admin-ui/src/views/report/datav/components/mixins:
-    newFile: !uuid '66aed01c419924155707253ad566165511b7c17a'
-    oldFile: !uuid 'ac4f5ff21fcbb68bf334dcd40c46444e8a4fccd9'
-  /admin-ui/src/views/report/datav/components/mixins/sourceConfig.js:
-    newFile: !uuid 'de3a39506a74278a3d9f17c11d7c2fcc5e180f7e'
-    oldFile: !uuid '3b8b3cb622292347bdcb119a752631f79e23ea33'
-  /admin-ui/src/views/report/datav/datavRelease.vue:
-    newFile: !uuid '4547c419ccb6da868c3bac603b0002a84064f904'
-    oldFile: !uuid 'c85a537f84b69ae62dbadcc0be2370162d01c568'
-gitCommitId: !uuid 'b83156919876817c7b9323b141914e09778ef761'
+    newFile: !uuid 'd9e9840006ba7ef0d39cc98dea7b51007539594e'
+    oldFile: !uuid '66aed01c419924155707253ad566165511b7c17a'
+  /admin-ui/src/views/report/datav/components/mixins/zutaiChart.js:
+    newFile: !uuid 'c05fd123f4291f4aec35b53f1f0873aa345f06ce'
+    oldFile: !uuid '488e42dd79b0b167915ea4da0a6b3c6c1e41bb76'
+gitCommitId: !uuid '4d94a232fdbf4d72b32f252ccb41e98360852d4a'
 renames: {
   }
-revisionId: 44
+revisionId: 45
