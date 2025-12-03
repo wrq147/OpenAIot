@@ -17,7 +17,8 @@
       <!-- 流动路径 -->
       <path :id="'line2' + chartOption.bindingDiv" :d="getPathData()" :stroke="chartOption.flowColor"
         :stroke-width="chartOption.flowWidth" fill-opacity="0" fill="none" :stroke-dasharray="chartOption.dasharray"
-        stroke-dashoffset="0" stroke-linecap="round" v-if="chartOption.animateType == 'droplet'" stroke-linejoin="round">
+        stroke-dashoffset="0" stroke-linecap="round" v-if="chartOption.animateType == 'droplet'"
+        stroke-linejoin="round">
         <animate v-if="chartOption.isReverseAnimation" attributeName="stroke-dashoffset" from="0" to="1000"
           :dur="chartOption.delayTime + 's'" repeatCount="indefinite"></animate>
         <animate v-else attributeName="stroke-dashoffset" from="1000" to="0" :dur="chartOption.delayTime + 's'"
@@ -72,6 +73,9 @@ export default {
     y: {
       type: Number,
     },
+    dragchartdata: {
+      type: Object
+    }
   },
   data() {
     return {
@@ -86,6 +90,8 @@ export default {
         startX: 0,
         startY: 0
       },
+      widNum: this.WHToNumber(this.width),
+      heiNum: this.WHToNumber(this.height),
       svgElement: null, // 缓存SVG元素
       hoverPointIndex: -1, // 当前hover的点索引（用于动态控制大小）
     };
@@ -100,67 +106,80 @@ export default {
       },
     },
     width: {
-      handler() {
+      handler(newvalue) {
+        this.widNum = this.WHToNumber(newvalue);
         this.updateSvgSize();
+        this.fixStartEndPoints();
       },
       immediate: true,
     },
     height: {
-      handler() {
+      handler(newvalue) {
+        this.heiNum = this.WHToNumber(newvalue);
         this.updateSvgSize();
+        this.fixStartEndPoints();
       },
       immediate: true,
     },
-    // 监听points数组，确保响应式
-    "chartOption.points": {
-      handler(newPoints) {
-        if (!Array.isArray(newPoints) || newPoints.length < 2) {
-          this.initPoints();
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
+
   },
   mounted() {
-    this.valUpdate = this.setChartVal;
+    this.valUpdate = (result) => { };
     this.svgElement = this.$refs.svgRef;
     this.updateSvgSize(); // 初始化SVG尺寸
-    this.initPoints();
-  },
-  computed: {
-    widNum() {
-      if (this.width.indexOf("px") > -1) {
-        return Number(this.width.substring(0, this.width.length - 2));
-      } else if (this.width.indexOf("%") > -1) {
-        return Number(this.width.substring(0, this.width.length - 1));
-      } else {
-        return Number(this.width.substring(0, this.width.length));
-      }
-    },
-    heiNum() {
-      if (this.height.indexOf("px") > -1) {
-        return Number(this.height.substring(0, this.height.length - 2));
-      } else if (this.height.indexOf("%") > -1) {
-        return Number(this.height.substring(0, this.height.length - 1));
-      } else {
-        return Number(this.height.substring(0, this.height.length));
-      }
-    },
-    svgRect() {
-      return {
-        left: 0,
-        right: this.widNum,
-        top: 0,
-        bottom: this.heiNum,
-      };
-    },
+    this.fixStartEndPoints();
   },
   methods: {
-    removeSprite() { },
-    upActiveId() { },
-    setChartVal(result) { },
+    WHToNumber(str) {
+      if (str.indexOf("px") > -1) {
+        return Number(str.substring(0, str.length - 2));
+      } else if (str.indexOf("%") > -1) {
+        return Number(str.substring(0, str.length - 1));
+      } else {
+        return Number(str.substring(0, str.length));
+      }
+    },
+    fixStartEndPoints() {
+      if (!this.svgWidth || !this.svgHeight) return;
+      const points = this.chartOption.points;
+      if (!Array.isArray(points) || points.length < 2) return;
 
+      // 固定开始点（索引0）：左中
+      this.$set(points, 0, {
+        cx: this.svgPadding,
+        cy: this.svgHeight / 2
+      });
+
+      // 固定结束点（最后一个索引）：右中
+      const endIndex = points.length - 1;
+      this.$set(points, endIndex, {
+        cx: this.svgWidth - this.svgPadding,
+        cy: this.svgHeight / 2
+      });
+
+      // 边界限制
+      let mxidx = points.length - 1;
+      for (let i = 1; i < mxidx; i++) {
+        let newCx = points[i].cx;
+        let newCy = points[i].cy;
+        newCx = Math.min(
+          Math.max(newCx, this.svgPadding),
+          this.svgWidth - this.svgPadding
+        );
+
+        newCy = Math.min(
+          Math.max(newCy, this.svgPadding),
+          this.svgHeight - this.svgPadding
+        );
+        this.$set(points, i, {
+          cx: newCx,
+          cy: newCy
+        });
+      }
+
+
+
+    },
     // 设置当前hover的点索引
     setHoverIndex(index) {
       this.hoverPointIndex = index;
@@ -180,60 +199,15 @@ export default {
     updateSvgSize() {
       if (!this.$el) return;
 
-      // 获取容器实际尺寸（支持px/%/vw/vh等所有单位）
-      const container = this.$el;
-      const containerRect = container.getBoundingClientRect();
+      this.svgWidth = this.widNum;
+      this.svgHeight = this.heiNum;
 
-      // 更新SVG尺寸（与容器完全一致）
-      this.svgWidth = containerRect.width;
-      this.svgHeight = containerRect.height;
-
-      // 同步更新SVG元素属性（确保坐标系正确）
+      // 同步更新SVG元素的width/height属性（确保SVG坐标系与计算值一致）
       if (this.svgElement) {
         this.svgElement.setAttribute("width", this.svgWidth);
         this.svgElement.setAttribute("height", this.svgHeight);
       }
     },
-
-    // 初始化点
-    initPoints() {
-      if (!this.svgWidth || !this.svgHeight) return;
-
-      const currentPoints = this.chartOption.points;
-      if (Array.isArray(currentPoints) && currentPoints.length >= 2) return;
-
-      const pointCount = 2;
-      const defaultPoints = [];
-      const stepX = this.svgWidth / (pointCount + 1);
-      const centerY = this.svgHeight / 2;
-
-      for (let i = 0; i < pointCount; i++) {
-        defaultPoints.push({
-          cx: stepX * (i + 1),
-          cy: centerY,
-        });
-      }
-
-      this.$set(this.chartOption, "points", defaultPoints);
-    },
-
-    // 可选：组件缩放后重新分布点（避免点聚集在角落）
-    redistributePoints() {
-      const points = this.chartOption.points;
-      if (points.length < 2) return;
-
-      const stepX = this.svgWidth / (points.length + 1);
-      const centerY = this.svgHeight / 2;
-
-      points.forEach((point, index) => {
-        this.$set(points, index, {
-          ...point,
-          cx: stepX * (index + 1),
-          cy: centerY,
-        });
-      });
-    },
-
     // 精准获取SVG坐标系下的鼠标坐标（无延迟）
     getMouseCoords(event) {
       if (!this.svgElement) return { x: 0, y: 0 };
@@ -269,32 +243,44 @@ export default {
     drag(event) {
       const { index, startX, startY } = this.dragState;
       if (index === -1) return;
+      if (index == 0 || index == (this.chartOption.points.length - 1)) {
+        return;
+      }
+      else {
+        const points = this.chartOption.points;
+        const mouseCoords = this.getMouseCoords(event);
 
-      const points = this.chartOption.points;
-      const mouseCoords = this.getMouseCoords(event);
+        let newCx = mouseCoords.x;
+        let newCy = mouseCoords.y;
 
-      let newCx = mouseCoords.x;
-      let newCy = mouseCoords.y;
 
-      // 边界限制
-      newCx = Math.min(
-        Math.max(newCx, this.svgRect.left + this.svgPadding),
-        this.svgRect.right - this.svgPadding
-      );
+        if (newCy > (this.svgHeight - this.svgPadding)) {
+          this.dragchartdata.height = this.dragchartdata.height + 20;
+        }
+        else if (newCy < this.svgPadding) {
+          this.dragchartdata.y = this.dragchartdata.y - 20;
+          this.dragchartdata.height = this.dragchartdata.height + 20;
+        }
 
-      newCy = Math.min(
-        Math.max(newCy, this.svgRect.top + this.svgPadding),
-        this.svgRect.bottom - this.svgPadding
-      );
-      // 强制响应式更新（解决拖动延迟）
-      this.$set(points, index, {
-        ...points[index],
-        cx: newCx,
-        cy: newCy
-      });
+        // 边界限制
+        newCx = Math.min(
+          Math.max(newCx, this.svgPadding),
+          this.svgWidth - this.svgPadding
+        );
 
-      // 手动触发DOM更新（极端情况下的保障）
-      this.$forceUpdate();
+        newCy = Math.min(
+          Math.max(newCy, this.svgPadding),
+          this.svgHeight - this.svgPadding
+        );
+
+        this.$set(points, index, {
+          cx: newCx,
+          cy: newCy
+        });
+
+      }
+
+
     },
 
     // 结束拖动
@@ -342,8 +328,6 @@ export default {
 
 svg {
   display: block;
-  width: 100%;
-  height: 100%;
 }
 
 path {

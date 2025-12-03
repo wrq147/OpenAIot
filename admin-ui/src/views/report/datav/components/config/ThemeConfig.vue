@@ -141,19 +141,10 @@ export default {
     }
   },
   watch: {
-    configData: {
-      deep: true,
-      handler(newVal) {
-        // console.log("1=>", newVal);
-        //this.$emit("costom-change", newVal);
-      }
-    },
     costomData: {
       deep: true,
       handler(newVal) {
-        // console.log("barConfig=>costomData.watch")
         this.configData = newVal;
-        //this.staticDataValue = JSON.stringify(newVal.chartOption.staticDataValue);
       }
     },
     'configData.panelWidth': {

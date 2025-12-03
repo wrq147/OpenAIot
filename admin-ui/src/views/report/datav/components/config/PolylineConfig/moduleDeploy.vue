@@ -146,12 +146,14 @@ export default {
     configData: {
       deep: true,
       handler(newVal) {
+        console.info("ddd")
         this.$emit("costom-change", newVal);
       },
     },
     costomData: {
       deep: true,
       handler(newVal) {
+        console.info("lklkl")
         this.configData = newVal;
       },
     },
@@ -171,26 +173,26 @@ export default {
     },
   },
   methods: {
-    // 添加控制点：在数组末尾新增一个点（位置默认在最后一个点右侧）
+    // 添加控制点：在数组中间新增一个点（位置默认在最后一个点右侧）
     addPoint() {
-      const lastPoint = this.configData.chartOption.points[this.configData.chartOption.points.length - 1];
-      const width = Number(this.configData.width) || 800;
-      const height = Number(this.configData.height) || 400;
+      const lastidx = this.configData.chartOption.points.length - 1;
+      const lastPoint = this.configData.chartOption.points[lastidx];
 
-      // 新增点的默认位置：最后一个点右侧20px，Y轴与最后一个点一致
+      // 新增点的默认位置
       const newPoint = {
-        cx: Math.min(lastPoint.cx + 20, width - 10), // 不超过右边界-10
+        cx: lastPoint.cx - 20,
         cy: lastPoint.cy,
       };
 
       // 响应式添加到数组
-      this.configData.chartOption.points.push(newPoint);
+      this.configData.chartOption.points.splice(lastidx, 0, newPoint);
     },
 
-    // 删除最后一个控制点（保留至少2个）
+    // 删除一个控制点（保留至少2个）
     deleteLastPoint() {
       if (this.configData.chartOption.points.length > 2) {
-        this.configData.chartOption.points.pop();
+        const lastidx = this.configData.chartOption.points.length - 2;
+        this.configData.chartOption.points.splice(lastidx, 1);
       }
     },
 

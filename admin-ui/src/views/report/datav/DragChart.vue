@@ -1,45 +1,18 @@
 <template>
-    <vue-draggable-resizable
-      :key="customId"
-      :custom-id="customId"
-      :w="width"
-      :h="height"
-      :x="x"
-      :y="y"
-      :z="dragchartdata.zindex"
-      :parent="true"
-      :debug="false"
-      :min-width="20"
-      :min-height="20"
-      :isConflictCheck="false"
-      :snap="true"
-      :snapTolerance="20"
-      :active="activeId == customId"
-      :scaleRatio="scale"
-      :selected="selected"
-      :onCtrl="onCtrl"
-      :ctrlSelectArr="ctrlSelectArr"
-      :draggable="isUnlocked"
-      :resizable="isUnlocked"
-      :grid="[10,10]"
-      @dragging="onDrag"
-      @resizing="onResize"
-      @dragstop="onDragstop"
-      @resizestop="onResizstop"
-      @refLineParams="getRefLineParams"
-      @activated="onActivated"
-      @deactivated= "onDeactivated"
-      @rightClick="onContextmenu"
-      class="test3"
-      class-name-dragging="my-dragging-class"
-      class-name-resizing="my-resizing-class"
-      class-name-active="my-active-class"
-      class-name-selected="ctrlSelected"
-    >
-      <!-- 判断显示组件 -->
-      <!--{{x}}-{{y}}-{{customId}}-->
-      <component :is="ComponentName" :theme="theme" :isDraw="true" :zIndex="dragchartdata.zindex" :width="width + 'px'" :height="height + 'px'" :chartOption="chartOption" :className="chartOption.animate" :drawingList="drawingList" :customId="customId" :dragchartdata="dragchartdata"></component>
-    </vue-draggable-resizable>
+  <vue-draggable-resizable :key="customId" :custom-id="customId" :w="width" :h="height" :x="x" :y="y"
+    :z="dragchartdata.zindex" :parent="true" :debug="false" :min-width="20" :min-height="20" :isConflictCheck="false"
+    :snap="true" :snapTolerance="20" :active="activeId == customId" :scaleRatio="scale" :selected="selected"
+    :onCtrl="onCtrl" :ctrlSelectArr="ctrlSelectArr" :draggable="isUnlocked" :resizable="isUnlocked" :grid="[10, 10]"
+    @dragging="onDrag" @resizing="onResize" @dragstop="onDragstop" @resizestop="onResizstop"
+    @refLineParams="getRefLineParams" @activated="onActivated" @deactivated="onDeactivated" @rightClick="onContextmenu"
+    class="test3" class-name-dragging="my-dragging-class" class-name-resizing="my-resizing-class"
+    class-name-active="my-active-class" class-name-selected="ctrlSelected">
+    <!-- 判断显示组件 -->
+    <!--{{x}}-{{y}}-{{customId}}-->
+    <component :is="ComponentName" :theme="theme" :isDraw="true" :zIndex="dragchartdata.zindex" :width="width + 'px'"
+      :height="height + 'px'" :chartOption="chartOption" :className="chartOption.animate" :drawingList="drawingList"
+      :customId="customId" :dragchartdata="dragchartdata"></component>
+  </vue-draggable-resizable>
 
 </template>
 
@@ -55,7 +28,7 @@ export default {
     VueDraggableResizable,
     ...AllComponents
   },
-  props: ["dragchartdata", "scale", "activeId", "drawingList", "onCtrl", "ctrlSelectArr","theme"],
+  props: ["dragchartdata", "scale", "activeId", "drawingList", "onCtrl", "ctrlSelectArr", "theme"],
   data() {
     return {
       chartOption: this.dragchartdata.chartOption,
@@ -67,44 +40,85 @@ export default {
       y: this.dragchartdata.y,
       selected: false,
       //是否没被锁定
-      isUnlocked: this.dragchartdata.isUnlocked==undefined ? true : this.dragchartdata.isUnlocked,
+      isUnlocked: this.dragchartdata.isUnlocked == undefined ? true : this.dragchartdata.isUnlocked,
     };
   },
-  computed:{
-    ComponentName(){
+  computed: {
+    ComponentName() {
       console.log(this.chartType)
-      if(this.chartType=="text"){
+      if (this.chartType == "text") {
         return "NormalText";
       }
-      else if(this.chartType=="lamp"){
+      else if (this.chartType == "lamp") {
         return "LampText";
       }
-      else if(this.chartType=="date"){
+      else if (this.chartType == "date") {
         return "DateText";
       }
-      else if(this.chartType=="textCheckBox"){
+      else if (this.chartType == "textCheckBox") {
         return "TextCheckBox";
       }
-      else{
-        return this.chartType+"Chart";
+      else {
+        return this.chartType + "Chart";
       }
     }
   },
   watch: {
-    dragchartdata: {
+    "dragchartdata.chartOption": {
       deep: true,
       handler(newVal) {
-        this.chartOption = newVal.chartOption,
-        this.chartType = newVal.chartType,
-        this.customId = newVal.customId,
-        this.width = newVal.width,
-        this.height = newVal.height,
-        this.x = newVal.x,
-        this.y = newVal.y,
-        this.animate = newVal.animate,
-        this.isUnlocked = newVal.isUnlocked
+        this.chartOption = newVal
       }
     },
+    "dragchartdata.chartType": {
+      deep: true,
+      handler(newVal) {
+        this.chartType = newVal
+      }
+    },
+    "dragchartdata.customId": {
+      deep: true,
+      handler(newVal) {
+        this.customId = newVal
+      }
+    },
+    "dragchartdata.width": {
+      deep: true,
+      handler(newVal) {
+        this.width = newVal
+      }
+    },
+    "dragchartdata.height": {
+      deep: true,
+      handler(newVal) {
+        this.height = newVal
+      }
+    },
+    "dragchartdata.x": {
+      deep: true,
+      handler(newVal) {
+        this.x = newVal
+      }
+    },
+    "dragchartdata.y": {
+      deep: true,
+      handler(newVal) {
+        this.y = newVal
+      }
+    },
+    "dragchartdata.animate": {
+      deep: true,
+      handler(newVal) {
+        this.animate = newVal
+      }
+    },
+    "dragchartdata.isUnlocked": {
+      deep: true,
+      handler(newVal) {
+        this.isUnlocked = newVal
+      }
+    },
+
     ctrlSelectArr: {
       deep: true,
       handler(newVal) {
@@ -112,20 +126,13 @@ export default {
       }
     }
   },
-  created(){
-    VueEvent.$on('movechart',function(x,y,width,height){
-      // this.dragchartdata.x = x;
-      // this.dragchartdata.y = y;
-      // this.dragchartdata.width = width;
-      // this.dragchartdata.height = height;
-
-    }.bind(this))
+  created() {
   },
-  mounted(){
-    
+  mounted() {
+
   },
   methods: {
-     //右键菜单
+    //右键菜单
     onContextmenu(event) {
       this.$contextmenu({
         items: [
@@ -147,10 +154,10 @@ export default {
             label: "删除图层",
             icon: "el-icon-delete",
             onClick: () => {
-              if(this.ctrlSelectArr.length==0){
+              if (this.ctrlSelectArr.length == 0) {
                 VueEvent.$emit("delete_component", this.customId);
               }
-              else{
+              else {
                 VueEvent.$emit("delete_component", this.activeId);
               }
 
@@ -204,20 +211,20 @@ export default {
     onDrag(x, y) {
       this.x = x;
       this.y = y;
-      if(this.ctrlSelectArr.length > 0) {
+      if (this.ctrlSelectArr.length > 0) {
         this.$emit("dragging", this.customId, x, y);
       }
-      if(this.chartType == 'group'){
-        VueEvent.$emit("combine_move",this.customId,x, y);
+      if (this.chartType == 'group') {
+        VueEvent.$emit("combine_move", this.customId, x, y);
       }
     },
     onDragstop(x, y) {
       this.dragchartdata.x = x;
       this.dragchartdata.y = y;
-      if(this.ctrlSelectArr.length > 0) {
+      if (this.ctrlSelectArr.length > 0) {
         this.$emit("dragstop");
       }
-      if(this.chartType == 'group'){
+      if (this.chartType == 'group') {
         VueEvent.$emit("combine_stop");
       }
     },
@@ -238,11 +245,11 @@ export default {
     },
     //点击控件
     onActivated(customId) {
-        this.$emit("actived", customId);
-        //将当前选中的元素信息发给RightPanel组件
-        VueEvent.$emit("to_activated_msg", this.dragchartdata);
-        //将当前选中的元素信息发给LayerItems组件
-        VueEvent.$emit("to_layer_msg", this.dragchartdata);
+      this.$emit("actived", customId);
+      //将当前选中的元素信息发给RightPanel组件
+      VueEvent.$emit("to_activated_msg", this.dragchartdata);
+      //将当前选中的元素信息发给LayerItems组件
+      VueEvent.$emit("to_layer_msg", this.dragchartdata);
 
     },
     //取消选中控件
@@ -257,26 +264,31 @@ export default {
 .test1 {
   background-color: rgb(239, 154, 154);
 }
+
 .test2 {
   background-color: rgb(129, 212, 250);
 }
+
 .test3 {
   background-color: rgba(255, 255, 255, 0);
 }
 
 .my-dragging-class {
-    background-color: rgba(9, 97, 230, 0.89);
-    border: 1px solid black;
+  background-color: rgba(9, 97, 230, 0.89);
+  border: 1px solid black;
 }
+
 .my-resizing-class {
-    background-color: blue;
-    border: 1px solid black;
-    color: white;
+  background-color: blue;
+  border: 1px solid black;
+  color: white;
 }
+
 .my-active-class {
   background-color: rgba(9, 97, 230, 0.89);
   border: 1px solid black;
 }
+
 .ctrlSelected {
   border: 1px solid rgba(9, 97, 230, 0.89);
 }
