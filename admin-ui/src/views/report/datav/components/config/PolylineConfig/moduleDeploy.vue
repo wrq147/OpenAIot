@@ -31,14 +31,12 @@
 
               <!-- 横坐标配置 -->
               <el-form-item label="横坐标(cx)">
-                <el-slider v-model="point.cx" :min="rangeMaxMin.x.min" :step="1" :max="rangeMaxMin.x.max" show-input
-                  @change="updatePoint(index, 'cx', point.cx)"></el-slider>
+                <span>{{point.cx}}</span>
               </el-form-item>
 
               <!-- 纵坐标配置 -->
               <el-form-item label="纵坐标(cy)">
-                <el-slider v-model="point.cy" :min="rangeMaxMin.y.min" :step="1" :max="rangeMaxMin.y.max" show-input
-                  @change="updatePoint(index, 'cy', point.cy)"></el-slider>
+                <span>{{point.cy}}</span>
               </el-form-item>
             </div>
 
@@ -140,20 +138,24 @@ export default {
       chartList: this.drawingList,
       animateOptions,
       configData: this.costomData,
+      isUpdatingFromCostomData: false
     };
   },
   watch: {
     configData: {
       deep: true,
       handler(newVal) {
-        console.info("ddd")
+        if (this.isUpdatingFromCostomData) {
+          this.isUpdatingFromCostomData = false;
+          return;
+        }
         this.$emit("costom-change", newVal);
       },
     },
     costomData: {
       deep: true,
       handler(newVal) {
-        console.info("lklkl")
+        this.isUpdatingFromCostomData = true;
         this.configData = newVal;
       },
     },
@@ -196,11 +198,6 @@ export default {
       }
     },
 
-    // 更新单个控制点的坐标（确保响应式更新）
-    updatePoint(index, key, value) {
-      // 使用$set确保响应式：修改数组中指定索引对象的属性
-      this.$set(this.configData.chartOption.points[index], key, value);
-    },
 
     bindCharts(val) {
       this.$set(this.configData.chartOption, "bindList", val);

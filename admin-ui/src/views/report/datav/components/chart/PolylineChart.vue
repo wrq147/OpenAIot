@@ -109,7 +109,7 @@ export default {
       handler(newvalue) {
         this.widNum = this.WHToNumber(newvalue);
         this.updateSvgSize();
-        this.fixStartEndPoints();
+        this.fixPoints();
       },
       immediate: true,
     },
@@ -117,7 +117,7 @@ export default {
       handler(newvalue) {
         this.heiNum = this.WHToNumber(newvalue);
         this.updateSvgSize();
-        this.fixStartEndPoints();
+        this.fixPoints();
       },
       immediate: true,
     },
@@ -127,7 +127,7 @@ export default {
     this.valUpdate = (result) => { };
     this.svgElement = this.$refs.svgRef;
     this.updateSvgSize(); // 初始化SVG尺寸
-    this.fixStartEndPoints();
+    this.fixPoints();
   },
   methods: {
     WHToNumber(str) {
@@ -139,27 +139,14 @@ export default {
         return Number(str.substring(0, str.length));
       }
     },
-    fixStartEndPoints() {
+    fixPoints() {
       if (!this.svgWidth || !this.svgHeight) return;
       const points = this.chartOption.points;
       if (!Array.isArray(points) || points.length < 2) return;
 
-      // 固定开始点（索引0）：左中
-      this.$set(points, 0, {
-        cx: this.svgPadding,
-        cy: this.svgHeight / 2
-      });
-
-      // 固定结束点（最后一个索引）：右中
-      const endIndex = points.length - 1;
-      this.$set(points, endIndex, {
-        cx: this.svgWidth - this.svgPadding,
-        cy: this.svgHeight / 2
-      });
 
       // 边界限制
-      let mxidx = points.length - 1;
-      for (let i = 1; i < mxidx; i++) {
+      for (let i = 0; i < points.length; i++) {
         let newCx = points[i].cx;
         let newCy = points[i].cy;
         newCx = Math.min(
@@ -243,43 +230,43 @@ export default {
     drag(event) {
       const { index, startX, startY } = this.dragState;
       if (index === -1) return;
-      if (index == 0 || index == (this.chartOption.points.length - 1)) {
-        return;
+      const points = this.chartOption.points;
+      const mouseCoords = this.getMouseCoords(event);
+
+      let newCx = mouseCoords.x;
+      let newCy = mouseCoords.y;
+
+      if (newCx > (this.svgWidth - this.svgPadding)) {
+        this.dragchartdata.width = this.dragchartdata.width + 20;
       }
-      else {
-        const points = this.chartOption.points;
-        const mouseCoords = this.getMouseCoords(event);
-
-        let newCx = mouseCoords.x;
-        let newCy = mouseCoords.y;
-
-
-        if (newCy > (this.svgHeight - this.svgPadding)) {
-          this.dragchartdata.height = this.dragchartdata.height + 20;
-        }
-        else if (newCy < this.svgPadding) {
-          this.dragchartdata.y = this.dragchartdata.y - 20;
-          this.dragchartdata.height = this.dragchartdata.height + 20;
-        }
-
-        // 边界限制
-        newCx = Math.min(
-          Math.max(newCx, this.svgPadding),
-          this.svgWidth - this.svgPadding
-        );
-
-        newCy = Math.min(
-          Math.max(newCy, this.svgPadding),
-          this.svgHeight - this.svgPadding
-        );
-
-        this.$set(points, index, {
-          cx: newCx,
-          cy: newCy
-        });
-
+      else if (newCx < this.svgPadding) {
+        this.dragchartdata.x = this.dragchartdata.x - 20;
+        this.dragchartdata.width = this.dragchartdata.width + 20;
       }
 
+      if (newCy > (this.svgHeight - this.svgPadding)) {
+        this.dragchartdata.height = this.dragchartdata.height + 20;
+      }
+      else if (newCy < this.svgPadding) {
+        this.dragchartdata.y = this.dragchartdata.y - 20;
+        this.dragchartdata.height = this.dragchartdata.height + 20;
+      }
+
+      // 边界限制
+      newCx = Math.min(
+        Math.max(newCx, this.svgPadding),
+        this.svgWidth - this.svgPadding
+      );
+
+      newCy = Math.min(
+        Math.max(newCy, this.svgPadding),
+        this.svgHeight - this.svgPadding
+      );
+
+      this.$set(points, index, {
+        cx: newCx,
+        cy: newCy
+      });
 
     },
 

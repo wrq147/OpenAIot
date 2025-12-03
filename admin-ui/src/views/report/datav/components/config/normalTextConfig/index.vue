@@ -217,10 +217,8 @@ export default {
       }
     },
     handleClick(val) {
-      // console.log("切换tab", this.configData.chartOption.tableSelectLine);
       if (this.currentTab == "data") {
         let arr = JSON.parse(JSON.stringify(this.configData));
-        // this.$emit("costom-change", arr);
         this.$nextTick(() => {
           if (
             this.configData.chartOption &&
@@ -279,7 +277,6 @@ export default {
         }
       }
       this.ishandleSelect = false;
-      // this.$emit("costom-change", this.configData);
     },
     // 点击一行时选中
     clickRow(row) {

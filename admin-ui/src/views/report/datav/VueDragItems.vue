@@ -36,7 +36,6 @@ import DragChart from './DragChart'
 import DragChartConfig from './DragChartConfiguration'
 import VueEvent from './VueEvent'
 import { addEvent, removeEvent } from './util/dom'
-import * as spritejs from "spritejs";
 export default {
   components: {
     DragChart,
@@ -72,32 +71,7 @@ export default {
     });
   },
   methods: {
-    //右键菜单
-    onContextmenu(event) {
-      this.$contextmenu({
-        items: [
-          {
-            label: "删除图层",
-            icon: "el-icon-delete",
-            onClick: () => {
-              this.$refs['com' + this.customId].removeSprite()
-              if (this.ctrlSelectArr.length == 0) {
-                VueEvent.$emit("delete_component", this.customId);
-              }
-              else {
-                VueEvent.$emit("delete_component", this.activeId);
-              }
 
-            }
-          },
-        ],
-        event,
-        customClass: "custom-class",
-        zIndex: 3,
-        minWidth: 230
-      });
-      return false;
-    },
     // 辅助线回调事件
     getRefLineParams(params) {
       const { vLine, hLine } = params;

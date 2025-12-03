@@ -162,7 +162,11 @@ export default {
             label: "删除图层",
             icon: "el-icon-delete",
             onClick: () => {
-              this.$refs['com' + this.customId].removeSprite()
+              let comid = 'com' + this.customId;
+              if (this.$refs[comid].removeSprite) {
+                this.$refs[comid].removeSprite();
+              }
+
               if (this.ctrlSelectArr.length == 0) {
                 VueEvent.$emit("delete_component", this.customId);
               }

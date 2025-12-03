@@ -2,11 +2,13 @@
   <div class="field-box">
     <el-scrollbar class="right-scrollbar">
       <el-form size="small" label-width="90px">
-        <div style="background-color: #f5f5f5;padding: 10px 15px;border: solid 1px #dadada;font-size: 14px;margin-bottom: 15px;color: #999;">
+        <div
+          style="background-color: #f5f5f5;padding: 10px 15px;border: solid 1px #dadada;font-size: 14px;margin-bottom: 15px;color: #999;">
           事件预处理
         </div>
         <chart-interact :chartOption="configData.chartOption" @changeData="changeInteractData"></chart-interact>
-        <div style="background-color: #f5f5f5;padding: 10px 15px;border: solid 1px #dadada;font-size: 14px;margin-bottom: 15px;color: #999;">
+        <div
+          style="background-color: #f5f5f5;padding: 10px 15px;border: solid 1px #dadada;font-size: 14px;margin-bottom: 15px;color: #999;">
           事件发生后更新数据源
         </div>
         <el-form-item label="变更事件">
@@ -24,7 +26,7 @@
 import ChartInteract from "../interact/ChartInteract";
 
 export default {
-  props: ["costomData","themeForm"],
+  props: ["costomData", "themeForm"],
   components: {
     ChartInteract
   },
@@ -32,18 +34,24 @@ export default {
     return {
       configData: this.costomData,
       dataList: [],
+      isUpdatingFromCostomData: false
     };
   },
   watch: {
     configData: {
       deep: true,
-      handler(newVal,oldVal) {
+      handler(newVal, oldVal) {
+        if (this.isUpdatingFromCostomData) {
+          this.isUpdatingFromCostomData = false;
+          return;
+        }
         this.$emit("costom-change", newVal);
       }
     },
     costomData: {
       deep: true,
       handler(newVal) {
+        this.isUpdatingFromCostomData = true;
         this.configData = newVal;
       }
     },
@@ -54,8 +62,8 @@ export default {
   },
   computed: {},
   methods: {
-    changeInteractData(val){
-      this.$emit("changeData",val);
+    changeInteractData(val) {
+      this.$emit("changeData", val);
     },
     bindDataList(val) {
       this.$set(this.configData.chartOption, "dataList", val);
@@ -69,6 +77,7 @@ export default {
   width: 33%;
   text-align: center;
 }
+
 .dataProduct {
   margin-bottom: 10px;
   line-height: 45px;

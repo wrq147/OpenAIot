@@ -34,9 +34,6 @@ import './animate/animate.css'
 import VueEvent from './VueEvent'
 
 import AllComponents from './ComponentsExport'
-// import { getFormsource } from "@/api/report/formsource";
-// import { chartBIanalysis } from "@/api/report/sourse";
-// import { chartApi } from "@/api/report/chartApi";
 import { rptInfo, shareInfo, checkShare,reportUpdateTime } from "@/api/report/report";
 import { getToken, setShareToken, removeShareToken } from '@/utils/auth'
 import { replaceLinkParam } from "./util/LinkageChart"

@@ -3,13 +3,16 @@
     <div class="dataOrigin" v-if="configData.chartOption.globalData && !activeTab.globalData">
       请先添加数据源
     </div>
-    <div class="dataOrigin" v-if="configData.chartOption.globalProcessor &&activeTab.globalData &&!activeTab.globalProcessor">
+    <div class="dataOrigin"
+      v-if="configData.chartOption.globalProcessor && activeTab.globalData && !activeTab.globalProcessor">
       请选择处理器
     </div>
     <div class="dataProduct">1、数据生成</div>
     <div style="margin-bottom: 20px">
-      <el-table ref="multipleTable" v-loading="false" border :data="resultTableList" style="width: 100%" :fit="true" max-height="500">
-        <el-table-column :label="item.name" align="left" :key="item.key" :prop="item.key" :show-overflow-tooltip="true" v-for="item in tableColum">
+      <el-table ref="multipleTable" v-loading="false" border :data="resultTableList" style="width: 100%" :fit="true"
+        max-height="500">
+        <el-table-column :label="item.name" align="left" :key="item.key" :prop="item.key" :show-overflow-tooltip="true"
+          v-for="item in tableColum">
         </el-table-column>
       </el-table>
     </div>
@@ -19,17 +22,21 @@
     <div style="margin-bottom: 20px" v-if="mainTableColum && mainTableColum.length > 0">
       <el-form-item>
         <div v-for="(tmpitem, index) in filedSelected.main" :key="'a' + index" style="margin-bottom: 10px">
-          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.main[index].key" placeholder="请选择" :disabled="true">
-            <el-option v-for="item in defaultKeyList" :key="item.key" :label="item.name" :value="item.key" >
+          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.main[index].key"
+            placeholder="请选择" :disabled="true">
+            <el-option v-for="item in defaultKeyList" :key="item.key" :label="item.name" :value="item.key">
             </el-option>
           </el-select>
           <span>-</span>
-          <el-select :clearable="true" style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.main[index].filed" placeholder="请选择"
-            v-if="filedSelected.main[index].key != 'currentList' &&filedSelected.main[index].key != 'list'&&filedSelected.main[index].key != 'rowtitle'">
+          <el-select :clearable="true" style="width: calc(50% - 10px)" @change="valHasChange"
+            v-model="filedSelected.main[index].filed" placeholder="请选择"
+            v-if="filedSelected.main[index].key != 'currentList' && filedSelected.main[index].key != 'list' && filedSelected.main[index].key != 'rowtitle'">
             <el-option v-for="item in mainTableColum" :key="item.key" :label="item.key" :value="item.key">
             </el-option>
           </el-select>
-          <el-select :clearable="true" style="width: calc(50% - 10px)" @change="valHasChangeTable(filedSelected.main[index].key)" v-model="filedSelected.main[index].filed" placeholder="请选择" v-else>
+          <el-select :clearable="true" style="width: calc(50% - 10px)"
+            @change="valHasChangeTable(filedSelected.main[index].key)" v-model="filedSelected.main[index].filed"
+            placeholder="请选择" v-else>
             <el-option v-for="item in slectTableList" :key="item.name" :label="item.title" :value="item.name">
             </el-option>
           </el-select>
@@ -42,12 +49,14 @@
     <div style="margin-bottom: 20px" v-if="infoItemTableColum && infoItemTableColum.length > 0">
       <el-form-item>
         <div v-for="(tmpitem, index) in filedSelected.currentList" :key="'a' + index" style="margin-bottom: 10px">
-          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.currentList[index].key" placeholder="请选择" :disabled="true">
+          <el-select style="width: calc(50% - 10px)" @change="valHasChange"
+            v-model="filedSelected.currentList[index].key" placeholder="请选择" :disabled="true">
             <el-option v-for="item in currentList" :key="item.key" :label="item.name" :value="item.key">
             </el-option>
           </el-select>
           <span>-</span>
-          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.currentList[index].filed" placeholder="请选择">
+          <el-select style="width: calc(50% - 10px)" @change="valHasChange"
+            v-model="filedSelected.currentList[index].filed" placeholder="请选择">
             <el-option v-for="item in infoItemTableColum" :key="item.key" :label="item.key" :value="item.key">
             </el-option>
           </el-select>
@@ -60,11 +69,13 @@
     <div style="margin-bottom: 20px" v-if="detailItemTableColum && detailItemTableColum.length > 0">
       <el-form-item>
         <div v-for="(tmpitem, index) in filedSelected.list" :key="'a' + index" style="margin-bottom: 10px">
-          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.list[index].key" placeholder="请选择" :disabled="true">
+          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.list[index].key"
+            placeholder="请选择" :disabled="true">
             <el-option v-for="item in list" :key="item.key" :label="item.name" :value="item.key"></el-option>
           </el-select>
           <span>-</span>
-          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.list[index].filed" placeholder="请选择">
+          <el-select style="width: calc(50% - 10px)" @change="valHasChange" v-model="filedSelected.list[index].filed"
+            placeholder="请选择">
             <el-option v-for="item in detailItemTableColum" :key="item.key" :label="item.key" :value="item.key">
             </el-option>
           </el-select>
@@ -148,10 +159,11 @@ export default {
       detailItemTableColumVal: [],
       mainTableColumVal: [],
       filedSelectedVal: [],
+      isUpdatingFromCostomData: false
     };
   },
   //页面加载完执行
-  mounted() {},
+  mounted() { },
   watch: {
     resultTableList: {
       deep: true,
@@ -188,12 +200,17 @@ export default {
     configData: {
       deep: true,
       handler(newVal, oldVal) {
+        if (this.isUpdatingFromCostomData) {
+          this.isUpdatingFromCostomData = false;
+          return;
+        }
         this.$emit("costom-change", newVal);
       },
     },
     costomData: {
       deep: true,
       handler(newVal) {
+        this.isUpdatingFromCostomData = true;
         this.configData = newVal;
       },
     },
@@ -202,8 +219,8 @@ export default {
     filedSelected() {
       if (this.configData.chartOption.tableSelectLine) {
         if (this.processorTabs && this.processorTabs[0]) {
-          this.$set(this.configData.chartOption,"globalData",this.processorTabs[0].globalData);
-          this.$set(this.configData.chartOption,"globalProcessor",this.processorTabs[0].globalProcessor);
+          this.$set(this.configData.chartOption, "globalData", this.processorTabs[0].globalData);
+          this.$set(this.configData.chartOption, "globalProcessor", this.processorTabs[0].globalProcessor);
         }
         return this.configData.chartOption.tableSelectLine;
       } else {
@@ -243,7 +260,7 @@ export default {
         return [];
       }
     },
-    infoItemTableColum:{
+    infoItemTableColum: {
       get() {
         return this.infoItemReturn();
       },
@@ -264,10 +281,10 @@ export default {
       },
     },
     mainTableColum() {
-      if(this.processorTabs[0] == undefined ||this.processorTabs[0].globalData == "") {
+      if (this.processorTabs[0] == undefined || this.processorTabs[0].globalData == "") {
         return [];
       }
-      if(this.processorTabs[0] == undefined || this.processorTabs[0].globalProcessor == "") {
+      if (this.processorTabs[0] == undefined || this.processorTabs[0].globalProcessor == "") {
         return [];
       }
       let tdlist = this.themeForm.globalData.filter((x) => x.name == this.processorTabs[0].globalData);
@@ -322,7 +339,7 @@ export default {
   },
   methods: {
     infoItemReturn() {
-      if (this.filedSelected &&this.filedSelected.main &&this.filedSelected.main.length > 0) {
+      if (this.filedSelected && this.filedSelected.main && this.filedSelected.main.length > 0) {
         let infoItemobj = this.filedSelected.main.find((row) => row.key == "currentList");
         if (infoItemobj && infoItemobj.filed) {
           let tabobkTable = this.tableListMap.get(infoItemobj.filed);
@@ -345,7 +362,7 @@ export default {
       }
     },
     detailTableReturn() {
-      if (this.filedSelected &&this.filedSelected.main &&this.filedSelected.main.length > 0) {
+      if (this.filedSelected && this.filedSelected.main && this.filedSelected.main.length > 0) {
         let detailItemobj = this.filedSelected.main.find((row) => row.key == "list");
         if (detailItemobj && detailItemobj.filed) {
           let tabobkTable = this.tableListMap.get(detailItemobj.filed);
@@ -360,7 +377,7 @@ export default {
           } else {
             return [];
           }
-        }else{
+        } else {
           return [];
         }
       } else {
@@ -371,7 +388,7 @@ export default {
       //值发生了变化
       let arr = [];
       this.filedSelected2 = JSON.parse(JSON.stringify(this.filedSelected));
-      this.$set(this.configData.chartOption,"tableSelectLine",this.filedSelected2);
+      this.$set(this.configData.chartOption, "tableSelectLine", this.filedSelected2);
     },
     valHasChangeTable(filed) {
       if (filed) {
@@ -426,6 +443,7 @@ export default {
   width: 25%;
   text-align: center;
 }
+
 .dataProduct {
   margin-bottom: 10px;
   line-height: 45px;
@@ -433,6 +451,7 @@ export default {
   background-color: #f5f5f5;
   color: #666;
 }
+
 .dataOrigin {
   font-size: 14px;
   color: red;
@@ -443,6 +462,7 @@ export default {
   .el-input__icon {
     line-height: 28px;
   }
+
   .el-tabs__new-tab {
     background-color: #1682e6;
     margin-right: 18px;
