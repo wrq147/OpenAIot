@@ -93,7 +93,6 @@ namespace MESService.Business
             {
                 return BusResponse<int>.Error(114, "类别不能为空");
             }
-
             return BusResponse<int>.Success(await _defectDAL.Update(data));
         }
 

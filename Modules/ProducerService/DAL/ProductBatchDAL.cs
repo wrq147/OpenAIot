@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using Common;
+﻿using Common;
 using Common.Share;
 using MyAccess.DB;
 using MyAccess.DB.Builder.WhereToSql;

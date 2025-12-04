@@ -145,17 +145,7 @@ namespace MyAccess.Sqlite
             rtvalues = "(" + rtvalues + ")";
             _sql.Append(" " + rtfields + " values " + rtvalues);
 
-            bool noEntity = true;
             StringBuilder sb = new StringBuilder();
-            if (entity is IBaseEntity be)
-            {
-                noEntity = false;
-                myProInfos = be.GetUsedPropertys();
-            }
-            else
-            {
-                myProInfos = EntityType.GetProperties();
-            }
             for (int i = 0; i < myProInfos.Length; i++)
             {
                 PropertyInfo pi = myProInfos[i];
@@ -166,7 +156,7 @@ namespace MyAccess.Sqlite
                 if (!pi.IsDefined(typeof(IDAttribute)))
                 {
                     object val = pi.GetValue(entity);
-                    if (noEntity && val == null)
+                    if (val == null)
                     {
                         continue;
                     }

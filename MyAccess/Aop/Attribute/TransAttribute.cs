@@ -1,65 +1,75 @@
-﻿using Castle.DynamicProxy;
+﻿using AspectCore.DynamicProxy;
 using System;
-using MyAccess.DB;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+
 
 namespace MyAccess.Aop
 {
-
-    [AttributeUsage(AttributeTargets.Method)]
-    public class TransAttribute : AbstractAopAttr
+    public class TransAttribute : AbstractInterceptorAttribute
     {
-        public TransAttribute()
+        public static AsyncLocal<BLLDbStore> ThreadDbHelp = new AsyncLocal<BLLDbStore>();
+        private T GetTargetInstance<T>(AspectContext context) where T : class
         {
+            if (context == null)
+                return null;
+
+            // 场景 1：直接拦截类（非接口）→ context.Implementation 就是目标实例
+            if (context.Implementation is T target)
+                return target;
+
+            // 场景 2：拦截接口（通过 DI 注册接口+实现类）→ context.Proxy 是真实实现类实例
+            if (context.Proxy is T proxyTarget)
+                return proxyTarget;
+
+            return null;
         }
-        public override async Task ExcuteAsync(IDbHelp dbhelp, IInvocation invocation, IInvocationProceedInfo proceedInfo)
+        public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var attrib = invocation.Method.GetCustomAttribute<AsyncStateMachineAttribute>();
-            bool issync = attrib == null;
-            if (dbhelp != null)
+            DBSupport support = GetTargetInstance<DBSupport>(context);
+            bool issync = context.IsAsync();
+            if (support != null && support.help != null)
             {
-                bool disableTrans = BLLIntercept.ThreadDbHelp.Value != null && BLLIntercept.ThreadDbHelp.Value.ThreadDb != null;
+                bool disableTrans = ThreadDbHelp.Value != null && ThreadDbHelp.Value.ThreadDb != null;
                 if (!disableTrans)
                 {
                     if (issync)
                     {
-                        dbhelp.BeginTran();
+                        support.help.BeginTran();
                     }
                     else
                     {
-                        await dbhelp.BeginTranAsync();
+                        await support.help.BeginTranAsync();
                     }
                 }
 
                 try
                 {
-                    await Next.ExcuteAsync(dbhelp, invocation, proceedInfo);
+                    await next(context);
                     if (!disableTrans)
                     {
                         if (issync)
                         {
-                            dbhelp.Commit();
+                            support.help.Commit();
                         }
                         else
                         {
-                            await dbhelp.CommitAsync();
+                            await support.help.CommitAsync();
                         }
                     }
-
                 }
                 finally
                 {
-                    if (!disableTrans && dbhelp.IsTrans())
+                    if (!disableTrans && support.help.IsTrans())
                     {
                         if (issync)
                         {
-                            dbhelp.RollBack();
+                            support.help.RollBack();
                         }
                         else
                         {
-                            await dbhelp.RollBackAsync();
+                            await support.help.RollBackAsync();
                         }
                     }
                 }
@@ -68,27 +78,28 @@ namespace MyAccess.Aop
             {
                 using (BLLTranScope scope = new BLLTranScope())
                 {
-                    await Next.ExcuteAsync(dbhelp, invocation, proceedInfo);
+                    await next(context);
+                    if (context.ImplementationMethod.IsReturnValueTask())
+                    {
+                        ITransReturn tr = context.ReturnValue as ITransReturn;
+                        if (tr != null && !tr.IsSuccess())
+                        {
+                            return;
+                        }
+                        // 完成
+                        if (issync)
+                        {
+                            scope.Complete();
+                        }
+                        else
+                        {
+                            await scope.CompleteAsync();
+                        }
+                    }
 
-                    ITransReturn tr = Last.GetResult() as ITransReturn;
-                    if (tr != null && !tr.IsSuccess())
-                    {
-                        return;
-                    }
-                    // 完成
-                    if (issync)
-                    {
-                        scope.Complete();
-                    }
-                    else
-                    {
-                        await scope.CompleteAsync();
-                    }
                 }
             }
-
         }
-
 
     }
 }

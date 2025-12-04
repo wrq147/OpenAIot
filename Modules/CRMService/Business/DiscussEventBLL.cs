@@ -1,19 +1,13 @@
 ﻿using AuthService;
-using Castle.Core.Resource;
 using Common.EventBus;
-using Common.IdGenerator;
-using CRMService.Controller;
 using CRMService.DAL;
 using CRMService.Model;
 using DiscussService;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using static NPOI.HSSF.Util.HSSFColor;
 
 namespace CRMService.Business
 {

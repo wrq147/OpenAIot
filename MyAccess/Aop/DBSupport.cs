@@ -2,7 +2,7 @@
 using System;
 using System.Threading;
 
-namespace MyAccess.Aop.DAL
+namespace MyAccess.Aop
 {
     /// <summary>
     /// DAL层

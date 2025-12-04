@@ -545,7 +545,7 @@ namespace AuthService
 
         public virtual async Task<BusResponse<int>> ResetPwd(long userId, string password, IUserInfo updater)
         {
-            MZ_AdminInfo user = InterceptFactory.CreateEntityOp<MZ_AdminInfo>();
+            MZ_AdminInfo user = new MZ_AdminInfo();
             user.Id = userId;
             user.Salt = MyAccess.Core.StringTool.GetEnglishChar(16);
             user.Password = MyAccess.Core.Crypter.MD5(string.Concat(password, user.Salt));
@@ -558,7 +558,7 @@ namespace AuthService
             {
                 return BusResponse<int>.Error(12, "状态值错误");
             }
-            MZ_AdminInfo user = InterceptFactory.CreateEntityOp<MZ_AdminInfo>();
+            MZ_AdminInfo user = new MZ_AdminInfo();
             user.Id = userId;
             user.status = status;
             user.SetUpdateBy(updater);

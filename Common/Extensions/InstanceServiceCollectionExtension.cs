@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using TemplateAction.Core;
+using TemplateAction.NetCore;
 
 namespace Common
 {
@@ -8,20 +10,21 @@ namespace Common
     /// </summary>
     public static class InstanceServiceCollectionExtension
     {
-        public static IServiceCollection AddBLL<T>(this IServiceCollection collection)
+
+        public static IServiceCollection AddBLL<T>(this IServiceCollection collection) where T : class
         {
             collection.AddTransient<T>((object[] arguments, ITAServiceProvider provider) =>
             {
-                return MyAccess.Aop.InterceptFactory.CreateBLL(typeof(T), arguments);
+                return MyAccess.Aop.InterceptFactory.CreateBLL<T>(arguments);
             });
             return collection;
         }
-        public static IServiceCollection AddDAL<T>(this IServiceCollection collection)
+        public static IServiceCollection AddDAL<T>(this IServiceCollection collection) where T : class
         {
             collection.AddSingleton<T>((object[] arguments, ITAServiceProvider provider) =>
             {
-                var dalObj = MyAccess.Aop.InterceptFactory.CreateDAL(typeof(T), arguments);
-                if(dalObj is IRepository repository)
+                var dalObj = MyAccess.Aop.InterceptFactory.CreateDAL<T>(arguments);
+                if (dalObj is IRepository repository)
                 {
                     repository.Provider = provider;
                 }
@@ -33,7 +36,7 @@ namespace Common
         {
             collection.AddTransient<T1, T2>((object[] arguments, ITAServiceProvider provider) =>
              {
-                 return MyAccess.Aop.InterceptFactory.CreateBLL(typeof(T2), arguments);
+                 return MyAccess.Aop.InterceptFactory.CreateBLL<T2>(arguments);
              });
             return collection;
         }
@@ -41,7 +44,7 @@ namespace Common
         {
             collection.AddSingleton<T1, T2>((object[] arguments, ITAServiceProvider provider) =>
             {
-                var dalObj = MyAccess.Aop.InterceptFactory.CreateDAL(typeof(T2), arguments);
+                var dalObj = MyAccess.Aop.InterceptFactory.CreateDAL<T2>(arguments);
                 if (dalObj is IRepository repository)
                 {
                     repository.Provider = provider;

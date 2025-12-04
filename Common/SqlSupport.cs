@@ -1,9 +1,9 @@
-﻿using MyAccess.Aop.DAL;
-using MyAccess.MySql;
+﻿using MyAccess.MySql;
 using MyAccess.Sqlite;
 using System;
 using System.Threading.Tasks;
 using MyAccess.DB;
+using MyAccess.Aop;
 
 namespace Common
 {

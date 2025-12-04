@@ -324,16 +324,7 @@ namespace MyAccess.DB
 
 
             bool noEntity = true;
-            PropertyInfo[] myProInfos;
-            if (updated is IBaseEntity be)
-            {
-                noEntity = false;
-                myProInfos = be.GetUsedPropertys();
-            }
-            else
-            {
-                myProInfos = EntityType.GetProperties();
-            }
+            PropertyInfo[] myProInfos = EntityType.GetProperties();
             for (int i = 0; i < myProInfos.Length; i++)
             {
                 PropertyInfo pi = myProInfos[i];

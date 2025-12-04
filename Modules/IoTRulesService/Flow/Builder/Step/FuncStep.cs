@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using IoTRulesService.Flow.Node;
+﻿using IoTRulesService.Flow.Node;
 using IoTService;
 using IoTService.DAL;
 using System.Collections.Generic;

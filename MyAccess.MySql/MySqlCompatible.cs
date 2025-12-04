@@ -129,17 +129,7 @@ namespace MyAccess.MySql
             _sql.Append(" " + rtfields + " values " + rtvalues);
             _sql.Append(" ON DUPLICATE KEY UPDATE ");
 
-            bool noEntity = true;
             StringBuilder sb = new StringBuilder();
-            if (entity is IBaseEntity be)
-            {
-                noEntity = false;
-                myProInfos = be.GetUsedPropertys();
-            }
-            else
-            {
-                myProInfos = EntityType.GetProperties();
-            }
             for (int i = 0; i < myProInfos.Length; i++)
             {
                 PropertyInfo pi = myProInfos[i];
@@ -150,7 +140,7 @@ namespace MyAccess.MySql
                 if (!pi.IsDefined(typeof(IDAttribute)))
                 {
                     object val = pi.GetValue(entity);
-                    if (noEntity && val == null)
+                    if (val == null)
                     {
                         continue;
                     }
