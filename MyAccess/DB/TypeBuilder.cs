@@ -1,31 +1,50 @@
 ﻿using System;
-using System.Reflection.Emit;
-using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using System.Reflection;
 namespace MyAccess.DB
 {
     /// <summary>
-    /// IL动态创建实例类
+    /// 无参实例创建器
     /// </summary>
-    public class TypeBuilder
+    public static class TypeBuilder
     {
         /// <summary>
-        /// 缓存创建方法
+        /// 泛型静态缓存：每个T对应一个创建委托，仅初始化一次
         /// </summary>
-        private static ConcurrentDictionary<Type, Delegate> _buildMethodCache = new ConcurrentDictionary<Type, Delegate>();
-        /// <summary>
-        /// 生成实例创建方法
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static Delegate BuildMethodCreateInstance<T>()
+        /// <typeparam name="T">目标类型</typeparam>
+        private static class CreatorCache<T>
         {
-            Type type = typeof(T);
-            DynamicMethod dm = new DynamicMethod(string.Format("_{0:N}", Guid.NewGuid()), type, null);
-            var gen = dm.GetILGenerator();
-            gen.Emit(OpCodes.Newobj, type.GetConstructor(Type.EmptyTypes));
-            gen.Emit(OpCodes.Ret);
-            return dm.CreateDelegate(typeof(Func<T>));
+            // 静态委托：编译期绑定，无反射开销
+            public static readonly Func<T> InstanceCreator = CreateCreator();
+            /// <summary>
+            /// 初始化创建委托（仅执行一次）
+            /// </summary>
+            private static Func<T> CreateCreator()
+            {
+                Type type = typeof(T);
+
+                // 1. 值类型：直接返回default(T)，无需构造函数
+                if (type.IsValueType)
+                {
+                    return () => default(T);
+                }
+
+                // 2. 引用类型：校验无参构造函数并构建Expression委托
+                ConstructorInfo? ctor = type.GetConstructor(
+                    BindingFlags.Public | BindingFlags.Instance,
+                    Type.EmptyTypes);
+
+                if (ctor == null)
+                {
+                    throw new MissingMethodException(type.FullName, "无公共无参构造函数，无法创建实例");
+                }
+
+                NewExpression newExpr = Expression.New(ctor);
+                Expression<Func<T>> lambda = Expression.Lambda<Func<T>>(newExpr);
+                return lambda.Compile();
+            }
         }
+
         /// <summary>
         /// 生成实例
         /// </summary>
@@ -33,17 +52,7 @@ namespace MyAccess.DB
         /// <returns></returns>
         public static T CreateInstance<T>()
         {
-            Type type = typeof(T);
-            var func = _buildMethodCache.GetOrAdd(type, (t) =>
-            {
-                return BuildMethodCreateInstance<T>();
-            });
-            Func<T> invokeFunc = func as Func<T>;
-            if (invokeFunc != null)
-            {
-                return invokeFunc.Invoke();
-            }
-            return default(T);
+            return CreatorCache<T>.InstanceCreator.Invoke();
         }
     }
 }
