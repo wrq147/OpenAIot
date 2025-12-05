@@ -2,16 +2,112 @@
 branches: {
   }
 fileChange:
+  /Modules:
+    newFile: !uuid 'fae35bb455c108443be28f64c0109ba61b06a5d2'
+    oldFile: !uuid '6bd6411aea0f1c997a873041a076a5e8bee2dd07'
+  /Modules/AuthService:
+    newFile: !uuid '41adda2a8211daf679f7203830dcc824204ce823'
+    oldFile: !uuid '0842fd0659272c6ce4e02f2cd67b63fb3810960a'
+  /Modules/AuthService/DAL:
+    newFile: !uuid '99c625d2ef816989777c98934b9a319defd45e4f'
+    oldFile: !uuid '4fb82fc8f031fb8b5a5d15c27b375d00a76ec0c3'
+  /Modules/AuthService/DAL/OrgExtDAL.cs:
+    newFile: !uuid '5dbaf3c28a08fb4a761ef71546f752f502e363d0'
+    oldFile: !uuid '271d73ea3e857be2054dd653ea8ab23029407692'
+  /Modules/AuthService/Model:
+    newFile: !uuid 'fd02552f1663492ca67e6167a61fb32f2161fefc'
+    oldFile: !uuid 'e5dd432b98ee79a60cec365704368da227711863'
+  /Modules/AuthService/Model/MZ_AdminInfo.cs:
+    newFile: !uuid '8bd9a833e1169c3d92c593fe86bd006e49b85bbe'
+    oldFile: !uuid 'c186885dd76ac8ada360a957dc3580d3bcd08240'
+  /Modules/IoTService:
+    newFile: !uuid 'e6a90c6ea2ad7bf2211b09ac30b8eed2d73d93c1'
+    oldFile: !uuid '0e8408cb0903179d0d102820d644e961a163f0c6'
+  /Modules/IoTService/DAL:
+    newFile: !uuid '23f970e2f4f2874041e03511a036d824fad16b57'
+    oldFile: !uuid '513d9aa38f1fe32f8c79eade2db29ce8270a6c18'
+  /Modules/IoTService/DAL/IotDeviceDAL.cs:
+    newFile: !uuid '89cc9f41b507171c7d9ae19eb034de3de783952c'
+    oldFile: !uuid '3933244f9561ff4125018ac7e0cfb951a270c1f6'
+  /Modules/MESService:
+    newFile: !uuid 'a145260b3b75e771a5c72ff90ac16db8fed90646'
+    oldFile: !uuid '532ab3d2445b6caf391fce910198b215ee38c53a'
+  /Modules/MESService/Business:
+    newFile: !uuid 'f15de54769fb5ffddfe34c7ac84ec353c8c0f3eb'
+    oldFile: !uuid '5073807bbd11bd6e2dd1e7306a4de0b953954224'
+  /Modules/MESService/Business/BatchDevHisBLL.cs:
+    newFile: !uuid '0ef815e678dd02a265a4b5dc4f451c30eb0edcaa'
+    oldFile: !uuid 'a6e2149b453a9dc0184d9dd9da3fad233254ac2f'
+  /Modules/MonitorService:
+    newFile: !uuid '376d36faf52403eea6fedb42e10fc130965535f5'
+    oldFile: !uuid '870b7a9cd4a59b9dfa702591ecf4a3356f027d73'
+  /Modules/MonitorService/OperLogThread.cs:
+    newFile: !uuid '8ad361cae8b6b98c1a5bf9cd2cb1933700a9cc80'
+    oldFile: !uuid 'a058e0fb5b849c60e56c0e5b157f3e3cd083db1f'
+  /Modules/WeiXinService:
+    newFile: !uuid '1f0a2fe27eea6f29f757c2d066144f4eba72a6d9'
+    oldFile: !uuid '287cc8325895b7bceff0758ba3ff20ed5392aa52'
+  /Modules/WeiXinService/WxExecutor.cs:
+    newFile: !uuid '88a59de0da325e885a12bca3259fe9ad077935f7'
+    oldFile: !uuid 'ab615c37cee66401d7c164b2eda6e1ec49c9e249'
   /MyAccess:
-    newFile: !uuid 'd6ae03f076b7f16054a32cef3d5507c2623ebf97'
-    oldFile: !uuid '2779e2c39ca26165775fb2d2e1838ff1b4104d6b'
-  /MyAccess/DB:
-    newFile: !uuid '819b6b36ddd85412852f5956f75053076825156f'
-    oldFile: !uuid '8cfe1ae31a5b76a4b82645faab790ac2446b8566'
-  /MyAccess/DB/TypeBuilder.cs:
-    newFile: !uuid 'b2b1c689c3cef4bdffbc74ff9b7211240117a72b'
-    oldFile: !uuid '15f704587d2e09c0d9d9124811bf7edefac22c66'
-gitCommitId: !uuid 'd6406ca399722cd74e21daaf954316b7153199b6'
+    newFile: !uuid 'b050fa4b8905b79e40a7e6d5c96f73c4656fdf77'
+    oldFile: !uuid 'd6ae03f076b7f16054a32cef3d5507c2623ebf97'
+  /MyAccess/Aop:
+    newFile: !uuid '3b5ed8572c33cbb887600b78a6b2170bce5122f7'
+    oldFile: !uuid 'f679dca370e2102a1606e2a9bac7a14ac86d7ca8'
+  /MyAccess/Aop/Attribute:
+    newFile: !uuid '8597c2e6b69ac925d8800d506740190e6f2e2900'
+    oldFile: !uuid 'f2e2a6c7837902216add97fe50d7ced93b41f991'
+  /MyAccess/Aop/Attribute/TransAttribute.cs:
+    newFile: !uuid '2d6d0cbb5c363a138d4d174c48b92dd2a5760d79'
+    oldFile: !uuid 'ce7049024694cb5f9eefa0204e8eb0eda32015da'
+  /admin-ui:
+    newFile: !uuid '6b6453ec4c056771d7bdee34e37a81c5a773566c'
+    oldFile: !uuid '5484ce559e6d3d410cb962527e79cf9fb9078362'
+  /admin-ui/src:
+    newFile: !uuid '52938e79f6c7c42d040a656f326dc38dbc847cd8'
+    oldFile: !uuid '0b35b91e9fec2f8bf1fe22978bb1d1fe1876ca38'
+  /admin-ui/src/views:
+    newFile: !uuid '46c3afed576e3f52c84f2c4918116bf281f48a78'
+    oldFile: !uuid 'c5932c87d995dcdba3f199cb0cda80c0d33a2a28'
+  /admin-ui/src/views/report:
+    newFile: !uuid '16a6ced7e089e7bd057fbbba982e656f85fba28a'
+    oldFile: !uuid '64aed5de1053894670ae0edc1d31e9560a733339'
+  /admin-ui/src/views/report/datav:
+    newFile: !uuid 'b7c5cffd9dee8c05f455c7a76c1df94e015cca65'
+    oldFile: !uuid '7b088e0e554426f973180ab1c3759aabc0834e1b'
+  /admin-ui/src/views/report/datav/ComponentsConfig.js:
+    newFile: !uuid 'a13dfc528959f555bb516910a95df49821352954'
+    oldFile: !uuid '8696f3f80252278347b5a65519197ca1f788b155'
+  /admin-ui/src/views/report/datav/components:
+    newFile: !uuid 'b74c3c9fd532866cc56b0fc25d3f5f65c962727b'
+    oldFile: !uuid '4777cc38bc6def7db37f0893916102dee18a30b9'
+  /admin-ui/src/views/report/datav/components/chart:
+    newFile: !uuid '9a8067b0590e739de19e98336470dea2b14d4b80'
+    oldFile: !uuid '22f9a0c261d57804fcfb07a4694b5f1a1844d97e'
+  /admin-ui/src/views/report/datav/components/chart/PolylineChart.vue:
+    newFile: !uuid 'ffe4102c86b3273113ed00243e1f6e58a36b7f9b'
+    oldFile: !uuid '707415e86180db00505150634f95b046a42754e4'
+  /admin-ui/src/views/report/datav/components/config:
+    newFile: !uuid '5a90e628c9279acdf3aa5180ed52810541b3ca81'
+    oldFile: !uuid '0d50ae9cac2d93c2f2ff280b3999c16b8c9db13c'
+  /admin-ui/src/views/report/datav/components/config/PolylineConfig:
+    newFile: !uuid '2953a39b38a313c1e051484764232f81f6e386f0'
+    oldFile: !uuid 'd951672c2fe1bbb77ec155f285f0990fb9df3330'
+  /admin-ui/src/views/report/datav/components/config/PolylineConfig/index.vue:
+    newFile: !uuid '8fad3bfe8561de0be1b0c007de0521e9d2f5e8db'
+    oldFile: !uuid 'a6b6c7a78d4ec36fa7d4751d6747b5664dd773b0'
+  /admin-ui/src/views/report/list:
+    newFile: !uuid '02acc46f5990248ce6975f925027eaab22f25891'
+    oldFile: !uuid '3ee05ca26cbe1d7b587e5018edec654656b6a23d'
+  /admin-ui/src/views/report/list/groupManage.vue:
+    newFile: !uuid '366a5aa5263065ceea6459359b5b042e25f80b9c'
+    oldFile: !uuid '73bc7bad6426de19989872e6730e7d0ac0ee9970'
+  /admin-ui/src/views/report/list/index.vue:
+    newFile: !uuid '1805248f87eb5dd8f82b147ed2d4a4d06786a216'
+    oldFile: !uuid '69919bc8d6b8f17fb2841f22fae044608bad28a4'
+gitCommitId: !uuid 'd4d7c33fbb3310b332b62d8896e3558c8eee7564'
 renames: {
   }
-revisionId: 48
+revisionId: 49
