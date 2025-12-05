@@ -3,33 +3,15 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '5927d3a9297e999c7b7525f4dd615b3164726943'
-    oldFile: !uuid '97d40250eabaf62f00562d6e389cd2a88a6de13b'
+    newFile: !uuid 'f1353e49af5f3ac606901fdcc37776d2dd45f356'
+    oldFile: !uuid '5927d3a9297e999c7b7525f4dd615b3164726943'
   /Channel/ChannelUtility:
-    newFile: !uuid 'a9337932962e8babd862bd3f0dab9fa8acd7f971'
-    oldFile: !uuid 'e1670af7fea23cbd00b9a6b0899f51d69dcc4976'
+    newFile: !uuid 'cc4e882264934435aa465da1b91d0269cfb906f6'
+    oldFile: !uuid 'a9337932962e8babd862bd3f0dab9fa8acd7f971'
   /Channel/ChannelUtility/ClientBusProxy.cs:
-    newFile: !uuid '34831934a00c5d5f8613c172aca850573a43eade'
-    oldFile: !uuid 'bbafe022b28545985d9c1536d534f751997054b0'
-  /admin-ui:
-    newFile: !uuid 'e731c73346f446085053e52d08e2cf9cdfb95c19'
-    oldFile: !uuid '6b6453ec4c056771d7bdee34e37a81c5a773566c'
-  /admin-ui/src:
-    newFile: !uuid '7061a55725b82f8c7f0177a6888a0c257b57df47'
-    oldFile: !uuid '52938e79f6c7c42d040a656f326dc38dbc847cd8'
-  /admin-ui/src/views:
-    newFile: !uuid '24ee85bb4436597f1ba1eae44f9b663d951fb17d'
-    oldFile: !uuid '46c3afed576e3f52c84f2c4918116bf281f48a78'
-  /admin-ui/src/views/report:
-    newFile: !uuid 'df7aa80a7b34d981e5ae696653e43d46d60cd482'
-    oldFile: !uuid '16a6ced7e089e7bd057fbbba982e656f85fba28a'
-  /admin-ui/src/views/report/list:
-    newFile: !uuid '4f3edf440b475a5efcaf9ff3d1300fa36f2e32ce'
-    oldFile: !uuid '02acc46f5990248ce6975f925027eaab22f25891'
-  /admin-ui/src/views/report/list/groupManage.vue:
-    newFile: !uuid 'dbc67d005332d2f78a45d438bf33cc7c70ca0f9d'
-    oldFile: !uuid '366a5aa5263065ceea6459359b5b042e25f80b9c'
-gitCommitId: !uuid '0b59645dcee885274f27f3783f9aa8f92c8689f3'
+    newFile: !uuid '7d335f14a46a41ee9206a9e276bac449232521ff'
+    oldFile: !uuid '34831934a00c5d5f8613c172aca850573a43eade'
+gitCommitId: !uuid '4fc70e150ba4edf830e86b9f4bc90e106757b626'
 renames: {
   }
-revisionId: 50
+revisionId: 51
