@@ -192,8 +192,8 @@ namespace ChannelUtility
             }, cts.Token);
             try
             {
-                await this.PublicMessage(msg, null);
-                var reply = await tcs.Task.ConfigureAwait(false);
+                await this.PublicMessage(msg, null).ConfigureAwait(false);
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 return reply;
             }
             catch (Exception ex)
@@ -219,7 +219,7 @@ namespace ChannelUtility
             try
             {
                 await this.PublicMessage(msg, null).ConfigureAwait(false);
-                var reply = await tcs.Task.ConfigureAwait(false);
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 return reply;
             }
             catch (Exception ex)
@@ -465,7 +465,7 @@ namespace ChannelUtility
 
             try
             {
-                var reply = await tcs.Task.ConfigureAwait(false);
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 //清除系统消息Id
                 await _redis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 return reply;
@@ -512,7 +512,7 @@ namespace ChannelUtility
             await ac.Invoke();
             try
             {
-                var reply = await tcs.Task.ConfigureAwait(false);
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 //清除系统消息Id
                 await _redis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 return reply;
