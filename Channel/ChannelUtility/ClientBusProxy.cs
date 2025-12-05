@@ -178,12 +178,12 @@ namespace ChannelUtility
         {
             await StartReadAllMessage(msg.ProductId, msg.DeviceId, msg.Properties);
 
-            var tcs = new TaskCompletionSource<ReadPropertyMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
             //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<ReadPropertyMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
+            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
-            var rs = await _bus.SendReceive.ReceiveAsync<ReadPropertyMessageReply>("bus.response." + msg.MessageId, msg =>
+            using var rs = await _bus.SendReceive.ReceiveAsync<ReadPropertyMessageReply>("bus.response." + msg.MessageId, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -194,24 +194,22 @@ namespace ChannelUtility
             {
                 await this.PublicMessage(msg, null);
                 var reply = await tcs.Task.ConfigureAwait(false);
-                rs.Dispose();
                 return reply;
             }
             catch (Exception ex)
             {
-                rs.Dispose();
                 return null;
             }
         }
 
         public async Task<FunctionInvokeMessageReply> PublicWaitFuncReply(FunctionInvokeMessage msg)
         {
-            var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
             //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
+            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
-            var rs = await _bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
+            using var rs = await _bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -222,12 +220,10 @@ namespace ChannelUtility
             {
                 await this.PublicMessage(msg, null).ConfigureAwait(false);
                 var reply = await tcs.Task.ConfigureAwait(false);
-                rs.Dispose();
                 return reply;
             }
             catch (Exception ex)
             {
-                rs.Dispose();
                 return null;
             }
         }
@@ -452,14 +448,14 @@ namespace ChannelUtility
         {
             await _redis.ListRightPushAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
 
-            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
             //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
             string tkey = "subs:" + deviceId + msgId;
 
-            var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
+            using var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -470,7 +466,6 @@ namespace ChannelUtility
             try
             {
                 var reply = await tcs.Task.ConfigureAwait(false);
-                rs.Dispose();
                 //清除系统消息Id
                 await _redis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 return reply;
@@ -479,7 +474,6 @@ namespace ChannelUtility
             {
                 //清除系统消息Id
                 await _redis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
-                rs.Dispose();
                 await Print(deviceId, "异常", "未收到回复消息").ConfigureAwait(false);
                 return null;
             }
@@ -500,14 +494,14 @@ namespace ChannelUtility
             }
             await _redis.ListRightPushAsync($"DeviceMsgId:{deviceId}", msgId);
 
-            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
             //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
             string tkey = "subs:" + deviceId + msgId;
 
-            var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
+            using var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -519,14 +513,12 @@ namespace ChannelUtility
             try
             {
                 var reply = await tcs.Task.ConfigureAwait(false);
-                rs.Dispose();
                 //清除系统消息Id
                 await _redis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 return reply;
             }
             catch (Exception ex)
             {
-                rs.Dispose();
                 await Print(deviceId, "异常", "下发的消息无回复").ConfigureAwait(false);
                 //清除系统消息Id
                 await _redis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);

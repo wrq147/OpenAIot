@@ -425,12 +425,11 @@ export default {
   .group-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 16px;
   }
   
   .action-btn {
     font-size: 14px;
-    padding: 4px 8px;
+    padding: 4px 6px;
     transition: all 0.2s;
     
     &:hover {
