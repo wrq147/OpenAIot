@@ -20,66 +20,63 @@
         <el-button type="primary" icon="el-icon-plus" @click="add('')">新增</el-button>
       </div>
     </div>
-    <div style="background-color: rgb(255, 255, 255);">
-      <div class="content" v-loading="loading">
-        <groupManage @clickNode="clickNode"></groupManage>
-        <div class="content__item-list">
-          <div class="content__item" v-for="item in screenList" :key="item.Id">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <img v-if="item.Thumbnail !== ''" :src="item.Thumbnail" class="image" style="width: 100%;height: 156px;"
-                @click="view(item.Id)" />
-              <div v-else @click="viewReport(item.Id)">
-                <el-empty :imageSize="113" />
+    <div class="content" v-loading="loading">
+      <groupManage @clickNode="clickNode"></groupManage>
+      <div class="content__item-list">
+        <div class="content__item" v-for="item in screenList" :key="item.Id">
+          <el-card shadow="hover" :body-style="{ padding: '0px' }">
+            <img v-if="item.Thumbnail !== ''" :src="item.Thumbnail" class="image" style="width: 100%;height: 156px;"
+              @click="view(item.Id)" />
+            <div v-else @click="viewReport(item.Id)">
+              <el-empty :imageSize="113" />
+            </div>
+            <div style="padding: 2px 10px;display: flex;justify-content: space-between;align-items: center;">
+              <span class="content__name">{{ item.Name }}</span>
+              <div style="display: flex; align-items: center;">
+                <el-switch @change="releaseStatus(item, $event)" v-model="item.Status" active-color="#13ce66"
+                  inactive-color="#DCDFE6" class="switchStyle" active-value="2" inactive-value="0" active-text="已发布"
+                  inactive-text="未发布">
+                </el-switch>
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    <img style="width: 48px;height: 48px;" src="@/assets/images/more.png" alt="">
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="edit(item)" v-hasPermi="['/ReportService/Report/Edit']">
+                      <i class="el-tooltip el-icon-edit" style="cursor: pointer"> 编辑</i>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click.native="add(item)" v-hasPermi="['/ReportService/Report/Edit']">
+                      <i class="el-tooltip el-icon-connection" style="cursor: pointer"> 分组</i>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click.native="copy(item)" v-hasPermi="['/ReportService/Report/Add']">
+                      <i class="el-tooltip el-icon-document-copy" style="cursor: pointer"> 复制</i>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click.native="del(item.Id)" v-hasPermi="['/ReportService/Report/Remove']">
+                      <i class="el-tooltip el-icon-delete" style="cursor: pointer"> 删除</i>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click.native="share(item.Id, item.Name, item.ReportType)">
+                      <i class="el-tooltip el-icon-share" style="cursor: pointer"> 分享</i>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click.native="release(item)">
+                      <i :class="'el-tooltip ' + (item.Status == '2' ? 'el-icon-star-on' : 'el-icon-star-off')"
+                        style="cursor: pointer"> 发布</i>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </div>
-              <div style="padding: 2px 10px;display: flex;justify-content: space-between;align-items: center;">
-                <span class="content__name">{{ item.Name }}</span>
-                <div style="display: flex; align-items: center;">
-                  <el-switch @change="releaseStatus(item, $event)" v-model="item.Status" active-color="#13ce66"
-                    inactive-color="#DCDFE6" class="switchStyle" active-value="2" inactive-value="0" active-text="已发布"
-                    inactive-text="未发布">
-                  </el-switch>
-                  <el-dropdown>
-                    <span class="el-dropdown-link">
-                      <img style="width: 48px;height: 48px;" src="@/assets/images/more.png" alt="">
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="edit(item)" v-hasPermi="['/ReportService/Report/Edit']">
-                        <i class="el-tooltip el-icon-edit" style="cursor: pointer"> 编辑</i>
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="add(item)" v-hasPermi="['/ReportService/Report/Edit']">
-                        <i class="el-tooltip el-icon-connection" style="cursor: pointer"> 分组</i>
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="copy(item)" v-hasPermi="['/ReportService/Report/Add']">
-                        <i class="el-tooltip el-icon-document-copy" style="cursor: pointer"> 复制</i>
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="del(item.Id)" v-hasPermi="['/ReportService/Report/Remove']">
-                        <i class="el-tooltip el-icon-delete" style="cursor: pointer"> 删除</i>
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="share(item.Id, item.Name, item.ReportType)">
-                        <i class="el-tooltip el-icon-share" style="cursor: pointer"> 分享</i>
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="release(item)">
-                        <i :class="'el-tooltip ' + (item.Status == '2' ? 'el-icon-star-on' : 'el-icon-star-off')"
-                          style="cursor: pointer"> 发布</i>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </div>
-              </div>
-            </el-card>
-          </div>
-          <div v-if="screenList.length === 0 && !loading" class="empty-list">
-            <el-empty description="暂无报表数据">
-              <el-button type="primary" icon="el-icon-plus" @click="add('')" v-hasPermi="['/ReportService/Report/Add']">
-                新增报表
-              </el-button>
-            </el-empty>
-          </div>
-
+            </div>
+          </el-card>
         </div>
+        <div v-if="screenList.length === 0 && !loading" class="empty-list">
+          <el-empty description="暂无报表数据">
+            <el-button type="primary" icon="el-icon-plus" @click="add('')" v-hasPermi="['/ReportService/Report/Add']">
+              新增报表
+            </el-button>
+          </el-empty>
+        </div>
+        <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize" @pagination="getList" :pageSizes="[12, 24, 36, 48, 60]" />
       </div>
-      <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-        @pagination="getList" :pageSizes="[12, 24, 36, 48, 60]" />
     </div>
     <!-- 数据大屏保存参数配置对话框 -->
     <add-screen ref="addScreen" :title="title" :dialog-visible="open" @cancelForm="cancelForm" @getList="getList" />
@@ -303,7 +300,7 @@ export default {
   }
 
   .el-card {
-    width: 280px;
+    width: 310px;
     margin: 0 6px 12px 6px;
   }
 
@@ -339,19 +336,23 @@ export default {
 .el-switch .el-switch__label {
   width: 72px !important;
 }
-
+.header-query{
+  border: 1px solid #E4E7ED;
+}
 .content {
-  padding: 15px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
 
 .content__item-list {
+  border: 1px solid #E4E7ED;
+  background-color: #fff;
   width: calc(100% - 21%);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  padding:20px 10px;
 }
 
 .content__name {
@@ -393,6 +394,7 @@ export default {
   margin-right: 10px;
   vertical-align: bottom;
 }
+
 .empty-list {
   width: 100%;
   padding: 60px 0;
@@ -400,6 +402,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+
 }
 </style>

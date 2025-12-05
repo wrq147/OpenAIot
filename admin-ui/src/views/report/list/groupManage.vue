@@ -404,11 +404,10 @@ export default {
 }
 
 .groupList-pd {
-  border-radius: 8px;
   background-color: #fff;
   border: 1px solid #E4E7ED;
+  min-height: 395px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 // 分组头部

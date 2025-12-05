@@ -15,7 +15,7 @@
     <path @mousedown.stop="itemSelected()" :id="'line2' + chartOption.bindingDiv" :d="getPathData()"
       :stroke="chartOption.flowColor" :stroke-width="chartOption.flowWidth" fill-opacity="0" fill="none"
       :stroke-dasharray="chartOption.dasharray" stroke-dashoffset="0" stroke-linecap="round"
-      v-if="chartOption.animateType == 'droplet'" stroke-linejoin="round">
+      v-if="chartOption.animateType == 'droplet'&&chartOption.staticDataValue[0].enable" stroke-linejoin="round">
       <animate v-if="chartOption.isReverseAnimation" attributeName="stroke-dashoffset" from="0" to="1000"
         :dur="chartOption.delayTime + 's'" repeatCount="indefinite"></animate>
       <animate v-else attributeName="stroke-dashoffset" from="1000" to="0" :dur="chartOption.delayTime + 's'"
@@ -23,7 +23,7 @@
     </path>
 
     <!-- 跟踪动画 -->
-    <circle v-if="chartOption.animateType == 'track'" cx="0" cy="0" :r="chartOption.radius"
+    <circle v-if="chartOption.animateType == 'track'&&chartOption.staticDataValue[0].enable" cx="0" cy="0" :r="chartOption.radius"
       :fill="chartOption.radiusFillColor">
       <animateMotion v-if="chartOption.isReverseAnimation" :path="getReversePathData()"
         :dur="chartOption.delayTime + 's'" repeatCount="indefinite"></animateMotion>
@@ -198,21 +198,9 @@ export default {
       const points = this.chartOption.points;
       let parentSvg = this.getParentSvg(event.target);
       const mouseCoords = this.getMouseCoords(event, parentSvg);
-      const rect = parentSvg.getBoundingClientRect();
 
       let newCx = mouseCoords.x;
       let newCy = mouseCoords.y;
-
-      // 边界限制
-      newCx = Math.min(
-        Math.max(newCx, this.svgPadding),
-        rect.width - this.svgPadding
-      );
-
-      newCy = Math.min(
-        Math.max(newCy, this.svgPadding),
-        rect.height - this.svgPadding
-      );
 
       this.$set(points, index, {
         cx: newCx,

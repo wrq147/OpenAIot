@@ -1,17 +1,11 @@
 ﻿using AuthService;
 using Common;
 using Common.Share;
-using FluentMigrator.Runner.Generators.SQLite;
 using IoTService.Models;
 using JiebaNet.Segmenter;
-using MonitorService.Hardware;
 using MyAccess.DB;
-using NPOI.POIFS.Crypt.Agile;
-using Org.BouncyCastle.Crypto;
-using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

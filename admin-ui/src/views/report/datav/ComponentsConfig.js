@@ -9522,19 +9522,16 @@ export const configurationComponents = [{
         radiusFillColor: 'rgb(130, 179, 102)',
         isReverseAnimation: false, //是否反转动画
         dasharray: 39, //线缝隙间隔
-        aggrName: "fengji_dong_name",
         bindList: [],
         customData: "",
         interactData: [],
         //静态数据值
-        staticDataValue: ["1"],
+        staticDataValue: [{"enable":true}],
         //绑定的div
         bindingDiv: "",
         theme: "",
         // 数据源类型：静态数据：static；接口数据：url;数据源：database
         dataSourceType: "static",
-        bi: null,
-        // timeout: 0,
     },
 }, ]
 export const otherComponents = [{

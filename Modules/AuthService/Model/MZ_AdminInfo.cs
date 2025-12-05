@@ -3,7 +3,6 @@ using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 
 namespace AuthService

@@ -5,38 +5,37 @@
       <el-tab-pane label="数据" name="data" />
     </el-tabs>
     <!-- 组件属性 -->
-    <moduleDeploy
-      v-if="currentTab === 'field'"
-      :costomData="configData"
-      :drawingList="drawingList"
-      @costom-change="costomChange"
-    ></moduleDeploy>
+    <moduleDeploy v-if="currentTab === 'field'" :costomData="configData" :drawingList="drawingList"
+      @costom-change="costomChange"></moduleDeploy>
     <div class="field-box" v-if="currentTab === 'data'">
       <el-scrollbar class="right-scrollbar">
         <!-- 表单属性 -->
-        <data-source-config
-          :drawingList="drawingList"
-          :themeForm="themeForm"
-          :dataSourceType="configData.chartOption.dataSourceType"
-          :customData="configData"
-          :customId="configData.customId"
-          @changeSource="changeSource"
-          @changeData="changeData"
-          @changeGlobalProcessor="changeGlobalProcessor"
-          :baseType="''"
-        >
+        <data-source-config :drawingList="drawingList" :themeForm="themeForm"
+          :dataSourceType="configData.chartOption.dataSourceType" :customData="configData"
+          :customId="configData.customId" @changeSource="changeSource" @changeData="changeData"
+          @changeGlobalProcessor="changeGlobalProcessor" :baseType="''">
           <template v-slot:staticSlot v-if="configData.chartOption.dataSourceType == 'static'">
-            <el-form-item></el-form-item>
+            <el-form-item>
+              <div slot="label">
+                <span style="margin-right: 10px">动画开关</span>
+              </div>
+              <div>
+                  <el-radio-group v-model="configData.chartOption.staticDataValue[0].enable">
+                    <el-radio :label="true">开</el-radio>
+                    <el-radio :label="false">关</el-radio>
+                  </el-radio-group>
+              </div>
+            </el-form-item>
           </template>
           <template>
             <div style="margin-bottom: 20px">
-              <el-table ref="multipleTable" v-loading="false" border :data="resultTableList"
-                style="width: 100%" max-height="500" :fit="true"
-                @cell-click="(row, column) => cellhandleClick({ column })"
-                @header-click="(column) => cellhandleClick({ column })"
-                :cell-style="cellStyle" :header-cell-style="headercellStyle">
+              <el-table ref="multipleTable" v-loading="false" border :data="resultTableList" style="width: 100%"
+                max-height="500" :fit="true" @cell-click="(row, column) => cellhandleClick({ column })"
+                @header-click="(column) => cellhandleClick({ column })" :cell-style="cellStyle"
+                :header-cell-style="headercellStyle">
                 <el-table-column :label="item.name" align="left" :key="item.key" :prop="item.key"
-                  :class-name="item.current ? 'cellSelected' : ''" :show-overflow-tooltip="true" v-for="item in tableColum">
+                  :class-name="item.current ? 'cellSelected' : ''" :show-overflow-tooltip="true"
+                  v-for="item in tableColum">
                   <template #header="data">
                     <div @click="cellhandleClick(data)">{{ item.key }}</div>
                   </template>
@@ -78,7 +77,7 @@ export default {
     }
   },
   //页面加载完执行
-  mounted() {},
+  mounted() { },
   computed: {
     resultTableList() {
       if (this.configData.chartOption.globalData == "") {
@@ -145,10 +144,10 @@ export default {
     },
   },
   methods: {
-    addItem(){
+    addItem() {
       this.configData.chartOption.staticDataValue.push("");
     },
-    delItem(idx){
+    delItem(idx) {
       this.configData.chartOption.staticDataValue.splice(idx, 1);
     },
     costomChange(newVal) {
@@ -254,13 +253,16 @@ export default {
   color: #409eff !important;
   font-weight: 600;
 }
+
 th.cellSelected {
   border-top: 1px solid;
 }
+
 ::v-deep .center-tabs .el-tabs__item {
   width: 33%;
   text-align: center;
 }
+
 .dataProduct {
   margin-bottom: 10px;
   line-height: 45px;

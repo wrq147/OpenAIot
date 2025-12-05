@@ -1,5 +1,6 @@
 ﻿using AspectCore.DynamicProxy;
 using System;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,25 +79,35 @@ namespace MyAccess.Aop
             {
                 using (BLLTranScope scope = new BLLTranScope())
                 {
+                    object returnval = null;
                     await next(context);
-                    if (context.ImplementationMethod.IsReturnValueTask())
+                    if (context.ReturnValue is Task asyncTask)
                     {
-                        ITransReturn tr = context.ReturnValue as ITransReturn;
-                        if (tr != null && !tr.IsSuccess())
+                        await asyncTask;
+                        var resultProperty = asyncTask.GetType().GetProperty("Result");
+                        if (resultProperty != null)
                         {
-                            return;
-                        }
-                        // 完成
-                        if (issync)
-                        {
-                            scope.Complete();
-                        }
-                        else
-                        {
-                            await scope.CompleteAsync();
+                            returnval = resultProperty.GetValue(asyncTask);
                         }
                     }
-
+                    else
+                    {
+                        returnval = context.ReturnValue;
+                    }
+                    ITransReturn tr = returnval as ITransReturn;
+                    if (tr != null && !tr.IsSuccess())
+                    {
+                        return;
+                    }
+                    // 完成
+                    if (issync)
+                    {
+                        scope.Complete();
+                    }
+                    else
+                    {
+                        await scope.CompleteAsync();
+                    }
                 }
             }
         }

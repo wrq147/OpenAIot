@@ -1,7 +1,6 @@
 ﻿using AuthService.Model;
 using Common;
 using MyAccess.DB;
-using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
