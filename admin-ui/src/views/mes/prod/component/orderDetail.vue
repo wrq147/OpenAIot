@@ -139,6 +139,44 @@
                         </template>
                         <el-table-column label="创建时间" prop="CreatedOn" align="center" />
                         <el-table-column label="更新时间" prop="UpdatedOn" align="center" />
+                        <el-table-column label="操作" align="center" fixed="right" class-name="small-padding fixed-width"
+                            width="80">
+                            <template slot-scope="scope">
+                                <!-- 报工记录按钮 + Popover 时间线 -->
+                                <el-popover ref="recordPopover" placement="left" width="600" trigger="click"
+                                    @show="loadRecordTimeline(scope.row)">
+                                    <div v-loading="timelineLoading" class="timeline-container">
+                                        <el-timeline>
+                                            <el-timeline-item v-for="(item, index) in timelineData" :key="index"
+                                                :timestamp="item.createTime">
+                                                <span v-if="item.Status == 0" style="color:#909399">
+                                                    {{ item.ReportMem.RealName + "创建了一条未提交的报工" }}
+                                                </span>
+                                                <span v-else-if="item.Status == 1" style="color:#E6A23C">
+                                                    {{ item.ReportMem.RealName + "提交了一条未审核的报工" }}
+                                                </span>
+                                                <span v-else-if="item.Status == 2" style="color:#67C23A">
+                                                    {{ item.ReportMem.RealName + "提交了一条已审核的报工" }}
+                                                </span>
+                                                <span v-else-if="item.Status == 3" style="color:#909399">
+                                                    {{ item.ReportMem.RealName + "取消了一条报工" }}
+                                                </span>
+                                                <span v-else-if="item.Status == 4" style="color:#F56C6C">
+                                                    {{ item.ReportMem.RealName + "被驳回了一条报工" }}
+                                                </span>
+                                            </el-timeline-item>
+                                        </el-timeline>
+                                        <div v-if="timelineData.length === 0" class="empty-timeline">
+                                            暂无报工记录
+                                        </div>
+                                    </div>
+
+                                    <el-button slot="reference" type="text" icon="el-icon-notebook-2">
+                                        报工记录
+                                    </el-button>
+                                </el-popover>
+                            </template>
+                        </el-table-column>
                     </el-table>
 
                     <!-- 分页控件 -->
@@ -162,7 +200,7 @@
 import { WorkBatchList, mesOrderInfo, mesOrderList } from "@/api/mes/report";
 import { orgField } from "@/api/factory/customFields";
 import { getFieldShow } from '@/utils/field.js'
-
+import { ReportList } from '@/api/mes/report'
 export default {
     data() {
         return {
@@ -198,7 +236,11 @@ export default {
             subOrderTotal: 0,
 
             orderData: null,
-            filedTableList: []
+            filedTableList: [],
+
+            timelineLoading: false,
+            timelineData: [],
+            currentRecordId: ''
         }
     },
     watch: {
@@ -350,6 +392,13 @@ export default {
         // 关闭弹窗
         handleClose() {
             this.detailDialogVisible = false;
+        },
+        async loadRecordTimeline(record) {
+            this.timelineLoading = true;
+            this.currentRecordId = record.Id;
+            this.timelineData = [];
+            let res = await ReportList({ "pageSize": 0, "BatchNo": record.Id });
+            this.timelineData = res.data.List;
         }
     }
 }

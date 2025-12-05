@@ -171,7 +171,7 @@ import {
 var dayjs = require("@/utils/day.js");
 import AddEmbed from "@/views/flowable/task/record/AddEmbed";
 import OrgPicker from "@/views/flowable/common/OrgPicker";
-import { orgField } from "@/api/factory/customFields";
+import { orgFormFields } from "@/api/factory/customFields";
 import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
 import { operInfo } from "@/api/mes/oper";
 import { factoryMesConfig } from "@/api/mes/config";
@@ -542,11 +542,9 @@ export default {
     async getCustomFiled() {
       //获取自定义的字段
       this.filedTableList = [];
-      let orgId = this.$store.state.user.orgId;
-      let res = await orgField({ orgId: orgId, field: "报工" });
+      let res = await orgFormFields({ field: "报工", ext: true, isfixed: true });
       if (res.data) {
-        let filedList = JSON.parse(res.data.ExtValue);
-        this.filedTableList = filedList;
+        this.filedTableList = res.data;
       } else {
         this.filedTableList = [];
       }

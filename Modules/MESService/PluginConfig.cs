@@ -155,12 +155,6 @@ namespace MESService
             List<FieldBase> reportfields = new List<FieldBase>();
             reportfields.Add(new TextField()
             {
-                mapid = "BatchNo",
-                name = "批次编号",
-                type = "文本"
-            });
-            reportfields.Add(new TextField()
-            {
                 mapid = "LNumber",
                 name = "通讯编号",
                 type = "文本"

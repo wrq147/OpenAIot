@@ -83,12 +83,11 @@ namespace Common.EventBus
             where T : ResponseEvent
             where Z : EvtResponse
         {
-            var tcs = new TaskCompletionSource<Z>(TaskCreationOptions.RunContinuationsAsynchronously);
             //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<Z>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            var rs = await Bus.SendReceive.ReceiveAsync<Z>("dispatch.response." + evt.MessageId, msg =>
+            using var rs = await Bus.SendReceive.ReceiveAsync<Z>("dispatch.response." + evt.MessageId, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -98,14 +97,12 @@ namespace Common.EventBus
             try
             {
                 await Bus.PubSub.PublishAsync(evt, key);
-                var reply = await tcs.Task.ConfigureAwait(false);
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 reply.IsDone = true;
-                rs.Dispose();
                 return reply;
             }
             catch (Exception ex)
             {
-                rs.Dispose();
                 return null;
             }
         }

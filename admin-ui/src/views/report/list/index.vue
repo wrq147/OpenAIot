@@ -75,7 +75,7 @@
           </el-empty>
         </div>
         <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize" @pagination="getList" :pageSizes="[12, 24, 36, 48, 60]" />
+          :limit.sync="queryParams.pageSize" @pagination="getList" :pageSizes="[8, 24, 36, 48, 60]" />
       </div>
     </div>
     <!-- 数据大屏保存参数配置对话框 -->
@@ -120,7 +120,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 12,
+        pageSize: 8,
         Key: '',
         GroupId: '',
         Status: undefined,
@@ -300,7 +300,7 @@ export default {
   }
 
   .el-card {
-    width: 310px;
+    width: 309px;
     margin: 0 6px 12px 6px;
   }
 
@@ -352,7 +352,10 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding:20px 10px;
+  padding-top:20px;
+  padding-bottom: 20px;
+  padding-left:12px;
+  padding-right: 10px;
 }
 
 .content__name {

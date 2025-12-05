@@ -95,12 +95,12 @@ namespace IoTService
         private async Task<T> WaitDown<I, T>(I msg, string networkWay) where I : RequestMessage where T : BaseUpDeviceMessage
         {
             var bus = _provider.GetService<RabbitScope>().Bus;
-            var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-            //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
 
-            var rs = await bus.SendReceive.ReceiveAsync<T>("bus.response." + msg.MessageId, msg =>
+            //8秒后自动取消
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            using var rs = await bus.SendReceive.ReceiveAsync<T>("bus.response." + msg.MessageId, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -117,13 +117,11 @@ namespace IoTService
 
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
                 await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
-                var reply = await tcs.Task.ConfigureAwait(false);
-                rs.Dispose();
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 return reply;
             }
             catch (Exception ex)
             {
-                rs.Dispose();
                 return null;
             }
         }

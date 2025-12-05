@@ -181,7 +181,6 @@ namespace ChannelUtility
             //8秒后自动取消
             using var cts = new CancellationTokenSource(8000);
             var tcs = new TaskCompletionSource<ReadPropertyMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
-            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
             using var rs = await _bus.SendReceive.ReceiveAsync<ReadPropertyMessageReply>("bus.response." + msg.MessageId, msg =>
             {
@@ -207,7 +206,6 @@ namespace ChannelUtility
             //8秒后自动取消
             using var cts = new CancellationTokenSource(8000);
             var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
-            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
             using var rs = await _bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
             {
@@ -451,10 +449,8 @@ namespace ChannelUtility
             //8秒后自动取消
             using var cts = new CancellationTokenSource(8000);
             var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
             string tkey = "subs:" + deviceId + msgId;
-
             using var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
             {
                 tcs.TrySetResult(msg);
@@ -497,10 +493,8 @@ namespace ChannelUtility
             //8秒后自动取消
             using var cts = new CancellationTokenSource(8000);
             var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-            cts.Token.Register(() => tcs.TrySetCanceled(cts.Token), useSynchronizationContext: false);
 
             string tkey = "subs:" + deviceId + msgId;
-
             using var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
             {
                 tcs.TrySetResult(msg);

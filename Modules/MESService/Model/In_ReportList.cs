@@ -1,10 +1,6 @@
 ﻿using AuthService.Fields;
 using Common.Share;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MESService.Model
 {
@@ -22,6 +18,10 @@ namespace MESService.Model
         /// 过滤报工人员
         /// </summary>
         public string UserName { get; set; }
+        /// <summary>
+        /// 过滤指定批次编号
+        /// </summary>
+        public string BatchNo { get; set; }
         /// <summary>
         /// 过滤扩展字段
         /// </summary>

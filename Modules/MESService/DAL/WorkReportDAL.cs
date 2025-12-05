@@ -30,6 +30,10 @@ namespace MESService.DAL
             {
                 expression = expression.And((a) => a.ReportMem.RealName.Contains(query.UserName));
             }
+            if (!string.IsNullOrEmpty(query.BatchNo))
+            {
+                expression = expression.And((a) => a.BatchNo == query.BatchNo);
+            }
             if (query.beginTime != null)
             {
                 expression = expression.And((a) => a.create_time >= query.beginTime);

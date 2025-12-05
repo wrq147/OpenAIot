@@ -500,6 +500,11 @@
             过滤报工人员
             </summary>
         </member>
+        <member name="P:MESService.Model.In_ReportList.BatchNo">
+            <summary>
+            过滤指定批次编号
+            </summary>
+        </member>
         <member name="P:MESService.Model.In_ReportList.Items">
             <summary>
             过滤扩展字段

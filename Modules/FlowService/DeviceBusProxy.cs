@@ -89,12 +89,12 @@ namespace FlowService
         private async Task<FunctionInvokeMessageReply> WaitDown(Out_FlowDevice device, FunctionInvokeMessage msg)
         {
             var bus = _provider.GetService<RabbitScope>().Bus;
-            var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
-            //8秒后自动取消
-            var cts = new CancellationTokenSource(8000);
-            cts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
 
-            var rs = await bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
+            //8秒后自动取消
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            using var rs = await bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
             {
                 tcs.TrySetResult(msg);
             }, cfg =>
@@ -105,13 +105,11 @@ namespace FlowService
             {
                 string msgbody = JsonConvert.SerializeObject(msg);
                 await bus.PubSub.PublishAsync(msgbody, "/device." + device.NetworkWay + ".down");
-                var reply = await tcs.Task.ConfigureAwait(false);
-                rs.Dispose();
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 return reply;
             }
             catch (Exception ex)
             {
-                rs.Dispose();
                 return null;
             }
         }

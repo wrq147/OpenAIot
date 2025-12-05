@@ -210,6 +210,10 @@ namespace MESService.Business
             {
                 return BusResponse<string>.Error(111, "非企业用户无法添加生产报工");
             }
+            if (string.IsNullOrEmpty(data.BatchNo))
+            {
+                return BusResponse<string>.Error(112, "批次编号不能为空");
+            }
             if (string.IsNullOrEmpty(data.WorkTaskId))
             {
                 return BusResponse<string>.Error(121, "生产任务不能为空");
