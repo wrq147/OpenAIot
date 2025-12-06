@@ -3,11 +3,13 @@
     <el-dialog :visible.sync="dialogVisible" width="800px" :show-close="false">
       <div slot="title" class="dialog_slot_title">
         <div class="title_text">添加供应商</div>
-        <el-tabs v-model="dialogName" tab-position="top" :stretch="true" v-if="filedTableList && filedTableList.length > 0">
+        <el-tabs v-model="dialogName" tab-position="top" :stretch="true"
+          v-if="filedTableList && filedTableList.length > 0">
           <el-tab-pane name="null1" :disabled="true"><span slot="label"></span></el-tab-pane>
           <el-tab-pane name="null2" :disabled="true"><span slot="label"></span></el-tab-pane>
           <el-tab-pane name="custominfonull" :disabled="true"
-            v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span slot="label"></span></el-tab-pane>
+            v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span
+              slot="label"></span></el-tab-pane>
           <el-tab-pane name="baseinfo"><span slot="label">基本信息</span></el-tab-pane>
           <el-tab-pane name="custominfo"><span slot="label"
               v-if="filedTableList && filedTableList.length > 0">自定义信息</span></el-tab-pane>
@@ -70,7 +72,7 @@
         </el-row>
         <el-row :gutter="10" v-show="dialogName == 'custominfo'">
           <template v-for="(item, ix) in filedTableList">
-            <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item)">
+            <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,this.form)">
               <el-form-item :label="item.name" :prop="item.mapid">
                 <el-select @change="customValChange" :disabled="item.is_readonly" :allow-create="item.is_add"
                   :multiple="item.type == '复选框'" :clearable="!item.is_required" v-model="form[item.mapid]"
@@ -103,7 +105,7 @@
                   :precision="item.decimals"></el-input>
                 <el-link :disabled="item.is_readonly" v-if="item.type == '超链接'" href="#" target="_blank">{{
                   item.describe_text
-                  }}</el-link>
+                }}</el-link>
                 <!-- <image-upload @input="customValChange" v-model="form[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
                 <div class="avatar_con" v-if="item.type == '图片'">
                   <image-upload @input="customValChange($event, item)" v-model="form[item.mapid]" :limit="1"
@@ -162,7 +164,7 @@ import {
   editSupplierSave,
 } from "@/api/factory/supplier";
 import dayjs from "dayjs";
-
+import { setCustomDefaultValue, checkBeforeSave,setFormItemHide } from '@/utils/field.js'
 export default {
   name: "AdminUiProductAdd",
   data() {
@@ -253,174 +255,7 @@ export default {
       this.form.AddressDetail = info.AddressDetail;
       this.$forceUpdate();
     },
-    setFormItemHide(item) {
-      if (item.conditions && item.conditions.length > 0) {
-        let result = false;
-        let conditionsResArr = [];
-        for (let i = 0; i < item.conditions.length; i++) {
-          let row = item.conditions[i];
-          conditionsResArr[i] = this.returnCompareResult(
-            row.field,
-            row.compare,
-            row.val,
-            row.type
-          );
-        }
-        for (let i = 0; i < conditionsResArr.length; i++) {
-          if (i == 0) {
-            result = conditionsResArr[i];
-          } else {
-            if (item.groups && item.groups[i - 1]) {
-              if (item.groups[i - 1] == "and") {
-                result = result && conditionsResArr[i];
-              } else if (item.groups[i - 1] == "or") {
-                result = result || conditionsResArr[i];
-              }
-            } else {
-              result = result || conditionsResArr[i];
-            }
-          }
-        }
-        return result;
-      } else {
-        return false;
-      }
-    },
-    returnCompareResult(field, compare, val, type) {
-      let result = true;
-      switch (compare) {
-        case "=":
-          result = this.form[field] == val;
-          break;
-        case "!=":
-          result = this.form[field] != val;
-          break;
-        case "IN":
-          result = this.form[field] && this.form[field].indexOf(val) > -1;
-          break;
-        case "NOTIN":
-          result =
-            !this.form[field] ||
-            (this.form[field] && this.form[field].indexOf(val) == -1);
-          break;
-        case "ISNULL":
-          result = this.form[field] == "" || this.form[field] == null;
-          break;
-        case "NOTNULL":
-          result = this.form[field] != "" && this.form[field] != null;
-          break;
-        case ">":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form[field]).valueOf() >
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form[field] > val;
-          }
-          break;
-        case "<":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form[field]).valueOf() <
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form[field] < val;
-          }
-          break;
-        case "==":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form[field]).valueOf() ==
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form[field] == val;
-          }
-          break;
-        case "><":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form[field]).valueOf() !=
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form[field] != val;
-          }
-          break;
-        case ">=":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form[field]).valueOf() >=
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form[field] >= val;
-          }
-          break;
-        case "<=":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form[field]).valueOf() <=
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form[field] <= val;
-          }
-          break;
-        case "INRANGE":
-          if (type && type == "数字") {
-            if (val.min && val.max) {
-              if (this.form[field] >= val.min && this.form[field] <= val.max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          result = this.form[field] != "" && this.form[field] != null;
-          break;
-        case "NOTINRANGE":
-          if (type && type == "数字") {
-            if (val.min && val.max) {
-              if (this.form[field] < val.min && this.form[field] > val.max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          break;
-        case "SELECTRANGE":
-          if (type && type == "时间") {
-            if (val[0] && val[1]) {
-              let max = Math.max(...val);
-              let min = Math.min(...val);
-              if (this.form[field] >= min && this.form[field] <= max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          break;
-        case "DYNAMICS":
-          if (type && type == "时间") {
-            if (val[0] && val[1]) {
-              let max = Math.max(...val);
-              let min = Math.min(...val);
-              if (this.form[field] >= min && this.form[field] <= max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          break;
-      }
-      return result;
-    },
+   
     customValChange2(val, fidItem) {//数据发生变化后刷新，并验证表单
       // console.log("看看关联对象选择后有没有出现",fidItem);
       let form = JSON.parse(JSON.stringify(this.form));
@@ -471,7 +306,7 @@ export default {
           AddressName: supplierInfo.AddressName, //地址名称
           AddressDetail: supplierInfo.AddressDetail, //地址详情
         };
-        this.setCustomDefaultValue(supplierInfo);
+        setCustomDefaultValue(this.filedTableList, this.form, this.rules, supplierInfo);
       } else {
         this.form = {
           SupplierName: "",
@@ -485,68 +320,10 @@ export default {
           AddressName: "", //地址名称
           AddressDetail: "", //地址详情
         }
-        this.setCustomDefaultValue();
+        setCustomDefaultValue(this.filedTableList, this.form, this.rules);
         // console.log("表单初始化",this.form);
       }
       this.dialogVisible = true;
-    },
-    setCustomDefaultValue(afterForm) {
-      //设置自定义的变量初始化
-      this.filedTableList.map((rw) => {
-        if (afterForm) {
-          this.form[rw.mapid] = afterForm[rw.mapid];
-          if (rw.type == "时间") {
-            let newStr = rw.format.replace(/y/g, "Y");
-            newStr = newStr.replace(/d/g, "D");
-            this.form[rw.mapid] = dayjs(afterForm[rw.mapid]).format(newStr);
-          } else {
-            if (rw.type == "数字") {
-              this.form[rw.mapid] = Number(afterForm[rw.mapid]);
-            } else if (rw.type == "复选框") {
-              this.form[rw.mapid] = afterForm[rw.mapid].split(",");
-            } else {
-              this.form[rw.mapid] = afterForm[rw.mapid];
-            }
-          }
-        } else {
-          this.form[rw.mapid] = null;
-          if (rw.defval != "" && rw.defval != undefined && rw.defval != null) {
-            if (rw.type == "时间") {
-              let newStr = rw.format.replace(/y/g, "Y");
-              newStr = newStr.replace(/d/g, "D");
-              this.form[rw.mapid] = dayjs(rw.defval).format(newStr);
-            } else {
-              if (rw.type == "数字") {
-                this.form[rw.mapid] = Number(rw.defval);
-              } else {
-                this.form[rw.mapid] = rw.defval;
-              }
-            }
-          } else {
-            if (rw.type == "复选框") {
-              this.form[rw.mapid] = [];
-            }
-          }
-        }
-        if (rw.is_required) {
-          if (rw.type == "单选框" || rw.type == "复选框" || rw.type == "时间") {
-            let rowRules = [
-              {
-                required: true,
-                trigger: "change",
-                message: "请选择" + rw.name,
-              },
-            ];
-            this.rules[rw.mapid] = rowRules;
-          } else {
-            let rowRules = [
-              { required: true, trigger: "blur", message: "请输入" + rw.name },
-            ];
-            this.rules[rw.mapid] = rowRules;
-          }
-        }
-      });
-      console.log("this.rules", this.rules);
     },
     async getCustomFiled() {
       //获取自定义的字段
@@ -560,29 +337,7 @@ export default {
         console.log("检验");
         if (valid) {
           let submitForm = JSON.parse(JSON.stringify(this.form));
-          for (let i = 0; i < this.filedTableList.length; i++) {
-            let row = this.filedTableList[i];
-            if (row.type == "数字") {
-              if (submitForm[row.mapid]) {
-              } else {
-                submitForm[row.mapid] = Number(submitForm[row.mapid]);
-              }
-            } else if (row.type == "时间") {
-              submitForm[row.mapid] = dayjs(submitForm[row.mapid]).valueOf();
-            } else if (row.type == "复选框") {
-              if (submitForm[row.mapid] && submitForm[row.mapid].length > 0) {
-                submitForm[row.mapid] = submitForm[row.mapid].join(",");
-              } else {
-                submitForm[row.mapid] = "";
-              }
-            } else {
-              if (submitForm[row.mapid]) {
-              } else {
-                submitForm[row.mapid] = "";
-              }
-            }
-          }
-          console.log("提交的数据", submitForm);
+          checkBeforeSave(this.filedTableList, submitForm);
           if (submitForm.Id) {
             editSupplierSave(submitForm).then((res) => {
               console.log("修改执行结果", res);

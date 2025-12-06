@@ -28,28 +28,18 @@ export function getFieldShow(model, field) {
 export function checkBeforeSave(filedTableList, form) {
     for (let i = 0; i < filedTableList.length; i++) {
         let row = filedTableList[i];
-        if (row.type == "数字") {
-            if (!form[row.mapid]) {
-                form[row.mapid] = Number(form[row.mapid]);
-            }
-        } else if (row.type == "时间") {
+        if (row.type == "时间") {
             form[row.mapid] = dayjs(form[row.mapid]).valueOf();
         } else if (row.type == "复选框") {
             if (form[row.mapid] && form[row.mapid].length > 0) {
                 form[row.mapid] = form[row.mapid].join(",");
-            } else {
-                form[row.mapid] = "";
-            }
-        } else {
-            if (!form[row.mapid]) {
-                form[row.mapid] = "";
             }
         }
     }
 }
 
 //初始化自定义表单
-export function setCustomDefaultValue(filedTableList, form, formRules, initForm) {
+export function setCustomDefaultValue(filedTableList, form, formRules, initForm, pre) {
     //设置自定义的变量初始化
     filedTableList.map((rw) => {
         if (initForm) {
@@ -96,13 +86,184 @@ export function setCustomDefaultValue(filedTableList, form, formRules, initForm)
                         message: "请选择" + rw.name,
                     },
                 ];
-                formRules["RepBat." + rw.mapid] = rowRules;
+                formRules[pre + rw.mapid] = rowRules;
             } else {
                 let rowRules = [
                     { required: true, trigger: "blur", message: "请输入" + rw.name },
                 ];
-                formRules["RepBat." + rw.mapid] = rowRules;
+                formRules[pre + rw.mapid] = rowRules;
             }
         }
     });
+}
+
+
+export function setFormItemHide(item, form) {
+    //判断字段是否隐藏
+    if (item.conditions && item.conditions.length > 0) {
+        let result = false;
+        let conditionsResArr = [];
+        for (let i = 0; i < item.conditions.length; i++) {
+            let row = item.conditions[i];
+            conditionsResArr[i] = returnCompareResult(
+                row.field,
+                row.compare,
+                row.val,
+                row.valtype,
+                form
+            );
+        }
+        for (let i = 0; i < conditionsResArr.length; i++) {
+            if (i == 0) {
+                result = conditionsResArr[i];
+            } else {
+                if (item.groups && item.groups[i - 1]) {
+                    if (item.groups[i - 1] == "and") {
+                        result = result && conditionsResArr[i];
+                    } else if (item.groups[i - 1] == "or") {
+                        result = result || conditionsResArr[i];
+                    }
+                } else {
+                    result = result || conditionsResArr[i];
+                }
+            }
+        }
+        return result;
+    } else {
+        return false;
+    }
+}
+function returnCompareResult(field, compare, val, type, form) {
+    //隐藏规则设置方法
+    let result = true;
+    switch (compare) {
+        case "=":
+            result = form[field] == val;
+            break;
+        case "!=":
+            result = form[field] != val;
+            break;
+        case "IN":
+            result = form[field] && form[field].indexOf(val) > -1;
+            break;
+        case "NOTIN":
+            result =
+                !form[field] ||
+                (form[field] && form[field].indexOf(val) == -1);
+            break;
+        case "ISNULL":
+            result = form[field] == "" || form[field] == null;
+            break;
+        case "NOTNULL":
+            result = form[field] != "" && form[field] != null;
+            break;
+        case ">":
+            if (type && type == "时间") {
+                result = val.timeValue && dayjs(form[field]).valueOf() > dayjs(val.timeValue).valueOf();
+            } else if (type && type == "数字") {
+                result = form[field] > val;
+            }
+            break;
+        case "<":
+            if (type && type == "时间") {
+                result =
+                    val.timeValue &&
+                    dayjs(form[field]).valueOf() <
+                    dayjs(val.timeValue).valueOf();
+            } else if (type && type == "数字") {
+                result = form[field] < val;
+            }
+            break;
+        case "==":
+            if (type && type == "时间") {
+                result =
+                    val.timeValue &&
+                    dayjs(form[field]).valueOf() ==
+                    dayjs(val.timeValue).valueOf();
+            } else if (type && type == "数字") {
+                result = form[field] == val;
+            }
+            break;
+        case "><":
+            if (type && type == "时间") {
+                result =
+                    val.timeValue &&
+                    dayjs(form[field]).valueOf() !=
+                    dayjs(val.timeValue).valueOf();
+            } else if (type && type == "数字") {
+                result = form[field] != val;
+            }
+            break;
+        case ">=":
+            if (type && type == "时间") {
+                result =
+                    val.timeValue &&
+                    dayjs(form[field]).valueOf() >=
+                    dayjs(val.timeValue).valueOf();
+            } else if (type && type == "数字") {
+                result = form[field] >= val;
+            }
+            break;
+        case "<=":
+            if (type && type == "时间") {
+                result =
+                    val.timeValue &&
+                    dayjs(form[field]).valueOf() <=
+                    dayjs(val.timeValue).valueOf();
+            } else if (type && type == "数字") {
+                result = form[field] <= val;
+            }
+            break;
+        case "INRANGE":
+            if (type && type == "数字") {
+
+                if (val.min && val.max) {
+                    if (form[field] >= val.min && form[field] <= val.max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            }
+
+            break;
+        case "NOTINRANGE":
+            if (type && type == "数字") {
+                if (val.min && val.max) {
+                    if (form[field] < val.min && form[field] > val.max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            }
+            break;
+        case "SELECTRANGE":
+            if (type && type == "时间") {
+                if (val[0] && val[1]) {
+                    let max = Math.max(...val);
+                    let min = Math.min(...val);
+                    if (form[field] >= min && form[field] <= max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            }
+            break;
+        case "DYNAMICS":
+            if (type && type == "时间") {
+                if (val[0] && val[1]) {
+                    let max = Math.max(...val);
+                    let min = Math.min(...val);
+                    if (form[field] >= min && form[field] <= max) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            }
+            break;
+    }
+    return result;
 }

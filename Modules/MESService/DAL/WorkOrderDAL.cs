@@ -44,12 +44,9 @@ namespace MESService.DAL
             var tmpSql = new SqlBuilder(help).Append("select a.Id,a.WorkNumber,a.ProductId,a.Status,a.Priority,a.PlannedStartOn,a.PlannedEndOn,b.ProductName,c.PlanName from mz_work_order a left join mz_product b on a.ProductId=b.Id left join mz_product_plan c on a.PlanId=c.Id");
             return (await tmpSql.DoAsync<DoQuerySql<Out_ParentWordInfo>>()).ToList();
         }
-        [Trans]
-        public virtual async Task<decimal> IncreaseProgress(string orderId, decimal addval)
+        public virtual async Task IncreaseProgress(string orderId, decimal addval)
         {
-            var rawBatchCount = await new SqlBuilder(help).Append("select BatchCount from mz_work_order where Id=").AppendParam(orderId).DoAsync<DoQuerySql<decimal>>();
             await new SqlBuilder(help).Append("update mz_work_order set BatchCount=BatchCount+").AppendParam(addval).Append(" where Id=").AppendParam(orderId).DoAsync<DoExecSql>();
-            return rawBatchCount.ToFirst();
         }
     }
 }

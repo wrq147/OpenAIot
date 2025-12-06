@@ -173,7 +173,7 @@ import { orgFormFields } from "@/api/factory/customFields";
 import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
 import { operInfo } from "@/api/mes/oper";
 import { factoryMesConfig } from "@/api/mes/config";
-import { setCustomDefaultValue, checkBeforeSave } from '@/utils/field.js'
+import { setCustomDefaultValue, checkBeforeSave, setFormItemHide } from '@/utils/field.js'
 export default {
   name: 'AdminUiReportAdd',
   components: { AddEmbed, OrgPicker },
@@ -252,7 +252,13 @@ export default {
     },
     ExtItems: function () {
       let newFields = this.filedTableList.filter(item => {
-        return !this.setFormItemHide(item);
+        let fperm = this.FieldsPerms.filter(x => x.id == item.mapid);
+        if (fperm.length > 0) {
+          if (fperm[0].perm == 'H') {
+            return false;
+          }
+        }
+        return !setFormItemHide(item, this.form.RepBat);
       });
       return newFields;
     },
@@ -291,7 +297,8 @@ export default {
       }
       this.form.TaskInfo = val;
       this.FieldsPerms = JSON.parse(operRes.data.ReportFields);
-      setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules);
+            console.info(this.FieldsPerms)
+      setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules, null, "RepBat.");
       this.$forceUpdate()
       this.resetNeedReason();
     },
@@ -316,141 +323,7 @@ export default {
       this.$forceUpdate();
       this.resetNeedReason();
     },
-    returnCompareResult(field, compare, val, type) {
-      let result = true;
-      switch (compare) {
-        case "=":
-          result = this.form.RepBat[field] == val;
-          break;
-        case "!=":
-          result = this.form.RepBat[field] != val;
-          break;
-        case "IN":
-          result = this.form.RepBat[field] && this.form.RepBat[field].indexOf(val) > -1;
-          break;
-        case "NOTIN":
-          result =
-            !this.form.RepBat[field] ||
-            (this.form.RepBat[field] && this.form.RepBat[field].indexOf(val) == -1);
-          break;
-        case "ISNULL":
-          result = this.form.RepBat[field] == "" || this.form.RepBat[field] == null;
-          break;
-        case "NOTNULL":
-          result = this.form.RepBat[field] != "" && this.form.RepBat[field] != null;
-          break;
-        case ">":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form.RepBat[field]).valueOf() >
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form.RepBat[field] > val;
-          }
-          break;
-        case "<":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form.RepBat[field]).valueOf() <
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form.RepBat[field] < val;
-          }
-          break;
-        case "==":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form.RepBat[field]).valueOf() ==
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form.RepBat[field] == val;
-          }
-          break;
-        case "><":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form.RepBat[field]).valueOf() !=
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form.RepBat[field] != val;
-          }
-          break;
-        case ">=":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form.RepBat[field]).valueOf() >=
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form.RepBat[field] >= val;
-          }
-          break;
-        case "<=":
-          if (type && type == "时间") {
-            result =
-              val.timeValue &&
-              dayjs(this.form.RepBat[field]).valueOf() <=
-              dayjs(val.timeValue).valueOf();
-          } else if (type && type == "数字") {
-            result = this.form.RepBat[field] <= val;
-          }
-          break;
-        case "INRANGE":
-          if (type && type == "数字") {
-            if (val.min && val.max) {
-              if (this.form.RepBat[field] >= val.min && this.form.RepBat[field] <= val.max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          result = this.form.RepBat[field] != "" && this.form.RepBat[field] != null;
-          break;
-        case "NOTINRANGE":
-          if (type && type == "数字") {
-            if (val.min && val.max) {
-              if (this.form.RepBat[field] < val.min && this.form.RepBat[field] > val.max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          break;
-        case "SELECTRANGE":
-          if (type && type == "时间") {
-            if (val[0] && val[1]) {
-              let max = Math.max(...val);
-              let min = Math.min(...val);
-              if (this.form.RepBat[field] >= min && this.form.RepBat[field] <= max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          break;
-        case "DYNAMICS":
-          if (type && type == "时间") {
-            if (val[0] && val[1]) {
-              let max = Math.max(...val);
-              let min = Math.min(...val);
-              if (this.form.RepBat[field] >= min && this.form.RepBat[field] <= max) {
-                result = true;
-              } else {
-                result = false;
-              }
-            }
-          }
-          break;
-      }
-      return result;
-    },
+    
     setFormItemReadOnly(item) {
       let fperm = this.FieldsPerms.filter(x => x.id == item.mapid);
       if (fperm.length > 0) {
@@ -460,45 +333,7 @@ export default {
       }
       return item.is_readonly && this.isOnlyRead;
     },
-    setFormItemHide(item) {
-      let fperm = this.FieldsPerms.filter(x => x.id == item.mapid);
-      if (fperm.length > 0) {
-        if (fperm[0].perm == 'H') {
-          return true;
-        }
-      }
-      if (item.conditions && item.conditions.length > 0) {
-        let result = false;
-        let conditionsResArr = [];
-        for (let i = 0; i < item.conditions.length; i++) {
-          let row = item.conditions[i];
-          conditionsResArr[i] = this.returnCompareResult(
-            row.field,
-            row.compare,
-            row.val,
-            row.type
-          );
-        }
-        for (let i = 0; i < conditionsResArr.length; i++) {
-          if (i == 0) {
-            result = conditionsResArr[i];
-          } else {
-            if (item.groups && item.groups[i - 1]) {
-              if (item.groups[i - 1] == "and") {
-                result = result && conditionsResArr[i];
-              } else if (item.groups[i - 1] == "or") {
-                result = result || conditionsResArr[i];
-              }
-            } else {
-              result = result || conditionsResArr[i];
-            }
-          }
-        }
-        return result;
-      } else {
-        return false;
-      }
-    },
+  
     afterValSearch(val, item) {//关联对象回显时获取列表
       if (val && val.indexOf(',') > -1) {
         let keyVal = val.split(',')
@@ -601,7 +436,7 @@ export default {
           RepBat: res.data.RepBat
         };
         this.FieldsPerms = JSON.parse(res.data.Oper.ReportFields);
-        setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules, res.data.RepBat);
+        setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules, res.data.RepBat, "RepBat.");
         this.resetNeedReason();
       } else {
         this.form = {
@@ -648,7 +483,6 @@ export default {
     submitFiledAdd(st) {
       //提交数据
       this.$refs["form"].validate(async (valid, validateResult) => {
-        // console.log("检验");
         if (valid) {
           let submitForm = JSON.parse(JSON.stringify(this.form));
           checkBeforeSave(this.filedTableList, submitForm.RepBat)

@@ -10,6 +10,7 @@ using FlowService.FlowNode.Builder;
 using FlowService.FlowNode.FormFields;
 using MESService.DAL;
 using MESService.Model;
+using MyAccess.Aop;
 using Newtonsoft.Json;
 using NPOI.HSSF.Record;
 using NPOI.SS.Formula.Functions;
@@ -308,8 +309,8 @@ namespace MESService.Business
             else
             {
                 data.RepBat = new MZ_WorkBatch();
-
             }
+
             data.RepBat.Id = data.BatchNo;
             data.RepBat.WorkOrderId = data.WorkOrderId;
             data.RepBat.OrgId = user.OrgId;
@@ -321,6 +322,7 @@ namespace MESService.Business
             }
             else
             {
+                data.RepBat.IsFinish = false;
                 data.RepBat.CreatedOn = DateTime.Now;
                 data.RepBat.UpdatedOn = data.RepBat.CreatedOn;
                 await wkbatchDAL.Insert(data.RepBat);
@@ -371,7 +373,6 @@ namespace MESService.Business
             await _provider.GetService<WorkDefectDAL>().Delete(x => x.ReportId == id);
             return BusResponse<int>.Success(rs);
         }
-
 
         public virtual async Task<BusResponse<string>> SubmitModel(In_SubmitReport data, IUserInfo user)
         {

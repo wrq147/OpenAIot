@@ -1445,6 +1445,11 @@
             更新时间
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.IsFinish">
+            <summary>
+            生产是否完成
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkBatch.StrExt1">
             <summary>
             扩展字符串字段1

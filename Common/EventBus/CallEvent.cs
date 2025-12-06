@@ -1,5 +1,6 @@
 ﻿using Common.Share;
 using EasyNetQ;
+using Minio;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -101,17 +102,20 @@ namespace Common.EventBus
     }
     public class CallResponse : EvtResponse
     {
-        public CallResponse(object result)
+        public static CallResponse Create(object result)
         {
+            CallResponse response = new CallResponse();
             if (result != null)
             {
-                Result = JsonConvert.SerializeObject(result);
+                response.Result = JsonConvert.SerializeObject(result);
             }
-            this.IsDone = true;
+            response.IsDone = true;
+            return response;
         }
+
         public static CallResponse Next()
         {
-            CallResponse rsp = new CallResponse(string.Empty);
+            CallResponse rsp = Create(string.Empty);
             rsp.IsDone = false;
             return rsp;
         }
@@ -119,9 +123,7 @@ namespace Common.EventBus
         public string Result { get; set; }
         public T GetResult<T>()
         {
-            JToken jToken = JToken.Parse(Result);
-            JObject jObject = JObject.Parse((string)jToken);
-            return jObject.ToObject<T>();
+            return JsonConvert.DeserializeObject<T>(this.Result);
         }
     }
 }

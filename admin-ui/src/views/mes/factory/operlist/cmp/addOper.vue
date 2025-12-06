@@ -132,7 +132,7 @@
             </el-row>
             <el-row v-show="dialogName == 'custominfo'">
                 <template v-for="(item, ix) in filedTableList">
-                    <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item)">
+                    <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,ruleForm)">
                         <el-form-item :label="item.name" :prop="item.mapid">
                             <el-select @change="customValChange" :disabled="item.is_readonly"
                                 :allow-create="item.is_add" :multiple="item.type === '复选框'"
@@ -149,7 +149,7 @@
                             <el-checkbox-group @change="customValChange" :disabled="item.is_readonly"
                                 v-model="ruleForm[item.mapid]" v-if="item.type === '复选框' && item.show_way === '平铺'">
                                 <el-checkbox v-for="it in item.optionals" :label="it" :key="it + ix">{{ it
-                                }}</el-checkbox>
+                                    }}</el-checkbox>
                             </el-checkbox-group>
                             <el-date-picker @change="customValChange" :disabled="item.is_readonly"
                                 v-if="item.type === '时间'" v-model="ruleForm[item.mapid]" type="datetime"
@@ -222,6 +222,7 @@ import { factorySearchObject } from "@/api/factory/product";
 import addPeople from '@/views/flowable/common/OrgPicker.vue';
 import addEquipment from './addEquipment.vue'
 import { defectList } from "@/api/mes/defect";
+import { setCustomDefaultValue, checkBeforeSave,setFormItemHide } from '@/utils/field.js'
 export default {
     name: 'addDefect',
     components: {
@@ -346,94 +347,18 @@ export default {
         async getProductCustomFiled(afterForm, type) {
             //获取自定义的字段
             this.filedTableList = [];
-            let res = await orgFormFields({ field: "工序",ext:true,isfixed:false });
+            let res = await orgFormFields({ field: "工序", ext: true, isfixed: false });
             this.filedTableList = res.data;
-            this.setCustomDefaultValue(afterForm)
+            setCustomDefaultValue(this.filedTableList, this.ruleForm, this.rules, afterForm);
+
         },
-        setCustomDefaultValue(afterForm) {
-            //设置自定义的变量初始化
-            this.filedTableList.map((rw) => {
-                if (afterForm) {
-                    this.ruleForm[rw.mapid] = afterForm[rw.mapid];
-                    if (rw.type === "时间") {
-                        let newStr = rw.format.replace(/y/g, "Y");
-                        newStr = newStr.replace(/d/g, "D");
-                        this.ruleForm[rw.mapid] = dayjs(afterForm[rw.mapid]).format(newStr);
-                    } else {
-                        if (rw.type === "数字") {
-                            this.forruleFormm[rw.mapid] = Number(afterForm[rw.mapid]);
-                        } else if (rw.type === "复选框") {
-                            this.ruleForm[rw.mapid] = afterForm[rw.mapid].split(",");
-                        } else {
-                            this.v[rw.mapid] = afterForm[rw.mapid];
-                        }
-                    }
-                } else {
-                    this.ruleForm[rw.mapid] = null;
-                    if (rw.defval != "" && rw.defval != undefined && rw.defval != null) {
-                        if (rw.type === "时间") {
-                            let newStr = rw.format.replace(/y/g, "Y");
-                            newStr = newStr.replace(/d/g, "D");
-                            this.ruleForm[rw.mapid] = dayjs(rw.defval).format(newStr);
-                        } else {
-                            if (rw.type === "数字") {
-                                this.ruleForm[rw.mapid] = Number(rw.defval);
-                            } else {
-                                this.ruleForm[rw.mapid] = rw.defval;
-                            }
-                        }
-                    } else {
-                        if (rw.type === "复选框") {
-                            this.ruleForm[rw.mapid] = [];
-                        }
-                    }
-                }
-                if (rw.is_required) {
-                    if (rw.type === "单选框" || rw.type === "复选框" || rw.type === "时间") {
-                        let rowRules = [
-                            {
-                                required: true,
-                                trigger: "change",
-                                message: "请选择" + rw.name,
-                            },
-                        ];
-                        this.rules[rw.mapid] = rowRules;
-                    } else {
-                        let rowRules = [
-                            { required: true, trigger: "blur", message: "请输入" + rw.name },
-                        ];
-                        this.rules[rw.mapid] = rowRules;
-                    }
-                }
-            });
-        },
+
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
-                let submitForm = JSON.parse(JSON.stringify(this.ruleForm));
-                submitForm.DefectJson = JSON.stringify(submitForm.DefectObject);
-                for (let i = 0; i < this.filedTableList.length; i++) {
-                    let row = this.filedTableList[i];
-                    if (row.type === "数字") {
-                        if (submitForm[row.mapid]) {
-                        } else {
-                            submitForm[row.mapid] = Number(submitForm[row.mapid]);
-                        }
-                    } else if (row.type === "时间") {
-                        submitForm[row.mapid] = dayjs(submitForm[row.mapid]).valueOf();
-                    } else if (row.type === "复选框") {
-                        if (submitForm[row.mapid] && submitForm[row.mapid].length > 0) {
-                            submitForm[row.mapid] = submitForm[row.mapid].join(",");
-                        } else {
-                            submitForm[row.mapid] = "";
-                        }
-                    } else {
-                        if (submitForm[row.mapid]) {
-                        } else {
-                            submitForm[row.mapid] = "";
-                        }
-                    }
-                };
                 if (valid) {
+                    let submitForm = JSON.parse(JSON.stringify(this.ruleForm));
+                    submitForm.DefectJson = JSON.stringify(submitForm.DefectObject);
+                    checkBeforeSave(this.filedTableList, submitForm);
                     submitForm.reportFields = JSON.stringify(this.reportFieldsData);
                     submitForm.fieldsInit = JSON.stringify(this.fieldsInit);
                     if (this.title === '新增生产工序') {
@@ -446,155 +371,7 @@ export default {
                 }
             })
         },
-        setFormItemHide(item) {
-            if (item.conditions && item.conditions.length > 0) {
-                let result = false;
-                let conditionsResArr = [];
-                for (let i = 0; i < item.conditions.length; i++) {
-                    let row = item.conditions[i];
-                    conditionsResArr[i] = this.returnCompareResult(
-                        row.field,
-                        row.compare,
-                        row.val,
-                        row.type
-                    );
-                }
-                for (let i = 0; i < conditionsResArr.length; i++) {
-                    if (i == 0) {
-                        result = conditionsResArr[i];
-                    } else {
-                        if (item.groups && item.groups[i - 1]) {
-                            if (item.groups[i - 1] === "and") {
-                                result = result && conditionsResArr[i];
-                            } else if (item.groups[i - 1] === "or") {
-                                result = result || conditionsResArr[i];
-                            }
-                        } else {
-                            result = result || conditionsResArr[i];
-                        }
-                    }
-                }
-                return result;
-            } else {
-                return false;
-            }
-        },
-        returnCompareResult(field, compare, val, type) {//隐藏规则设置方法
-            let result = true;
-            switch (compare) {
-                case "=":
-                    result = this.deviceAddFrom[field] == val;
-                    break;
-                case "!=":
-                    result = this.deviceAddFrom[field] != val;
-                    break;
-                case "IN":
-                    result = this.deviceAddFrom[field] && this.deviceAddFrom[field].indexOf(val) > -1;
-                    break;
-                case "NOTIN":
-                    result = !this.deviceAddFrom[field] || (this.deviceAddFrom[field] && this.deviceAddFrom[field].indexOf(val) == -1);
-                    break;
-                case "ISNULL":
-                    result = this.deviceAddFrom[field] == "" || this.deviceAddFrom[field] == null;
-                    break;
-                case "NOTNULL":
-                    result = this.deviceAddFrom[field] != "" && this.deviceAddFrom[field] != null;
-                    break;
-                case ">":
-                    if (type && type == "时间") {
-                        result = val.timeValue && dayjs(this.deviceAddFrom[field]).valueOf() > dayjs(val.timeValue).valueOf();
-                    } else if (type && type == "数字") {
-                        result = this.deviceAddFrom[field] > val;
-                    }
-                    break;
-                case "<":
-                    if (type && type == "时间") {
-                        result = val.timeValue && dayjs(this.deviceAddFrom[field]).valueOf() < dayjs(val.timeValue).valueOf();
-                    } else if (type && type == "数字") {
-                        result = this.deviceAddFrom[field] < val;
-                    }
-                    break;
-                case "==":
-                    if (type && type == "时间") {
-                        result = val.timeValue && dayjs(this.deviceAddFrom[field]).valueOf() == dayjs(val.timeValue).valueOf();
-                    } else if (type && type == "数字") {
-                        result = this.deviceAddFrom[field] == val;
-                    }
-                    break;
-                case "><":
-                    if (type && type == "时间") {
-                        result = val.timeValue && dayjs(this.deviceAddFrom[field]).valueOf() != dayjs(val.timeValue).valueOf();
-                    } else if (type && type == "数字") {
-                        result = this.deviceAddFrom[field] != val;
-                    }
-                    break;
-                case ">=":
-                    if (type && type == "时间") {
-                        result = val.timeValue && dayjs(this.deviceAddFrom[field]).valueOf() >= dayjs(val.timeValue).valueOf();
-                    } else if (type && type == "数字") {
-                        result = this.deviceAddFrom[field] >= val;
-                    }
-                    break;
-                case "<=":
-                    if (type && type == "时间") {
-                        result = val.timeValue && dayjs(this.deviceAddFrom[field]).valueOf() <= dayjs(val.timeValue).valueOf();
-                    } else if (type && type == "数字") {
-                        result = this.deviceAddFrom[field] <= val;
-                    }
-                    break;
-                case "INRANGE":
-                    if (type && type == "数字") {
-
-                        if (val.min && val.max) {
-                            if (this.deviceAddFrom[field] >= val.min && this.deviceAddFrom[field] <= val.max) {
-                                result = true;
-                            } else {
-                                result = false;
-                            }
-                        }
-                    }
-
-                    break;
-                case "NOTINRANGE":
-                    if (type && type == "数字") {
-                        if (val.min && val.max) {
-                            if (this.deviceAddFrom[field] < val.min && this.deviceAddFrom[field] > val.max) {
-                                result = true;
-                            } else {
-                                result = false;
-                            }
-                        }
-                    }
-                    break;
-                case "SELECTRANGE":
-                    if (type && type == "时间") {
-                        if (val[0] && val[1]) {
-                            let max = Math.max(...val);
-                            let min = Math.min(...val);
-                            if (this.deviceAddFrom[field] >= min && this.deviceAddFrom[field] <= max) {
-                                result = true;
-                            } else {
-                                result = false;
-                            }
-                        }
-                    }
-                    break;
-                case "DYNAMICS":
-                    if (type && type == "时间") {
-                        if (val[0] && val[1]) {
-                            let max = Math.max(...val);
-                            let min = Math.min(...val);
-                            if (this.deviceAddFrom[field] >= min && this.deviceAddFrom[field] <= max) {
-                                result = true;
-                            } else {
-                                result = false;
-                            }
-                        }
-                    }
-                    break;
-            }
-            return result;
-        },
+        
         customValChange() {
             let ruleForm = JSON.parse(JSON.stringify(this.ruleForm));
             this.ruleForm = JSON.parse(JSON.stringify(ruleForm));

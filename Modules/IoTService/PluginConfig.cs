@@ -278,7 +278,7 @@ namespace IoTService
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<IotActionBLL>().DoActionEvent(paramdata);
-                    return new CallResponse(res);
+                    return CallResponse.Create(res);
                 }
                 return CallResponse.Next();
             });
@@ -367,7 +367,7 @@ namespace IoTService
                     dev.DeviceId = tDeviceId;
                     dev.Name = tName;
                     await app.ServiceProvider.GetService<IotDeviceBLL>().Update(dev, artificialUser, tdevlist[0], false);
-                    return new CallResponse(tdevlist[0].Id);
+                    return CallResponse.Create(BusResponse<string>.Success(tdevlist[0].Id));
                 }
                 else
                 {
@@ -379,7 +379,7 @@ namespace IoTService
                     dev.DeviceId = tDeviceId;
                     dev.Name = tName;
                     var res = await app.ServiceProvider.GetService<IotDeviceBLL>().Insert(dev, artificialUser, false);
-                    return new CallResponse(res);
+                    return CallResponse.Create(res);
                 }
 
             });

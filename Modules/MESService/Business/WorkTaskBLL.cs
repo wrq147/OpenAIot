@@ -3,6 +3,7 @@ using Common.IdGenerator;
 using Common.Share;
 using MESService.DAL;
 using MESService.Model;
+using MyAccess.Aop;
 using ProducerService.DAL;
 using ProducerService.Model;
 using System;
@@ -62,6 +63,7 @@ namespace MESService.Business
             }
             return BusResponse<MZ_WorkTask>.Success(info);
         }
+
         public virtual async Task ResetTaskInfo(string taskId, MZ_WorkReport report)
         {
             var oldTask = await _workTaskDAL.Select(taskId);
@@ -82,6 +84,7 @@ namespace MESService.Business
             {
                 newTask.StartOn = report.StartWork;
             }
+
             if (reportTotalInfo.TotalGoodNum >= oldTask.PlanNum)
             {
                 newTask.FinishOn = report.EndWork;
@@ -112,18 +115,6 @@ namespace MESService.Business
                 await _provider.GetService<ProductPlanDAL>().StartPlane(workOrder.PlanId);
             }
 
-            var rawcc = await workOrderDAL.IncreaseProgress(workOrder.Id, report.GoodNum.Value);
-            if (rawcc < workOrder.Quantity && (rawcc + report.GoodNum.Value) >= workOrder.Quantity)
-            {
-                //结束工单
-                MZ_WorkOrder neworder = new MZ_WorkOrder();
-                neworder.Id = workOrder.Id;
-                neworder.Status = 2;
-                neworder.EndOn = report.EndWork;
-                await workOrderDAL.Update(neworder);
-                await _provider.GetService<ProductPlanDAL>().FinishPlane(workOrder.PlanId);
-            }
-
 
             var route = await _provider.GetService<RouteDAL>().Select(workOrder.RouteId);
             if (route == null)
@@ -136,10 +127,19 @@ namespace MESService.Business
                 return;
             }
             var proBatchDAL = _provider.GetService<ProductBatchDAL>();
-            var workBatchList = await _provider.GetService<WorkBatchDAL>().SelectList(x => x.Id == report.BatchNo && x.OrgId == report.OrgId);
+            var workBatchDAL = _provider.GetService<WorkBatchDAL>();
+            var workBatchList = await workBatchDAL.SelectList(x => x.Id == report.BatchNo && x.OrgId == report.OrgId);
+            if (workBatchList.Count == 0)
+            {
+                return;
+            }
+            if (workBatchList[0].IsFinish == true)
+            {
+                return;
+            }
             MZ_ProductBatch proBatch = null;
             //判断是否为首次绑定通讯编码
-            if (workBatchList.Count > 0 && !string.IsNullOrEmpty(workBatchList[0].LNumber))
+            if (!string.IsNullOrEmpty(workBatchList[0].LNumber))
             {
                 var workBatch = workBatchList[0];
                 if (!await proBatchDAL.Some(x => x.Number == workBatch.Id))
@@ -172,24 +172,33 @@ namespace MESService.Business
                             Name = proBatch.BatchName
                         });
                         var brs = tmprsp.GetResult<BusResponse<string>>();
-                        batchId = brs.Data;
+                        if (brs.IsSuccess())
+                        {
+                            batchId = brs.Data;
+                        }
+                        else
+                        {
+                            throw new Exception(brs.Message);
+                        }
                     }
                     proBatch.Id = batchId;
                     await proBatchDAL.Insert(proBatch);
                 }
             }
 
-            //如果是工艺的最后一个工序，则生成产品批次并入库
-            var routeOperList = await _provider.GetService<RouteOperDAL>().SelectList(x => x.RouteId == workOrder.RouteId);
-            var lastRoute = routeOperList.OrderByDescending(x => x.Sequence).FirstOrDefault();
-            if (lastRoute == null)
+            //如果是工艺的最后一个工序，则产品批次入库
+            int routeOpCC = await _provider.GetService<RouteOperDAL>().Count(x => x.RouteId == workOrder.RouteId);
+            var reportlist = await reportDAL.SelectList(x => x.WorkOrderId == workOrder.Id && x.BatchNo == report.BatchNo && x.Status == 2, "", "RouteOperId");
+            int reportedcc = reportlist.Select(x => x.RouteOperId).Distinct().Count();
+            if (reportedcc < routeOpCC)
             {
                 return;
             }
-            if (lastRoute.OperId != report.OperId)
-            {
-                return;
-            }
+            MZ_WorkBatch newbatch = new MZ_WorkBatch();
+            newbatch.Id = report.BatchNo;
+            newbatch.IsFinish = true;
+            await workBatchDAL.Update(newbatch);
+
             if (proBatch == null)
             {
                 var tmpbatchlist = await proBatchDAL.SelectList(x => x.Number == report.BatchNo && x.OrgId == report.OrgId);
@@ -210,6 +219,17 @@ namespace MESService.Business
                 }
             }
 
+            await workOrderDAL.IncreaseProgress(workOrder.Id, report.GoodNum.Value);
+            if (workOrder.BatchCount < workOrder.Quantity && (workOrder.BatchCount + report.GoodNum.Value) >= workOrder.Quantity)
+            {
+                //结束工单
+                MZ_WorkOrder neworder = new MZ_WorkOrder();
+                neworder.Id = workOrder.Id;
+                neworder.Status = 2;
+                neworder.EndOn = report.EndWork;
+                await workOrderDAL.Update(neworder);
+                await _provider.GetService<ProductPlanDAL>().FinishPlane(workOrder.PlanId);
+            }
 
             if (!string.IsNullOrEmpty(route.ToHouseId))
             {

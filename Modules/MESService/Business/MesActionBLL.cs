@@ -20,6 +20,7 @@ namespace MESService.Business
         {
             _provider = provider;
         }
+
         public virtual async Task<BusResponse<int>> DoReportActionEvent(ActionChangeData evt)
         {
             try
@@ -90,11 +91,11 @@ namespace MESService.Business
                     //报工成功，计算任务进度
                     if (!string.IsNullOrEmpty(filterNumber))
                     {
-                        await BusUtility.Dispatch("ResetNumberTaskInfo", new
+                        var reportlist = await _provider.GetService<WorkReportDAL>().SelectList(x => x.OrgId == evt.OrgId && x.Number == filterNumber);
+                        if (reportlist.Count > 0)
                         {
-                            OrgId = evt.OrgId,
-                            Number = filterNumber
-                        });
+                            await _provider.GetService<WorkTaskBLL>().ResetTaskInfo(reportlist[0].WorkTaskId, reportlist[0]);
+                        }
                     }
                 }
                 return BusResponse<int>.Success(rs);
@@ -104,7 +105,6 @@ namespace MESService.Business
                 return BusResponse<int>.Error(133, ex.Message);
             }
         }
-
         public virtual async Task<BusResponse<int>> DoPlanActionEvent(ActionChangeData evt)
         {
             try
@@ -176,12 +176,17 @@ namespace MESService.Business
                     //生成生产工单
                     if (!string.IsNullOrEmpty(filterNumber))
                     {
-                        await BusUtility.Dispatch("GenerateNumberWorkOrder", new
+                        var planDAL = _provider.GetService<ProductPlanDAL>();
+                        var planItemDAL = _provider.GetService<ProductPlanItemDAL>();
+                        var orderBLL = _provider.GetService<WorkOrderBLL>();
+                        List<MZ_ProductPlan> planlist = await planDAL.SelectList(x => x.OrgId == evt.OrgId && x.Number == filterNumber);
+                        foreach (var planItem in planlist)
                         {
-                            OrgId = evt.OrgId,
-                            Number = filterNumber
-                        });
+                            planItem.Items = await planItemDAL.SelectList(x => x.PlanId == planItem.Id);
+                            await orderBLL.GenerateWorkOrder(planItem);
+                        }
                     }
+ 
                 }
                 return BusResponse<int>.Success(rs);
             }

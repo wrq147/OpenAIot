@@ -158,7 +158,6 @@ namespace MESService.Business
             return BusResponse<int>.Success(rs);
         }
 
-
         public virtual async Task<BusResponse<string>> SubmitModel(In_SubmitPlan data, IUserInfo user)
         {
             ProductPlanDAL productPlanDAL = _provider.GetService<ProductPlanDAL>();

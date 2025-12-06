@@ -84,7 +84,7 @@ namespace CRMService
                 long fromOrgId = Convert.ToInt64(paramdata.from);
                 long toOrgId = Convert.ToInt64(paramdata.to);
                 var res = await app.ServiceProvider.GetService<CustomerDAL>().SelectCustomerByOrgId(fromOrgId, toOrgId);
-                return new CallResponse(res);
+                return CallResponse.Create(res);
             });
 
             //监听业务事件

@@ -41,7 +41,10 @@ namespace MESService.Model
         /// 更新时间
         /// </summary>
         public DateTime? UpdatedOn { get; set; }
-
+        /// <summary>
+        /// 生产是否完成
+        /// </summary>
+        public bool? IsFinish { get; set; }
         /// <summary>
         /// 扩展字符串字段1
         /// </summary>

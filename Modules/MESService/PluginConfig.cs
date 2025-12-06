@@ -169,45 +169,18 @@ namespace MESService
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<MesActionBLL>().DoPlanActionEvent(paramdata);
-                    return new CallResponse(res);
+                    return CallResponse.Create(res);
                 }
                 else if (tb2.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<MesActionBLL>().DoReportActionEvent(paramdata);
-                    return new CallResponse(res);
+                    return CallResponse.Create(res);
                 }
                 return CallResponse.Next();
             });
 
 
-            plg.RegisterBus("ResetNumberTaskInfo", async (evt) =>
-            {
-                var taskOrgId = evt.GetLong("OrgId");
-                var taskNumber = evt.GetValue("Number");
-                var workTaskBLL = app.ServiceProvider.GetService<WorkTaskBLL>();
-                var reportlist = await app.ServiceProvider.GetService<WorkReportDAL>().SelectList(x => x.OrgId == taskOrgId && x.Number == taskNumber);
-                if (reportlist.Count > 0)
-                {
-                    await workTaskBLL.ResetTaskInfo(reportlist[0].WorkTaskId, reportlist[0]);
-                }
-            });
 
-
-
-            plg.RegisterBus("GenerateNumberWorkOrder", async (evt) =>
-            {
-                var tOrgId = evt.GetLong("OrgId");
-                var tNumber = evt.GetValue("Number");
-                var planDAL = app.ServiceProvider.GetService<ProductPlanDAL>();
-                var planItemDAL = app.ServiceProvider.GetService<ProductPlanItemDAL>();
-                var orderBLL = app.ServiceProvider.GetService<WorkOrderBLL>();
-                List<MZ_ProductPlan> planlist = await planDAL.SelectList(x => x.OrgId == tOrgId && x.Number == tNumber);
-                foreach (var planItem in planlist)
-                {
-                    planItem.Items = await planItemDAL.SelectList(x => x.PlanId == planItem.Id);
-                    await orderBLL.GenerateWorkOrder(planItem);
-                }
-            });
 
 
         }

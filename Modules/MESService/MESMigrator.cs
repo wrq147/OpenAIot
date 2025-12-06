@@ -480,6 +480,7 @@ namespace MESService
                 .WithColumn("WorkOrderId").AsString(128).Indexed().WithColumnDescription("关联的工单Id")
                 .WithColumn("CreatedOn").AsDateTime().WithColumnDescription("创建时间")
                 .WithColumn("UpdatedOn").AsDateTime().WithColumnDescription("更新时间")
+                .WithColumn("IsFinish").AsBoolean().WithColumnDescription("生产是否完成")
                               .WithColumn("StrExt1").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段1")
                               .WithColumn("StrExt2").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段2")
                               .WithColumn("StrExt3").AsString(500).Indexed().Nullable().WithColumnDescription("扩展字符串字段3")
