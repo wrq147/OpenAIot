@@ -140,10 +140,10 @@
                         <el-table-column label="创建时间" prop="CreatedOn" align="center" />
                         <el-table-column label="更新时间" prop="UpdatedOn" align="center" />
                         <el-table-column label="操作" align="center" fixed="right" class-name="small-padding fixed-width"
-                            width="80">
+                            width="120">
                             <template slot-scope="scope">
                                 <!-- 报工记录按钮 + Popover 时间线 -->
-                                <el-popover ref="recordPopover" placement="left" width="600" trigger="click"
+                                <el-popover ref="recordPopover" placement="left" width="400" trigger="click"
                                     @show="loadRecordTimeline(scope.row)">
                                     <div v-loading="timelineLoading" class="timeline-container">
                                         <el-timeline>
@@ -198,7 +198,7 @@
 
 <script>
 import { WorkBatchList, mesOrderInfo, mesOrderList } from "@/api/mes/report";
-import { orgField } from "@/api/factory/customFields";
+import { orgFormFields } from "@/api/factory/customFields";
 import { getFieldShow } from '@/utils/field.js'
 import { ReportList } from '@/api/mes/report'
 export default {
@@ -267,14 +267,8 @@ export default {
         async getCustomFiled() {
             //获取自定义的字段
             this.filedTableList = [];
-            let orgId = this.$store.state.user.orgId;
-            let res = await orgField({ orgId: orgId, field: "报工" });
-            if (res.data) {
-                let filedList = JSON.parse(res.data.ExtValue);
-                this.filedTableList = filedList;
-            } else {
-                this.filedTableList = [];
-            }
+            let res = await orgFormFields({ field: "报工", ext: true, isfixed: false });
+            this.filedTableList = res.data;
         },
         // 初始化生产记录查询参数
         initWorkQuery() {
@@ -399,6 +393,7 @@ export default {
             this.timelineData = [];
             let res = await ReportList({ "pageSize": 0, "BatchNo": record.Id });
             this.timelineData = res.data.List;
+            this.timelineLoading = false;
         }
     }
 }
@@ -433,5 +428,8 @@ export default {
     padding-left: 15px;
     margin-bottom: 10px;
     background-color: #f5f7fa;
+}
+.timeline-container{
+    padding-top:10px;
 }
 </style>

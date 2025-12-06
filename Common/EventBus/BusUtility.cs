@@ -21,7 +21,7 @@ namespace Common.EventBus
         /// <returns></returns>
         public static async Task<CallResponse> Call(string name, object data)
         {
-            return await TAEventDispatcher.Instance.DispathWait<CallEvent, CallResponse>(CallEvent.EventKey, new CallEvent(name, data));
+            return await TAEventDispatcher.Instance.DispathWait<CallEvent, CallResponse>(CallEvent.EventKey, CallEvent.Create(name, data));
         }
         /// <summary>
         /// 触发总线上的事件

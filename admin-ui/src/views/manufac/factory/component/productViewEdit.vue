@@ -110,7 +110,7 @@
 
 <script>
 import { resizeTableCon } from "@/mixins/resizeTableCon";
-import {saveOrgField,orgFormFields} from '@/api/factory/customFields'
+import {orgFormFields} from '@/api/factory/customFields'
 import {
   addProductTypeSave,
   editProductTypeSave,

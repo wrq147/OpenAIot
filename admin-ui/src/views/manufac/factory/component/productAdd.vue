@@ -2,11 +2,13 @@
   <el-dialog :visible.sync="dialogVisible" width="800px" :show-close="false" top="3vh">
     <div slot="title" class="dialog_slot_title">
       <div class="title_text">添加产品</div>
-      <el-tabs v-model="dialogName" tab-position="top" :stretch="true" v-if="filedTableList && filedTableList.length > 0">
+      <el-tabs v-model="dialogName" tab-position="top" :stretch="true"
+        v-if="filedTableList && filedTableList.length > 0">
         <el-tab-pane name="null1" :disabled="true"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="null2" :disabled="true"><span slot="label"></span></el-tab-pane>
         <el-tab-pane name="custominfonull" :disabled="true"
-          v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span slot="label"></span></el-tab-pane>
+          v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span
+            slot="label"></span></el-tab-pane>
         <el-tab-pane name="baseinfo"><span slot="label">基本信息</span></el-tab-pane>
         <el-tab-pane name="custominfo" v-if="filedTableList && filedTableList.length > 0"><span
             slot="label">自定义信息</span></el-tab-pane>
@@ -109,8 +111,9 @@
           <el-form-item label="绑定协议" prop="IOTProductId">
             <el-select clearable style="width: 100%" v-model="form.IOTProductId" filterable remote reserve-keyword
               placeholder="请输入需要关联的协议名称" :remote-method="IOTProductRemoteMethod" :loading="IOTProductloading">
-              <el-option v-for="item in IOTProductoptions" :key="item.Id" :label="item.Name"
-                :value="item.Id">{{ item.Name }}</el-option>
+              <el-option v-for="item in IOTProductoptions" :key="item.Id" :label="item.Name" :value="item.Id">{{
+                item.Name
+              }}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -134,8 +137,9 @@
           <el-form-item label="工艺路线" prop="Route">
             <el-select clearable style="width: 100%" v-model="form.Route" filterable remote reserve-keyword
               placeholder="请输入工艺路线" :remote-method="routeRemoteMethod" :loading="Routeloading">
-              <el-option v-for="item in Routeoptions" :key="item.Id" :label="item.RouteName"
-                :value="item.Id">{{ item.RouteName }}</el-option>
+              <el-option v-for="item in Routeoptions" :key="item.Id" :label="item.RouteName" :value="item.Id">{{
+                item.RouteName
+              }}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -143,8 +147,8 @@
           <el-form-item label="供应商" prop="Supplier">
             <el-select clearable style="width: 100%" v-model="form.Supplier" filterable remote reserve-keyword
               placeholder="请输入关键词" :remote-method="supplierRemoteMethod" :loading="Supplierloading">
-              <el-option v-for="item in Supplieroptions" :key="item.Id" :label="item.SupplierName"
-                :value="item.Id">{{ item.SupplierName }}</el-option>
+              <el-option v-for="item in Supplieroptions" :key="item.Id" :label="item.SupplierName" :value="item.Id">{{
+                item.SupplierName }}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -237,7 +241,7 @@
 </template>
 
 <script>
-import { orgField } from "@/api/factory/customFields";
+import { orgFormFields } from "@/api/factory/customFields";
 import {
   factoryProductNumber,
   addProductSave,
@@ -826,17 +830,8 @@ export default {
     async getProductCustomFiled() {
       //获取自定义的字段
       this.filedTableList = [];
-      let orgId = this.$store.state.user.orgId;
-      let res = await orgField({ orgId: orgId, field: "产品" });
-      if (res.data) {
-        if (res.data.ExtValue) {
-          let filedList = JSON.parse(res.data.ExtValue);
-          this.filedTableList = filedList; //排序处理，并且数字字段排前面
-          // console.log("自定义字段",this.filedTableList);
-        }
-      } else {
-        this.filedTableList = [];
-      }
+      let res = await orgFormFields({ field: "产品", ext: true, isfixed: false });
+      this.filedTableList = res.data;
     },
     submitFiledAdd() {
       //提交数据

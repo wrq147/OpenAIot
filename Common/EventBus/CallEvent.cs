@@ -17,10 +17,12 @@ namespace Common.EventBus
     {
         public const string EventKey = "/EV.BUS.CALL";
         private Dictionary<string, object> _tmpobj;
-        public CallEvent(string name, object data)
+        public static CallEvent Create(string name, object data)
         {
-            this.Name = name;
-            this.Params = JsonConvert.SerializeObject(data);
+            CallEvent evt = new CallEvent();
+            evt.Name = name;
+            evt.Params = JsonConvert.SerializeObject(data);
+            return evt;
         }
         public string GetValue(string key)
         {
@@ -55,6 +57,41 @@ namespace Common.EventBus
                 return Convert.ToInt64(val);
             }
             return 0;
+        }
+
+        public List<X> GetList<X>(string key)
+        {
+            if (_tmpobj == null)
+            {
+                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
+            }
+            if (_tmpobj == null)
+            {
+                return null;
+            }
+            object val;
+            if (_tmpobj.TryGetValue(key, out val))
+            {
+                return (List<X>)val;
+            }
+            return null;
+        }
+        public object GetObject(string key)
+        {
+            if (_tmpobj == null)
+            {
+                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
+            }
+            if (_tmpobj == null)
+            {
+                return null;
+            }
+            object val;
+            if (_tmpobj.TryGetValue(key, out val))
+            {
+                return val;
+            }
+            return null;
         }
         /// <summary>
         /// 业务名称

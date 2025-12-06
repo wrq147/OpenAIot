@@ -12,6 +12,7 @@
     <PackageReference Include="StackExchange.Redis" Version="2.9.11" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\..\Third\EasyNetQ\EasyNetQ.csproj" />
   </ItemGroup>

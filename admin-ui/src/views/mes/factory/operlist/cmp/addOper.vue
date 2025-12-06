@@ -215,7 +215,7 @@
     </el-dialog>
 </template>
 <script>
-import { orgField, orgFormFields } from "@/api/factory/customFields";
+import { orgFormFields } from "@/api/factory/customFields";
 import { operAdd, operEdit } from "@/api/mes/oper";
 import { myDeviceList } from "@/api/after/dev";
 import { factorySearchObject } from "@/api/factory/product";
@@ -346,14 +346,8 @@ export default {
         async getProductCustomFiled(afterForm, type) {
             //获取自定义的字段
             this.filedTableList = [];
-            let orgId = this.$store.state.user.orgId;
-            let res = await orgField({ orgId: orgId, field: "工序" });
-            if (res.data && res.data.ExtValue) {
-                let filedList = JSON.parse(res.data.ExtValue);
-                this.filedTableList = filedList; //排序处理，并且数字字段排前面
-            } else {
-                this.filedTableList = [];
-            }
+            let res = await orgFormFields({ field: "工序",ext:true,isfixed:false });
+            this.filedTableList = res.data;
             this.setCustomDefaultValue(afterForm)
         },
         setCustomDefaultValue(afterForm) {

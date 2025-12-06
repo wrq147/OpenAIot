@@ -73,72 +73,70 @@
         </el-row>
       </div>
       <div class="dialog_slot_title">
-        <el-tabs v-model="dialogName" type="card" v-if="filedTableList && filedTableList.length > 0">
-          <el-tab-pane name="custominfonull" :disabled="true"
-            v-if="!filedTableList || filedTableList && filedTableList.length == 0"><span
-              slot="label"></span></el-tab-pane>
+        <el-tabs v-model="dialogName" type="card"
+          v-if="(ExtItems && ExtItems.length > 0) || (mesform.ReportTemplateId != null && mesform.ReportTemplateId !== 0)">
           <el-tab-pane name="custominfo"><span slot="label"
-              v-if="filedTableList && filedTableList.length > 0">自定义信息</span></el-tab-pane>
+              v-if="ExtItems && ExtItems.length > 0">自定义信息</span></el-tab-pane>
           <el-tab-pane name="approveinfo"
             v-if="mesform.ReportTemplateId != null && mesform.ReportTemplateId !== 0"><span
               slot="label">报工审批</span></el-tab-pane>
         </el-tabs>
       </div>
       <el-row :gutter="10" v-show="dialogName == 'custominfo'">
-        <template v-for="(item, ix) in filedTableList">
-          <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item)">
+        <template v-for="(item, ix) in ExtItems">
+          <el-col :span="12" :key="'custom_filed' + ix">
             <el-form-item :label="item.name" :prop="'RepBat.' + item.mapid">
-              <el-select @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
-                :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
-                v-model="form.RepBat[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
-                style="width: 100%"
+              <el-select @change="customValChange" :disabled="setFormItemReadOnly(item)" :allow-create="item.is_add"
+                :multiple="item.type == '复选框'" :clearable="!item.is_required" v-model="form.RepBat[item.mapid]"
+                :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
                 v-if="(item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉')">
                 <template v-for="it in item.optionals">
                   <el-option :label="it" :value="it" :key="it + ix"></el-option>
                 </template>
               </el-select>
-              <el-radio-group @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
+              <el-radio-group @change="customValChange" :disabled="setFormItemReadOnly(item)"
                 v-model="form.RepBat[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
                 <template v-for="it in item.optionals">
                   <el-radio :label="it" :key="it + ix">{{ it }}</el-radio>
                 </template>
               </el-radio-group>
-              <el-checkbox-group @change="customValChange" :disabled="item.is_readonly && isOnlyRead"
+              <el-checkbox-group @change="customValChange" :disabled="setFormItemReadOnly(item)"
                 v-model="form.RepBat[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
                 <template v-for="it in item.optionals">
                   <el-checkbox :label="it" :key="it + ix">{{ it }}</el-checkbox>
                 </template>
               </el-checkbox-group>
-              <el-date-picker @blur="customValChange" @change="customValChange"
-                :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '时间'" v-model="form.RepBat[item.mapid]"
-                type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
+              <el-date-picker @blur="customValChange" @change="customValChange" :disabled="setFormItemReadOnly(item)"
+                v-if="item.type == '时间'" v-model="form.RepBat[item.mapid]" type="datetime"
+                :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
                 :value-format="item.format" :format="item.format"></el-date-picker>
-              <el-input @input="customValChange" :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '文本'"
+              <el-input @input="customValChange" :disabled="setFormItemReadOnly(item)" v-if="item.type == '文本'"
                 :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
                 :type="item.is_multiple ? 'textarea' : 'text'" v-model="form.RepBat[item.mapid]"></el-input>
-              <el-input @input="customValChange" :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '数字'"
+              <el-input @input="customValChange" :disabled="setFormItemReadOnly(item)" v-if="item.type == '数字'"
                 :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number"
                 v-model="form.RepBat[item.mapid]" :precision="item.decimals"></el-input>
-              <el-link :disabled="item.is_readonly && isOnlyRead" v-if="item.type == '超链接'" href="#" target="_blank">{{
+              <el-link :disabled="setFormItemReadOnly(item)" v-if="item.type == '超链接'" href="#" target="_blank">{{
                 item.describe_text }}</el-link>
               <!-- <image-upload @input="customValChange" v-model="form[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
               <div class="avatar_con" v-if="item.type == '图片'">
-                <image-upload :disabled="isOnlyRead" @input="customValChange($event, item)"
+                <image-upload :disabled="setFormItemReadOnly(item)" @input="customValChange($event, item)"
                   v-model="form.RepBat[item.mapid]" :limit="1" :isShowLeft="true">
                   <template #tip>
                     <span></span>
                   </template>
                 </image-upload>
               </div>
-              <file-upload :disabled="isOnlyRead" @input="customValChange($event, item)"
+              <file-upload :disabled="setFormItemReadOnly(item)" @input="customValChange($event, item)"
                 v-model="form.RepBat[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
                 <template #tip>
                   <span></span>
                 </template>
               </file-upload>
-              <el-select :disabled="isOnlyRead" @focus="afterValSearch(form.RepBat[item.mapid], item)" :clearable="true"
-                @change="customValChange2($event, item)" style="width: 100%" v-model="form.RepBat[item.mapid]"
-                filterable remote reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+              <el-select :disabled="setFormItemReadOnly(item)" @focus="afterValSearch(form.RepBat[item.mapid], item)"
+                :clearable="true" @change="customValChange2($event, item)" style="width: 100%"
+                v-model="form.RepBat[item.mapid]" filterable remote reserve-keyword
+                :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
                 :remote-method="(query) => associationMethod(query, item)" :loading="objectLoading"
                 v-if="item.type == '关联对象'">
                 <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name"
@@ -238,7 +236,8 @@ export default {
       associationObject: {},//所有关联对象对应的下拉的参数列表
       objectLoading: true,
       isOnlyRead: false,
-      NeedReason: false
+      NeedReason: false,
+      FieldsPerms: []
     };
   },
   computed: {
@@ -250,7 +249,13 @@ export default {
     },
     dialogTitle: function () {
       return this.isOnlyRead ? "编辑报工" : "添加报工";
-    }
+    },
+    ExtItems: function () {
+      let newFields = this.filedTableList.filter(item => {
+        return !this.setFormItemHide(item);
+      });
+      return newFields;
+    },
   },
   mounted() {
 
@@ -285,6 +290,8 @@ export default {
         }
       }
       this.form.TaskInfo = val;
+      this.FieldsPerms = JSON.parse(operRes.data.ReportFields);
+      setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules);
       this.$forceUpdate()
       this.resetNeedReason();
     },
@@ -444,7 +451,22 @@ export default {
       }
       return result;
     },
+    setFormItemReadOnly(item) {
+      let fperm = this.FieldsPerms.filter(x => x.id == item.mapid);
+      if (fperm.length > 0) {
+        if (fperm[0].perm == 'R') {
+          return true;
+        }
+      }
+      return item.is_readonly && this.isOnlyRead;
+    },
     setFormItemHide(item) {
+      let fperm = this.FieldsPerms.filter(x => x.id == item.mapid);
+      if (fperm.length > 0) {
+        if (fperm[0].perm == 'H') {
+          return true;
+        }
+      }
       if (item.conditions && item.conditions.length > 0) {
         let result = false;
         let conditionsResArr = [];
@@ -578,7 +600,7 @@ export default {
           TaskInfo: res.data.TaskInfo,
           RepBat: res.data.RepBat
         };
-
+        this.FieldsPerms = JSON.parse(res.data.Oper.ReportFields);
         setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules, res.data.RepBat);
         this.resetNeedReason();
       } else {
@@ -603,8 +625,7 @@ export default {
         }
 
         let numres = await GeneratePlaneNumber()//获取报工编号
-        this.form.Number = numres.data
-        setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules);
+        this.form.Number = numres.data;
       }
       let response = await factoryMesConfig();//获取生产报工相关配置
       this.mesform.ReportTemplateName = response.data.ReportTemplateName;

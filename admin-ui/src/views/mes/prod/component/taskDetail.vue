@@ -1,6 +1,6 @@
 <template>
-    <el-dialog title="任务详情" v-if="detailDialogVisible" top="5vh" :visible.sync="detailDialogVisible" width="70%" append-to-body
-        @close="handleClose">
+    <el-dialog title="任务详情" v-if="detailDialogVisible" top="5vh" :visible.sync="detailDialogVisible" width="70%"
+        append-to-body @close="handleClose">
         <div style="margin-bottom: 20px;">
             <el-descriptions :column="2" border :span="16" class="detail-descriptions">
                 <el-descriptions-item label="工单编号">{{ taskData.WorkNumber }}</el-descriptions-item>
@@ -23,7 +23,7 @@
                             <i
                                 :class="['el-icon', user.type === 'user' ? 'el-icon-user' : 'el-icon-office-building']"></i>
                             <span class="tag-text">{{ user.name || (user.type === "user" ? "未知人员" : "未知部门")
-                            }}</span>
+                                }}</span>
                         </div>
                         <span v-if="!taskData.AssignedUser || parseAssignedUsers(taskData.AssignedUser).length === 0"
                             class="no-user-text">
@@ -43,7 +43,7 @@
                     <el-descriptions-item label="预计平均工时">{{ taskData.WorkTime + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="实际总工时">{{ taskData.WorkTimeTotal + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="预计总工时">{{ (taskData.WorkTime * taskData.PlanNum) + "分钟"
-                    }}</el-descriptions-item>
+                        }}</el-descriptions-item>
                     <template v-for="(item, ix) in filedTableList">
                         <el-descriptions-item :label="item.name" :key="'custom_des' + ix">
                             <div v-html="ingetFieldShow(taskData.RouteOper, item)"></div>
@@ -131,7 +131,7 @@
 <script>
 import { ReportList } from "@/api/mes/report";
 import { taskInfo } from "@/api/mes/task";
-import { orgField } from "@/api/factory/customFields";
+import { orgFormFields } from "@/api/factory/customFields";
 import { getFieldShow } from '@/utils/field.js'
 export default {
     name: 'TaskDetail',
@@ -182,14 +182,8 @@ export default {
         async getCustomFiled() {
             //获取自定义的字段
             this.filedTableList = [];
-            let orgId = this.$store.state.user.orgId;
-            let res = await orgField({ orgId: orgId, field: "报工" });
-            if (res.data) {
-                let filedList = JSON.parse(res.data.ExtValue);
-                this.filedTableList = filedList;
-            } else {
-                this.filedTableList = [];
-            }
+            let res = await orgFormFields({ field: "报工", ext: true, isfixed: false });
+            this.filedTableList = res.data;
         },
         // 解析分配用户数据
         parseAssignedUsers(assignedUsers) {

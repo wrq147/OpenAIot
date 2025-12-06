@@ -15,8 +15,6 @@ namespace EasyNetQ;
 /// </summary>
 public class JsonSerializer : ISerializer
 {
-    private static readonly Encoding Encoding = new UTF8Encoding(false);
-    private const int DefaultBufferSize = 1024;
     private readonly JsonSerializerOptions serializerOptions;
 
     /// <summary>

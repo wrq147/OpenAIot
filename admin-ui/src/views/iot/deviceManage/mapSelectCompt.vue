@@ -33,9 +33,7 @@
 </template>
 
 <script>
-// import { initMap } from "@/utils/map";
 import { initMap } from "@/utils/amap";
-// import { geocoder } from "@/api/code";
 export default {
   name: "AdminUiMapSelectCompt",
 

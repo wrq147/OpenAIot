@@ -240,7 +240,6 @@ export default {
       this.$refs.filedAddForm.openDialog(index)//打开添加的弹窗
     },
     handleDelete(row, index) {
-      console.log(row, 'row')
       let that = this
       this.$modal.confirm('是否确认移除自定义字段"' + row.name + '"？').then(function () {
         let sumfiledList = JSON.parse(JSON.stringify(that.filedTableList))
