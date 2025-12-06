@@ -16,10 +16,10 @@ namespace IoTRulesService.Flow.Node.Conditions
         public int valueFrom { get; set; }
         public override async Task<bool> ToExpressionString(RuleExecutionContext context)
         {
-            long valtime;
+            long? valtime;
             if (valueFrom == 1)
             {
-                valtime = Convert.ToInt64(context.GetParam(value));
+                valtime = await context.ReadSourceTime(value);
             }
             else
             {

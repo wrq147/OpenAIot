@@ -16,10 +16,10 @@ namespace IoTRulesService.Flow.Node.Conditions
         public int valueFrom { get; set; }
         public override async Task<bool> ToExpressionString(RuleExecutionContext context)
         {
-            double compareval;
+            double? compareval;
             if (valueFrom == 1)
             {
-                compareval = TAConverter.Cast<double>(context.GetParam(value));
+                compareval = await context.ReadSourceDouble(value);
             }
             else
             {

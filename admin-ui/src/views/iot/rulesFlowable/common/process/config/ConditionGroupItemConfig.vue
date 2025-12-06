@@ -57,8 +57,8 @@
                 <span style="margin-left: 10px">
                   <el-select v-if="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择参数"
                     style="width: 220px">
-                    <template v-for="opx in ParamList">
-                      <el-option :label="opx.name" :value="opx.code" v-if="opx.type == 'string'"
+                    <template v-for="opx in conditionList">
+                      <el-option :label="opx.title" :value="opx.code" v-if="opx.valueType == 'string'"
                         :key="'cc' + opx.code"></el-option>
                     </template>
                   </el-select>
@@ -72,9 +72,9 @@
                 <span style="margin-left: 10px">
                   <el-select v-if="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择参数"
                     style="width: 220px">
-                    <template v-for="opx in ParamList">
-                      <el-option :label="opx.name" :value="opx.code"
-                        v-if="(condition.valueType === ValueType2.int && opx.type == 'int') || (condition.valueType === ValueType2.float && opx.type == 'float')"
+                    <template v-for="opx in conditionList">
+                      <el-option :label="opx.title" :value="opx.code"
+                        v-if="(condition.valueType === ValueType2.int && opx.valueType == 'int') || (condition.valueType === ValueType2.float && opx.valueType == 'float')"
                         :key="'cc' + opx.code"></el-option>
                     </template>
                   </el-select>
@@ -91,9 +91,9 @@
                 <span style="margin-left:10px">
                   <el-select v-if="condition.valueFrom == 1"  size="small" v-model="condition.value" placeholder="请选择参数"
                     style="width: 220px">
-                    <template v-for="opx in ParamList">
-                      <el-option :label="opx.name" :value="opx.code"
-                        v-if="(condition.valueType === ValueType2.enum && opx.type == 'enum') || (condition.valueType === ValueType2.boolean && opx.type == 'boolean')"
+                    <template v-for="opx in conditionList">
+                      <el-option :label="opx.title" :value="opx.code"
+                        v-if="(condition.valueType === ValueType2.enum && opx.valueType == 'enum') || (condition.valueType === ValueType2.boolean && opx.valueType == 'boolean')"
                         :key="'cc' + opx.code"></el-option>
                     </template>
                   </el-select>
@@ -108,8 +108,8 @@
                 <span>在</span>
                 <el-select v-show="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择参数"
                   style="margin-left: 10px">
-                  <template v-for="opx in ParamList">
-                    <el-option :label="opx.name" :value="opx.code" v-if="opx.type == 'date'"
+                  <template v-for="opx in conditionList">
+                    <el-option :label="opx.title" :value="opx.code" v-if="opx.valueType == 'date'"
                       :key="'cc' + opx.code"></el-option>
                   </template>
                 </el-select>
@@ -122,7 +122,7 @@
                 </el-select>
               </span>
               <span v-if="condition.valueFrom == 1" class="el-swit" @click="switchVal(condition, 0)"
-                style="margin-left:20px;margin-right: 10px;">参</span>
+                style="margin-left:20px;margin-right: 10px;">变</span>
               <span v-else class="el-swit" @click="switchVal(condition, 1)"
                 style="margin-left:20px;margin-right: 10px;">值</span>
               <i class="el-icon-delete" @click="rmSubCondition(group, cindex)"></i>
@@ -183,15 +183,6 @@ export default {
       const map = new Map();
       this.formItems.forEach(item => this.itemToMap(map, item));
       return map;
-    },
-    ParamList() {
-      let httpss = this.$store.state.rulesFlowable.rulesDesign.HttpParams;
-      if (httpss != null) {
-        return httpss;
-      }
-      else {
-        return [];
-      }
     },
     conditionList() {
       //构造条件

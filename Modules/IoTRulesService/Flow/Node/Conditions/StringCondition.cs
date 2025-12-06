@@ -20,7 +20,7 @@ namespace IoTRulesService.Flow.Node.Conditions
             string compareval;
             if (valueFrom == 1)
             {
-                compareval = TAConverter.Cast<string>(context.GetParam(value));
+                compareval = await context.ReadSourceString(value);
             }
             else
             {
