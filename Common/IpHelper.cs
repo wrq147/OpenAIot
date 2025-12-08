@@ -1,18 +1,15 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Json;
+using System;
 using System.Collections.Generic;
-using TemplateAction.Core;
-using Newtonsoft.Json;
-using System.Net.Http;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using NPOI.XSSF.UserModel;
-using TemplateAction.Label.Expression;
-using System.Linq;
-using System.Net.Sockets;
+using System.Threading.Tasks;
+using TemplateAction.Core;
 
 namespace Common
 {
@@ -180,7 +177,7 @@ namespace Common
             {
                 return null;
             }
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(rspStr);
+            return System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(rspStr, MyDefaultTextJsonConfig.DefaultOptions);
         }
 
 

@@ -1,8 +1,6 @@
-﻿
-using IoTRulesService.Flow.Builder;
+﻿using IoTRulesService.Flow.Builder;
 using System;
 using System.Threading.Tasks;
-using TemplateAction.Common;
 
 namespace IoTRulesService.Flow.Node.Conditions
 {
@@ -19,13 +17,13 @@ namespace IoTRulesService.Flow.Node.Conditions
             long? valtime;
             if (valueFrom == 1)
             {
-                valtime = await context.ReadSourceTime(value);
+                valtime = await context.ReadSourceLong(value);
             }
             else
             {
                 valtime = Convert.ToInt64(value);
             }
-            var tval = await context.ReadSourceTime(code);
+            var tval = await context.ReadSourceLong(code);
             if (tval == null) return false;
             if (this.compare == "before")
             {

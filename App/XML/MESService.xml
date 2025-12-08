@@ -222,6 +222,12 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:MESService.Controller.Order.BomList(System.String)">
+            <summary>
+            获取工单物料
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:MESService.Controller.Plan">
             <summary>
             生产计划API
@@ -650,6 +656,11 @@
             所属产品Id
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_BomHeader.SkuNumber">
+            <summary>
+            产品编号(sku编码)
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_BomHeader.ProductName">
             <summary>
             产品名称
@@ -713,6 +724,11 @@
         <member name="P:MESService.Model.MZ_BomLine.ProInfo">
             <summary>
             子项产品信息
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_BomLine.ProcessStepInfo">
+            <summary>
+            关联工序信息
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_DefectType.Id">

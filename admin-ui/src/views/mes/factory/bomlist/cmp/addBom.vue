@@ -39,29 +39,37 @@
             <el-button type="primary" size="mini" @click="openDeviceDialogChild(false, scope.$index)">选择物料</el-button>
           </div>
           <div v-else>
-            <span>{{scope.row.ProductName}}</span>
+            <span>{{ scope.row.ProductName }}</span>
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="关联工序" align="center">
+      <el-table-column label="关联工序" align="center">
         <template slot-scope="scope">
           <div style="display: flex;">
-            <el-select v-model="scope.row.ProcessStepId" placeholder="请选择工序">
-              <el-option v-for="(item, index) in operListData" :key="index" :label="item.OperName" :value="item.Id" />
+            <el-select v-model="scope.row.ProcessStepInfo" style="width:100%;" value-key="Id" filterable remote
+              reserve-keyword placeholder="请选择工序" :clearable="true" @clear="clearEvt" :remote-method="remoteOperList"
+              :loading="steploading">
+              <el-option v-for="item in operListData" :key="item.Id" :label="item.OperName" :value="item">
+              </el-option>
             </el-select>
           </div>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="规格" prop="Specs" align="center"></el-table-column>
       <el-table-column label="单位" prop="Unit" align="center"></el-table-column>
-      <!-- <el-table-column label="产品属性" prop="ProductFrom" align="center"></el-table-column> -->
+      <el-table-column label="标签" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.ProductLabel == 'F'">成品</span>
+          <span v-else>半成品</span>
+        </template>
+      </el-table-column>
       <el-table-column label="数量" align="center">
         <template slot-scope="scope">
           <div style="display: flex;" v-if="!isReadonly">
             <el-input type="Number" v-model="ruleForm.items[scope.$index].Quantity" placeholder="请输入数量" />
           </div>
           <div v-else>
-            <span>{{ruleForm.items[scope.$index].Quantity}}</span>
+            <span>{{ ruleForm.items[scope.$index].Quantity }}</span>
           </div>
         </template>
       </el-table-column>
@@ -71,7 +79,7 @@
             <el-input v-model="ruleForm.items[scope.$index].Remark" placeholder="请输入备注" />
           </div>
           <div v-else>
-            <span>{{ruleForm.items[scope.$index].Remark}}</span>
+            <span>{{ ruleForm.items[scope.$index].Remark }}</span>
           </div>
         </template>
       </el-table-column>
@@ -94,7 +102,7 @@
   </el-dialog>
 </template>
 <script>
-// import { operList } from "@/api/mes/oper";
+import { operList } from "@/api/mes/oper";
 import { factoryProductInfo } from "@/api/factory/product";
 import { bomAdd, bomEdit } from "@/api/mes/bom";
 import slectProductList from './slectProductList.vue'
@@ -115,34 +123,53 @@ export default {
     return {
       dialogFlag: false,
       deviceOpen: false,
-      // 表单
+
       ruleForm: {},
       operListData: [],
       childrenIndex: '',
-      // 存储每行的错误信息
+  
       rowErrors: [],
-      isReadonly:false,
+      isReadonly: false,
+
+      steploading: false,
+      operListData: []
     }
   },
   watch: {
     dialogVisible(newValue) {
       this.dialogFlag = newValue;
-      // operList().then(res => {
-      //   this.operListData = res.data.List
-      // })
     }
   },
   methods: {
+    clearEvt(item) {
+      item.ProcessStepInfo = null;
+    },
+    async remoteOperList(query){
+      this.steploading = true
+      let obj = {
+        pageNum: 1,
+        pageSize: 30
+      }
+      if (query == "") {
+        let res = await operList(obj);
+        this.operListData = res.data.List;
+      }
+      else {
+        obj.Key = query;
+        let res = await operList(obj);
+        this.operListData = res.data.List;
+      }
+      this.steploading = false
+    },
     // 获取父产品详情
     getProductInfo(id) {
       factoryProductInfo({ id: id }).then(res => {
-        console.log(res,'resres');
         this.ruleForm.productFrom = res.data.ProductFrom;
         this.ruleForm.productName = res.data.ProductName;
         this.ruleForm.specs = res.data.Specs;
         this.ruleForm.quantity = res.data.Quantity;
         this.ruleForm.unit = res.data.Unit;
-        this.ruleForm.SkuNumber=res.data.SkuNumber
+        this.ruleForm.SkuNumber = res.data.SkuNumber
       })
     },
 
@@ -192,10 +219,11 @@ export default {
         Specs: '',
         OrgId: this.$store.state.user.orgId,
         Quantity: 1,
-        Unit:'',
+        Unit: '',
         ProcessStepId: "",
+        ProcessStepInfo: null,
         Remark: "",
-        Sort:this.ruleForm.items.length+1
+        Sort: this.ruleForm.items.length + 1
       })
     },
 
@@ -235,9 +263,9 @@ export default {
         this.ruleForm.productFrom = data.ProductFrom;
         this.ruleForm.specs = data.Specs;
         this.ruleForm.unit = data.Unit;
-        this.ruleForm.SkuNumber=data.SkuNumber
+        this.ruleForm.SkuNumber = data.SkuNumber
       } else {
-        this.ruleForm.items[this.childrenIndex].Sort=this.childrenIndex
+        this.ruleForm.items[this.childrenIndex].Sort = this.childrenIndex
         this.ruleForm.items[this.childrenIndex].ProductId = data.Id;
         this.ruleForm.items[this.childrenIndex].ProductName = data.ProductName;
         this.ruleForm.items[this.childrenIndex].Specs = data.Specs;
@@ -245,8 +273,8 @@ export default {
         this.ruleForm.items[this.childrenIndex].Unit = data.Unit;
         this.ruleForm.items[this.childrenIndex].ProductFrom = data.ProductFrom;
       }
-      let items=JSON.parse(JSON.stringify(this.ruleForm.items))
-      this.ruleForm.items=JSON.parse(JSON.stringify(items))
+      let items = JSON.parse(JSON.stringify(this.ruleForm.items))
+      this.ruleForm.items = JSON.parse(JSON.stringify(items))
     },
 
     // 验证单行

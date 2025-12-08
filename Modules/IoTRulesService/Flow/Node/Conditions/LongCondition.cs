@@ -14,10 +14,10 @@ namespace IoTRulesService.Flow.Node.Conditions
         public int valueFrom { get; set; }
         public override async Task<bool> ToExpressionString(RuleExecutionContext context)
         {
-            long compareval;
+            long? compareval;
             if (valueFrom == 1)
             {
-                compareval = TAConverter.Cast<long>(context.GetParam(value));
+                compareval = await context.ReadSourceLong(value);
             }
             else
             {

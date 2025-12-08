@@ -16,6 +16,6 @@ namespace SMSService
         /// <param name="templateCode">模板编码</param>
         /// <param name="parameters">参数</param>
         /// <returns></returns>
-        Task<bool> SendSMSCode(string phone, string templateCode, JObject parameters);
+        Task<bool> SendSMSCode(string phone, string templateCode, IDictionary<string, string> parameters);
     }
 }

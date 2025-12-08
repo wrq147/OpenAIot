@@ -18,6 +18,15 @@ export function mesOrderList(params) {
     })
 }
 
+// 获取工单物料
+export function mesBomList(id) {
+    return request({
+        url: '/MESService/Order/BomList',
+        method: 'get',
+        params: {id}
+    })
+}
+
 //获取生产工单信息
 export function mesOrderInfo(params) {
     return request({

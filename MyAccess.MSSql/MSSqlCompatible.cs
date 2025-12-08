@@ -16,6 +16,10 @@ namespace MyAccess.MSSql
             _db = db;
             _sql = sql;
         }
+        public string GetFieldSign()
+        {
+            return "\"";
+        }
         public string FullSearch(string field, IEnumerable<string> words)
         {
             return "CONTAINS(" + field + ", '" + StringTool.SqlLikeFilter(string.Join(" OR ", words)) + "')";

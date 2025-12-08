@@ -20,6 +20,10 @@ namespace MyAccess.Sqlite
             _db = db;
             _sql = sql;
         }
+        public string GetFieldSign()
+        {
+            return "\"";
+        }
         public string FullSearch(string field, IEnumerable<string> words)
         {
             StringBuilder sb = new StringBuilder();

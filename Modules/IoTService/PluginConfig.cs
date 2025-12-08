@@ -274,7 +274,7 @@ namespace IoTService
             //监听数据变动
             plg.RegisterCall("ChangeData", async (evt) =>
             {
-                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<ActionChangeData>(evt.Params);
+                var paramdata = evt.To<ActionChangeData>();
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<IotActionBLL>().DoActionEvent(paramdata);
@@ -287,11 +287,10 @@ namespace IoTService
 
             plg.RegisterBus("UpdateIotOrg", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(bs.Params);
-                string tid = Convert.ToString(evt.Id);
-                long tOwnerOrgId = Convert.ToInt64(evt.OwnerOrgId);
-                long tUseOrgId = Convert.ToInt64(evt.UseOrgId);
-                long tUseUserId = Convert.ToInt64(evt.UseUserId);
+                string tid = bs.GetValue("Id");
+                long tOwnerOrgId = bs.GetLong("OwnerOrgId");
+                long tUseOrgId = bs.GetLong("UseOrgId");
+                long tUseUserId = bs.GetLong("UseUserId");
 
                 MZ_IotDevice tmpdevice = new MZ_IotDevice();
                 tmpdevice.Id = tid;
@@ -313,7 +312,7 @@ namespace IoTService
 
             plg.RegisterBus("BatchIotOrg", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<BatchIotOrgParams>(bs.Params);
+                var evt = bs.To<BatchIotOrgParams>();
                 var deviceDAL = app.ServiceProvider.GetService<IotDeviceDAL>();
                 if (evt.OwnerOrgId != null)
                 {

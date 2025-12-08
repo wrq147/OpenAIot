@@ -31,6 +31,11 @@ namespace MESService.Model
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
+        /// 产品编号(sku编码)
+        /// </summary>
+        [DataIgnore]
+        public string SkuNumber { get; set; }
+        /// <summary>
         /// 产品名称
         /// </summary>
         [DataIgnore]

@@ -1,8 +1,10 @@
 ﻿using IoTRulesService.Flow.Builder;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TemplateAction.Common;
 
@@ -22,8 +24,21 @@ namespace IoTRulesService.Flow.Node.Conditions
             List<string> comparevals = new List<string>();
             if (valueFrom == 1)
             {
-                string tmpval = TAConverter.Cast<string>(context.GetParam((string)value));
-                comparevals.Add(tmpval);
+                object tmpval = await context.ReadSourceValue((string)value);
+                if (tmpval is IList tmplist)
+                {
+                    foreach (var tmpitem in tmplist)
+                    {
+                        if (tmpitem != null)
+                        {
+                            comparevals.Add(tmpitem.ToString());
+                        }
+                    }
+                }
+                else if (tmpval != null)
+                {
+                    comparevals.Add(tmpval.ToString());
+                }
             }
             else
             {

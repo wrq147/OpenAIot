@@ -25,24 +25,12 @@
                   <el-col :span="1.5">
                     <el-button type="primary" icon="el-icon-plus" plain @click="handleAdd('')">新增物料清单</el-button>
                   </el-col>
-                  <el-col :span="1.5">
-                    <el-button :disabled="single" type="success" plain @click="handleAdd(selection[0])">
-                      <i class="el-icon-edit"></i>
-                      <span style="margin-left:6px">修改</span>
-                    </el-button>
-                  </el-col>
-                  <el-col :span="1.5">
-                    <el-button :disabled="single" type="danger" plain @click="handleDelete(selection[0])">
-                      <i class="el-icon-delete"></i>
-                      <span style="margin-left:6px">删除</span>
-                    </el-button>
-                  </el-col>
                 </div>
               </el-row>
   
               <el-table v-loading="loading" :data="bomList" class="data_table" :row-style="isRed" @selection-change="handleSelectionChange" :header-cell-style="cellSty" style="width:100%" :fit="true">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column label="父物料编码" align="center" prop="Id" :show-overflow-tooltip="true" >
+                <el-table-column label="物料编码" align="center" :show-overflow-tooltip="true" >
                   <template slot-scope="scope">
                     <el-link @click.stop="handleAdd(scope.row,true)">{{scope.row.SkuNumber}}</el-link>
                   </template>
@@ -52,13 +40,13 @@
                 <el-table-column label="更新者" align="center" prop="updateName" />
                 <el-table-column label="创建时间" align="center" prop="createTime" />
                 <el-table-column label="更新时间" align="center" prop="updateTime" />
-                <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
                   <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-edit" @click="handleAdd(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" style="color:red"
                       @click="handleDelete(scope.row.Id)">删除</el-button>
                   </template>
-                </el-table-column> -->
+                </el-table-column>
               </el-table>
               <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
                 :limit.sync="queryParams.pageSize" @pagination="getList" />
@@ -66,7 +54,7 @@
           </el-col>
         </el-row>
       </div>
-      <!-- 新增/编辑不良品项弹窗 -->
+      <!-- 新增/编辑bom项弹窗 -->
       <add-bom ref="addBom" :title="title" :dialog-visible="open" @cancelForm="cancelForm" @getList="getList" />
     </div>
 </template>

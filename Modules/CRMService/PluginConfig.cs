@@ -80,9 +80,8 @@ namespace CRMService
 
             plg.RegisterCall("GetCustomerByOrg", async (evt) =>
             {
-                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(evt.Params);
-                long fromOrgId = Convert.ToInt64(paramdata.from);
-                long toOrgId = Convert.ToInt64(paramdata.to);
+                long fromOrgId = evt.GetLong("from");
+                long toOrgId = evt.GetLong("to");
                 var res = await app.ServiceProvider.GetService<CustomerDAL>().SelectCustomerByOrgId(fromOrgId, toOrgId);
                 return CallResponse.Create(res);
             });
@@ -90,13 +89,13 @@ namespace CRMService
             //监听业务事件
             plg.RegisterBus("NewDiscuss", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<DiscussEvent>(bs.Params);
+                var evt = bs.To<DiscussEvent>();
                 await app.ServiceProvider.GetService<DiscussEventBLL>().DoEvent(evt);
             });
 
             plg.RegisterBus("JoinBy", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<JoinEventData>(bs.Params);
+                var evt = bs.To<JoinEventData>();
                 await app.ServiceProvider.GetService<CRMAgentBLL>().JoinByOtherMod(evt);
             });
 

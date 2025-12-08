@@ -1,11 +1,9 @@
 ﻿using AuthService;
 using Common;
+using Common.Json;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
@@ -25,14 +23,14 @@ namespace SMSService
             _log = factory.CreateLogger<ShanYunSmsHelper>();
         }
 
-        public async Task<bool> SendSMSCode(string phone, string templateCode, JObject parameters)
+        public async Task<bool> SendSMSCode(string phone, string templateCode, IDictionary<string,string> parameters)
         {
             var smsconfig = await _provider.GetService<ConfigBLL>().SelectConfigByKey("sms.shanyun");
             if (string.IsNullOrEmpty(smsconfig))
             {
                 return false;
             }
-            SmsShanYunConfig configObj = Newtonsoft.Json.JsonConvert.DeserializeObject<SmsShanYunConfig>(smsconfig);
+            SmsShanYunConfig configObj = System.Text.Json.JsonSerializer.Deserialize<SmsShanYunConfig>(smsconfig, MyDefaultTextJsonConfig.DefaultOptions);
             if (configObj == null)
             {
                 return false;
@@ -49,11 +47,9 @@ namespace SMSService
                 return false;
             }
             //替换参数
-            var props = parameters.Properties();
-            foreach (var prp in props)
+            foreach (var prp in parameters)
             {
-                string tmpxx = prp.Value.ToString();
-                tccContent = tccContent.Replace("$" + prp.Name, tmpxx);
+                tccContent = tccContent.Replace("$" + prp.Key, prp.Value);
             }
             List<SmsShanYunSendItem> items = new List<SmsShanYunSendItem>();
             items.Add(new SmsShanYunSendItem()
@@ -71,15 +67,15 @@ namespace SMSService
                 userBody.Add("signatureStr", configObj.signatureStr);
             }
 
-            var userBodyStr = Newtonsoft.Json.JsonConvert.SerializeObject(userBody);
+            var userBodyStr = System.Text.Json.JsonSerializer.Serialize(userBody, MyDefaultTextJsonConfig.DefaultOptions);
             var signStr = MyAccess.Core.Crypter.MD5(userBodyStr + configObj.secret + bodyTimestamp);
-            var tcc = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            var tcc = System.Text.Json.JsonSerializer.Serialize(new
             {
                 userAccount = configObj.account,
                 businessBody = userBody,
                 timestamp = bodyTimestamp,
                 sign = signStr
-            });
+            }, MyDefaultTextJsonConfig.DefaultOptions);
 
             var rsp = await HttpHelper.Instance.PostJsonAsync("http://apiext.szshanyun.com:8089/receive", tcc, Encoding.UTF8).ConfigureAwait(false);
             if (rsp != null && rsp.Contains("操作成功"))

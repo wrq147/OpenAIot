@@ -190,13 +190,17 @@ namespace MyAccess.DB
                         string propname = fieldname.Substring(prefix + 1);
                         if (!_subObjs.TryGetValue(prefixstr, out target))
                         {
-                            int prefixIdx = DBMapping.GetIndexByPrefix(prefixstr);
-                            propertyInfo = GetMapColumn(_tMaps[prefixIdx].Name, propname);
+                            target = model;
+                            propertyInfo = GetMapColumn(target.GetType().Name, propname);
                             if (propertyInfo == null)
                             {
                                 continue;
                             }
-                            target = model;
+                            DataIgnoreAttribute tmpIgnore = propertyInfo.GetCustomAttribute<DataIgnoreAttribute>();
+                            if (tmpIgnore == null)
+                            {
+                                continue;
+                            }
                         }
                         else
                         {
@@ -357,13 +361,17 @@ namespace MyAccess.DB
                         string propname = fieldname.Substring(prefix + 1);
                         if (!_subObjs.TryGetValue(prefixstr, out target))
                         {
-                            int prefixIdx = DBMapping.GetIndexByPrefix(prefixstr);
-                            propertyInfo = GetMapColumn(_tMaps[prefixIdx].Name, propname);
+                            target = model;
+                            propertyInfo = GetMapColumn(target.GetType().Name, propname);
                             if (propertyInfo == null)
                             {
                                 continue;
                             }
-                            target = model;
+                            DataIgnoreAttribute tmpIgnore = propertyInfo.GetCustomAttribute<DataIgnoreAttribute>();
+                            if (tmpIgnore == null)
+                            {
+                                continue;
+                            }
                         }
                         else
                         {
@@ -373,7 +381,6 @@ namespace MyAccess.DB
                                 continue;
                             }
                         }
-
                     }
                     string mapval = DBMapping.TryGetValue(propertyInfo.PropertyType);
                     if (mapval != null)

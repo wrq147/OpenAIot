@@ -23,7 +23,7 @@ namespace StorageService.DAL
             return await new SqlBuilder(help).Query<MZ_EnterStock>()
                 .Append(@"select ls.*,g.OrgName as FromName,u.RealName as Creater from mz_enter_stock ls left join mz_org g on ls.FromOrgId=g.Id left join mz_admin u on ls.createId=u.Id where ls.OrgId=").AppendParam(user.OrgId)
                 .Then(!string.IsNullOrEmpty(tmpkey), sql => sql.Append(" and (ls.StockNumber like ").AppendParam(tmpkey + "%").Append(" or g.OrgName like ").AppendParam("%" + tmpkey + "%")
-                .Append(" or exists(select ed.StockId from mz_enter_detail ed inner join mz_product_batch p on ed.StockId=ls.Id and ed.TargetId=p.Id where p.BatchName like ").AppendParam("%" + tmpkey + "%").Append(")"))
+                .Append(" or exists(select ed.StockId from mz_enter_detail ed inner join mz_product_batch p on ed.StockId=ls.Id and ed.TargetId=p.Id where p.BatchName like ").AppendParam("%" + tmpkey + "%").Append("))"))
                 .Then(!string.IsNullOrEmpty(query.FromCompany), sql => sql.Append(" and g.OrgName like ").AppendParam("%" + tmpkey + "%"))
                 .Then(query.EnterMethod != null, sql => 
                 {

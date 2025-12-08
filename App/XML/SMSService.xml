@@ -67,7 +67,7 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:SMSService.ISmsHelper.SendSMSCode(System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+        <member name="M:SMSService.ISmsHelper.SendSMSCode(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
             发送短信验证码
             </summary>

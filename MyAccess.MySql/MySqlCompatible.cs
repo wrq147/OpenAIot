@@ -22,6 +22,10 @@ namespace MyAccess.MySql
             _db = db;
             _sql = sql;
         }
+        public string GetFieldSign()
+        {
+            return "`";
+        }
         public string FullSearch(string field, IEnumerable<string> words)
         {
             return "MATCH (" + field + ") AGAINST('" + StringTool.SqlLikeFilter(string.Join(" ", words)) + "')";

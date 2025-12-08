@@ -17,6 +17,20 @@ namespace MyAccess.DB.Builder
         {
             return new QueryOneBuilder<A>(this._sqlBuilder);
         }
+
+        /// <summary>
+        /// 将e映射到指定成员
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public JoinFiveBuilder<A, B, C, D, E> MappingE(Expression<Func<A, object>> obj)
+        {
+            int preidx = DBMapping.GetIndexByPrefix("e");
+            string name = ExpressionTool.GetMemberName(obj);
+            _sqlBuilder.SubMaps[preidx] = name;
+            return this;
+        }
+
         /// <summary>
         /// 查询数量
         /// </summary>

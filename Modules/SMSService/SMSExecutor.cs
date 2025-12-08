@@ -5,8 +5,8 @@ using Common.Share;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,7 +53,7 @@ namespace SMSService
                     if (string.IsNullOrEmpty(targetUser.phone)) continue;
                     if (evt.TargetType == "验证码")
                     {
-                        JObject cp = new JObject();
+                        IDictionary<string, string> cp = new Dictionary<string, string>();
                         cp.Add("code", evt.Content);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
                         {
@@ -64,7 +64,7 @@ namespace SMSService
                     {
                         var generOption = _provider.GetService<IOptions<GeneralOption>>();
                         var context = _provider.GetService<ITAContext>();
-                        JObject cp = new JObject();
+                        IDictionary<string, string> cp = new Dictionary<string, string>();
                         string tmpurl = string.IsNullOrEmpty(generOption.Value.url) ? ("http://" + IpHelper.GetAvaOutIp()) : generOption.Value.url;
                         cp.Add("url", tmpurl + "/WeiXinService/Ext/SmsJmp?t=" + evt.Content);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
@@ -74,7 +74,7 @@ namespace SMSService
                     }
                     else if (evt.TargetType == "邀请短信")
                     {
-                        JObject cp = new JObject();
+                        IDictionary<string, string> cp = new Dictionary<string, string>();
                         cp.Add("url", evt.Content);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
                         {
@@ -83,7 +83,7 @@ namespace SMSService
                     }
                     else
                     {
-                        JObject cp = new JObject();
+                        IDictionary<string, string> cp = new Dictionary<string, string>();
                         cp.Add("label", evt.Label);
                         cp.Add("content", evt.Content);
                         cp.Add("url", evt.TargetUrl);

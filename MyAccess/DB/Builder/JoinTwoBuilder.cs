@@ -79,7 +79,18 @@ namespace MyAccess.DB.Builder
             _sqlBuilder.SubIdMaps[_sqlBuilder.SubIdMaps.Count - 1] = cc;
             return new JoinThreeBuilder<A, B, C>(this._sqlBuilder);
         }
-
+        /// <summary>
+        /// 将b映射到指定成员
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public JoinTwoBuilder<A, B> MappingB(Expression<Func<A, object>> obj)
+        {
+            int preidx = DBMapping.GetIndexByPrefix("b");
+            string name = ExpressionTool.GetMemberName(obj);
+            _sqlBuilder.SubMaps[preidx] = name;
+            return this;
+        }
         /// <summary>
         /// 查询数量
         /// </summary>

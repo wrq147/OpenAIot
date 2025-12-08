@@ -42,6 +42,10 @@ namespace MESService.Business
             _snowflake = snowflake;
             _logger = factory.CreateLogger<WorkOrderBLL>();
         }
+        public virtual async Task<List<MZ_WorkBom>> BomList(string orderId)
+        {
+            return await _workBomDAL.SelectList(x => x.WorkOrderId == orderId);
+        }
         public virtual async Task<BusResponse<MZ_WorkOrder>> Info(string id)
         {
             var info = await _workOrderDAL.Select(id);

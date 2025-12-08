@@ -1,6 +1,6 @@
 ﻿using AuthService;
 using Common;
-using Newtonsoft.Json.Linq;
+using Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +21,14 @@ namespace SMSService
             _provider = provider;
         }
 
-        public async Task<bool> SendSMSCode(string phone, string templateCode, JObject parameters)
+        public async Task<bool> SendSMSCode(string phone, string templateCode, IDictionary<string, string> parameters)
         {
             var smsconfig = await _provider.GetService<ConfigBLL>().SelectConfigByKey("sms.json");
             if (string.IsNullOrEmpty(smsconfig))
             {
                 return false;
             }
-            SmsJsonConfig jsonconfig = Newtonsoft.Json.JsonConvert.DeserializeObject<SmsJsonConfig>(smsconfig);
+            SmsJsonConfig jsonconfig = System.Text.Json.JsonSerializer.Deserialize<SmsJsonConfig>(smsconfig, MyDefaultTextJsonConfig.DefaultOptions);
             string tUrl = jsonconfig.url;
             string tOk = jsonconfig.ok;
 
@@ -37,15 +37,13 @@ namespace SMSService
             {
                 return false;
             }
-            var tcc = Newtonsoft.Json.JsonConvert.SerializeObject(tccobj);
+            var tcc = System.Text.Json.JsonSerializer.Serialize(tccobj, MyDefaultTextJsonConfig.DefaultOptions);
             //替换手机号
             tcc = tcc.Replace("$mobile", phone);
             //替换参数
-            var props = parameters.Properties();
-            foreach (var prp in props)
+            foreach (var prp in parameters)
             {
-                string tmpxx = prp.Value.ToString();
-                tcc = tcc.Replace("$" + prp.Name, tmpxx);
+                tcc = tcc.Replace("$" + prp.Key, prp.Value);
             }
 
             var rsp = await HttpHelper.Instance.PostJsonAsync(tUrl, tcc, Encoding.UTF8).ConfigureAwait(false);

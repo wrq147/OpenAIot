@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Common.Share;
+using System.Collections;
 
 namespace StorageService
 {
@@ -233,7 +234,7 @@ namespace StorageService
             //监听数据变动
             plg.RegisterCall("ChangeData", async (evt) =>
             {
-                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<ActionChangeData>(evt.Params);
+                var paramdata = evt.To<ActionChangeData>();
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<StorageActionBLL>().DoStockActionEvent(paramdata);
@@ -255,15 +256,14 @@ namespace StorageService
             //监听业务事件
             plg.RegisterBus("AddFactory", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(bs.Params);
-                var tmpfactoryId = Convert.ToInt64(evt.FactoryId);
+                var tmpfactoryId = bs.GetLong("FactoryId");
                 await app.ServiceProvider.GetService<HouseBLL>().AddDefHouse(tmpfactoryId);
             });
 
 
             plg.RegisterBus("JoinBy", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<Tmp_JoinEventData>(bs.Params);
+                var evt = bs.To<Tmp_JoinEventData>();
                 await app.ServiceProvider.GetService<HouseBLL>().JoinByOtherMod(evt);
             });
 
@@ -284,7 +284,7 @@ namespace StorageService
                     targetHouseId = tsysHouseList[0].Id;
                 }
 
-                var detailJArr = detailList as JArray;
+                var detailJArr = detailList as IList;
                 if (detailJArr.Count == 0)
                 {
                     return;
@@ -299,12 +299,12 @@ namespace StorageService
                 manualParam.List = new List<MZ_EnterDetail>();
                 foreach (var item in detailJArr)
                 {
-                    var jobj = item as JObject;
+                    var jobj = item as IDictionary<string, object>;
                     MZ_EnterDetail detail = new MZ_EnterDetail();
-                    detail.TargetType = jobj.Value<int>("TargetType");
-                    detail.TargetId = jobj.Value<string>("TargetId");
-                    detail.Price = jobj.Value<decimal>("Price");
-                    detail.Quantity = jobj.Value<decimal>("Quantity");
+                    detail.TargetType = jobj.Value<int>("TargetType", 1);
+                    detail.TargetId = jobj.Value<string>("TargetType", string.Empty);
+                    detail.Price = jobj.Value<decimal>("Price", 0);
+                    detail.Quantity = jobj.Value<decimal>("Quantity", 0);
                     manualParam.List.Add(detail);
                 }
 

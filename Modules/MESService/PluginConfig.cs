@@ -165,7 +165,7 @@ namespace MESService
             //监听数据变动
             plg.RegisterCall("ChangeData", async (evt) =>
             {
-                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<ActionChangeData>(evt.Params);
+                var paramdata = evt.To<ActionChangeData>();
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<MesActionBLL>().DoPlanActionEvent(paramdata);

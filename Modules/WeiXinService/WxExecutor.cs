@@ -1,4 +1,5 @@
 ﻿using Common.EventBus;
+using Common.Json;
 using Common.Share;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,26 +39,24 @@ namespace WeiXinService
                         //微信公众号推送
                         if (!string.IsNullOrEmpty(wxConfig.push_appid) && wxConfig.push_template != null)
                         {
-                            JObject cp = new JObject();
+                            IDictionary<string, string> cp = new Dictionary<string, string>();
                             cp.Add("label", evt.Label);
                             cp.Add("content", evt.Content);
                             cp.Add("url", evt.TargetUrl);
                             cp.Add("type", evt.TargetType);
-                            cp.Add("now", DateTime.Now);
+                            cp.Add("now", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                             object tccobj;
                             if (wxConfig.push_template.TryGetValue(evt.TargetType, out tccobj))
                             {
-                                string tcc = Newtonsoft.Json.JsonConvert.SerializeObject(tccobj);
+                                string tcc = System.Text.Json.JsonSerializer.Serialize(tccobj, MyDefaultTextJsonConfig.DefaultOptions);
                                 //替换参数
-                                var props = cp.Properties();
-                                foreach (var prp in props)
+                                foreach (var prp in cp)
                                 {
-                                    string tmpxx = prp.Value.ToString();
-                                    tcc = tcc.Replace("$" + prp.Name, tmpxx);
+                                    tcc = tcc.Replace("$" + prp.Key, prp.Value);
                                 }
 
-                                WxPushItem wxitem = Newtonsoft.Json.JsonConvert.DeserializeObject<WxPushItem>(tcc);
+                                WxPushItem wxitem = System.Text.Json.JsonSerializer.Deserialize<WxPushItem>(tcc, MyDefaultTextJsonConfig.DefaultOptions);
 
                                 var tpushwx = await apiHelper.AccountInfo(wxConfig.push_appid);
                                 if (tpushwx != null)

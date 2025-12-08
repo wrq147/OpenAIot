@@ -32,7 +32,6 @@ namespace MyAccess.MySql
             return new MySqlConnection();
         }
 
-
         protected override string AutoDbParam(string name, object val, ParameterDirection direct)
         {
             if (!name.StartsWith("@"))

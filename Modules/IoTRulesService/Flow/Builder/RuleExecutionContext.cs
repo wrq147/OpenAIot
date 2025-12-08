@@ -22,6 +22,7 @@ using IoTService.DAL;
 using AuthService.Model;
 using TemplateAction.Common;
 using NPOI.OpenXmlFormats.Dml;
+using System.Text.Json;
 
 namespace IoTRulesService.Flow.Builder
 {
@@ -675,19 +676,7 @@ namespace IoTRulesService.Flow.Builder
             }
             return null;
         }
-        public async Task<long?> ReadSourceTime(string key)
-        {
-            object val = await ReadSourceValue(key);
-            if (val == null)
-            {
-                return null;
-            }
-            if (val is JObject obj)
-            {
-                return obj.ToObject<long>();
-            }
-            return Convert.ToInt64(val);
-        }
+
         public async Task<bool?> ReadSourceBool(string key)
         {
             object val = await ReadSourceValue(key);
@@ -695,10 +684,7 @@ namespace IoTRulesService.Flow.Builder
             {
                 return null;
             }
-            if (val is JObject obj)
-            {
-                return obj.ToObject<bool>();
-            }
+
             return Convert.ToBoolean(val);
         }
         public async Task<double?> ReadSourceDouble(string key)
@@ -712,6 +698,7 @@ namespace IoTRulesService.Flow.Builder
             {
                 return obj.ToObject<double>();
             }
+
             return Convert.ToDouble(val);
         }
         public async Task<long?> ReadSourceLong(string key)
@@ -725,6 +712,7 @@ namespace IoTRulesService.Flow.Builder
             {
                 return obj.ToObject<long>();
             }
+
             return Convert.ToInt64(val);
         }
         public async Task<string> ReadSourceString(string key)

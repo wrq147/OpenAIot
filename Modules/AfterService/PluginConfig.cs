@@ -146,7 +146,7 @@ namespace AfterService
             //监听数据变动
             plg.RegisterCall("ChangeData", async (evt) =>
             {
-                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<ActionChangeData>(evt.Params);
+                var paramdata = evt.To<ActionChangeData>();
                 if (tb3.IsThisTable(paramdata))
                 {
                     paramdata.TargetName = "计划任务单";
@@ -160,7 +160,7 @@ namespace AfterService
             //监听业务事件
             plg.RegisterBus("DeviceEvent", async (bs) =>
             {
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceEventData>(bs.Params);
+                var evt = bs.To<DeviceEventData>();
                 await app.ServiceProvider.GetService<DevPlaneBLL>().EventToTask(evt);
             });
 
@@ -168,8 +168,7 @@ namespace AfterService
             {
                 try
                 {
-                    var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(bs.Params);
-                    await app.ServiceProvider.GetService<RoomDeviceBLL>().ClearJunk(Convert.ToInt64(evt.OrgId));
+                    await app.ServiceProvider.GetService<RoomDeviceBLL>().ClearJunk(bs.GetLong("OrgId"));
                 }
                 catch { }
             });
@@ -177,10 +176,9 @@ namespace AfterService
             plg.RegisterBus("LeaveApply", async (bs) =>
             {
                 //领用时分配设备房间
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(bs.Params);
-                long torgId = Convert.ToInt64(evt.OrgId);
-                long tleaderId = Convert.ToInt64(evt.LeaderId);
-                string tDevIds = Convert.ToString(evt.DevIds);
+                long torgId = bs.GetLong("OrgId");
+                long tleaderId = bs.GetLong("LeaderId");
+                string tDevIds = bs.GetValue("DevIds");
                 string[] tdevIdsArr = tDevIds.Split(',', StringSplitOptions.RemoveEmptyEntries);
                 try
                 {
@@ -206,10 +204,9 @@ namespace AfterService
             plg.RegisterBus("StockLeave", async (bs) =>
             {
                 //出库时为房间分配设备
-                var evt = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(bs.Params);
-                long torgId = Convert.ToInt64(evt.OrgId);
-                long ttargetOrgId = Convert.ToInt64(evt.TargetOrgId);
-                string tDevIds = Convert.ToString(evt.DevIds);
+                long torgId = bs.GetLong("OrgId");
+                long ttargetOrgId = bs.GetLong("TargetOrgId");
+                string tDevIds = bs.GetValue("DevIds");
                 string[] tdevIdsArr = tDevIds.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                 try

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AuthService;
+using Common.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using TemplateAction.Core;
-using AuthService;
 
 namespace SMSService
 {
@@ -16,14 +16,14 @@ namespace SMSService
         }
 
 
-        public async Task<bool> SendSMSCode(string phone, string templateCode, JObject parameters)
+        public async Task<bool> SendSMSCode(string phone, string templateCode, IDictionary<string, string> parameters)
         {
             var smsconfig = await _provider.GetService<ConfigBLL>().SelectConfigByKey("sms.ali");
             if (string.IsNullOrEmpty(smsconfig))
             {
                 return false;
             }
-            SmsAliConfig aliconfig = Newtonsoft.Json.JsonConvert.DeserializeObject<SmsAliConfig>(smsconfig);
+            SmsAliConfig aliconfig = System.Text.Json.JsonSerializer.Deserialize<SmsAliConfig>(smsconfig, MyDefaultTextJsonConfig.DefaultOptions);
             string accessKeyId = aliconfig.accessKeyId;
             string accessKeySecret = aliconfig.accessKeySecret;
             string signName = aliconfig.signName;
@@ -34,8 +34,7 @@ namespace SMSService
             {
                 return false;
             }
-            var tcc = Newtonsoft.Json.JsonConvert.SerializeObject(tccobj);
-
+            var tcc = System.Text.Json.JsonSerializer.Serialize(tccobj, MyDefaultTextJsonConfig.DefaultOptions);
             var result = await sender.SendAsync(phone, tcc, parameters);
             if (result.Code == "OK")
             {

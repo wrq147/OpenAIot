@@ -52,7 +52,7 @@ namespace AuthService
 
                 services.AddSingleton<ConfigCache>();
             }
-     
+
         }
         private DA_Table tb1;
         protected override void Configure(ITAApplication app, PluginObject plg)
@@ -135,7 +135,7 @@ namespace AuthService
             //监听数据变动
             plg.RegisterCall("ChangeData", async (evt) =>
             {
-                var paramdata = Newtonsoft.Json.JsonConvert.DeserializeObject<ActionChangeData>(evt.Params);
+                var paramdata = evt.To<ActionChangeData>();
                 if (tb1.IsThisTable(paramdata))
                 {
                     paramdata.TargetName = "用户信息";

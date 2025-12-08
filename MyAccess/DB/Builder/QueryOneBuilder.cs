@@ -21,78 +21,10 @@ namespace MyAccess.DB.Builder
         {
             return this;
         }
-        /// <summary>
-        /// 将b映射到指定成员
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public QueryOneBuilder<X> MappingB(Expression<Func<X, object>> obj)
-        {
-            int preidx = DBMapping.GetIndexByPrefix("b");
-            string name = ExpressionTool.GetMemberName(obj);
-            _sqlBuilder.SubMaps[preidx] = name;
-            return This();
-        }
-        /// <summary>
-        /// 将c映射到指定成员
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public QueryOneBuilder<X> MappingC(Expression<Func<X, object>> obj)
-        {
-            int preidx = DBMapping.GetIndexByPrefix("c");
-            string name = ExpressionTool.GetMemberName(obj);
-            _sqlBuilder.SubMaps[preidx] = name;
-            return This();
-        }
-        /// <summary>
-        /// 将d映射到指定成员
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public QueryOneBuilder<X> MappingD(Expression<Func<X, object>> obj)
-        {
-            int preidx = DBMapping.GetIndexByPrefix("d");
-            string name = ExpressionTool.GetMemberName(obj);
-            _sqlBuilder.SubMaps[preidx] = name;
-            return This();
-        }
-        /// <summary>
-        /// 将e映射到指定成员
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public QueryOneBuilder<X> MappingE(Expression<Func<X, object>> obj)
-        {
-            int preidx = DBMapping.GetIndexByPrefix("e");
-            string name = ExpressionTool.GetMemberName(obj);
-            _sqlBuilder.SubMaps[preidx] = name;
-            return This();
-        }
-        /// <summary>
-        /// 将f映射到指定成员
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public QueryOneBuilder<X> MappingF(Expression<Func<X, object>> obj)
-        {
-            int preidx = DBMapping.GetIndexByPrefix("f");
-            string name = ExpressionTool.GetMemberName(obj);
-            _sqlBuilder.SubMaps[preidx] = name;
-            return This();
-        }
-        /// <summary>
-        /// 将g映射到指定成员
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public QueryOneBuilder<X> MappingG(Expression<Func<X, object>> obj)
-        {
-            int preidx = DBMapping.GetIndexByPrefix("g");
-            string name = ExpressionTool.GetMemberName(obj);
-            _sqlBuilder.SubMaps[preidx] = name;
-            return This();
-        }
+
+
+
+      
         public QueryTwoBulider<X, T> Query<T>()
         {
             _sqlBuilder.AppendDiv();

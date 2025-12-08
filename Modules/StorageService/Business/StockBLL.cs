@@ -239,21 +239,24 @@ namespace StorageService.Business
                 var tmpfromids = allpage.List.Select(x => x.FromHouseId).ToList();
                 var tmptoids = allpage.List.Select(x => x.ToHouseId).ToList();
                 tmpfromids.AddRange(tmptoids);
-
                 var tmpids = tmpfromids.Distinct().ToList();
-                var alldict = await _houseDAL.SelectDict(tmpids);
-                foreach (var sellitem in allpage.List)
+                if (tmpids.Count > 0)
                 {
-                    MZ_StoreHouse tmpstr;
-                    if (alldict.TryGetValue(sellitem.FromHouseId, out tmpstr))
+                    var alldict = await _houseDAL.SelectDict(tmpids);
+                    foreach (var sellitem in allpage.List)
                     {
-                        sellitem.FromHouseName = tmpstr.StoreName;
-                    }
-                    if (alldict.TryGetValue(sellitem.ToHouseId, out tmpstr))
-                    {
-                        sellitem.ToHouseName = tmpstr.StoreName;
+                        MZ_StoreHouse tmpstr;
+                        if (alldict.TryGetValue(sellitem.FromHouseId, out tmpstr))
+                        {
+                            sellitem.FromHouseName = tmpstr.StoreName;
+                        }
+                        if (alldict.TryGetValue(sellitem.ToHouseId, out tmpstr))
+                        {
+                            sellitem.ToHouseName = tmpstr.StoreName;
+                        }
                     }
                 }
+
 
             }
 

@@ -1,4 +1,5 @@
 ﻿using AuthService;
+using Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace WeiXinService
         public async Task<WeiXinJson> GetJsonConfig()
         {
             var json = await _serviceProvider.GetService<ConfigBLL>().SelectConfigByKey("system.wx");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<WeiXinJson>(json);
+            return System.Text.Json.JsonSerializer.Deserialize<WeiXinJson>(json, MyDefaultTextJsonConfig.DefaultOptions);
         }
 
     }

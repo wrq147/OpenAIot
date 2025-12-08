@@ -56,5 +56,10 @@ namespace MESService.Model
         /// </summary>
         [DataIgnore]
         public MZ_Product ProInfo { get; set; }
+        /// <summary>
+        /// 关联工序信息
+        /// </summary>
+        [DataIgnore]
+        public MZ_ProductOper ProcessStepInfo { get; set; }
     }
 }

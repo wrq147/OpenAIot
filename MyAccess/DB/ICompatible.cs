@@ -11,6 +11,7 @@ namespace MyAccess.DB
     /// </summary>
     public interface ICompatible
     {
+        string GetFieldSign();
         string FullSearch(string field, IEnumerable<string> words);
         void SqlPageTotal(int page, int size, string orderby);
         void SqlPage(int page, int size, string orderby);

@@ -68,7 +68,7 @@ namespace FlowService
             //监听创建新的流程
             plg.RegisterCall("NewFlowTask", async (bs) =>
             {
-                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<In_TaskAdd>(bs.Params);
+                var data = bs.To<In_TaskAdd>();
                 if (data == null)
                 {
                     return CallResponse.Next();

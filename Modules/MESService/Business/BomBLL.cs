@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace MESService.Business
 {
     public class BomBLL
@@ -30,7 +31,20 @@ namespace MESService.Business
         public virtual async Task<PageObject<MZ_BomHeader>> SelectList(In_BomList query, IUserInfo user)
         {
             BomHeaderDAL bomHeaderDAL = _provider.GetService<BomHeaderDAL>();
-            return await bomHeaderDAL.SelectByPage(query, user.OrgId);
+            var pagelist = await bomHeaderDAL.SelectByPage(query, user.OrgId);
+            var createdIds = pagelist.List.Select(x => x.createId.Value).ToList();
+            var updatedIds = pagelist.List.Select(x => x.updateId.Value).ToList();
+            List<long> concatList = createdIds.Concat(updatedIds).ToList();
+            if (concatList.Count > 0)
+            {
+                var tmpUsers = await _provider.GetService<UserDAL>().GetUserListByIds(concatList);
+                foreach(var item in pagelist.List)
+                {
+                    item.updateName = tmpUsers.Where(x => x.Id == item.updateId).FirstOrDefault()?.RealName;
+                    item.createName = tmpUsers.Where(x => x.Id == item.createId).FirstOrDefault()?.RealName;
+                }
+            }
+            return pagelist;
         }
         public virtual async Task<BusResponse<MZ_BomHeader>> Info(string id)
         {
@@ -49,6 +63,15 @@ namespace MESService.Business
                 foreach (var iitem in info.Items)
                 {
                     iitem.ProInfo = prolist.FirstOrDefault(x => x.Id == iitem.ProductId);
+                }
+            }
+            var operids = info.Items.Select(x => x.ProcessStepId).ToList();
+            if (operids.Count > 0)
+            {
+                var operlist = await _provider.GetService<OperDAL>().SelectList(x => operids.Contains(x.Id));
+                foreach (var iitem in info.Items)
+                {
+                    iitem.ProcessStepInfo = operlist.FirstOrDefault(x => x.Id == iitem.ProcessStepId);
                 }
             }
             return BusResponse<MZ_BomHeader>.Success(info);

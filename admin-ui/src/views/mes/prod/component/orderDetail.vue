@@ -188,6 +188,13 @@
 
                 </div>
             </el-tab-pane>
+            <el-tab-pane label="生产物料" name="workBomList">
+                <div>
+                    <el-table :data="workBomList" border stripe style="width: 100%;" v-loading="workBomLoading">
+
+                    </el-table>
+                </div>
+            </el-tab-pane>
         </el-tabs>
 
         <div slot="footer" class="dialog-footer">
@@ -197,7 +204,7 @@
 </template>
 
 <script>
-import { WorkBatchList, mesOrderInfo, mesOrderList } from "@/api/mes/report";
+import { WorkBatchList, mesOrderInfo, mesOrderList, mesBomList } from "@/api/mes/report";
 import { orgFormFields } from "@/api/factory/customFields";
 import { getFieldShow } from '@/utils/field.js'
 import { ReportList } from '@/api/mes/report'
@@ -240,7 +247,11 @@ export default {
 
             timelineLoading: false,
             timelineData: [],
-            currentRecordId: ''
+            currentRecordId: '',
+
+            workBomLoading: false,
+            workBomList: [],
+            WorkOrderId: null
         }
     },
     watch: {
@@ -259,6 +270,21 @@ export default {
             if (tabval === 'subOrderList') {
                 this.initSubOrderQuery();
                 this.loadSubOrders();
+            }
+            else if (tabval == 'workBomList') {
+                this.loadBomList();
+            }
+        },
+        async loadBomList() {
+            this.workBomLoading = true;
+            try {
+                let res = await mesBomList(this.WorkOrderId);
+                this.workBomList = res.data;
+
+            } catch (error) {
+                this.$message.error('加载物料信息失败');
+            } finally {
+                this.workBomLoading = false;
             }
         },
         ingetFieldShow(obj, field) {
@@ -294,7 +320,6 @@ export default {
 
             } catch (error) {
                 this.$message.error('加载生产记录失败');
-                console.error(error);
             } finally {
                 this.workLoading = false;
             }
@@ -332,7 +357,6 @@ export default {
 
             } catch (error) {
                 this.$message.error('加载子工单失败');
-                console.error(error);
             } finally {
                 this.subOrderLoading = false;
             }
@@ -376,6 +400,7 @@ export default {
         },
 
         async openDialog(id) {
+            this.WorkOrderId = id;
             await this.getCustomFiled();
             let res = await mesOrderInfo({ "id": id });
             this.orderData = res.data;
@@ -429,7 +454,8 @@ export default {
     margin-bottom: 10px;
     background-color: #f5f7fa;
 }
-.timeline-container{
-    padding-top:10px;
+
+.timeline-container {
+    padding-top: 10px;
 }
 </style>

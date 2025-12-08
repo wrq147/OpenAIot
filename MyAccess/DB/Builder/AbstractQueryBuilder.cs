@@ -1,5 +1,6 @@
 ﻿using MyAccess.DB.Attr;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace MyAccess.DB.Builder
@@ -53,52 +54,55 @@ namespace MyAccess.DB.Builder
                                 break;
                             }
                         }
-                        onCondi = " on a." + _sqlBuilder.SubIdMaps[i] + "=" + tmpprefix + "." + subpropname;
+                        onCondi = $" on a.{_sqlBuilder.SubIdMaps[i]}={tmpprefix}.{subpropname}";
                     }
 
 
                     TableNameAttribute jointn = subType.GetCustomAttribute<TableNameAttribute>();
                     string jointableName = jointn == null ? subType.Name : jointn.Name;
-                    table = table + " " + _sqlBuilder.JoinWays[i] + " " + jointableName + " " + tmpprefix + onCondi;
+                    table = table + $" {_sqlBuilder.JoinWays[i]} {jointableName} {tmpprefix}{onCondi}";
                 }
             }
             return table;
         }
         protected string GenerateFields(Type EntityType)
         {
-            if (_sqlBuilder.SubMaps != null)
-            {
-                string fields = "a.*";
-                var submaplist = _sqlBuilder.SubMaps;
-                for (int i = 0; i < submaplist.Count; i++)
-                {
-                    string tmpprefix = DBMapping.GetSubPrefix(i);
-                    PropertyInfo[] properties;
-                    if (_sqlBuilder.SubTypeMaps[i] != null)
-                    {
-                        properties = _sqlBuilder.SubTypeMaps[i].GetProperties();
-                    }
-                    else
-                    {
-                        PropertyInfo ptInfo = EntityType.GetProperty(submaplist[i]);
-                        properties = ptInfo.PropertyType.GetProperties();
-                    }
-
-                    foreach (PropertyInfo property in properties)
-                    {
-                        if (property.IsDefined(typeof(DataIgnoreAttribute)) || !DBMapping.IsMapping(property.PropertyType))
-                        {
-                            continue;
-                        }
-                        fields = fields + "," + tmpprefix + "." + property.Name + " '" + tmpprefix + "." + property.Name + "'";
-                    }
-                }
-                return fields;
-            }
-            else
+            if (_sqlBuilder.SubMaps == null)
             {
                 return "*";
             }
+            var newSubMaps = _sqlBuilder.SubMaps.Where(x => x != SqlBuilder.NullSub);
+            if (newSubMaps.Count() == 0)
+            {
+                return "*";
+            }
+            var tmpsign = this._sqlBuilder.Comparable.GetFieldSign();
+            string fields = "a.*";
+            var submaplist = _sqlBuilder.SubMaps;
+            for (int i = 0; i < submaplist.Count; i++)
+            {
+                string tmpprefix = DBMapping.GetSubPrefix(i);
+                PropertyInfo[] properties;
+                if (_sqlBuilder.SubTypeMaps[i] != null)
+                {
+                    properties = _sqlBuilder.SubTypeMaps[i].GetProperties();
+                }
+                else
+                {
+                    PropertyInfo ptInfo = EntityType.GetProperty(submaplist[i]);
+                    properties = ptInfo.PropertyType.GetProperties();
+                }
+
+                foreach (PropertyInfo property in properties)
+                {
+                    if (property.IsDefined(typeof(DataIgnoreAttribute)) || !DBMapping.IsMapping(property.PropertyType))
+                    {
+                        continue;
+                    }
+                    fields = fields + $",{tmpprefix}.{property.Name} {tmpsign}{tmpprefix}.{property.Name}{tmpsign}";
+                }
+            }
+            return fields;
         }
     }
 }

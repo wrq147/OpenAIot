@@ -44,5 +44,14 @@ namespace MESService.Controller
         {
             return (await _workOrderBLL.Info(id)).ToAjaxResult();
         }
+        /// <summary>
+        /// 获取工单物料
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<List<MZ_WorkBom>>> BomList(string id)
+        {
+            return this.Success(await _workOrderBLL.BomList(id));
+        }
     }
 }

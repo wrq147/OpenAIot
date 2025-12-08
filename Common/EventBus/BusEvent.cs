@@ -1,4 +1,5 @@
-﻿using Common.Share;
+﻿using Common.Json;
+using Common.Share;
 using EasyNetQ;
 using Newtonsoft.Json;
 using System;
@@ -25,18 +26,23 @@ namespace Common.EventBus
             evt.Params = JsonConvert.SerializeObject(data);
             return evt;
         }
-        public string GetValue(string key)
+        private Dictionary<string, object> GetObjDict()
         {
             if (_tmpobj == null)
             {
-                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
+                _tmpobj = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(this.Params, MyDefaultTextJsonConfig.DefaultOptions);
             }
-            if (_tmpobj == null)
+            return _tmpobj;
+        }
+        public string GetValue(string key)
+        {
+            var tmpdict = GetObjDict();
+            if (tmpdict == null)
             {
                 return null;
             }
             object val;
-            if (_tmpobj.TryGetValue(key, out val))
+            if (tmpdict.TryGetValue(key, out val))
             {
                 return Convert.ToString(val);
             }
@@ -44,16 +50,13 @@ namespace Common.EventBus
         }
         public long GetLong(string key)
         {
-            if (_tmpobj == null)
-            {
-                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
-            }
-            if (_tmpobj == null)
+            var tmpdict = GetObjDict();
+            if (tmpdict == null)
             {
                 return 0;
             }
             object val;
-            if (_tmpobj.TryGetValue(key, out val))
+            if (tmpdict.TryGetValue(key, out val))
             {
                 return Convert.ToInt64(val);
             }
@@ -62,16 +65,13 @@ namespace Common.EventBus
 
         public List<X> GetList<X>(string key)
         {
-            if (_tmpobj == null)
-            {
-                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
-            }
-            if (_tmpobj == null)
+            var tmpdict = GetObjDict();
+            if (tmpdict == null)
             {
                 return null;
             }
             object val;
-            if (_tmpobj.TryGetValue(key, out val))
+            if (tmpdict.TryGetValue(key, out val))
             {
                 return (List<X>)val;
             }
@@ -79,20 +79,21 @@ namespace Common.EventBus
         }
         public object GetObject(string key)
         {
-            if (_tmpobj == null)
-            {
-                _tmpobj = JsonConvert.DeserializeObject<Dictionary<string, object>>(this.Params);
-            }
-            if (_tmpobj == null)
+            var tmpdict = GetObjDict();
+            if (tmpdict == null)
             {
                 return null;
             }
             object val;
-            if (_tmpobj.TryGetValue(key, out val))
+            if (tmpdict.TryGetValue(key, out val))
             {
                 return val;
             }
             return null;
+        }
+        public T To<T>()
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<T>(this.Params, MyDefaultTextJsonConfig.DefaultOptions);
         }
         /// <summary>
         /// 业务名称

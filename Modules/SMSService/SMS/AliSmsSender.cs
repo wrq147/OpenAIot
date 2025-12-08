@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -56,7 +57,7 @@ namespace SMSService
                 {"SignatureVersion", "1.0"},
                 {"SignName", SignName},
                 {"TemplateCode", templateCode},
-                {"TemplateParam", JsonConvert.SerializeObject(param)},
+                {"TemplateParam",System.Text.Json.JsonSerializer.Serialize(param, MyDefaultTextJsonConfig.DefaultOptions)},
                 {"Timestamp", GetTimeStamp()},
                 {"Version", "2017-05-25"}
             };
@@ -75,7 +76,7 @@ namespace SMSService
                 using (var response = await HttpClient.SendAsync(request))
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<SendSmsResponse>(json);
+                    return System.Text.Json.JsonSerializer.Deserialize<SendSmsResponse>(json, MyDefaultTextJsonConfig.DefaultOptions);
                 }
             }
         }

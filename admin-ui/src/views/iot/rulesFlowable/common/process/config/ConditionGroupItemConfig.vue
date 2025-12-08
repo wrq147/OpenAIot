@@ -55,7 +55,7 @@
                   <el-option label="包含" value="IN"></el-option>
                 </el-select>
                 <span style="margin-left: 10px">
-                  <el-select v-if="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择参数"
+                  <el-select v-if="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择变量"
                     style="width: 220px">
                     <template v-for="opx in conditionList">
                       <el-option :label="opx.title" :value="opx.code" v-if="opx.valueType == 'string'"
@@ -70,7 +70,7 @@
                   <el-option :label="exp.label" :value="exp.value" :key="exp.value" v-for="exp in explains"></el-option>
                 </el-select>
                 <span style="margin-left: 10px">
-                  <el-select v-if="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择参数"
+                  <el-select v-if="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择变量"
                     style="width: 220px">
                     <template v-for="opx in conditionList">
                       <el-option :label="opx.title" :value="opx.code"
@@ -89,7 +89,7 @@
                   <el-option :label="condition.codeIsArrary==true||condition.valueType === ValueType2.enum ?'不包含':'不等于'" value="!="></el-option>
                 </el-select>
                 <span style="margin-left:10px">
-                  <el-select v-if="condition.valueFrom == 1"  size="small" v-model="condition.value" placeholder="请选择参数"
+                  <el-select v-if="condition.valueFrom == 1"  size="small" v-model="condition.value" placeholder="请选择变量"
                     style="width: 220px">
                     <template v-for="opx in conditionList">
                       <el-option :label="opx.title" :value="opx.code"
@@ -106,7 +106,7 @@
               </span>
               <span v-else-if="condition.valueType === ValueType2.date">
                 <span>在</span>
-                <el-select v-show="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择参数"
+                <el-select v-show="condition.valueFrom == 1" size="small" v-model="condition.value" placeholder="请选择变量"
                   style="margin-left: 10px">
                   <template v-for="opx in conditionList">
                     <el-option :label="opx.title" :value="opx.code" v-if="opx.valueType == 'date'"
