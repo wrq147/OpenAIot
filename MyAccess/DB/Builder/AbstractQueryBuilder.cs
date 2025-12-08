@@ -67,12 +67,7 @@ namespace MyAccess.DB.Builder
         }
         protected string GenerateFields(Type EntityType)
         {
-            if (_sqlBuilder.SubMaps == null)
-            {
-                return "*";
-            }
-            var newSubMaps = _sqlBuilder.SubMaps.Where(x => x != SqlBuilder.NullSub);
-            if (newSubMaps.Count() == 0)
+            if (_sqlBuilder.SubMaps == null || _sqlBuilder.SubMaps.Count == 0)
             {
                 return "*";
             }
