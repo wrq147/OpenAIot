@@ -24,7 +24,9 @@
           <el-table-column prop="Id" label="产品编号" align="center" width="150" />
           <el-table-column label="产品标签" align="center">
             <template slot-scope="scope">
-                <div>{{ scope.row.ProductLabel === 'U' ? '半成品' : '成品' }}</div>
+                <span v-if="scope.row.ProductLabel === 'M'">原材料</span>
+                <span v-else-if="scope.row.ProductLabel === 'U'">半成品</span>
+                <span v-else-if="scope.row.ProductLabel === 'F'">成品</span>
             </template>
           </el-table-column>
           <el-table-column label="预览图片" align="center" width="100">

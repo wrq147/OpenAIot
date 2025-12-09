@@ -41,12 +41,12 @@ namespace ProducerService
           .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
                 Execute.Sql("DROP TABLE IF EXISTS mz_product");
-                Create.Table("mz_product").WithDescription("产品表（半成品、成品）")
+                Create.Table("mz_product").WithDescription("产品表")
                                .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
                                .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                                .WithColumn("SkuNumber").AsString(50).Indexed().WithColumnDescription("唯一编号(sku编码)")
                                .WithColumn("IOTProductId").AsString(128).Nullable().Indexed().WithColumnDescription("关联的物联协议Id")
-                               .WithColumn("ProductLabel").AsFixedLengthAnsiString(1).Indexed().WithColumnDescription("产品标签：U半成品，F成品")
+                               .WithColumn("ProductLabel").AsFixedLengthAnsiString(1).Indexed().WithColumnDescription("产品标签：M原材料，U半成品，F成品")
                                .WithColumn("TypeId").AsString(128).Indexed().WithColumnDescription("产品分组Id，为空所属全部")
                                .WithColumn("Prop").AsString(255).WithColumnDescription("产品分组对应的产品属性，可为空")
                                .WithColumn("ProductFrom").AsString(10).WithColumnDescription("生产来源：自制，外购，委外")
@@ -227,7 +227,7 @@ namespace ProducerService
                     .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                     .WithColumn("SkuNumber").AsString(50).Indexed().WithColumnDescription("唯一编号(sku编码)")
                     .WithColumn("IOTProductId").AsString(128).Nullable().Indexed().WithColumnDescription("关联的物联协议Id")
-                    .WithColumn("ProductLabel").AsFixedLengthAnsiString(1).Indexed().WithColumnDescription("产品标签：U半成品，F成品")
+                    .WithColumn("ProductLabel").AsFixedLengthAnsiString(1).Indexed().WithColumnDescription("产品标签：M原材料，U半成品，F成品")
                     .WithColumn("TypeId").AsString(128).Indexed().WithColumnDescription("产品分组Id，为空所属全部")
                     .WithColumn("Prop").AsString(255).WithColumnDescription("产品分组对应的产品属性，可为空")
                     .WithColumn("ProductFrom").AsString(10).WithColumnDescription("生产来源：自制，外购，委外")

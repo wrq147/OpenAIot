@@ -72,8 +72,9 @@
       </el-table-column>
       <el-table-column label="标签" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.ProductLabel == 'F'">成品</span>
-          <span v-else>半成品</span>
+          <span v-if="scope.row.ProductLabel == 'M'">原材料</span>
+          <span v-else-if="scope.row.ProductLabel == 'F'">成品</span>
+          <span v-else-if="scope.row.ProductLabel == 'U'">半成品</span>
         </template>
       </el-table-column>
       <el-table-column label="数量" align="center">

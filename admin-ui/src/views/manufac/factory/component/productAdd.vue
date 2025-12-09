@@ -282,7 +282,7 @@ export default {
       IOTProductloading: false,//物联网产品加载
       Unitoptions: [],//单位列表
       dialogName: "baseinfo",
-      labelList: [{ label: "半成品", value: "U" }, { label: "成品", value: "F" }],
+      labelList: [{ label: "原材料", value: "M" },{ label: "半成品", value: "U" }, { label: "成品", value: "F" }],
       typeList: [],
       dialogVisible: false,
       form: {

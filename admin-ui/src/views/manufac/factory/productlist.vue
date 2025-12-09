@@ -195,6 +195,8 @@ export default {
   methods: {
     returnProductLabelName(val) {
       switch (val) {
+        case 'M':
+          return '原材料';
         case 'F':
           return '成品';
         case 'U':

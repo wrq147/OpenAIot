@@ -16,9 +16,40 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:ShortLinkService.Controller.LinkMan.List(ShortLinkService.Model.In_ShortLinkList)">
+            <summary>
+            短链接管理列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ShortLinkService.Controller.LinkMan.Add(System.String)">
+            <summary>
+            添加短链接
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ShortLinkService.Controller.LinkMan.Remove(System.String[])">
+            <summary>
+            删除短链接
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ShortLinkService.Model.In_ShortLinkList.Key">
+            <summary>
+            搜索关键词
+            </summary>
+        </member>
         <member name="P:ShortLinkService.Model.MZ_ShortLink.Id">
             <summary>
             短链接映射表
+            </summary>
+        </member>
+        <member name="P:ShortLinkService.Model.MZ_ShortLink.OrgId">
+            <summary>
+            所属组织ID
             </summary>
         </member>
         <member name="P:ShortLinkService.Model.MZ_ShortLink.Url">
@@ -30,6 +61,19 @@
             <summary>
             创建时间
             </summary>
+        </member>
+        <member name="P:ShortLinkService.Model.MZ_ShortLink.OrgName">
+            <summary>
+            所属组织名称
+            </summary>
+        </member>
+        <member name="M:ShortLinkService.ShortCodeGenerator.Encode(System.Int64)">
+            <summary>
+            数字ID转Base62短链接码
+            </summary>
+            <param name="id">自增ID/分布式ID（正数）</param>
+            <returns>Base62短码（如 1000000 → 4C9）</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">ID为负数</exception>
         </member>
     </members>
 </doc>

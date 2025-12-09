@@ -54,7 +54,7 @@ namespace MESService.Business
                     iitem.ProInfo = prolist.FirstOrDefault(x => x.Id == iitem.ProductId);
                 }
             }
-            var operids = tllist.Select(x => x.OperId).ToList();
+            var operids = tllist.Where(x => !string.IsNullOrEmpty(x.OperId)).Select(x => x.OperId).ToList();
             if (operids.Count > 0)
             {
                 var operlist = await _provider.GetService<OperDAL>().SelectList(x => operids.Contains(x.Id));

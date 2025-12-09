@@ -9,7 +9,8 @@
       </div>
       <el-form-item>
         <el-button icon="el-icon-refresh" @click="resetDevice">重置</el-button>
-        <el-button type="primary" icon="el-icon-search" @click="deviceQuery.pageNum = 1; loadDeviceList()">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search"
+          @click="deviceQuery.pageNum = 1; loadDeviceList()">搜索</el-button>
       </el-form-item>
     </el-form>
     <el-table ref="devTable" :data="deviceList" tooltip-effect="dark" v-loading="loading" style="width: 100%"
@@ -17,7 +18,9 @@
       <el-table-column prop="SkuNumber" label="物料编码" align="center" width="150" />
       <el-table-column label="物料类型" align="center">
         <template slot-scope="scope">
-            <span>{{ scope.row.ProductLabel == "F" ? "成品" : (scope.row.ProductLabel == "M"?'原材料':"半成品") }}</span>
+          <span v-if="scope.row.ProductLabel == 'M'">原材料</span>
+          <span v-else-if="scope.row.ProductLabel == 'F'">成品</span>
+          <span v-else-if="scope.row.ProductLabel == 'U'">半成品</span>
         </template>
       </el-table-column>
       <el-table-column prop="ProductName" label="物料名称" />
@@ -66,10 +69,10 @@ export default {
   methods: {
     loadDeviceList() {
       this.loading = true;
-      if(this.isFather){
-        this.deviceQuery.ProductLabel='U,F'
-      }else{
-        this.deviceQuery.ProductLabel='M'
+      if (this.isFather) {
+        this.deviceQuery.ProductLabel = 'U,F'
+      } else {
+        this.deviceQuery.ProductLabel = 'M'
       }
       factoryProductListGet(this.deviceQuery).then(response => {
         this.deviceList = response.data.List;

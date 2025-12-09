@@ -33,7 +33,7 @@ namespace ProducerService.Model
         /// </summary>
         public string IOTProductId { get; set; }
         /// <summary>
-        /// 产品标签：U半成品，F成品
+        /// 产品标签：M原材料，U半成品，F成品
         /// </summary>
         public string ProductLabel { get; set; }
         /// <summary>

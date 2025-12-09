@@ -953,7 +953,7 @@
         </member>
         <member name="P:ProducerService.Model.MZ_Product.ProductLabel">
             <summary>
-            产品标签：U半成品，F成品
+            产品标签：M原材料，U半成品，F成品
             </summary>
         </member>
         <member name="P:ProducerService.Model.MZ_Product.TypeId">

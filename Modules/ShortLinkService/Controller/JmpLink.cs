@@ -1,7 +1,6 @@
 ﻿using AuthService;
 using ShortLinkService.Business;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -22,17 +21,16 @@ namespace ShortLinkService.Controller
         /// 短信跳转小程序中转页面
         /// </summary>
         /// <returns></returns>
-        [Route("wx")]
         public async Task<ViewResult> Wx()
         {
-            string jpage = await _config.SelectConfigByKey("smsjmp");
+            string jpage = await _config.SelectConfigByKey("wxjmp");
             return new ViewResult(jpage);
         }
         /// <summary>
         /// 短链接跳转
         /// </summary>
         /// <returns></returns>
-        [Route("lk/{id}")]
+        [Route("s/{id}")]
         public async Task<TextResult> Short(string id)
         {
             var tshortLink = await _shortLinkBLL.Info(id);
@@ -43,5 +41,6 @@ namespace ShortLinkService.Controller
             Response.Redirect(tshortLink.Url);
             return new TextResult(string.Empty);
         }
+
     }
 }
