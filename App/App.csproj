@@ -28,6 +28,7 @@
 		<ProjectReference Include="..\Modules\ProducerService\ProducerService.csproj" />
 		<ProjectReference Include="..\Modules\ReportService\ReportService.csproj" />
 		<ProjectReference Include="..\Modules\SaleService\SaleService.csproj" />
+		<ProjectReference Include="..\Modules\ShortLinkService\ShortLinkService.csproj" />
 		<ProjectReference Include="..\Modules\SMSService\SMSService.csproj" />
 		<ProjectReference Include="..\Modules\StorageService\StorageService.csproj" />
 		<ProjectReference Include="..\Modules\ThirdPartyService\ThirdPartyService.csproj" />

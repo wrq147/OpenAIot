@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ShortLinkService</name>
+    </assembly>
+    <members>
+        <member name="M:ShortLinkService.Controller.JmpLink.Wx">
+            <summary>
+            短信跳转小程序中转页面
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ShortLinkService.Controller.JmpLink.Short(System.String)">
+            <summary>
+            短链接跳转
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ShortLinkService.Model.MZ_ShortLink.Id">
+            <summary>
+            短链接映射表
+            </summary>
+        </member>
+        <member name="P:ShortLinkService.Model.MZ_ShortLink.Url">
+            <summary>
+            映射的url地址
+            </summary>
+        </member>
+        <member name="P:ShortLinkService.Model.MZ_ShortLink.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -3,8 +3,6 @@ using Common.IdGenerator;
 using Common.Share;
 using MESService.DAL;
 using MESService.Model;
-using Minio.DataModel;
-using MyAccess.DB.Builder.WhereToSql;
 using ProducerService.DAL;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace MESService.Business
 {
     public class BomBLL

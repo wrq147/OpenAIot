@@ -72,12 +72,6 @@
             微信扩展操作
             </summary>
         </member>
-        <member name="M:WeiXinService.Controller.Ext.SmsJmp">
-            <summary>
-            短信跳转小程序中转页面
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:WeiXinService.Controller.Ext.WxSchemeTick(WeiXinService.Model.In_GenerateWxSchemeTick)">
             <summary>
             获取微信小程序的跳转加密URL Scheme

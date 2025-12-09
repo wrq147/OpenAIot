@@ -66,7 +66,7 @@ namespace SMSService
                         var context = _provider.GetService<ITAContext>();
                         IDictionary<string, string> cp = new Dictionary<string, string>();
                         string tmpurl = string.IsNullOrEmpty(generOption.Value.url) ? ("http://" + IpHelper.GetAvaOutIp()) : generOption.Value.url;
-                        cp.Add("url", tmpurl + "/WeiXinService/Ext/SmsJmp?t=" + evt.Content);
+                        cp.Add("url", tmpurl + "/wx?t=" + evt.Content);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
                         {
                             _log.LogError("跳转短信发送失败");

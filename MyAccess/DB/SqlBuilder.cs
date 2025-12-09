@@ -323,7 +323,6 @@ namespace MyAccess.DB
             bool autowhere = string.IsNullOrEmpty(where);
 
 
-            bool noEntity = true;
             PropertyInfo[] myProInfos = EntityType.GetProperties();
             for (int i = 0; i < myProInfos.Length; i++)
             {
@@ -351,7 +350,7 @@ namespace MyAccess.DB
                 if (canupdated)
                 {
                     object val = pi.GetValue(updated);
-                    if (noEntity && val == null)
+                    if (val == null)
                     {
                         continue;
                     }
@@ -384,6 +383,11 @@ namespace MyAccess.DB
         public UpdateBuilder<T> Update<T>(T updated, Expression<Func<T, bool>> expression)
         {
             return Update<T>(updated, this.GetWhereByLambda(expression));
+        }
+
+        public UpdateColumnsBuilder<T> UpdateColumns<T>()
+        {
+            return new UpdateColumnsBuilder<T>(this);
         }
         public CreateOrUpdateBuilder<T> CreateOrUpdate<T>(T entity)
         {

@@ -1,4 +1,5 @@
 ﻿AuthService
+ShortLinkService
 DeveloperService
 DictService
 MonitorService

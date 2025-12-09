@@ -1,9 +1,6 @@
 ﻿using MyAccess.Core;
-using MyAccess.DB.Attr;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder

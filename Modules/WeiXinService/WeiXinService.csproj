@@ -8,12 +8,6 @@
 		<DocumentationFile>..\..\App\XML\WeiXinService.xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Ext.SmsJmp.my" />
-	</ItemGroup>
-	<ItemGroup>
-	  <EmbeddedResource Include="Ext\SmsJmp.my" />
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="SKIT.FlurlHttpClient.Wechat.Api" Version="2.22.0" />
 	  <PackageReference Include="SKIT.FlurlHttpClient.Wechat.Work" Version="2.14.2" />
 	</ItemGroup>
