@@ -43,7 +43,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="关联工序" align="center">
+      <el-table-column align="center" width="240">
+        <template #header>
+          <span>
+            <span style="color: #f56c6c;">*</span>关联工序
+          </span>
+        </template>
         <template slot-scope="scope">
           <div style="display: flex;">
             <el-select v-model="scope.row.ProcessStepInfo" style="width:100%;" value-key="Id" filterable remote
@@ -55,8 +60,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="规格" prop="Specs" align="center"></el-table-column>
-      <el-table-column label="单位" prop="Unit" align="center"></el-table-column>
+      <el-table-column label="规格" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.ProInfo == null ? "" : scope.row.ProInfo.Specs }}
+        </template>
+      </el-table-column>
+      <el-table-column label="单位" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.ProInfo == null ? "" : scope.row.ProInfo.Unit }}
+        </template>
+      </el-table-column>
       <el-table-column label="标签" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.ProductLabel == 'F'">成品</span>
@@ -127,8 +140,6 @@ export default {
       ruleForm: {},
       operListData: [],
       childrenIndex: '',
-  
-      rowErrors: [],
       isReadonly: false,
 
       steploading: false,
@@ -138,13 +149,16 @@ export default {
   watch: {
     dialogVisible(newValue) {
       this.dialogFlag = newValue;
+      if (this.dialogFlag == true) {
+        this.remoteOperList("");
+      }
     }
   },
   methods: {
     clearEvt(item) {
       item.ProcessStepInfo = null;
     },
-    async remoteOperList(query){
+    async remoteOperList(query) {
       this.steploading = true
       let obj = {
         pageNum: 1,
@@ -183,6 +197,9 @@ export default {
         this.$message.error('请完善表格中的必填项');
         return false;
       }
+      this.ruleForm.items.forEach(item => {
+        item.ProcessStepId = item.ProcessStepInfo.Id;
+      });
       if (this.title === '新增物料清单') {
         this.getAddRpt()
       } else {
@@ -216,10 +233,9 @@ export default {
         ProductId: "",
         ProductFrom: '',
         ProductName: '',
-        Specs: '',
+        ProInfo: null,
         OrgId: this.$store.state.user.orgId,
         Quantity: 1,
-        Unit: '',
         ProcessStepId: "",
         ProcessStepInfo: null,
         Remark: "",
@@ -268,10 +284,9 @@ export default {
         this.ruleForm.items[this.childrenIndex].Sort = this.childrenIndex
         this.ruleForm.items[this.childrenIndex].ProductId = data.Id;
         this.ruleForm.items[this.childrenIndex].ProductName = data.ProductName;
-        this.ruleForm.items[this.childrenIndex].Specs = data.Specs;
         this.ruleForm.items[this.childrenIndex].Quantity = 1;
-        this.ruleForm.items[this.childrenIndex].Unit = data.Unit;
         this.ruleForm.items[this.childrenIndex].ProductFrom = data.ProductFrom;
+        this.ruleForm.items[this.childrenIndex].ProInfo = data;
       }
       let items = JSON.parse(JSON.stringify(this.ruleForm.items))
       this.ruleForm.items = JSON.parse(JSON.stringify(items))
@@ -282,12 +297,16 @@ export default {
       const row = this.ruleForm.items[index];
       const errors = {
         ProductName: !row.ProductName,
+        ProcessStepInfo: !row.ProcessStepInfo
       };
 
-      this.rowErrors[index] = errors;
-
       // 返回是否验证通过
-      return !errors.ProductName;
+      for (let prop in errors) {
+        if (errors[prop]) {
+          return false;
+        }
+      }
+      return true;
     },
 
     // 验证所有行

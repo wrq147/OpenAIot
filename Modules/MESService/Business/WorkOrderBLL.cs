@@ -44,7 +44,26 @@ namespace MESService.Business
         }
         public virtual async Task<List<MZ_WorkBom>> BomList(string orderId)
         {
-            return await _workBomDAL.SelectList(x => x.WorkOrderId == orderId);
+            var tllist = await _workBomDAL.SelectList(x => x.WorkOrderId == orderId);
+            var pids = tllist.Select(x => x.ProductId).ToList();
+            if (pids.Count > 0)
+            {
+                var prolist = await _provider.GetService<ProductDAL>().SelectList(x => pids.Contains(x.Id));
+                foreach (var iitem in tllist)
+                {
+                    iitem.ProInfo = prolist.FirstOrDefault(x => x.Id == iitem.ProductId);
+                }
+            }
+            var operids = tllist.Select(x => x.OperId).ToList();
+            if (operids.Count > 0)
+            {
+                var operlist = await _provider.GetService<OperDAL>().SelectList(x => operids.Contains(x.Id));
+                foreach (var iitem in tllist)
+                {
+                    iitem.OperInfo = operlist.FirstOrDefault(x => x.Id == iitem.OperId);
+                }
+            }
+            return tllist;
         }
         public virtual async Task<BusResponse<MZ_WorkOrder>> Info(string id)
         {

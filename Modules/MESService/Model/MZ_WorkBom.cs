@@ -1,6 +1,7 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
 using Newtonsoft.Json;
+using ProducerService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,5 +48,15 @@ namespace MESService.Model
         /// 单个用量
         /// </summary>
         public decimal? Quantity { get; set; }
+        /// <summary>
+        /// 产品信息
+        /// </summary>
+        [DataIgnore]
+        public MZ_Product ProInfo { get; set; }
+        /// <summary>
+        /// 工序信息
+        /// </summary>
+        [DataIgnore]
+        public MZ_ProductOper OperInfo { get; set; }
     }
 }

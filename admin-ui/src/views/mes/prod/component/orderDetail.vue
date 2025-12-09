@@ -5,9 +5,9 @@
             <el-descriptions :column="2" border :span="16" class="detail-descriptions">
                 <el-descriptions-item label="工单编号">{{ orderData.WorkNumber }}</el-descriptions-item>
                 <el-descriptions-item label="计划名称">{{ orderData.PlanInfo ? orderData.PlanInfo.PlanName : ''
-                }}</el-descriptions-item>
+                    }}</el-descriptions-item>
                 <el-descriptions-item label="产品名称">{{ orderData.ProdInfo ? orderData.ProdInfo.ProductName : ''
-                }}</el-descriptions-item>
+                    }}</el-descriptions-item>
                 <el-descriptions-item label="状态">
                     <el-tag v-if="orderData.Status == 0" type="warning">待生产</el-tag>
                     <el-tag v-if="orderData.Status == 1">生产中</el-tag>
@@ -15,7 +15,7 @@
                     <el-tag v-if="orderData.Status == 3" type="danger">已取消</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item label="生产数量/计划数量">{{ orderData.BatchCount }}/{{ orderData.Quantity
-                }}</el-descriptions-item>
+                    }}</el-descriptions-item>
                 <el-descriptions-item label="当前进度">
                     <template v-if="orderData.Status == 1">
                         <el-progress type="line"
@@ -143,26 +143,26 @@
                             width="120">
                             <template slot-scope="scope">
                                 <!-- 报工记录按钮 + Popover 时间线 -->
-                                <el-popover ref="recordPopover" placement="left" width="400" trigger="click"
+                                <el-popover ref="recordPopover" placement="left" width="480" trigger="click"
                                     @show="loadRecordTimeline(scope.row)">
                                     <div v-loading="timelineLoading" class="timeline-container">
                                         <el-timeline>
                                             <el-timeline-item v-for="(item, index) in timelineData" :key="index"
                                                 :timestamp="item.createTime">
                                                 <span v-if="item.Status == 0" style="color:#909399">
-                                                    {{ item.ReportMem.RealName + "创建了一条未提交的报工" }}
+                                                    {{"工序【" + item.Oper.OperName + "】的"+item.ReportMem.RealName + "创建了一条未提交的报工"}}
                                                 </span>
                                                 <span v-else-if="item.Status == 1" style="color:#E6A23C">
-                                                    {{ item.ReportMem.RealName + "提交了一条未审核的报工" }}
+                                                    {{ "工序【" + item.Oper.OperName + "】的"+item.ReportMem.RealName + "提交了一条未审核的报工" }}
                                                 </span>
                                                 <span v-else-if="item.Status == 2" style="color:#67C23A">
-                                                    {{ item.ReportMem.RealName + "提交了一条已审核的报工" }}
+                                                    {{"工序【" + item.Oper.OperName + "】的"+ item.ReportMem.RealName + "提交了一条已审核的报工" }}
                                                 </span>
                                                 <span v-else-if="item.Status == 3" style="color:#909399">
-                                                    {{ item.ReportMem.RealName + "取消了一条报工" }}
+                                                    {{"工序【" + item.Oper.OperName + "】的"+ item.ReportMem.RealName + "取消了一条报工" }}
                                                 </span>
                                                 <span v-else-if="item.Status == 4" style="color:#F56C6C">
-                                                    {{ item.ReportMem.RealName + "被驳回了一条报工" }}
+                                                    {{ "工序【" + item.Oper.OperName + "】的"+item.ReportMem.RealName + "被驳回了一条报工" }}
                                                 </span>
                                             </el-timeline-item>
                                         </el-timeline>
@@ -188,10 +188,21 @@
 
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="生产物料" name="workBomList">
+            <el-tab-pane label="物料清单" name="workBomList">
                 <div>
                     <el-table :data="workBomList" border stripe style="width: 100%;" v-loading="workBomLoading">
-
+                        <el-table-column label="物料名称" align="center">
+                            <template slot-scope="scope">
+                                {{ scope.row.ProInfo.ProductName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="投料工序" align="center">
+                            <template slot-scope="scope">
+                                {{ scope.row.OperInfo.OperName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="需求用量" prop="NeedQuantity" align="center" />
+                        <el-table-column label="实际用量" prop="UsedQuantity" align="center" />
                     </el-table>
                 </div>
             </el-tab-pane>

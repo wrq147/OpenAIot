@@ -1716,6 +1716,16 @@
             单个用量
             </summary>
         </member>
+        <member name="P:MESService.Model.MZ_WorkBom.ProInfo">
+            <summary>
+            产品信息
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBom.OperInfo">
+            <summary>
+            工序信息
+            </summary>
+        </member>
         <member name="P:MESService.Model.MZ_WorkDefect.Id">
             <summary>
             Id编号
