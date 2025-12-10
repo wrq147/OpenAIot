@@ -3,24 +3,24 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'f008395b405acdafda0225f1161f133a15755226'
-    oldFile: !uuid '0fd82649ff4fdba7d8509dd29da44282ab581b22'
+    newFile: !uuid 'f22a845862b6b6e0c836d4e8b84d8ecd12151e21'
+    oldFile: !uuid 'f008395b405acdafda0225f1161f133a15755226'
   /Modules/SMSService:
-    newFile: !uuid '9ddc6fc604f9f96e4a227097dc67e8fef01c4d88'
-    oldFile: !uuid '63dec4c97b535f351daca48056bde24f8f2558db'
-  /Modules/SMSService/SMSExecutor.cs:
-    newFile: !uuid '8af24bfc87650bc276dd40911cfe37773a89584c'
-    oldFile: !uuid 'c83300ad8c7c63f710082c1132bb3e987dbf17b6'
-  /Modules/SMSService/SMSService.csproj:
-    newFile: !uuid 'd679a1dadc7170e01822449c83aa42cd04f8ec92'
-    oldFile: !uuid 'ed3309c63f3828f230c2bbcc6ecf63505f0e98ae'
-  /Modules/ShortLinkService:
-    newFile: !uuid '29507f8c022e782ebe1a05dfa7401fd14a6a5d35'
-    oldFile: !uuid '691d44a0e07f72c1bb02144fa464229166ddb01a'
-  /Modules/ShortLinkService/PluginConfig.cs:
-    newFile: !uuid '056d7a0ad2ebcbf1148ce1c7615e2395cbe3e2ec'
-    oldFile: !uuid 'fda38baf154fd613011a48b080578a7d85fd01eb'
-gitCommitId: !uuid 'c724ea1f1145ced9e30ac9e102d65aee526224b6'
+    newFile: !uuid '6659d969d520aba2149781cef663c8dd1e152b92'
+    oldFile: !uuid '9ddc6fc604f9f96e4a227097dc67e8fef01c4d88'
+  /Modules/SMSService/PluginConfig.cs:
+    newFile: !uuid '6e06d510c51c6f73cce988d5d19f133b07b98f79'
+    oldFile: !uuid '5832c1eb6a69ea7c9dcfdac4b7c4ad503ddeace3'
+  /Modules/StorageService:
+    newFile: !uuid 'ceaa938ca813ddc2f0874d1e8d333c2383dab4d7'
+    oldFile: !uuid '7dc90694f49af04d516818d59ae63c23bed4cf01'
+  /Modules/StorageService/DAL:
+    newFile: !uuid '19c9ffa68e7a86eb8cad13c7aa0efa920a6b228e'
+    oldFile: !uuid '4e888fb862078cf5a51c370009be80f2e78361b0'
+  /Modules/StorageService/DAL/LeaveStockDAL.cs:
+    newFile: !uuid 'a3b4626d4f00dc00f43805a080d1f9e4c547f646'
+    oldFile: !uuid '644adc9ff8a219e0d1f6ea3c5ee62d9292f97590'
+gitCommitId: !uuid 'dec4f6c225bfab500858f97f15682b3a47b0176b'
 renames: {
   }
-revisionId: 63
+revisionId: 64
