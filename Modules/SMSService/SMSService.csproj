@@ -9,5 +9,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\AuthService\AuthService.csproj" />
+		<ProjectReference Include="..\ShortLinkService\ShortLinkService.csproj" />
 	</ItemGroup>
 </Project>
