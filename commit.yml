@@ -2,25 +2,91 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid 'f22a845862b6b6e0c836d4e8b84d8ecd12151e21'
-    oldFile: !uuid 'f008395b405acdafda0225f1161f133a15755226'
-  /Modules/SMSService:
-    newFile: !uuid '6659d969d520aba2149781cef663c8dd1e152b92'
-    oldFile: !uuid '9ddc6fc604f9f96e4a227097dc67e8fef01c4d88'
-  /Modules/SMSService/PluginConfig.cs:
-    newFile: !uuid '6e06d510c51c6f73cce988d5d19f133b07b98f79'
-    oldFile: !uuid '5832c1eb6a69ea7c9dcfdac4b7c4ad503ddeace3'
-  /Modules/StorageService:
-    newFile: !uuid 'ceaa938ca813ddc2f0874d1e8d333c2383dab4d7'
-    oldFile: !uuid '7dc90694f49af04d516818d59ae63c23bed4cf01'
-  /Modules/StorageService/DAL:
-    newFile: !uuid '19c9ffa68e7a86eb8cad13c7aa0efa920a6b228e'
-    oldFile: !uuid '4e888fb862078cf5a51c370009be80f2e78361b0'
-  /Modules/StorageService/DAL/LeaveStockDAL.cs:
-    newFile: !uuid 'a3b4626d4f00dc00f43805a080d1f9e4c547f646'
-    oldFile: !uuid '644adc9ff8a219e0d1f6ea3c5ee62d9292f97590'
-gitCommitId: !uuid 'dec4f6c225bfab500858f97f15682b3a47b0176b'
+  /Channel:
+    newFile: !uuid '2c7fc9e6f1191176586983277cde4aa10437b587'
+    oldFile: !uuid 'e3bba30e99ee43efabcf1f36983a9451623adcf3'
+  /Channel/HttpChannel:
+    newFile: null
+    oldFile: !uuid '3dc501310e268a05fde2a10ebf1099c50a70267b'
+  /Channel/HttpChannel/.config:
+    newFile: null
+    oldFile: !uuid 'a14df7c25918545be85ce338a73102bc1c57936d'
+  /Channel/HttpChannel/.config/dotnet-tools.json:
+    newFile: null
+    oldFile: !uuid 'b0e38abdace3ec27cf077fc88770357028cf3bb6'
+  /Channel/HttpChannel/AEP:
+    newFile: null
+    oldFile: !uuid 'f55d3dae7409ac07bdaac1f5c0b8cd1ea045f3b3'
+  /Channel/HttpChannel/AEP/AepSdkCore.cs:
+    newFile: null
+    oldFile: !uuid '38d2fbd17da689bf2f66e69119c7049c9ab22b44'
+  /Channel/HttpChannel/AEP/Aep_device_command.cs:
+    newFile: null
+    oldFile: !uuid 'cc53f4e67a6e1fc8031e8ec217d827440bcb4ce6'
+  /Channel/HttpChannel/AEP/Aep_product_management.cs:
+    newFile: null
+    oldFile: !uuid '3a1d0799bd35945db88b14aa76d05d64bc4161b6'
+  /Channel/HttpChannel/Controllers:
+    newFile: null
+    oldFile: !uuid '28d61930993c19cc5660f89aae9ce0169fb0e045'
+  /Channel/HttpChannel/Controllers/AEPController.cs:
+    newFile: null
+    oldFile: !uuid 'c1d845bc285a128036971fe53212bd3f121cb6cb'
+  /Channel/HttpChannel/Controllers/RecvJsonController.cs:
+    newFile: null
+    oldFile: !uuid '434804212a9a3af25989f58499e9c86869d4132b'
+  /Channel/HttpChannel/Controllers/WeatherForecastController.cs:
+    newFile: null
+    oldFile: !uuid '5c1db21d3711bd539d0287484f1e21bf56481004'
+  /Channel/HttpChannel/HttpChannel.csproj:
+    newFile: null
+    oldFile: !uuid '24507c764bd7f3b10c21615eec1abf10b72cdf5c'
+  /Channel/HttpChannel/HttpChannelOption.cs:
+    newFile: null
+    oldFile: !uuid '37b004c0d696826e429cd54172d73adc8edf165b'
+  /Channel/HttpChannel/Models:
+    newFile: null
+    oldFile: !uuid '9cf7849e3f9360499967860a9fd0c697342e7b47'
+  /Channel/HttpChannel/Models/AEPCommandInput.cs:
+    newFile: null
+    oldFile: !uuid 'cae825ed23ea0970cabfb1b2d05fbb14d4d3b278'
+  /Channel/HttpChannel/Models/AepInput.cs:
+    newFile: null
+    oldFile: !uuid '8fb15c8ca3bc9cb05746d779053dd7eac9d91444'
+  /Channel/HttpChannel/Models/EventContent.cs:
+    newFile: null
+    oldFile: !uuid '74eee03a55a04a43b963928406afcefa83a166ad'
+  /Channel/HttpChannel/Models/ProductInfo.cs:
+    newFile: null
+    oldFile: !uuid 'c119226b80c63a2a728f8988ec8368c48dd6b5d9'
+  /Channel/HttpChannel/Models/ProductResult.cs:
+    newFile: null
+    oldFile: !uuid '4de835346aeec05e337f83d0d74c4ddad1f62867'
+  /Channel/HttpChannel/Program.cs:
+    newFile: null
+    oldFile: !uuid '6ac2f8fae9afecf3fb3b115298e7cb1b6daa8329'
+  /Channel/HttpChannel/Properties:
+    newFile: null
+    oldFile: !uuid '70c782e3d5906cdf952007d39028d903f124ab8a'
+  /Channel/HttpChannel/Properties/launchSettings.json:
+    newFile: null
+    oldFile: !uuid '40a83dc52aff305bfa45f6a1c4a3465580bde544'
+  /Channel/HttpChannel/Services:
+    newFile: null
+    oldFile: !uuid 'bc5854d81166fa193ec26559c1a49562165ea30e'
+  /Channel/HttpChannel/Services/HttpService.cs:
+    newFile: null
+    oldFile: !uuid '2ab090028afc982563ce5c732e7aa9826ffad71c'
+  /Channel/HttpChannel/WeatherForecast.cs:
+    newFile: null
+    oldFile: !uuid '19918a7987d8ed0c4d3198403d369bd5afeeb12e'
+  /Channel/HttpChannel/appsettings.Development.json:
+    newFile: null
+    oldFile: !uuid '0c208ae9181e5e5717e47ec1bd59368aebc6066e'
+  /Channel/HttpChannel/appsettings.json:
+    newFile: null
+    oldFile: !uuid '2da180d40d784970bf1281be692be849c18765e1'
+gitCommitId: !uuid 'e965074e074f3ed7f60742b882b297c360eb46f5'
 renames: {
   }
-revisionId: 64
+revisionId: 65
