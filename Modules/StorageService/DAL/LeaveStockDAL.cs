@@ -23,7 +23,7 @@ namespace StorageService.DAL
             return await new SqlBuilder(help).Query<MZ_LeaveStock>()
                 .Append(@"select ls.*,g.OrgName as ToName,c.CustomerName,u.RealName as Creater from mz_leave_stock ls left join mz_customer c on ls.CustomerId=c.Id and ls.LeaveMethod=0 left join mz_org g on ls.ToOrgId=g.Id left join mz_admin u on ls.createId=u.Id where ls.OrgId=").AppendParam(user.OrgId)
                 .Then(!string.IsNullOrEmpty(tmpkey), sql => sql.Append(" and (ls.StockNumber like ").AppendParam(tmpkey + "%")
-                 .Append(" or exists(select ed.StockId from mz_leave_detail ed inner join mz_product_batch p on ed.StockId=ls.Id and ed.TargetId=p.Id where p.BatchName like ").AppendParam("%" + tmpkey + "%").Append(")")
+                 .Append(" or exists(select ed.StockId from mz_leave_detail ed inner join mz_product_batch p on ed.StockId=ls.Id and ed.TargetId=p.Id where p.BatchName like ").AppendParam("%" + tmpkey + "%").Append("))")
                 )
                 .Then(!string.IsNullOrEmpty(query.ToCompany), sql => sql.Append(" and (c.CustomerName like ").AppendParam("%" + tmpkey + "%").Append(" or g.OrgName like ").AppendParam("%" + tmpkey + "%").Append(")"))
                 .Then(query.LeaveMethod != null, sql => sql.Append(" and ls.LeaveMethod=").AppendParam(query.LeaveMethod))

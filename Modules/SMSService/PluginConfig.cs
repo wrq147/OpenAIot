@@ -10,6 +10,7 @@ namespace SMSService
 {
     public class PluginConfig : TANetCorePluginConfig
     {
+        public override string[] DependOn => new string[] { "AuthService", "ShortLinkService" };
         protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
         {
             services.AddScope<SmsCodeBLL>();
