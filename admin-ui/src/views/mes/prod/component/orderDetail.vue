@@ -5,9 +5,9 @@
             <el-descriptions :column="2" border :span="16" class="detail-descriptions">
                 <el-descriptions-item label="工单编号">{{ orderData.WorkNumber }}</el-descriptions-item>
                 <el-descriptions-item label="计划名称">{{ orderData.PlanInfo ? orderData.PlanInfo.PlanName : ''
-                    }}</el-descriptions-item>
+                }}</el-descriptions-item>
                 <el-descriptions-item label="产品名称">{{ orderData.ProdInfo ? orderData.ProdInfo.ProductName : ''
-                    }}</el-descriptions-item>
+                }}</el-descriptions-item>
                 <el-descriptions-item label="状态">
                     <el-tag v-if="orderData.Status == 0" type="warning">待生产</el-tag>
                     <el-tag v-if="orderData.Status == 1">生产中</el-tag>
@@ -15,7 +15,7 @@
                     <el-tag v-if="orderData.Status == 3" type="danger">已取消</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item label="生产数量/计划数量">{{ orderData.BatchCount }}/{{ orderData.Quantity
-                    }}</el-descriptions-item>
+                }}</el-descriptions-item>
                 <el-descriptions-item label="当前进度">
                     <template v-if="orderData.Status == 1">
                         <el-progress type="line"
@@ -150,19 +150,24 @@
                                             <el-timeline-item v-for="(item, index) in timelineData" :key="index"
                                                 :timestamp="item.createTime">
                                                 <span v-if="item.Status == 0" style="color:#909399">
-                                                    {{"工序【" + item.Oper.OperName + "】的"+item.ReportMem.RealName + "创建了一条未提交的报工"}}
+                                                    {{ "工序【" + item.Oper.OperName + "】的" + item.ReportMem.RealName +
+                                                    "创建了一条未提交的报工"}}
                                                 </span>
                                                 <span v-else-if="item.Status == 1" style="color:#E6A23C">
-                                                    {{ "工序【" + item.Oper.OperName + "】的"+item.ReportMem.RealName + "提交了一条未审核的报工" }}
+                                                    {{ "工序【" + item.Oper.OperName + "】的" + item.ReportMem.RealName +
+                                                    "提交了一条未审核的报工" }}
                                                 </span>
                                                 <span v-else-if="item.Status == 2" style="color:#67C23A">
-                                                    {{"工序【" + item.Oper.OperName + "】的"+ item.ReportMem.RealName + "提交了一条已审核的报工" }}
+                                                    {{ "工序【" + item.Oper.OperName + "】的" + item.ReportMem.RealName +
+                                                    "提交了一条已审核的报工" }}
                                                 </span>
                                                 <span v-else-if="item.Status == 3" style="color:#909399">
-                                                    {{"工序【" + item.Oper.OperName + "】的"+ item.ReportMem.RealName + "取消了一条报工" }}
+                                                    {{ "工序【" + item.Oper.OperName + "】的" + item.ReportMem.RealName +
+                                                    "取消了一条报工" }}
                                                 </span>
                                                 <span v-else-if="item.Status == 4" style="color:#F56C6C">
-                                                    {{ "工序【" + item.Oper.OperName + "】的"+item.ReportMem.RealName + "被驳回了一条报工" }}
+                                                    {{ "工序【" + item.Oper.OperName + "】的" + item.ReportMem.RealName +
+                                                    "被驳回了一条报工" }}
                                                 </span>
                                             </el-timeline-item>
                                         </el-timeline>
@@ -417,6 +422,7 @@ export default {
             this.orderData = res.data;
             this.detailDialogVisible = true;
             this.subOrderQueryParams.ParentId = id;
+            this.activeTab = 'subOrderList';
             await this.tabInit(this.activeTab);
         },
         // 关闭弹窗

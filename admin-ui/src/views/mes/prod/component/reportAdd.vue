@@ -10,7 +10,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="批次编号" prop="BatchNo">
-              <el-input v-model="form.BatchNo" placeholder="请输入批次编号" :disabled="isOnlyRead"></el-input>
+              <el-input v-model="form.BatchNo" placeholder="请输入批次编号" :disabled="isOnlyRead"
+                @change="chgBatchNo"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -170,7 +171,8 @@ var dayjs = require("@/utils/day.js");
 import AddEmbed from "@/views/flowable/task/record/AddEmbed";
 import OrgPicker from "@/views/flowable/common/OrgPicker";
 import { orgFormFields } from "@/api/factory/customFields";
-import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo } from '@/api/mes/report'
+import { taskList } from '@/api/mes/task'
+import { GeneratePlaneNumber, reportFormData, reportSubmitModel, reportAdd, reportEdit, reportInfo, WorkBatchInfo } from '@/api/mes/report'
 import { operInfo } from "@/api/mes/oper";
 import { factoryMesConfig } from "@/api/mes/config";
 import { setCustomDefaultValue, checkBeforeSave, setFormItemHide } from '@/utils/field.js'
@@ -268,6 +270,22 @@ export default {
   },
 
   methods: {
+    async chgBatchNo(val) {
+      if (val == "") return;
+      let res = await WorkBatchInfo({ id: val });
+      if (res.data != null) {
+        if (res.data.WorkOrderId != this.form.WorkOrderId) {
+          let tkres = await taskList({ WorkOrderId: res.data.WorkOrderId, OperId: this.form.OperId });
+          if (tkres.data.List.length > 0) {
+            if (tkres.data.List[0].IsFinish == false) {
+              await this.setTaskSelect(tkres.data.List[0]);
+              return;
+            }
+          }
+          this.onTaskClear();
+        }
+      }
+    },
     resetNeedReason() {
       if (!this.form.TaskInfo || !this.form.GoodNum || this.form.WorkTime === undefined) {
         this.NeedReason = false;
@@ -297,7 +315,7 @@ export default {
       }
       this.form.TaskInfo = val;
       this.FieldsPerms = JSON.parse(operRes.data.ReportFields);
-            console.info(this.FieldsPerms)
+      console.info(this.FieldsPerms)
       setCustomDefaultValue(this.filedTableList, this.form.RepBat, this.rules, null, "RepBat.");
       this.$forceUpdate()
       this.resetNeedReason();
@@ -323,7 +341,7 @@ export default {
       this.$forceUpdate();
       this.resetNeedReason();
     },
-    
+
     setFormItemReadOnly(item) {
       let fperm = this.FieldsPerms.filter(x => x.id == item.mapid);
       if (fperm.length > 0) {
@@ -333,7 +351,7 @@ export default {
       }
       return item.is_readonly && this.isOnlyRead;
     },
-  
+
     afterValSearch(val, item) {//关联对象回显时获取列表
       if (val && val.indexOf(',') > -1) {
         let keyVal = val.split(',')

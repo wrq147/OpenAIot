@@ -9,6 +9,15 @@ export function WorkBatchList(params) {
     })
 }
 
+// 获取指定生产批次
+export function WorkBatchInfo(params) {
+    return request({
+        url: '/MESService/Batch/Info',
+        method: 'get',
+        params: params
+    })
+}
+
 // 获取生产工单列表
 export function mesOrderList(params) {
     return request({

@@ -2117,7 +2117,7 @@ namespace StorageService.Business
             string leavestockId = _snowflake.NextId().ToString();
             foreach (var detail in ipt.List)
             {
-                var tmppile = pilelist.Where(x => x.TargetId == detail.TargetId).First();
+                var tmppile = pilelist.Where(x => x.TargetId == detail.TargetId).FirstOrDefault();
                 if (tmppile == null)
                 {
                     continue;

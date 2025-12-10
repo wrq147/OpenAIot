@@ -26,6 +26,14 @@ namespace MESService.DAL
             {
                 expression = expression.And((a, b, c, d) => a.IsFinish == true);
             }
+            if (!string.IsNullOrEmpty(query.WorkOrderId))
+            {
+                expression = expression.And((a, b, c, d) => a.WorkOrderId == query.WorkOrderId);
+            }
+            if (!string.IsNullOrEmpty(query.OperId))
+            {
+                expression = expression.And((a, b, c, d) => a.OperId == query.OperId);
+            }
             if (query.beginTime != null)
             {
                 expression = expression.And((a, b, c, d) => a.CreatedOn >= query.beginTime);

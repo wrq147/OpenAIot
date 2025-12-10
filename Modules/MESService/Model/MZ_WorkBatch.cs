@@ -21,14 +21,16 @@ namespace MESService.Model
         [ID(false)]
         public string Id { get; set; }
         /// <summary>
+        /// 所属组织ID
+        /// </summary>
+        [ID(false)]
+        [JsonConverter(typeof(OnlySeriaize))]
+        public long? OrgId { get; set; }
+        /// <summary>
         /// 通讯编号
         /// </summary>
         public string LNumber { get; set; }
-        /// <summary>
-        /// 所属组织ID
-        /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
-        public long? OrgId { get; set; }
+
         /// <summary>
         /// 关联的工单Id
         /// </summary>

@@ -23,7 +23,7 @@
                             <i
                                 :class="['el-icon', user.type === 'user' ? 'el-icon-user' : 'el-icon-office-building']"></i>
                             <span class="tag-text">{{ user.name || (user.type === "user" ? "未知人员" : "未知部门")
-                                }}</span>
+                            }}</span>
                         </div>
                         <span v-if="!taskData.AssignedUser || parseAssignedUsers(taskData.AssignedUser).length === 0"
                             class="no-user-text">
@@ -43,7 +43,7 @@
                     <el-descriptions-item label="预计平均工时">{{ taskData.WorkTime + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="实际总工时">{{ taskData.WorkTimeTotal + "分钟" }}</el-descriptions-item>
                     <el-descriptions-item label="预计总工时">{{ (taskData.WorkTime * taskData.PlanNum) + "分钟"
-                        }}</el-descriptions-item>
+                    }}</el-descriptions-item>
                     <template v-for="(item, ix) in filedTableList">
                         <el-descriptions-item :label="item.name" :key="'custom_des' + ix">
                             <div v-html="ingetFieldShow(taskData.RouteOper, item)"></div>
@@ -256,6 +256,7 @@ export default {
             let res = await taskInfo({ "id": id });
             this.taskData = res.data;
             this.detailDialogVisible = true;
+            this.activeTab = 'processInfo';
         },
         // 关闭弹窗
         handleClose() {

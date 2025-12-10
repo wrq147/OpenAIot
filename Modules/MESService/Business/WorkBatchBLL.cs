@@ -26,5 +26,15 @@ namespace MESService.Business
             var listpage = await _workBatchDAL.SelectByPage(query, user.OrgId);
             return listpage;
         }
+
+        public virtual async Task<BusResponse<MZ_WorkBatch>> Info(string id, IUserInfo user)
+        {
+            var info = (await _workBatchDAL.SelectList(x => x.Id == id && x.OrgId == user.OrgId)).FirstOrDefault();
+            if (info == null)
+            {
+                return BusResponse<MZ_WorkBatch>.Error(3, "生产批次不存在");
+            }
+            return BusResponse<MZ_WorkBatch>.Success(info);
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace ShortLinkService
 {
     public class PluginConfig : TANetCorePluginConfig
     {
-        public override string[] DependOn => new string[] { "AuthService" };
+        public override string[] DependOn => new string[] { "AuthService", "DeveloperService" };
         protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
         {
             services.AddBLL<ShortLinkBLL>();

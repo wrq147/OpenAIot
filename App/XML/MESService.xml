@@ -37,6 +37,13 @@
             <param name="query"></param>
             <returns></returns>
         </member>
+        <member name="M:MESService.Controller.Batch.Info(System.String)">
+            <summary>
+            获取指定生产批次
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:MESService.Controller.Bom">
             <summary>
             物料清单API
@@ -574,6 +581,16 @@
         <member name="P:MESService.Model.In_WorkTaskList.Status">
             <summary>
             0为进行中，1为已完成
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkTaskList.WorkOrderId">
+            <summary>
+            过滤工单
+            </summary>
+        </member>
+        <member name="P:MESService.Model.In_WorkTaskList.OperId">
+            <summary>
+            过滤工序
             </summary>
         </member>
         <member name="T:MESService.Model.MZ_BatchDevHis">
@@ -1436,14 +1453,14 @@
             批次编号
             </summary>
         </member>
-        <member name="P:MESService.Model.MZ_WorkBatch.LNumber">
-            <summary>
-            通讯编号
-            </summary>
-        </member>
         <member name="P:MESService.Model.MZ_WorkBatch.OrgId">
             <summary>
             所属组织ID
+            </summary>
+        </member>
+        <member name="P:MESService.Model.MZ_WorkBatch.LNumber">
+            <summary>
+            通讯编号
             </summary>
         </member>
         <member name="P:MESService.Model.MZ_WorkBatch.WorkOrderId">

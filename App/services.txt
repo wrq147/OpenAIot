@@ -1,5 +1,4 @@
 ﻿AuthService
-ShortLinkService
 DeveloperService
 DictService
 MonitorService
@@ -7,6 +6,7 @@ SaleService
 ProducerService
 DiscussService
 EmailService
+ShortLinkService
 FlowService
 IoTRulesService
 IoTService

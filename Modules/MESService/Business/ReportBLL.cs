@@ -176,12 +176,29 @@ namespace MESService.Business
                 else
                 {
                     data.RepBat.Id = data.BatchNo;
+                    var wkbatchDAL = _provider.GetService<WorkBatchDAL>();
+                    var oldRepBat = (await wkbatchDAL.SelectList(x => x.Id == data.BatchNo && x.OrgId == user.OrgId)).FirstOrDefault();
+                    data.RepBat.WorkOrderId = string.IsNullOrEmpty(data.WorkOrderId) ? old.WorkOrderId : data.WorkOrderId;
+                    if (oldRepBat != null)
+                    {
+                        if (oldRepBat.WorkOrderId != data.RepBat.WorkOrderId)
+                        {
+                            return BusResponse<int>.Error(299, "批次编号已被其它生产工单使用");
+                        }
+                        data.RepBat.UpdatedOn = DateTime.Now;
+                        await wkbatchDAL.Update(data.RepBat);
+                    }
+                    else
+                    {
+                        data.RepBat.OrgId = user.OrgId;
+                        data.RepBat.IsFinish = false;
+                        data.RepBat.CreatedOn = DateTime.Now;
+                        data.RepBat.UpdatedOn = data.RepBat.CreatedOn;
+                        await wkbatchDAL.Insert(data.RepBat);
+                    }
                 }
 
-                data.RepBat.WorkOrderId = old.WorkOrderId;
-                data.RepBat.OrgId = null;
-                data.RepBat.UpdatedOn = DateTime.Now;
-                await _provider.GetService<WorkBatchDAL>().Update(data.RepBat);
+
             }
             data.SetUpdateBy(user);
             data.DefectNum = 0;
@@ -315,8 +332,13 @@ namespace MESService.Business
             data.RepBat.WorkOrderId = data.WorkOrderId;
             data.RepBat.OrgId = user.OrgId;
             var wkbatchDAL = _provider.GetService<WorkBatchDAL>();
-            if (await wkbatchDAL.Some(x => x.Id == data.BatchNo && x.OrgId == data.RepBat.OrgId))
+            var oldRepBat = (await wkbatchDAL.SelectList(x => x.Id == data.BatchNo && x.OrgId == data.RepBat.OrgId)).FirstOrDefault();
+            if (oldRepBat != null)
             {
+                if (oldRepBat.WorkOrderId != data.WorkOrderId)
+                {
+                    return BusResponse<string>.Error(299, "批次编号已被其它生产工单使用");
+                }
                 data.RepBat.UpdatedOn = DateTime.Now;
                 await wkbatchDAL.Update(data.RepBat);
             }

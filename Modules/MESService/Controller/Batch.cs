@@ -34,5 +34,15 @@ namespace MESService.Controller
         {
             return this.Success(await _batchBLL.SelectByPage(query, GetUser()));
         }
+        /// <summary>
+        /// 获取指定生产批次
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<MZ_WorkBatch>> Info(string id)
+        {
+            return (await _batchBLL.Info(id, GetUser())).ToAjaxResult();
+        }
     }
 }
