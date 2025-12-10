@@ -75,20 +75,13 @@ namespace FlowService.FlowNode.Builder.Step
                 throw new Exception($"流程节点[{context.Step.Name}]至少需要一条过滤条件");
             }
             var rsp = await BusUtility.Call("ChangeData", ae);
-            if (rsp == null)
-            {
-                throw new Exception("执行流程超时");
-            }
-
-
-            var neval = rsp.GetResult<BusResponse<int>>();
-            if (neval.IsSuccess())
+            if (rsp.IsSuccess())
             {
                 return await ExecutionResult.Next();
             }
             else
             {
-                throw new Exception(neval.Message);
+                throw new Exception(rsp.Message);
             }
         }
     }

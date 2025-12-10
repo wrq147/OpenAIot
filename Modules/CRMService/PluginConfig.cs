@@ -83,7 +83,7 @@ namespace CRMService
                 long fromOrgId = evt.GetLong("from");
                 long toOrgId = evt.GetLong("to");
                 var res = await app.ServiceProvider.GetService<CustomerDAL>().SelectCustomerByOrgId(fromOrgId, toOrgId);
-                return CallResponse.Create(res);
+                return CallResponse.Success(res);
             });
 
             //监听业务事件

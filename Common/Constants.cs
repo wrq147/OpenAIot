@@ -17,6 +17,11 @@ namespace Common
         public const int SUCCESS_CODE = 0;
         /// <summary>
         /// 错误代码
+        /// 超时未回复
+        /// </summary>
+        public const int TIME_OUT = -1;
+        /// <summary>
+        /// 错误代码
         /// 表示业务繁忙,请稍候重试
         /// </summary>
         public const int ERROR_BUSY = 100;

@@ -452,12 +452,11 @@ namespace MESService.Business
                     }
                 }
                 var fcrsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                var brs = fcrsp.GetResult<BusResponse<long>>();
-                if (!brs.IsSuccess())
+                if (!fcrsp.IsSuccess())
                 {
-                    return BusResponse<string>.Error(144, brs.Message);
+                    return BusResponse<string>.Error(144, fcrsp.Message);
                 }
-                old.FlowId = brs.Data;
+                old.FlowId = fcrsp.GetResult<long>();
             }
 
             try

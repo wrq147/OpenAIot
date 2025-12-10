@@ -169,12 +169,12 @@ namespace MESService
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<MesActionBLL>().DoPlanActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 else if (tb2.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<MesActionBLL>().DoReportActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 return CallResponse.Next();
             });

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 
 namespace TemplateAction.Core
 {
@@ -19,8 +20,16 @@ namespace TemplateAction.Core
     public class EvtResponse
     {
         /// <summary>
-        /// 是否被处理
+        /// 是否处理
         /// </summary>
         public bool IsDone { get; set; }
+        /// <summary>
+        /// 错误代码：0为成功，-1为超时，其它为失败
+        /// </summary>
+        public int Code { get; set; }
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string Message { get; set; }
     }
 }

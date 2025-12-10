@@ -353,15 +353,15 @@ namespace AfterService.Business
                 }
                 await _devPlaneTaskDAL.Insert(data);
                 var rsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                var brs = rsp.GetResult<BusResponse<long>>();
-                if (brs.IsSuccess())
+                if (rsp.IsSuccess())
                 {
-                    data.FlowId = brs.Data;
+                   
+                    data.FlowId = rsp.GetResult<long>();
                 }
                 else
                 {
                     await _devPlaneTaskDAL.Delete(data.Id);
-                    return BusResponse<string>.Error(114, "流程创建失败:" + brs.Message);
+                    return BusResponse<string>.Error(114, "流程创建失败:" + rsp.Message);
                 }
 
                 MZ_PlaneTask uptask = new MZ_PlaneTask();

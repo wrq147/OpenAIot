@@ -298,6 +298,12 @@
             成功代码
             </summary>
         </member>
+        <member name="F:Common.Constants.TIME_OUT">
+            <summary>
+            错误代码
+            超时未回复
+            </summary>
+        </member>
         <member name="F:Common.Constants.ERROR_BUSY">
             <summary>
             错误代码

@@ -66,7 +66,20 @@ namespace SMSService
                         var context = _provider.GetService<ITAContext>();
                         IDictionary<string, string> cp = new Dictionary<string, string>();
                         string tmpurl = string.IsNullOrEmpty(generOption.Value.url) ? ("http://" + IpHelper.GetAvaOutIp()) : generOption.Value.url;
-                        cp.Add("url", tmpurl + "/wx?t=" + evt.Content);
+                        tmpurl = tmpurl + "/wx?t=" + evt.Content;
+
+                        var newRes = await BusUtility.Call("GetShortLink", new
+                        {
+                            OrgId = evt.OrgId > 0 ? evt.OrgId : 1,
+                            Url = tmpurl
+                        });
+                        if (!newRes.IsSuccess())
+                        {
+                            _log.LogError(newRes.Message);
+                            continue;
+                        }
+
+                        cp.Add("url", newRes.Result);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
                         {
                             _log.LogError("跳转短信发送失败");
@@ -75,7 +88,17 @@ namespace SMSService
                     else if (evt.TargetType == "邀请短信")
                     {
                         IDictionary<string, string> cp = new Dictionary<string, string>();
-                        cp.Add("url", evt.Content);
+                        var newRes = await BusUtility.Call("GetShortLink", new
+                        {
+                            OrgId = evt.OrgId > 0 ? evt.OrgId : 1,
+                            Url = evt.Content
+                        });
+                        if (!newRes.IsSuccess())
+                        {
+                            _log.LogError(newRes.Message);
+                            continue;
+                        }
+                        cp.Add("url", newRes.Result);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
                         {
                             _log.LogError("邀请短信发送失败");
@@ -84,9 +107,22 @@ namespace SMSService
                     else
                     {
                         IDictionary<string, string> cp = new Dictionary<string, string>();
+                        if (!string.IsNullOrEmpty(evt.TargetUrl))
+                        {
+                            var newRes = await BusUtility.Call("GetShortLink", new
+                            {
+                                OrgId = evt.OrgId > 0 ? evt.OrgId : 1,
+                                Url = evt.TargetUrl
+                            });
+                            if (!newRes.IsSuccess())
+                            {
+                                _log.LogError(newRes.Message);
+                                continue;
+                            }
+                            cp.Add("url", newRes.Result);
+                        }
                         cp.Add("label", evt.Label);
                         cp.Add("content", evt.Content);
-                        cp.Add("url", evt.TargetUrl);
                         cp.Add("type", evt.TargetType);
                         if (!await smsHelper.SendSMSCode(targetUser.phone, evt.TargetType, cp))
                         {

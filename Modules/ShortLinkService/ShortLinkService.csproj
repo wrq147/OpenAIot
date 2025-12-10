@@ -9,5 +9,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\AuthService\AuthService.csproj" />
+	  <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
 	</ItemGroup>
 </Project>

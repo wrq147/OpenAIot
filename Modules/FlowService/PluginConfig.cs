@@ -84,16 +84,16 @@ namespace FlowService
                     if (res.IsSuccess())
                     {
                         var tmpformdata = res.Data as MZ_FormData;
-                        return CallResponse.Create(BusResponse<long>.Success(tmpformdata.flowId));
+                        return CallResponse.Success(tmpformdata.flowId);
                     }
                     else
                     {
-                        return CallResponse.Create(BusResponse<long>.Error(res.Code, res.Message));
+                        return CallResponse.Error(res.Code, res.Message);
                     }
                 }
                 catch (Exception ex)
                 {
-                    return CallResponse.Create(BusResponse<long>.Error(21, ex.Message));
+                    return CallResponse.Error(33, ex.Message);
                 }
             });
 

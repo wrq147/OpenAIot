@@ -305,21 +305,13 @@ namespace AfterService.Business
                     }
 
                     var rsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                    if (rsp == null)
+                    if (!rsp.IsSuccess())
                     {
-                        flowerr.Add("【" + dev.Name + "】流程创建超时");
+                        flowerr.Add($"【{dev.Name}】流程创建异常：{rsp.Message}");
                         continue;
                     }
-                    var brs = rsp.GetResult<BusResponse<long>>();
-                    if (brs.IsSuccess())
-                    {
-                        task.FlowId = brs.Data;
-                        planTaskList.Add(task);
-                    }
-                    else
-                    {
-                        flowerr.Add("【" + dev.Name + "】流程异常" + brs.Message);
-                    }
+                    task.FlowId = rsp.GetResult<long>();
+                    planTaskList.Add(task);
                 }
                 if (planTaskList.Count > 0)
                 {

@@ -171,14 +171,13 @@ namespace ProducerService.Business
                         DeviceId = addData.DtuId,
                         Name = data.BatchName
                     });
-                    var brs = tmprsp.GetResult<BusResponse<string>>();
-                    if (brs.IsSuccess())
+                    if (tmprsp.IsSuccess())
                     {
-                        data.Id = brs.Data;
+                        data.Id = tmprsp.Result;
                     }
                     else
                     {
-                        return BusResponse<int>.Error(brs.Code, brs.Message);
+                        return BusResponse<int>.Error(tmprsp.Code, tmprsp.Message);
                     }
                 }
             }
@@ -218,14 +217,14 @@ namespace ProducerService.Business
                         MesProductId = pro.Id,
                         DeviceId = data.DtuId
                     });
-                    var brs = tmprsp.GetResult<BusResponse<string>>();
-                    if (brs.IsSuccess())
+
+                    if (tmprsp.IsSuccess())
                     {
-                        data.Id = brs.Data;
+                        data.Id = tmprsp.Result;
                     }
                     else
                     {
-                        return BusResponse<int>.Error(brs.Code, brs.Message);
+                        return BusResponse<int>.Error(tmprsp.Code, tmprsp.Message);
                     }
                 }
             }

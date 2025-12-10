@@ -180,12 +180,11 @@ namespace IoTService.Business
                     }
 
                     var rsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                    var brs = rsp.GetResult<BusResponse<long>>();
-                    if (brs.IsSuccess())
+                    if (rsp.IsSuccess())
                     {
                         MZ_IotWarning upwarn = new MZ_IotWarning();
                         upwarn.Id = targetrt.Id;
-                        upwarn.FlowId = brs.Data;
+                        upwarn.FlowId = rsp.GetResult<long>();
                         await _warningDAL.Update(upwarn);
                     }
                     else
@@ -205,7 +204,7 @@ namespace IoTService.Business
                         nt.OrgId = warning.OrgId.Value;
                         nt.TargetType = "WarningFlow";
                         nt.TargetUrl = string.Empty;
-                        nt.Content = $"配置的告警流程无法初始化,错误内容：{brs.Message}";
+                        nt.Content = $"配置的告警流程无法初始化,错误内容：{rsp.Message}";
                         nt.Label = "物联设备消息";
                         await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
                     }

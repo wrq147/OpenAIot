@@ -11,6 +11,7 @@ using ProducerService.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
@@ -220,12 +221,11 @@ namespace MESService.Business
                     }
                 }
                 var fcrsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                var brs = fcrsp.GetResult<BusResponse<long>>();
-                if (!brs.IsSuccess())
+                if (!fcrsp.IsSuccess())
                 {
-                    return BusResponse<string>.Error(144, brs.Message);
+                    return BusResponse<string>.Error(144, fcrsp.Message);
                 }
-                old.FlowId = brs.Data;
+                old.FlowId = fcrsp.GetResult<long>();
             }
 
             try

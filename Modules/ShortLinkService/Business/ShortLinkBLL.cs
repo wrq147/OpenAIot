@@ -1,6 +1,8 @@
 ﻿using AuthService;
-using Common.IdGenerator;
+using Common;
 using Common.Share;
+using Microsoft.Extensions.Options;
+using MyAccess.Core;
 using MyAccess.DB.Builder.WhereToSql;
 using ShortLinkService.DAL;
 using ShortLinkService.Model;
@@ -44,7 +46,7 @@ namespace ShortLinkService.Business
             {
                 expression = expression.And(x => x.Url.Contains(query.Key) || x.Id == query.Key);
             }
-            var tpage = await _shortLinkDAL.SelectPage(expression, query, string.Empty);
+            var tpage = await _shortLinkDAL.SelectPage(expression, query, "CreatedOn desc");
             var orgIds = tpage.List.Select(x => x.OrgId).ToList();
             if (orgIds.Count > 0)
             {
@@ -63,14 +65,17 @@ namespace ShortLinkService.Business
         }
         public virtual async Task<BusResponse<string>> Add(string url, long orgId)
         {
-            var snowflake = _provider.GetService<SnowflakeHelper>();
+
+            long tmpval = await _provider.GetService<GeneralRedisHelper>().StringIncrementLongAsync("SL_VAL");
+            string tmpstr = $"{tmpval}{(Utility.ThreadLocalRandom.Value.Next(9999)).ToString().PadLeft(4, '0')}";
             MZ_ShortLink data = new MZ_ShortLink();
-            data.Id = ShortCodeGenerator.Encode(snowflake.NextId());
+            data.Id = ShortCodeGenerator.Encode(Convert.ToInt64(tmpstr));
             data.CreatedOn = DateTime.Now;
             data.OrgId = orgId;
             data.Url = url;
             await _shortLinkDAL.Insert(data);
-            return BusResponse<string>.Success(data.Id);
+            var generOption = _provider.GetService<IOptions<GeneralOption>>();
+            return BusResponse<string>.Success(generOption.Value.url + "/s/" + data.Id);
 
         }
     }

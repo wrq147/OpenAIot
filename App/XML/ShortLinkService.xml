@@ -4,6 +4,21 @@
         <name>ShortLinkService</name>
     </assembly>
     <members>
+        <member name="M:ShortLinkService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ShortLinkService.Controller.HttpSync.ToShort(System.String)">
+            <summary>
+            url转短码
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
         <member name="M:ShortLinkService.Controller.JmpLink.Wx">
             <summary>
             短信跳转小程序中转页面

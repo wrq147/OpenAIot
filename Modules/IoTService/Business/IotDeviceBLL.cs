@@ -1285,7 +1285,7 @@ namespace IoTService.Business
             }
 
 
-            return BusResponse<string>.Success();
+            return BusResponse<string>.Success(data.Id);
         }
 
         public virtual async Task<BusResponse<string>> Insert(MZ_IotDevice data, IUserInfo user, bool enableEvt = true)

@@ -140,7 +140,7 @@ namespace AuthService
                 {
                     paramdata.TargetName = "用户信息";
                     var res = await app.ServiceProvider.GetService<DataChangeBLL>().DoActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 return CallResponse.Next();
             });

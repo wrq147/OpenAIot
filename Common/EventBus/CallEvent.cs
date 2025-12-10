@@ -1,9 +1,11 @@
 ﻿using Common.Json;
+using Common.Share;
 using EasyNetQ;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TemplateAction.Core;
 
 namespace Common.EventBus
@@ -100,20 +102,52 @@ namespace Common.EventBus
     }
     public class CallResponse : EvtResponse
     {
-        public static CallResponse Create(object result)
+        public bool IsSuccess()
+        {
+            return this.Code == Constants.SUCCESS_CODE;
+        }
+        public static CallResponse CreateFrom<T>(BusResponse<T> data)
+        {
+            if (data.IsSuccess())
+            {
+                return Success(data.Data);
+            }
+            else
+            {
+                return Error(data.Code, data.Message);
+            }
+        }
+        public static CallResponse Success(object result)
         {
             CallResponse response = new CallResponse();
-            if (result != null)
+            if (result is string s)
             {
-                response.Result = System.Text.Json.JsonSerializer.Serialize(result, MyDefaultTextJsonConfig.DefaultOptions);
+                response.Result = s;
             }
+            else
+            {
+                if (result != null)
+                {
+                    response.Result = System.Text.Json.JsonSerializer.Serialize(result, MyDefaultTextJsonConfig.DefaultOptions);
+                }
+            }
+
+            response.Code = Constants.SUCCESS_CODE;
+            response.IsDone = true;
+            return response;
+        }
+        public static CallResponse Error(int code, string message)
+        {
+            CallResponse response = new CallResponse();
+            response.Message = message;
+            response.Code = code;
             response.IsDone = true;
             return response;
         }
 
         public static CallResponse Next()
         {
-            CallResponse rsp = Create(string.Empty);
+            CallResponse rsp = Success(string.Empty);
             rsp.IsDone = false;
             return rsp;
         }

@@ -151,7 +151,7 @@ namespace AfterService
                 {
                     paramdata.TargetName = "计划任务单";
                     var res = await app.ServiceProvider.GetService<AfterActionBLL>().DoPlaneActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 return CallResponse.Next();
             });

@@ -545,7 +545,7 @@ namespace StorageService.Business
                             from = data.OrgId.Value,
                             to = data.ToOrgId.Value
                         });
-                        if (rsp != null)
+                        if (rsp.IsSuccess())
                         {
                             customer = rsp.GetResult<Tmp_CustomerInfo>();
                         }
@@ -1103,12 +1103,11 @@ namespace StorageService.Business
                     }
                 }
                 var fcrsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                var brs = fcrsp.GetResult<BusResponse<long>>();
-                if (!brs.IsSuccess())
+                if (!fcrsp.IsSuccess())
                 {
-                    return BusResponse<int>.Error(144, brs.Message);
+                    return BusResponse<int>.Error(144, fcrsp.Message);
                 }
-                old.FlowId = brs.Data;
+                old.FlowId = fcrsp.GetResult<long>();
             }
             using (BLLTranScope scope = new BLLTranScope())
             {
@@ -1450,12 +1449,11 @@ namespace StorageService.Business
                         }
                     }
                     var fcrsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                    var brs = fcrsp.GetResult<BusResponse<long>>();
-                    if (!brs.IsSuccess())
+                    if (!fcrsp.IsSuccess())
                     {
-                        return BusResponse<int>.Error(144, brs.Message);
+                        return BusResponse<int>.Error(144, fcrsp.Message);
                     }
-                    leaveStock.FlowId = brs.Data;
+                    leaveStock.FlowId = fcrsp.GetResult<long>();
                 }
                 else
                 {
@@ -1805,12 +1803,11 @@ namespace StorageService.Business
                 }
 
                 var fcrsp = await BusUtility.Call("NewFlowTask", flowcreate);
-                var brs = fcrsp.GetResult<BusResponse<long>>();
-                if (!brs.IsSuccess())
+                if (!fcrsp.IsSuccess())
                 {
-                    return BusResponse<int>.Error(145, brs.Message);
+                    return BusResponse<int>.Error(145, fcrsp.Message);
                 }
-                enterStock.FlowId = brs.Data;
+                enterStock.FlowId = fcrsp.GetResult<long>();
             }
             else
             {
@@ -2162,7 +2159,7 @@ namespace StorageService.Business
                     from = leaveOrgId,
                     to = user.OrgId
                 });
-                if (tmprr != null)
+                if (tmprr.IsSuccess())
                 {
                     customer = tmprr.GetResult<Tmp_CustomerInfo>();
                 }

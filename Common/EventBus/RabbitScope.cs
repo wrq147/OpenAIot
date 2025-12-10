@@ -98,12 +98,14 @@ namespace Common.EventBus
             {
                 await Bus.PubSub.PublishAsync(evt, key);
                 var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                reply.IsDone = true;
                 return reply;
             }
             catch (Exception ex)
             {
-                return null;
+                var reply = new EvtResponse();
+                reply.Code = Constants.TIME_OUT;
+                reply.Message = "Call请求超时被取消";
+                return (Z)reply;
             }
         }
     }

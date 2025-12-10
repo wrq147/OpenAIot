@@ -238,17 +238,17 @@ namespace StorageService
                 if (tb1.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<StorageActionBLL>().DoStockActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 else if (tb2.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<StorageActionBLL>().DoStockActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 else if (tb4.IsThisTable(paramdata))
                 {
                     var res = await app.ServiceProvider.GetService<StorageActionBLL>().DoApplyActionEvent(paramdata);
-                    return CallResponse.Create(res);
+                    return CallResponse.CreateFrom(res);
                 }
                 return CallResponse.Next();
             });

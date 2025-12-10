@@ -171,14 +171,13 @@ namespace MESService.Business
                             DeviceId = workBatch.LNumber,
                             Name = proBatch.BatchName
                         });
-                        var brs = tmprsp.GetResult<BusResponse<string>>();
-                        if (brs.IsSuccess())
+                        if (tmprsp.IsSuccess())
                         {
-                            batchId = brs.Data;
+                            batchId = tmprsp.Result;
                         }
                         else
                         {
-                            throw new Exception(brs.Message);
+                            throw new Exception(tmprsp.Message);
                         }
                     }
                     proBatch.Id = batchId;
