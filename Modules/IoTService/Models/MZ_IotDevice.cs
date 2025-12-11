@@ -95,10 +95,6 @@ namespace IoTService.Models
         /// </summary>
         public DateTime? LastOnline { get; set; }
         /// <summary>
-        /// 固件版本
-        /// </summary>
-        public int? FirmwareVer { get; set; }
-        /// <summary>
         /// 协议版本
         /// </summary>
         public int? ProductVer { get; set; }
@@ -126,6 +122,10 @@ namespace IoTService.Models
         /// 信号强度
         /// </summary>
         public float? dBm { get; set; }
+        /// <summary>
+        /// 设备类型：0为普通设备，1为视频设备
+        /// </summary>
+        public byte? DType { get; set; }
         /// <summary>
         /// 标签列表
         /// </summary>

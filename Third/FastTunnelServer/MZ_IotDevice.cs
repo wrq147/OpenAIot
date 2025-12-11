@@ -92,10 +92,6 @@ namespace FastTunnelServer
         /// </summary>
         public DateTime? LastOnline { get; set; }
         /// <summary>
-        /// 固件版本
-        /// </summary>
-        public int? FirmwareVer { get; set; }
-        /// <summary>
         /// 协议版本
         /// </summary>
         public int? ProductVer { get; set; }

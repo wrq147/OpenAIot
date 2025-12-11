@@ -24,7 +24,6 @@
                     </el-select>
                     <el-date-picker v-else-if="item.Option.type == 'date'" v-model="item.Value" value-format="timestamp" type="datetime" placeholder="选择日期时间"></el-date-picker>
                     <el-input v-else v-model="item.Value" placeholder="请输入内容"></el-input>
-                    <el-date-picker style="margin-top:10px" v-model="item.indate" value-format="timestamp" type="datetime" placeholder="选择日期时间"></el-date-picker>
                   </el-form-item>
                 </div>
                 <div v-if="canChangeDevice">

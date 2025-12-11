@@ -70,14 +70,14 @@ namespace IotService.Migrations
 .WithColumn("GeoHash").AsString(20).Nullable().WithColumnDescription("经纬度对应geohash码值")
 .WithColumn("CreateOn").AsDateTime().WithColumnDescription("创建时间")
 .WithColumn("LastOnline").AsDateTime().Nullable().WithColumnDescription("最后在线时间")
-.WithColumn("FirmwareVer").AsInt32().WithDefaultValue(0).WithColumnDescription("固件版本")
 .WithColumn("ProductVer").AsInt32().WithDefaultValue(0).WithColumnDescription("协议版本")
                 .WithColumn("Remark").AsString(5000).WithColumnDescription("备注说明")
                 .WithColumn("OwnerOrgPath").AsString(500).WithColumnDescription("设备经过的组织路径")
                 .WithColumn("DeviceUpIdx").AsInt32().Indexed().WithDefaultValue(0).WithColumnDescription("设备所属处理节点索引")
                 .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("设备关键词")
                 .WithColumn("NeedUpdateKey").AsBoolean().Indexed().WithDefaultValue(false).WithColumnDescription("设备是否需要更新关键词")
-                .WithColumn("dBm").AsFloat().Nullable().WithDefaultValue(0).WithColumnDescription("信号强度");
+                .WithColumn("dBm").AsFloat().Nullable().WithDefaultValue(0).WithColumnDescription("信号强度")
+                .WithColumn("DType").AsByte().WithDefaultValue(0).WithColumnDescription("设备类型：0为普通设备，1为视频设备");
 
 
             Create.Index().OnTable("mz_iot_device").OnColumn("ProductId").Ascending().OnColumn("OrgId").Ascending();
@@ -94,6 +94,15 @@ namespace IotService.Migrations
 .WithColumn("Name").AsString(50).WithColumnDescription("标签名称")
 .WithColumn("Value").AsString(500).Nullable().Indexed("TAG_VALUE_IDX").WithColumnDescription("扩展信息值（字符串存储）")
 .WithColumn("NumValue").AsDouble().Nullable().Indexed("TAG_NUMVALUE_IDX").WithColumnDescription("扩展信息值（数值存储）");
+
+
+            Execute.Sql("DROP TABLE IF EXISTS mz_iot_warn_config");
+            Create.Table("mz_iot_warn_config").WithDescription("告警工单配置")
+.WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
+.WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
+.WithColumn("ProductId").AsString(128).Unique().WithColumnDescription("所属物联协议Id")
+.WithColumn("WarnFlowId").AsInt64().WithColumnDescription("告警工单执行流程")
+.WithColumn("WarnFlowInitJson").AsString(50000).WithColumnDescription("表单初始化映射");
 
             Insert.IntoTable("mz_menu").Row(new
             {

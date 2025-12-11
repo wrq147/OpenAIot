@@ -83,10 +83,6 @@ namespace AirJointUI.Models
         /// </summary>
         public string LastOnline { get; set; }
         /// <summary>
-        /// 固件版本
-        /// </summary>
-        public int? FirmwareVer { get; set; }
-        /// <summary>
         /// 产品版本
         /// </summary>
         public int? ProductVer { get; set; }

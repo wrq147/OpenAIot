@@ -1338,7 +1338,6 @@ namespace IoTService.Business
             data.UseUserId = 0;
             data.Online = 2;
             data.CreateOn = DateTime.Now;
-            data.FirmwareVer = 0;
             data.ProductVer = 0;
             data.PhotoUrl ??= string.Empty;
             data.Remark ??= string.Empty;
@@ -1352,6 +1351,7 @@ namespace IoTService.Business
             data.DeviceNumber = data.DeviceNumber.Trim();
             data.NeedUpdateKey = false;
             data.dBm ??= 0;
+            data.DType ??= 0;
 
             var tclassDAL = _provider.GetService<IotClassDAL>();
             if (!string.IsNullOrEmpty(product.Path))
