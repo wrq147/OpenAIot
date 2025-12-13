@@ -2,88 +2,1132 @@
 branches: {
   }
 fileChange:
-  /AirJointUI:
-    newFile: !uuid 'a00a0c4e12ad686a20c14add49096b98e3b9442c'
-    oldFile: !uuid '6e3e82b5cd9888f4fb0684f644658a85a66881c9'
-  /AirJointUI/Models:
-    newFile: !uuid '8d65e419792a1c8e2d0826225aed592c450f3284'
-    oldFile: !uuid '002ce2a0cf2ed176ebee8d2afcc2dd830c9d1745'
-  /AirJointUI/Models/DeviceItem.cs:
-    newFile: !uuid '94d2367402337551fac23a15d5ec326f98717feb'
-    oldFile: !uuid '44867acf7e54c77fb4817d8fef7893ee084b130b'
-  /DigitalCard.sln:
-    newFile: !uuid 'fa0123091e9d84ce2d0d2259cc8b21b693e9f3f5'
-    oldFile: !uuid '20c012ba627ddea2120f5bb4a3a6acb75b898506'
-  /Modules:
-    newFile: !uuid '2d2dd29eafb1aefe772fb4f511b7af5c7e80f0d0'
-    oldFile: !uuid 'f22a845862b6b6e0c836d4e8b84d8ecd12151e21'
-  /Modules/AfterService:
-    newFile: !uuid '6b6d27650bd3b72d80885b7a36fc3089dcdc4cf7'
-    oldFile: !uuid '555c8b8301564a29d4787ddf99126b2480fd3614'
-  /Modules/AfterService/Model:
-    newFile: !uuid '6a7470d2883ddfca6064daeffdb6d03de92ebbe0'
-    oldFile: !uuid '10e38eff5391f1124f060c263ee0923a517a7115'
-  /Modules/AfterService/Model/Out_KfDevice.cs:
-    newFile: !uuid 'd1b8973e7b99db43b4c59b0087e6244791c1336c'
-    oldFile: !uuid '4eaf4b490b3ec9846a330049193a76c9994d2501'
-  /Modules/IoTAIService:
-    newFile: !uuid '3f0fddcab001f912cc88cf9f023f00e4a15a741b'
-    oldFile: !uuid 'ee3d4cab9c10ea2ec88e3a43b36b030122bdf1cf'
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid '7daaf7e5119c3855765d639dca9e4f1a2acc09e0'
-    oldFile: !uuid '401404f544e59aa78656018ca13bfd7728200020'
-  /Modules/IoTService:
-    newFile: !uuid '911c7c649eabe08e21c2b02648bf181e314729c8'
-    oldFile: !uuid '1b0b3740551a9be0bf960fa45e1470e7799342f9'
-  /Modules/IoTService/Business:
-    newFile: !uuid '0e7b2388bdf498cafc8068e7e99dca865f65f25b'
-    oldFile: !uuid '8082305d8558c6676a7782b45058d9fe7c44595f'
-  /Modules/IoTService/Business/IotDeviceBLL.cs:
-    newFile: !uuid '27d76aad0877674015fe1808bf464f1382c073aa'
-    oldFile: !uuid '102119d8f15583f44e75e45261f89ef1f0a7015f'
-  /Modules/IoTService/Migrations:
-    newFile: !uuid 'aa284688f62d2ac62fa643bb381c8387d9c6eb63'
-    oldFile: !uuid '3acc19cd2655f334cb67180e084f3ecf31709edd'
-  /Modules/IoTService/Migrations/IotMigrator.cs:
-    newFile: !uuid 'b19828df57d85e5bfff98d2b8538462cd1a23979'
-    oldFile: !uuid '81bf4d42df98c39e963cf02b19737c05a921c4cb'
-  /Modules/IoTService/Migrations/IotMigratorA1.cs:
-    newFile: !uuid '2bb1a8bfa407e74d9e79c318dbb650fe34078bc8'
-    oldFile: !uuid '6d6da27f5364c0b9850b276fe5054e656dfd532e'
-  /Modules/IoTService/Models:
-    newFile: !uuid '055a6471f3013a4057e2b0ee9d7c5176e1f43f9b'
-    oldFile: !uuid '9fea4559de79c85835ff1a671cb0283bb1205b4f'
-  /Modules/IoTService/Models/MZ_IotDevice.cs:
-    newFile: !uuid 'b9e011e50907c8443a8b7fff6e7130ce17c3149a'
-    oldFile: !uuid '85e5c60c39eacedf73f268136095fa7bc851abac'
   /Third:
-    newFile: !uuid '681edb57bf9b5d4d130cedecaa445784d15a8280'
-    oldFile: !uuid '89b760f96382950abaf4ca0e1f335cc69bfbeef4'
-  /Third/FastTunnelServer:
-    newFile: !uuid '94c1b185b0a40401d948619b06855913755fa7be'
-    oldFile: !uuid 'c059eb502cb530e434c0d5b10a548d240faaa21a'
-  /Third/FastTunnelServer/MZ_IotDevice.cs:
-    newFile: !uuid 'a20285630685db66a198b5045545dd8210bff575'
-    oldFile: !uuid '4732836e0afa90aed2ba4585059734b01b209ac4'
-  /admin-ui:
-    newFile: !uuid '9fe1482f0ad5fcfe45b221df3344b49170096e1d'
-    oldFile: !uuid 'ca17ea551da2a7f1d32efc4f4436df43793d51d4'
-  /admin-ui/src:
-    newFile: !uuid 'a9fb312b5e6751415a6456b2fbe3a3efbbd1f230'
-    oldFile: !uuid '073dcd97f025c4ffc5dcb2c5a4acb17ac004046e'
-  /admin-ui/src/views:
-    newFile: !uuid '961f589c002423d1acb916f78f4a2344025620d5'
-    oldFile: !uuid '132171682974fb762864ff4837e01f04fd2614ec'
-  /admin-ui/src/views/iot:
-    newFile: !uuid 'be54241951f5785b6a21c20ead176afb88dcfc81'
-    oldFile: !uuid 'b87d170b078dc2c4ce890438baa2d40d184b75f9'
-  /admin-ui/src/views/iot/deviceManage:
-    newFile: !uuid '5211c323b31cd096c96727f5e7083c0c4fd781e6'
-    oldFile: !uuid '756adddc1b8b12f0465c1b1fbe09b9040c41a86c'
-  /admin-ui/src/views/iot/deviceManage/deviceTagsInfo.vue:
-    newFile: !uuid '5b9b55bb38bb937214f90aaae96a79df1a238df3'
-    oldFile: !uuid 'cdb70ace5787f50e445c8bfd7a34cce43af4158e'
-gitCommitId: !uuid '714fe6b413320c8cc5806b9765df2a2642d23c30'
+    newFile: !uuid 'c93f559523481cc0213d3bf27195755eba9680c8'
+    oldFile: !uuid '681edb57bf9b5d4d130cedecaa445784d15a8280'
+  /Third/LibGB28181SipServer:
+    newFile: !uuid '9c468bfe87f8c7d21cccc45d2bca48360127a995'
+    oldFile: null
+  /Third/LibGB28181SipServer/AKStreamException.cs:
+    newFile: !uuid '7e53d6b17ca573d37f1c5b1bf3ffcc2512adf762'
+    oldFile: null
+  /Third/LibGB28181SipServer/Common.cs:
+    newFile: !uuid '9da11dec7d621da6b0f0a4a4edf08b6a76c9ecd0'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums:
+    newFile: !uuid 'b7d2dcc14f3d8ec88c748cd032d5884ba5434b2e'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums/EncodingType.cs:
+    newFile: !uuid 'c998d98022ede2342b1ea61544b526d903fddfa9'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums/PTZCommandType.cs:
+    newFile: !uuid 'ee9e7f8feb3568ea0cfa81eb2b9b08715440312a'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums/PushStreamSocketType.cs:
+    newFile: !uuid '8304564304ff48cef1b0a4833d7f2e9d09a29e25'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums/SipChnnelType.cs:
+    newFile: !uuid 'e8ec7cf4076a7d403d0364bd0a69e51e4f8f5315'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums/SipRecordFileQueryType.cs:
+    newFile: !uuid '4e5085096ce841e739b26ac35c3e0ccf26d19952'
+    oldFile: null
+  /Third/LibGB28181SipServer/Enums/StreamDeviceEnums.cs:
+    newFile: !uuid '71a2833dfafd25097d32943ceb44b388e5d45895'
+    oldFile: null
+  /Third/LibGB28181SipServer/ErrorNumber.cs:
+    newFile: !uuid 'ba76f243746ebda44ce69d4e190836288a4dd3b1'
+    oldFile: null
+  /Third/LibGB28181SipServer/Helper:
+    newFile: !uuid 'efa4869d0455782ad0482deb49c65ff8b1c45c86'
+    oldFile: null
+  /Third/LibGB28181SipServer/Helper/CRC32Helper.cs:
+    newFile: !uuid '0066677a6c36847266479fea8a6039c90b7676f8'
+    oldFile: null
+  /Third/LibGB28181SipServer/Helper/JsonHelper.cs:
+    newFile: !uuid 'a488818f0cac8d7824d8f2007acf0243efa1d20c'
+    oldFile: null
+  /Third/LibGB28181SipServer/Helper/ProcessHelper.cs:
+    newFile: !uuid '3ce79d4dc6ecd6a4c511c56fb4ab9b13ac9954a6'
+    oldFile: null
+  /Third/LibGB28181SipServer/Helper/UtilsHelper.cs:
+    newFile: !uuid '63a1500b91b3bd3c31cb9314197c950255d60978'
+    oldFile: null
+  /Third/LibGB28181SipServer/Json:
+    newFile: !uuid '56c0f0a599f31b6827ac87740922cdc6471b3627'
+    oldFile: null
+  /Third/LibGB28181SipServer/Json/DefaultTextJsonConfig.cs:
+    newFile: !uuid '468d63d10a97c83f23367ff08de22010e5228a42'
+    oldFile: null
+  /Third/LibGB28181SipServer/LibGB28181SipServer.csproj:
+    newFile: !uuid 'd395f29a8e4d2af3258b4ce8768695c0612b97de'
+    oldFile: null
+  /Third/LibGB28181SipServer/ResponseStruct.cs:
+    newFile: !uuid '9c974495b25800202730efab45a529e89734d843'
+    oldFile: null
+  /Third/LibGB28181SipServer/SipMethodProxy.cs:
+    newFile: !uuid '738b02af455d1848b8cb159f2e894a81aea12f73'
+    oldFile: null
+  /Third/LibGB28181SipServer/SipMsgProcess.cs:
+    newFile: !uuid '35449fdb9fd8f62f982a77d71c2aa3621264c53c'
+    oldFile: null
+  /Third/LibGB28181SipServer/SipServer.cs:
+    newFile: !uuid 'c9d87accea9b9fc1665887debb2903f4428a822c'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs:
+    newFile: !uuid '7d2c62fc1bbc1a46f46508ff65c3899fe64e5875'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/AKStreamVersions.cs:
+    newFile: !uuid '980d7af79b81a33cd0d6d65fff9936514394bdc0'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/CutMergeStruct.cs:
+    newFile: !uuid 'daf1c758cc42875fa959e71085362c332704e07c'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181:
+    newFile: !uuid '71bd7f869a4b715a03995e198b3f62369b942415'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/NeedReturnTask.cs:
+    newFile: !uuid '0af7877e9b638f09b8180f6a48308d5d8281169e'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net:
+    newFile: !uuid 'c5cab4f99cefaa82127427cda864585679759b23'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net/SDP:
+    newFile: !uuid 'e82969e7ac82bd46e28cc9e53394f599d3caf778'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net/SDP/SDP.cs:
+    newFile: !uuid '0352e556f63cdd25bddd2a9628ebb61c985e479a'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net/SDP/SDPConnectionInformation.cs:
+    newFile: !uuid '3ce4d45b242615045007be8cbc89b401a451de00'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net/SDP/SDPMediaAnnouncement.cs:
+    newFile: !uuid '78740d1191855e3514733d741a5162ca1c1d545e'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net/SDP/SDPMediaFormat.cs:
+    newFile: !uuid '2845d09498d0c1437144c8a151eb2715ff1f609d'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Net/SDP/SDPMediaTypes.cs:
+    newFile: !uuid '7d6c37a54bd30b95f3fcb1f1f1465daa2ba87494'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/NoAuthenticationRequired.cs:
+    newFile: !uuid 'abd415cc33a5e598cd1951f0815e760748b656fd'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/PtzCtrl.cs:
+    newFile: !uuid '086fdbcda5ed772a41c6c13dc0afc944514d5d40'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/SIP:
+    newFile: !uuid 'af55ea6e5710f6a2e1c318043d772cf6d1d69992'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/SIP/ConstString.cs:
+    newFile: !uuid '4b71b85c26bb4970bf01804b95b228cc0f82d7a0'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/SipChannel.cs:
+    newFile: !uuid 'a7f70312b2b2f092f3c8539baacd89689c397117'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/SipClientConfig.cs:
+    newFile: !uuid 'ca4016f3e1fdb1277febfef5fa56b95d58395be2'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/SipDevice.cs:
+    newFile: !uuid '8709bc72695e45a3a26b74002817621ab5a89966'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/SipServerConfig.cs:
+    newFile: !uuid 'fba6da1c70f310b83344349ab8b938c0c70125fb'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys:
+    newFile: !uuid 'c8d3d98f8a735013742b2c18c9d9c955940feedb'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Auth:
+    newFile: !uuid 'ed7b0405dec4b737796b4793fa0a5f459cde14ab'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Auth/SIPSorcerySecurityHeader.cs:
+    newFile: !uuid '494dcab7b7a1f69ecc5d8a6c431a70023ab60ccd'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Auth/ServiceAuthToken.cs:
+    newFile: !uuid '436dc06d21c00f16a862d2647d291c92cfd1e7c2'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/DevType.cs:
+    newFile: !uuid '7946f051396d32d71060ccdf190c63f36d36f30f'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/EnvironmentVariables.cs:
+    newFile: !uuid 'bf331bb71010b725f49b36b2ab6fcc948abde69b'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Net:
+    newFile: !uuid '0bd62ea1b40953a8a6fdc4f3f2d43088bde736cb'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Net/IPSocket.cs:
+    newFile: !uuid 'ce8190c8252e9ae55daa3f66623eb9278373d870'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Net/LocalIPConfig.cs:
+    newFile: !uuid '1b9bb510f50e3447c985b68cb2def4c306406607'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Net/NetServices.cs:
+    newFile: !uuid 'afe6565d91ceca46e2f07ace9c01407c5c20aa99'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/Net/UDPListener.cs:
+    newFile: !uuid '55adc4d555eabe5bc6d1c4cc7b0bfd2d6fa901dc'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/SIPSorceryPerformanceMonitor.cs:
+    newFile: !uuid '577a1f9c8a1b96ec57916043e208a8004bf22bb3'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/StorageTypes.cs:
+    newFile: !uuid 'cdf755cda5e9dcc30317d6ffc813c261c5884c27'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/TimeConvert.cs:
+    newFile: !uuid '4777b7661277108dce294db4e6dc21a357b3a900'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/TypeExtensions.cs:
+    newFile: !uuid 'a25611512bf731b2606e075ca37f5f12ae2e5290'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/Sys/WCFUtility.cs:
+    newFile: !uuid 'a87fac4e53167595ced4f3d71e805549964c01e4'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML:
+    newFile: !uuid 'aa534c39874bfcd27c67ec85b84bb00b8aaa2bd4'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/Alarm.cs:
+    newFile: !uuid '6810239b395a26040d4d56de12b04ac1797da9d0'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/Catalog.cs:
+    newFile: !uuid '154e9497898c3e36ad4009d87f4d23fa07c5bfa5'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/CommandType.cs:
+    newFile: !uuid '789a2cf8c102cb03e12f469ad171fe0644872eee'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/ConfigType.cs:
+    newFile: !uuid 'e48bdc88ade59914fba9e0ba306754310456c6b8'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/Control.cs:
+    newFile: !uuid 'b25fe1be3a57a9c98d6e746034c64a6949344733'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/DeviceConfigDownload.cs:
+    newFile: !uuid '15c6561b1f98c4dd3dbff06b548f2a4d1fa57bee'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/DeviceInfo.cs:
+    newFile: !uuid '1a86721860f7c7eb074385590e7579234673c958'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/DeviceStatus.cs:
+    newFile: !uuid '76f6a65748c5dd0168ea05f45b65b0dcc4b339f1'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/DragZoom.cs:
+    newFile: !uuid '7a7df78b3274b19160f363458cc3e71f2d7db33f'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/EventType.cs:
+    newFile: !uuid 'cf974ca2e9ddb1f86a3974756f0b424de2e8ebf9'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/GroupInfo.cs:
+    newFile: !uuid '5871da787c2ce3a06be8693630a6f0465ef5f1e7'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/HomePositionCmd.cs:
+    newFile: !uuid '4024e0039e1fba273e6da96f9f39d748a801587e'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/KeepAlive.cs:
+    newFile: !uuid '398d7fa62af4c9aa9c16c655c0fede6c5351759c'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/KeyFrameCmd.cs:
+    newFile: !uuid '0bd03857bc8cbb901816bfc7632aa1c08bb5ab40'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/MediaStatus.cs:
+    newFile: !uuid '54e0187f06c0b70ab5cbfed456e83198f18a1110'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/MobilePositionQuery.cs:
+    newFile: !uuid '8d6f8fba3c5f5b639809feabd88ccd323f5c2913'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/NvrExport.cs:
+    newFile: !uuid 'b5dffdfbcd6ea67f3e9297dd3d9597ab50e5ffce'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/PTZControl.cs:
+    newFile: !uuid '07228fb29b5a49bb663ed7e22c07ef2e4482b44f'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/PositionInfoSubNotify.cs:
+    newFile: !uuid '2abfa77824d8c028fb2e504fe7cb3e13c3b80c0a'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/PresetQuery.cs:
+    newFile: !uuid 'f4de94a05148cff9e6587578b79122082e29d613'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/RecordInfo.cs:
+    newFile: !uuid '251e2f8e6583f45986fb6dca2ef07d309d4fb111'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/RecordInfoEx.cs:
+    newFile: !uuid '41ee87290d51c2da0e28040e8887eac1818f2934'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/Regeister.cs:
+    newFile: !uuid 'acfe5680d1e262d17fbb9376596a07705fdc239d'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/ServiceStatus.cs:
+    newFile: !uuid '776a02001151dd45114d3ffda50a5b8ef0198547'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/SipServer.cs:
+    newFile: !uuid 'e5aba0acfdd558d4eb1269cf7c49ae74ce295476'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/SipSocket.cs:
+    newFile: !uuid '467ef0f9c2edef4b95c7ef97a6174fc576497de7'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/VoiceBroadcastNotify.cs:
+    newFile: !uuid 'feb8278f4a60b7d8cf1b168f18592996883d5d09'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/GB28181/XML/XmlHelper.cs:
+    newFile: !uuid '117c5cdad712851379c26f271a3b3a026597af2e'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/IPInfo.cs:
+    newFile: !uuid 'a8d5b3aebb6f538312ce99e9a6c899f8dc60d962'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/MediaServerStreamInfo.cs:
+    newFile: !uuid 'c46831d7a761fe202e90b48e2e5b1b8743337c2e'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/PerformanceInfo.cs:
+    newFile: !uuid 'd723a762683ec583350602c3f96555dd1fffddde'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/PushMediaInfo.cs:
+    newFile: !uuid 'a6e0882e36f17531bf9a27069434505364fe272f'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/SipQueryRecordFile.cs:
+    newFile: !uuid 'f5402aa4a496389638f778b55b8cd6a15c3864e8'
+    oldFile: null
+  /Third/LibGB28181SipServer/Structs/VideoChannelRecordInfo.cs:
+    newFile: !uuid '72f1b1b37202cc5e6569691e0db00198ecab6c80'
+    oldFile: null
+  /Third/LibGB28181SipServer/System:
+    newFile: !uuid 'f9c8c9f3c2cfd2044520e65577ca1671fdefe6e7'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/CPULinuxLoadValue.cs:
+    newFile: !uuid '9437d35cb62f96a2d51c0a390199024ecc5a7ec8'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/CPUMacOSLoadValue.cs:
+    newFile: !uuid 'dc50a301ed5d859755afb34cd6317bfd37a405ce'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/CPUWinLoadValue.cs:
+    newFile: !uuid 'ffba71519f2e532aa6b7f0b7d672ee505e808e9d'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/DiskInfoValue.cs:
+    newFile: !uuid 'fe75330e8896d00086a622e8fbbac893cb97d928'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware:
+    newFile: !uuid '519745713fda008c0f5f50e13955dd925c08fe1b'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/BSDHardwareInfo.cs:
+    newFile: !uuid '0de080df9d7cb2a41d65d161a13502790b16113b'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/CPU:
+    newFile: !uuid '8bef3499d466b8b2db831d1f665692a235da818c'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/CPU/BSDCPUInfo.cs:
+    newFile: !uuid '45a4615032bb43de2cc4f19b9c8133b13b2e6254'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/CPU/CPUInfo.cs:
+    newFile: !uuid '72dca60d141f51e43f96e28f1f5bf4ecf3d45a83'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/CPU/LinuxCPUInfo.cs:
+    newFile: !uuid '7c6a8d54a64ca1a0ce87d2d1a5ba1b223604b75e'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/CPU/UnityCPUInfo.cs:
+    newFile: !uuid 'e3dea0c56e13a3a4a4403d74e2110770fa9530d9'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/CPU/WindowsCPUInfo.cs:
+    newFile: !uuid '71d4935e556ad2634939b7d3efe0e409bd0b9f90'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/Display:
+    newFile: !uuid 'cb72a8a470bc0d688321a18bfb83266a31707621'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/Display/DisplayInfo.cs:
+    newFile: !uuid '5e1003e390c63b51e701d781f0697e5e4114ef3d'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/GPU:
+    newFile: !uuid 'ad101c825efc5929b47f5527f383b7738e76703c'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/GPU/GPUInfo.cs:
+    newFile: !uuid '8b0f9b2245926bd293dfcf81b004033008804b00'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/GPU/LinuxGPUInfo.cs:
+    newFile: !uuid 'a47a76a5fd5d5eb1d908376a27714cf66ef9b960'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/GPU/MacOSXGPUInfo.cs:
+    newFile: !uuid 'd62527a973b4c5ef7c19eb43483d0bca4c3848c6'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/GPU/UnityGPUInfo.cs:
+    newFile: !uuid '3441d009f878903e12c7f23dc70b0754f5861cd2'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/GPU/WindowsGPUInfo.cs:
+    newFile: !uuid 'e588e9f3f8081f3e6a45eb05febee755f611017e'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/HardwareInfo.cs:
+    newFile: !uuid 'b382c106b0ee4876d710a04d949c78e1b886db3f'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/LinuxHardwareInfo.cs:
+    newFile: !uuid 'cdaa15bbfa264e3771ad06b441675989cb40010e'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/MacOSXHardwareInfo.cs:
+    newFile: !uuid 'b05e25ffe9ff82c795a6a20a2c61a02e6f829e3a'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/RAM:
+    newFile: !uuid '326de1571d4a63544d5035454ee664f3ba065099'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/RAM/BSDRAMInfo.cs:
+    newFile: !uuid '92c40739d15ca5f08a40e45f7f2b365344e56e84'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/RAM/LinuxRAMInfo.cs:
+    newFile: !uuid '174f33efabf3cbcd1ee7145abf32038ec98aa166'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/RAM/RAMInfo.cs:
+    newFile: !uuid 'a29975c17f82388fa93daa9de0ba9c50ff32aa17'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/RAM/UnityRAMInfo.cs:
+    newFile: !uuid '1ef0cbdf8414dbc257b01e176c378217d19fa9b6'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/RAM/WindowsRAMInfo.cs:
+    newFile: !uuid '665c7292d8592f66e32e59ca1d4e88a62d08643e'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/UnityHardwareInfo.cs:
+    newFile: !uuid '3e85851c09872c40ddfad9a3ad44e5912bc5ea02'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Hardware/WindowsHardwareInfo.cs:
+    newFile: !uuid 'a17f063fe25beed0117968baad7270651a97cc75'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/MemoryLinuxValue.cs:
+    newFile: !uuid '130af3ea2fd8d4fce6c2933aa26f980ad33e6d4d'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/MemoryMacValue.cs:
+    newFile: !uuid '2c808874b75b936c1138859238d76477572b68dc'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/MemoryWinValue.cs:
+    newFile: !uuid 'c5bf2f12332988408838c4728a475c9f13c4ea4e'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/NetWorkLinuxValue.cs:
+    newFile: !uuid 'aeb5e8041ad8a495c975ed9a4d1d6fd3b098af43'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/NetWorkMacValue.cs:
+    newFile: !uuid '407e97bb48d6911908e457ddff4ffa0f6b0fa132'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/NetWorkWinValue.cs:
+    newFile: !uuid '4e376a626e576a6095b3e22cfe4ff938325fdb63'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/NetWorkWinValue2.cs:
+    newFile: !uuid 'a40c4f0436bce66e2eb3a966a863c98fb0ee2a3f'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/NetWorkWinValue3.cs:
+    newFile: !uuid '0487d74d602fef5570e67e3e0e35353953294daf'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/NetWrokWinValue2IfTableStructs.cs:
+    newFile: !uuid '2c4f7ce2185a66549dcdb006a61f38439aecb2dd'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem:
+    newFile: !uuid 'b1ee383af41f3e497616b3f3340c167f6371204f'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/BSDOperatingSystemInfo.cs:
+    newFile: !uuid 'a5f4090a1f00258dba554738032f3849c6104d9c'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/LinuxOperatingSystemInfo.cs:
+    newFile: !uuid '81abd43ca5b2a1a70f458ef46eb538c965656f26'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/MacOSXOperatingSystemInfo.cs:
+    newFile: !uuid '87147964c4c43a4b9ca809b95a7f6699673691ac'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/OperatingSystemInfo.cs:
+    newFile: !uuid '82a2d3ce6295505d6bc70e3c4a6eb8c54d619fd2'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/OtherOperatingSystemInfo.cs:
+    newFile: !uuid '8454cd4a1cb2a11d49224f96ef85c426c058723f'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/UnityOperatingSystemInfo.cs:
+    newFile: !uuid '212b0abec460d2ea12d9aabd131aadd5db0ed801'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/UnixOperatingSystemInfo.cs:
+    newFile: !uuid 'b8827eff386d6886595a7b0a36d25deda43b6ce4'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/OperatingSystem/WindowsOperatingSystemInfo.cs:
+    newFile: !uuid '1bdb1ab716a8baaf0944b1093e61bf0d4de38d58'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/SystemInfo.cs:
+    newFile: !uuid 'a0548831ccad3d5c05e1b89cee3d7684faa584bc'
+    oldFile: null
+  /Third/LibGB28181SipServer/System/Utils.cs:
+    newFile: !uuid '9593c0d2cd36c720d7770746eb7a23f9c31805d8'
+    oldFile: null
+  /Third/SipSorcery:
+    newFile: !uuid '0b5fc0f42ace9bfb60a9299ad2b094bda190c239'
+    oldFile: null
+  /Third/SipSorcery/SIPSorcery.csproj:
+    newFile: !uuid 'f51cde4e46280c17978e09140eab5a2326d93ba3'
+    oldFile: null
+  /Third/SipSorcery/SIPSorcery.sln:
+    newFile: !uuid 'c84b406db35511218a9e1410c69034c0ad93f817'
+    oldFile: null
+  /Third/SipSorcery/app:
+    newFile: !uuid '8ab20cbe84de595c55f6c2ea10cdd805c135ece6'
+    oldFile: null
+  /Third/SipSorcery/app/Media:
+    newFile: !uuid 'ae3f15398619f650341e2602e62aaf6cbc821f8f'
+    oldFile: null
+  /Third/SipSorcery/app/Media/AudioSendOnlyMediaSession.cs:
+    newFile: !uuid 'f15ea65299adf5aad4d0c5c9b6cce7cf5951e32e'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Codecs:
+    newFile: !uuid '54025df78aa9c09e0ed1dc42aecab1eaa31a322f'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Codecs/AudioEncoder.cs:
+    newFile: !uuid '9f8681a260196fe63f6f2b007bd9881f5761845d'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Codecs/G711Codecs.cs:
+    newFile: !uuid 'aae571f205d5eac4cf0f277255082f50ce03ad1b'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Codecs/G722Codec.cs:
+    newFile: !uuid '8c6f2cb1f17b6f888b03f492925615eacc732b9f'
+    oldFile: null
+  /Third/SipSorcery/app/Media/IMediaSession.cs:
+    newFile: !uuid 'd56b766c92f06891611772e6e65a188a730de804'
+    oldFile: null
+  /Third/SipSorcery/app/Media/MusicMediaSession.cs:
+    newFile: !uuid 'ad4e9fee789966bc6aef4bbcad52d41a26f9602f'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Sources:
+    newFile: !uuid '475310020a661005ff3d62e87f52ebcf9149412c'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Sources/AudioExtrasSource.cs:
+    newFile: !uuid 'bed7c840faf5bd63b2e79d09cd8b21f740d8dacf'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Sources/AudioSignalGenerator.cs:
+    newFile: !uuid 'a72151a5e01dbafe3ec74a77561746a496062324'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Sources/EmptyAudioSource.cs:
+    newFile: !uuid '16d5d1667cf66b87061cdfaad2cbfc8109d0c623'
+    oldFile: null
+  /Third/SipSorcery/app/Media/Sources/VideoTestPatternSource.cs:
+    newFile: !uuid 'cedb2538d05bf72c75209d87a3ceefb7d3d5f5c5'
+    oldFile: null
+  /Third/SipSorcery/app/Media/VoIPMediaSession.cs:
+    newFile: !uuid '8779c5a21700906c46f19eaeb921431e292365f1'
+    oldFile: null
+  /Third/SipSorcery/app/Media/VoIPMediaSessionConfig.cs:
+    newFile: !uuid 'bc137f6772f533355eb46714048fc030c1ee225e'
+    oldFile: null
+  /Third/SipSorcery/app/SIPPacketMangler.cs:
+    newFile: !uuid 'feca5dcbcb3faf49c250b1e0eeea985c7e905a3c'
+    oldFile: null
+  /Third/SipSorcery/app/SIPRequestAuthoriser:
+    newFile: !uuid '6eb9a2d198f670bb6e0de6516ce514610caa356a'
+    oldFile: null
+  /Third/SipSorcery/app/SIPRequestAuthoriser/SIPRequestAuthenticationResult.cs:
+    newFile: !uuid 'b35966a5ff97a069166bd63877c0440cad6338f9'
+    oldFile: null
+  /Third/SipSorcery/app/SIPRequestAuthoriser/SIPRequestAuthenticator.cs:
+    newFile: !uuid '602e31eceffd4626c194eff24cd56a33d35a7349'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents:
+    newFile: !uuid 'e149c3dd5be1210b5d640a12262b6c8ff493b146'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/ISIPAccount.cs:
+    newFile: !uuid '995e51d4e845defd768c32144104c2fb8cf068d3'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/ISIPClientUserAgent.cs:
+    newFile: !uuid '0d41d17f4c0125e7d6fa65aae70135f3fdaa28ff'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/ISIPServerUserAgent.cs:
+    newFile: !uuid 'cfdf6bb697fc721fb92e8bdf65c09586cd8d2581'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPB2BUserAgent.cs:
+    newFile: !uuid '452b0d9910d718a3997cf001d998b9a005c94843'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPCallDescriptor.cs:
+    newFile: !uuid '873e263c4008128ef0c6a24dfa5cef58cc004d83'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPClientUserAgent.cs:
+    newFile: !uuid '14ad1b405a6e31e6393874caa5bb385f089e1485'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPNonInviteClientUserAgent.cs:
+    newFile: !uuid '156c7832ff1c003546e1576ee1b5be1d784a6aaf'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPNonInviteServerUserAgent.cs:
+    newFile: !uuid '0f9bac14b6d2efe10e848e956affa7a5df33de67'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPNotifierClient.cs:
+    newFile: !uuid '251d7e00494999539cc7b7f3ee63e78c36933108'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPRegistrationUserAgent.cs:
+    newFile: !uuid 'c1f4f27eb05243488e30ad1f4a48b730fa2f93e2'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPServerUserAgent.cs:
+    newFile: !uuid 'ad50b34c9c28ebdc766967e7537add9c7007bef5'
+    oldFile: null
+  /Third/SipSorcery/app/SIPUserAgents/SIPUserAgent.cs:
+    newFile: !uuid '523c6f85e6d61c1af9eb2479a042eab3d6b03c38'
+    oldFile: null
+  /Third/SipSorcery/core:
+    newFile: !uuid '0466b267964c75d27b5dcc705c57befe0737bd55'
+    oldFile: null
+  /Third/SipSorcery/core/CallProperties.cs:
+    newFile: !uuid 'a32449614274011f322b56b11ab39988049ff62d'
+    oldFile: null
+  /Third/SipSorcery/core/DNS:
+    newFile: !uuid '1201f52ee5e2941a1b064afbef594e28d247e787'
+    oldFile: null
+  /Third/SipSorcery/core/DNS/SIPDNSConstants.cs:
+    newFile: !uuid 'dd7bd59fa80c8ea2721c70330765426c08d192ba'
+    oldFile: null
+  /Third/SipSorcery/core/DNS/SIPDns.cs:
+    newFile: !uuid 'c9df0460fd8fc88d610b0ef32cf74986e46e9d35'
+    oldFile: null
+  /Third/SipSorcery/core/SIP:
+    newFile: !uuid '5d93f10b0d2e60520e13163f8a5494180a2326bf'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels:
+    newFile: !uuid 'd9c9006a0df87a0192bd985cf2682b85b4c524cd'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPChannel.cs:
+    newFile: !uuid '403a9feb9c3601673252b0df871a5d7b1d8f2f46'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPClientWebSocketChannel.cs:
+    newFile: !uuid 'b82f214924c793069ea7966de855133c8a17eacc'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPStreamConnection.cs:
+    newFile: !uuid 'fd0d178b4e6f3f5b9600af63359b7726aac73552'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPTCPChannel.cs:
+    newFile: !uuid '233731961a3bb07fb7479b7b641c2745d296622b'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPTLSChannel.cs:
+    newFile: !uuid 'a4096a4b3cb24e0dbcbfc7598c620a49711f3a81'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPUDPChannel.cs:
+    newFile: !uuid 'fc76553833a56a18ca75f55c45322c7cd335ce6b'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/Channels/SIPWebSocketChannel.cs:
+    newFile: !uuid '8ab8117acd751e450dc588db1dd62fbf75175c0c'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPAuthChallenge.cs:
+    newFile: !uuid 'b6775972493e97040be64d46bea562d237ae2278'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPAuthorisationDigest.cs:
+    newFile: !uuid '25aefb1db361666aa44f6eb034f51419b23e6b04'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPConstants.cs:
+    newFile: !uuid 'a9225648b39ec814f047728dfacef169cadd6cfa'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPDialogue.cs:
+    newFile: !uuid '6b2cfd1a09304b0f5e905d6788a5aa943f27e5f7'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPEndPoint.cs:
+    newFile: !uuid '8739f78f6bbb7aa586a5e7f0a053e91db228753f'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPHeader.cs:
+    newFile: !uuid '59f9b82779845d3b15cbac52387ba1f23b7098bf'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPMessageBase.cs:
+    newFile: !uuid '1272393271bd13993cfa430bb68f541283842a1d'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPMessageBuffer.cs:
+    newFile: !uuid '743a413c5777063cac3bf6a0265c89e7047a3bea'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPParameterlessURI.cs:
+    newFile: !uuid '24b8cfa8f96ed81bb13b73499607063d2c4c6952'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPParameters.cs:
+    newFile: !uuid '67dc22754c875d22646a100be275bef12553bc23'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPReplacesParameter.cs:
+    newFile: !uuid 'b885e5657139c347350af85cc082e65c9b004de0'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPRequest.cs:
+    newFile: !uuid '10182b17a1a04c5f60c7c6e5a31e2a3a9bd977d7'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPResponse.cs:
+    newFile: !uuid '5a9800c6ab27ad2ff7f4da8e75f653eda8de94cf'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPTransport.cs:
+    newFile: !uuid '8658064ae02e99c1c7890210ec3925e7b616230d'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPURI.cs:
+    newFile: !uuid '12dcded9d4e3ca8964ff793d6ff07b0ffd6ef863'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPUserAgentsRolesEnum.cs:
+    newFile: !uuid '19a4179339b9023f3148c2f780ce0fd835f75092'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPUserField.cs:
+    newFile: !uuid '7e19676310c3c035025e874bce8ad1175d2cf73e'
+    oldFile: null
+  /Third/SipSorcery/core/SIP/SIPValidationException.cs:
+    newFile: !uuid '544c18fc54004a96cb9249a8245819ed5e1a7062'
+    oldFile: null
+  /Third/SipSorcery/core/SIPCDR:
+    newFile: !uuid '222d6a71add33d7cef88a3aaf9bf153865f2ddfb'
+    oldFile: null
+  /Third/SipSorcery/core/SIPCDR/SIPCDR.cs:
+    newFile: !uuid '383d946285f714793dae425200d417f9119decf0'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents:
+    newFile: !uuid '172639d7b59d2a51ff7a6d359a15b91045be163c'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Dialog:
+    newFile: !uuid '377d8dcb761aa9444585b350604c407106455b4f'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Dialog/EventDialogSchema.xsd:
+    newFile: !uuid 'eb1fabcc46952fd59ac1368c6821231c17d3ff78'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Dialog/SIPEventDialog.cs:
+    newFile: !uuid '0abbab9ca1dd5a10a77777ad8bf0b5668952f0ad'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Dialog/SIPEventDialogInfo.cs:
+    newFile: !uuid 'b1b5cd4ab41bbc38f7fe987f6a31c6e4cf58fbf6'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Dialog/SIPEventDialogParticipant.cs:
+    newFile: !uuid 'd8aab988d9fe8db8ad626d57e4fd9512c96343d9'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Presence:
+    newFile: !uuid '4bc19959f0b8251b60a5124f3350efd7757570af'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Presence/PIDFSchema.xsd:
+    newFile: !uuid 'a3b62a136f9f42145323d4797ac86bedb774275c'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Presence/SIPEventPresence.cs:
+    newFile: !uuid 'fb1d7a35960ea35fc6d2d4d559ed11b4ad9c8733'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/Presence/SIPEventPresenceTuple.cs:
+    newFile: !uuid 'aca469c9e33e397c122281c8cbfbeb95f22ac06b'
+    oldFile: null
+  /Third/SipSorcery/core/SIPEvents/SIPEventPackages.cs:
+    newFile: !uuid '85b3f4f2e064ee615ee8eee0524d1115c9e2e9b1'
+    oldFile: null
+  /Third/SipSorcery/core/SIPFunctionDelegates.cs:
+    newFile: !uuid '700f5521b267d32ccd3873295ef3f877488717b3'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransactions:
+    newFile: !uuid 'e79808a5400cff56d75245b9493197cd8242ca53'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransactions/SIPNonInviteTransaction.cs:
+    newFile: !uuid '4cc78adb020a09b3b350abb85733d3785edbbc4e'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransactions/SIPTransaction.cs:
+    newFile: !uuid 'eabb21da2c3e8bedfe4c0139a526c38d602fac88'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransactions/SIPTransactionEngine.cs:
+    newFile: !uuid '1bdd80a6190875c144fe8e0d718284dba904bc33'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransactions/UACInviteTransaction.cs:
+    newFile: !uuid '848852b019d4b4a6208582ce73cea24b8447be94'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransactions/UASInviteTransaction.cs:
+    newFile: !uuid '651718e025989585a0e818cf0aea732a3a2cd491'
+    oldFile: null
+  /Third/SipSorcery/core/SIPTransportConfig.cs:
+    newFile: !uuid '6b365d2c7ecfb543919304a83f5a30bf91deb8fd'
+    oldFile: null
+  /Third/SipSorcery/media:
+    newFile: !uuid 'c560b8f2c9c891f4dc7f97605eae621b7d608f77'
+    oldFile: null
+  /Third/SipSorcery/media/Macroform_-_Simplicity.raw:
+    newFile: !uuid 'eb6aa4b908e3f8aa8f95fe4bc35612cbaf51c110'
+    oldFile: null
+  /Third/SipSorcery/media/testpattern.i420:
+    newFile: !uuid '2b66fecfe6908eaf5b93cea4b56469bb44bdb7c7'
+    oldFile: null
+  /Third/SipSorcery/net:
+    newFile: !uuid '07daf3537d0fd86efa6e99ce097c3ea037adce50'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp:
+    newFile: !uuid '54293b95ecc88402b1c9aa9d872a50facda38e88'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/DtlsSrtpClient.cs:
+    newFile: !uuid 'bb4942b5f86fa08aeb075ae05eb2c68996c45971'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/DtlsSrtpServer.cs:
+    newFile: !uuid 'fc42b1ca06c6d220c5cc9ba61bdd719d42736516'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/DtlsSrtpTransport.cs:
+    newFile: !uuid '0c3a3f3a37fb66d842d4afa82329f9ba1d8b3d48'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/DtlsUtils.cs:
+    newFile: !uuid 'e4c109ec7f1d4379f28e011b4d99adfd86081a93'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/SrtpHandler.cs:
+    newFile: !uuid '409787d6a605710668d39bd25fde34a5830cf150'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/SrtpParameters.cs:
+    newFile: !uuid '96dfef7a582a2202414db574acedd44e9012c9a7'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/SrtpPolicy.cs:
+    newFile: !uuid '96b76be153184e8d17dd58091484cad58142e7de'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform:
+    newFile: !uuid '360957eebe6a44c89a90252ea3be8580fc44550d'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/IPackerTransformer.cs:
+    newFile: !uuid '81bb0ebc40330b1afb0a7cba1fc5fd2270aa4c70'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/ITransformEngine.cs:
+    newFile: !uuid '1feb253df1ca8e0012e212cd81e9f8bdf2b71775'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/RawPacket.cs:
+    newFile: !uuid 'fa30112db49f5785aa9c55d6b4a556a070a167b0'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtcpCryptoContext.cs:
+    newFile: !uuid '8d0c4c4a06976c9397df9734bc75735a0dd0f604'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtcpTransformer.cs:
+    newFile: !uuid 'ed67fc9e13cd53d15de7842922daf08a890be410'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtpCipherCTR.cs:
+    newFile: !uuid '2302b2ba9df3497ced8717aa764144a0152fccc3'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtpCipherF8.cs:
+    newFile: !uuid 'e732d1c2848246d190c3569645a32e96bed4bae7'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtpCryptoContext.cs:
+    newFile: !uuid '8a85caf85d323dd39a6b7d62f8c147b0a6a2f95c'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtpTransformEngine.cs:
+    newFile: !uuid '8f1ae4688b63befa38419736ddcad631d234a276'
+    oldFile: null
+  /Third/SipSorcery/net/DtlsSrtp/Transform/SrtpTransformer.cs:
+    newFile: !uuid '580be59bf0cec566271a293f588369f98bf56def'
+    oldFile: null
+  /Third/SipSorcery/net/HEP:
+    newFile: !uuid 'b9b540c49e9fba5bd20dff13d18d618360d0077d'
+    oldFile: null
+  /Third/SipSorcery/net/HEP/HepPacket.cs:
+    newFile: !uuid 'a573eedbbe7ed6a6e045061d546b6f56430246ce'
+    oldFile: null
+  /Third/SipSorcery/net/ICE:
+    newFile: !uuid '8deaefb37a058b3887f609136fa20e519c799e23'
+    oldFile: null
+  /Third/SipSorcery/net/ICE/IRTCIceCandidate.cs:
+    newFile: !uuid '8cfe972145296c7945822a206be4d7dd368376dd'
+    oldFile: null
+  /Third/SipSorcery/net/ICE/IceChecklistEntry.cs:
+    newFile: !uuid 'b3db4c627756534baed1320bd147756843247142'
+    oldFile: null
+  /Third/SipSorcery/net/ICE/IceServer.cs:
+    newFile: !uuid 'd2831c82a93668099b629c854c23417df2c69f9c'
+    oldFile: null
+  /Third/SipSorcery/net/ICE/RTCIceCandidate.cs:
+    newFile: !uuid '5a2627c13028edd6f7c42bd8e7c66a30c3c066a9'
+    oldFile: null
+  /Third/SipSorcery/net/ICE/RtpIceChannel.cs:
+    newFile: !uuid '6f840b14111b7d3a048ee23a5b49ab586b1677e3'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP:
+    newFile: !uuid '49458e2f5c3e837b045db753482c1f7ab82bdd85'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPBye.cs:
+    newFile: !uuid '1f49aa61b03b7868ca93b0f46cb4dd2cb3de529c'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPCompoundPacket.cs:
+    newFile: !uuid '82ecfd56bd335a005c5285b4add4218cd6167873'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPFeedback.cs:
+    newFile: !uuid 'a858fd70f1f341388a2e42e099c683f195d537cd'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPHeader.cs:
+    newFile: !uuid '7d0cf19d97c8872a96f25f8980faa56a3b93a41a'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPReceiverReport.cs:
+    newFile: !uuid '7b49e562df78e2c877249169a6154e5883f07d8b'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPSdesReport.cs:
+    newFile: !uuid 'acc0b91090647533383d983a11b91e9c7aa5d057'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPSenderReport.cs:
+    newFile: !uuid 'f8dcf573fb27654b60e75b3c8161c9e7b74a8a0f'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/RTCPSession.cs:
+    newFile: !uuid 'a2c72eed066ec93be8ee62944c78514fc9b3a5fb'
+    oldFile: null
+  /Third/SipSorcery/net/RTCP/ReceptionReport.cs:
+    newFile: !uuid 'e2e1b5745a27f028ee976d4e33f23c938f436f50'
+    oldFile: null
+  /Third/SipSorcery/net/RTP:
+    newFile: !uuid '03f49fff74284dd33735ec993dd0756b146746bd'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/MediaStreamTrack.cs:
+    newFile: !uuid 'b52fe31c2d611249211352c53e237489ceb1144c'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/Packetisation:
+    newFile: !uuid 'b5238996306d0676c5d12b7b04360da3ee76b34b'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/Packetisation/H264Depacketiser.cs:
+    newFile: !uuid '47c3e93d0420ac3ff8e42639c7ea9f6c2a04b570'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/Packetisation/H264Packetiser.cs:
+    newFile: !uuid '00aa61f4da19d0f384d1f28a76fb5ebf5b61e537'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/Packetisation/RtpVP8Header.cs:
+    newFile: !uuid 'ff7e7fc3524e47a7ed565b73ddfe1e2688ca9f08'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/Packetisation/RtpVideoFramer.cs:
+    newFile: !uuid '05201888493462cafff0b059fb4fbbfec1f3d5f6'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/RTPChannel.cs:
+    newFile: !uuid 'e673fe6d92117c910a3d6647d0b90e7fd5597536'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/RTPEvent.cs:
+    newFile: !uuid 'edb09247283a15a1eac4f81304dbc10fa79c5788'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/RTPHeader.cs:
+    newFile: !uuid '55fe0ae0b952ab58392ae9d3bb2e4e4f93ae2590'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/RTPPacket.cs:
+    newFile: !uuid 'bfd396a50c2094be5c79e233d0736c6f94f784a2'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/RTPSession.cs:
+    newFile: !uuid '128efb4cb536e33bbbc21ab397669528f4bfad9b'
+    oldFile: null
+  /Third/SipSorcery/net/RTP/RTPSessionConfig.cs:
+    newFile: !uuid 'e50e9a7c3278df0f87e8400e261a2702a7a3a804'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP:
+    newFile: !uuid '63292c3a54e8bf94e894b5adb9e66117bfef5463'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/Mjpeg.cs:
+    newFile: !uuid 'c542be31289c53989565dac43bc46d8bd71814d0'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPClient.cs:
+    newFile: !uuid 'b6adf8a70a6d68291d51b78ebca397212dd0fd7e'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPConnection.cs:
+    newFile: !uuid 'a2525ddf5f6b1379b54321090824c67e9d2ef899'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPContants.cs:
+    newFile: !uuid '55801e223282812d27702d23ce9797982c57f7b7'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPHeader.cs:
+    newFile: !uuid 'd037b085684b6735fc98653b9e4a0e23f6037e3d'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPMessage.cs:
+    newFile: !uuid '3b8cccd5d57864dce581be16d64f9749fbeba2e1'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPRequest.cs:
+    newFile: !uuid '43c6c8fc8292372cfee98189aee3db6dcb3763ac'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPResponse.cs:
+    newFile: !uuid 'b971f70dbd43fa749ee751768a969170f97fff29'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPServer.cs:
+    newFile: !uuid 'c171d4d8c5509e25c5767804c13f2fea6bfcc37f'
+    oldFile: null
+  /Third/SipSorcery/net/RTSP/RTSPURL.cs:
+    newFile: !uuid 'ea3b8ce2046b95166dc80718f9c1a7c17c54463f'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP:
+    newFile: !uuid 'da4e0acc626afeccef5d471b20a742e16cfa1388'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks:
+    newFile: !uuid 'e1621b962c94c03eb7c10557e2bdba68f560d297'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpAbortChunk.cs:
+    newFile: !uuid '48f41dda954fa819cd7aeee46e1875547aeefeb2'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpChunk.cs:
+    newFile: !uuid '076f34b3e23696866e785f8bea15ed621a3981b0'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpDataChunk.cs:
+    newFile: !uuid '72b0ab5100fb064fb7f7819e0bd6ce0441d3527f'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpErrorCauses.cs:
+    newFile: !uuid '4bd5d23147179ff6938387753db49d23a5e530e9'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpErrorChunk.cs:
+    newFile: !uuid 'd7793997cce14a9c70af12b7a87c81a31e37b9ff'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpInitChunk.cs:
+    newFile: !uuid '7733f205388ba21f93fa261a7d9b8f04d6a2d16e'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpSackChunk.cs:
+    newFile: !uuid 'e43cb99357e4420a6f051610449612a9ceb667b0'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpShutdownChunk.cs:
+    newFile: !uuid '6f4be6c9424633807d3a20a628aa3f7c22e40290'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/Chunks/SctpTlvChunkParameter.cs:
+    newFile: !uuid '38213412c81b0335967ce180a4770beff4eb72f6'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpAssociation.cs:
+    newFile: !uuid '71dfec6c033925b3e76057b6d3c032d32a5269e1'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpDataReceiver.cs:
+    newFile: !uuid 'f4143ba18b19884002087596402ee41df139745b'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpDataSender.cs:
+    newFile: !uuid 'f28b1de901fb694bd90a47b6a6b964d4ca70e88f'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpHeader.cs:
+    newFile: !uuid '5ded0dc26119e3e6d77adc0c62e7ed8acb533270'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpPacket.cs:
+    newFile: !uuid 'aba6e0256595dd2e4064fde0a4ca94d70dfb78fc'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpTransport.cs:
+    newFile: !uuid '0ef16c218b526f2a6249f57c7cbc3fa345d7d66b'
+    oldFile: null
+  /Third/SipSorcery/net/SCTP/SctpUdpTransport.cs:
+    newFile: !uuid 'fc19c9c825fb8d0b89369a8fe966e6623d160ac8'
+    oldFile: null
+  /Third/SipSorcery/net/SDP:
+    newFile: !uuid 'b65e2bfcc6ba96b30caf1414a2ab6aa00cf4a1c1'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDP.cs:
+    newFile: !uuid '9a0b447c1e1db270915602a4cf24951b27cb9776'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPApplicationMediaFormat.cs:
+    newFile: !uuid 'ef1e5aa8845fa9983a1e2c376142b26b5c3187ca'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPAudioVideoMediaFormat.cs:
+    newFile: !uuid 'f3d30c1e9e989a467db286c27522d7d8bf0de291'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPConnectionInformation.cs:
+    newFile: !uuid 'e2daf4a3a081f461b2dc5e6ca55d52943e0e8eec'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPMediaAnnouncement.cs:
+    newFile: !uuid '453c54d84049fecdfb8048b4ace9b82a4dafa6c2'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPMessageMediaFormat.cs:
+    newFile: !uuid '21d98d1625fe4f2a87968a33270cce7c00ff6784'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPSecurityDescription.cs:
+    newFile: !uuid 'e9d8c7343452562d0535a767f6a15891b70fd312'
+    oldFile: null
+  /Third/SipSorcery/net/SDP/SDPTypes.cs:
+    newFile: !uuid 'c7d3b60a73d66248a5726dfc6e39ed0826c6b4f1'
+    oldFile: null
+  /Third/SipSorcery/net/STUN:
+    newFile: !uuid 'dda2ef7df0dc02d04d8d10c5a8cf2bea49af04ab'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAppState.cs:
+    newFile: !uuid '6d3b1469abf788d62b95d49dc2ad4f082b423c59'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAttributes:
+    newFile: !uuid 'f4bbd9913cd661a9b7eacc66b373e4af164b3aca'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAttributes/STUNAddressAttribute.cs:
+    newFile: !uuid '8a32f71b6e7d19f5f3d4b98ddfb13f95d3c0eb8e'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAttributes/STUNAttribute.cs:
+    newFile: !uuid '7f9183200d955905467f62626f4d1bc268fe79c5'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAttributes/STUNChangeRequestAttribute.cs:
+    newFile: !uuid 'f60a7ad70d59d4b1b05f8a6c2ada1e0c6c764dc6'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAttributes/STUNErrorCodeAttribute.cs:
+    newFile: !uuid '0584fc8fab7c12376f31d133fd80b859c835e8a0'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNAttributes/STUNXORAddressAttribute.cs:
+    newFile: !uuid '896fc793c0a56cd9a901589c387e7fd08e3c43e2'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNClient.cs:
+    newFile: !uuid 'c41a2cee631551fb020ea7d7a106ec1fbfd874c8'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNDns.cs:
+    newFile: !uuid 'c3572e8b4370c7b77aba5f7e7bf8a24732aac20a'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNHeader.cs:
+    newFile: !uuid '7ea2dc3d63561e89ce15100fe56d9aa5c951db4c'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNListener.cs:
+    newFile: !uuid '4a132c313fccfcd97c0f6951e89a421663dc34a1'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNMessage.cs:
+    newFile: !uuid '5744d9b89197c28f0aa99e6194988d2b4b6c1e3d'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNServer.cs:
+    newFile: !uuid '7b9551893c860d020753dc73f80f1f7171a7db2b'
+    oldFile: null
+  /Third/SipSorcery/net/STUN/STUNUri.cs:
+    newFile: !uuid '8374c4f610f45e78de741e39e7bc2d05d7308aa3'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC:
+    newFile: !uuid '04f2a239ced7706cbc4391fb399609b4ac200b10'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/DCEP.cs:
+    newFile: !uuid '534431cc90fb0dcc7179201f57662986c19e79eb'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/IRTCDataChannel.cs:
+    newFile: !uuid '28ff6eae7b9f9346bc085968817e759971330cde'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/IRTCPeerConnection.cs:
+    newFile: !uuid '517dd10aadc0e807c0418c26047d4a98772781e4'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/RTCDataChannel.cs:
+    newFile: !uuid 'de1ea7f512a1d9d9baab6f60ca716bf55ead2072'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/RTCPeerConnection.cs:
+    newFile: !uuid 'd65a87e521b8a4edf746f06ff9619040dd45dee6'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/RTCPeerSctpAssociation.cs:
+    newFile: !uuid 'f57dbe25bd7dd77da9ee95143407825009426cd5'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/RTCSctpTransport.cs:
+    newFile: !uuid '15fe07a79a1d855a2b9b18aa707eb90658f56ec4'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/WebRTCRestSignalingPeer.cs:
+    newFile: !uuid 'b488dbdf6a13299d6880edd43e036add384f525e'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/WebRTCWebSocketClient.cs:
+    newFile: !uuid '7bc5c5ac2d07a09cdfa018d3c5974f6bd147ff15'
+    oldFile: null
+  /Third/SipSorcery/net/WebRTC/WebRTCWebSocketPeer.cs:
+    newFile: !uuid '388b87846426eecdaf7000e41e6ce30c65d1cea9'
+    oldFile: null
+  /Third/SipSorcery/sys:
+    newFile: !uuid '83a3c93663e17ff13a6daba9714512a1a9ebb66e'
+    oldFile: null
+  /Third/SipSorcery/sys/BufferUtils.cs:
+    newFile: !uuid '3090aabb8c69e2e744d9aa1aa34a487a5d690a14'
+    oldFile: null
+  /Third/SipSorcery/sys/CRC32.cs:
+    newFile: !uuid 'df24bbd168187f2ea6d50c5b9530f379b63daa61'
+    oldFile: null
+  /Third/SipSorcery/sys/Crypto:
+    newFile: !uuid 'd0c05c3761b9f7ce32775b352f28cfdc3ab30931'
+    oldFile: null
+  /Third/SipSorcery/sys/Crypto/Crypto.cs:
+    newFile: !uuid '62738834c4f4e79b316cf3af30ae9821245b236e'
+    oldFile: null
+  /Third/SipSorcery/sys/Crypto/PasswordHash.cs:
+    newFile: !uuid '70775eafefecc3065292fa24784bc14145de9be4'
+    oldFile: null
+  /Third/SipSorcery/sys/Formatting:
+    newFile: !uuid 'c3be858327507d36fe92e71ab40ee4f3e03178a7'
+    oldFile: null
+  /Third/SipSorcery/sys/Formatting/NumberFormatting.cs:
+    newFile: !uuid '321162f92120e129babfd0db63323403f57fcf01'
+    oldFile: null
+  /Third/SipSorcery/sys/JSONWriter.cs:
+    newFile: !uuid '007f3df64cf1769eff34b46b709a8c329424a6b4'
+    oldFile: null
+  /Third/SipSorcery/sys/JsonParser.cs:
+    newFile: !uuid '00c21b277565d215f025b38961c9ee8e45dea314'
+    oldFile: null
+  /Third/SipSorcery/sys/Log.cs:
+    newFile: !uuid '68bad066e854d36239cd93575228166be025c6d8'
+    oldFile: null
+  /Third/SipSorcery/sys/Net:
+    newFile: !uuid 'f7a7187a71f924010a4016170961784f3fe07572'
+    oldFile: null
+  /Third/SipSorcery/sys/Net/IPSocket.cs:
+    newFile: !uuid '3eb78105fb6fd63c3c4209d0dfa3fec994e007b9'
+    oldFile: null
+  /Third/SipSorcery/sys/Net/NetConvert.cs:
+    newFile: !uuid '527a2b4a66c2a11c95bbbe123690ecbbfca0ee25'
+    oldFile: null
+  /Third/SipSorcery/sys/Net/NetServices.cs:
+    newFile: !uuid 'cf118da98f5bba22e86d86a6f7c02b818410c794'
+    oldFile: null
+  /Third/SipSorcery/sys/Net/PipedMemoryStream.cs:
+    newFile: !uuid 'b6c50aaebf1f059b207c73064d751c37f37fd9c1'
+    oldFile: null
+  /Third/SipSorcery/sys/Net/PortRange.cs:
+    newFile: !uuid 'f5803f51a37823b68c36c92f6e4d17809b3902ef'
+    oldFile: null
+  /Third/SipSorcery/sys/Net/RawSocket.cs:
+    newFile: !uuid 'ae95b37616c4f3ab499cd7ad3ec6e1f29d4391a2'
+    oldFile: null
+  /Third/SipSorcery/sys/SafeXML.cs:
+    newFile: !uuid '98cf485038f544672a933dc1ab0c5c1563c52d34'
+    oldFile: null
+  /Third/SipSorcery/sys/StorageTypes.cs:
+    newFile: !uuid '6a0794f19eb0e143e8852b707c6d5df6c3c9c540'
+    oldFile: null
+  /Third/SipSorcery/sys/TypeExtensions.cs:
+    newFile: !uuid '22ddf1b130acf815008ed2e8b2c48208d407afa1'
+    oldFile: null
+gitCommitId: !uuid '1f9bffe54e03423b9652c92a1634b5f209ff8300'
 renames: {
   }
-revisionId: 66
+revisionId: 67
