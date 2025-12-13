@@ -76,8 +76,7 @@ namespace IotService.Migrations
                 .WithColumn("DeviceUpIdx").AsInt32().Indexed().WithDefaultValue(0).WithColumnDescription("设备所属处理节点索引")
                 .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("设备关键词")
                 .WithColumn("NeedUpdateKey").AsBoolean().Indexed().WithDefaultValue(false).WithColumnDescription("设备是否需要更新关键词")
-                .WithColumn("dBm").AsFloat().Nullable().WithDefaultValue(0).WithColumnDescription("信号强度")
-                .WithColumn("DType").AsByte().WithDefaultValue(0).WithColumnDescription("设备类型：0为普通设备，1为视频设备");
+                .WithColumn("dBm").AsFloat().Nullable().WithDefaultValue(0).WithColumnDescription("信号强度");
 
 
             Create.Index().OnTable("mz_iot_device").OnColumn("ProductId").Ascending().OnColumn("OrgId").Ascending();

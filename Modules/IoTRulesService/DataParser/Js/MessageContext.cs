@@ -1,21 +1,21 @@
-﻿using ChannelUtility.Buffers;
+﻿using ChannelUtility;
+using ChannelUtility.Buffers;
 using ChannelUtility.Message;
 using ChannelUtility.Tsl;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ChannelUtility.Js
+namespace IoTRulesService.DataParser.Js
 {
     public class MessageContext
     {
         protected RequestMessage _msg;
-        protected ClientBusProxy _client;
+        protected PackParser _client;
         protected TslModel _model;
         protected string _prefix;
-        public MessageContext(RequestMessage msg, ClientBusProxy client, TslModel model, string prefix)
+        public MessageContext(RequestMessage msg, PackParser client, TslModel model, string prefix)
         {
             _msg = msg;
             _client = client;
@@ -298,16 +298,9 @@ namespace ChannelUtility.Js
         /// <param name="msg"></param>
         public void ConfirmReply(string msgId, BaseUpDeviceMessage msg)
         {
-            _client.ConfirmReply(msgId, msg);
+            var res = _client.ConfirmReply(msgId, msg);
+            res.Wait();
         }
 
-        /// <summary>
-        /// 修改通道信息（需要通道允许修改）
-        /// </summary>
-        /// <param name="info"></param>
-        public void SetChannelInfo(string info)
-        {
-            _client.SetChannelInfo(info);
-        }
     }
 }

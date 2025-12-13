@@ -40,7 +40,7 @@ namespace ModbusChannel
             _down_interval = downInterval;
             _provider = provider;
         }
-        private async Task SuProductHandler(RequestMessage msg, TslReturn ret)
+        private async Task SuProductHandler(RequestMessage msg)
         {
             if (_dtuId != msg.DeviceId)
             {
@@ -52,6 +52,16 @@ namespace ModbusChannel
                 if (msg is RawDataMessage rawMsg)
                 {
                     data = rawMsg.Data;
+                }
+                else if (msg is ModbusMatchMessage mmsg)
+                {
+                    var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+                    _pplastTime = curttt;
+                    foreach (var mm in mmsg.MatchList)
+                    {
+                        _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
+                    }
+                    _autoResetEvent.Set();
                 }
                 if (data != null && data.Length > 0)
                 {
@@ -148,17 +158,8 @@ namespace ModbusChannel
                     FastWriter fw = new FastWriter();
                     fw.WriteBytes(_readBuffer, 0, bytesReadLen);
 
-                    var mmlist = await _eventBus.rawDataTo(null, _dtuId, fw.ToArray(), string.Empty, false);
-                    var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-                    if (mmlist != null && mmlist.Count > 0)
-                    {
-                        _pplastTime = curttt;
-                        foreach (var mm in mmlist)
-                        {
-                            _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
-                        }
-                        _autoResetEvent.Set();
-                    }
+                    await _eventBus.PublishRawUp(_dtuId, fw.ToArray(), string.Empty);
+
                 }
             }
             catch (Exception ex)
@@ -182,7 +183,7 @@ namespace ModbusChannel
                     _tcpStream?.Close();
                     _tcpClient?.Close();
                 }
-    
+
             }
             if (_tcpClient.Connected)
             {

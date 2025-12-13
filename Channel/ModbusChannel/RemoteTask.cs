@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static ChannelUtility.ClientBusProxy;
 
 namespace ModbusChannel
 {
@@ -359,7 +360,7 @@ namespace ModbusChannel
                 var tsl = await eventBus.GetTsl(null, dtuId);
                 rawdata.DeviceId = dtuId;
                 rawdata.ProductId = tsl.ProductId;
-                await eventBus.PublicMessage(rawdata, tsl);
+                await eventBus.DownRequestMessage(rawdata);
                 await UpMsg("$exefunc success");
             }
             else if (ss.StartsWith("$setloop"))
@@ -522,18 +523,14 @@ namespace ModbusChannel
         }
         private async Task CreateRemote(CancellationToken stoppingToken)
         {
-            XRemoteInfo tmpServerInfo = await _provider.GetService<ClientBusProxy>().GetChannelInfo<XRemoteInfo>();
-            if (tmpServerInfo == null)
-            {
-                tmpServerInfo = new XRemoteInfo();
-                tmpServerInfo.server_ip = _option.server_ip;
-                tmpServerInfo.server_port = _option.server_port;
-                tmpServerInfo.server_token = _option.server_token;
-                tmpServerInfo.server_devkey = _option.server_devkey;
-                tmpServerInfo.mqtt_port = _option.mqtt_port;
-                tmpServerInfo.mqtt_username = _option.mqtt_username;
-                tmpServerInfo.mqtt_password = _option.mqtt_password;
-            }
+            XRemoteInfo tmpServerInfo = new XRemoteInfo();
+            tmpServerInfo.server_ip = _option.server_ip;
+            tmpServerInfo.server_port = _option.server_port;
+            tmpServerInfo.server_token = _option.server_token;
+            tmpServerInfo.server_devkey = _option.server_devkey;
+            tmpServerInfo.mqtt_port = _option.mqtt_port;
+            tmpServerInfo.mqtt_username = _option.mqtt_username;
+            tmpServerInfo.mqtt_password = _option.mqtt_password;
 
             //创建远程控制
             _client = _factory.CreateMqttClient();

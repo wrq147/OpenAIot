@@ -22,14 +22,14 @@ namespace MqttChannel.Timer
             }
 
         }
-        public void PushConcurrentTask(RawDataMessage msg, TslReturn ret, Func<RawDataMessage, TslReturn, Task> ac)
+        public void PushConcurrentTask(RawDataMessage msg, Func<RawDataMessage, Task> ac)
         {
-            PushConcurrentTask(msg, ret, ac, TimeSpan.Zero);
+            PushConcurrentTask(msg, ac, TimeSpan.Zero);
         }
-        public void PushConcurrentTask(RawDataMessage msg, TslReturn ret, Func<RawDataMessage, TslReturn, Task> ac, TimeSpan ts)
+        public void PushConcurrentTask(RawDataMessage msg, Func<RawDataMessage, Task> ac, TimeSpan ts)
         {
             int curidx = Math.Abs(msg.DeviceId.GetHashCode() % _schedulers.Count);
-            _schedulers[curidx].NewTimeout(new DownTask(msg, ret, ac), ts);
+            _schedulers[curidx].NewTimeout(new DownTask(msg, ac), ts);
         }
         public void StopAll()
         {
@@ -42,18 +42,16 @@ namespace MqttChannel.Timer
 
     public class DownTask : TimerTask
     {
-        private Func<RawDataMessage, TslReturn, Task> _ac;
+        private Func<RawDataMessage, Task> _ac;
         private RawDataMessage _msg;
-        private TslReturn _ret;
-        public DownTask(RawDataMessage msg, TslReturn ret, Func<RawDataMessage, TslReturn, Task> ac)
+        public DownTask(RawDataMessage msg, Func<RawDataMessage, Task> ac)
         {
             _msg = msg;
-            _ret = ret;
             _ac = ac;
         }
         public void Run(IWheelTimeout timeout)
         {
-            var res = _ac(_msg, _ret);
+            var res = _ac(_msg);
             res.Wait();
         }
     }

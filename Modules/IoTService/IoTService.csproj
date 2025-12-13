@@ -8,11 +8,6 @@
 		<DocumentationFile>..\..\App\XML\IoTService.xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Third\Extension\**" />
-	  <EmbeddedResource Remove="Third\Extension\**" />
-	  <None Remove="Third\Extension\**" />
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="InfluxDB.Client" Version="4.16.0" />
 	  <PackageReference Include="InfluxDB.Client.Core" Version="4.16.0" />
 	  <PackageReference Include="TimeZoneConverter" Version="7.0.0" />

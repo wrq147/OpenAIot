@@ -2,6 +2,7 @@
 using ChannelUtility.Tsl;
 using Common;
 using IoTService.DAL;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,59 @@ namespace IoTService
 {
     public static class TslCache
     {
+        public static async Task<TslReturn> GetTslModelByDtuId(string dtuId, bool sendconn, ITAServiceProvider provider)
+        {
+            IotRedisHelper redis = provider.GetService<IotRedisHelper>();
+            var serverBus = provider.GetService<ServerBusProxy>();
+            var cache = provider.GetService<CacheHelper>();
+            var productId = cache.GetCache<string>("Device:" + dtuId + "$ProductId");
+            if (string.IsNullOrEmpty(productId))
+            {
+                productId = await redis.HashGetAsync<string>("Device:" + dtuId, "$ProductId").ConfigureAwait(false);
+                if (string.IsNullOrEmpty(productId))
+                {
+                    if (sendconn)
+                    {
+                        await serverBus.SendConnect(string.Empty, dtuId);
+                        int tcount = 0;
+                        while (tcount < 5)
+                        {
+                            await Task.Delay(50).ConfigureAwait(false);
+                            productId = await redis.HashGetAsync<string>("Device:" + dtuId, "$ProductId").ConfigureAwait(false);
+                            if (!string.IsNullOrEmpty(productId))
+                            {
+                                break;
+                            }
+                            ++tcount;
+                        }
+                    }
+                    else
+                    {
+                        var deviceDAL = provider.GetService<IotDeviceDAL>();
+                        var devicelist = await deviceDAL.SelectList(x => x.DeviceId == dtuId);
+                        if (devicelist.Count > 0)
+                        {
+                            productId = devicelist[0].ProductId;
+                        }
+                    }
+
+
+                    if (productId == null)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        cache.SetCache("Device:" + dtuId + "$ProductId", productId, DateTime.Now.AddMinutes(60));
+                    }
+                }
+            }
+            else
+            {
+                cache.SetCache("Device:" + dtuId + "$ProductId", productId, DateTime.Now.AddMinutes(60));
+            }
+            return await GetTslModel(productId, redis, provider);
+        }
         public static async Task<TslReturn> GetTslModel(string productId, ITAServiceProvider provider)
         {
             IotRedisHelper redis = provider.GetService<IotRedisHelper>();

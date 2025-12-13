@@ -123,10 +123,6 @@ namespace IoTService.Models
         /// </summary>
         public float? dBm { get; set; }
         /// <summary>
-        /// 设备类型：0为普通设备，1为视频设备
-        /// </summary>
-        public byte? DType { get; set; }
-        /// <summary>
         /// 标签列表
         /// </summary>
         [DataIgnore]

@@ -34,7 +34,7 @@ namespace ModbusChannel
             _provider = provider;
         }
 
-        private async Task SuProductHandler(RequestMessage msg, TslReturn ret)
+        private async Task SuProductHandler(RequestMessage msg)
         {
             if (_item.dtuid != msg.DeviceId)
             {
@@ -46,6 +46,16 @@ namespace ModbusChannel
                 if (msg is RawDataMessage rawMsg)
                 {
                     data = rawMsg.Data;
+                }
+                else if(msg is ModbusMatchMessage mmsg)
+                {
+                    var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+                    _pplastTime = curttt;
+                    foreach (var mm in mmsg.MatchList)
+                    {
+                        _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
+                    }
+                    _autoResetEvent.Set();
                 }
                 if (data != null && data.Length > 0)
                 {
@@ -156,27 +166,14 @@ namespace ModbusChannel
                             tmpbytes = new byte[bytesReadLen];
                             Buffer.BlockCopy(_readBuffer, 0, tmpbytes, 0, bytesReadLen);
                         }
-
-                        var mmlist = await _eventBus.rawDataTo(null, _item.dtuid, tmpbytes, string.Empty, false);
+                        if (tmpbytes.Length <= 5)
+                        {
+                            _lastByteTime = curttt;
+                            _lastBytes = tmpbytes;
+                            continue;
+                        }
+                        await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty);
                         _lastBytes = null;
-                        if (mmlist != null && mmlist.Count > 0)
-                        {
-                            _pplastTime = curttt;
-                            foreach (var mm in mmlist)
-                            {
-                                _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
-                            }
-                            _autoResetEvent.Set();
-
-                        }
-                        else
-                        {
-                            if (tmpbytes.Length <= 5)
-                            {
-                                _lastByteTime = curttt;
-                                _lastBytes = tmpbytes;
-                            }
-                        }
                     }
 
                 }

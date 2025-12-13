@@ -6,20 +6,21 @@ using ChannelUtility.Message;
 using System.Net.Http;
 using ChannelUtility.Tsl;
 using System.Linq;
+using ChannelUtility;
 
-namespace ChannelUtility.Js
+namespace IoTRulesService.DataParser.Js
 {
     public class DataContext
     {
         private string _deviceId;
         private string _productId;
-        private ClientBusProxy _client;
+        private PackParser _client;
         private FastReader _readObj;
         private ReadPropertyMessageReply _reply;
         private string _codeprefix;
         private TslModel _model;
 
-        public DataContext(ReadPropertyMessageReply reply, FastReader reader, string productId, string deviceId, ClientBusProxy client, TslModel model, string codeprefix)
+        public DataContext(ReadPropertyMessageReply reply, FastReader reader, string productId, string deviceId, PackParser client, TslModel model, string codeprefix)
         {
             _model = model;
             _reply = reply;

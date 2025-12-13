@@ -2112,11 +2112,6 @@
             最后在线时间
             </summary>
         </member>
-        <member name="P:IoTService.Models.MZ_IotDevice.FirmwareVer">
-            <summary>
-            固件版本
-            </summary>
-        </member>
         <member name="P:IoTService.Models.MZ_IotDevice.ProductVer">
             <summary>
             协议版本

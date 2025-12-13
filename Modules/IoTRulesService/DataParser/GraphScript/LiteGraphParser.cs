@@ -1,7 +1,7 @@
-﻿using ChannelUtility.Js;
+﻿using IoTRulesService.DataParser.Js;
 using System;
 
-namespace ChannelUtility.GraphScript
+namespace IoTRulesService.DataParser.GraphScript
 {
     public class LiteGraphParser
     {

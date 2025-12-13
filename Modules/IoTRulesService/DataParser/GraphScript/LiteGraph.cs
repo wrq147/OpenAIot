@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace ChannelUtility.GraphScript
+namespace IoTRulesService.DataParser.GraphScript
 {
     [Flags]
     public enum DataType

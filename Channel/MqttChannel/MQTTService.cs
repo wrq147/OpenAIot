@@ -7,15 +7,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ChannelUtility;
-using ChannelUtility.Buffers;
 using Microsoft.Extensions.Logging;
 using ChannelUtility.Message;
 using System.Text;
 using MqttChannel.Timer;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using EasyNetQ;
 
 namespace MqttChannel
 {
@@ -79,7 +76,7 @@ namespace MqttChannel
                         return;
                     }
 
-                    string productId = string.Empty;
+
                     string deviceId = e.ApplicationMessage.Topic.Substring(WUK_STR.Length);
                     string subprefix = string.Empty;
                     int subidx = deviceId.IndexOf("/");
@@ -100,7 +97,7 @@ namespace MqttChannel
                     var eventBus = _provider.GetService<ClientBusProxy>();
                     if (e.ApplicationMessage.Payload != null)
                     {
-                        await eventBus.rawDataTo(productId, deviceId, e.ApplicationMessage.Payload, subprefix);
+                        await eventBus.PublishRawUp(deviceId, e.ApplicationMessage.Payload, subprefix);
                     }
                 }
             }
@@ -113,7 +110,7 @@ namespace MqttChannel
 
         private ConcurrentDictionary<string, List<RawDataMessage>> _downWaitQueue = new ConcurrentDictionary<string, List<RawDataMessage>>();
         private ConcurrentDictionary<string, DateTime> _downLastTime = new ConcurrentDictionary<string, DateTime>();
-        private async Task DownRunHandler(RawDataMessage msg, TslReturn ret)
+        private async Task DownRunHandler(RawDataMessage msg)
         {
             var rqlist = _downWaitQueue.GetOrAdd(msg.DeviceId, (key) =>
             {
@@ -124,11 +121,11 @@ namespace MqttChannel
                 var first = rqlist[0];
                 rqlist.RemoveAt(0);
                 var eventBus = _provider.GetService<ClientBusProxy>();
-                await MessageConcurrentHandler(first, ret, true);
+                await MessageConcurrentHandler(first, true);
             }
 
         }
-        private async Task MessageConcurrentHandler(RawDataMessage msg, TslReturn ret, bool iswait)
+        private async Task MessageConcurrentHandler(RawDataMessage msg, bool iswait)
         {
             var eventBus = _provider.GetService<ClientBusProxy>();
             if (eventBus == null)
@@ -169,7 +166,7 @@ namespace MqttChannel
                     {
                         millsec = 15 * pollTime + (150 * rqlist.Count) % 1000;
                     }
-                    _downRuner.PushConcurrentTask(msg, ret, DownRunHandler, TimeSpan.FromMilliseconds(millsec));
+                    _downRuner.PushConcurrentTask(msg, DownRunHandler, TimeSpan.FromMilliseconds(millsec));
                 }
             }
 
@@ -183,11 +180,6 @@ namespace MqttChannel
                 {
                     if (msg.Data.Length > 0)
                     {
-                        //未发布打印
-                        if (ret.Status == "0")
-                        {
-                            await eventBus.Print(msg.DeviceId, "设备下发消息", FastBufferHelper.ByteToHexStr(msg.Data));
-                        }
                         string tdowntopic = $"wukong/down/{msg.DeviceId}";
                         if (!string.IsNullOrEmpty(msg.prefix))
                         {
@@ -204,9 +196,9 @@ namespace MqttChannel
 
             }
         }
-        private async Task FirstMessageHandler(RawDataMessage msg, TslReturn ret)
+        private async Task FirstMessageHandler(RawDataMessage msg)
         {
-            await MessageConcurrentHandler(msg, ret, false);
+            await MessageConcurrentHandler(msg, false);
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -216,13 +208,13 @@ namespace MqttChannel
             _client = _mqttFactory.CreateMqttClient();
             _client.ApplicationMessageReceivedAsync += MqttServer_ApplicationMessageReceived;
 
-            eventBus.OnSubProductMessage += async (msg, ret) =>
+            eventBus.OnSubProductMessage += async (msg) =>
             {
                 try
                 {
                     if (msg is RawDataMessage rawMsg)
                     {
-                        _downRuner.PushConcurrentTask(rawMsg, ret, FirstMessageHandler);
+                        _downRuner.PushConcurrentTask(rawMsg, FirstMessageHandler);
                     }
                 }
                 catch (Exception ex)

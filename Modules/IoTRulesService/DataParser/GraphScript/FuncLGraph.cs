@@ -1,9 +1,9 @@
-﻿using ChannelUtility.Js;
+﻿using IoTRulesService.DataParser.Js;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
-namespace ChannelUtility.GraphScript
+namespace IoTRulesService.DataParser.GraphScript
 {
     /// <summary>
     /// 功能图形

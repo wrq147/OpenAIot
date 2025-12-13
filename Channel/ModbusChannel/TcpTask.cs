@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.IO;
 using System.IO.Ports;
 using System.Net;
@@ -40,7 +41,7 @@ namespace ModbusChannel
             _down_interval = downInterval;
             _provider = provider;
         }
-        private async Task SuProductHandler(RequestMessage msg, TslReturn ret)
+        private async Task SuProductHandler(RequestMessage msg)
         {
             if (_dtuId != msg.DeviceId)
             {
@@ -52,6 +53,16 @@ namespace ModbusChannel
                 if (msg is RawDataMessage rawMsg)
                 {
                     data = rawMsg.Data;
+                }
+                else if (msg is ModbusMatchMessage mmsg)
+                {
+                    var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+                    _pplastTime = curttt;
+                    foreach (var mm in mmsg.MatchList)
+                    {
+                        _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
+                    }
+                    _autoResetEvent.Set();
                 }
                 if (data != null && data.Length > 0)
                 {
@@ -146,20 +157,10 @@ namespace ModbusChannel
                         break;
                     }
                     // 处理接收到的数据
-                    FastWriter fw = new FastWriter();
-                    fw.WriteBytes(_readBuffer, 0, bytesReadLen);
+                    byte[] newbytes = new byte[bytesReadLen];
+                    Buffer.BlockCopy(_readBuffer, 0, newbytes, 0, bytesReadLen);
+                    await _eventBus.PublishRawUp(_dtuId, newbytes, string.Empty);
 
-                    var mmlist = await _eventBus.rawDataTo(null, _dtuId, fw.ToArray(), string.Empty, false);
-                    var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-                    if (mmlist != null && mmlist.Count > 0)
-                    {
-                        _pplastTime = curttt;
-                        foreach (var mm in mmlist)
-                        {
-                            _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
-                        }
-                        _autoResetEvent.Set();
-                    }
                 }
             }
             catch (Exception ex)

@@ -8,6 +8,7 @@ namespace MqttChannel
 {
     public class MqttOption
     {
+        public string node_name { get; set; }
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
         public string mqtt_server { get; set; }

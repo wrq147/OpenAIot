@@ -1,5 +1,4 @@
 ﻿using ChannelUtility;
-using ChannelUtility.Buffers;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -133,7 +132,7 @@ namespace ModbusChannel
             _controller.OpenPin(pin);
             _openPins.Add(pin);
         }
-        private async Task SuProductHandler(RequestMessage msg, TslReturn ret)
+        private async Task SuProductHandler(RequestMessage msg)
         {
             if (_dtuId != msg.DeviceId)
             {

@@ -24,8 +24,10 @@ namespace ChannelUtility
             { "Bind", typeof(DeviceBindMessage) },
             { "BindReply", typeof(DeviceBindMessageReply) },
             { "RawData", typeof(RawDataMessage) },
-            { "TempProduct", typeof(TempProductMessage) },
+            { "RawUpData", typeof(RawUpDataMessage) },
+            { "ModbusMatch", typeof(ModbusMatchMessage) },
             { "QueryICCID", typeof(QueryICCIDMessage) },
+            { "TempProduct", typeof(TempProductMessage) },
             { "QueryICCIDReply", typeof(QueryICCIDMessageReply) },
             { "ChangeProduct", typeof(ChangeProductMessage) },
             { "StartReadAll", typeof(StartReadAllMessage) }

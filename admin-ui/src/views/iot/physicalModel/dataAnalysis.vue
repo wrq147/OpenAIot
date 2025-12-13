@@ -307,11 +307,6 @@ export default {
     declare class MessageContext
       {
         /**
-         * 修改通道信息（需要通道允许修改）
-         * @param {String} info - 通道信息
-         */
-        SetChannelInfo(info:String):void;
-        /**
          * 获取指定属性定义
          * @param {String} code - 属性标识
          * @returns {String} 返回值

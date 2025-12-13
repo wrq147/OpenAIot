@@ -1,19 +1,21 @@
 ﻿using ChannelUtility.Message;
 using ChannelUtility.Tsl;
+using IoTService;
+using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ChannelUtility.Js
+namespace IoTRulesService.DataParser.Js
 {
     /// <summary>
     /// 功能函数脚本用
     /// </summary>
     public class FuncMessageContext : MessageContext
     {
-        public FuncMessageContext(RequestMessage msg, ClientBusProxy client, TslModel model, string funPrefix) : base(msg, client, model, funPrefix)
+        public FuncMessageContext(RequestMessage msg, PackParser client, TslModel model, string funPrefix) : base(msg, client, model, funPrefix)
         {
         }
         /// <summary>
@@ -90,7 +92,8 @@ namespace ChannelUtility.Js
             msg.ProductId = _msg.ProductId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.TargetProductId = targetId;
-            _client.ConfirmReply(string.Empty, msg);
+            var res = _client.ConfirmReply(string.Empty, msg);
+            res.Wait();
         }
         /// <summary>
         /// 功能执行成功
@@ -201,7 +204,8 @@ namespace ChannelUtility.Js
                 var tmpss = _client.Print(_msg.DeviceId, "功能调用异常", "无法死循环调用同一个功能");
                 return null;
             }
-            var tmpxxxe = _client.GetTsl(null, deviceId);
+           
+            var tmpxxxe = TslCache.GetTslModelByDtuId(deviceId, false, _client.Provider);
             var tsl = tmpxxxe.Result;
 
             FunctionInvokeMessage msg = new FunctionInvokeMessage();

@@ -239,6 +239,521 @@
             <param name="groupPath"></param>
             <returns></returns>
         </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.FuncLGraph">
+            <summary>
+            功能图形
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.FuncOutNode">
+            <summary>
+            功能回复
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.RefreshNode">
+            <summary>
+            刷新功能页面
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.MsgOutNode">
+            <summary>
+            展示文字
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.SilenceTimeNode">
+            <summary>
+            重置指定事件的沉默周期
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.GoUrlNode">
+            <summary>
+            跳转到指定网址
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.FuncParamsNode">
+            <summary>
+            功能的输入参数
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.ExecuteFuncNode">
+            <summary>
+            执行指定设备的功能
+            </summary>
+        </member>
+        <member name="T:IoTRulesService.DataParser.GraphScript.PublicWaitNode">
+            <summary>
+            下发消息
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.CodePrefix">
+            <summary>
+            上报的扩展信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.ReplyMessage">
+            <summary>
+            返回当前的回复消息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.GetTslProps(System.String)">
+            <summary>
+            获取指定属性定义
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.GetProps">
+            <summary>
+            获取当前设备的所有属性信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.CreatePropertyMessage">
+            <summary>
+            创建读属性回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.CreateICCIDReply">
+            <summary>
+            创建ICCID回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.CreateEventMessage">
+            <summary>
+            创建设备事件包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.CreateEmptyMessage">
+            <summary>
+            创建空回复
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.ReplyMsgId(System.String,System.String)">
+            <summary>
+            回复消息Id
+            </summary>
+            <param name="msgId">可为null,为null时自动从系统缓存里取</param>
+            <param name="value"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.Public(System.Byte[])">
+            <summary>
+            直接推送数据
+            </summary>
+            <param name="bytes"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.PublicStr(System.String,System.Boolean)">
+            <summary>
+            推送字符串数据
+            </summary>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.DataContext.UploadFile(System.String,System.String,System.Byte[],System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            向指定站点上传文件并返回文件的url
+            </summary>
+            <param name="url"></param>
+            <param name="filename"></param>
+            <param name="bytes"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTRulesService.DataParser.Js.FuncMessageContext">
+            <summary>
+            功能函数脚本用
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.FuncMessage">
+            <summary>
+            获取请求的功能消息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.Refresh">
+            <summary>
+            刷新前端功能列表
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.ResetSilenceTime(System.String)">
+            <summary>
+            重置事件周期
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.GoUrl(System.String)">
+            <summary>
+            通知前端跳转到指定url
+            </summary>
+            <param name="url">要跳转的url</param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.ShowMsg(System.String)">
+            <summary>
+            通知前端展示信息
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.RawProductId">
+            <summary>
+            获取当前设备的源协议Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.RawDtuId">
+            <summary>
+            获取当前设备的源dtuid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.ChangeProduct(System.String)">
+            <summary>
+            变更所属协议
+            </summary>
+            <param name="targetId">协议编号</param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.ConfirmSuccess(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            功能执行成功
+            </summary>
+            <param name="outputs"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.ConfirmError(System.String)">
+            <summary>
+            功能执行失败
+            </summary>
+            <param name="error"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.SetTimeout(System.Action,System.Int32)">
+            <summary>
+            定时执行
+            </summary>
+            <param name="ac"></param>
+            <param name="millisecond"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.Execute(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行设备的其它功能
+            </summary>
+            <param name="funId">功能代码</param>
+            <param name="inputs">参数</param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.ExecuteOther(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            执行其它设备的功能
+            </summary>
+            <param name="deviceId"></param>
+            <param name="funId"></param>
+            <param name="inputs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.ToJson(System.Object)">
+            <summary>
+            对象转JSON字符串
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.GetProps">
+            <summary>
+            获取当前设备的所有属性信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.CreateBindReply">
+            <summary>
+            创建绑定回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.CreateFuncReply">
+            <summary>
+            创建功能回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.CreateICCIDReply">
+            <summary>
+            创建ICCID回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.CreateEventMessage">
+            <summary>
+            创建设备事件包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.CreatePropertyReply">
+            <summary>
+            创建属性回复包
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.CreateModbusHex(System.Boolean)">
+            <summary>
+            创建ModbusHex数组
+            </summary>
+            <param name="space"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.GetModbusInfo">
+            <summary>
+            获取Modbus信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.GetTslProps(System.String)">
+            <summary>
+            获取指定属性定义
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.GetFirmwareNewest(System.String)">
+            <summary>
+            获取最新固件路径
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.GetFirmware(System.String,System.String)">
+            <summary>
+            获取指定名称和标签的固件
+            </summary>
+            <param name="name"></param>
+            <param name="tag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.Wait(System.String)">
+            <summary>
+            等待回复消息（不发送）
+            </summary>
+            <param name="msgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicWait(System.String,System.Byte[])">
+            <summary>
+            直接推送数据并返回复的消息
+            </summary>
+            <param name="msgId">消息标识</param>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.Public(System.Byte[])">
+            <summary>
+            直接推送数据
+            </summary>
+            <param name="bytes"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicStrWait(System.String,System.String,System.Boolean)">
+            <summary>
+            推送字符串数据并返回复的消息
+            </summary>
+            <param name="msgId"></param>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicStr(System.String,System.Boolean)">
+            <summary>
+            推送字符串数据
+            </summary>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.ConfirmReply(System.String,ChannelUtility.Message.BaseUpDeviceMessage)">
+            <summary>
+            发送确认回复包
+            </summary>
+            <param name="msgId"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.MessageHandler.UpMsgExe(ChannelUtility.Message.BaseUpDeviceMessage)">
+            <summary>
+            处理上报的消息
+            </summary>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.MessageHandler.ExecuteRules(ChannelUtility.Message.BaseUpDeviceMessage,ChannelUtility.TslReturn,System.DateTime,TemplateAction.Core.ITAServiceProvider,IoTService.IotRedisHelper)">
+            <summary>
+            执行规则
+            </summary>
+            <param name="rs"></param>
+            <param name="model"></param>
+            <param name="nowTime"></param>
+            <param name="_provider"></param>
+            <param name="redis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.MessageHandler.ExcuteNotice(TemplateAction.Core.ITAServiceProvider,ChannelUtility.Tsl.BaseEvent,IoTService.Models.MZ_IotDevice,System.Collections.Generic.List{IoTService.Models.WarningNoticeItem},System.Collections.Generic.List{IoTService.Models.Out_WarnTargetId},System.String)">
+            <summary>
+            执行设备通知
+            </summary>
+            <param name="_provider"></param>
+            <param name="evt"></param>
+            <param name="device"></param>
+            <param name="notices"></param>
+            <param name="warnids"></param>
+            <param name="extInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="F:IoTRulesService.DataParser.PackParser._lastReaderDict">
+            <summary>
+            拆包、拼包用
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.BytesToReader(System.Byte[],System.String)">
+            <summary>
+            将原二进制转FastReader
+            </summary>
+            <param name="input"></param>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.SaveFastReader(System.String,ChannelUtility.Buffers.FastReader)">
+            <summary>
+            保存剩余
+            </summary>
+            <param name="deviceId"></param>
+            <param name="lastReader"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.ResetSilenceTime(System.String,System.String)">
+            <summary>
+            重置事件周期
+            </summary>
+            <param name="deviceId"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.ConfirmReply(System.String,ChannelUtility.Message.BaseUpDeviceMessage)">
+            <summary>
+            发送确认回复包（同步）
+            </summary>
+            <param name="msgId"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.FunCmd(System.String,System.String)">
+            <summary>
+            向前端发送功能命令
+            </summary>
+            <param name="devId"></param>
+            <param name="cmd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.GetProps(System.String)">
+            <summary>
+            获取指定设备的当前所有属性
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.GetPropOfCode(System.String,System.String)">
+            <summary>
+            获取指定设备的指定属性
+            </summary>
+            <param name="deviceId"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.GetRawDtuId(System.String)">
+            <summary>
+            获取指定设备的原dtuid
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.GetRawProductId(System.String)">
+            <summary>
+            获取当前设备的源协议Id
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.PushReply(System.String,System.String,System.String)">
+            <summary>
+            写入回复数据
+            </summary>
+            <param name="deviceId"></param>
+            <param name="value"></param>
+            <param name="msgId">如果msgId为null,则自动取系统保存的第一条msgId</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.PublicWait(System.String,System.String,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            获取设备指定类型的返回值
+            </summary>
+            <param name="deviceId"></param>
+            <param name="msgId"></param>
+            <param name="ac"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.PublicMessage(ChannelUtility.Message.RequestMessage,ChannelUtility.TslReturn)">
+            <summary>
+            直接调用下发消息
+            </summary>
+            <param name="msg"></param>
+            <param name="ret"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.ConfirmFuncReply(System.String,System.String,System.Boolean,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.String)">
+            <summary>
+            发送设备功能回复给事件总线
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="isSuccess"></param>
+            <param name="outputs"></param>
+            <param name="errInfo"></param>
+            <param name="msgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.ConfirmBindReply(System.String,System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            发送设备绑定回复
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="isSuccess"></param>
+            <param name="msgId"></param>
+            <param name="reason"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.RequestMessage,ChannelUtility.Tsl.TslModel,System.String)">
+            <summary>
+            解释自定义数据包
+            </summary>
+            <param name="msg"></param>
+            <param name="model"></param>
+            <param name="script"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.ParseFunc(System.String,ChannelUtility.Message.FunctionInvokeMessage,ChannelUtility.Tsl.TslModel,System.String)">
+            <summary>
+            解释功能脚本
+            </summary>
+            <param name="funcScript"></param>
+            <param name="msg"></param>
+            <param name="model"></param>
+            <param name="funprefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.PackParser.PushCustom(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},ChannelUtility.Buffers.FastReader,System.String,ChannelUtility.Tsl.TslModel,System.String)">
+            <summary>
+            发送自定义数据包
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="properties"></param>
+            <param name="input"></param>
+            <param name="script"></param>
+            <param name="model"></param>
+            <param name="codeprefix"></param>
+            <returns></returns>
+        </member>
         <member name="T:IoTRulesService.DeviceCache">
             <summary>
             设备本地缓存
@@ -1398,37 +1913,6 @@
             <summary>
             订阅的消息类型：参考JsonMessageConverter里的（当触发方式为0时使用）
             </summary>
-        </member>
-        <member name="M:IoTRulesService.PluginConfig.UpMsgExe(System.String,System.Threading.CancellationToken)">
-            <summary>
-            处理上报的消息
-            </summary>
-            <param name="msg"></param>
-            <param name="tk"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTRulesService.PluginConfig.ExecuteRules(ChannelUtility.Message.BaseUpDeviceMessage,ChannelUtility.TslReturn,System.DateTime,TemplateAction.Core.ITAServiceProvider,IoTService.IotRedisHelper)">
-            <summary>
-            执行规则
-            </summary>
-            <param name="rs"></param>
-            <param name="model"></param>
-            <param name="nowTime"></param>
-            <param name="provider"></param>
-            <param name="redis"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTRulesService.PluginConfig.ExcuteNotice(TemplateAction.Core.ITAServiceProvider,ChannelUtility.Tsl.BaseEvent,IoTService.Models.MZ_IotDevice,System.Collections.Generic.List{IoTService.Models.WarningNoticeItem},System.Collections.Generic.List{IoTService.Models.Out_WarnTargetId},System.String)">
-            <summary>
-            执行设备通知
-            </summary>
-            <param name="provider"></param>
-            <param name="evt"></param>
-            <param name="device"></param>
-            <param name="notices"></param>
-            <param name="warnids"></param>
-            <param name="extInfo"></param>
-            <returns></returns>
         </member>
         <member name="T:IoTRulesService.RuleCache">
             <summary>

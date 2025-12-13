@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\</OutputPath>
+		<DocumentationFile>..\..\App\XML\IoTVideoService.xml</DocumentationFile>
+	</PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IoTService\IoTService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controller\" />
+    <Folder Include="Business\" />
+    <Folder Include="DAL\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+</Project>

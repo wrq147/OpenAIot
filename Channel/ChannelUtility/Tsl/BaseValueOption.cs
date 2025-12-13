@@ -131,17 +131,6 @@ namespace ChannelUtility.Tsl
         /// <returns></returns>
         public object RawTo(object input, Func<string, object> getProp)
         {
-            if (input is string sinput)
-            {
-                if (sinput.StartsWith("#"))
-                {
-                    var tmpshort = sinput.Substring(1);
-                    if (short.TryParse(tmpshort, out short kk))
-                    {
-                        input = kk;
-                    }
-                }
-            }
             if (string.IsNullOrEmpty(express))
             {
                 return InnerRawTo(input);

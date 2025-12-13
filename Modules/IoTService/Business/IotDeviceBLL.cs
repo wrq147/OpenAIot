@@ -1351,7 +1351,6 @@ namespace IoTService.Business
             data.DeviceNumber = data.DeviceNumber.Trim();
             data.NeedUpdateKey = false;
             data.dBm ??= 0;
-            data.DType ??= 0;
 
             var tclassDAL = _provider.GetService<IotClassDAL>();
             if (!string.IsNullOrEmpty(product.Path))

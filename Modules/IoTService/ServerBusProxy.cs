@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Config;
 using ChannelUtility.Message;
+using ChannelUtility.Tsl;
 using Common.EventBus;
 using Common.Share;
 using EasyNetQ;
@@ -9,11 +10,11 @@ using IoTService.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using System.Linq;
 
 
 
@@ -224,12 +225,39 @@ namespace IoTService
             string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
         }
+        public async Task DownRawData(RawDataMessage rawdata, string networkWay)
+        {
+            var bus = _provider.GetService<RabbitScope>().Bus;
+            if (string.IsNullOrEmpty(networkWay))
+            {
+                var pro = await _productDAL.Select(rawdata.ProductId);
+                networkWay = pro.NetworkWay;
+            }
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
+            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+        }
         public async Task DownBind(string productId, string deviceId, string networkWay)
         {
             DeviceBindMessage msg = new DeviceBindMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
+            var bus = _provider.GetService<RabbitScope>().Bus;
+            if (string.IsNullOrEmpty(networkWay))
+            {
+                var pro = await _productDAL.Select(msg.ProductId);
+                networkWay = pro.NetworkWay;
+            }
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+        }
+        public async Task DownModbusMatch(string productId, string deviceId, string networkWay, List<ModbusMatch> list)
+        {
+            ModbusMatchMessage msg = new ModbusMatchMessage();
+            msg.DeviceId = deviceId;
+            msg.ProductId = productId;
+            msg.MessageId = MyAccess.Core.StringTool.GetGUID();
+            msg.MatchList = list;
             var bus = _provider.GetService<RabbitScope>().Bus;
             if (string.IsNullOrEmpty(networkWay))
             {
