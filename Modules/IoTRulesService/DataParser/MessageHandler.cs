@@ -14,8 +14,6 @@ using IoTService.DAL;
 using IoTService.Models;
 using Jint;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

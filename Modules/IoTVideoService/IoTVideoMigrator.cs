@@ -19,7 +19,9 @@ namespace IoTVideoService
 .WithColumn("VideoPort").AsInt32().WithColumnDescription("摄像头端口")
 .WithColumn("UserName").AsString(50).WithColumnDescription("用户名")
 .WithColumn("UserPwd").AsString(50).WithColumnDescription("密码")
-.WithColumn("BitType").AsByte().WithColumnDescription("码流类型：0为主码流，1为子码流");
+.WithColumn("BitType").AsByte().WithColumnDescription("码流类型：0为主码流，1为子码流")
+.WithColumn("PullNode").AsString(50).Indexed().WithColumnDescription("当前拉流的节点名称，无为空");
+
 
 
             //            Execute.Sql("DROP TABLE IF EXISTS mz_video_task");
