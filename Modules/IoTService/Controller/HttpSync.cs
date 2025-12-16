@@ -32,40 +32,7 @@ namespace IoTService.Controller
             }
             return await base.CallAction(ac, parameters);
         }
-        /// <summary>
-        /// 获取指定通道信息
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<DefaultAjaxResult<ChannelConfig>> Channel(string code)
-        {
-            IotProductBLL productBLL = this.ServiceProvider.GetService<IotProductBLL>();
-            return this.Success(await productBLL.GetChannel(code));
-        }
 
-        /// <summary>
-        /// 修改通道信息
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<DefaultAjaxResult<string>> ChgChannel(In_SyncChannel input)
-        {
-            var redis = this.ServiceProvider.GetService<IotRedisHelper>();
-            switch (input.code)
-            {
-                case "modbus_only":
-                    break;
-                default:
-                    return this.Error<string>(22, "指定通道无法被修改", string.Empty);
-            }
-            IotProductBLL productBLL = this.ServiceProvider.GetService<IotProductBLL>();
-            var oldchannel = await productBLL.GetChannel(input.code);
-            oldchannel.SendInterval = input.data.SendInterval;
-            await redis.HashSetAsync("IotChannels", input.code, oldchannel);
-            return this.Success(string.Empty);
-        }
 
         /// <summary>
         /// 刷新所属所有协议的缓存

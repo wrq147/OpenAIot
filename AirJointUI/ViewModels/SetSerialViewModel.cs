@@ -120,21 +120,11 @@ namespace AirJointUI.ViewModels
                     this.TxtIpPort = mdop["tcp_ip"].GetValue<string>() + " " + mdop["tcp_port"].GetValue<int>();
 
                     this.TxtDownInterval = mdop["down_interval"].GetValue<int>().ToString();
+                    this.TxtSendInterval = mdop["send_interval"].GetValue<int>().ToString();
                 }
                 catch { }
             }
 
-
-            //初始化下发间隔
-            var chinfo = await RedisApi.GetOnlyChannelInfo();
-            if (chinfo.code == 0)
-            {
-                TxtSendInterval = chinfo.data.SendInterval.ToString();
-            }
-            else
-            {
-                TxtSendInterval = "1000";
-            }
 
 
             //初始化黑屏时间
@@ -210,32 +200,33 @@ namespace AirJointUI.ViewModels
         }
         public bool Save()
         {
-            File.WriteAllText("bktime", TxtTurnOff);
-
-            string txtPath = "/etc/X11/xorg.conf";
-            if (this.EnablePort)
+            try
             {
-                File.WriteAllText(txtPath, @"
+                File.WriteAllText("bktime", TxtTurnOff);
+
+                string txtPath = "/etc/X11/xorg.conf";
+                if (this.EnablePort)
+                {
+                    File.WriteAllText(txtPath, @"
 Section ""Device""
     Identifier ""Allwinner Graphics""
     Driver ""fbdev""
     Option ""Rotate"" ""CCW""
 EndSection");
-                File.WriteAllText("dirf", "Port");
-            }
-            else if (this.EnableHoriz)
-            {
-                File.WriteAllText(txtPath, string.Empty);
-                File.WriteAllText("dirf", "Horiz");
-            }
-
-
-            string currentDirectory = Directory.GetCurrentDirectory();
-            DirectoryInfo parentDirectoryInfo = Directory.GetParent(currentDirectory);
-            if (parentDirectoryInfo != null)
-            {
-                try
+                    File.WriteAllText("dirf", "Port");
+                }
+                else if (this.EnableHoriz)
                 {
+                    File.WriteAllText(txtPath, string.Empty);
+                    File.WriteAllText("dirf", "Horiz");
+                }
+
+
+                string currentDirectory = Directory.GetCurrentDirectory();
+                DirectoryInfo parentDirectoryInfo = Directory.GetParent(currentDirectory);
+                if (parentDirectoryInfo != null)
+                {
+
                     string tmpfilepath = Path.Combine(parentDirectoryInfo.FullName, "channel", "appsettings.json");
                     string jsonContent = File.ReadAllText(tmpfilepath);
                     var jsonObject = JsonNode.Parse(jsonContent);
@@ -256,28 +247,17 @@ EndSection");
                     }
 
                     mdop["down_interval"] = Convert.ToInt32(this.TxtDownInterval);
-
+                    mdop["send_interval"] = Convert.ToInt32(this.TxtSendInterval);
                     string updatedJson = jsonObject.ToJsonString();
                     File.WriteAllText(tmpfilepath, updatedJson);
+
                 }
-                catch { }
-            }
 
 
-            setTimeZone();
-
-            ChannelInfo info = new ChannelInfo();
-            info.SendInterval = Convert.ToInt32(_txtSendInterval);
-            if (info.SendInterval > 25000)
-            {
-                info.SendInterval = 25000;
-            }
-            var svrs = RedisApi.ChgOnlyChannel(info);
-            if (svrs != null && svrs.code == 0)
-            {
+                setTimeZone();
                 return true;
             }
-            else
+            catch
             {
                 return false;
             }

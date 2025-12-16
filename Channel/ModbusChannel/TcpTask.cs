@@ -33,12 +33,14 @@ namespace ModbusChannel
         private Task _recvTask;
         private CancellationTokenSource _recvCancellationTokenSource;
         private int _down_interval;
-        public TcpTask(string ip, int port, string dtuId, int downInterval, IServiceProvider provider)
+        private int _send_interval;
+        public TcpTask(string ip, int port, string dtuId, int downInterval, int send_interval, IServiceProvider provider)
         {
             _ip = ip;
             _port = port;
             _dtuId = dtuId;
             _down_interval = downInterval;
+            _send_interval = send_interval;
             _provider = provider;
         }
         private async Task SuProductHandler(RequestMessage msg)
@@ -185,7 +187,7 @@ namespace ModbusChannel
                     _tcpStream?.Close();
                     _tcpClient?.Close();
                 }
-    
+
             }
             if (_tcpClient.Connected)
             {
@@ -346,11 +348,7 @@ namespace ModbusChannel
                     });
 
                     //时间延时
-                    var mddetal = await _provider.GetService<GeneralRedisHelper>().HashGetAsync<ChannelConfig>("IotChannels", "modbus_only");
-                    if (mddetal != null)
-                    {
-                        _delTime = mddetal.SendInterval;
-                    }
+                    _delTime = _send_interval;
                 }
                 catch (Exception ex)
                 {

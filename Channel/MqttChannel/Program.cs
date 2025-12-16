@@ -47,7 +47,6 @@ namespace MqttChannel
                     config.CanModbus = true;
                     config.CanBind = true;
                     config.CanModify = false;
-                    config.SendInterval = 400;
                     x.config = config;
                 });
                 services.AddHostedService<MQTTService>();

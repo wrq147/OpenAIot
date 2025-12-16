@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace MqttChannel
 {
     public class MqttOption
     {
-        public string node_name { get; set; }
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
         public string mqtt_server { get; set; }
@@ -19,5 +13,9 @@ namespace MqttChannel
         /// 下发定时延时线程数：为0则不延时
         /// </summary>
         public int run_count { get; set; }
+        /// <summary>
+        /// 轮询间隔
+        /// </summary>
+        public int send_interval { get; set; } = 400;
     }
 }

@@ -63,167 +63,96 @@ namespace MESService.Model
         /// 报工表单初始化配置，存储json格式（[{"sid":"自定义工序字段Id","tid":"自定义报工字段Id"}]）,工序与报工字段的类型要一致
         /// </summary>
         public string FieldsInit { get; set; }
-
-        /// <summary>
-        /// 扩展字符串字段1
-        /// </summary>
         public string StrExt1 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段2
-        /// </summary>
         public string StrExt2 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段3
-        /// </summary>
         public string StrExt3 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段4
-        /// </summary>
         public string StrExt4 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段5
-        /// </summary>
         public string StrExt5 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段6
-        /// </summary>
         public string StrExt6 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段7
-        /// </summary>
         public string StrExt7 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段8
-        /// </summary>
         public string StrExt8 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段9
-        /// </summary>
         public string StrExt9 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段10
-        /// </summary>
         public string StrExt10 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段11
-        /// </summary>
         public string StrExt11 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段12
-        /// </summary>
         public string StrExt12 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段13
-        /// </summary>
         public string StrExt13 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段14
-        /// </summary>
         public string StrExt14 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段15
-        /// </summary>
         public string StrExt15 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段16
-        /// </summary>
         public string StrExt16 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段17
-        /// </summary>
         public string StrExt17 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段18
-        /// </summary>
         public string StrExt18 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段19
-        /// </summary>
         public string StrExt19 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段20
-        /// </summary>
         public string StrExt20 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段21
-        /// </summary>
         public string StrExt21 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段22
-        /// </summary>
         public string StrExt22 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段23
-        /// </summary>
         public string StrExt23 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段24
-        /// </summary>
         public string StrExt24 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段25
-        /// </summary>
         public string StrExt25 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段26
-        /// </summary>
         public string StrExt26 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段27
-        /// </summary>
         public string StrExt27 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段28
-        /// </summary>
         public string StrExt28 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段29
-        /// </summary>
         public string StrExt29 { get; set; }
-        /// <summary>
-        /// 扩展字符串字段30
-        /// </summary>
         public string StrExt30 { get; set; }
-        /// <summary>
-        /// 扩展数字字段1
-        /// </summary>
+        public string StrExt31 { get; set; }
+        public string StrExt32 { get; set; }
+        public string StrExt33 { get; set; }
+        public string StrExt34 { get; set; }
+        public string StrExt35 { get; set; }
+        public string StrExt36 { get; set; }
+        public string StrExt37 { get; set; }
+        public string StrExt38 { get; set; }
+        public string StrExt39 { get; set; }
+        public string StrExt40 { get; set; }
+        public string StrExt41 { get; set; }
+        public string StrExt42 { get; set; }
+        public string StrExt43 { get; set; }
+        public string StrExt44 { get; set; }
+        public string StrExt45 { get; set; }
+        public string StrExt46 { get; set; }
+        public string StrExt47 { get; set; }
+        public string StrExt48 { get; set; }
+        public string StrExt49 { get; set; }
+        public string StrExt50 { get; set; }
         public double? NumExt1 { get; set; }
-        /// <summary>
-        /// 扩展数字字段2
-        /// </summary>
         public double? NumExt2 { get; set; }
-        /// <summary>
-        /// 扩展数字字段3
-        /// </summary>
         public double? NumExt3 { get; set; }
-        /// <summary>
-        /// 扩展数字字段4
-        /// </summary>
         public double? NumExt4 { get; set; }
-        /// <summary>
-        /// 扩展数字字段5
-        /// </summary>
         public double? NumExt5 { get; set; }
-        /// <summary>
-        /// 扩展数字字段6
-        /// </summary>
         public double? NumExt6 { get; set; }
-        /// <summary>
-        /// 扩展数字字段7
-        /// </summary>
         public double? NumExt7 { get; set; }
-        /// <summary>
-        /// 扩展数字字段8
-        /// </summary>
         public double? NumExt8 { get; set; }
-        /// <summary>
-        /// 扩展数字字段9
-        /// </summary>
         public double? NumExt9 { get; set; }
-        /// <summary>
-        /// 扩展数字字段10
-        /// </summary>
         public double? NumExt10 { get; set; }
+        public double? NumExt11 { get; set; }
+        public double? NumExt12 { get; set; }
+        public double? NumExt13 { get; set; }
+        public double? NumExt14 { get; set; }
+        public double? NumExt15 { get; set; }
+        public double? NumExt16 { get; set; }
+        public double? NumExt17 { get; set; }
+        public double? NumExt18 { get; set; }
+        public double? NumExt19 { get; set; }
+        public double? NumExt20 { get; set; }
+        public double? NumExt31 { get; set; }
+        public double? NumExt32 { get; set; }
+        public double? NumExt33 { get; set; }
+        public double? NumExt34 { get; set; }
+        public double? NumExt35 { get; set; }
+        public double? NumExt36 { get; set; }
+        public double? NumExt37 { get; set; }
+        public double? NumExt38 { get; set; }
+        public double? NumExt39 { get; set; }
+        public double? NumExt40 { get; set; }
+        public double? NumExt41 { get; set; }
+        public double? NumExt42 { get; set; }
+        public double? NumExt43 { get; set; }
+        public double? NumExt44 { get; set; }
+        public double? NumExt45 { get; set; }
+        public double? NumExt46 { get; set; }
+        public double? NumExt47 { get; set; }
+        public double? NumExt48 { get; set; }
+        public double? NumExt49 { get; set; }
+        public double? NumExt50 { get; set; }
 
         /// <summary>
         /// 扩展的关联对象

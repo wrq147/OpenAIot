@@ -27,12 +27,6 @@ namespace ChannelUtility
         {
             _option = provider.GetService<ChannelOption>();
             _redis = provider.GetService<GeneralRedisHelper>();
-            ChannelConfig oldConfig = _redis.HashGet<ChannelConfig>("IotChannels", _option.config.Code);
-            if (oldConfig != null)
-            {
-                _option.config.SendInterval = oldConfig.SendInterval;
-            }
-            _redis.HashSet("IotChannels", _option.config.Code, System.Text.Json.JsonSerializer.Serialize(_option.config, JsonMessageSerializerConfig.SerializeOptions));
         }
         //供程序员显式调用的Dispose方法
         public void Dispose()

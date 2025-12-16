@@ -53,7 +53,6 @@ namespace ModbusChannel
                     x.config.CanModbus = true;
                     x.config.CanBind = false;
                     x.config.CanModify = true;
-                    x.config.SendInterval = 300;
                 });
                 services.AddHostedService<ModbusService>();
 

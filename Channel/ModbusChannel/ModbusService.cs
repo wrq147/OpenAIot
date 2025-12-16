@@ -107,7 +107,7 @@ namespace ModbusChannel
             }
             else if (option.Value.net_way == 2)
             {
-                _tcp = new TcpClientTask(option.Value.tcp_ip, option.Value.tcp_port, option.Value.tcp_dtuid, option.Value.down_interval, _provider);
+                _tcp = new TcpClientTask(option.Value.tcp_ip, option.Value.tcp_port, option.Value.tcp_dtuid, option.Value.down_interval, option.Value.send_interval, _provider);
                 await _tcp.Start(stoppingToken);
             }
             else
@@ -125,7 +125,7 @@ namespace ModbusChannel
                 //启用tcp服务
                 if (_tasks.Count == 0 && !string.IsNullOrEmpty(option.Value.tcp_dtuid))
                 {
-                    _tcp = new TcpClientTask(option.Value.tcp_ip, option.Value.tcp_port, option.Value.tcp_dtuid, option.Value.down_interval, _provider);
+                    _tcp = new TcpClientTask(option.Value.tcp_ip, option.Value.tcp_port, option.Value.tcp_dtuid, option.Value.down_interval, option.Value.send_interval, _provider);
                     await _tcp.Start(stoppingToken);
                 }
             }

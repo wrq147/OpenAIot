@@ -38,9 +38,5 @@ namespace ChannelUtility.Config
         /// 是否允许动态修改通道参数
         /// </summary>
         public bool CanModify { get; set; } = false;
-        /// <summary>
-        /// 报文间隔(如果redis中有值，则使用redis的)
-        /// </summary>
-        public int SendInterval { get; set; } = 400;
     }
 }

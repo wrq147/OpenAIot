@@ -144,7 +144,7 @@ namespace MqttChannel
                     return new List<RawDataMessage>();
                 });
 
-                int pollTime = eventBus.Option.config.SendInterval;
+                int pollTime = _send_interval;
                 var timeSpan = DateTime.Now - lastTime;
                 if ((timeSpan.TotalMilliseconds < (pollTime - 20)) || rqlist.Count > 0)
                 {
@@ -200,10 +200,12 @@ namespace MqttChannel
         {
             await MessageConcurrentHandler(msg, false);
         }
+        private int _send_interval;
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var eventBus = _provider.GetService<ClientBusProxy>();
             var option = _provider.GetService<IOptions<MqttOption>>();
+            _send_interval = option.Value.send_interval;
             _downRuner = new DownWheelRuner(option.Value.run_count);
             _client = _mqttFactory.CreateMqttClient();
             _client.ApplicationMessageReceivedAsync += MqttServer_ApplicationMessageReceived;

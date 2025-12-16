@@ -22,6 +22,10 @@ namespace ModbusChannel
         /// </summary>
         public int down_interval { get; set; }
         /// <summary>
+        /// 轮询间隔
+        /// </summary>
+        public int send_interval { get; set; }
+        /// <summary>
         /// tcp的dtuid
         /// </summary>
         public string tcp_dtuid { get; set; }

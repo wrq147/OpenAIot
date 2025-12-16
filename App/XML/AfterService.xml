@@ -1346,11 +1346,6 @@
             最后在线时间
             </summary>
         </member>
-        <member name="P:AfterService.Model.Out_KfDevice.FirmwareVer">
-            <summary>
-            固件版本
-            </summary>
-        </member>
         <member name="P:AfterService.Model.Out_KfDevice.ProductVer">
             <summary>
             协议版本

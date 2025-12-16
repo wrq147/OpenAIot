@@ -26,6 +26,10 @@ namespace ChannelUtility
         /// </summary>
         public event SubProductMessage OnSubProductMessage;
         private IBus _bus;
+        public IBus Bus
+        {
+            get { return _bus; }
+        }
         protected IMemoryCache _memoryCache;
         public IMemoryCache MemoryCache { get { return _memoryCache; } }
         public ClientBusProxy(IServiceProvider provider) : base(provider)

@@ -481,12 +481,7 @@ namespace ModbusChannel
                         _port.StopBits = trt.Model.modbus.StopBits == "1" ? StopBits.One : StopBits.Two;//停止位
                     }
                     _port.Open();
-                    //时间延时
-                    var mddetal = await _eventBus.RedisHelper.HashGetAsync<ChannelConfig>("IotChannels", "modbus_only");
-                    if (mddetal != null)
-                    {
-                        _delTime = mddetal.SendInterval;
-                    }
+                    _delTime = _option.send_interval;
                     _recvCancellationTokenSource = new CancellationTokenSource();
 
                     _recvTask = Task.Run(async () =>

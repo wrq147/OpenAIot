@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Controller\" />
-    <Folder Include="Business\" />
     <Folder Include="DAL\" />
     <Folder Include="Models\" />
   </ItemGroup>

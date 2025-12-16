@@ -275,6 +275,7 @@ export default {
   },
   data() {
     return {
+      MaxFieldCount:50,
       pickerOptions:pickerOptions,
       activeSelectValue:'',
       dialogVisible: false,
@@ -507,7 +508,7 @@ export default {
       
     },
     setMapid(){
-        //获取字段的唯一id//总共40个字段，字符串：StrExt1~StrExt30，数值：NumExt1~NumExt10，删除掉的要可以补充
+        //获取字段的唯一id
         try {
           if(this.activeFiledIndex==-1){
             let mapidArr=[]
@@ -524,7 +525,7 @@ export default {
                 }
                 let arr=[]
                 if(mapidArr&&mapidArr.length>0){
-                  arr=this.findMissingNumbers(1,10,mapidArr)
+                  arr=this.findMissingNumbers(1,this.MaxFieldCount,mapidArr)
                   // console.log(arr);
                   if(arr&&arr.length>0){
                     const min = Math.min(...arr);
@@ -549,10 +550,10 @@ export default {
                     }
                   })).filter(rw=>rw!=undefined)
                 }
-                // console.log(mapidArr,'mapidArrmapidArr');
+
                 let arr=[]
                 if(mapidArr&&mapidArr.length>0){
-                  arr=this.findMissingNumbers(1,30,mapidArr)//获取中间间断的数据
+                  arr=this.findMissingNumbers(1,this.MaxFieldCount,mapidArr)//获取中间间断的数据
                   if(arr&&arr.length>0){
                     const min = Math.min(...arr);
                     this.form.mapid='StrExt'+min
@@ -609,6 +610,10 @@ export default {
             submitFiledList.push(subForm)
           }else{
             submitFiledList[this.activeFiledIndex]=JSON.parse(JSON.stringify(subForm))
+          }
+          if(submitFiledList.length>this.MaxFieldCount){
+            this.$modal.msgError("自定义字段数量不能超过【"+this.MaxFieldCount+"】个");
+            return;
           }
           saveOrgField({field:this.customFiledType,val:JSON.stringify(submitFiledList)}).then(res=>{
             // console.log("添加成功",res);
