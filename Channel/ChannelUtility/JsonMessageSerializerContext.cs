@@ -42,6 +42,7 @@ namespace ChannelUtility
     [JsonSerializable(typeof(DeviceBindMessage))]
     [JsonSerializable(typeof(DeviceBindMessageReply))]
     [JsonSerializable(typeof(RawDataMessage))]
+    [JsonSerializable(typeof(AIDetectRequestMeesage))]
     [JsonSerializable(typeof(RawUpDataMessage))]
     [JsonSerializable(typeof(TempProductMessage))]
     [JsonSerializable(typeof(ModbusMatchMessage))]

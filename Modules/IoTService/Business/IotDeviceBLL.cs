@@ -19,8 +19,6 @@ using MonitorService.DAL;
 using MyAccess.Aop;
 using MyAccess.DB.Builder.WhereToSql;
 using Newtonsoft.Json;
-using Quartz.Impl.AdoJobStore.Common;
-using SixLabors.ImageSharp.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Linq;

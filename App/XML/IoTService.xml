@@ -115,20 +115,6 @@
             <param name="parameters"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.Controller.HttpSync.Channel(System.String)">
-            <summary>
-            获取指定通道信息
-            </summary>
-            <param name="code"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTService.Controller.HttpSync.ChgChannel(IoTService.Models.In_SyncChannel)">
-            <summary>
-            修改通道信息
-            </summary>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
         <member name="M:IoTService.Controller.HttpSync.RefreshAllProductCache">
             <summary>
             刷新所属所有协议的缓存

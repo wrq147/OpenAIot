@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.EventBus;
 using Common.Share;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -112,7 +113,7 @@ namespace MonitorService
                     if (!await jobBLL.ExistJob(jobname, group))
                     {
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -132,7 +133,7 @@ namespace MonitorService
                     if (!await jobBLL.ExistJob(clearFilejobname, group))
                     {
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -153,7 +154,7 @@ namespace MonitorService
                     if (!await jobBLL.ExistJob(holidayjobname, group))
                     {
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -173,7 +174,7 @@ namespace MonitorService
                     if (!await jobBLL.ExistJob(errjobname, group))
                     {
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -190,6 +191,10 @@ namespace MonitorService
                 }
                
             });
+
+
+            plg.RegisterQuartzTask();
+
         }
 
     }

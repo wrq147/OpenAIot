@@ -1,5 +1,7 @@
 ﻿using FFmpeg.AutoGen;
 using System;
+using System.Collections.Concurrent;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -20,7 +22,8 @@ namespace FixVideoChannel
         #endregion
 
         #region 依赖组件
-        private readonly AIDetector _aiDetector;
+        private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        private List<AIDetectorTask> _aiDetectTaskList;
         private readonly ZLMediaKitPusher _zlPusher;
         private readonly string _rtspUrl;
         private readonly string _pushUrl;
@@ -38,11 +41,10 @@ namespace FixVideoChannel
         private AVRational _audioTimeBase; // 音频时间基
         #endregion
 
-        private RtspParam _rtspParam;
+
         // 构造函数
-        public RtspStreamProcessor(string rtspUrl, string pushUrl, RtspParam rtspParam)
+        public RtspStreamProcessor(string rtspUrl, string pushUrl, List<AIDetectorTask> tasks)
         {
-            _rtspParam = rtspParam;
             _rtspUrl = rtspUrl ?? throw new ArgumentNullException(nameof(rtspUrl));
             _pushUrl = pushUrl ?? throw new ArgumentNullException(nameof(pushUrl));
 
@@ -62,10 +64,26 @@ namespace FixVideoChannel
             }
 
             // 初始化组件
-            _aiDetector = new AIDetector();
+            _aiDetectTaskList = tasks;
             _zlPusher = new ZLMediaKitPusher();
         }
-
+        /// <summary>
+        /// 更新检测任务
+        /// </summary>
+        /// <param name="tasks"></param>
+        public void UpdateDetectTask(List<AIDetectorTask> tasks)
+        {
+            _rwLock.EnterWriteLock();
+            try
+            {
+                _aiDetectTaskList = tasks;
+            }
+            finally
+            {
+                // 确保释放写锁
+                _rwLock.ExitWriteLock();
+            }
+        }
         /// <summary>
         /// 启动RTSP流处理
         /// </summary>
@@ -364,8 +382,24 @@ namespace FixVideoChannel
                     }
 
                     // AI检测
-                    var detectionBoxes = _aiDetector.Detect(rgbBuffer, _videoWidth, _videoHeight, _rtspParam);
-
+                    AIDetectorTask[] tdectarr = null;
+                    _rwLock.EnterReadLock();
+                    try
+                    {
+                        tdectarr = _aiDetectTaskList.ToArray();
+                    }
+                    finally
+                    {
+                        _rwLock.ExitReadLock();
+                    }
+                    if (tdectarr != null)
+                    {
+                        foreach(var dectItem in tdectarr)
+                        {
+                            dectItem.Detect(rgbBuffer, _videoWidth, _videoHeight);
+                        }
+                    }
+           
                     // 提取参数
                     isKeyFrame = (videoFrame->flags & ffmpeg.AV_FRAME_FLAG_KEY) != 0;
                     long timestamp = videoFrame->pts;
@@ -516,7 +550,6 @@ namespace FixVideoChannel
             {
                 _cts?.Cancel();
                 _ = StopAsync();
-                _aiDetector.Dispose();
                 _zlPusher.Dispose();
             }
 

@@ -30,7 +30,8 @@ namespace ChannelUtility
             { "TempProduct", typeof(TempProductMessage) },
             { "QueryICCIDReply", typeof(QueryICCIDMessageReply) },
             { "ChangeProduct", typeof(ChangeProductMessage) },
-            { "StartReadAll", typeof(StartReadAllMessage) }
+            { "StartReadAll", typeof(StartReadAllMessage) },
+            { "AIDetectReq",typeof(AIDetectRequestMeesage) }
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions
         {

@@ -1,9 +1,13 @@
-﻿using Common;
+﻿using ChannelUtility.Message;
+using Common;
+using EasyNetQ.Consumer;
 using IoTAIService.AICode;
 using IoTAIService.Business;
 using IoTAIService.DAL;
+using IoTRulesService.DataParser;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
 
@@ -42,8 +46,26 @@ namespace IoTAIService
 
             });
 
+            app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener += MessageHandler;
 
+        }
+        public override void Unload(ITAApplication app, PluginObject plg)
+        {
+            app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener -= MessageHandler;
+            base.Unload(app, plg);
+        }
+        private Task MessageHandler(BaseDeviceMessage msg)
+        {
+            switch (msg.MsgType)
+            {
+                case "AIDetectReq":
+                    {
+                        AIDetectRequestMeesage detectReq = (AIDetectRequestMeesage)msg;
 
+                    }
+                    break;
+            }
+            return Task.CompletedTask;
         }
     }
 }

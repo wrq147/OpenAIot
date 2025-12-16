@@ -7,6 +7,96 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="FFmpegLibs\Linux\arm64\libavcodec.so" />
+    <None Remove="FFmpegLibs\Linux\arm64\libavdevice.so" />
+    <None Remove="FFmpegLibs\Linux\arm64\libavfilter.so" />
+    <None Remove="FFmpegLibs\Linux\arm64\libavformat.so" />
+    <None Remove="FFmpegLibs\Linux\arm64\libavutil.so" />
+    <None Remove="FFmpegLibs\Linux\arm64\libswresample.so" />
+    <None Remove="FFmpegLibs\Linux\arm64\libswscale.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libavcodec.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libavdevice.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libavfilter.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libavformat.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libavutil.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libswresample.so" />
+    <None Remove="FFmpegLibs\Linux\x64\libswscale.so" />
+    <None Remove="FFmpegLibs\Windows\x64\avcodec-62.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avdevice-62.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avfilter-11.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avformat-62.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avutil-60.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\swresample-6.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\swscale-9.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="FFmpegLibs\Linux\arm64\libavcodec.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\arm64\libavdevice.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\arm64\libavfilter.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\arm64\libavformat.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\arm64\libavutil.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\arm64\libswresample.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\arm64\libswscale.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libavcodec.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libavdevice.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libavfilter.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libavformat.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libavutil.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libswresample.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Linux\x64\libswscale.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avcodec-62.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avdevice-62.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avfilter-11.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avformat-62.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avutil-60.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\swresample-6.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\swscale-9.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="FFmpeg.AutoGen" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.31" />

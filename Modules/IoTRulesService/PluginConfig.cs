@@ -44,8 +44,9 @@ namespace IoTRulesService
             services.AddSingleton<RuleCache>();
             services.AddSingleton<DeviceCache>();
             services.AddSingleton<RuleWheelRuner>();
+            services.AddSingleton<MessageRunner>();
             services.AddSingleton<PackParser>();
-            services.AddSingleton<MessageHandler>();
+            services.AddSingleton<DeviceMessageHandler>();
             services.AddRuleflow();
         }
 
@@ -61,23 +62,7 @@ namespace IoTRulesService
                     var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
                     await bus.PubSub.SubscribeAsync("IotRule", async (string msg) =>
                     {
-                        if (string.IsNullOrEmpty(msg))
-                        {
-                            var tmpoption = app.ServiceProvider.GetService<IOptions<IotOption>>();
-                            var redis = app.ServiceProvider.GetService<IotRedisHelper>();
-                            await redis.HashSetAsync("RuleExeNodes", tmpoption.Value.node_name, DateTime.Now.AddSeconds(130).ToString("o"));
-                            return;
-                        }
-
-                        var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
-                        if(rs is RawUpDataMessage rawUpData)
-                        {
-                            await app.ServiceProvider.GetService<PackParser>().rawDataTo(rawUpData.DeviceId, rawUpData.Data, rawUpData.prefix, true);
-                        }
-                        else if(rs is BaseUpDeviceMessage upMsg)
-                        {
-                            await app.ServiceProvider.GetService<MessageHandler>().UpMsgExe(upMsg);
-                        }
+                        await app.ServiceProvider.GetService<MessageRunner>().ParseExe(msg);
                     }, cfg =>
                     {
                         if (string.IsNullOrEmpty(option.Value.node_name))
@@ -101,7 +86,7 @@ namespace IoTRulesService
                         if (!await jobBLL.ExistJob(heartjobname, heartgroup))
                         {
                             MZ_Job devjob = new MZ_Job();
-                            devjob.concurrent = "1";
+                            devjob.concurrent = "0";
                             devjob.createId = 0;
                             devjob.create_time = DateTime.Now;
                             devjob.updateId = 0;
@@ -218,7 +203,7 @@ namespace IoTRulesService
             });
 
 
-
+            plg.RegisterQuartzTask();
         }
         public override void Unload(ITAApplication app, PluginObject plg)
         {

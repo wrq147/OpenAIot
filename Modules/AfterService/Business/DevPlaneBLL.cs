@@ -352,7 +352,7 @@ namespace AfterService.Business
                 await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
             }
         }
-        public virtual async Task Execute(string id, IJobExecutionContext context, long jobId)
+        public virtual async Task Execute(string id, long jobId)
         {
             var planeType = await _devPlaneDAL.Select(id);
             if (planeType == null)
@@ -439,7 +439,7 @@ namespace AfterService.Business
                 job.updateId = 0;
                 job.update_time = DateTime.Now;
                 job.cron_expression = data.TimerCron;
-                job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$context,$id)";
+                job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$id)";
                 job.job_group = "DEFAULT";
                 job.job_name = "DevPlaneTimer-" + data.Id;
                 job.misfire_policy = "0";
@@ -516,7 +516,7 @@ namespace AfterService.Business
                 job.updateId = 0;
                 job.update_time = DateTime.Now;
                 job.cron_expression = data.TimerCron;
-                job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$context,$id)";
+                job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$id)";
                 job.job_group = "DEFAULT";
                 job.job_name = "DevPlaneTimer-" + data.Id;
                 job.misfire_policy = "0";

@@ -59,7 +59,7 @@ namespace CRMService
                     if (!await jobBLL.ExistJob(jobname, group))
                     {
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -99,6 +99,7 @@ namespace CRMService
                 await app.ServiceProvider.GetService<CRMAgentBLL>().JoinByOtherMod(evt);
             });
 
+            plg.RegisterQuartzTask();
         }
         public override void Unload(ITAApplication app, PluginObject plg)
         {

@@ -17,7 +17,7 @@ namespace FixVideoChannel
         private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(50);
         private Thread _timerThread;
         private IServiceProvider _provider;
-        private HashSet<string> _videoIds = new HashSet<string>();
+        private Dictionary<string,> _videoIds = new HashSet<string>();
         public FixVideoService(IServiceProvider provider)
         {
             _provider = provider;
@@ -56,10 +56,14 @@ namespace FixVideoChannel
 
             await eventBus.Bus.PubSub.SubscribeAsync<string>("VideoCaptureItem", async (videoitem, tk) =>
             {
-                var item = System.Text.Json.JsonSerializer.Deserialize<VideoCaptureItemcs>(videoitem);
+                var item = System.Text.Json.JsonSerializer.Deserialize<VideoCaptureItem>(videoitem);
                 if (!_videoIds.Contains(item.Id))
                 {
                     _videoIds.Add(item.Id);
+                }
+                else
+                {
+
                 }
             }, cfg =>
             {

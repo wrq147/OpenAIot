@@ -10,7 +10,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.Business.RuleBLL.Execute(System.Int64,System.Int32,Quartz.IJobExecutionContext,System.Int64,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="M:IoTRulesService.Business.RuleBLL.Execute(System.Int64,System.Int32,Common.EventBus.QuartzContext,System.Int64,System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
             http触发与定时器触发
             </summary>
@@ -237,6 +237,29 @@
             指定分组路径下面是否有设备
             </summary>
             <param name="groupPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.DeviceMessageHandler.ExecuteRules(ChannelUtility.Message.BaseUpDeviceMessage,ChannelUtility.TslReturn,System.DateTime,TemplateAction.Core.ITAServiceProvider,IoTService.IotRedisHelper)">
+            <summary>
+            执行规则
+            </summary>
+            <param name="rs"></param>
+            <param name="model"></param>
+            <param name="nowTime"></param>
+            <param name="_provider"></param>
+            <param name="redis"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.DeviceMessageHandler.ExcuteNotice(TemplateAction.Core.ITAServiceProvider,ChannelUtility.Tsl.BaseEvent,IoTService.Models.MZ_IotDevice,System.Collections.Generic.List{IoTService.Models.WarningNoticeItem},System.Collections.Generic.List{IoTService.Models.Out_WarnTargetId},System.String)">
+            <summary>
+            执行设备通知
+            </summary>
+            <param name="_provider"></param>
+            <param name="evt"></param>
+            <param name="device"></param>
+            <param name="notices"></param>
+            <param name="warnids"></param>
+            <param name="extInfo"></param>
             <returns></returns>
         </member>
         <member name="T:IoTRulesService.DataParser.GraphScript.FuncLGraph">
@@ -570,34 +593,11 @@
             <param name="msgId"></param>
             <param name="msg"></param>
         </member>
-        <member name="M:IoTRulesService.DataParser.MessageHandler.UpMsgExe(ChannelUtility.Message.BaseUpDeviceMessage)">
+        <member name="M:IoTRulesService.DataParser.MessageRunner.ParseExe(System.String)">
             <summary>
-            处理上报的消息
+            单线程处理所有的消息
             </summary>
             <param name="msg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTRulesService.DataParser.MessageHandler.ExecuteRules(ChannelUtility.Message.BaseUpDeviceMessage,ChannelUtility.TslReturn,System.DateTime,TemplateAction.Core.ITAServiceProvider,IoTService.IotRedisHelper)">
-            <summary>
-            执行规则
-            </summary>
-            <param name="rs"></param>
-            <param name="model"></param>
-            <param name="nowTime"></param>
-            <param name="_provider"></param>
-            <param name="redis"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTRulesService.DataParser.MessageHandler.ExcuteNotice(TemplateAction.Core.ITAServiceProvider,ChannelUtility.Tsl.BaseEvent,IoTService.Models.MZ_IotDevice,System.Collections.Generic.List{IoTService.Models.WarningNoticeItem},System.Collections.Generic.List{IoTService.Models.Out_WarnTargetId},System.String)">
-            <summary>
-            执行设备通知
-            </summary>
-            <param name="_provider"></param>
-            <param name="evt"></param>
-            <param name="device"></param>
-            <param name="notices"></param>
-            <param name="warnids"></param>
-            <param name="extInfo"></param>
             <returns></returns>
         </member>
         <member name="F:IoTRulesService.DataParser.PackParser._lastReaderDict">

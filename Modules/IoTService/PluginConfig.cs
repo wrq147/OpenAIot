@@ -79,12 +79,12 @@ namespace IoTService
                     if (!await jobBLL.ExistJob(devjobname, devgroup))
                     {
                         MZ_Job devjob = new MZ_Job();
-                        devjob.concurrent = "1";
+                        devjob.concurrent = "0";
                         devjob.createId = 0;
                         devjob.create_time = DateTime.Now;
                         devjob.updateId = 0;
                         devjob.update_time = DateTime.Now;
-                        devjob.cron_expression = "0/10 * * * * ?";
+                        devjob.cron_expression = "0 0/10 * * * ?";
                         devjob.invoke_target = typeof(IotDeviceBLL).FullName + ".SyncDevice()";
                         devjob.job_group = devgroup;
                         devjob.job_name = devjobname;
@@ -101,7 +101,7 @@ namespace IoTService
                     if (!await jobBLL.ExistJob(clearupdateLog, cleargroup))
                     {
                         MZ_Job warnjob = new MZ_Job();
-                        warnjob.concurrent = "1";
+                        warnjob.concurrent = "0";
                         warnjob.createId = 0;
                         warnjob.create_time = DateTime.Now;
                         warnjob.updateId = 0;
@@ -122,7 +122,7 @@ namespace IoTService
                     if (!await jobBLL.ExistJob(warnjobname, warngroup))
                     {
                         MZ_Job warnjob = new MZ_Job();
-                        warnjob.concurrent = "1";
+                        warnjob.concurrent = "0";
                         warnjob.createId = 0;
                         warnjob.create_time = DateTime.Now;
                         warnjob.updateId = 0;
@@ -143,7 +143,7 @@ namespace IoTService
                     if (!await jobBLL.ExistJob(cardjobname, cardgroup))
                     {
                         MZ_Job cardjob = new MZ_Job();
-                        cardjob.concurrent = "1";
+                        cardjob.concurrent = "0";
                         cardjob.createId = 0;
                         cardjob.create_time = DateTime.Now;
                         cardjob.updateId = 0;
@@ -167,7 +167,7 @@ namespace IoTService
                     if (!await jobBLL.ExistJob(winrulejobname, winrulegroup))
                     {
                         MZ_Job devjob = new MZ_Job();
-                        devjob.concurrent = "1";
+                        devjob.concurrent = "0";
                         devjob.createId = 0;
                         devjob.create_time = DateTime.Now;
                         devjob.updateId = 0;
@@ -384,6 +384,7 @@ namespace IoTService
 
             });
 
+            plg.RegisterQuartzTask();
         }
 
     }

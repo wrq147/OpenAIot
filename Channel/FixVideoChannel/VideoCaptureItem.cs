@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FixVideoChannel
 {
-    public class VideoCaptureItemcs
+    public class VideoCaptureItem
     {
         /// <summary>
         /// 视频Id

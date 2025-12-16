@@ -98,7 +98,7 @@ namespace FlowService
             });
 
 
-
+            plg.RegisterQuartzTask();
 
         }
 

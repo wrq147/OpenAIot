@@ -1,12 +1,10 @@
 ﻿using Common;
-using IoTService.Business;
+using Common.EventBus;
 using IoTVideoService.Business;
 using Microsoft.Extensions.Configuration;
 using MonitorService.Business;
 using MonitorService.Model;
 using System;
-using System.Collections.Generic;
-using TemplateAction.Common;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
 namespace IoTVideoService
@@ -33,7 +31,7 @@ namespace IoTVideoService
                     if (!await jobBLL.ExistJob(videojobname, videogroup))
                     {
                         MZ_Job devjob = new MZ_Job();
-                        devjob.concurrent = "1";
+                        devjob.concurrent = "0";
                         devjob.createId = 0;
                         devjob.create_time = DateTime.Now;
                         devjob.updateId = 0;
@@ -47,12 +45,12 @@ namespace IoTVideoService
 
                         await jobBLL.InsertJob(devjob);
                     }
-
-
-             
-
                 }
             });
+
+            plg.RegisterQuartzTask();
         }
+
+
     }
 }

@@ -131,7 +131,7 @@ namespace IoTRulesService.DataParser
         {
             if (string.IsNullOrEmpty(msgId))
             {
-                await _provider.GetService<MessageHandler>().UpMsgExe(msg).ConfigureAwait(false);
+                await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg).ConfigureAwait(false);
             }
             else
             {
@@ -145,7 +145,7 @@ namespace IoTRulesService.DataParser
             msg.DeviceId = deviceId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.props = props;
-            await _provider.GetService<MessageHandler>().UpMsgExe(msg);
+            await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
         }
 
         public async Task<ReadPropertyMessageReply> PublicWaitReadProperty(ReadPropertyMessage msg)
@@ -567,7 +567,7 @@ namespace IoTRulesService.DataParser
             {
                 if (msg != null)
                 {
-                    await _provider.GetService<MessageHandler>().UpMsgExe(msg);
+                    await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
                     return true;
                 }
                 else
@@ -589,7 +589,7 @@ namespace IoTRulesService.DataParser
                 {
                     if (msg != null)
                     {
-                        await _provider.GetService<MessageHandler>().UpMsgExe(msg);
+                        await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
                         return true;
                     }
                     else
@@ -602,7 +602,7 @@ namespace IoTRulesService.DataParser
                 {
                     if (msg != null)
                     {
-                        await _provider.GetService<MessageHandler>().UpMsgExe(msg);
+                        await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
                         return true;
                     }
                     else
@@ -614,7 +614,7 @@ namespace IoTRulesService.DataParser
                 {
                     return true;
                 }
-                await _provider.GetService<MessageHandler>().UpMsgExe(newmsg);
+                await _provider.GetService<DeviceMessageHandler>().ExeMessage(newmsg);
                 return true;
             }
             catch (JavaScriptException ex)

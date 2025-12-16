@@ -16,7 +16,7 @@ namespace MonitorService.Util
         }
         protected override async Task DoExecute(IJobExecutionContext context, MZ_Job job)
         {
-            await ScheduleUtils.InvokeMethod(Provider, context, job);
+            await ScheduleUtils.InvokeMethod(Provider, context, job, false);
         }
     }
 }

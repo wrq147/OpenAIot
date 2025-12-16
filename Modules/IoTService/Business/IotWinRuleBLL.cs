@@ -1,4 +1,5 @@
 ﻿using ChannelUtility.Tsl;
+using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
 using IoTService.DAL;
@@ -94,7 +95,7 @@ namespace IoTService.Business
                 return BusResponse<int>.Error(111, ex.Message);
             }
         }
-        public virtual async Task CalDevice(IJobExecutionContext context)
+        public virtual async Task CalDevice(QuartzContext context)
         {
             var serverBus = _provider.GetService<ServerBusProxy>();
             var iotInfluxBLL = _provider.GetService<IotInfluxBLL>();

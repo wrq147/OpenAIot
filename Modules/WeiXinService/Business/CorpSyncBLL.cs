@@ -109,7 +109,7 @@ namespace WeiXinService.Business
             corpItem.UpdatedOn = DateTime.Now;
 
             MZ_Job job = new MZ_Job();
-            job.concurrent = "1";
+            job.concurrent = "0";
             job.createId = 0;
             job.create_time = DateTime.Now;
             job.updateId = 0;

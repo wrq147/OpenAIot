@@ -43,7 +43,7 @@ namespace MessageService
                         if (!await app.ServiceProvider.GetService<JobBLL>().ExistJob(devjobname, devgroup))
                         {
                             MZ_Job devjob = new MZ_Job();
-                            devjob.concurrent = "1";
+                            devjob.concurrent = "0";
                             devjob.createId = 0;
                             devjob.create_time = DateTime.Now;
                             devjob.updateId = 0;
@@ -62,6 +62,7 @@ namespace MessageService
                 });
             }
 
+            plg.RegisterQuartzTask();
         }
     }
 }

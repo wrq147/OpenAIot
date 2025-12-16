@@ -24,31 +24,32 @@ using TemplateAction.Core;
 
 namespace IoTRulesService.DataParser
 {
-    public class MessageHandler
+    public class DeviceMessageHandler
     {
         private RuleWheelRuner _runner;
-        private ILogger<MessageHandler> _log;
+        private ILogger<DeviceMessageHandler> _log;
         private ITAServiceProvider _provider;
         private static readonly string[] GroupNames = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-        public MessageHandler(ILoggerFactory factory, ITAServiceProvider provider)
+        public DeviceMessageHandler(ILoggerFactory factory, ITAServiceProvider provider)
         {
             _provider = provider;
-            _log = factory.CreateLogger<MessageHandler>();
             _runner = _provider.GetService<RuleWheelRuner>();
+            _log = factory.CreateLogger<DeviceMessageHandler>();
         }
-        /// <summary>
-        /// 处理上报的消息
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public async Task UpMsgExe(BaseUpDeviceMessage msg)
+        public async Task ParseMessage(RawUpDataMessage rs)
         {
-            _runner.PushConcurrentTask(msg.DeviceId, async () =>
+            _runner.PushConcurrentTask(rs.DeviceId, async () =>
             {
-                await AnalyseDeviceUp(msg).ConfigureAwait(false);
+                await _provider.GetService<PackParser>().rawDataTo(rs.DeviceId, rs.Data, rs.prefix, true).ConfigureAwait(false);
             });
         }
-
+        public async Task ExeMessage(BaseUpDeviceMessage rs)
+        {
+            _runner.PushConcurrentTask(rs.DeviceId, async () =>
+            {
+                await _provider.GetService<DeviceMessageHandler>().AnalyseDeviceUp(rs).ConfigureAwait(false);
+            });
+        }
         private async Task AnalyseDeviceUp(BaseUpDeviceMessage rs)
         {
             try

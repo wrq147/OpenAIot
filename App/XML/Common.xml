@@ -511,6 +511,28 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:Common.EventBus.BusUtility.Trigger(System.String,System.String,System.String,Common.EventBus.QuartzContext,System.Int64)">
+            <summary>
+            触发执行定时任务
+            </summary>
+            <param name="className"></param>
+            <param name="methodName"></param>
+            <param name="methodParams"></param>
+            <param name="context"></param>
+            <param name="jobId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Common.EventBus.BusUtility.TriggerWait(System.String,System.String,System.String,Common.EventBus.QuartzContext,System.Int64)">
+            <summary>
+            触发执行等待定时任务
+            </summary>
+            <param name="className"></param>
+            <param name="methodName"></param>
+            <param name="methodParams"></param>
+            <param name="context"></param>
+            <param name="jobId"></param>
+            <returns></returns>
+        </member>
         <member name="T:Common.EventBus.CallEvent">
             <summary>
             功能调用事件
@@ -563,6 +585,23 @@
             </summary>
             <param name="plg"></param>
             <param name="ac"></param>
+        </member>
+        <member name="M:Common.EventBus.PluginEventRegisterExtends.RegisterQuartzTask(TemplateAction.Core.PluginObject)">
+            <summary>
+            注册监听Quartz执行任务
+            </summary>
+            <param name="plg"></param>
+        </member>
+        <member name="T:Common.EventBus.QuartzExeEvent">
+            <summary>
+            Quartz任务执行事件
+            </summary>
+        </member>
+        <member name="M:Common.EventBus.QuartzExeEvent.GetMethodParams">
+            <summary>
+            获取method方法参数相关列表
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Common.EventBus.RabbitScope.Dispatch``1(System.String,``0)">
             <summary>

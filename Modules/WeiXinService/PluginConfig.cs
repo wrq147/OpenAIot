@@ -62,6 +62,8 @@ namespace WeiXinService
                     }
                 });
             }
+
+            plg.RegisterQuartzTask();
         }
 
     }

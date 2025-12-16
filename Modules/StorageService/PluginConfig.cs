@@ -214,7 +214,7 @@ namespace StorageService
                     if (!await jobBLL.ExistJob(xxjobname, xxgroup))
                     {
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -311,6 +311,9 @@ namespace StorageService
                 await stockBLL.ManualPile(manualParam, artificialUser);
 
             });
+
+            plg.RegisterQuartzTask();
+
         }
     }
 }

@@ -2900,7 +2900,7 @@ namespace EfficiencyService.Business
         /// 定时执行能耗计算
         /// </summary>
         /// <returns></returns>
-        public virtual async Task ExecuteEnergy(IJobExecutionContext context)
+        public virtual async Task ExecuteEnergy(QuartzContext context)
         {
             //所有绑定了物联网采集模块的设备
             List<T_Com_Equipment> equipments = await _commonDAL.SelectEnergyEquipmentList();

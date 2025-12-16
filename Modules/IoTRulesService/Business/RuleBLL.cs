@@ -203,7 +203,7 @@ namespace IoTRulesService.Business
         /// <param name="jobId"></param>
         /// <param name="inputs"></param>
         /// <returns></returns>
-        public virtual async Task<BusResponse<List<StreamData>>> Execute(long id, int triggerWay, IJobExecutionContext context, long jobId, Dictionary<string, object> inputs = null)
+        public virtual async Task<BusResponse<List<StreamData>>> Execute(long id, int triggerWay, QuartzContext context, long jobId, Dictionary<string, object> inputs = null)
         {
             try
             {

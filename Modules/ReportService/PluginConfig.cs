@@ -1,5 +1,6 @@
 ﻿
 using Common;
+using Common.EventBus;
 using Microsoft.Extensions.Configuration;
 using ReportService.Business;
 using ReportService.DAL;
@@ -38,6 +39,7 @@ namespace ReportService
         }
         protected override void Configure(ITAApplication app, PluginObject plg)
         {
+            plg.RegisterQuartzTask();
         }
     }
 }

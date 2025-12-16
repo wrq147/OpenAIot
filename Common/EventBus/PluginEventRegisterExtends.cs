@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Common;
@@ -193,6 +194,125 @@ namespace Common.EventBus
                     cfg.WithAutoDelete(true);
                 });
             }
+        }
+
+
+
+        /// <summary>
+        /// 注册监听Quartz执行任务
+        /// </summary>
+        /// <param name="plg"></param>
+        public static void RegisterQuartzTask(this PluginObject plg)
+        {
+            var generalOption = plg.Collection.GetService<IOptions<GeneralOption>>();
+            if (string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
+            {
+                plg.Dispatcher.Register<QuartzExeEvent>($"{QuartzExeEvent.EventKey}.{plg.Name}", async (tmpitem) =>
+                {
+                    try
+                    {
+                        List<object> methodParams = tmpitem.GetMethodParams();
+                        object obj = plg.Collection.GetService(tmpitem.ClassName);
+                        if (obj == null)
+                        {
+                            throw new Exception("获取不到类：" + tmpitem.ClassName);
+                        }
+                        object rt;
+                        if (methodParams == null)
+                        {
+                            rt = obj.GetType().GetMethod(tmpitem.MethodName)?.Invoke(obj, null);
+                        }
+                        else
+                        {
+                            rt = obj.GetType().GetMethod(tmpitem.MethodName)?.Invoke(obj, methodParams.ToArray());
+                        }
+
+                        if (rt is Task t)
+                        {
+                            await t;
+                        }
+                    }
+                    catch { }
+                });
+
+                plg.Dispatcher.RegisterReponse($"{QuartzExeEvent.EventKey}.{plg.Name}", new DefaultResponseHandler<QuartzExeEvent, QuartzExeResponse>(async (tmpitem) =>
+                {
+                    try
+                    {
+                        List<object> methodParams = tmpitem.GetMethodParams();
+                        object obj = plg.Collection.GetService(tmpitem.ClassName);
+                        if (obj == null)
+                        {
+                            throw new Exception("获取不到类：" + tmpitem.ClassName);
+                        }
+                        object rt;
+                        if (methodParams == null)
+                        {
+                            rt = obj.GetType().GetMethod(tmpitem.MethodName)?.Invoke(obj, null);
+                        }
+                        else
+                        {
+                            rt = obj.GetType().GetMethod(tmpitem.MethodName)?.Invoke(obj, methodParams.ToArray());
+                        }
+
+                        if (rt is Task t)
+                        {
+                            await t;
+                        }
+                        return QuartzExeResponse.Success();
+                    }
+                    catch (Exception ex)
+                    {
+                        return QuartzExeResponse.Error(99, ex.Message);
+                    }
+                }));
+            }
+            else
+            {
+                var bus = plg.Collection.GetService<RabbitScope>().Bus;
+                bus.PubSub.SubscribeAsync<QuartzExeEvent>("Quartz_" + plg.Name, async (bs) =>
+                {
+                    try
+                    {
+                        List<object> methodParams = bs.GetMethodParams();
+                        object obj = plg.Collection.GetService(bs.ClassName);
+                        if (obj == null)
+                        {
+                            throw new Exception("获取不到类：" + bs.ClassName);
+                        }
+                        object rt;
+                        if (methodParams == null)
+                        {
+                            rt = obj.GetType().GetMethod(bs.MethodName)?.Invoke(obj, null);
+                        }
+                        else
+                        {
+                            rt = obj.GetType().GetMethod(bs.MethodName)?.Invoke(obj, methodParams.ToArray());
+                        }
+
+                        if (rt is Task t)
+                        {
+                            await t;
+                        }
+                        if (bs.DisConcurrent)
+                        {
+                            await bus.SendReceive.SendAsync("dispatch.response." + bs.MessageId, QuartzExeResponse.Success());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (bs.DisConcurrent)
+                        {
+                            await bus.SendReceive.SendAsync("dispatch.response." + bs.MessageId, QuartzExeResponse.Error(99, ex.Message));
+                        }
+                    }
+                }, cfg =>
+                {
+                    cfg.WithTopic($"{QuartzExeEvent.EventKey}.{plg.Name}");
+                    cfg.WithAutoDelete(true);
+                });
+            }
+
         }
     }
 

@@ -138,7 +138,7 @@ namespace ReportService.Business
                 if (data.TimerStatus == "0" && old.TimerStatus == "1")
                 {
                     MZ_Job job = new MZ_Job();
-                    job.concurrent = "1";
+                    job.concurrent = "0";
                     job.createId = 0;
                     job.create_time = DateTime.Now;
                     job.updateId = 0;
@@ -167,7 +167,7 @@ namespace ReportService.Business
                     {
                         await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
                         MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
+                        job.concurrent = "0";
                         job.createId = 0;
                         job.create_time = DateTime.Now;
                         job.updateId = 0;
@@ -238,7 +238,7 @@ namespace ReportService.Business
             if (data.TimerStatus == "0")
             {
                 MZ_Job job = new MZ_Job();
-                job.concurrent = "1";
+                job.concurrent = "0";
                 job.createId = 0;
                 job.create_time = DateTime.Now;
                 job.updateId = 0;
@@ -265,7 +265,7 @@ namespace ReportService.Business
             return BusResponse<MZ_ReportShare>.Success(data);
         }
 
-        public virtual async Task Execute(string id, IJobExecutionContext context, long jobId)
+        public virtual async Task Execute(string id, QuartzContext context, long jobId)
         {
             var shareInfo = await _shareDAL.Select(id);
             if (shareInfo == null)

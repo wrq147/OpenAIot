@@ -1115,24 +1115,16 @@
             <param name="job"></param>
             <returns></returns>
         </member>
-        <member name="M:MonitorService.Util.ScheduleUtils.InvokeMethod(TemplateAction.Core.ITAServiceProvider,Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job)">
+        <member name="M:MonitorService.Util.ScheduleUtils.InvokeMethod(TemplateAction.Core.ITAServiceProvider,Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job,System.Boolean)">
             <summary>
             执行指定类的方法
             </summary>
             <param name="provider"></param>
             <param name="context"></param>
             <param name="job"></param>
+            <param name="disConcurrent"></param>
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
-        </member>
-        <member name="M:MonitorService.Util.ScheduleUtils.GetMethodParams(System.String,Quartz.IJobExecutionContext,MonitorService.Model.MZ_Job)">
-            <summary>
-            获取method方法参数相关列表
-            </summary>
-            <param name="invokeTarget"></param>
-            <param name="context"></param>
-            <param name="job"></param>
-            <returns></returns>
         </member>
         <member name="M:MonitorService.Util.ScheduleUtils.GetNextExecution(System.String)">
             <summary>

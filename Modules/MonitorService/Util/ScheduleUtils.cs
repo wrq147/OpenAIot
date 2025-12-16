@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.EventBus;
 using Microsoft.Extensions.Primitives;
 using MonitorService.Model;
 using Quartz;
@@ -119,9 +120,10 @@ namespace MonitorService.Util
         /// <param name="provider"></param>
         /// <param name="context"></param>
         /// <param name="job"></param>
+        /// <param name="disConcurrent"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task InvokeMethod(ITAServiceProvider provider, IJobExecutionContext context, MZ_Job job)
+        public static async Task InvokeMethod(ITAServiceProvider provider, IJobExecutionContext context, MZ_Job job, bool disConcurrent)
         {
             if (job != null)
             {
@@ -133,27 +135,23 @@ namespace MonitorService.Util
                 {
                     string className = ScheduleUtils.GetClassName(job.invoke_target);
                     string methodName = ScheduleUtils.GetMethodName(job.invoke_target);
-                    List<object> methodParams = ScheduleUtils.GetMethodParams(job.invoke_target, context, job);
-                    object obj = provider.GetService(className);
-                    if (obj == null)
+                    string methodParams = job.invoke_target.SubstringBetween("(", ")");
+                    QuartzContext quartzContext = new QuartzContext();
+                    quartzContext.PreviousFireTimeUtc = context.PreviousFireTimeUtc;
+                    quartzContext.ScheduledFireTimeUtc = context.ScheduledFireTimeUtc;
+
+                    if (disConcurrent)
                     {
-                        throw new Exception("获取不到类：" + className);
-                    }
-                    object rt;
-                    if (methodParams == null)
-                    {
-                        rt = obj.GetType().GetMethod(methodName)?.Invoke(obj, null);
+                        var tres = await BusUtility.TriggerWait(className, methodName, methodParams, quartzContext, job.job_id.Value);
+                        if (!tres.IsSuccess())
+                        {
+                            throw new Exception(tres.Message);
+                        }
                     }
                     else
                     {
-                        rt = obj.GetType().GetMethod(methodName)?.Invoke(obj, methodParams.ToArray());
+                        await BusUtility.Trigger(className, methodName, methodParams, quartzContext, job.job_id.Value);
                     }
-
-                    if (rt is Task t)
-                    {
-                        await t;
-                    }
-
                 }
             }
         }
@@ -169,66 +167,6 @@ namespace MonitorService.Util
         }
 
 
-        /// <summary>
-        /// 获取method方法参数相关列表
-        /// </summary>
-        /// <param name="invokeTarget"></param>
-        /// <param name="context"></param>
-        /// <param name="job"></param>
-        /// <returns></returns>
-        private static List<object> GetMethodParams(string invokeTarget, IJobExecutionContext context, MZ_Job job)
-        {
-
-            string methodStr = invokeTarget.SubstringBetween("(", ")");
-            if (string.IsNullOrEmpty(methodStr))
-            {
-                return null;
-            }
-            string[] methodParams = methodStr.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            List<object> classs = new List<object>();
-            for (int i = 0; i < methodParams.Length; i++)
-            {
-                string str = methodParams[i].Trim();
-                // String字符串类型，包含'
-                if (str.StartsWith("'"))
-                {
-                    classs.Add(str.Replace("'", ""));
-                }
-                // boolean布尔类型，等于true或者false
-                else if (string.Equals(str, "true", StringComparison.OrdinalIgnoreCase) || string.Equals(str, "false", StringComparison.OrdinalIgnoreCase))
-                {
-                    classs.Add(bool.Parse(str));
-                }
-                // long长整形，包含L
-                else if (str.StartsWith("L"))
-                {
-                    classs.Add(long.Parse(str.Replace("L", "")));
-                }
-                // double浮点类型，包含D
-                else if (str.StartsWith("D"))
-                {
-                    classs.Add(double.Parse(str.Replace("D", "")));
-                }
-                else if (str == "$id")
-                {
-                    classs.Add(job.job_id.Value);
-                }
-                else if (str == "$context")
-                {
-                    classs.Add(context);
-                }
-                else if (str == "$null")
-                {
-                    classs.Add(null);
-                }
-                // 其他类型归类为整形
-                else
-                {
-                    classs.Add(int.Parse(str));
-                }
-            }
-            return classs;
-        }
 
         /// <summary>
         /// 返回下一个执行时间根据给定的Cron表达式
