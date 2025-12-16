@@ -2,31 +2,301 @@
 branches: {
   }
 fileChange:
+  /AirJointUI:
+    newFile: !uuid 'de0486c702e85d58f61b535fd0c7fcf4aaf5ab17'
+    oldFile: !uuid 'a00a0c4e12ad686a20c14add49096b98e3b9442c'
+  /AirJointUI/Api:
+    newFile: !uuid 'c9649701a604bf8b1471e99531b4a0638ef12f0c'
+    oldFile: !uuid '3c7b535e1d867ba79a5267bdce200f467bb6925a'
+  /AirJointUI/Api/RedisApi.cs:
+    newFile: null
+    oldFile: !uuid '750277a10c761a0451fd421a0d7183a613e0e457'
+  /AirJointUI/ViewModels:
+    newFile: !uuid '702aa3cebf2eaaccc52ee07e918da38cd4da5e7e'
+    oldFile: !uuid 'ce719ff75e370090b328ad1276772c66fd745081'
+  /AirJointUI/ViewModels/SetSerialViewModel.cs:
+    newFile: !uuid '54e1a185543005ef7aaddfb9308a20d2c815616c'
+    oldFile: !uuid '6e86e65a4e37dd519755bf95d0f4c6e7415643f0'
+  /App:
+    newFile: !uuid '4166d7c03926376a9e09e01bb2ce597ea01910fa'
+    oldFile: !uuid '130eec83824a9353f689c2564a7456072289e3d3'
+  /App/XML:
+    newFile: !uuid 'cf68bbdff8d54a8e4d0aee9a1b59e9ed820246fb'
+    oldFile: !uuid '41aea076a7b616e2bfb347034403e717ad02a0ec'
+  /App/XML/AfterService.xml:
+    newFile: !uuid '0afe39a8dd2d36450d96887f9da4defc20bcefc2'
+    oldFile: !uuid 'eda027fa4bdf9da5d58c12760a5dab6b7b5419b4'
+  /Channel:
+    newFile: !uuid '8886bf5d5020616c60f68bd5d8f8176622648cdf'
+    oldFile: !uuid '6116994aae0f4698b2173e99eb36b583c5989fab'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'd5de55e58c69d640fa8087d32eba27a7bd73a501'
+    oldFile: !uuid '234a42d651d91646f9791740af899c6b72b75d8e'
+  /Channel/ChannelUtility/ChannelRegister.cs:
+    newFile: !uuid 'c6303be42b0c35c360ded322d68742f227c62f45'
+    oldFile: !uuid 'bc7e99b0a0da679b70fc8bbdc73d8e0bf2513060'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid '02b5d533992b88fba6e8d60e1c6dfa4e6346e14a'
+    oldFile: !uuid '2120c744a5e389c4c16a438090ec8bade676f4da'
+  /Channel/ChannelUtility/Config:
+    newFile: !uuid '756b115cbd9e2bb19c047534ce5d1d5bb247f1e5'
+    oldFile: !uuid 'f6e52beb981fe62424f99cfbd1f135e486d49b39'
+  /Channel/ChannelUtility/Config/ChannelConfig.cs:
+    newFile: !uuid '104716dbfb4f16ee60fc4b743801c5ca19e0cac0'
+    oldFile: !uuid '6de165fd4fcffd372a21be1b99388c2be5cfe41d'
+  /Channel/FixVideoChannel:
+    newFile: !uuid 'bd9de0e4834ec88ced942114de4002afeb56b6cf'
+    oldFile: null
+  /Channel/FixVideoChannel/AIDetector.cs:
+    newFile: !uuid '76bdd549efeeb174ea919a6bedbb7dde95ff854a'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs:
+    newFile: !uuid 'b43f6cfb6222816ec04deeaee096c7340b659350'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux:
+    newFile: !uuid '5f33f02beebde972632daa6be05848073ac19b67'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64:
+    newFile: !uuid '246f66435194b70e2a182573b7b6c1e572b865ba'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavcodec.so:
+    newFile: !uuid '4232c0271fe8ed6ee68387a454ecc29834ef07e7'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavdevice.so:
+    newFile: !uuid '164dea2ff252bf92a3f9618900a76d94bc4faf3e'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavfilter.so:
+    newFile: !uuid '0ad47673ec4737cba4465974ad0b70436004af52'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavformat.so:
+    newFile: !uuid 'b067749f717d77216ae6e3011ce2e8823f181319'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavutil.so:
+    newFile: !uuid '05d7b235109de909149f4d60b292d1bf3c1d2ee1'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libswresample.so:
+    newFile: !uuid 'a3c8faf87d332ba3c36106a0fd63c3db1d307af4'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libswscale.so:
+    newFile: !uuid '9b85f3232174ebc8f4c631a3271fef4e370253a4'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64:
+    newFile: !uuid '5b72358cfb2b2b78da86abed35cf707bb4486175'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavcodec.so:
+    newFile: !uuid 'bdc6647006bc7e018cd38eb6826596bdbd15cb70'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavdevice.so:
+    newFile: !uuid '03b3bade29cea1765b890492dbdd2500743b7b8e'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavfilter.so:
+    newFile: !uuid '95dd2b6cce758af8a9edc638f6dc0821a31f45b9'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavformat.so:
+    newFile: !uuid 'f6d8bca2847b8eaf10a7324d3cadcc5a6ead2936'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavutil.so:
+    newFile: !uuid '840d004f371a6856136c50cb3800fb12a6493575'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libswresample.so:
+    newFile: !uuid '019980c8ac220b2f15a1980a0f0bc9477ef8afce'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libswscale.so:
+    newFile: !uuid '6f4849af515e9813de3abd97a94bac0a87d8b42e'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows:
+    newFile: !uuid '9a2c722865138035afa14fbbcb68d3e37f498a93'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64:
+    newFile: !uuid '61dacf41628ef784fa30f7e2577e6a3bdef3b05d'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avcodec-62.dll:
+    newFile: !uuid '359ed3915a8788995e1e04fa446b561fc57b7fdf'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avdevice-62.dll:
+    newFile: !uuid '13baf7fdef4d3931f2a93819f925a0a852859119'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avfilter-11.dll:
+    newFile: !uuid 'b86a0b40f1b43967baaf9b32dcb18fbe51a7f599'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avformat-62.dll:
+    newFile: !uuid '5834ef72abf363edeb0b73553445acf7fb6cf331'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avutil-60.dll:
+    newFile: !uuid 'd63844b1e61d71f78560062f95ab222cca26817a'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swresample-6.dll:
+    newFile: !uuid '333c46c0c38cf7eafd74439ece73255ce584281c'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swscale-9.dll:
+    newFile: !uuid '62d83d0b63840711df2a687a68f21728722e34cc'
+    oldFile: null
+  /Channel/FixVideoChannel/FixVideoChannel.csproj:
+    newFile: !uuid 'b48aa54d1bf38ce00215d2a17a3f981e77c3dcbb'
+    oldFile: null
+  /Channel/FixVideoChannel/FixVideoOption.cs:
+    newFile: !uuid '256ed952073e423334a09bf59a7657bb8cf808cf'
+    oldFile: null
+  /Channel/FixVideoChannel/FixVideoService.cs:
+    newFile: !uuid 'c27551a01b1e339972a390e932b7007aa601230c'
+    oldFile: null
+  /Channel/FixVideoChannel/Program.cs:
+    newFile: !uuid 'd8327bfbcb7faf7b8be4cbbe3aa22dc9a3fe34f0'
+    oldFile: null
+  /Channel/FixVideoChannel/RtspParam.cs:
+    newFile: !uuid '21a3ccfc6277aaa0d6571ab20df9c19235058ddf'
+    oldFile: null
+  /Channel/FixVideoChannel/RtspStreamProcessor.cs:
+    newFile: !uuid 'd08afd6ebb8ef7e1ab4352657a27db69fd9b30cd'
+    oldFile: null
+  /Channel/FixVideoChannel/VideoCaptureItemcs.cs:
+    newFile: !uuid 'd49b44499bcc44fca420e1b7e22eb096efd5275c'
+    oldFile: null
+  /Channel/FixVideoChannel/ZLMediaKitPusher .cs:
+    newFile: !uuid '1baf12b6d701a197f72a9abf7912ea331ecde005'
+    oldFile: null
+  /Channel/FixVideoChannel/appsettings.json:
+    newFile: !uuid '25127846265673e941c330656f5e0f8ce98b3040'
+    oldFile: null
+  /Channel/GB28181Channel:
+    newFile: !uuid 'dfb3ea64ab6f7bd4e6c980e9bc97d59ad60462a8'
+    oldFile: !uuid '06a3c5e7996d0823bda67dfc6b83d6935887dce5'
+  /Channel/GB28181Channel/GB28181Channel.csproj:
+    newFile: !uuid 'e97131e1befb741be5bef6baed3ce8d3647e4374'
+    oldFile: !uuid 'b456b34f655bc590cec187ad1427f8c341008298'
+  /Channel/GB28181Channel/GB28181Option.cs:
+    newFile: !uuid 'be8ca772f04d42f759e38ef3ab3355aed2f86f3c'
+    oldFile: null
+  /Channel/GB28181Channel/GB28181Service.cs:
+    newFile: !uuid '2e7b21fd0c9af66ff12647259dc99efadd969816'
+    oldFile: null
+  /Channel/GB28181Channel/Program.cs:
+    newFile: !uuid '12c06aa786ac3401c084e33df8f211b3af3fcf86'
+    oldFile: !uuid '3751555cbd32d09340c8cb7b75ce8311c4330054'
+  /Channel/GB28181Channel/appsettings.json:
+    newFile: !uuid 'ec51d3e0a9bc2b2e2653a5ff5cc864ccf0fbbc63'
+    oldFile: null
+  /Channel/ModbusChannel:
+    newFile: !uuid 'd0df3608012a257d1fce826f8ff1a3f1245f7c9f'
+    oldFile: !uuid 'edb0e560c2f18e532d2c71fe5c42162ea4a536fc'
+  /Channel/ModbusChannel/ModbusOption.cs:
+    newFile: !uuid '64f467d970b137ffe1bc5525077801b82777abda'
+    oldFile: !uuid '4dafebb5122f74968e8df4c9dd899a76b47b3bef'
+  /Channel/ModbusChannel/ModbusService.cs:
+    newFile: !uuid 'dbb6cd3320e3f7cfda9d3722e957359b1d6edbaf'
+    oldFile: !uuid '75a9544c19feb51ccb5450593347a1c350316e8d'
+  /Channel/ModbusChannel/Program.cs:
+    newFile: !uuid '13e61c40b9d2953d78cb51b9777e6d1b49b94e30'
+    oldFile: !uuid '90935def4f048312df1b5f147c972055c5586e90'
+  /Channel/ModbusChannel/SerialTask.cs:
+    newFile: !uuid '4158a96737eed0005d0d4a015c316f808e076aa7'
+    oldFile: !uuid '183b9a54b25385d0b7825cecd9f1786193894707'
+  /Channel/ModbusChannel/TcpClientTask.cs:
+    newFile: !uuid '270d41073768e3f3a702c6de6889bae1749e34a2'
+    oldFile: !uuid '32e16969571f33ee3c30e0f4311df5a03fdf59cf'
+  /Channel/ModbusChannel/TcpTask.cs:
+    newFile: !uuid '203724d4fd35310cddb49d478eed189e0ea61eba'
+    oldFile: !uuid 'd742143e46f21fa07a498a41daefa03936bd17cd'
+  /Channel/ModbusChannel/appsettings.json:
+    newFile: !uuid '7273492ec229e0cb7ce38d1b0da54294fe35b60b'
+    oldFile: !uuid 'deb2fd994a94912b1ff7213ef47bcaa36474eed2'
+  /Channel/MqttChannel:
+    newFile: !uuid 'b67ee4f9ad7ddeea1e3089853c55e24ba576ac35'
+    oldFile: !uuid 'e7482a5162a29f3f26b1bb83468a37423a138066'
+  /Channel/MqttChannel/MQTTService.cs:
+    newFile: !uuid 'eb3b306f921715d1a1db8b1735a2390ba8aa7e8e'
+    oldFile: !uuid '0ed36b9ebf545379736bfa0932de883585567c7b'
+  /Channel/MqttChannel/MqttOption.cs:
+    newFile: !uuid '10a0c7f95891bc06092f59b2e0103df7a7e65bd9'
+    oldFile: !uuid '08c70d0f96aac9bffc2b5bd83a9f268ae864b7fb'
+  /Channel/MqttChannel/Program.cs:
+    newFile: !uuid '898239673353ff081d0267328d414c3493b6933b'
+    oldFile: !uuid '6d17acd700ef0b1118e9eacc5151783201df1b03'
+  /Channel/MqttChannel/appsettings.json:
+    newFile: !uuid '3e15834d3cbf5a748294ee1c6ff817a6a19e7f64'
+    oldFile: !uuid '3967030a3e01ceae652339aa7152470330cfddce'
+  /DigitalCard.sln:
+    newFile: !uuid '1e7bec7c2c369670cb3c5790bd238cbf1d4c0c91'
+    oldFile: !uuid '6a5f6ac63da78ae693938ca69f9eee50387f2804'
   /Modules:
-    newFile: !uuid 'c1d690356f80d97cacdda3ad16a693a661a319b4'
-    oldFile: !uuid '3b7fee750c010b9dda6d76bc1067e474b8b3d8be'
-  /Modules/IoTRulesService:
-    newFile: !uuid '90a060e9b645364da8897246c467dcf831692360'
-    oldFile: !uuid '85c187dcbc311e201b0781d4899b6052d5cde309'
-  /Modules/IoTRulesService/DataParser:
-    newFile: !uuid '6a139d8d161c57030f6cdd74896275f2ac74b367'
-    oldFile: !uuid '4cd9fa51d33c2f67ae67718e83666d8321cac214'
-  /Modules/IoTRulesService/DataParser/MessageHandler.cs:
-    newFile: !uuid '2f7063c9dd600b91d43522d959e3cd2f385dc68a'
-    oldFile: !uuid 'b6693e41b65ee78f4559cdca2ee23d94559ce896'
+    newFile: !uuid '0fcab3dec8171b47eec82eb06ef015e899951370'
+    oldFile: !uuid 'c1d690356f80d97cacdda3ad16a693a661a319b4'
+  /Modules/IoTService:
+    newFile: !uuid 'ababdf1687aecdba16c8fcad3d85ab6eecf6e70a'
+    oldFile: !uuid '46f5849ff3f593cc462fd07cc490f73fbc89e2ad'
+  /Modules/IoTService/Controller:
+    newFile: !uuid 'a28f692364a236f95cdaf01f82f281ca1aaf8c5b'
+    oldFile: !uuid 'c15176454147468da0b981c0e5cc9dcb202bd302'
+  /Modules/IoTService/Controller/HttpSync.cs:
+    newFile: !uuid '69fa7c0c4f5e8dad8e41b78db0afcb2cb6ee607a'
+    oldFile: !uuid 'f6a998ea8eb1d5323b97ea3e6d8082c8a0dd4741'
   /Modules/IoTVideoService:
-    newFile: !uuid '8c9ac64e6d51b96b4976aa2fa18cae127dc829a4'
-    oldFile: !uuid '1bf4437ba7b9bdd5473492fe6b42f253aee88f8a'
-  /Modules/IoTVideoService/IoTVideoMigrator.cs:
-    newFile: !uuid 'faf0d80ed8bb227e971425a811374d6ff10600a5'
-    oldFile: !uuid '8ce838086b91a27f5f4d18ab38f5c6a436d0e039'
+    newFile: !uuid 'f80bd81524419e96a842cdac20a06ba5fa9d8147'
+    oldFile: !uuid '8c9ac64e6d51b96b4976aa2fa18cae127dc829a4'
+  /Modules/IoTVideoService/Business:
+    newFile: !uuid 'f9683459b60a7730d5519287393aebb421672609'
+    oldFile: null
+  /Modules/IoTVideoService/Business/FixVideoBLL.cs:
+    newFile: !uuid 'e6a69ca52438a9876029dbf91e2814bf3703233d'
+    oldFile: null
   /Modules/IoTVideoService/IoTVideoService.csproj:
-    newFile: !uuid '92c1fe1bee8f7b96591c7150e87f949cf5208544'
-    oldFile: !uuid 'df3d08997164f049462c27ca40226dc967d327e0'
+    newFile: !uuid '3e1760537e624a06e520c93f779784a4531e5c84'
+    oldFile: !uuid '92c1fe1bee8f7b96591c7150e87f949cf5208544'
   /Modules/IoTVideoService/PluginConfig.cs:
-    newFile: !uuid '4ffdd604075e82b8d5b58be5f6eff3d1da0318da'
-    oldFile: !uuid '1f9bd8fb2bd29118d31a7a2af6fec8101eaca45b'
-gitCommitId: !uuid 'fc5e67c2956a7d4e1a2631a1f15c1930736c02bb'
+    newFile: !uuid '2d00a9f5b065d2bf4193b94cbec0a6468cec21fe'
+    oldFile: !uuid '4ffdd604075e82b8d5b58be5f6eff3d1da0318da'
+  /Modules/MESService:
+    newFile: !uuid 'c51c477f72c9c6f15b75ca8794fab6f179ee0765'
+    oldFile: !uuid 'b0f947d158e319aa5476ddb739eb89e096a59537'
+  /Modules/MESService/MESMigrator.cs:
+    newFile: !uuid '78a84eac5d3ca30c557a8adc4ebf2ab736b4e0ce'
+    oldFile: !uuid '5403880063e8c7db394a09754f5bb1e44ff12c84'
+  /Modules/MESService/Model:
+    newFile: !uuid 'fcd42c6572a05bbbeaab659d1202c5da418b2beb'
+    oldFile: !uuid '41ab2dd6ca892ac8a73e0a843772790ef9db03d9'
+  /Modules/MESService/Model/MZ_ProductOper.cs:
+    newFile: !uuid 'dad6fa675741cec23c71b9b58b2386873fe2dedd'
+    oldFile: !uuid '1d5833142ec2ce23d3a2efed8d72c329ff4fc77c'
+  /Modules/MESService/Model/MZ_ProductRouteOper.cs:
+    newFile: !uuid 'dd25ee6a2e3e8cfabd1c5b0c45b3eed4f0e15d2d'
+    oldFile: !uuid '9b36fca492ad9ea2645e608a5723b9fd14b31403'
+  /Modules/MESService/Model/MZ_WorkBatch.cs:
+    newFile: !uuid 'fc1b1bc4135e62bddee49b3bf9e827e4efbde76b'
+    oldFile: !uuid '3a18ed9c55f6288aa5cf8e138510f599cc3294c7'
+  /Modules/ProducerService:
+    newFile: !uuid '200d114cd670b6ef06fb6dbcb8b38f1057039f0a'
+    oldFile: !uuid '92693a5fc95a314c1220bc6c8073eda2df3cf03c'
+  /Modules/ProducerService/Model:
+    newFile: !uuid '6e9ff6f06ce0ea36f8d6ebc27c1a2f014ad66691'
+    oldFile: !uuid '4d93ee8d6083edd1550515d3797db1eecff32d51'
+  /Modules/ProducerService/Model/MZ_Product.cs:
+    newFile: !uuid '98297fcde636e5e7b7484aa861329f74612d8568'
+    oldFile: !uuid '567660730b7362c913f7749cdcde09a19b58631e'
+  /Modules/ProducerService/Model/MZ_Supplier.cs:
+    newFile: !uuid 'ad2eb9f74b6bbc684ded97f012721b9ebe0e5f38'
+    oldFile: !uuid '757b2ada6ab5892a1eab3224e493098f87b76854'
+  /Modules/ProducerService/ProducerMigrator.cs:
+    newFile: !uuid '5fbc952978eecf1345eb94f56406050de2e10a39'
+    oldFile: !uuid '3af20766e61a862e185564568efcb6eb7cb44ece'
+  /admin-ui:
+    newFile: !uuid 'ef5120faf5f2b4c711341d639a1dae7b2e96c1c3'
+    oldFile: !uuid 'aed3b2122064d5e2c0e30bd3d7642f4eb3513ca3'
+  /admin-ui/src:
+    newFile: !uuid '048a0dfdcc221fea20704af167346b9f3f34eb6b'
+    oldFile: !uuid 'ff3e6f676e80e50206b829c4512765fa87b6f632'
+  /admin-ui/src/views:
+    newFile: !uuid 'fee4e13e265137f02970d8becb8a74a11e1b616c'
+    oldFile: !uuid 'abfc573b11706c485245724337eaeae0fd56b4c6'
+  /admin-ui/src/views/system:
+    newFile: !uuid 'c54c199a233b19793332b659d1851bd90a1ef515'
+    oldFile: !uuid 'a8a52547474c28aa52dcd5a1df84d55053b1378d'
+  /admin-ui/src/views/system/field:
+    newFile: !uuid '80aeff0d37da0e3227e6282ad6ea9a57ea8d077a'
+    oldFile: !uuid '5f367bffd1774d937e509ca0dd0c3be2ae4b21e3'
+  /admin-ui/src/views/system/field/filedAdd.vue:
+    newFile: !uuid '3ff59aec27b2be010bd5256294dfff3a5c7c470b'
+    oldFile: !uuid '0f5849941dc8414bf87b4d23b0d079a1c0af872d'
+gitCommitId: !uuid '88f275e4c430f16f4dec115296cce7e2f5c1587f'
 renames: {
   }
-revisionId: 69
+revisionId: 70
