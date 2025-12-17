@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace ChannelUtility.Message
 {
-    public class AIDetectRequestMeesage : RequestMessage
+    public class AIDetectRequestMeesage : BaseDeviceMessage
     {
         public AIDetectRequestMeesage()
         {
             MsgType = "AIDetectReq";
         }
+        public string DetType { get; set; }
+        public Dictionary<string, string> DetParams { get; set; }
+        public byte[] RgbFrame { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }

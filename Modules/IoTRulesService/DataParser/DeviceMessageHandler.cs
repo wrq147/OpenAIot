@@ -298,7 +298,7 @@ namespace IoTRulesService.DataParser
                             }
                         }
                         break;
-                    case "ReadPropertyReply":
+                    case "PropReply":
                         {
                             ReadPropertyMessageReply rdmsg = (ReadPropertyMessageReply)rs;
                             //根据物模型转换设备属性
@@ -1008,7 +1008,7 @@ namespace IoTRulesService.DataParser
             List<StreamData> initdata = new List<StreamData>();
             switch (rs.MsgType)
             {
-                case "ReadPropertyReply":
+                case "PropReply":
                     initdata.Add(StreamData.Create(((ReadPropertyMessageReply)rs).Properties, nowTime));
                     break;
                 case "FunctionReply":

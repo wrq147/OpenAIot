@@ -10,7 +10,6 @@
 		<DocumentationFile>..\..\App\XML\IoTVideoService.xml</DocumentationFile>
 	</PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\IoTRulesService\IoTRulesService.csproj" />
     <ProjectReference Include="..\IoTService\IoTService.csproj" />
   </ItemGroup>

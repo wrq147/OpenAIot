@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 namespace FixVideoChannel
 {
     // 推流任务类型
-    internal enum PushTaskType
+    public enum PushTaskType
     {
         H264Frame,
         AACFrame,
@@ -14,13 +14,13 @@ namespace FixVideoChannel
     }
 
     // 推流任务数据
-    internal class PushTask
+    public class PushTask
     {
         public PushTaskType Type { get; set; }
         public byte[] Data { get; set; }
         public long TimestampMs { get; set; }
         public bool IsKeyFrame { get; set; }
-        public TaskCompletionSource<bool> Tcs { get; set; } = new TaskCompletionSource<bool>();
+        public ZLMediaKitPusher Pusher { get; set; }
     }
 
     // 视频编码参数
@@ -62,9 +62,7 @@ namespace FixVideoChannel
         private AudioCodecParams _audioParams;
 
         private bool _isConnected;
-        private readonly ConcurrentQueue<PushTask> _taskQueue = new ConcurrentQueue<PushTask>();
-        private readonly AutoResetEvent _taskEvent = new AutoResetEvent(false);
-        private Thread _pushThread;
+
         #endregion
 
         #region 公共属性
@@ -74,7 +72,14 @@ namespace FixVideoChannel
         public bool IsConnected => _isConnected;
         #endregion
 
-        public ZLMediaKitPusher()
+        public ZLMediaKitPusher() { }
+
+        /// <summary>
+        /// 初始化编码参数（必须在Connect前调用）
+        /// </summary>
+        /// <param name="videoParams">视频编码参数</param>
+        /// <param name="audioParams">音频编码参数</param>
+        public void InitializeCodecParams(VideoCodecParams videoParams, AudioCodecParams audioParams = null)
         {
             // 初始化FFmpeg数据包
             unsafe
@@ -85,15 +90,6 @@ namespace FixVideoChannel
                     throw new OutOfMemoryException("无法分配AVPacket");
                 }
             }
-        }
-
-        /// <summary>
-        /// 初始化编码参数（必须在Connect前调用）
-        /// </summary>
-        /// <param name="videoParams">视频编码参数</param>
-        /// <param name="audioParams">音频编码参数</param>
-        public void InitializeCodecParams(VideoCodecParams videoParams, AudioCodecParams audioParams = null)
-        {
             _videoParams = videoParams ?? throw new ArgumentNullException(nameof(videoParams));
             _audioParams = audioParams;
         }
@@ -102,11 +98,10 @@ namespace FixVideoChannel
         /// 连接ZLMediaKit并初始化推流上下文
         /// </summary>
         /// <param name="pushUrl">推流地址 (rtmp://或rtsp://)</param>
-        /// <param name="stoppingToken"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public async Task ConnectAsync(string pushUrl, CancellationToken stoppingToken)
+        public void Connect(string pushUrl)
         {
             if (string.IsNullOrEmpty(pushUrl))
                 throw new ArgumentNullException(nameof(pushUrl));
@@ -146,14 +141,6 @@ namespace FixVideoChannel
 
                 // 标记为已连接
                 _isConnected = true;
-
-                // 启动后台任务处理队列
-                _pushThread = new Thread(() => ProcessTaskQueueAsync(stoppingToken))
-                {
-                    IsBackground = true,
-                    Name = "pushTaskThread"
-                };
-                _pushThread.Start();
             }
             catch
             {
@@ -162,7 +149,7 @@ namespace FixVideoChannel
         }
 
         /// <summary>
-        /// 推送H264帧到ZLMediaKit（无锁）
+        /// 推送H264帧到ZLMediaKit
         /// </summary>
         /// <param name="frameData">H264裸数据 (包含NALU头)</param>
         /// <param name="timestampMs">时间戳（毫秒）</param>
@@ -170,7 +157,7 @@ namespace FixVideoChannel
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public Task PushH264FrameAsync(byte[] frameData, long timestampMs, bool isKeyFrame)
+        public void PushH264Frame(byte[] frameData, long timestampMs, bool isKeyFrame)
         {
             if (!_isConnected)
                 throw new InvalidOperationException("未连接到ZLMediaKit");
@@ -184,24 +171,22 @@ namespace FixVideoChannel
                 Type = PushTaskType.H264Frame,
                 Data = frameData,
                 TimestampMs = timestampMs,
-                IsKeyFrame = isKeyFrame
+                IsKeyFrame = isKeyFrame,
+                Pusher = this
             };
 
-            _taskQueue.Enqueue(task);
-            _taskEvent.Set(); // 唤醒处理线程
-
-            return task.Tcs.Task;
+            StreamTaskScheduler.Instance.EnqueuePushTask(task);
         }
 
         /// <summary>
-        /// 推送AAC帧到ZLMediaKit（无锁）
+        /// 推送AAC帧到ZLMediaKit
         /// </summary>
         /// <param name="frameData">AAC裸数据 (ADTS头可选)</param>
         /// <param name="timestampMs">时间戳（毫秒）</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public Task PushAacFrameAsync(byte[] frameData, long timestampMs)
+        public void PushAacFrame(byte[] frameData, long timestampMs)
         {
             if (!_isConnected)
                 throw new InvalidOperationException("未连接到ZLMediaKit");
@@ -217,13 +202,11 @@ namespace FixVideoChannel
             {
                 Type = PushTaskType.AACFrame,
                 Data = frameData,
-                TimestampMs = timestampMs
+                TimestampMs = timestampMs,
+                Pusher = this
             };
 
-            _taskQueue.Enqueue(task);
-            _taskEvent.Set(); // 唤醒处理线程
-
-            return task.Tcs.Task;
+            StreamTaskScheduler.Instance.EnqueuePushTask(task);
         }
 
         /// <summary>
@@ -235,72 +218,18 @@ namespace FixVideoChannel
             if (!_isConnected)
                 return;
 
-            // 加入断开连接任务
-            var task = new PushTask { Type = PushTaskType.Disconnect };
-            _taskQueue.Enqueue(task);
-            _taskEvent.Set();
-
-            // 等待任务完成
-            await task.Tcs.Task;
-
             // 清理资源
             _isConnected = false;
-            _pushThread?.Join(1000);
-            _pushThread = null;
         }
 
-        #region 私有方法
-        /// <summary>
-        /// 后台处理任务队列（单线程，无锁）
-        /// </summary>
-        /// <param name="cancellationToken">取消令牌</param>
-        /// <returns></returns>
-        private async Task ProcessTaskQueueAsync(CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // 等待任务事件
-                _taskEvent.WaitOne(100);
 
-                // 处理队列中的所有任务
-                while (_taskQueue.TryDequeue(out var task))
-                {
-                    try
-                    {
-                        switch (task.Type)
-                        {
-                            case PushTaskType.H264Frame:
-                                ProcessH264Frame(task);
-                                task.Tcs.SetResult(true);
-                                break;
-                            case PushTaskType.AACFrame:
-                                ProcessAacFrame(task);
-                                task.Tcs.SetResult(true);
-                                break;
-                            case PushTaskType.Disconnect:
-                                ProcessDisconnect();
-                                task.Tcs.SetResult(true);
-                                break;
-                            default:
-                                task.Tcs.SetResult(false);
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        task.Tcs.SetException(ex);
-                    }
-                }
 
-                await Task.Yield();
-            }
-        }
 
         /// <summary>
         /// 处理H264帧推送（单线程执行）
         /// </summary>
         /// <param name="task">推流任务</param>
-        private unsafe void ProcessH264Frame(PushTask task)
+        public unsafe void ProcessH264Frame(PushTask task)
         {
             AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
             AVPacket* packet = (AVPacket*)_packetPtr;
@@ -346,7 +275,7 @@ namespace FixVideoChannel
         /// 处理AAC帧推送（单线程执行）
         /// </summary>
         /// <param name="task">推流任务</param>
-        private unsafe void ProcessAacFrame(PushTask task)
+        public unsafe void ProcessAacFrame(PushTask task)
         {
             AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
             AVPacket* packet = (AVPacket*)_packetPtr;
@@ -385,7 +314,7 @@ namespace FixVideoChannel
         /// <summary>
         /// 处理断开连接（单线程执行）
         /// </summary>
-        private unsafe void ProcessDisconnect()
+        public unsafe void ProcessDisconnect()
         {
             AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
             if (fmtCtx != null)
@@ -505,9 +434,29 @@ namespace FixVideoChannel
                 return System.Text.Encoding.ASCII.GetString(buffer).TrimEnd('\0');
             }
         }
-        #endregion
 
         #region 资源释放
+        public void CleanupFFmpegResources()
+        {
+            unsafe
+            {
+                if (_fmtCtxPtr != IntPtr.Zero)
+                {
+                    AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
+                    ffmpeg.avformat_close_input(&fmtCtx);
+                    _fmtCtxPtr = IntPtr.Zero;
+                }
+
+                // 释放数据包
+                if (_packetPtr != IntPtr.Zero)
+                {
+                    AVPacket* pkt = (AVPacket*)_packetPtr;
+                    ffmpeg.av_packet_free(&pkt);
+                    _packetPtr = IntPtr.Zero;
+                }
+
+            }
+        }
         public void Dispose()
         {
             Dispose(true);
@@ -520,19 +469,10 @@ namespace FixVideoChannel
             {
                 // 释放托管资源
                 _ = DisconnectAsync();
-                _taskEvent.Dispose();
             }
 
             // 释放非托管资源
-            unsafe
-            {
-                if (_packetPtr != IntPtr.Zero)
-                {
-                    AVPacket* pkt = (AVPacket*)_packetPtr;
-                    ffmpeg.av_packet_free(&pkt);
-                    _packetPtr = IntPtr.Zero;
-                }
-            }
+            this.CleanupFFmpegResources();
         }
 
         ~ZLMediaKitPusher()

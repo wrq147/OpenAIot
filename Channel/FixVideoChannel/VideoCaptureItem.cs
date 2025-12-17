@@ -16,5 +16,13 @@ namespace FixVideoChannel
         /// 拉流地址
         /// </summary>
         public string PullAddr { get; set; }
+        /// <summary>
+        /// 推流地址
+        /// </summary>
+        public string PushAddr { get; set; }
+        /// <summary>
+        /// AI检测帧间隔,默认25帧
+        /// </summary>
+        public int FrameInterval { get; set; }
     }
 }

@@ -47,7 +47,10 @@ namespace IoTRulesService.DataParser
             }
             else
             {
-
+                if (OtherMessageListener != null)
+                {
+                    await OtherMessageListener(rs);
+                }
             }
 
         }

@@ -17,8 +17,8 @@ namespace ChannelUtility
             { "Online", typeof(DeviceOnlineMessage) },
             { "Function", typeof(FunctionInvokeMessage) },
             { "FunctionReply", typeof(FunctionInvokeMessageReply) },
-            { "ReadProperty", typeof(ReadPropertyMessage) },
-            { "ReadPropertyReply", typeof(ReadPropertyMessageReply) },
+            { "ReadProp", typeof(ReadPropertyMessage) },
+            { "PropReply", typeof(ReadPropertyMessageReply) },
             { "Execute", typeof(ExecuteRuleMessage) },
             { "MobusRequest", typeof(ModbusMessage) },
             { "Bind", typeof(DeviceBindMessage) },
@@ -31,7 +31,8 @@ namespace ChannelUtility
             { "QueryICCIDReply", typeof(QueryICCIDMessageReply) },
             { "ChangeProduct", typeof(ChangeProductMessage) },
             { "StartReadAll", typeof(StartReadAllMessage) },
-            { "AIDetectReq",typeof(AIDetectRequestMeesage) }
+            { "AIDetectReq",typeof(AIDetectRequestMeesage) },
+            { "AIDetectResp",typeof(AIDetectResponseMessage) }
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions
         {

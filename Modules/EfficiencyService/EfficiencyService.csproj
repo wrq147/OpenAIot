@@ -10,9 +10,6 @@
 		<DocumentationFile>..\..\App\XML\EfficiencyService.xml</DocumentationFile>
 	</PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.csproj" />
-    <ProjectReference Include="..\..\TemplateAction.NetCore\TemplateAction.NetCore.csproj" />
-    <ProjectReference Include="..\..\TemplateAction\TemplateAction.csproj" />
     <ProjectReference Include="..\AfterService\AfterService.csproj" />
     <ProjectReference Include="..\AuthService\AuthService.csproj" />
   </ItemGroup>

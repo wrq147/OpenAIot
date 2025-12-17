@@ -107,7 +107,7 @@ namespace ChannelUtility
                 await OnSubProductMessage(msg).ConfigureAwait(false);
             }
         }
-   
+
         /// <summary>
         /// 向设备控制台打印消息
         /// </summary>
@@ -123,7 +123,7 @@ namespace ChannelUtility
 
             await _bus.PubSub.PublishAsync(data, "/MqttNotice.Msg").ConfigureAwait(false);
         }
-   
+
         /// <summary>
         /// 获取指定协议的物模型
         /// </summary>
@@ -343,7 +343,23 @@ namespace ChannelUtility
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
-
+        /// <summary>
+        /// 上报AI检测请求
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <returns></returns>
+        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, string> detParams, byte[] rgbFrame, int width, int height)
+        {
+            AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
+            msg.DeviceId = deviceId;
+            msg.ProductId = string.Empty;
+            msg.DetType = detectType;
+            msg.DetParams = detParams;
+            msg.RgbFrame = rgbFrame;
+            msg.Width = width;
+            msg.Height = height;
+            await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+        }
         /// <summary>
         /// 发送确认回复包（异步）
         /// </summary>

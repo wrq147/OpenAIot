@@ -8,7 +8,7 @@ namespace FixVideoChannel
         /// </summary>
         public string DetectType { get; set; }
         // AI检测
-        public virtual Task Detect(byte[] rgbFrame, int width, int height)
+        public virtual Task Detect(byte[] rgbFrame, int width, int height, IDeviceEventListener listener)
         {
             return Task.CompletedTask;
         }

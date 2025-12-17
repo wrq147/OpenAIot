@@ -1100,24 +1100,41 @@
         <member name="T:IoTRulesService.Flow.Builder.Step.ExceptStep">
             <summary>
             AI数据异常检测
-            目前只提供三种：峰值、拐点、SRCNN
+            目前只提供三种：峰值、拐点
             </summary>
         </member>
-        <member name="M:IoTRulesService.Flow.Builder.Step.ExceptStep.GenerateInput(System.Collections.Generic.List{IoTRulesService.Flow.Builder.StreamData})">
+        <member name="M:IoTRulesService.Flow.Builder.Step.TimeSeriesDetector.DetectSpike(System.Collections.Generic.List{IoTRulesService.Flow.Builder.StreamData},System.Int32)">
             <summary>
-            输入数据流转换成模型输入
+            滑动窗口法检测峰值（极大值/极小值）
             </summary>
-            <param name="inputList"></param>
-            <returns></returns>
+            <param name="data">时序数据</param>
+            <param name="halfWindow">半邻域窗口大小</param>
+            <returns>峰值列表</returns>
         </member>
-        <member name="T:IoTRulesService.Flow.Builder.Step.ExceptInputItem">
+        <member name="M:IoTRulesService.Flow.Builder.Step.TimeSeriesDetector.DetectInflectionPoints(System.Collections.Generic.List{IoTRulesService.Flow.Builder.StreamData},System.Int32)">
             <summary>
-            检测的输入
+            差分法检测拐点（趋势反转点）
+            </summary>
+            <param name="data">时序数据</param>
+            <param name="halfWindow">平滑窗口半宽（建议小于数据长度的1/2）</param>
+            <returns>拐点列表</returns>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.Step.TimeSeriesDetector.SmoothData(System.Collections.Generic.List{IoTRulesService.Flow.Builder.StreamData},System.Int32)">
+            <summary>
+            移动平均平滑数据（对称窗口，边界安全）
+            </summary>
+            <param name="data">原始时序数据</param>
+            <param name="halfWindow">平滑窗口半宽</param>
+            <returns>平滑后的特征点列表</returns>
+        </member>
+        <member name="P:IoTRulesService.Flow.Builder.Step.FeaturePoint.Index">
+            <summary>
+            数据点索引
             </summary>
         </member>
-        <member name="T:IoTRulesService.Flow.Builder.Step.ExceptOutputItem">
+        <member name="P:IoTRulesService.Flow.Builder.Step.FeaturePoint.Value">
             <summary>
-            检测的输出
+            数值
             </summary>
         </member>
         <member name="T:IoTRulesService.Flow.Builder.Step.FuncStep">
@@ -1342,12 +1359,12 @@
         </member>
         <member name="P:IoTRulesService.Flow.Node.ExceptProps.ExceptType">
             <summary>
-            异常检测类型：峰值spike、更改change、range范围、SRCNN
+            异常检测类型：峰值spike、更改change、range范围
             </summary>
         </member>
-        <member name="P:IoTRulesService.Flow.Node.ExceptProps.Confidence">
+        <member name="P:IoTRulesService.Flow.Node.ExceptProps.windowSize">
             <summary>
-            [0， 100] 范围内的峰值检测置信度
+            
             </summary>
         </member>
         <member name="P:IoTRulesService.Flow.Node.ExceptProps.Min">

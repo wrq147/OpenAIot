@@ -629,7 +629,7 @@ namespace IoTRulesService.Flow.Builder
                         }
                     case "$change":
                         {
-                            if (_source.MsgType == "ReadPropertyReply")
+                            if (_source.MsgType == "PropReply")
                             {
                                 IDictionary<string, DevicePropertyValue> tmpdata = await this.Provider.GetService<DeviceCache>().GetDevice(this._source.DeviceId);
                                 if (tmpdata == null)

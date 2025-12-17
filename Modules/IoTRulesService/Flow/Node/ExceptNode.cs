@@ -21,13 +21,13 @@ namespace IoTRulesService.Flow.Node
         /// </summary>
         public string CountId { get; set; }
         /// <summary>
-        /// 异常检测类型：峰值spike、更改change、range范围、SRCNN
+        /// 异常检测类型：峰值spike、更改change、range范围
         /// </summary>
         public string ExceptType { get; set; }
         /// <summary>
-        /// [0， 100] 范围内的峰值检测置信度
+        /// 
         /// </summary>
-        public double Confidence { get; set; }
+        public int windowSize { get; set; }
         /// <summary>
         /// 最小值
         /// </summary>

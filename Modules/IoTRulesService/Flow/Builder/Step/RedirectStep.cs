@@ -61,7 +61,7 @@ namespace IoTRulesService.Flow.Builder.Step
                             }
                         }
                         break;
-                    case "ReadPropertyReply":
+                    case "PropReply":
                         {
                             var oldmsg = (ReadPropertyMessageReply)context.Source;
                             if (oldmsg.RedirectFromProductId == context.Source.ProductId)

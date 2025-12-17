@@ -13,7 +13,7 @@ namespace ChannelUtility.Message
         public List<string> Properties { get; set; }
         public ReadPropertyMessage()
         {
-            MsgType = "ReadProperty";
+            MsgType = "ReadProp";
         }
     }
 }

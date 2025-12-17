@@ -18,7 +18,7 @@ namespace ChannelUtility.Message
         public bool IsTagSync { get; set; }
         public ReadPropertyMessageReply()
         {
-            MsgType = "ReadPropertyReply";
+            MsgType = "PropReply";
         }
     }
 }

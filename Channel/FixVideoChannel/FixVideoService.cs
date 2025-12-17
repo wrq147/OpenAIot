@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -17,21 +18,24 @@ namespace FixVideoChannel
         private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(50);
         private Thread _timerThread;
         private IServiceProvider _provider;
-        private Dictionary<string,> _videoIds = new HashSet<string>();
+        private ConcurrentDictionary<string, RtspStreamProcessor> _processorDict = new ConcurrentDictionary<string, RtspStreamProcessor>();
+        private ConcurrentDictionary<string, string> _resetProcessors = new ConcurrentDictionary<string, string>();
+        private FixVideoDeviceEventListener _deviceEventListener;
         public FixVideoService(IServiceProvider provider)
         {
             _provider = provider;
+            _deviceEventListener = new FixVideoDeviceEventListener(provider);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X64)
             {
                 ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Windows", "x64");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                if(RuntimeInformation.OSArchitecture == Architecture.X64)
+                if (RuntimeInformation.OSArchitecture == Architecture.X64)
                 {
                     ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Linux", "x64");
                 }
-                else if(RuntimeInformation.OSArchitecture == Architecture.Arm64)
+                else if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
                 {
                     ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Linux", "arm64");
                 }
@@ -54,16 +58,22 @@ namespace FixVideoChannel
             _timerThread.Start();
 
 
-            await eventBus.Bus.PubSub.SubscribeAsync<string>("VideoCaptureItem", async (videoitem, tk) =>
+            await eventBus.Bus.PubSub.SubscribeAsync<string>("AVideoCaptureItem", async (videoitem, tk) =>
             {
                 var item = System.Text.Json.JsonSerializer.Deserialize<VideoCaptureItem>(videoitem);
-                if (!_videoIds.Contains(item.Id))
+                if (_processorDict.TryGetValue(item.Id, out RtspStreamProcessor tmp))
                 {
-                    _videoIds.Add(item.Id);
+                    tmp.Item = item;
                 }
                 else
                 {
-
+                    var tmpProccess = new RtspStreamProcessor(item, null, _deviceEventListener);
+                    if (!await tmpProccess.StartAsync())
+                    {
+                        tmpProccess.CleanupFFmpegResources();
+                        _resetProcessors.TryAdd(item.Id, item.Id);
+                    }
+                    _processorDict.TryAdd(item.Id, tmpProccess);
                 }
             }, cfg =>
             {
@@ -71,21 +81,34 @@ namespace FixVideoChannel
                 cfg.WithAutoDelete(true);
             });
 
+            await eventBus.Bus.PubSub.SubscribeAsync<string>("BVideoCaptureItem", (itemId, tk) =>
+            {
+                if (_processorDict.TryRemove(itemId, out RtspStreamProcessor tmp))
+                {
+                    tmp.Dispose();
+                }
+                return Task.CompletedTask;
+            }, cfg =>
+            {
+                cfg.WithTopic("/VideoCapture.del");
+                cfg.WithAutoDelete(true);
+            });
+
+            await StreamTaskScheduler.Instance.StartAsync(stoppingToken);
         }
 
         private async Task KeepAliveTask(CancellationToken cancellationToken)
         {
             try
             {
-                await KeepAlive();
+                await KeepAlive(cancellationToken);
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     try
                     {
-                        // 等待50秒（监听取消信号，避免无意义的等待）
-                        Thread.Sleep(_executionInterval);
-                        await KeepAlive();
+                        await Task.Delay(_executionInterval, cancellationToken);
+                        await KeepAlive(cancellationToken);
                     }
                     catch (OperationCanceledException)
                     {
@@ -98,7 +121,7 @@ namespace FixVideoChannel
                         // 异常后短暂延迟，避免频繁报错
                         if (!cancellationToken.IsCancellationRequested)
                         {
-                            Thread.Sleep(TimeSpan.FromSeconds(5));
+                            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
                         }
                     }
                 }
@@ -112,11 +135,32 @@ namespace FixVideoChannel
                 Console.WriteLine("独立定时线程已退出");
             }
         }
-        private async Task KeepAlive()
+        private async Task KeepAlive(CancellationToken cancellationToken)
         {
+            //节点保活
             var option = _provider.GetService<IOptions<FixVideoOption>>();
             var eventBus = _provider.GetService<ClientBusProxy>();
             await eventBus.RedisHelper.HashSetAsync("FixVideoNode", option.Value.node_name, DateTime.Now.AddSeconds(60).ToString("o"));
+
+
+            //重新处理
+            var tmparr = _resetProcessors.ToArray();
+            foreach (var item in tmparr)
+            {
+                if (_processorDict.TryGetValue(item.Key, out RtspStreamProcessor tmpProccess))
+                {
+                    if (!await tmpProccess.StartAsync())
+                    {
+                        tmpProccess.CleanupFFmpegResources();
+                    }
+                    else
+                    {
+                        _resetProcessors.TryRemove(item);
+                    }
+                }
+
+            }
+
         }
     }
 }
