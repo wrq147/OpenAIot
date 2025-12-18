@@ -76,6 +76,22 @@ namespace IoTRulesService
                         cfg.WithAutoDelete(true);
                     });
 
+                    await bus.PubSub.SubscribeAsync("IotRule", async (string msg) =>
+                    {
+                        await app.ServiceProvider.GetService<MessageRunner>().ParseDown(msg);
+                    }, cfg =>
+                    {
+                        if (string.IsNullOrEmpty(option.Value.node_name))
+                        {
+                            cfg.WithTopic("/device.down");
+                        }
+                        else
+                        {
+                            cfg.WithTopic("/device.down." + option.Value.node_name);
+                        }
+                        cfg.WithAutoDelete(true);
+                    });
+
 
                     if (Constants.General.quick_init != true)
                     {

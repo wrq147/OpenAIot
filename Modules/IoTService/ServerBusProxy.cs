@@ -93,7 +93,7 @@ namespace IoTService
             return sysdict;
         }
 
-        private async Task<T> WaitDown<I, T>(I msg, string networkWay) where I : RequestMessage where T : BaseUpDeviceMessage
+        private async Task<T> WaitDown<I, T>(I msg) where I : RequestMessage where T : BaseUpDeviceMessage
         {
             var bus = _provider.GetService<RabbitScope>().Bus;
 
@@ -110,14 +110,8 @@ namespace IoTService
             }, cts.Token);
             try
             {
-                if (string.IsNullOrEmpty(networkWay))
-                {
-                    var pro = await _productDAL.Select(msg.ProductId);
-                    networkWay = pro.NetworkWay;
-                }
-
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+                await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
                 var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 return reply;
             }
@@ -133,10 +127,9 @@ namespace IoTService
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="deviceId"></param>
-        /// <param name="networkWay"></param>
         /// <param name="properties"></param>
         /// <returns></returns>
-        public async Task<BusResponse<Dictionary<string, DevicePropertyValue>>> WaitDownReadProperty(string productId, string deviceId, string networkWay, List<string> properties)
+        public async Task<BusResponse<Dictionary<string, DevicePropertyValue>>> WaitDownReadProperty(string productId, string deviceId, List<string> properties)
         {
             properties.Sort();
             ReadPropertyMessage msg = new ReadPropertyMessage();
@@ -144,14 +137,14 @@ namespace IoTService
             msg.ProductId = productId;
             msg.Properties = properties;
             msg.MessageId = $"Rd{deviceId}-{properties.Count}-{UtilityTool.MD5(string.Join('#', properties))}";
-            var rs = await WaitDown<ReadPropertyMessage, ReadPropertyMessageReply>(msg, networkWay);
+            var rs = await WaitDown<ReadPropertyMessage, ReadPropertyMessageReply>(msg);
             if (rs == null)
             {
                 return BusResponse<Dictionary<string, DevicePropertyValue>>.Error(119, "读取指定属性超时");
             }
             return BusResponse<Dictionary<string, DevicePropertyValue>>.Success(DevicePropertyValue.FromDict(rs.Properties, MyAccess.Core.TypeConvert.Unix2Time(rs.Timestamp)));
         }
-        public async Task DownReadProperty(string productId, string deviceId, string networkWay, List<string> properties)
+        public async Task DownReadProperty(string productId, string deviceId, List<string> properties)
         {
             properties.Sort();
             ReadPropertyMessage msg = new ReadPropertyMessage();
@@ -160,13 +153,8 @@ namespace IoTService
             msg.Properties = properties;
             msg.MessageId = string.Empty;
             var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(msg.ProductId);
-                networkWay = pro.NetworkWay;
-            }
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
 
         public async Task ConfirmPropertyReply(ReadPropertyMessageReply msg)
@@ -184,11 +172,10 @@ namespace IoTService
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="deviceId"></param>
-        /// <param name="netway"></param>
         /// <param name="functionId"></param>
         /// <param name="inputs"></param>
         /// <returns></returns>
-        public async Task<BusResponse<IDictionary<string, object>>> DownFunction(string productId, string deviceId, string netway, string functionId, IDictionary<string, object> inputs)
+        public async Task<BusResponse<IDictionary<string, object>>> DownFunction(string productId, string deviceId, string functionId, IDictionary<string, object> inputs)
         {
             FunctionInvokeMessage msg = new FunctionInvokeMessage();
             msg.DeviceId = deviceId;
@@ -196,7 +183,7 @@ namespace IoTService
             msg.FunctionId = functionId;
             msg.Inputs = inputs;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
-            var rs = await WaitDown<FunctionInvokeMessage, FunctionInvokeMessageReply>(msg, netway);
+            var rs = await WaitDown<FunctionInvokeMessage, FunctionInvokeMessageReply>(msg);
             if (rs == null)
             {
                 return BusResponse<IDictionary<string, object>>.Error(119, "执行功能超时");
@@ -208,7 +195,7 @@ namespace IoTService
             return BusResponse<IDictionary<string, object>>.Success(rs.Outputs);
         }
 
-        public async Task DownRawData(string productId, string deviceId, string networkWay, byte[] data)
+        public async Task DownRawData(string productId, string deviceId, byte[] data)
         {
             RawDataMessage rawdata = new RawDataMessage();
             rawdata.Data = data;
@@ -217,70 +204,30 @@ namespace IoTService
             rawdata.ProductId = productId;
 
             var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(rawdata.ProductId);
-                networkWay = pro.NetworkWay;
-            }
             string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+            await bus.PubSub.PublishAsync(msgbody, GetDownKey(deviceId));
         }
-        public async Task DownRawData(RawDataMessage rawdata, string networkWay)
-        {
-            var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(rawdata.ProductId);
-                networkWay = pro.NetworkWay;
-            }
-            string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
-        }
-        public async Task DownBind(string productId, string deviceId, string networkWay)
+
+        public async Task DownBind(string productId, string deviceId)
         {
             DeviceBindMessage msg = new DeviceBindMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
             var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(msg.ProductId);
-                networkWay = pro.NetworkWay;
-            }
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
-        public async Task DownModbusMatch(string productId, string deviceId, string networkWay, List<ModbusMatch> list)
-        {
-            ModbusMatchMessage msg = new ModbusMatchMessage();
-            msg.DeviceId = deviceId;
-            msg.ProductId = productId;
-            msg.MessageId = MyAccess.Core.StringTool.GetGUID();
-            msg.MatchList = list;
-            var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(msg.ProductId);
-                networkWay = pro.NetworkWay;
-            }
-            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
-        }
-        public async Task DownICCID(string productId, string deviceId, string networkWay)
+
+        public async Task DownICCID(string productId, string deviceId)
         {
             QueryICCIDMessage msg = new QueryICCIDMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
             var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(msg.ProductId);
-                networkWay = pro.NetworkWay;
-            }
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
         /// <summary>
         /// 更新设备信息（发送设备绑定消息）
@@ -302,8 +249,7 @@ namespace IoTService
                 msg.ProductId = device.ProductId;
                 msg.MessageId = MyAccess.Core.StringTool.GetGUID();
 
-                var tsl = await TslCache.GetTslModel(device.ProductId, _provider);
-                var reply = await WaitDown<DeviceBindMessage, DeviceBindMessageReply>(msg, tsl.NetworkWay);
+                var reply = await WaitDown<DeviceBindMessage, DeviceBindMessageReply>(msg);
                 if (reply == null)
                 {
                     return BusResponse<string>.Error(119, "设备绑定超时");
@@ -332,23 +278,17 @@ namespace IoTService
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="deviceId"></param>
-        /// <param name="networkWay"></param>
         /// <param name="matchName"></param>
         /// <returns></returns>
-        public async Task DownModbusMessage(string productId, string deviceId, string networkWay, string matchName)
+        public async Task DownModbusMessage(string productId, string deviceId, string matchName)
         {
             ModbusMessage msg = new ModbusMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MatchName = matchName;
             var bus = _provider.GetService<RabbitScope>().Bus;
-            if (string.IsNullOrEmpty(networkWay))
-            {
-                var pro = await _productDAL.Select(msg.ProductId);
-                networkWay = pro.NetworkWay;
-            }
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down");
+            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
 
         private List<string> _upList;
@@ -426,6 +366,20 @@ namespace IoTService
                 _lock.ExitWriteLock();
             }
         }
+        private string GetDownKey(string deviceId)
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                if (_upList == null || _upList.Count == 0) return "/device.down";
+                int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
+                return "/device.down." + _upList[pos];
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+        }
         private string GetUpKey(string deviceId)
         {
             _lock.EnterReadLock();
@@ -439,9 +393,8 @@ namespace IoTService
             {
                 _lock.ExitReadLock();
             }
-
         }
-        public int GetUpIdx(string deviceId)
+        public int GetIdx(string deviceId)
         {
             _lock.EnterReadLock();
             try

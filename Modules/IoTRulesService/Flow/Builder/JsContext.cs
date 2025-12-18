@@ -86,12 +86,7 @@ namespace IoTRulesService.Flow.Builder
                 {
                     return null;
                 }
-                var tsl = await _context.GetTsl(targetDevice.ProductId).ConfigureAwait(false);
-                if (tsl == null)
-                {
-                    return null;
-                }
-                var rs = await _context.Provider.GetService<ServerBusProxy>().DownFunction(targetDevice.ProductId, targetDevice.DeviceId, tsl.NetworkWay, functionId, data).ConfigureAwait(false);
+                var rs = await _context.Provider.GetService<ServerBusProxy>().DownFunction(targetDevice.ProductId, targetDevice.DeviceId, functionId, data).ConfigureAwait(false);
                 if (rs.IsSuccess())
                 {
                     if (rs.Data == null)

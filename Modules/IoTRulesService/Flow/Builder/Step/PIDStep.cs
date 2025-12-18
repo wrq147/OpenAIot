@@ -120,7 +120,7 @@ namespace IoTRulesService.Flow.Builder.Step
                             {
                                 inputs.Add(pp.codeval, iptval);
                             }
-                            var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(device.ProductId, device.DeviceId, tsl.NetworkWay, funcItem.code, inputs);
+                            var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(device.ProductId, device.DeviceId, funcItem.code, inputs);
                             if (!rs.IsSuccess())
                             {
                                 await context.Print("功能执行失败：" + rs.Message);
@@ -180,7 +180,7 @@ namespace IoTRulesService.Flow.Builder.Step
                             {
                                 inputs.Add(pp.codeval, iptval);
                             }
-                            var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(device.ProductId, device.DeviceId, tsl.NetworkWay, funcItem.code, inputs);
+                            var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(device.ProductId, device.DeviceId, funcItem.code, inputs);
                             if (!rs.IsSuccess())
                             {
                                 await context.Print("功能执行失败：" + rs.Message);

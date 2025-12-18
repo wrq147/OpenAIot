@@ -7,6 +7,11 @@ using IoTAIService.DAL;
 using IoTRulesService.DataParser;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Asn1.Cms;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -54,18 +59,21 @@ namespace IoTAIService
             app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener -= MessageHandler;
             base.Unload(app, plg);
         }
-        private Task MessageHandler(BaseDeviceMessage msg)
+        private async Task MessageHandler(BaseDeviceMessage msg)
         {
             switch (msg.MsgType)
             {
                 case "AIDetectReq":
                     {
                         AIDetectRequestMeesage detectReq = (AIDetectRequestMeesage)msg;
+                        using (var ms = new MemoryStream(detectReq.RgbFrame))
+                        using (var image = Image.Load<Rgb24>(ms))
+                        {
 
+                        }
                     }
                     break;
             }
-            return Task.CompletedTask;
         }
     }
 }

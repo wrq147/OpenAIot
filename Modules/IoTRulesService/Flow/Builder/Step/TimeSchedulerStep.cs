@@ -307,7 +307,7 @@ namespace IoTRulesService.Flow.Builder.Step
 
                                     }
                                 }
-                                var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(actionDev.ProductId, actionDev.DeviceId, tsl.NetworkWay, actionItem.code, inputs);
+                                var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(actionDev.ProductId, actionDev.DeviceId, actionItem.code, inputs);
                                 if (!rs.IsSuccess())
                                 {
                                     if (context.IsDebug)

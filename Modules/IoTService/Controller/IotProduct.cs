@@ -73,9 +73,7 @@ namespace IoTService.Controller
             }
 
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
-            var product = await _product.Info(device.ProductId);
-            await sbp.DownUpdateProductSys(product);
-            await sbp.DownModbusMessage(device.ProductId, device.DeviceId, product.NetworkWay, data.MatchName);
+            await sbp.DownModbusMessage(device.ProductId, device.DeviceId, data.MatchName);
             return this.Success<string>();
         }
         /// <summary>
@@ -97,9 +95,7 @@ namespace IoTService.Controller
                 return this.Error<string>(13, "设备未绑定协议");
             }
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
-            var product = await _product.Info(device.ProductId);
-            await sbp.DownUpdateProductSys(product);
-            await sbp.WaitDownReadProperty(device.ProductId, device.DeviceId, product.NetworkWay, data.Properties);
+            await sbp.WaitDownReadProperty(device.ProductId, device.DeviceId, data.Properties);
             return this.Success<string>();
         }
         /// <summary>
@@ -121,9 +117,7 @@ namespace IoTService.Controller
                 return this.Error<string>(13, "设备未绑定协议");
             }
             var sbp = this.ServiceProvider.GetService<ServerBusProxy>();
-            var product = await _product.Info(device.ProductId);
-            await sbp.DownUpdateProductSys(product);
-            await sbp.DownFunction(device.ProductId, device.DeviceId, product.NetworkWay, data.FunctionId, data.Inputs);
+            await sbp.DownFunction(device.ProductId, device.DeviceId, data.FunctionId, data.Inputs);
             return this.Success<string>();
         }
         /// <summary>
@@ -180,13 +174,11 @@ namespace IoTService.Controller
                 {
                     return this.Error<string>(14, "HEX格式错误");
                 }
-                var tsl = await TslCache.GetTslModel(device.ProductId, this.ServiceProvider);
-                await this.ServiceProvider.GetService<ServerBusProxy>().DownRawData(device.ProductId, device.DeviceId, tsl.NetworkWay, bytes);
+                await this.ServiceProvider.GetService<ServerBusProxy>().DownRawData(device.ProductId, device.DeviceId, bytes);
             }
             else
             {
-                var tsl = await TslCache.GetTslModel(device.ProductId, this.ServiceProvider);
-                await this.ServiceProvider.GetService<ServerBusProxy>().DownRawData(device.ProductId, device.DeviceId, tsl.NetworkWay, Encoding.UTF8.GetBytes(data.Text.Replace("\n", "\r\n")));
+                await this.ServiceProvider.GetService<ServerBusProxy>().DownRawData(device.ProductId, device.DeviceId, Encoding.UTF8.GetBytes(data.Text.Replace("\n", "\r\n")));
             }
             return this.Success<string>();
         }
@@ -208,17 +200,16 @@ namespace IoTService.Controller
             {
                 return this.Error<string>(13, "设备未绑定协议");
             }
-            var tsl = await TslCache.GetTslModel(device.ProductId, this.ServiceProvider);
             switch (data.MsgType)
             {
                 case "Bind":
                     {
-                        await this.ServiceProvider.GetService<ServerBusProxy>().DownBind(device.ProductId, device.DeviceId, tsl.NetworkWay);
+                        await this.ServiceProvider.GetService<ServerBusProxy>().DownBind(device.ProductId, device.DeviceId);
                     }
                     break;
                 case "QueryICCID":
                     {
-                        await this.ServiceProvider.GetService<ServerBusProxy>().DownICCID(device.ProductId, device.DeviceId, tsl.NetworkWay);
+                        await this.ServiceProvider.GetService<ServerBusProxy>().DownICCID(device.ProductId, device.DeviceId);
                     }
                     break;
                 case "Connect":

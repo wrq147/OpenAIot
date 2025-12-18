@@ -692,7 +692,7 @@ namespace IoTService.Business
                     inputs.Add(kvp);
                 }
             }
-            var res = await _provider.GetService<ServerBusProxy>().DownFunction(device.ProductId, device.DeviceId, model.NetworkWay, data.FunctionId, inputs);
+            var res = await _provider.GetService<ServerBusProxy>().DownFunction(device.ProductId, device.DeviceId, data.FunctionId, inputs);
 
             #region 记录日志
             if (res.Data != null)
@@ -844,11 +844,10 @@ namespace IoTService.Business
                 if (rawProductId != null && rawDtuId != null)
                 {
                     var rawmodel = await TslCache.GetTslModel(rawProductId, redis, _provider);
-
-                    await _provider.GetService<ServerBusProxy>().DownReadProperty(rawProductId, rawDtuId, rawmodel.NetworkWay, rawmodel.Model.properties.Select(x => x.code).ToList());
+                    await _provider.GetService<ServerBusProxy>().DownReadProperty(rawProductId, rawDtuId, rawmodel.Model.properties.Select(x => x.code).ToList());
                 }
 
-                var prs = await _provider.GetService<ServerBusProxy>().WaitDownReadProperty(productId, id, model.NetworkWay, tlist);
+                var prs = await _provider.GetService<ServerBusProxy>().WaitDownReadProperty(productId, id, tlist);
                 //合并最新属性
                 if (!prs.IsSuccess())
                 {
@@ -925,11 +924,11 @@ namespace IoTService.Business
                         {
                             return BusResponse<List<DeviceProperty>>.Error(122, "原物模型不存在");
                         }
-                        await _provider.GetService<ServerBusProxy>().DownReadProperty(rawProductId, rawDtuId, rawmodel.NetworkWay, rawmodel.Model.properties.Select(x => x.code).ToList());
+                        await _provider.GetService<ServerBusProxy>().DownReadProperty(rawProductId, rawDtuId, rawmodel.Model.properties.Select(x => x.code).ToList());
                     }
                     else
                     {
-                        await _provider.GetService<ServerBusProxy>().DownReadProperty(productId, id, model.NetworkWay, model.Model.properties.Select(x => x.code).ToList());
+                        await _provider.GetService<ServerBusProxy>().DownReadProperty(productId, id, model.Model.properties.Select(x => x.code).ToList());
                     }
                 }
 
@@ -1203,7 +1202,7 @@ namespace IoTService.Business
             if (!string.IsNullOrEmpty(data.DeviceId))
             {
                 var serverBus = _provider.GetService<ServerBusProxy>();
-                data.DeviceUpIdx = serverBus.GetUpIdx(data.DeviceId);
+                data.DeviceUpIdx = serverBus.GetIdx(data.DeviceId);
             }
             if ((data.Lat != null && data.Lng != null) && (data.Lat != 0 && data.Lng != 0))
             {
@@ -1322,7 +1321,7 @@ namespace IoTService.Business
             }
 
             var serverBus = _provider.GetService<ServerBusProxy>();
-            data.DeviceUpIdx = serverBus.GetUpIdx(data.DeviceId);
+            data.DeviceUpIdx = serverBus.GetIdx(data.DeviceId);
             MZ_IotProduct product = await _provider.GetService<IotProductDAL>().SelectProductView(data.ProductId);
             if (product == null)
             {

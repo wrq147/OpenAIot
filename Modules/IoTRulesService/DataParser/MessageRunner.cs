@@ -1,11 +1,14 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
+using Common.EventBus;
 using IoTService;
 using Microsoft.Extensions.Options;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
@@ -52,7 +55,15 @@ namespace IoTRulesService.DataParser
                     await OtherMessageListener(rs);
                 }
             }
-
+        }
+        public async Task ParseDown(RequestMessage msg)
+        {
+            await _provider.GetService<DeviceMessageHandler>().ParseDown(msg);
+        }
+        public async Task ParseDown(string msg)
+        {
+            var rs = System.Text.Json.JsonSerializer.Deserialize<RequestMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await this.ParseDown(rs);
         }
     }
 }

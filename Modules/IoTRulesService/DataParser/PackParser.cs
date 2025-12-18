@@ -8,10 +8,12 @@ using EasyNetQ;
 using IoTRulesService.DataParser.GraphScript;
 using IoTRulesService.DataParser.Js;
 using IoTService;
+using IoTService.DAL;
 using Jint;
 using Jint.Native;
 using Jint.Runtime;
 using Jint.Runtime.Interop;
+using Org.BouncyCastle.Asn1.Pkcs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -380,6 +382,18 @@ namespace IoTRulesService.DataParser
                 return null;
             }
         }
+
+        public async Task DownModbusMatch(string productId, string deviceId, string networkWay, List<ModbusMatch> list)
+        {
+            ModbusMatchMessage msg = new ModbusMatchMessage();
+            msg.DeviceId = deviceId;
+            msg.ProductId = productId;
+            msg.MessageId = MyAccess.Core.StringTool.GetGUID();
+            msg.MatchList = list;
+            var bus = _provider.GetService<RabbitScope>().Bus;
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down").ConfigureAwait(false);
+        }
         /// <summary>
         /// 直接调用下发消息
         /// </summary>
@@ -395,20 +409,24 @@ namespace IoTRulesService.DataParser
             }
 
             if (msg is RawDataMessage rawdata)
-            {                        
+            {
                 //未发布打印
                 if (ret.Status == "0")
                 {
                     await Print(msg.DeviceId, "设备下发消息", FastBufferHelper.ByteToHexStr(rawdata.Data));
                 }
-                await _provider.GetService<ServerBusProxy>().DownRawData(rawdata, ret.NetworkWay).ConfigureAwait(false);
+                var bus = _provider.GetService<RabbitScope>().Bus;
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
+                await bus.PubSub.PublishAsync(msgbody, "/device." + ret.NetworkWay + ".down").ConfigureAwait(false);
                 return;
             }
 
             var newmsg = await this.toRawData(msg, ret).ConfigureAwait(false);
             if (newmsg != null)
             {
-                await _provider.GetService<ServerBusProxy>().DownRawData(newmsg, ret.NetworkWay).ConfigureAwait(false);
+                var bus = _provider.GetService<RabbitScope>().Bus;
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
+                await bus.PubSub.PublishAsync(msgbody, "/device." + ret.NetworkWay + ".down").ConfigureAwait(false);
             }
             else
             {
@@ -966,7 +984,7 @@ namespace IoTRulesService.DataParser
                     }
                     if (newmmlist != null && newmmlist.Count > 0)
                     {
-                        await _provider.GetService<ServerBusProxy>().DownModbusMatch(productId, deviceId, ret.NetworkWay, newmmlist);
+                        await DownModbusMatch(productId, deviceId, ret.NetworkWay, newmmlist);
                     }
                     return;
                 }
@@ -974,9 +992,8 @@ namespace IoTRulesService.DataParser
 
             if (newmmlist != null && newmmlist.Count > 0)
             {
-                await _provider.GetService<ServerBusProxy>().DownModbusMatch(productId, deviceId, ret.NetworkWay, newmmlist);
+                await DownModbusMatch(productId, deviceId, ret.NetworkWay, newmmlist);
             }
-
         }
         public async Task<RawDataMessage> toRawData(RequestMessage msg, TslReturn ret)
         {

@@ -36,6 +36,13 @@ namespace IoTRulesService.DataParser
             _runner = _provider.GetService<RuleWheelRuner>();
             _log = factory.CreateLogger<DeviceMessageHandler>();
         }
+        public async Task ParseDown(RequestMessage rs)
+        {
+            _runner.PushConcurrentTask(rs.DeviceId, async () =>
+            {
+                await _provider.GetService<PackParser>().PublicMessage(rs, null).ConfigureAwait(false);
+            });
+        }
         public async Task ParseMessage(RawUpDataMessage rs)
         {
             _runner.PushConcurrentTask(rs.DeviceId, async () =>
@@ -102,7 +109,11 @@ namespace IoTRulesService.DataParser
                                 //查询设备是否需要下发查询ICCID（2G网络、3G网络、4G网络、5G网络的设备未绑定物联网卡时会自动下发查询）
                                 if (product.PhysicsWay.IndexOf("G") != -1)
                                 {
-                                    await serverBus.DownICCID(product.Id, rs.DeviceId, product.NetworkWay);
+                                    QueryICCIDMessage msg = new QueryICCIDMessage();
+                                    msg.DeviceId = rs.DeviceId;
+                                    msg.ProductId = product.Id;
+                                    msg.MessageId = MyAccess.Core.StringTool.GetGUID();
+                                    await _provider.GetService<MessageRunner>().ParseDown(msg);
                                 }
 
                                 //获取物模型
@@ -185,7 +196,11 @@ namespace IoTRulesService.DataParser
                                             //初始化设备信息
                                             foreach (var matchItem in matches)
                                             {
-                                                await serverBus.DownModbusMessage(product.Id, rs.DeviceId, product.NetworkWay, matchItem.Name).ConfigureAwait(false);
+                                                ModbusMessage msg = new ModbusMessage();
+                                                msg.DeviceId = rs.DeviceId;
+                                                msg.ProductId = product.Id;
+                                                msg.MatchName = matchItem.Name;
+                                                await _provider.GetService<MessageRunner>().ParseDown(msg);
                                             }
 
                                         }, TimeSpan.FromSeconds(3));

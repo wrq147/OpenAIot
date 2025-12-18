@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChannelUtility.Message;
+using System;
 namespace FixVideoChannel
 {
     public interface IDeviceEventListener
@@ -32,5 +33,12 @@ namespace FixVideoChannel
         /// <param name="height"></param>
         /// <returns></returns>
         Task OnSendAIDetectRequest(VideoCaptureItem item, string detectType, Dictionary<string, string> detectParams, byte[] rgbFrame, int width, int height);
+
+        /// <summary>
+        /// 处理平台下发消息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        Task OnDeviceDownMessage(RequestMessage msg);
     }
 }

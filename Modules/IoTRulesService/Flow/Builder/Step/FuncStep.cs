@@ -98,12 +98,12 @@ namespace IoTRulesService.Flow.Builder.Step
                 var dtuIds = await deviceDal.SelectDtuIdListByOnline(productId);
                 foreach(var dtuId in dtuIds)
                 {
-                    await context.Provider.GetService<ServerBusProxy>().DownFunction(productId, dtuId, tsl.NetworkWay, props.FunctionId, inputs);
+                    await context.Provider.GetService<ServerBusProxy>().DownFunction(productId, dtuId, props.FunctionId, inputs);
                 }
             }
             else
             {
-                var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(productId, deviceId, tsl.NetworkWay, props.FunctionId, inputs);
+                var rs = await context.Provider.GetService<ServerBusProxy>().DownFunction(productId, deviceId, props.FunctionId, inputs);
                 if (!rs.IsSuccess())
                 {
                     await context.Print("功能执行失败：" + rs.Message);

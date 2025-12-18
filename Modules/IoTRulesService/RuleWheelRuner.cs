@@ -26,7 +26,7 @@ namespace IoTRulesService
             _log = logfactory.CreateLogger<RuleWheelRuner>();
             _provider = provider;
             var option = _provider.GetService<IOptions<IotOption>>();
-            int totalcc = 3;
+            int totalcc = 4;
             if (option.Value.runer_count > 0)
             {
                 totalcc = option.Value.runer_count;

@@ -85,7 +85,7 @@ namespace IoTRulesService.Business
                 var tdevlist = await devDAL.SelectDevicesByIdx(evt.ProductId, idx);
                 foreach (var dev in tdevlist)
                 {
-                    int curidx = serverBus.GetUpIdx(dev.DeviceId);
+                    int curidx = serverBus.GetIdx(dev.DeviceId);
                     if (curidx != idx)
                     {
                         MZ_IotDevice newdev = new MZ_IotDevice();

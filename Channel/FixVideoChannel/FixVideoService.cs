@@ -1,8 +1,10 @@
 ﻿using ChannelUtility;
+using ChannelUtility.Message;
 using FFmpeg.AutoGen;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using MQTTnet;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -45,6 +47,8 @@ namespace FixVideoChannel
                 ffmpeg.RootPath = provider.GetService<IOptions<FixVideoOption>>().Value.ffmpeg_path;
             }
             ffmpeg.avformat_network_init();
+            var eventBus = _provider.GetService<ClientBusProxy>();
+            eventBus.OnSubProductMessage += _deviceEventListener.OnDeviceDownMessage;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
