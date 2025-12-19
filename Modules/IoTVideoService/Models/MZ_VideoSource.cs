@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace IoTVideoService.Models
 {
+    [TableName("mz_iot_video_source")]
     public class MZ_VideoSource
     {
         /// <summary>

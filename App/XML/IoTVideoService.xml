@@ -4,5 +4,80 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.Id">
+            <summary>
+            视频源Id
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoType">
+            <summary>
+            摄像头类型:0为固定地址,1为GB/T28181
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoKey">
+            <summary>
+            ZLMediaKit的视频Key
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.PullAddr">
+            <summary>
+            拉流地址
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.UserPwd">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.BitType">
+            <summary>
+            码流类型：0为主码流，1为子码流
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.FrameInterval">
+            <summary>
+            AI检测帧间隔,默认25帧
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.PullNode">
+            <summary>
+            当前拉流的节点名称，无为空
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.VideoOption.ZLMediaKitSecret">
+            <summary>
+            ZLMediaKit接口密钥
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.VideoOption.ZLMediaKitIp">
+            <summary>
+            ZLMediaKit的Ip地址
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.VideoOption.ZLMediaKitRTSPPort">
+            <summary>
+            ZLMediaKit的RTSP端口号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.VideoOption.ZLMediaKitRTMPPort">
+            <summary>
+            ZLMediaKit的RTMP端口号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.VideoOption.ZLMediaKitApp">
+            <summary>
+            ZLMediaKit的应用名
+            </summary>
+        </member>
     </members>
 </doc>

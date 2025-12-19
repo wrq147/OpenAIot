@@ -313,13 +313,12 @@ export default {
 
       //添加事件输出参数
       if (this.$store.state.rulesFlowable.rulesDesign.TriggerWay == 0&&this.$store.state.rulesFlowable.rulesDesign.TopicMsg.value=='Event') {
+        let curmsgcode=this.$store.state.rulesFlowable.rulesDesign.TopicMsg.code;
         this.formEvents.forEach(item => {
-          if(item.code==this.$store.state.rulesFlowable.rulesDesign.TopicMsg.EventId){
+          if(item.code==curmsgcode){
             if(item.outputs!=null){
               item.outputs.forEach(newitem => {
-                let newxxitem = JSON.parse(JSON.stringify(newitem));
-                newxxitem.name = "【事】" + item.name;
-                newxxitem.code = "$input." + item.code;
+                let newxxitem = {"name":"【事】" + newitem.name,"code":"$input." + newitem.code,"type":newitem.type};
                 this.filterCondition(newxxitem, conditionItems);
               });
             }

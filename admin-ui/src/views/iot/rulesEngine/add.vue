@@ -592,6 +592,7 @@ export default {
               let tmpeeee = tmptsl.events.filter((x) => x.code == tmpccc);
               if (tmpeeee.length > 0) {
                 rulse.TopicMsg = its;
+                rulse.TopicMsg.code=tmpccc;
                 rulse.TopicMsg.label =
                   its.label + "【" + tmpeeee[0].name + "】";
               }

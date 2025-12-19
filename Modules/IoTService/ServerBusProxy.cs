@@ -371,9 +371,9 @@ namespace IoTService
             _lock.EnterReadLock();
             try
             {
-                if (_upList == null || _upList.Count == 0) return "/device.down";
+                if (_upList == null || _upList.Count == 0) return "/device.dwn";
                 int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
-                return "/device.down." + _upList[pos];
+                return "/device.dwn." + _upList[pos];
             }
             finally
             {

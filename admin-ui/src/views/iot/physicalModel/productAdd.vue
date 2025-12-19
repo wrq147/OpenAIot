@@ -12,14 +12,16 @@
           <el-menu-item index="dataAnalysis" @click="to('dataAnalysis')">数据解析</el-menu-item>
           <el-menu-item index="warning" @click="to('warning')">报警工单</el-menu-item>
           <el-menu-item index="notice" @click="to('notice')">配置事件通知</el-menu-item>
-          <el-menu-item v-show="NetworkWayName != ''" index="protocolList" @click="to('protocolList')">协议介绍</el-menu-item>
+          <el-menu-item v-show="NetworkWayName != ''" index="protocolList"
+            @click="to('protocolList')">协议介绍</el-menu-item>
         </el-menu>
-        <div class="name_text">{{ productInfos==null?"":productInfos.Name }}</div>
+        <div class="name_text">{{ productInfos == null ? "" : productInfos.Name }}</div>
       </div>
     </div>
     <div style="padding-top:50px">
       <div style="padding:20px 20px 0 20px" id="big_con">
-        <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-if="activeSelect == 'configInfo'">
+        <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }"
+          v-if="activeSelect == 'configInfo'">
           <el-row :gutter="10" class="mb8 button_row" style="justify-content:space-between;margin-bottom:10px">
             <div>
               <el-col :span="1.5">
@@ -33,7 +35,8 @@
           <product-info :productInfos="productInfos" :configLoading="configLoading" :NetworkWayName="NetworkWayName"
             :className="className"></product-info>
         </div>
-        <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-if="activeSelect == 'physicalModel'">
+        <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }"
+          v-if="activeSelect == 'physicalModel'">
           <div>
             <div class="header" style="border-top:none;padding: 0;border-bottom: 1px solid #dadada;">
               <el-menu :default-active="activeDefinition" active-text-color="#409eff" class="el-menu-demo shejiqi"
@@ -42,36 +45,36 @@
                 <el-menu-item index="function" @click="definitonSelect('function')">功能定义</el-menu-item>
                 <el-menu-item index="event" @click="definitonSelect('event')">事件定义</el-menu-item>
                 <el-menu-item index="expands" @click="definitonSelect('expands')">标签</el-menu-item>
-                <el-menu-item v-if="enableStore==true" index="proprules" @click="definitonSelect('proprules')">统计规则</el-menu-item>
+                <el-menu-item v-if="enableStore == true" index="proprules"
+                  @click="definitonSelect('proprules')">统计规则</el-menu-item>
                 <el-menu-item index="firmwareFiles" @click="definitonSelect('firmwareFiles')">固件文件</el-menu-item>
               </el-menu>
             </div>
             <div style="padding:20px;">
-              <div v-if="activeDefinition != 'firmwareFiles'&&activeDefinition != 'proprules'">
+              <div v-if="activeDefinition != 'firmwareFiles' && activeDefinition != 'proprules'">
                 <el-row :gutter="10" class="mb8 button_row">
                   <div v-if="activeDefinition != 'expands'">
                     <el-col :span="1.5">
-                      <DynamicAddDropdown
-                        :treeType="activeDefinition"
-                        @menu-click="handleMenuClick"
-                      ></DynamicAddDropdown>
-                    
+                      <DynamicAddDropdown :treeType="activeDefinition" @menu-click="handleMenuClick">
+                      </DynamicAddDropdown>
+
                     </el-col>
                     <el-col :span="1.5">
-                      <el-upload style="display:inline" accept=".json" :multiple="false" :show-file-list="false" action="#" :before-upload="handleImport">
-                        <el-button  type="primary" plain>
+                      <el-upload style="display:inline" accept=".json" :multiple="false" :show-file-list="false"
+                        action="#" :before-upload="handleImport">
+                        <el-button type="primary" plain>
                           <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
                           <span style="margin-left:6px">导入</span>
                         </el-button>
                       </el-upload>
                     </el-col>
                     <el-col :span="1.5">
-                        <el-button  type="primary" plain @click="exportRow(tableData,true)">
-                          <i class="zhongtaiiconfont zhongtai-icon-daoru"></i>
-                          <span style="margin-left:6px">导出</span>
-                        </el-button>
+                      <el-button type="primary" plain @click="exportRow(tableData, true)">
+                        <i class="zhongtaiiconfont zhongtai-icon-daoru"></i>
+                        <span style="margin-left:6px">导出</span>
+                      </el-button>
                     </el-col>
-                    <el-col :span="1.5"> 
+                    <el-col :span="1.5">
                       <el-button v-if="!showsort" type="primary" plain @click="startSort">
                         <span style="margin-left:6px">点这里开始拖动排序</span>
                       </el-button>
@@ -98,24 +101,26 @@
                           </div>
                           <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item v-for="item of typeList" :key="item.value" :command="item.value"
-                              v-show="!(activeDefinition == 'expands' && item.value == 'file')">{{ item.alabel}}</el-dropdown-item>
+                              v-show="!(activeDefinition == 'expands' && item.value == 'file')">{{
+                              item.alabel}}</el-dropdown-item>
                           </el-dropdown-menu>
                         </el-dropdown>
                       </div>
                     </el-col>
                     <el-col :span="1.5">
-                      <el-upload style="display:inline" accept=".json" :multiple="false" :show-file-list="false" action="#" :before-upload="handleImport">
-                        <el-button  type="primary" plain>
+                      <el-upload style="display:inline" accept=".json" :multiple="false" :show-file-list="false"
+                        action="#" :before-upload="handleImport">
+                        <el-button type="primary" plain>
                           <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
                           <span style="margin-left:6px">导入</span>
                         </el-button>
                       </el-upload>
                     </el-col>
                     <el-col :span="1.5">
-                        <el-button  type="primary" plain @click="exportRow(tableData,true)">
-                          <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
-                          <span style="margin-left:6px">导出</span>
-                        </el-button>
+                      <el-button type="primary" plain @click="exportRow(tableData, true)">
+                        <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
+                        <span style="margin-left:6px">导出</span>
+                      </el-button>
                     </el-col>
                     <el-col :span="1.5">
                       <el-button v-if="!showsort" type="primary" plain @click="startSort">
@@ -135,7 +140,8 @@
                     @queryTable="getProductInfo()"></right-toolbar>
                 </el-row>
                 <el-table v-if="activeDefinition != 'firmwareFiles'" v-loading="configLoading" :data="tableData"
-                  style="width: 100%;" row-key="code" class="data_table" :row-class-name="sortFilterClass" :header-cell-style="cellSty" border>
+                  style="width: 100%;" row-key="code" class="data_table" :row-class-name="sortFilterClass"
+                  :header-cell-style="cellSty" border>
                   <el-table-column :prop="its.filed" :label="its.filedName" v-for="its in tableColumnsList"
                     :key="its.filed">
                     <template slot-scope="scope">
@@ -172,14 +178,16 @@
         <device-manage v-if="activeSelect == 'deviceManagement'" :activeSelect="activeSelect"
           :productInfos="productInfos"></device-manage>
         <online-debug v-show="activeSelect == 'onlineDebug'" :productInfos="productInfos"></online-debug>
-        <data-analysis ref="scriptEditor" v-if="activeSelect == 'dataAnalysis'" :productInfo="productInfos" :ChannelData="ChannelData"
-          :content="productInfos.InterScripts" @saveCode="saveCode" @saveSetData="saveSetData"></data-analysis>
+        <data-analysis ref="scriptEditor" v-if="activeSelect == 'dataAnalysis'" :productInfo="productInfos"
+          :ChannelData="ChannelData" :content="productInfos.InterScripts" @saveCode="saveCode"
+          @saveSetData="saveSetData"></data-analysis>
         <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-if="activeSelect == 'warning'">
           <warn-list ref="warning-list" :isComponent="true" :filProductId="productId"></warn-list>
         </div>
         <topicList v-if="activeSelect == 'protocolList'"></topicList>
-        <noticeList v-if="activeSelect == 'notice'" :noticeStr="productInfos.NoticeWay" @saveNotice="onSaveNotice"></noticeList>
-        
+        <noticeList v-if="activeSelect == 'notice'" :noticeStr="productInfos.NoticeWay" @saveNotice="onSaveNotice">
+        </noticeList>
+
       </div>
     </div>
     <el-drawer
@@ -197,39 +205,42 @@
         <el-form-item label="标识符" prop="code">
           <el-input v-if="activeDefinition == 'attribute'" v-model="attrFrom.code" placeholder="请输入标识符"
             @input="attrFrom.code = attrFrom.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"
-            :disabled="(isEditCode && attrFrom.code != '')||attrFrom.isfixed==true" />
-          <el-input v-if="activeDefinition == 'expands'"
-            :disabled="(isEditCode && expandsForm.code != '')"
+            :disabled="(isEditCode && attrFrom.code != '') || attrFrom.isfixed == true" />
+          <el-input v-if="activeDefinition == 'expands'" :disabled="(isEditCode && expandsForm.code != '')"
             v-model="expandsForm.code" placeholder="请输入标识符"
             @input="expandsForm.code = expandsForm.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')" />
           <el-input v-if="activeDefinition == 'function'" v-model="funcFrom.code" placeholder="请输入标识符"
             @input="funcFrom.code = funcFrom.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"
-            :disabled="(isEditCode && funcFrom.code != '')||funcFrom.isfixed==true" />
+            :disabled="(isEditCode && funcFrom.code != '') || funcFrom.isfixed == true" />
           <el-input v-if="activeDefinition == 'event'" v-model="eventFrom.code" placeholder="请输入标识符"
             @input="eventFrom.code = eventFrom.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"
-            :disabled="(isEditCode && eventFrom.code != '')||eventFrom.isfixed==true" />
+            :disabled="(isEditCode && eventFrom.code != '') || eventFrom.isfixed == true" />
           <span style="font-size:14px;color:#909399">
             <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="font-size:14px;margin-right:5px;"></i>1到50位字母，数字，下划线
           </span>
         </el-form-item>
-        <el-form-item label="标识符前缀" prop="prefixcode" v-if="activeDefinition == 'function'||activeDefinition == 'attribute'">
+        <el-form-item label="标识符前缀" prop="prefixcode"
+          v-if="activeDefinition == 'function' || activeDefinition == 'attribute'">
           <el-input v-if="activeDefinition == 'attribute'" v-model="attrFrom.prefixcode" placeholder="表示边缘的设备地址,没有则不填"
-            @input="attrFrom.prefixcode = attrFrom.prefixcode.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"/>
+            @input="attrFrom.prefixcode = attrFrom.prefixcode.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')" />
           <el-input v-if="activeDefinition == 'function'" v-model="funcFrom.prefixcode" placeholder="表示边缘的设备地址,没有则不填"
             @input="funcFrom.prefixcode = funcFrom.prefixcode.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')" />
         </el-form-item>
         <el-form-item label="默认值" prop="value" v-if="activeDefinition == 'expands'">
-          <template v-if="expandsForm.option.type=='geo'">
-            <div>经度<el-input-number style="margin-left:10px;" v-model="expandsForm.value.lng" :min="0" :max="180" ></el-input-number></div>
-            <div style="margin-top:15px;">纬度<el-input-number style="margin-left:10px;" v-model="expandsForm.value.lat" :min="0" :max="90" ></el-input-number></div>
+          <template v-if="expandsForm.option.type == 'geo'">
+            <div>经度<el-input-number style="margin-left:10px;" v-model="expandsForm.value.lng" :min="0"
+                :max="180"></el-input-number></div>
+            <div style="margin-top:15px;">纬度<el-input-number style="margin-left:10px;" v-model="expandsForm.value.lat"
+                :min="0" :max="90"></el-input-number></div>
           </template>
-          <template v-else-if="expandsForm.option.type=='date'">
-            <el-date-picker v-model="expandsForm.value" value-format="timestamp" type="datetime" placeholder="选择默认日期时间"></el-date-picker>
+          <template v-else-if="expandsForm.option.type == 'date'">
+            <el-date-picker v-model="expandsForm.value" value-format="timestamp" type="datetime"
+              placeholder="选择默认日期时间"></el-date-picker>
           </template>
           <template v-else>
             <el-input v-model="expandsForm.value" placeholder="请输入默认值" style="width:280px;"></el-input>
           </template>
-          
+
         </el-form-item>
         <el-form-item label="属性标识" prop="mapcode" v-if="activeDefinition == 'expands'">
           <el-select filterable v-model="expandsForm.mapcode" placeholder="请选择属性标识" style="width:100%" clearable>
@@ -237,7 +248,8 @@
               :label="item.name" :value="item.code"></el-option>
           </el-select>
           <span style="font-size:14px;color:#909399">
-            <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="font-size:14px;margin-right:5px;"></i>请先在属性定义中创建属性，仅支持对应的数据类型。
+            <i class="zhongtaiiconfont zhongtai-icon-zhuyi"
+              style="font-size:14px;margin-right:5px;"></i>请先在属性定义中创建属性，仅支持对应的数据类型。
           </span>
         </el-form-item>
         <el-form-item label="属性使用者" prop="propshowway" v-if="activeDefinition == 'attribute'">
@@ -254,14 +266,14 @@
             <el-option v-for="item in LevelList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="告警目标" v-if="activeDefinition == 'event'&&eventFrom.Level!=-1">
+        <el-form-item label="告警目标" v-if="activeDefinition == 'event' && eventFrom.Level != -1">
           <el-checkbox-group v-model="eventFrom.Targets">
             <el-checkbox label="org" name="evttarget">来源组织</el-checkbox>
             <el-checkbox label="own" name="evttarget">拥有者组织</el-checkbox>
             <el-checkbox label="use" name="evttarget">使用者组织</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="沉默周期" prop="SilenceTime" v-if="activeDefinition == 'event'&&eventFrom.Level!=-1">
+        <el-form-item label="沉默周期" prop="SilenceTime" v-if="activeDefinition == 'event' && eventFrom.Level != -1">
           <el-select v-model="eventFrom.SilenceTime" placeholder="请选择沉默周期" style="width:100%">
             <el-option label="无" :value="0"></el-option>
             <el-option label="5分钟" :value="300"></el-option>
@@ -293,13 +305,12 @@
           <div>
             <el-button type="text" @click="onAddCondition">+ 添加</el-button>
           </div>
-          <div class="dlg-param-bg" v-if="funcFrom.conditions!=null&&funcFrom.conditions.length > 0">
+          <div class="dlg-param-bg" v-if="funcFrom.conditions != null && funcFrom.conditions.length > 0">
             <div class="paramrow" v-for="(ccitem, cidx) in funcFrom.conditions" :key="cidx">
               <span style="margin-right: 10px;width:45px;">条件{{ getCondName(cidx) }}</span>
               <el-select v-model="ccitem.code" placeholder="属性" style="width: 120px;margin-right: 10px;"
                 @change="condiChange($event, ccitem)">
-                <el-option :label="opx.name" :value="opx.code" v-for="opx in attrTableData"
-                  :key="opx.code"></el-option>
+                <el-option :label="opx.name" :value="opx.code" v-for="opx in attrTableData" :key="opx.code"></el-option>
               </el-select>
               <el-select placeholder="判断符" v-model="ccitem.compare" style="width: 100px;margin-right: 10px;">
                 <el-option label="等于" value="=" v-if="ccitem.valtype != 'Date'"></el-option>
@@ -315,36 +326,37 @@
               </el-select>
 
               <el-input v-if="ccitem.valtype == 'Double' || ccitem.valtype == 'Long'" v-model="ccitem.val"
-                  style="width: 120px" type="number" placeholder="输入比较值" />
-                <el-input v-else-if="ccitem.valtype == 'String'" v-model="ccitem.val" type="text" placeholder="输入比较值"
-                  style="width: 120px" />
-                <el-select v-else-if="ccitem.valtype == 'Enum'" placeholder="请选择比较值" v-model="ccitem.val" @visible-change="enumVisibleChange($event, ccitem)"
-                  style="width: 120px;">
-                  <el-option v-for="(option, oi) in enumArr" :key="oi" :label="option.key"
-                    :value="option.value"></el-option>
-                </el-select>
-                <el-select v-else-if="ccitem.valtype == 'Bool'" placeholder="请选择布尔值" v-model="ccitem.val"
-                  style="width: 120px;">
-                  <el-option label="真" value="True"></el-option>
-                  <el-option label="假" value="False"></el-option>
-                </el-select>
-                <el-date-picker v-else-if="ccitem.valtype == 'Date'" style="width: 120px;" v-model="ccitem.val"
-                  value-format="timestamp" type="datetime" placeholder="请选择日期和时间">
-                </el-date-picker>
-              <i class="el-icon-delete" style="color: #ff0000;cursor: pointer;margin-left:10px;" @click="onDelCondition(cidx)"></i>
+                style="width: 120px" type="number" placeholder="输入比较值" />
+              <el-input v-else-if="ccitem.valtype == 'String'" v-model="ccitem.val" type="text" placeholder="输入比较值"
+                style="width: 120px" />
+              <el-select v-else-if="ccitem.valtype == 'Enum'" placeholder="请选择比较值" v-model="ccitem.val"
+                @visible-change="enumVisibleChange($event, ccitem)" style="width: 120px;">
+                <el-option v-for="(option, oi) in enumArr" :key="oi" :label="option.key"
+                  :value="option.value"></el-option>
+              </el-select>
+              <el-select v-else-if="ccitem.valtype == 'Bool'" placeholder="请选择布尔值" v-model="ccitem.val"
+                style="width: 120px;">
+                <el-option label="真" value="True"></el-option>
+                <el-option label="假" value="False"></el-option>
+              </el-select>
+              <el-date-picker v-else-if="ccitem.valtype == 'Date'" style="width: 120px;" v-model="ccitem.val"
+                value-format="timestamp" type="datetime" placeholder="请选择日期和时间">
+              </el-date-picker>
+              <i class="el-icon-delete" style="color: #ff0000;cursor: pointer;margin-left:10px;"
+                @click="onDelCondition(cidx)"></i>
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="条件组合" v-if="activeDefinition == 'function'&&funcFrom.conditions!=null&&funcFrom.conditions.length > 1">
+        <el-form-item label="条件组合"
+          v-if="activeDefinition == 'function' && funcFrom.conditions != null && funcFrom.conditions.length > 1">
           <div class="dlg-gg-row">
-            <el-input v-model="funcFrom.GroupTxt" placeholder="输入条件组关系表达式  &为与，|为或"/>
+            <el-input v-model="funcFrom.GroupTxt" placeholder="输入条件组关系表达式  &为与，|为或" />
             <el-alert title="使用表达式构建复杂逻辑，例如: (A & B) | C" type="warning" :closable="false"></el-alert>
           </div>
         </el-form-item>
         <el-form-item label="触发方式" v-if="activeDefinition == 'event'">
           <div>
-            <el-select placeholder="请选择触发方式" v-model="eventFrom.CondType"
-              style="width: 220px;">
+            <el-select placeholder="请选择触发方式" v-model="eventFrom.CondType" style="width: 220px;">
               <el-option label="规则触发" :value="0"></el-option>
               <el-option label="在线触发" :value="1"></el-option>
               <el-option label="离线触发" :value="2"></el-option>
@@ -352,17 +364,16 @@
             </el-select>
           </div>
         </el-form-item>
-        <el-form-item v-if="activeDefinition == 'event'&&eventFrom.CondType==3" label="触发条件">
+        <el-form-item v-if="activeDefinition == 'event' && eventFrom.CondType == 3" label="触发条件">
           <div>
             <el-button type="text" @click="onAddEvtCondition">+ 添加</el-button>
           </div>
-          <div class="dlg-param-bg" v-if="eventFrom.PropConditions!=null&&eventFrom.PropConditions.length > 0">
+          <div class="dlg-param-bg" v-if="eventFrom.PropConditions != null && eventFrom.PropConditions.length > 0">
             <div class="paramrow" v-for="(ccitem, cidx) in eventFrom.PropConditions" :key="cidx">
               <span style="margin-right: 10px;width:45px;">条件{{ getCondName(cidx) }}</span>
               <el-select v-model="ccitem.code" placeholder="属性" style="width: 120px;margin-right: 10px;"
                 @change="condiChange($event, ccitem)">
-                <el-option :label="opx.name" :value="opx.code" v-for="opx in attrTableData"
-                  :key="opx.code"></el-option>
+                <el-option :label="opx.name" :value="opx.code" v-for="opx in attrTableData" :key="opx.code"></el-option>
               </el-select>
               <el-select placeholder="判断符" v-model="ccitem.compare" style="width: 100px;margin-right: 10px;">
                 <el-option label="等于" value="=" v-if="ccitem.valtype != 'Date'"></el-option>
@@ -378,29 +389,32 @@
               </el-select>
 
               <el-input v-if="ccitem.valtype == 'Double' || ccitem.valtype == 'Long'" v-model="ccitem.val"
-                  style="width: 120px" type="number" placeholder="输入比较值" />
-                <el-input v-else-if="ccitem.valtype == 'String'" v-model="ccitem.val" type="text" placeholder="输入比较值"
-                  style="width: 120px" />
-                <el-select v-else-if="ccitem.valtype == 'Enum'" placeholder="请选择比较值" v-model="ccitem.val" @visible-change="enumVisibleChange($event, ccitem)"
-                  style="width: 120px;">
-                  <el-option v-for="(option, oi) in enumArr" :key="oi" :label="option.key"
-                    :value="option.value"></el-option>
-                </el-select>
-                <el-select v-else-if="ccitem.valtype == 'Bool'" placeholder="请选择布尔值" v-model="ccitem.val"
-                  style="width: 120px;">
-                  <el-option label="真" value="True"></el-option>
-                  <el-option label="假" value="False"></el-option>
-                </el-select>
-                <el-date-picker v-else-if="ccitem.valtype == 'Date'" style="width: 120px;" v-model="ccitem.val"
-                  value-format="timestamp" type="datetime" placeholder="请选择日期和时间">
-                </el-date-picker>
-              <i class="el-icon-delete" style="color: #ff0000;cursor: pointer;margin-left:10px;" @click="onDelEvtCondition(cidx)"></i>
+                style="width: 120px" type="number" placeholder="输入比较值" />
+              <el-input v-else-if="ccitem.valtype == 'String'" v-model="ccitem.val" type="text" placeholder="输入比较值"
+                style="width: 120px" />
+              <el-select v-else-if="ccitem.valtype == 'Enum'" placeholder="请选择比较值" v-model="ccitem.val"
+                @visible-change="enumVisibleChange($event, ccitem)" style="width: 120px;">
+                <el-option v-for="(option, oi) in enumArr" :key="oi" :label="option.key"
+                  :value="option.value"></el-option>
+              </el-select>
+              <el-select v-else-if="ccitem.valtype == 'Bool'" placeholder="请选择布尔值" v-model="ccitem.val"
+                style="width: 120px;">
+                <el-option label="真" value="True"></el-option>
+                <el-option label="假" value="False"></el-option>
+              </el-select>
+              <el-date-picker v-else-if="ccitem.valtype == 'Date'" style="width: 120px;" v-model="ccitem.val"
+                value-format="timestamp" type="datetime" placeholder="请选择日期和时间">
+              </el-date-picker>
+              <i class="el-icon-delete" style="color: #ff0000;cursor: pointer;margin-left:10px;"
+                @click="onDelEvtCondition(cidx)"></i>
             </div>
           </div>
         </el-form-item>
-        <el-form-item v-if="activeDefinition == 'event'&&eventFrom.CondType==3&&eventFrom.PropConditions!=null&&eventFrom.PropConditions.length > 1" label="条件组合">
+        <el-form-item
+          v-if="activeDefinition == 'event' && eventFrom.CondType == 3 && eventFrom.PropConditions != null && eventFrom.PropConditions.length > 1"
+          label="条件组合">
           <div class="dlg-gg-row">
-            <el-input v-model="eventFrom.GroupTxt" placeholder="输入条件组关系表达式  &为与，|为或"/>
+            <el-input v-model="eventFrom.GroupTxt" placeholder="输入条件组关系表达式  &为与，|为或" />
             <el-alert title="使用表达式构建复杂逻辑，例如: (A & B) | C" type="warning" :closable="false"></el-alert>
           </div>
         </el-form-item>
@@ -431,7 +445,7 @@
           <span style="color:#0055FF;cursor: pointer;" @click="openParamsDrawer('inputs')">+输入参数</span>
         </el-form-item>
         <el-form-item label="输出参数" v-if="activeDefinition == 'event'">
-          <div v-if="inputsList.length > 0">
+          <div v-if="outputsList.length > 0">
             <div class="param_list" v-for="(item, inx) in outputsList" :key="inx">
               <div class="list_left">
                 <span>{{ item.name }}</span>
@@ -446,9 +460,10 @@
           <span style="color:#0055FF;cursor: pointer;" @click="openParamsDrawer('outputs')">+输出参数</span>
         </el-form-item>
         <type-form ref="typeFormAssembly" v-if="activeDefinition == 'attribute' || activeDefinition == 'expands'"
-          :activeDefinition="activeDefinition" :enumKeyList="enumKeyList" :paramsForm="paramsForm" :attrTableData="attrTableData"
-          @changeMapcode="changeMapcode" @setCurType="setCurType"></type-form>
-        <el-alert  v-if="activeDefinition == 'expands'&&expandsForm.code=='state'" title="只有设备运行状态在枚举值里时，属性才能变更设备的运行状态" type="warning" :closable="false"></el-alert>
+          :activeDefinition="activeDefinition" :enumKeyList="enumKeyList" :paramsForm="paramsForm"
+          :attrTableData="attrTableData" @changeMapcode="changeMapcode" @setCurType="setCurType"></type-form>
+        <el-alert v-if="activeDefinition == 'expands' && expandsForm.code == 'state'" title="只有设备运行状态在枚举值里时，属性才能变更设备的运行状态"
+          type="warning" :closable="false"></el-alert>
         <div v-if="activeDefinition == 'function'">
           <span style="color: #72767b;line-height: 45px;margin-top: 10px;">功能执行</span>
           <div style="padding: 10px 10px;">
@@ -481,7 +496,8 @@
                 </el-option>
               </el-select>
             </div>
-            <div v-if="funcFrom.downway == 4" style="padding:15px 20px 15px 20px;border:solid 1px #dadada;background-color: #fafafa;text-align: center;">
+            <div v-if="funcFrom.downway == 4"
+              style="padding:15px 20px 15px 20px;border:solid 1px #dadada;background-color: #fafafa;text-align: center;">
               <el-button type="primary" plain @click="onEditGraph">打开图形化编程器</el-button>
             </div>
           </div>
@@ -499,15 +515,17 @@
           <el-input v-model="paramsForm.name" placeholder="请输入字段名称" />
         </el-form-item>
         <el-form-item label="标识符" prop="code">
-          <el-input v-model="paramsForm.code" placeholder="请输入标识符" @input="paramsForm.code = paramsForm.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')" :disabled="isEditCode && paramsForm.code != ''" />
+          <el-input v-model="paramsForm.code" placeholder="请输入标识符"
+            @input="paramsForm.code = paramsForm.code.replace(/[^a-zA-Z0-9_]{1,50}$/g, '')"
+            :disabled="isEditCode && paramsForm.code != ''" />
           <span style="font-size:14px;color:#909399">
             <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="margin-right:5px;font-size:14px;"></i>1到50位字母，数字，下划线
           </span>
         </el-form-item>
         <el-form-item label="数据类型" prop="type">
           <el-select v-model="paramsForm.type" placeholder="请选择数据类型" style="width:100%" @change="onIptChg">
-            <el-option v-for="item in typeList" v-show="item.paramshow" :key="item.value"
-              :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in typeList" v-show="item.paramshow" :key="item.value" :label="item.label"
+              :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <enum-item v-model="paramsForm" v-if="paramsForm.type == 'enum'" :hasKey="true"></enum-item>
@@ -523,8 +541,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="备注" prop="remark" v-if="activeParams == 'inputs'">
-          <el-input  type="textarea" :rows="2" placeholder="请输入备注说明"
-            v-model="paramsForm.remark"></el-input>
+          <el-input type="textarea" :rows="2" placeholder="请输入备注说明" v-model="paramsForm.remark"></el-input>
         </el-form-item>
       </el-form>
       <div class="demo-drawer__footer" style="text-align: center;margin-top:40p;padding-bottom:20px">
@@ -532,12 +549,13 @@
         <el-button type="primary" @click="joinParams" :loading="paramsLoading">{{ paramsLoading ? '提交中 ...' : '确 定'}}</el-button>
       </div>
     </el-drawer>
-  
+
 
     <edit-product-info ref="editProduct" :productInfo="productInfos" @saveInfo="saveInfo"></edit-product-info>
 
     <copy-item ref="cpyRef" @ok="confirmCopy"></copy-item>
-    <graph-code-dialog v-if="funcFrom.downway==4" ref="graphDlg" :initval="funcFrom.downdata" @confirm="funcFrom.downdata=$event"></graph-code-dialog>
+    <graph-code-dialog v-if="funcFrom.downway == 4" ref="graphDlg" :initval="funcFrom.downdata"
+      @confirm="funcFrom.downdata = $event"></graph-code-dialog>
   </div>
 </template>
 <script>
@@ -567,7 +585,7 @@ let funModbus = () => import("./components/funModbus.vue")
 let paramItem = () => import("../funInput/paramItem.vue")
 let enumItem = () => import("../funInput/enumItem.vue")
 let GraphCodeDialog = () => import("./components/GraphCodeDialog")
-let DynamicAddDropdown= () => import("./components/DynamicAddDropdown.vue");
+let DynamicAddDropdown = () => import("./components/DynamicAddDropdown.vue");
 import Sortable from 'sortablejs';
 
 export default {
@@ -652,16 +670,16 @@ export default {
     return {
       curType: null, //当前物模型数据类型
       typeList: [
-        { alabel: "信号", label: "信号强度", value: "signal",paramshow:false },
-        { alabel: "状态", label: "运行状态", value: "state",paramshow:false },
-        { alabel: "整型", label: "整型(Int)", value: "int",paramshow:true},
-        { alabel: "浮点", label: "浮点型(Float)", value: "float",paramshow:true },
-        { alabel: "字符", label: "字符型(String)", value: "string",paramshow:true },
-        { alabel: "时间", label: "时间型(Date)", value: "date",paramshow:true },
-        { alabel: "布尔", label: "布尔型(Boolean)", value: "boolean",paramshow:true },
-        { alabel: "枚举", label: "枚举型(Enum)", value: "enum",paramshow:true },
-        { alabel: "文件", label: "文件类型(File)", value: "file",paramshow:false },
-        { alabel: "位置", label: "设备位置(Geo)", value: "geo",paramshow:false }
+        { alabel: "信号", label: "信号强度", value: "signal", paramshow: false },
+        { alabel: "状态", label: "运行状态", value: "state", paramshow: false },
+        { alabel: "整型", label: "整型(Int)", value: "int", paramshow: true },
+        { alabel: "浮点", label: "浮点型(Float)", value: "float", paramshow: true },
+        { alabel: "字符", label: "字符型(String)", value: "string", paramshow: true },
+        { alabel: "时间", label: "时间型(Date)", value: "date", paramshow: true },
+        { alabel: "布尔", label: "布尔型(Boolean)", value: "boolean", paramshow: true },
+        { alabel: "枚举", label: "枚举型(Enum)", value: "enum", paramshow: true },
+        { alabel: "文件", label: "文件类型(File)", value: "file", paramshow: false },
+        { alabel: "位置", label: "设备位置(Geo)", value: "geo", paramshow: false }
       ], //数据类型列表
       attrCodeList: [], //用于判断是否包含了该属性定义
       expandsCodeList: [], //用于判断是否包含了该标签
@@ -672,7 +690,7 @@ export default {
       activeCodeList: [],
       NetworkWayName: "",
       enumKeyList: [], //枚举key的列表
-      enableStore:false,
+      enableStore: false,
       isEdit: false, //判断是否是修改数据
       activeParams: "", //inputs,outputs
       inputsList: [], //输入参数列表
@@ -695,7 +713,7 @@ export default {
         //属性定义
         name: "", //名称
         code: "", //标识符
-        prefixcode:"",//标识符前缀
+        prefixcode: "",//标识符前缀
         description: "", //描述
         option: {}
       },
@@ -712,7 +730,7 @@ export default {
         //功能定义
         name: "", //名称
         code: "", //标识符
-        prefixcode:"",//标识符前缀
+        prefixcode: "",//标识符前缀
         description: "", //描述
         showway: "org,own,use,person",
         downway: 0,
@@ -725,8 +743,8 @@ export default {
         name: "", //名称
         code: "", //标识符
         Level: null,
-        CondType:0,
-        Targets:["org"],
+        CondType: 0,
+        Targets: ["org"],
         SilenceTime: 86400,
         description: "" //描述
       },
@@ -797,7 +815,7 @@ export default {
       ],
       expandsTableColumnsList: [
         { filed: "name", filedName: "名称" },
-        { filed: "code", filedName: "标识符" }, 
+        { filed: "code", filedName: "标识符" },
         { filed: "type", filedName: "类型" },
         { filed: "unit", filedName: "单位" },
         { filed: "value", filedName: "默认值" },
@@ -813,7 +831,7 @@ export default {
       activeModelLine: -1, //当前修改的行是
       activeParamsLine: -1, //当前修改的参数是哪一行
       isFirstGet: true, //是不是第一次获取协议数据
-      ChannelData:null,
+      ChannelData: null,
       fileType: ["png", "jpg", "jpeg", "gif"],
       // 大小限制(MB)
       fileSize: 10,
@@ -824,7 +842,7 @@ export default {
         { label: "紧急", value: 2 }
       ], //告警级别列表
       showarr: [],
-      showpparr:[],
+      showpparr: [],
       showsort: false,
       searchTxt: "",
       enumArr: [],
@@ -871,7 +889,7 @@ export default {
           if (this.funcFrom.downdata == null || this.funcFrom.downdata == "") {
             return [];
           }
-          return JSON.parse(this.funcFrom.downdata)||[];
+          return JSON.parse(this.funcFrom.downdata) || [];
         }
         else {
           return [];
@@ -893,73 +911,73 @@ export default {
           this.openAttrDrawer();
           break;
         case "codeItem":
-          if(this.activeDefinition=="attribute"){
+          if (this.activeDefinition == "attribute") {
             this.openAttrDrawer();
-            let tmpdata = JSON.parse(params.codeItem.OptionData)||{}; 
+            let tmpdata = JSON.parse(params.codeItem.OptionData) || {};
             for (let propName in tmpdata) {
-                this.attrFrom[propName]=tmpdata[propName]
+              this.attrFrom[propName] = tmpdata[propName]
             }
-            this.attrFrom.name=params.codeItem.Name||"";
-            this.attrFrom.code=params.codeItem.Code||"";
-            this.attrFrom.prefixcode="";
-            this.attrFrom.isfixed=true;
+            this.attrFrom.name = params.codeItem.Name || "";
+            this.attrFrom.code = params.codeItem.Code || "";
+            this.attrFrom.prefixcode = "";
+            this.attrFrom.isfixed = true;
             this.curType = this.attrFrom.option.type;
             this.$nextTick(() => {
-                if (this.$refs["typeFormAssembly"]) {
-                  this.$refs["typeFormAssembly"].setNOtInputsType(this.attrFrom); //执行子组件typeForm的setNOtInputsType方法
-                }
+              if (this.$refs["typeFormAssembly"]) {
+                this.$refs["typeFormAssembly"].setNOtInputsType(this.attrFrom); //执行子组件typeForm的setNOtInputsType方法
+              }
             });
           }
-          else if(this.activeDefinition=="function"){
+          else if (this.activeDefinition == "function") {
             this.openAttrDrawer();
-            let tmpdata = JSON.parse(params.codeItem.OptionData)||{}; 
+            let tmpdata = JSON.parse(params.codeItem.OptionData) || {};
             for (let propName in tmpdata) {
-                this.funcFrom[propName]=tmpdata[propName]
+              this.funcFrom[propName] = tmpdata[propName]
             }
-            this.funcFrom.name=params.codeItem.Name||"";
-            this.funcFrom.code=params.codeItem.Code||"";
-            this.funcFrom.prefixcode="";
-            this.funcFrom.isfixed=true;
-            this.funcFrom.showway="org,own,use,person";
+            this.funcFrom.name = params.codeItem.Name || "";
+            this.funcFrom.code = params.codeItem.Code || "";
+            this.funcFrom.prefixcode = "";
+            this.funcFrom.isfixed = true;
+            this.funcFrom.showway = "org,own,use,person";
           }
-          else if(this.activeDefinition=="event"){
+          else if (this.activeDefinition == "event") {
             this.openAttrDrawer();
-            let tmpdata = JSON.parse(params.codeItem.OptionData)||{}; 
+            let tmpdata = JSON.parse(params.codeItem.OptionData) || {};
             for (let propName in tmpdata) {
-                this.eventFrom[propName]=tmpdata[propName]
+              this.eventFrom[propName] = tmpdata[propName]
             }
-            this.eventFrom.name=params.codeItem.Name||"";
-            this.eventFrom.code=params.codeItem.Code||"";
-            this.eventFrom.Targets=["org"];
-            this.eventFrom.isfixed=true;
+            this.eventFrom.name = params.codeItem.Name || "";
+            this.eventFrom.code = params.codeItem.Code || "";
+            this.eventFrom.Targets = ["org"];
+            this.eventFrom.isfixed = true;
           }
 
           break;
       }
     },
-   
+
     //修改固件列表
-    filesUnload(val){
-        let tmpmodeltsl=JSON.parse(this.productInfos.ModelTSL)
-        tmpmodeltsl.firmwares=val;
-        console.info(tmpmodeltsl);
-        this.productInfos.ModelTSL = JSON.stringify(tmpmodeltsl);
-        this.saveLoading = true;
-        editProduct({
-          id: this.productInfos.Id,
-          ModelTSL: this.productInfos.ModelTSL
-        }).then(rsp => {
-          if (rsp.code == 0) {
-            this.$modal.msgSuccess("保存成功");
-            this.saveLoading = false;
-            this.getProductInfo();
-          }
-        }).catch(err=>{
+    filesUnload(val) {
+      let tmpmodeltsl = JSON.parse(this.productInfos.ModelTSL)
+      tmpmodeltsl.firmwares = val;
+      console.info(tmpmodeltsl);
+      this.productInfos.ModelTSL = JSON.stringify(tmpmodeltsl);
+      this.saveLoading = true;
+      editProduct({
+        id: this.productInfos.Id,
+        ModelTSL: this.productInfos.ModelTSL
+      }).then(rsp => {
+        if (rsp.code == 0) {
+          this.$modal.msgSuccess("保存成功");
           this.saveLoading = false;
-        });
-      
+          this.getProductInfo();
+        }
+      }).catch(err => {
+        this.saveLoading = false;
+      });
+
     },
-    exportRow(row,isAll) {
+    exportRow(row, isAll) {
       let tmploading = this.$loading({
         lock: true,
         text: "导出中...",
@@ -969,9 +987,9 @@ export default {
         t: this.activeDefinition,
         items: []
       };
-      if(isAll){
-        msgitem.items=JSON.parse(JSON.stringify(row))
-      }else{
+      if (isAll) {
+        msgitem.items = JSON.parse(JSON.stringify(row))
+      } else {
         msgitem.items.push(row);
       }
       let tmname = this.activeDefinition;
@@ -990,7 +1008,7 @@ export default {
         window.URL.revokeObjectURL(blobData)
       }
     },
-    handleImport(file){
+    handleImport(file) {
       let tmploading = this.$loading({
         lock: true,
         text: "导入中...",
@@ -998,55 +1016,55 @@ export default {
       });
       const reader = new FileReader()
       reader.readAsText(file)
-      reader.onload = async (e)=> {
+      reader.onload = async (e) => {
         const str = e.target.result
         const jsonData = JSON.parse(str)
 
-        if(jsonData.t!=this.activeDefinition){
+        if (jsonData.t != this.activeDefinition) {
           this.$modal.msgError("导入类型错误");
           tmploading.close();
           return;
         }
         let tmpmodeltsl = JSON.parse(this.productInfos.ModelTSL);
-        switch(this.activeDefinition){
+        switch (this.activeDefinition) {
           case "attribute":
             jsonData.items.forEach(item => {
-              let hasfindIndex=tmpmodeltsl.properties.findIndex(rw=>rw.code==item.code)
-              if(hasfindIndex==-1){
+              let hasfindIndex = tmpmodeltsl.properties.findIndex(rw => rw.code == item.code)
+              if (hasfindIndex == -1) {
                 tmpmodeltsl.properties.push(item);
-              }else if(hasfindIndex!==undefined){
-                tmpmodeltsl.properties[hasfindIndex]=JSON.parse(JSON.stringify(item))
+              } else if (hasfindIndex !== undefined) {
+                tmpmodeltsl.properties[hasfindIndex] = JSON.parse(JSON.stringify(item))
               }
-              
+
             });
             break;
           case "function":
             jsonData.items.forEach(item => {
-              let hasfindIndex=tmpmodeltsl.functions.findIndex(rw=>rw.code==item.code)
-              if(hasfindIndex==-1){
+              let hasfindIndex = tmpmodeltsl.functions.findIndex(rw => rw.code == item.code)
+              if (hasfindIndex == -1) {
                 tmpmodeltsl.functions.push(item);
-              }else if(hasfindIndex!==undefined){
-                tmpmodeltsl.functions[hasfindIndex]=JSON.parse(JSON.stringify(item))
+              } else if (hasfindIndex !== undefined) {
+                tmpmodeltsl.functions[hasfindIndex] = JSON.parse(JSON.stringify(item))
               }
             });
             break;
           case "event":
             jsonData.items.forEach(item => {
-              let hasfindIndex=tmpmodeltsl.events.findIndex(rw=>rw.code==item.code)
-              if(hasfindIndex==-1){
+              let hasfindIndex = tmpmodeltsl.events.findIndex(rw => rw.code == item.code)
+              if (hasfindIndex == -1) {
                 tmpmodeltsl.events.push(item);
-              }else if(hasfindIndex!==undefined){
-                tmpmodeltsl.events[hasfindIndex]=JSON.parse(JSON.stringify(item))
+              } else if (hasfindIndex !== undefined) {
+                tmpmodeltsl.events[hasfindIndex] = JSON.parse(JSON.stringify(item))
               }
             });
             break;
           case "expands":
             jsonData.items.forEach(item => {
-              let hasfindIndex=tmpmodeltsl.tags.findIndex(rw=>rw.code==item.code)
-              if(hasfindIndex==-1){
+              let hasfindIndex = tmpmodeltsl.tags.findIndex(rw => rw.code == item.code)
+              if (hasfindIndex == -1) {
                 tmpmodeltsl.tags.push(item);
-              }else if(hasfindIndex!==undefined){
-                tmpmodeltsl.tags[hasfindIndex]=JSON.parse(JSON.stringify(item))
+              } else if (hasfindIndex !== undefined) {
+                tmpmodeltsl.tags[hasfindIndex] = JSON.parse(JSON.stringify(item))
               }
             });
             break;
@@ -1061,7 +1079,7 @@ export default {
             this.$modal.msgSuccess("导入成功");
             this.getProductInfo();
           }
-        }).catch(er=>{
+        }).catch(er => {
           tmploading.close();
           return
         });
@@ -1115,7 +1133,7 @@ export default {
               this.saveLoading = false;
               this.getProductInfo();
             }
-          }).catch(err=>{
+          }).catch(err => {
             this.saveLoading = false;
           });
         },
@@ -1147,49 +1165,49 @@ export default {
           this.saveLoading = false;
           this.getProductInfo();
         }
-      }).catch(err=>{
+      }).catch(err => {
         this.saveLoading = false;
       });
     },
     onDownWayChange(val) {
       this.funcFrom.downdata = "";
       this.funcFrom.downway = val;
-      if(val==4){
-        this.$nextTick(()=>{
-          setTimeout(()=>{
+      if (val == 4) {
+        this.$nextTick(() => {
+          setTimeout(() => {
             this.$refs.graphDlg.open();
-          },200)
+          }, 200)
         })
       }
     },
-    onEditGraph(){
+    onEditGraph() {
       this.$refs.graphDlg.open();
     },
     setCurType(curType) {
 
-      if(this.curType!=curType){
-        if(this.activeDefinition == 'expands'){
-          this.expandsForm.option.type=curType;
-          if(curType=="geo"){
-            if(this.expandsForm.value==0){
-              this.expandsForm.value={"lng":0,"lat":0};
-            } 
+      if (this.curType != curType) {
+        if (this.activeDefinition == 'expands') {
+          this.expandsForm.option.type = curType;
+          if (curType == "geo") {
+            if (this.expandsForm.value == 0) {
+              this.expandsForm.value = { "lng": 0, "lat": 0 };
+            }
           }
-          else if(curType=="boolean"){
-            this.expandsForm.value="false";
+          else if (curType == "boolean") {
+            this.expandsForm.value = "false";
           }
-          else if(curType=="date"){
-            this.expandsForm.value=new Date().getTime();
+          else if (curType == "date") {
+            this.expandsForm.value = new Date().getTime();
           }
-          else if(curType=="int"||curType=="float"){
-            this.expandsForm.value=0;
+          else if (curType == "int" || curType == "float") {
+            this.expandsForm.value = 0;
           }
-          else{
-            this.expandsForm.value="";
+          else {
+            this.expandsForm.value = "";
           }
         }
-        else if(this.activeDefinition == 'attribute'){
-          this.attrFrom.option.type=curType;
+        else if (this.activeDefinition == 'attribute') {
+          this.attrFrom.option.type = curType;
         }
       }
       this.curType = curType;
@@ -1217,63 +1235,63 @@ export default {
       this.openAttrDrawer();
       this.$nextTick(() => {
         if (this.$refs["typeFormAssembly"]) {
-          if(type=='state'){
-            this.expandsForm={
-              code:'state',
-              enable:true,
-              mapcode:'',
-              name:'运行状态',
-              option:{
-                elements:{
-                  '正常':'正常',
-                  '维修':'维修',
-                  '保养':'保养'
+          if (type == 'state') {
+            this.expandsForm = {
+              code: 'state',
+              enable: true,
+              mapcode: '',
+              name: '运行状态',
+              option: {
+                elements: {
+                  '正常': '正常',
+                  '维修': '维修',
+                  '保养': '保养'
                 },
-                type:"enum"
+                type: "enum"
               },
-              value:'正常'
+              value: '正常'
             }
             this.$refs["typeFormAssembly"].setNOtInputsType(this.expandsForm); //直接赋值已有值
-          }else if(type=='signal'){
-            this.expandsForm={
-              code:'signal',
-              enable:true,
-              mapcode:'',
-              name:'信号强度',
-              option:{
-                max:9999,
-                min:0,
-                unit:'dBm',
-                decimals:2,
-                type:"float"
+          } else if (type == 'signal') {
+            this.expandsForm = {
+              code: 'signal',
+              enable: true,
+              mapcode: '',
+              name: '信号强度',
+              option: {
+                max: 9999,
+                min: 0,
+                unit: 'dBm',
+                decimals: 2,
+                type: "float"
               },
-              value:0
+              value: 0
             }
             this.$refs["typeFormAssembly"].setNOtInputsType(this.expandsForm); //直接赋值已有值
           }
-          else{
+          else {
             this.$refs["typeFormAssembly"].setTypeVal(type);
             this.curType = type;
-            this.expandsForm.option.type=this.curType;
-            if(this.curType=="geo"){
-              if(this.expandsForm.value==0){
-                this.expandsForm.value={"lng":0,"lat":0};
+            this.expandsForm.option.type = this.curType;
+            if (this.curType == "geo") {
+              if (this.expandsForm.value == 0) {
+                this.expandsForm.value = { "lng": 0, "lat": 0 };
               }
             }
-            else if(this.curType=="boolean"){
-              this.expandsForm.value="false";
+            else if (this.curType == "boolean") {
+              this.expandsForm.value = "false";
             }
-            else if(this.curType=="date"){
-              this.expandsForm.value=new Date().getTime();
+            else if (this.curType == "date") {
+              this.expandsForm.value = new Date().getTime();
             }
-            else if(this.curType=="int"||this.curType=="float"){
-              this.expandsForm.value=0;
+            else if (this.curType == "int" || this.curType == "float") {
+              this.expandsForm.value = 0;
             }
-            else{
-              this.expandsForm.value="";
+            else {
+              this.expandsForm.value = "";
             }
           }
-          
+
         }
       });
     },
@@ -1327,13 +1345,7 @@ export default {
       //编辑添加的参数
       this.openParamsDrawer(statusType);
       this.paramsForm = row;
-      if (statusType != "inputs") {
-        this.$nextTick(() => {
-          if (this.$refs["typeFormAssembly"]) {
-            this.$refs["typeFormAssembly"].setNOtInputsType(this.paramsForm);
-          }
-        });
-      } else {
+      if (statusType == "inputs") {
         this.paramsForm.disabledDef = this.paramsForm.defval == null;
         this.$nextTick(() => {
           if (this.$refs["typeFormAssembly"]) {
@@ -1374,14 +1386,14 @@ export default {
         this.attrFrom = JSON.parse(JSON.stringify(row));
         if (this.attrFrom.showway == null) {
           this.attrFrom.showway = "org,own,use,person";
-          this.showpparr=["org","own","use","person"];
+          this.showpparr = ["org", "own", "use", "person"];
         }
         else {
           this.showpparr = this.attrFrom.showway.split(',');
         }
         this.curType = this.attrFrom.option.type;
-        if(this.attrFrom.prefixcode==null){
-          this.$set(this.attrFrom,"prefixcode","");
+        if (this.attrFrom.prefixcode == null) {
+          this.$set(this.attrFrom, "prefixcode", "");
         }
         this.$nextTick(() => {
           if (this.$refs["typeFormAssembly"]) {
@@ -1391,8 +1403,8 @@ export default {
       }
       else if (this.activeDefinition == "expands") {
         this.expandsForm = JSON.parse(JSON.stringify(row));
-        if(this.expandsForm.option.type=="geo"){
-          this.$set(this.expandsForm,"value",{"lng":0,"lat":0});
+        if (this.expandsForm.option.type == "geo") {
+          this.$set(this.expandsForm, "value", { "lng": 0, "lat": 0 });
         }
         this.curType = this.expandsForm.option.type;
         this.$nextTick(() => {
@@ -1410,12 +1422,12 @@ export default {
         else {
           this.showarr = this.funcFrom.showway.split(',');
         }
-        if(this.funcFrom.prefixcode==null){
-          this.$set(this.funcFrom,"prefixcode","");
+        if (this.funcFrom.prefixcode == null) {
+          this.$set(this.funcFrom, "prefixcode", "");
         }
 
-        if(this.funcFrom.actionway==null){
-          this.$set(this.funcFrom,"actionway",0);
+        if (this.funcFrom.actionway == null) {
+          this.$set(this.funcFrom, "actionway", 0);
         }
         this.inputsList = this.funcFrom.inputs;
         this.inputsCodeList = Array.from(this.funcFrom.inputs, ({ code }) => code);
@@ -1424,11 +1436,11 @@ export default {
         this.eventFrom = JSON.parse(JSON.stringify(row));
         this.outputsList = this.eventFrom.outputs;
         this.outputsCodeList = Array.from(this.eventFrom.outputs, ({ code }) => code);
-        if(this.eventFrom.Targets==null){
-          this.$set(this.eventFrom,"Targets",[]);
+        if (this.eventFrom.Targets == null) {
+          this.$set(this.eventFrom, "Targets", []);
         }
-        if(this.eventFrom.CondType==null){
-          this.$set(this.eventFrom,"CondType",0);
+        if (this.eventFrom.CondType == null) {
+          this.$set(this.eventFrom, "CondType", 0);
         }
       }
     },
@@ -1493,6 +1505,7 @@ export default {
       this.funcDrawer = false;
     },
     onIptChg() {
+      if (this.activeParams == "outputs") return;
       this.$refs.defParamVal.reset();
     },
     onParamEnabel(val) {
@@ -1503,40 +1516,33 @@ export default {
     joinParams() {
       //添加输入输出参数
       this.$refs["paramsForm"].validate(val1 => {
-        if (this.activeParams == 'outputs') {
-          this.$refs["typeFormAssembly"].$refs["typeForm"].validate(val => {
-            if (val && val1) {
-              this.paramsLoading = true;
-              if (this.activeParamsLine > -1) {
-                let option = this.$refs["typeFormAssembly"].setOptionsData();
-                this.outputsList[this.activeParamsLine] = option;
-              } else {
-                let option = this.$refs["typeFormAssembly"].setOptionsData();
-                this.outputsList.push(option);
-                this.outputsCodeList.push(option.code);
-              }
-              this.funcDrawer = false; //关闭弹窗
-              this.paramsLoading = false;
-            }
-          });
-        }
-        else {
-          if (val1) {
+        if (val1) {
+          this.paramsLoading = true;
+          if (this.activeParams == 'inputs') {
             this.paramsForm.defval = this.$refs.defParamVal.getVal();
             delete this.paramsForm.option;
             delete this.paramsForm.disabledDef;
-            this.paramsLoading = true;
+            
             if (this.activeParamsLine > -1) {
               this.inputsList[this.activeParamsLine] = this.paramsForm;
             } else {
               this.inputsList.push(this.paramsForm);
               this.inputsCodeList.push(this.paramsForm.code);
             }
-            this.funcDrawer = false; //关闭弹窗
-            this.paramsLoading = false;
+          }
+          else{
+           if (this.activeParamsLine > -1) {
+              this.outputsList[this.activeParamsLine] = this.paramsForm;
+            } else {
+              this.outputsList.push(this.paramsForm);
+              this.outputsCodeList.push(this.paramsForm.code);
+            }
           }
 
+          this.funcDrawer = false; //关闭弹窗
+          this.paramsLoading = false;
         }
+
 
       });
     },
@@ -1551,15 +1557,9 @@ export default {
         option: {}
       };
       if (statusType != "inputs") {
-        if (this.paramsRules.hasOwnPerporty('type')) {
-          delete this.paramsRules['type'];
-        }
         this.activeCodeList = JSON.parse(JSON.stringify(this.outputsCodeList));
       } else {
         this.paramsForm["disabledDef"] = true;
-        this.paramsRules['type'] = [
-          { required: true, trigger: "change", message: "请选择数据类型" },
-        ];
         this.activeCodeList = JSON.parse(JSON.stringify(this.inputsCodeList));
       }
       this.activeParamsLine = -1;
@@ -1578,13 +1578,13 @@ export default {
       //打开属性定义弹出层
       this.attrDrawer = true;
       this.isEditCode = false;
-      this.showarr = ['org','own','use','person'];
-      this.showpparr=["org","own","use","person"];
+      this.showarr = ['org', 'own', 'use', 'person'];
+      this.showpparr = ["org", "own", "use", "person"];
       this.attrFrom = {
         //属性定义
         name: "", //名称
         code: "", //标识符
-        prefixcode:"",//标识符前缀
+        prefixcode: "",//标识符前缀
         description: "", //描述
         option: {}
       };
@@ -1601,11 +1601,11 @@ export default {
         //功能定义
         name: "", //名称
         code: "", //标识符
-        prefixcode:"",//标识符前缀
+        prefixcode: "",//标识符前缀
         description: "", //描述
         showway: "org,own,use,person",
         downway: 0,
-        actionway:0,
+        actionway: 0,
         downdata: "",
         inputs: [], //输入参数
         outputs: [] //输出参数
@@ -1615,8 +1615,8 @@ export default {
         name: "", //名称
         code: "", //标识符
         Level: null,
-        CondType:0,
-        Targets:["org"],
+        CondType: 0,
+        Targets: ["org"],
         SilenceTime: 60,
         description: "", //描述
       };
@@ -1635,17 +1635,17 @@ export default {
     },
     saveSetData(params, editInfo) {
       //修改和添加数据对数据进行处理
-      let proModelTSL=JSON.parse(this.productInfos.ModelTSL)
-      let modelTSL = JSON.parse(JSON.stringify(proModelTSL));      
-      if(params=="modbus"){
-          if (!modelTSL.modbus) {
-            modelTSL.modbus = {};
-          }
-          if (editInfo) {
-            modelTSL.modbus = JSON.parse(JSON.stringify(editInfo));
-          }
+      let proModelTSL = JSON.parse(this.productInfos.ModelTSL)
+      let modelTSL = JSON.parse(JSON.stringify(proModelTSL));
+      if (params == "modbus") {
+        if (!modelTSL.modbus) {
+          modelTSL.modbus = {};
+        }
+        if (editInfo) {
+          modelTSL.modbus = JSON.parse(JSON.stringify(editInfo));
+        }
       }
-      else{
+      else {
         if (this.activeModelLine > -1) {
           if (this.activeDefinition == "attribute") {
             let option = this.$refs["typeFormAssembly"].setOptionsData();
@@ -1722,7 +1722,7 @@ export default {
           this.getProductInfo();
           // console.log("新增修改后表格数据", this.tableData);
         }
-      }).catch(err=>{
+      }).catch(err => {
         this.saveLoading = false;
       });
     },
@@ -1739,22 +1739,22 @@ export default {
             this.$refs["typeFormAssembly"].$refs["typeForm"]
           ) {
             this.$refs["typeFormAssembly"].$refs["typeForm"].validate(valid2 => {
-                if (valid2) {
-                  if (this.$refs["paramsForm"]) {
-                    //效验每个参数的name和code
-                    this.$refs["paramsForm"].validate(valid3 => {
-                      if (valid3) {
-                        this.saveSetData();
-                      } else {
-                        return false;
-                      }
-                    });
-                  } else {
-                    this.saveSetData();
-                  }
+              if (valid2) {
+                if (this.$refs["paramsForm"]) {
+                  //效验每个参数的name和code
+                  this.$refs["paramsForm"].validate(valid3 => {
+                    if (valid3) {
+                      this.saveSetData();
+                    } else {
+                      return false;
+                    }
+                  });
                 } else {
-                  return false;
+                  this.saveSetData();
                 }
+              } else {
+                return false;
+              }
             });
           } else {
             this.saveSetData();
@@ -1773,14 +1773,14 @@ export default {
       productInfo({ id: this.productId }).then(rsp => {
         if (rsp.code == 0) {
           this.productInfos = rsp.data;
-          this.enableStore=false;
-          if(this.productInfos.StorageConfig){
+          this.enableStore = false;
+          if (this.productInfos.StorageConfig) {
             let tmpstorageConfig = JSON.parse(this.productInfos.StorageConfig);
-            if(tmpstorageConfig.enable == '1'){
-              this.enableStore=true;
+            if (tmpstorageConfig.enable == '1') {
+              this.enableStore = true;
             }
           }
-     
+
           let jsonLis = JSON.parse(this.productInfos.ModelTSL);
 
           if (jsonLis.properties) {
@@ -1804,20 +1804,20 @@ export default {
           if (jsonLis.tags) {
             this.expandsTableData = jsonLis.tags;
             this.expandsCodeList = Array.from(jsonLis.tags, ({ code }) => code);
-            if(this.expandsCodeList.includes('state')){
-              this.typeList=this.typeList.filter(row=>row.value!='state')
+            if (this.expandsCodeList.includes('state')) {
+              this.typeList = this.typeList.filter(row => row.value != 'state')
             }
-            else{
-              this.typeList=this.typeList.filter(row=>row.value!='state')
-              this.typeList=[...[{ alabel: "状态", label: "运行状态", value: "state" }],...this.typeList]
+            else {
+              this.typeList = this.typeList.filter(row => row.value != 'state')
+              this.typeList = [...[{ alabel: "状态", label: "运行状态", value: "state" }], ...this.typeList]
             }
 
-            if(this.expandsCodeList.includes('signal')){
-              this.typeList=this.typeList.filter(row=>row.value!='signal')
+            if (this.expandsCodeList.includes('signal')) {
+              this.typeList = this.typeList.filter(row => row.value != 'signal')
             }
-            else{
-              this.typeList=this.typeList.filter(row=>row.value!='signal')
-              this.typeList=[...[{ alabel: "信号", label: "信号强度", value: "signal" }],...this.typeList]
+            else {
+              this.typeList = this.typeList.filter(row => row.value != 'signal')
+              this.typeList = [...[{ alabel: "信号", label: "信号强度", value: "signal" }], ...this.typeList]
             }
             // console.log(this.typeList,'this.typeListthis.typeList');
           }
@@ -1843,7 +1843,7 @@ export default {
                 JSON.stringify(this.expandsTableColumnsList)
               );
             } else {
-              if(this.activeDefinition == "attribute"){
+              if (this.activeDefinition == "attribute") {
                 this.tableColumnsList = [
                   { filed: "name", filedName: "名称" },
                   { filed: "code", filedName: "标识符" },
@@ -1851,14 +1851,14 @@ export default {
                   { filed: "unit", filedName: "单位" },
                   { filed: "description", filedName: "说明" }
                 ];
-              }else{
+              } else {
                 this.tableColumnsList = [
                   { filed: "name", filedName: "名称" },
                   { filed: "code", filedName: "标识符" },
                   { filed: "description", filedName: "说明" }
                 ];
               }
-              
+
             }
             // console.log("表格数据",this.tableData);
           }
@@ -1873,10 +1873,10 @@ export default {
     },
 
     to(path) {
-      if(!this.configLoading){
+      if (!this.configLoading) {
         this.activeSelect = path;
       }
-      
+
     },
     definitonSelect(path) {
       this.activeDefinition = path;
@@ -1896,7 +1896,7 @@ export default {
           JSON.stringify(this.expandsTableColumnsList)
         );
       } else {
-        if(this.activeDefinition == "attribute"){
+        if (this.activeDefinition == "attribute") {
           this.tableColumnsList = [
             { filed: "name", filedName: "名称" },
             { filed: "code", filedName: "标识符" },
@@ -1904,7 +1904,7 @@ export default {
             { filed: "unit", filedName: "单位" },
             { filed: "description", filedName: "说明" }
           ];
-        }else{
+        } else {
           this.tableColumnsList = [
             { filed: "name", filedName: "名称" },
             { filed: "code", filedName: "标识符" },
@@ -1933,7 +1933,7 @@ export default {
             JSON.stringify(this.expandsTableColumnsList)
           );
         } else {
-          if(this.activeDefinition == "attribute"){
+          if (this.activeDefinition == "attribute") {
             this.tableColumnsList = [
               { filed: "name", filedName: "名称" },
               { filed: "code", filedName: "标识符" },
@@ -1941,7 +1941,7 @@ export default {
               { filed: "unit", filedName: "单位" },
               { filed: "description", filedName: "说明" }
             ];
-          }else{
+          } else {
             this.tableColumnsList = [
               { filed: "name", filedName: "名称" },
               { filed: "code", filedName: "标识符" },
@@ -1959,10 +1959,10 @@ export default {
         });
       }
     },
-    onAddCondition(){
-      if(this.funcFrom.conditions==null){
-        this.$set(this.funcFrom,"conditions",[]);
-        this.$set(this.funcFrom,"GroupTxt","");
+    onAddCondition() {
+      if (this.funcFrom.conditions == null) {
+        this.$set(this.funcFrom, "conditions", []);
+        this.$set(this.funcFrom, "GroupTxt", "");
       }
       this.funcFrom.conditions.push({ code: "", valtype: "String", compare: "=", val: "" });
     },
@@ -1970,14 +1970,14 @@ export default {
     onDelCondition(idx) {
       this.$delete(this.funcFrom.conditions, idx);
     },
-    enumVisibleChange(visible,item){
+    enumVisibleChange(visible, item) {
       if (visible) {
         let newttt;
         let newlist = this.attrTableData.filter(x => x.code == item.code);
         if (newlist.length > 0) {
           newttt = newlist[0].option;
         }
-        else{
+        else {
           return;
         }
         this.enumArr = [];
@@ -1992,7 +1992,7 @@ export default {
       if (newlist.length > 0) {
         newttt = newlist[0].option;
       }
-      else{
+      else {
         return;
       }
 
@@ -2026,22 +2026,22 @@ export default {
       }
     },
 
-    onAddEvtCondition(){
-      if(this.eventFrom.PropConditions==null){
-        this.$set(this.eventFrom,"PropConditions",[]);
-        this.$set(this.eventFrom,"GroupTxt","");
+    onAddEvtCondition() {
+      if (this.eventFrom.PropConditions == null) {
+        this.$set(this.eventFrom, "PropConditions", []);
+        this.$set(this.eventFrom, "GroupTxt", "");
       }
-      if(this.eventFrom.PropConditions.length>=26){
-           this.$modal.msgError("超过条件数量");
-           return;
+      if (this.eventFrom.PropConditions.length >= 26) {
+        this.$modal.msgError("超过条件数量");
+        return;
       }
       this.eventFrom.PropConditions.push({ code: "", valtype: "String", compare: "=", val: "" });
     },
     onDelEvtCondition(idx) {
       this.$delete(this.eventFrom.PropConditions, idx);
     },
-    getCondName(idx){
-      var tarrnames=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    getCondName(idx) {
+      var tarrnames = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
       return tarrnames[idx];
     }
   }
@@ -2055,6 +2055,7 @@ export default {
   position: relative;
   cursor: pointer;
   height: 390px;
+
   .tags_info {
     position: absolute;
     right: 0;
@@ -2066,6 +2067,7 @@ export default {
     // text-align: right;
     word-break: break-all;
   }
+
   .tags_info::before {
     content: "";
     position: absolute;
@@ -2077,6 +2079,7 @@ export default {
     z-index: 2;
     border-radius: 2px;
   }
+
   .tags_info::after {
     content: '\2713';
     position: absolute;
@@ -2092,11 +2095,13 @@ export default {
     transform-origin: center center;
     color: #ffffff;
   }
+
   .script_label {
     color: #666666;
     font-size: 16px;
     margin: 0 0 10px 0;
   }
+
   .remark_cot {
     color: #666666;
     font-size: 12px;
@@ -2107,6 +2112,7 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .del_con {
     position: absolute;
     right: 10px;
@@ -2123,6 +2129,7 @@ export default {
     background: #ffffff;
   }
 }
+
 .data_table {
   .item-sort {
     box-shadow: 5px 5px 5px -2px rgba(0, 0, 0, .3);
@@ -2209,7 +2216,8 @@ export default {
     line-height: 38px;
     font-size: 16px;
   }
-  .name_text{
+
+  .name_text {
     display: flex;
     justify-content: center;
     align-items: center;

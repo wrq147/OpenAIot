@@ -3,7 +3,7 @@ using System;
 
 namespace IoTVideoService
 {
-    [Migration(20251211002)]
+    [Migration(20251219002)]
     public class IoTVideoMigrator : Migration
     {
         public override void Up()

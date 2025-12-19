@@ -68,18 +68,18 @@ namespace IoTRulesService
                         cfg.WithAutoDelete(true);
                     });
 
-                    await bus.PubSub.SubscribeAsync("IotRule", async (string msg) =>
+                    await bus.PubSub.SubscribeAsync("IotDownM", async (string msg) =>
                     {
                         await app.ServiceProvider.GetService<MessageRunner>().ParseDown(msg);
                     }, cfg =>
                     {
                         if (string.IsNullOrEmpty(option.Value.node_name))
                         {
-                            cfg.WithTopic("/device.down");
+                            cfg.WithTopic("/device.dwn");
                         }
                         else
                         {
-                            cfg.WithTopic("/device.down." + option.Value.node_name);
+                            cfg.WithTopic("/device.dwn." + option.Value.node_name);
                         }
                         cfg.WithAutoDelete(true);
                     });
