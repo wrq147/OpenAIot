@@ -12,7 +12,12 @@ namespace ChannelUtility.Message
         {
             MsgType = "AIDetectReq";
         }
+        public string NodeId { get; set; }
         public string DetType { get; set; }
+        /// <summary>
+        /// 是否启用绘制
+        /// </summary>
+        public bool IsDraw { get; set; }
         public Dictionary<string, string> DetParams { get; set; }
         public byte[] RgbFrame { get; set; }
         public int Width { get; set; }

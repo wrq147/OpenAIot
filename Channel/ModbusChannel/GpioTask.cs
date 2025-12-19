@@ -132,7 +132,7 @@ namespace ModbusChannel
             _controller.OpenPin(pin);
             _openPins.Add(pin);
         }
-        private async Task SuProductHandler(RequestMessage msg)
+        private async Task SuProductHandler(BaseDeviceMessage msg)
         {
             if (_dtuId != msg.DeviceId)
             {

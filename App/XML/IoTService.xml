@@ -2786,23 +2786,21 @@
             <param name="product"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.WaitDownReadProperty(System.String,System.String,System.String,System.Collections.Generic.List{System.String})">
+        <member name="M:IoTService.ServerBusProxy.WaitDownReadProperty(System.String,System.String,System.Collections.Generic.List{System.String})">
             <summary>
             读取指定设备的属性
             </summary>
             <param name="productId"></param>
             <param name="deviceId"></param>
-            <param name="networkWay"></param>
             <param name="properties"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.DownFunction(System.String,System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+        <member name="M:IoTService.ServerBusProxy.DownFunction(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
             执行指定功能
             </summary>
             <param name="productId"></param>
             <param name="deviceId"></param>
-            <param name="netway"></param>
             <param name="functionId"></param>
             <param name="inputs"></param>
             <returns></returns>
@@ -2816,13 +2814,12 @@
             <param name="channelConfig"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.DownModbusMessage(System.String,System.String,System.String,System.String)">
+        <member name="M:IoTService.ServerBusProxy.DownModbusMessage(System.String,System.String,System.String)">
             <summary>
             下发Modbus规则消息
             </summary>
             <param name="productId"></param>
             <param name="deviceId"></param>
-            <param name="networkWay"></param>
             <param name="matchName"></param>
             <returns></returns>
         </member>

@@ -5,21 +5,17 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FixVideoChannel
 {
     public class FixVideoDeviceEventListener : IDeviceEventListener
     {
         private IServiceProvider _serviceProvider;
-        public FixVideoDeviceEventListener(IServiceProvider provider)
+        private FixVideoService _service;
+        public FixVideoDeviceEventListener(IServiceProvider provider, FixVideoService service)
         {
             _serviceProvider = provider;
+            _service = service;
         }
 
 
@@ -35,7 +31,7 @@ namespace FixVideoChannel
             await eventBus.Connected(item.Id);
         }
 
-        public async Task OnSendAIDetectRequest(VideoCaptureItem item, string detectType, Dictionary<string, string> detectParams, byte[] rgbFrame, int width, int height)
+        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] rgbFrame, int width, int height)
         {
             using (var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height))
             using (var ms = new MemoryStream())
@@ -49,13 +45,24 @@ namespace FixVideoChannel
                 image.Save(ms, webpEncoder);
                 byte[] pressData = ms.ToArray();
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.PublishAIDetectRequest(item.Id, detectType, detectParams, pressData, width, height);
+                await eventBus.PublishAIDetectRequest(videoId, item.DetectType, item.DetectParams, item.EnableDraw, pressData, width, height);
             }
         }
 
-        public Task OnDeviceDownMessage(RequestMessage msg)
+        public async Task OnDeviceDownMessage(BaseDeviceMessage msg)
         {
-        
+            if (msg is AIDetectResponseMessage aiResponse)
+            {
+
+            }
+            else if (msg is UpVideoItemMessage upItemResponse)
+            {
+                await _service.VideoCaptureItemEvent(upItemResponse);
+            }
+            else if (msg is DelVideoItemMessage delItemResponse)
+            {
+                await _service.DelCaptureItemEvent(delItemResponse);
+            }
         }
 
     }

@@ -43,7 +43,7 @@ namespace ModbusChannel
             _send_interval = send_interval;
             _provider = provider;
         }
-        private async Task SuProductHandler(RequestMessage msg)
+        private async Task SuProductHandler(BaseDeviceMessage msg)
         {
             if (_dtuId != msg.DeviceId)
             {
@@ -161,7 +161,7 @@ namespace ModbusChannel
                     // 处理接收到的数据
                     byte[] newbytes = new byte[bytesReadLen];
                     Buffer.BlockCopy(_readBuffer, 0, newbytes, 0, bytesReadLen);
-                    await _eventBus.PublishRawUp(_dtuId, newbytes, string.Empty);
+                    await _eventBus.PublishRawUp(_dtuId, newbytes, string.Empty, true);
 
                 }
             }

@@ -42,7 +42,7 @@ namespace ModbusChannel
             _send_interval = send_interval;
             _provider = provider;
         }
-        private async Task SuProductHandler(RequestMessage msg)
+        private async Task SuProductHandler(BaseDeviceMessage msg)
         {
             if (_dtuId != msg.DeviceId)
             {
@@ -160,7 +160,7 @@ namespace ModbusChannel
                     FastWriter fw = new FastWriter();
                     fw.WriteBytes(_readBuffer, 0, bytesReadLen);
 
-                    await _eventBus.PublishRawUp(_dtuId, fw.ToArray(), string.Empty);
+                    await _eventBus.PublishRawUp(_dtuId, fw.ToArray(), string.Empty, true);
 
                 }
             }

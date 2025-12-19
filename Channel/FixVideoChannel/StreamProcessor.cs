@@ -1,12 +1,14 @@
-﻿using FFmpeg.AutoGen;
+﻿using ChannelUtility.Message;
+using FFmpeg.AutoGen;
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
 namespace FixVideoChannel
 {
-    public class RtspStreamProcessor : IDisposable
+    public class StreamProcessor : IDisposable
     {
         #region FFmpeg资源
         private IntPtr _inputFormatContextPtr;
@@ -20,10 +22,9 @@ namespace FixVideoChannel
         #endregion
 
         #region 依赖组件
-        private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
-        private List<AIDetectorTask> _aiDetectTaskList;
+        private volatile List<AIDetectorTask> _aiDetectTaskList;
         private readonly ZLMediaKitPusher _zlPusher;
-        private readonly string _rtspUrl;
+        private readonly string _inputUrl;
         private readonly string _pushUrl;
         #endregion
 
@@ -40,19 +41,13 @@ namespace FixVideoChannel
         private IntPtr _rgbToYuvSwsContextPtr;
         private IntPtr _yuvFramePtr;
         private bool _isProcessing = false;
-        private VideoCaptureItem _item;
+        private volatile VideoCaptureItem _item;
         private IDeviceEventListener _listener;
-        public VideoCaptureItem Item
-        {
-            get { return _item; }
-            set { _item = value; }
-        }
-
         // 构造函数
-        public RtspStreamProcessor(VideoCaptureItem item, List<AIDetectorTask> tasks, IDeviceEventListener listener)
+        public StreamProcessor(VideoCaptureItem item, List<AIDetectorTask> tasks, IDeviceEventListener listener)
         {
             _item = item;
-            _rtspUrl = item.PullAddr;
+            _inputUrl = item.PullAddr;
             _pushUrl = item.PushAddr;
             // 初始化组件
             _aiDetectTaskList = tasks;
@@ -66,18 +61,12 @@ namespace FixVideoChannel
         /// <param name="tasks"></param>
         public void UpdateDetectTask(List<AIDetectorTask> tasks)
         {
-            _rwLock.EnterWriteLock();
-            try
-            {
-                _aiDetectTaskList = tasks;
-            }
-            finally
-            {
-                // 确保释放写锁
-                _rwLock.ExitWriteLock();
-            }
+            _aiDetectTaskList = tasks ?? new List<AIDetectorTask>();
         }
-
+        public void UpdateItem(VideoCaptureItem item)
+        {
+            _item = item;
+        }
         /// <summary>
         /// 启动RTSP流处理
         /// </summary>
@@ -107,8 +96,8 @@ namespace FixVideoChannel
                     }
                 }
 
-                // 1. 打开RTSP流
-                OpenRtspStream();
+                // 1. 打开流
+                OpenStream();
 
                 // 2. 初始化编解码器
                 InitializeCodecs();
@@ -176,41 +165,66 @@ namespace FixVideoChannel
 
         #region FFmpeg核心操作
         /// <summary>
-        /// 打开RTSP流
+        /// 打开流
         /// </summary>
-        private void OpenRtspStream()
+        private void OpenStream()
         {
             unsafe
             {
                 AVFormatContext* inputFormatContext = (AVFormatContext*)_inputFormatContextPtr;
                 AVDictionary* options = null;
 
-                // 设置RTSP选项
-                ffmpeg.av_dict_set(&options, "rtsp_transport", "tcp", 0);
-                ffmpeg.av_dict_set(&options, "stimeout", "5000000", 0); // 5秒超时
-                ffmpeg.av_dict_set(&options, "buffer_size", "1024000", 0); // 缓冲区大小
+                // 根据URL协议类型设置不同的参数
+                var uri = new Uri(_inputUrl);
+                var protocol = uri.Scheme.ToLowerInvariant();
 
-                int errorCode = ffmpeg.avformat_open_input(&inputFormatContext, _rtspUrl, null, &options);
-                if (errorCode < 0)
+                switch (protocol)
                 {
-                    // 释放字典
-                    ffmpeg.av_dict_free(&options);
-                    throw new InvalidOperationException($"无法打开RTSP流: {GetFFmpegErrorDescription(errorCode)}");
+                    case "rtsp":
+                        // RTSP专属参数
+                        ffmpeg.av_dict_set(&options, "rtsp_transport", "tcp", 0);
+                        ffmpeg.av_dict_set(&options, "stimeout", "5000000", 0); // 5秒超时（微秒）
+                        ffmpeg.av_dict_set(&options, "buffer_size", "1024000", 0);
+                        break;
+                    case "rtmp":
+                        // RTMP专属参数
+                        ffmpeg.av_dict_set(&options, "timeout", "5000000", 0); // 5秒超时
+                        ffmpeg.av_dict_set(&options, "buffer_size", "1024000", 0);
+                        ffmpeg.av_dict_set(&options, "rtmp_connect_timeout", "5000", 0); // 连接超时（毫秒）
+                        break;
+                    case "http":
+                    case "https":
+                        // HTTP-FLV等协议参数
+                        ffmpeg.av_dict_set(&options, "timeout", "5000000", 0);
+                        break;
+                    default:
+                        // 通用参数
+                        ffmpeg.av_dict_set(&options, "timeout", "5000000", 0);
+                        break;
                 }
 
-                // 释放字典（avformat_open_input后不再需要）
+                // 打开流（FFmpeg自动识别协议）
+                int errorCode = ffmpeg.avformat_open_input(&inputFormatContext, _inputUrl, null, &options);
+                if (errorCode < 0)
+                {
+                    ffmpeg.av_dict_free(&options);
+                    throw new InvalidOperationException($"无法打开流（{protocol}）: {GetFFmpegErrorDescription(errorCode)}");
+                }
+
+                // 释放字典
                 ffmpeg.av_dict_free(&options);
 
                 // 更新IntPtr
                 _inputFormatContextPtr = (IntPtr)inputFormatContext;
 
+                // 获取流信息（通用逻辑）
                 errorCode = ffmpeg.avformat_find_stream_info(inputFormatContext, null);
                 if (errorCode < 0)
                 {
                     throw new InvalidOperationException($"无法获取流信息: {GetFFmpegErrorDescription(errorCode)}");
                 }
 
-                // 查找视频和音频流索引，并保存时间基
+                // 查找视频和音频流索引（通用逻辑）
                 for (int i = 0; i < inputFormatContext->nb_streams; i++)
                 {
                     AVStream* stream = inputFormatContext->streams[i];
@@ -220,7 +234,6 @@ namespace FixVideoChannel
                         _videoWidth = stream->codecpar->width;
                         _videoHeight = stream->codecpar->height;
                         _videoTimeBase = stream->time_base;
-                        // 初始化复用的RGB缓冲区
                         _reusableRgbBuffer = new byte[_videoWidth * _videoHeight * 3];
                     }
                     else if (stream->codecpar->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO && _audioStreamIndex == -1)
@@ -235,7 +248,6 @@ namespace FixVideoChannel
                     throw new InvalidOperationException("未找到视频流");
                 }
             }
-
         }
 
         /// <summary>
@@ -328,7 +340,7 @@ namespace FixVideoChannel
                 if (errorCode == ffmpeg.AVERROR_EOF)
                 {
                     _isProcessing = false;
-                    await _zlPusher.DisconnectAsync();
+                    _zlPusher.Disconnect();
                     CleanupFFmpegResources();
                     await _listener.OnEventOffline(_item);
                 }
@@ -367,7 +379,7 @@ namespace FixVideoChannel
                 StreamTaskScheduler.Instance.EnqueueProcessTask(this);
             }
         }
-
+        private int _increaseFrame = 0;
         /// <summary>
         /// 处理视频帧
         /// </summary>
@@ -437,22 +449,25 @@ namespace FixVideoChannel
                 // 3. 退出unsafe块后，执行异步AI检测
                 if (decodeSuccess)
                 {
-                    AIDetectorTask[] detectTasks = null;
-                    _rwLock.EnterReadLock();
-                    try
+                    ++_increaseFrame;
+                    if (_increaseFrame >= _item.FrameInterval)
                     {
-                        detectTasks = _aiDetectTaskList.ToArray();
-                    }
-                    finally
-                    {
-                        _rwLock.ExitReadLock();
+                        //发送给AI模块处理
+                        var detectTasks = _aiDetectTaskList?.ToArray() ?? Array.Empty<AIDetectorTask>();
+                        if (detectTasks != null && detectTasks.Length > 0)
+                        {
+                            // 并行执行AI检测任务，提高效率
+                            await Task.WhenAll(detectTasks.Select(t => t.Detect(_item.Id, _reusableRgbBuffer, _videoWidth, _videoHeight, _listener)));
+                        }
+
+                        //处理AI模块返回的绘画
+                        foreach (var t in detectTasks)
+                        {
+                            t.Draw(_reusableRgbBuffer, _videoWidth, _videoHeight);
+                        }
+                        _increaseFrame = 0;
                     }
 
-                    if (detectTasks != null && detectTasks.Length > 0)
-                    {
-                        // 并行执行AI检测任务，提高效率
-                        await Task.WhenAll(detectTasks.Select(t => t.Detect(_reusableRgbBuffer, _videoWidth, _videoHeight, _listener)));
-                    }
 
                     // 4. 重新进入unsafe块，将处理后的RGB编码为H264
                     unsafe
@@ -691,7 +706,7 @@ namespace FixVideoChannel
             _isDisposed = true;
         }
 
-        ~RtspStreamProcessor()
+        ~StreamProcessor()
         {
             Dispose(false);
         }

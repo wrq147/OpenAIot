@@ -47,7 +47,7 @@ namespace IoTRulesService.DataParser
         {
             _runner.PushConcurrentTask(rs.DeviceId, async () =>
             {
-                await _provider.GetService<PackParser>().rawDataTo(rs.DeviceId, rs.Data, rs.prefix, true).ConfigureAwait(false);
+                await _provider.GetService<PackParser>().rawDataTo(rs, true).ConfigureAwait(false);
             });
         }
         public async Task ExeMessage(BaseUpDeviceMessage rs)

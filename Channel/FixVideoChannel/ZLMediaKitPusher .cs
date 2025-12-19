@@ -213,7 +213,7 @@ namespace FixVideoChannel
         /// 断开与ZLMediaKit的连接
         /// </summary>
         /// <returns></returns>
-        public async Task DisconnectAsync()
+        public void Disconnect()
         {
             if (!_isConnected)
                 return;
@@ -468,7 +468,7 @@ namespace FixVideoChannel
             if (disposing)
             {
                 // 释放托管资源
-                _ = DisconnectAsync();
+                _ = Disconnect();
             }
 
             // 释放非托管资源

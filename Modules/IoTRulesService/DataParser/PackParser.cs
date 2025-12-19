@@ -383,16 +383,15 @@ namespace IoTRulesService.DataParser
             }
         }
 
-        public async Task DownModbusMatch(string productId, string deviceId, string networkWay, List<ModbusMatch> list)
+        public async Task DownModbusMatch(string nodeid, List<ModbusMatch> list)
         {
             ModbusMatchMessage msg = new ModbusMatchMessage();
-            msg.DeviceId = deviceId;
-            msg.ProductId = productId;
-            msg.MessageId = MyAccess.Core.StringTool.GetGUID();
+            msg.DeviceId = string.Empty;
+            msg.ProductId = string.Empty;
             msg.MatchList = list;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + networkWay + ".down").ConfigureAwait(false);
+            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
         }
         /// <summary>
         /// 直接调用下发消息
@@ -648,36 +647,36 @@ namespace IoTRulesService.DataParser
             }
         }
 
-        public async Task rawDataTo(string deviceId, byte[] payload, string codeprefix = "", bool sendconn = true)
+        public async Task rawDataTo(RawUpDataMessage datamsg, bool sendconn = true)
         {
             List<ModbusMatch> newmmlist = null;
             //获取物模型，防止在线设备未添加
-            var ret = await TslCache.GetTslModelByDtuId(deviceId, sendconn, _provider);
+            var ret = await TslCache.GetTslModelByDtuId(datamsg.DeviceId, sendconn, _provider);
             if (ret == null)
             {
-                await Print(deviceId, "设备上报消息", "尝试初始化失败，请绑定设备编码后重启您的设备");
+                await Print(datamsg.DeviceId, "设备上报消息", "尝试初始化失败，请绑定设备编码后重启您的设备");
                 return;
             }
             if (ret.Status == "0")
             {
-                if (payload.Length > 4096)
+                if (datamsg.Data.Length > 4096)
                 {
-                    await Print(deviceId, "设备上报消息", "因数据超过4096字节，无法在控制台显示");
+                    await Print(datamsg.DeviceId, "设备上报消息", "因数据超过4096字节，无法在控制台显示");
                 }
                 else
                 {
-                    await Print(deviceId, "设备上报消息", FastBufferHelper.ByteToHexStr(payload));
+                    await Print(datamsg.DeviceId, "设备上报消息", FastBufferHelper.ByteToHexStr(datamsg.Data));
                 }
             }
             if (ret.Model == null)
             {
-                await Print(deviceId, "设备上报消息", "物模型不存在");
+                await Print(datamsg.DeviceId, "设备上报消息", "物模型不存在");
                 return;
             }
             var tsl = ret.Model;
             string productId = ret.ProductId;
             bool isCute = false;
-            FastReader lastReader = BytesToReader(payload, deviceId);
+            FastReader lastReader = BytesToReader(datamsg.Data, datamsg.DeviceId);
             while (!lastReader.EndOfBuffer)
             {
                 Dictionary<string, object> propsDict = null;
@@ -730,8 +729,8 @@ namespace IoTRulesService.DataParser
                                 }
                                 if (crcrs)
                                 {
-                                    string callkey = "Func#" + slaveAddress + "#" + funcByte + "#" + startAddress + "#" + codeprefix;
-                                    await PushReply(deviceId, "ok", callkey);
+                                    string callkey = "Func#" + slaveAddress + "#" + funcByte + "#" + startAddress + "#" + datamsg.prefix;
+                                    await PushReply(datamsg.DeviceId, "ok", callkey);
                                     if (newmmlist == null)
                                     {
                                         newmmlist = new List<ModbusMatch>();
@@ -806,7 +805,7 @@ namespace IoTRulesService.DataParser
                                     if (newmmlist == null || newmmlist.Count == 0)
                                     {
                                         lastReader.Reset();
-                                        await Print(deviceId, "设备上报消息", $"modbus无匹配规则:{FastBufferHelper.ByteToHexStr(lastReader.ReadToEnd())}");
+                                        await Print(datamsg.DeviceId, "设备上报消息", $"modbus无匹配规则:{FastBufferHelper.ByteToHexStr(lastReader.ReadToEnd())}");
                                         return;
                                     }
 
@@ -912,14 +911,14 @@ namespace IoTRulesService.DataParser
 
                                                         if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                         {
-                                                            if (!string.IsNullOrEmpty(codeprefix))
+                                                            if (!string.IsNullOrEmpty(datamsg.prefix))
                                                             {
                                                                 var prpitem = tsl.properties.Where(x => x.code == prop.PropertyCode).FirstOrDefault();
                                                                 if (prpitem == null)
                                                                 {
                                                                     continue;
                                                                 }
-                                                                if (!string.IsNullOrEmpty(prpitem.prefixcode) && prpitem.prefixcode != codeprefix)
+                                                                if (!string.IsNullOrEmpty(prpitem.prefixcode) && prpitem.prefixcode != datamsg.prefix)
                                                                 {
                                                                     continue;
                                                                 }
@@ -965,7 +964,7 @@ namespace IoTRulesService.DataParser
                 }
 
                 //自定义解释
-                await PushCustom(productId, deviceId, propsDict, lastReader, ret.script, tsl, codeprefix);
+                await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix);
                 if (lastReader.Position > -1)
                 {
                     //有剩余数据包，则下个循环处理
@@ -980,19 +979,19 @@ namespace IoTRulesService.DataParser
                     if (lastReader.IsMergeRead || isCute)
                     {
                         //保存下次使用
-                        SaveFastReader(deviceId, lastReader);
+                        SaveFastReader(datamsg.DeviceId, lastReader);
                     }
-                    if (newmmlist != null && newmmlist.Count > 0)
+                    if (newmmlist != null && newmmlist.Count > 0 && !string.IsNullOrEmpty(datamsg.NodeId))
                     {
-                        await DownModbusMatch(productId, deviceId, ret.NetworkWay, newmmlist);
+                        await DownModbusMatch(datamsg.NodeId, newmmlist);
                     }
                     return;
                 }
             }
 
-            if (newmmlist != null && newmmlist.Count > 0)
+            if (newmmlist != null && newmmlist.Count > 0 && !string.IsNullOrEmpty(datamsg.NodeId))
             {
-                await DownModbusMatch(productId, deviceId, ret.NetworkWay, newmmlist);
+                await DownModbusMatch(datamsg.NodeId, newmmlist);
             }
         }
         public async Task<RawDataMessage> toRawData(RequestMessage msg, TslReturn ret)

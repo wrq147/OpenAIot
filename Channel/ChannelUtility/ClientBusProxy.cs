@@ -1,5 +1,4 @@
-﻿using ChannelUtility.Buffers;
-using ChannelUtility.Message;
+﻿using ChannelUtility.Message;
 using ChannelUtility.Redis;
 using ChannelUtility.Tsl;
 using EasyNetQ;
@@ -21,7 +20,7 @@ namespace ChannelUtility
     public class ClientBusProxy : IDisposable
     {
         private IServiceProvider _provider;
-        public delegate Task SubProductMessage(RequestMessage msg);
+        public delegate Task SubProductMessage(BaseDeviceMessage msg);
         /// <summary>
         /// 监听订阅的指定协议的消息
         /// </summary>
@@ -40,12 +39,17 @@ namespace ChannelUtility
         {
             get { return _option; }
         }
-
+        private string _nodeGuid;
+        public string NodeGuid
+        {
+            get { return _nodeGuid; }
+        }
         public ClientBusProxy(IServiceProvider provider)
         {
             _provider = provider;
             _option = provider.GetService<ChannelOption>();
             _redis = provider.GetService<GeneralRedisHelper>();
+            _nodeGuid = Guid.NewGuid().ToString("N");
 
             _memoryCache = provider.GetService<IMemoryCache>();
             _bus = RabbitHutch.CreateBus(_option.EventConn, x =>
@@ -54,7 +58,7 @@ namespace ChannelUtility
             });
             _bus.PubSub.Subscribe<string>("IotDown" + _option.config.Code, async (msg, tk) =>
             {
-                var rs = System.Text.Json.JsonSerializer.Deserialize<RequestMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+                var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
                 if (OnSubProductMessage != null)
                 {
                     await OnSubProductMessage(rs).ConfigureAwait(false);
@@ -62,6 +66,18 @@ namespace ChannelUtility
             }, cfg =>
             {
                 cfg.WithTopic("/device." + _option.config.Code + ".down");
+                cfg.WithAutoDelete(true);
+            });
+            _bus.PubSub.Subscribe<string>("IotGuid" + _nodeGuid, async (msg, tk) =>
+            {
+                var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+                if (OnSubProductMessage != null)
+                {
+                    await OnSubProductMessage(rs).ConfigureAwait(false);
+                }
+            }, cfg =>
+            {
+                cfg.WithTopic("/device." + _nodeGuid + ".guid");
                 cfg.WithAutoDelete(true);
             });
 
@@ -306,13 +322,21 @@ namespace ChannelUtility
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
 
         }
-        public async Task PublishRawUp(string deviceId, byte[] data, string prefix)
+        public async Task PublishRawUp(string deviceId, byte[] data, string prefix, bool enableNodeId = false)
         {
             RawUpDataMessage msg = new RawUpDataMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.Data = data;
             msg.prefix = prefix;
+            if (enableNodeId)
+            {
+                msg.NodeId = this._nodeGuid;
+            }
+            else
+            {
+                msg.NodeId = string.Empty;
+            }
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
         public async Task PushReply(string deviceId, string value, string msgId = null)
@@ -343,21 +367,30 @@ namespace ChannelUtility
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
+
         /// <summary>
         /// 上报AI检测请求
         /// </summary>
         /// <param name="deviceId"></param>
+        /// <param name="detectType"></param>
+        /// <param name="detParams"></param>
+        /// <param name="isDraw"></param>
+        /// <param name="rgbFrame"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         /// <returns></returns>
-        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, string> detParams, byte[] rgbFrame, int width, int height)
+        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, string> detParams, bool isDraw, byte[] rgbFrame, int width, int height)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.DetType = detectType;
+            msg.IsDraw = isDraw;
             msg.DetParams = detParams;
             msg.RgbFrame = rgbFrame;
             msg.Width = width;
             msg.Height = height;
+            msg.NodeId = this._nodeGuid;
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
         /// <summary>

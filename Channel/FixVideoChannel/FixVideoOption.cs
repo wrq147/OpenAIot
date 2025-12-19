@@ -9,7 +9,6 @@ namespace FixVideoChannel
 {
     public class FixVideoOption
     {
-        public string node_name { get; set; }
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
         public string ffmpeg_path { get; set; }

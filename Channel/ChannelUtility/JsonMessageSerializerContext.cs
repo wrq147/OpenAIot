@@ -32,6 +32,8 @@ namespace ChannelUtility
     [JsonSerializable(typeof(Dictionary<string, object>))]
     [JsonSerializable(typeof(Dictionary<string, string>))]
     [JsonSerializable(typeof(IDictionary<string, string>))]
+    [JsonSerializable(typeof(DelVideoItemMessage))]
+    [JsonSerializable(typeof(UpVideoItemMessage))]
     [JsonSerializable(typeof(DeviceEventMessage))]
     [JsonSerializable(typeof(DeviceOfflineMessage))]
     [JsonSerializable(typeof(DeviceOnlineMessage))]

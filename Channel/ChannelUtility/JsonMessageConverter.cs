@@ -25,14 +25,17 @@ namespace ChannelUtility
             { "BindReply", typeof(DeviceBindMessageReply) },
             { "RawData", typeof(RawDataMessage) },
             { "RawUpData", typeof(RawUpDataMessage) },
-            { "ModbusMatch", typeof(ModbusMatchMessage) },
             { "QueryICCID", typeof(QueryICCIDMessage) },
             { "TempProduct", typeof(TempProductMessage) },
             { "QueryICCIDReply", typeof(QueryICCIDMessageReply) },
             { "ChangeProduct", typeof(ChangeProductMessage) },
             { "StartReadAll", typeof(StartReadAllMessage) },
+            { "ModMatch", typeof(ModbusMatchMessage) },
+            { "DelVItem", typeof(DelVideoItemMessage) },
+            { "UpVItem", typeof(UpVideoItemMessage) },
             { "AIDetectReq",typeof(AIDetectRequestMeesage) },
             { "AIDetectResp",typeof(AIDetectResponseMessage) }
+
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions
         {

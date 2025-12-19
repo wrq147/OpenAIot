@@ -9,7 +9,7 @@ namespace FixVideoChannel
     {
 
         // 流处理任务队列
-        private ConcurrentQueue<RtspStreamProcessor> _processQueue;
+        private ConcurrentQueue<StreamProcessor> _processQueue;
         // 推流任务队列
         private ConcurrentQueue<PushTask> _globalPushQueue;
 
@@ -38,7 +38,7 @@ namespace FixVideoChannel
             _pushEvent = new AutoResetEvent(false);
 
             // 初始化队列
-            _processQueue = new ConcurrentQueue<RtspStreamProcessor>();
+            _processQueue = new ConcurrentQueue<StreamProcessor>();
             _globalPushQueue = new ConcurrentQueue<PushTask>();
         }
         public async Task StartAsync(CancellationToken stoppingToken)
@@ -67,7 +67,7 @@ namespace FixVideoChannel
         /// <summary>
         /// 提交流处理任务到全局队列
         /// </summary>
-        public void EnqueueProcessTask(RtspStreamProcessor processor)
+        public void EnqueueProcessTask(StreamProcessor processor)
         {
             _processQueue.Enqueue(processor);
             _processEvent.Set();

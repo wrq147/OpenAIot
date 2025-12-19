@@ -13,7 +13,6 @@ namespace ChannelUtility.Config
         /// 通道代码
         /// </summary>
         public string Code { get; set; }
-
         /// <summary>
         /// 通道显示图片
         /// </summary>

@@ -34,7 +34,7 @@ namespace ModbusChannel
             _provider = provider;
         }
 
-        private async Task SuProductHandler(RequestMessage msg)
+        private async Task SuProductHandler(BaseDeviceMessage msg)
         {
             if (_item.dtuid != msg.DeviceId)
             {
@@ -47,7 +47,7 @@ namespace ModbusChannel
                 {
                     data = rawMsg.Data;
                 }
-                else if(msg is ModbusMatchMessage mmsg)
+                else if (msg is ModbusMatchMessage mmsg)
                 {
                     var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
                     _pplastTime = curttt;
@@ -172,7 +172,7 @@ namespace ModbusChannel
                             _lastBytes = tmpbytes;
                             continue;
                         }
-                        await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty);
+                        await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty, true);
                         _lastBytes = null;
                     }
 
@@ -465,7 +465,7 @@ namespace ModbusChannel
                         _preModbusStr = $"{trt.Model.modbus.BaudRate}|{trt.Model.modbus.DataBits}|{trt.Model.modbus.Parity}|{trt.Model.modbus.StopBits}";
                         _port.BaudRate = trt.Model.modbus.BaudRate;//波特率
                         _port.DataBits = trt.Model.modbus.DataBits;//数据位
-                                                                                    //奇偶效验
+                                                                   //奇偶效验
                         switch (trt.Model.modbus.Parity)
                         {
                             case "0":
