@@ -70,6 +70,10 @@ namespace FixVideoChannel
         }
         public void Draw(byte[] rgbFrame, int width, int height)
         {
+            if (!_item.EnableDraw)
+            {
+                return;
+            }
             using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
 
             // 遍历所有检测框

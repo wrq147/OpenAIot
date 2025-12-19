@@ -9,7 +9,10 @@ namespace ChannelUtility.Tsl
         /// 备注
         /// </summary>
         public string description { get; set; }
-
+        /// <summary>
+        /// 事件输出
+        /// </summary>
+        public List<BaseOutputValue> outputs { get; set; }
         /// <summary>
         /// 条件类型：1为在线触发，2为离线触发，3为属性触发。0则只能规则触发，否则根据条件触发
         /// </summary>

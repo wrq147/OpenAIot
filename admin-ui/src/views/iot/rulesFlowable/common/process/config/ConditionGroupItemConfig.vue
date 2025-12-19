@@ -179,6 +179,9 @@ export default {
     formTags() {
       return this.$store.state.rulesFlowable.rulesProductTags;
     },
+    formEvents(){
+      return this.$store.state.rulesFlowable.rulesProductEvent;
+    },
     formMap() {
       const map = new Map();
       this.formItems.forEach(item => this.itemToMap(map, item));
@@ -305,6 +308,23 @@ export default {
           title: "改变的属性",
           valueType: "enum",
           compare: "="
+        });
+      }
+
+      //添加事件输出参数
+      if (this.$store.state.rulesFlowable.rulesDesign.TriggerWay == 0&&this.$store.state.rulesFlowable.rulesDesign.TopicMsg.value=='Event') {
+        this.formEvents.forEach(item => {
+          if(item.code==this.$store.state.rulesFlowable.rulesDesign.TopicMsg.EventId){
+            if(item.outputs!=null){
+              item.outputs.forEach(newitem => {
+                let newxxitem = JSON.parse(JSON.stringify(newitem));
+                newxxitem.name = "【事】" + item.name;
+                newxxitem.code = "$input." + item.code;
+                this.filterCondition(newxxitem, conditionItems);
+              });
+            }
+          }
+
         });
       }
 

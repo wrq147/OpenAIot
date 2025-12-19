@@ -49,6 +49,13 @@ namespace FixVideoChannel
             ffmpeg.avformat_network_init();
 
         }
+        public void UpdateAIDraw(string videoId, string detType, List<BoxItem> boxList)
+        {
+            if (_processorDict.TryGetValue(videoId, out StreamProcessor sp))
+            {
+                sp.UpdateAIDraw(detType, boxList);
+            }
+        }
         public async Task VideoCaptureItemEvent(UpVideoItemMessage msg)
         {
             var item = msg.Item;

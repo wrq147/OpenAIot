@@ -1,26 +1,8 @@
 <template>
   <div style="padding: 20px 20px 0 20px" id="big_con">
-    <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 136px)','padding-top':'10px' }">
-      <div class="header" style="border-top: none; padding: 0; border-bottom: 1px solid #dadada">
-        <el-menu :default-active="activeRules" active-text-color="#409eff" class="el-menu-demo shejiqi" mode="horizontal">
-          <el-menu-item index="rulesManage" @click="rulesSelect('rulesManage')">规则</el-menu-item>
-          <el-menu-item index="rulesGroup" @click="rulesSelect('rulesGroup')">分组</el-menu-item>
-        </el-menu>
-      </div>
-      <div class="from_con" id="from_con" v-show="showSearch" v-if="activeRules == 'rulesManage'">
+    
+      <div class="from_con" id="from_con" v-show="showSearch" style="margin-bottom:20px;padding:20px 20px 12px">
         <el-form :model="queryParams" ref="queryForm" :inline="true" class="biaodan">
-          <el-form-item label="规则分组" prop="status">
-            <treeselect
-              class="groupSet"
-              style="width: 150px"
-              v-model="queryParams.GroupId"
-              :options="groupTreeList"
-              :show-count="true"
-              :normalizer="normalizer"
-              placeholder="请选择规则分组"
-              @select="selectGroupTree"
-            />
-          </el-form-item>
           <el-form-item label="关键字搜索" prop="key">
             <el-input v-model="queryParams.key" placeholder="请输入搜索关键字" clearable></el-input>
           </el-form-item>
@@ -34,17 +16,15 @@
               <el-option v-for="dict in statusList" :key="dict.value" :label="dict.label" :value="dict.value"/>
             </el-select>
           </el-form-item>
-
-          <!-- <el-col class="float_right" :span="24"> -->
           <el-form-item class="submit_button_con">
             <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
             <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
           </el-form-item>
-          <!-- </el-col> -->
         </el-form>
       </div>
-      <div style="padding: 20px; padding-top: 0" v-if="activeRules == 'rulesManage'">
-        <el-row :gutter="10" class="mb8 button_row">
+      <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 136px)','padding-top':'10px' }">
+      <div style="padding: 20px 0; padding-top: 0">
+        <el-row :gutter="10" class="mb8 button_row" style="width:100%">
           <el-col :span="1.5">
             <el-button type="primary" plain @click="toAdd(null)" :disabled="multiple">
               <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
@@ -55,166 +35,90 @@
         </el-row>
 
         <div style="margin-top: 15px" class="wulian_list pro-table-card-items" v-loading="tableDataLoading">
-          <el-row :gutter="20" style="margin-bottom: -25px">
-            <el-col v-for="it in myRulesList" :key="it.Id" :span="colNum">
-              <div class="iot-card">
-                <div class="iot-content" @click="toEdit(it.Id)">
-                  <div class="img_content">
-                    <div class="img_con">
-                      <img src="../../../assets/images/guize.png" alt />
-                    </div>
-                    <div class="iotcontent_con">
-                      <div class="top_title">
-                        <h2>{{ it.Name }}</h2>
+          <div class="group_con">
+            <groupManage @clickNode="clickNode" :beforeGroupTree="groupTreeList" :catetoryTableData="groupTreeListArr" @getGroupList="getGroupList"></groupManage>
+          </div>
+          <div class="cont_con">
+            <el-row :gutter="10" style="margin-bottom: -25px">
+              <el-col v-for="it in myRulesList" :key="it.Id" :span="colNum" :offset="-5">
+                <div class="iot-card">
+                  <div class="iot-content" @click="toEdit(it.Id)">
+                    <div class="img_content">
+                      <div class="img_con">
+                        <img src="../../../assets/images/guize.png" alt />
                       </div>
-                      <div class="bottom_detial">
-                        <div class="left_content">
-                          <div class="lab">触发方式</div>
-                          <div class="ctn">
-                            {{ it.TriggerWay == 0 ? "设备触发" : it.TriggerWay == 1 ? "HTTP触发" : "定时触发"}}
+                      <div class="iotcontent_con">
+                        <div class="top_title">
+                          <h2>{{ it.Name }}</h2>
+                        </div>
+                        <div class="bottom_detial">
+                          <div class="left_content">
+                            <div class="lab">触发方式</div>
+                            <div class="ctn">
+                              {{ it.TriggerWay == 0 ? "设备触发" : it.TriggerWay == 1 ? "HTTP触发" : "定时触发"}}
+                            </div>
+                          </div>
+                          <div class="right_content">
+                            <div class="lab">说明</div>
+                            <div class="ctn">{{ it.Remark }}</div>
                           </div>
                         </div>
-                        <div class="right_content">
-                          <div class="lab">说明</div>
-                          <div class="ctn">{{ it.Remark }}</div>
+                      </div>
+                    </div>
+                    <div class="card-state error" v-if="it.Status == 1">
+                      <div class="card-state-content">
+                        <span class="ant-badge ant-badge-status">
+                          <span class="ant-badge-status-dot ant-badge-status-error"></span>
+                          <span class="ant-badge-status-text">暂停</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-state success" v-if="it.Status == 0">
+                      <div class="card-state-content">
+                        <span class="ant-badge ant-badge-status">
+                          <span class="ant-badge-status-dot ant-badge-status-success"></span>
+                          <span class="ant-badge-status-text">正常</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-mask">
+                      <button>
+                        <svg-icon icon-class="todetails" style="color: #fff"></svg-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="iot-fun" style="margin-top: 10px">
+                    <el-row :gutter="10">
+                      <el-col :span="10">
+                        <div class="edit" @click="toEdit(it.Id)">
+                          <el-button :disabled="false"><i class="el-icon-edit" style="margin-right: 8px"></i><span>编辑</span></el-button>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-state error" v-if="it.Status == 1">
-                    <div class="card-state-content">
-                      <span class="ant-badge ant-badge-status">
-                        <span class="ant-badge-status-dot ant-badge-status-error"></span>
-                        <span class="ant-badge-status-text">暂停</span>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="card-state success" v-if="it.Status == 0">
-                    <div class="card-state-content">
-                      <span class="ant-badge ant-badge-status">
-                        <span class="ant-badge-status-dot ant-badge-status-success"></span>
-                        <span class="ant-badge-status-text">正常</span>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="card-mask">
-                    <button>
-                      <svg-icon icon-class="todetails" style="color: #fff"></svg-icon>
-                    </button>
+                      </el-col>
+                      <el-col :span="10">
+                        <div class="open" @click="setStatus(it.Id, it.Status)">
+                          <el-button v-if="it.Status == 1"><i class="el-icon-video-play"></i><span>启用</span></el-button>
+                          <el-button v-if="it.Status == 0"><i class="el-icon-video-pause"></i><span>暂停</span></el-button>
+                        </div>
+                      </el-col>
+                      <el-col :span="4">
+                        <div class="del" @click="delrule(it.Id)">
+                          <el-button style="font-size: 14px;display: flex;justify-content: center;width: 100%;"><i class="zhongtaiiconfont zhongtai-icon-shanchu"></i></el-button>
+                        </div>
+                      </el-col>
+                    </el-row>
                   </div>
                 </div>
-                <div class="iot-fun" style="margin-top: 10px">
-                  <el-row :gutter="10">
-                    <el-col :span="10">
-                      <div class="edit" @click="toEdit(it.Id)">
-                        <el-button :disabled="false">
-                          <i class="el-icon-edit" style="margin-right: 8px"></i>
-                          <span>编辑</span>
-                        </el-button>
-                      </div>
-                    </el-col>
-                    <el-col :span="10">
-                      <div class="open" @click="setStatus(it.Id, it.Status)">
-                        <el-button v-if="it.Status == 1">
-                          <i class="el-icon-video-play"></i>
-                          <span>启用</span>
-                        </el-button>
-                        <el-button v-if="it.Status == 0">
-                          <i class="el-icon-video-pause"></i>
-                          <span>暂停</span>
-                        </el-button>
-                      </div>
-                    </el-col>
-                    <el-col :span="4">
-                      <div class="del" @click="delrule(it.Id)">
-                        <el-button style="font-size: 14px;display: flex;justify-content: center;width: 100%;">
-                          <i class="zhongtaiiconfont zhongtai-icon-shanchu"></i>
-                        </el-button>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
+              </el-col>
+            </el-row>
+          </div>
         </div>
 
-        <pagination
-          v-if="myRulesList && myRulesList.length > 0"
-          :pageSizes="rulesPageSizes"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
+        <pagination v-if="myRulesList && myRulesList.length > 0" :pageSizes="rulesPageSizes" :total="total"
+          :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
       </div>
-      <div style="padding: 20px" v-if="activeRules == 'rulesGroup'">
-        <el-row :gutter="10" class="mb8 button_row">
-          <div>
-            <el-col :span="1.5">
-              <el-button type="primary" plain @click="openAddGroup">
-                <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
-                <span style="margin-left: 6px">添加分组</span>
-              </el-button>
-            </el-col>
-          </div>
-          <right-toolbar
-            :showSearch.sync="showSearch"
-            @queryTable="getGroupList"
-            :columns="columns"
-          ></right-toolbar>
-        </el-row>
-        <el-table
-          v-loading="tableDataLoading"
-          :data="groupTableData"
-          style="width: 100%"
-          row-key="Id"
-          class="data_table"
-          :header-cell-style="cellSty"
-          border
-          :default-expand-all="isExpandAll"
-          :tree-props="{ children: 'Children', hasChildren: 'hasChildren' }"
-        >
-          <el-table-column v-for="(item, inx) in groupParamsList" :key="inx" :prop="item.filed" :label="item.filedName" v-show="columns[inx].visible"
-          ></el-table-column>
-          <el-table-column label="操作" align="center" width="320" class-name="small-padding fixed-width">
-            <template slot-scope="scope">
-              <el-button type="text" icon="el-icon-edit" @click="editRowData(scope.row, false)">编辑</el-button>
-              <el-button type="text" icon="el-icon-delete" @click="deleteRowData(scope.row)">删除</el-button>
-              <el-button type="text" icon="el-icon-tickets" @click="editRowData(scope.row, true)">查看详情</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
       </div>
-      <el-dialog title="添加分组" :visible.sync="groupOpen" center width="600px" :close-on-click-modal="false">
-        <el-form :model="groupFrom" ref="groupFrom" :rules="groupRules" label-position="left" class="groupFrom" :inline="true" label-width="80px">
-          <el-form-item label="父级分组" prop="parentIdData">
-            <treeselect class="groupSet" v-model="groupFrom.parentIdData" :options="groupTreeList" :show-count="true" :normalizer="normalizer" placeholder="请选择规则分组" @select="selectGroupTree" :disabled="groupFormDisable"/>
-          </el-form-item>
-          <el-form-item label="分组名称" prop="groupName">
-            <el-input type="text" v-model="groupFrom.groupName" placeholder="请输入分组名称" :disabled="groupFormDisable"></el-input>
-          </el-form-item>
-          <el-form-item label="分组序号" prop="sort">
-            <el-input type="number" v-model.number="groupFrom.sort" placeholder="请输入分组序号" :disabled="groupFormDisable"></el-input>
-          </el-form-item>
-          <el-form-item label="分组描述" prop="remark">
-            <el-input type="text" v-model="groupFrom.remark" placeholder="请输入分组描述" :disabled="groupFormDisable"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="groupOpen = false">取 消</el-button>
-          <el-button type="primary" @click="addDeviceGroup">确 定</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog
-        title="添加规则"
-        :visible.sync="addRulesDialog"
-        width="60%"
-        @close="addRulesDialog = false"
-        :destroy-on-close="true"
-        :close-on-click-modal="false"
-        top="6vh"
-      >
+      
+      <el-dialog title="添加规则" :visible.sync="addRulesDialog" width="60%" @close="addRulesDialog = false" :destroy-on-close="true" :close-on-click-modal="false" top="6vh">
         <div slot="title">
           <div class="dia_title_con">
             <div class="title_text">添加规则</div>
@@ -225,22 +129,9 @@
           </div>
         </div>
         <div class="add_rules_dialog">
-          <addForm
-            ref="addForm"
-            @editParams="editParams"
-            @openParamsDrawer="openParamsDrawer"
-            @evtCodeChange="evtCodeChange"
-            @handleShowCron="handleShowCron"
-            @openStepChoice="openStepChoice"
-            @setAddForm="setAddForm"
-            @setSelProduct="setSelProduct"
-            :groupTreeList="groupTreeList"
-            :productmap="productmap"
-            :productLists="productLists"
-            :device="rulesFrom.device"
-            :product="rulesFrom.product"
-            :isEdit="false"
-          ></addForm>
+          <addForm ref="addForm" @editParams="editParams" @openParamsDrawer="openParamsDrawer" @evtCodeChange="evtCodeChange" @handleShowCron="handleShowCron"
+            @openStepChoice="openStepChoice" @setAddForm="setAddForm" @setSelProduct="setSelProduct" :groupTreeList="groupTreeList"
+            :productmap="productmap" :productLists="productLists" :device="rulesFrom.device" :product="rulesFrom.product" :isEdit="false"></addForm>
         </div>
         <div slot="footer">
           <el-button @click="addRulesDialog = false">取 消</el-button>
@@ -248,24 +139,10 @@
         </div>
       </el-dialog>
       <cronTime ref="cronTime" @finishTimeChoice="finishTimeChoice"></cronTime>
-      <paramsAdd
-        ref="paramsDialog"
-        :typeList="typeList"
-        :triggerWay="rulesFrom.TriggerWay"
-        :HttpParams="rulesFrom.HttpParams"
-        @joinParams="joinParams"
-      ></paramsAdd>
-      <selectDeviceWay
-        ref="selectDeviceWay"
-        @selectTriggerLs="selectTriggerLs"
-        @initProEvts="initProEvts"
-        :productmap="productmap"
-        :selProList="selProList"
-        @selectProduct="selectProduct"
-        @selectDeviceList="selectDeviceList"
-        @selectTopicMsg="selectTopicMsg"
-      ></selectDeviceWay>
-    </div>
+      <paramsAdd ref="paramsDialog" :typeList="typeList" :triggerWay="rulesFrom.TriggerWay" :HttpParams="rulesFrom.HttpParams" @joinParams="joinParams"></paramsAdd>
+      <selectDeviceWay ref="selectDeviceWay" @selectTriggerLs="selectTriggerLs" @initProEvts="initProEvts" :productmap="productmap"
+        :selProList="selProList" @selectProduct="selectProduct" @selectDeviceList="selectDeviceList" @selectTopicMsg="selectTopicMsg"></selectDeviceWay>
+    
   </div>
 </template>
 
@@ -275,10 +152,7 @@ import {
   delRusel,
   editRuselServe,
   addRuselServe,
-  addGroup,
   groupTree,
-  removeGroup,
-  editGroup,
 } from "@/api/rules/ruselSevic";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 import { productList } from "@/api/rules/productModel";
@@ -292,6 +166,7 @@ import addForm from "./addForm";
 import cronTime from "./cron_time";
 import paramsAdd from "./params_add";
 import selectDeviceWay from "./selectDeviceWay";
+import groupManage from "./groupManage";
 export default {
   name: "ProcessList",
   dicts: ["sys_normal_disable"],
@@ -305,6 +180,7 @@ export default {
     paramsAdd,
     addForm,
     selectDeviceWay,
+    groupManage
   },
   data() {
     return {
@@ -318,9 +194,10 @@ export default {
         { alabel: "时间", label: "时间型(Date)", value: "date" },
         { alabel: "布尔", label: "布尔型(Boolean)", value: "boolean" },
         { alabel: "枚举", label: "枚举型(Enum)", value: "enum" },
-      ],
-      //协议过滤条件
+      ], //数据类型列表
       triggerLs: [], //选择的设备
+
+      // rulesFrom:{},
       statusList: [
         { label: "正常", value: 0 },
         { label: "暂停", value: 1 },
@@ -356,7 +233,7 @@ export default {
         TriggerWay: 0, //触发方式
         device: [], //选中的设备
         product: "",
-        TopicMsg: "", //订阅的消息类型
+        TopicMsg: "",
         HttpParams: [],
         process: {
           id: "root",
@@ -385,55 +262,20 @@ export default {
         ],
       },
       addRulesDialog: false, //添加规则的弹出层
-      productLists: [], //协议列表
+      productLists: [],
       // device: [], //选中的设备
       productParams: {
         showAll: true,
-      }, //协议列表查询form
+      },
       // 传入的表达式
       timerCron: "",
       proEvt: [],
       evtCode: "",//事件Code
-      activeRules: "", //活动的页面是规则还是分组
-      groupOpen: false, //添加分组弹窗
-      groupFrom: {
-        parentIdData: "",
-        id: "",
-        groupName: "",
-        sort: "",
-        remark: "",
-      },
-      groupRules: {
-        parentIdData: [
-          { required: true, trigger: "change", message: "请选择父级分组" },
-        ],
-        groupName: [
-          { required: true, trigger: "blur", message: "请输入分组名称" },
-        ],
-        sort: [{ required: true, trigger: "blur", message: "请输入分组序号" }],
-      },
       groupTreeList: [],
-      groupParamsList: [
-        { filed: "Id", filedName: "分组ID" },
-        { filed: "GroupName", filedName: "分组名称" },
-        { filed: "Remark", filedName: "分组描述" },
-        // { filed: "Path", filedName: "分组路径" },
-        { filed: "updateTime", filedName: "修改时间" },
-      ],
-      groupmap: new Map(),
-      // 是否展开，默认全部折叠
-      isExpandAll: false,
+      groupTreeListArr: [],
       tableDataLoading: false,
-      columns: [
-        { key: 0, label: `分组Id`, visible: true },
-        { key: 1, label: `分组名称`, visible: true },
-        { key: 2, label: `分组描述`, visible: true },
-        // { key: 3, label: `分组路径`, visible: true },
-        { key: 3, label: `修改时间`, visible: true },
-      ],
-      groupFormDisable: false, //是否是查看详情
       rulesJsonName: "",
-      productmap: new Map(), //协议map类型数据
+      productmap: new Map(),
       triggerProduct:'',
     };
   },
@@ -465,9 +307,15 @@ export default {
     this.getProductList();
 
     this.getGroupList();
-    this.activeRules = "rulesManage";
   },
   methods: {
+    // 点击树形返回值
+    clickNode(data) {
+      this.queryParams.GroupId = data.Id;
+      // console.log(data,'datadata');
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
     selectTriggerLs(list) {
       this.triggerLs = JSON.parse(JSON.stringify(list));
     },
@@ -495,7 +343,6 @@ export default {
       this.$refs.addForm.selectDeviceList(list);
     },
     selectProduct(list) {
-      //选择完协议后
       this.$refs.addForm.selectProduct(list);
     },
     selectTopicMsg(node) {
@@ -507,7 +354,6 @@ export default {
       this.$refs.addForm.joinParams(paramList);
     },
     async initProEvts() {
-      //获取协议的事件
       await this.$refs.addForm.initProEvts();
     },
     setAddForm(formVal) {
@@ -521,151 +367,23 @@ export default {
     setSelProduct(selProduct){
       this.triggerProduct=selProduct
     },
-    editRowData(row, isdisable) {
-      //修改一行的数据
-      if (this.activeRules == "rulesGroup") {
-        this.openAddGroup();
-        this.groupFrom = {
-          parentIdData: row.ParentId == "" ? -1 : row.ParentId,
-          id: row.Id,
-          groupName: row.GroupName,
-          sort: row.Sort,
-          remark: row.Remark,
-        };
-        // console.log(isdisable, "是否禁用");
-        if (isdisable) {
-          this.groupFormDisable = true;
-        } else {
-          this.groupFormDisable = false;
-        }
-      }
-    },
-    addDeviceGroup() {
-      //添加设备分组
-      this.$refs["groupFrom"].validate((valid) => {
-        if (valid) {
-          if (this.groupFrom.parentIdData == -1) {
-            this.groupFrom.parentId = "";
-          } else {
-            this.groupFrom.parentId = this.groupFrom.parentIdData;
-          }
-          if (this.groupFrom.id) {
-            editGroup(this.groupFrom)
-              .then((response) => {
-                this.$message.success("修改分组成功");
-                if (response.code == 0) {
-                  this.getGroupList();
-                }
-                this.groupOpen = false;
-              })
-              .catch((err) => {
-                this.$message.error(err.message);
-              });
-          } else {
-
-            addGroup(this.groupFrom)
-              .then((response) => {
-                this.$message.success("创建分组成功");
-                if (response.code == 0) {
-                  this.getGroupList();
-                }
-                this.groupOpen = false;
-              })
-              .catch((err) => {
-                this.$message.error(err.message);
-              });
-          }
-        }
-      });
-    },
-    openAddGroup() {
-      //打开添加分组
-      this.resetForm("groupFrom");
-      this.groupFrom = {
-        parentIdData: null,
-        id: "",
-        groupName: "",
-        sort: "",
-        remark: "",
-      };
-      if (!this.groupTreeList[0] || this.groupTreeList[0].Id != "-1") {
-        this.groupTreeList.unshift({
-          GroupName: "作为一级分组",
-          Id: "-1",
-          ParentId: 0,
-        });
-      }
-      this.groupOpen = true;
-      this.groupFormDisable = false;
-    },
-    deleteRowData(row) {
-      //删除表格中的一行的数据
-      if (this.activeRules == "rulesGroup") {
-        this.$modal
-          .confirm('是否确认移除名为"' + row.GroupName + '"的设备分组？')
-          .then(function () {
-            return removeGroup({ id: row.Id });
-          })
-          .then(() => {
-            this.getGroupList();
-            this.$modal.msgSuccess("移除成功");
-          })
-          .catch(() => {});
-      }
-    },
+    
     getGroupList() {
       //获取规则分组列表
       this.tableDataLoading = true;
       groupTree().then((res) => {
         if (res.code == 0) {
-          this.groupTableData = res.data;
-          this.initgroupClassMap(this.groupTableData);
           let lists = [];
           lists = JSON.parse(JSON.stringify(res.data));
           this.groupTreeList = lists;
+          this.groupTreeListArr=[{
+            Id:'',
+            GroupName:'全部',
+            Children:lists
+          }]
           this.tableDataLoading = false;
         }
       });
-    },
-    selectGroupTree() {},
-    normalizer(node) {
-      if (node.Children == null || !node.Children.length) {
-        delete node.Children;
-      }
-      return {
-        id: node.Id,
-        label: node.GroupName,
-        children: node.Children,
-      };
-    },
-    initgroupClassMap(node) {
-      this.groupmap.set("-1", {
-        GroupName: "作为一级分组",
-        Id: "-1",
-        Children: [],
-      });
-      for (let idx = 0; idx < node.length; idx++) {
-        let curnode = node[idx];
-        this.groupmap.set(node[idx].Id, curnode);
-        if (
-          curnode.hasOwnProperty("Children") &&
-          curnode.Children &&
-          curnode.Children.length > 0
-        ) {
-          this.initgroupClassMap(curnode.Children);
-        }
-      }
-    },
-    rulesSelect(path) {
-      //切换设备管理
-      this.configLoading = true;
-      this.activeRules = path;
-      if (this.activeRules == "rulesManage") {
-        if (this.groupTreeList[0] && this.groupTreeList[0].Id == "-1") {
-          this.groupTreeList.splice(0, 1);
-        }
-      }
-      this.configLoading = false;
     },
     processReadFile(file) {
       //读取导入参数的值
@@ -825,12 +543,19 @@ export default {
               this.$message.success("规则创建成功");
               this.addRulesDialog = false;
               this.getList(); //获取规则列表
+              let route=this.$route
+              let name=route.name?route.name.toLowerCase():''
+              let path=route.path?route.path.toLowerCase():''
+              let pathHead=''
+              if(name&&path){
+                pathHead=path.replace(name, '');
+              }
               this.$store.commit("tagsView/DEL_CACHED_VIEW", {
-                path: "/iot/rulesEngine/add",
+                path: pathHead+"rulesEngine/add",
               });
               this.$nextTick(() => {
                 this.$router.push({
-                  path: "/iot/rulesEngine/add",
+                  path: pathHead+"rulesEngine/add",
                   query: { id: rsp.data },
                 });
               });
@@ -923,7 +648,7 @@ export default {
         TriggerWay: 0, //触发方式
         device: [], //选中的设备
         product: "",
-        TopicMsg: "", //订阅的消息类型
+        TopicMsg: "",
         HttpParams: [],
         process: {
           id: "root",
@@ -939,12 +664,19 @@ export default {
     toEdit(id) {
       //到规则编辑页
       if (id) {
+        let route=this.$route
+        let name=route.name?route.name.toLowerCase():''
+        let path=route.path?route.path.toLowerCase():''
+        let pathHead=''
+        if(name&&path){
+          pathHead=path.replace(name, '');
+        }
         this.$store.commit("tagsView/DEL_CACHED_VIEW", {
-          path: "/iot/rulesEngine/add",
+          path: pathHead+"rulesEngine/add",
         });
         this.$nextTick(() => {
           this.$router.push({
-            path: "/iot/rulesEngine/add",
+            path: pathHead+"rulesEngine/add",
             query: { id: id },
           });
         });
@@ -1609,7 +1341,17 @@ ul {
   //   display: grid;
   //   grid-gap: 26px;
   // padding-bottom: 38px;
+  display: flex;
+  justify-content: space-between;
   box-sizing: border-box;
+  width: 100%;
+  .group_con{
+    width: 18%;
+    
+  }
+  .cont_con{
+    width: calc(82% - 15px);
+  }
   .el-col {
     margin-bottom: 15px;
   }
@@ -1709,6 +1451,7 @@ ul {
             h2 {
               font-weight: 700;
               font-size: 16px;
+              margin-top: 0;
             }
           }
           .bottom_detial {

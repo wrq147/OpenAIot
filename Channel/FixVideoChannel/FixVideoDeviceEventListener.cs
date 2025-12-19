@@ -53,7 +53,7 @@ namespace FixVideoChannel
         {
             if (msg is AIDetectResponseMessage aiResponse)
             {
-
+                _service.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
             }
             else if (msg is UpVideoItemMessage upItemResponse)
             {

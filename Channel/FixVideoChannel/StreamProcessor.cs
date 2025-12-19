@@ -54,7 +54,17 @@ namespace FixVideoChannel
             _zlPusher = new ZLMediaKitPusher();
             _listener = listener;
         }
-
+        public void UpdateAIDraw(string detType, List<BoxItem> boxList)
+        {
+            var detectTasks = _aiDetectTaskList?.ToArray() ?? Array.Empty<AIDetectorTask>();
+            if (detectTasks != null && detectTasks.Length > 0)
+            {
+                foreach(var tmpit in detectTasks)
+                {
+                    tmpit.UpdateBoxList(detType, boxList);
+                }
+            }
+        }
         /// <summary>
         /// 更新检测任务
         /// </summary>

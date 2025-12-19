@@ -430,6 +430,21 @@
           </div>
           <span style="color:#0055FF;cursor: pointer;" @click="openParamsDrawer('inputs')">+输入参数</span>
         </el-form-item>
+        <el-form-item label="输出参数" v-if="activeDefinition == 'event'">
+          <div v-if="inputsList.length > 0">
+            <div class="param_list" v-for="(item, inx) in outputsList" :key="inx">
+              <div class="list_left">
+                <span>{{ item.name }}</span>
+                <span class="params_type">{{ typeListMap.get(item.type).label }}</span>
+              </div>
+              <div class="list_right">
+                <i class="el-icon-edit" @click="editParams('outputs', item, inx)"></i>
+                <i class="el-icon-delete" @click="deleteParams('outputs', item, inx)"></i>
+              </div>
+            </div>
+          </div>
+          <span style="color:#0055FF;cursor: pointer;" @click="openParamsDrawer('outputs')">+输出参数</span>
+        </el-form-item>
         <type-form ref="typeFormAssembly" v-if="activeDefinition == 'attribute' || activeDefinition == 'expands'"
           :activeDefinition="activeDefinition" :enumKeyList="enumKeyList" :paramsForm="paramsForm" :attrTableData="attrTableData"
           @changeMapcode="changeMapcode" @setCurType="setCurType"></type-form>
@@ -489,7 +504,7 @@
             <i class="zhongtaiiconfont zhongtai-icon-zhuyi" style="margin-right:5px;font-size:14px;"></i>1到50位字母，数字，下划线
           </span>
         </el-form-item>
-        <el-form-item v-if="activeParams == 'inputs'" label="数据类型" prop="type">
+        <el-form-item label="数据类型" prop="type">
           <el-select v-model="paramsForm.type" placeholder="请选择数据类型" style="width:100%" @change="onIptChg">
             <el-option v-for="item in typeList" v-show="item.paramshow" :key="item.value"
               :label="item.label" :value="item.value"></el-option>
@@ -1310,7 +1325,6 @@ export default {
 
     editParams(statusType, row, rowIndex) {
       //编辑添加的参数
-      // console.log("修改参数", statusType, row, rowIndex);
       this.openParamsDrawer(statusType);
       this.paramsForm = row;
       if (statusType != "inputs") {
@@ -1327,10 +1341,6 @@ export default {
           }
         });
       }
-      // console.log(
-      //   "用于判定重复时已经当前输入参数存在的数据",
-      //   this.activeCodeList
-      // );
       this.isEditCode = true;
       this.activeParamsLine = rowIndex;
     },
@@ -1408,12 +1418,12 @@ export default {
           this.$set(this.funcFrom,"actionway",0);
         }
         this.inputsList = this.funcFrom.inputs;
-        this.outputsList = this.funcFrom.outputs;
         this.inputsCodeList = Array.from(this.funcFrom.inputs, ({ code }) => code);
-        this.outputsCodeList = Array.from(this.funcFrom.outputs, ({ code }) => code);
       }
       else if (this.activeDefinition == "event") {
         this.eventFrom = JSON.parse(JSON.stringify(row));
+        this.outputsList = this.eventFrom.outputs;
+        this.outputsCodeList = Array.from(this.eventFrom.outputs, ({ code }) => code);
         if(this.eventFrom.Targets==null){
           this.$set(this.eventFrom,"Targets",[]);
         }
@@ -1495,7 +1505,6 @@ export default {
       this.$refs["paramsForm"].validate(val1 => {
         if (this.activeParams == 'outputs') {
           this.$refs["typeFormAssembly"].$refs["typeForm"].validate(val => {
-            // console.info(val1 + "ddd" + val);
             if (val && val1) {
               this.paramsLoading = true;
               if (this.activeParamsLine > -1) {
@@ -1654,12 +1663,12 @@ export default {
           }
           if (this.activeDefinition == "function") {
             this.funcFrom.inputs = this.inputsList;
-            this.funcFrom.outputs = this.outputsList;
             modelTSL.functions[this.activeModelLine] = JSON.parse(
               JSON.stringify(this.funcFrom)
             );
           }
           if (this.activeDefinition == "event") {
+            this.eventFrom.outputs = this.outputsList;
             modelTSL.events[this.activeModelLine] = JSON.parse(
               JSON.stringify(this.eventFrom)
             );
@@ -1679,8 +1688,6 @@ export default {
             if (!modelTSL.tags) {
               modelTSL.tags = [];
             }
-            // console.log("expands加入时option", option, this.expandsForm);
-            // console.log("标签",this.expandsForm);
             this.expandsForm.option = JSON.parse(JSON.stringify(option));
             modelTSL.tags.push(JSON.parse(JSON.stringify(this.expandsForm)));
           }
@@ -1688,12 +1695,11 @@ export default {
             if (!modelTSL.functions) {
               modelTSL.functions = [];
             }
-            // console.log("加入时", this.inputsList, this.outputsList);
             this.funcFrom.inputs = JSON.parse(JSON.stringify(this.inputsList));
-            this.funcFrom.outputs = JSON.parse(JSON.stringify(this.outputsList));
             modelTSL.functions.push(JSON.parse(JSON.stringify(this.funcFrom)));
           }
           if (this.activeDefinition == "event") {
+            this.eventFrom.outputs = JSON.parse(JSON.stringify(this.outputsList));
             if (!modelTSL.events) {
               modelTSL.events = [];
             }

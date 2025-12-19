@@ -553,6 +553,27 @@ namespace IoTRulesService.Flow.Builder
                     }
                 }
             }
+            else if (key.StartsWith("$input"))
+            {
+                string[] tmpkeys = key.Split(".");
+                if (tmpkeys.Length == 2)
+                {
+                    if (this.Data == null || this.Data.Count == 0)
+                    {
+                        return null;
+                    }
+                    string dataKey = tmpkeys[1];
+                    object rt;
+                    if (this.Data[0].Data.TryGetValue(dataKey, out rt))
+                    {
+                        return rt;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
             else if (key.StartsWith("$devprop"))
             {
                 //获取其它设备的属性$devprop.设备Id.key
