@@ -3,7 +3,7 @@ using System;
 
 namespace IoTVideoService
 {
-    [Migration(20251219003)]
+    [Migration(20251219005)]
     public class IoTVideoMigrator : Migration
     {
         public override void Up()
@@ -19,8 +19,8 @@ namespace IoTVideoService
 .WithColumn("UserPwd").AsString(50).WithColumnDescription("密码")
 .WithColumn("BitType").AsByte().WithColumnDescription("码流类型：0为主码流，1为子码流")
 .WithColumn("FrameInterval").AsInt32().WithDefaultValue(25).WithColumnDescription("AI检测帧间隔,默认25帧")
-.WithColumn("AIParams").AsString(20000).WithColumnDescription("AI检测参数")
-.WithColumn("PullNode").AsString(50).Indexed().WithColumnDescription("当前拉流的节点名称，无为空");
+.WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")
+.WithColumn("PullNode").AsString(128).Indexed().WithColumnDescription("当前拉流的节点名称，无为空");
 
 
 

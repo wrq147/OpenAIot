@@ -59,7 +59,7 @@ namespace FixVideoChannel
             var detectTasks = _aiDetectTaskList?.ToArray() ?? Array.Empty<AIDetectorTask>();
             if (detectTasks != null && detectTasks.Length > 0)
             {
-                foreach(var tmpit in detectTasks)
+                foreach (var tmpit in detectTasks)
                 {
                     tmpit.UpdateBoxList(detType, boxList);
                 }
@@ -104,6 +104,10 @@ namespace FixVideoChannel
                     {
                         throw new OutOfMemoryException("无法分配FFmpeg资源");
                     }
+                    AVFrame* rgbFrame = (AVFrame*)_rgbFramePtr;
+                    rgbFrame->format = (int)AVPixelFormat.AV_PIX_FMT_RGB24;
+                    rgbFrame->width = 0;
+                    rgbFrame->height = 0;
                 }
 
                 // 1. 打开流
@@ -198,7 +202,7 @@ namespace FixVideoChannel
                         break;
                     case "rtmp":
                         // RTMP专属参数
-                        ffmpeg.av_dict_set(&options, "timeout", "5000000", 0); // 5秒超时
+                        //ffmpeg.av_dict_set(&options, "timeout", "5000000", 0); // 5秒超时
                         ffmpeg.av_dict_set(&options, "buffer_size", "1024000", 0);
                         ffmpeg.av_dict_set(&options, "rtmp_connect_timeout", "5000", 0); // 连接超时（毫秒）
                         break;
@@ -395,12 +399,43 @@ namespace FixVideoChannel
         /// </summary>
         private async Task ProcessVideoFrameAsync()
         {
-            long videoPts = 0;
-            AVPictureType pictType = AVPictureType.AV_PICTURE_TYPE_NONE;
-            bool decodeSuccess = false;
-
             try
             {
+                bool needProcess = false;
+                _increaseFrame++;
+
+                // 检查是否达到帧间隔，且有检测任务需要处理
+                if (_increaseFrame >= _item.FrameInterval)
+                {
+                    var detectTasks = _aiDetectTaskList?.ToArray() ?? Array.Empty<AIDetectorTask>();
+                    needProcess = detectTasks.Length > 0;
+                }
+
+                // 分支1：无需AI处理和绘制，直接转发原始视频包
+                if (!needProcess)
+                {
+                    unsafe
+                    {
+                        AVPacket* packet = (AVPacket*)_packetPtr;
+                        AVFormatContext* inputFormatContext = (AVFormatContext*)_inputFormatContextPtr;
+                        // 计算时间戳（毫秒）
+                        long timestampMs = (long)(packet->pts * ffmpeg.av_q2d(inputFormatContext->streams[_videoStreamIndex]->time_base) * 1000);
+                        // 判断是否为关键帧
+                        bool isKeyFrame = (packet->flags & ffmpeg.AV_PKT_FLAG_KEY) != 0;
+                        // 提取原始H264数据
+                        byte[] h264Data = new byte[packet->size];
+                        Marshal.Copy((IntPtr)packet->data, h264Data, 0, packet->size);
+                        // 直接推送原始H264数据
+                        _zlPusher.PushH264Frame(h264Data, timestampMs, isKeyFrame);
+                    }
+                    return;
+                }
+
+                // 分支2：需要AI处理和绘制，执行完整的解码-处理-编码流程
+                long videoPts = 0;
+                AVPictureType pictType = AVPictureType.AV_PICTURE_TYPE_NONE;
+                bool decodeSuccess = false;
+
                 unsafe
                 {
                     AVCodecContext* videoCodecContext = (AVCodecContext*)_videoCodecContextPtr;
@@ -411,16 +446,13 @@ namespace FixVideoChannel
 
                     // 1. 发送数据包到解码器
                     int sendResult = ffmpeg.avcodec_send_packet(videoCodecContext, packet);
-                    if (sendResult < 0)
+                    if (sendResult < 0 && sendResult != ffmpeg.AVERROR_EOF)
                     {
-                        if (sendResult != ffmpeg.AVERROR_EOF)
-                        {
-                            Console.WriteLine($"发送数据包到解码器失败: {GetFFmpegErrorDescription(sendResult)}");
-                        }
+                        Console.WriteLine($"发送数据包到解码器失败: {GetFFmpegErrorDescription(sendResult)}");
                         return;
                     }
 
-                    // 2. 循环接收解码后的帧（处理多帧情况，实时流中取第一帧后退出）
+                    // 2. 接收解码后的帧
                     int receiveResult;
                     while ((receiveResult = ffmpeg.avcodec_receive_frame(videoCodecContext, videoFrame)) == 0)
                     {
@@ -444,42 +476,52 @@ namespace FixVideoChannel
                         videoPts = videoFrame->pts;
                         pictType = (AVPictureType)videoFrame->pict_type;
                         decodeSuccess = true;
-
-                        // 实时流中，处理一帧后退出循环（避免多帧累积）
-                        break;
+                        break; // 实时流中处理一帧即可
                     }
 
                     // 处理解码器的非致命错误
-                    if (receiveResult != ffmpeg.AVERROR(ffmpeg.EAGAIN) && receiveResult != ffmpeg.AVERROR_EOF)
+                    if (receiveResult != 0 && receiveResult != ffmpeg.AVERROR(ffmpeg.EAGAIN) && receiveResult != ffmpeg.AVERROR_EOF)
                     {
                         Console.WriteLine($"接收解码帧失败: {GetFFmpegErrorDescription(receiveResult)}");
                     }
                 }
 
-                // 3. 退出unsafe块后，执行异步AI检测
                 if (decodeSuccess)
                 {
-                    ++_increaseFrame;
-                    if (_increaseFrame >= _item.FrameInterval)
-                    {
-                        //发送给AI模块处理
-                        var detectTasks = _aiDetectTaskList?.ToArray() ?? Array.Empty<AIDetectorTask>();
-                        if (detectTasks != null && detectTasks.Length > 0)
-                        {
-                            // 并行执行AI检测任务，提高效率
-                            await Task.WhenAll(detectTasks.Select(t => t.Detect(_item.Id, _reusableRgbBuffer, _videoWidth, _videoHeight, _listener)));
-                        }
+                    bool hasDraw = false;
+                    var detectTasks = _aiDetectTaskList?.ToArray() ?? Array.Empty<AIDetectorTask>();
 
-                        //处理AI模块返回的绘画
-                        foreach (var t in detectTasks)
+                    // 执行AI检测
+                    await Task.WhenAll(detectTasks.Select(t => t.Detect(_item.Id, _reusableRgbBuffer, _videoWidth, _videoHeight, _listener)));
+
+                    // 执行绘制
+                    foreach (var t in detectTasks)
+                    {
+                        if (t.Draw(_reusableRgbBuffer, _videoWidth, _videoHeight))
                         {
-                            t.Draw(_reusableRgbBuffer, _videoWidth, _videoHeight);
+                            hasDraw = true;
                         }
-                        _increaseFrame = 0;
                     }
 
+                    _increaseFrame = 0;
 
-                    // 4. 重新进入unsafe块，将处理后的RGB编码为H264
+                    // 如果仍无绘制，直接转发原始包（兜底）
+                    if (!hasDraw)
+                    {
+                        unsafe
+                        {
+                            AVPacket* packet = (AVPacket*)_packetPtr;
+                            AVFormatContext* inputFormatContext = (AVFormatContext*)_inputFormatContextPtr;
+                            long timestampMs = (long)(packet->pts * ffmpeg.av_q2d(inputFormatContext->streams[_videoStreamIndex]->time_base) * 1000);
+                            bool isKeyFrame = (packet->flags & ffmpeg.AV_PKT_FLAG_KEY) != 0;
+                            byte[] h264Data = new byte[packet->size];
+                            Marshal.Copy((IntPtr)packet->data, h264Data, 0, packet->size);
+                            _zlPusher.PushH264Frame(h264Data, timestampMs, isKeyFrame);
+                        }
+                        return;
+                    }
+
+                    // 有绘制，执行编码流程
                     unsafe
                     {
                         AVCodecContext* encodeCodecContext = (AVCodecContext*)_encodeCodecContextPtr;
@@ -487,17 +529,15 @@ namespace FixVideoChannel
                         SwsContext* rgbToYuvSwsContext = (SwsContext*)_rgbToYuvSwsContextPtr;
                         AVFormatContext* inputFormatContext = (AVFormatContext*)_inputFormatContextPtr;
 
-                        // 5. 将AI处理后的RGB转换为YUV420P
+                        // 将AI处理后的RGB转换为YUV420P
                         fixed (byte* pRgb = _reusableRgbBuffer)
                         {
                             AVFrame* rgbFrame = (AVFrame*)_rgbFramePtr;
                             rgbFrame->data[0] = pRgb;
                             rgbFrame->linesize[0] = _videoWidth * 3;
 
-                            // 锁定YUV帧缓冲区
                             ffmpeg.av_frame_make_writable(yuvFrame);
 
-                            // 转换RGB到YUV
                             ffmpeg.sws_scale(
                                 rgbToYuvSwsContext,
                                 rgbFrame->data,
@@ -508,23 +548,20 @@ namespace FixVideoChannel
                                 yuvFrame->linesize);
                         }
 
-                        // 6. 设置YUV帧的属性
+                        // 设置YUV帧的属性
                         yuvFrame->pts = videoPts;
                         yuvFrame->pict_type = pictType;
                         bool isKeyFrame = (yuvFrame->pict_type == AVPictureType.AV_PICTURE_TYPE_I);
 
-                        // 7. 发送YUV帧到编码器
+                        // 发送YUV帧到编码器
                         int sendResult = ffmpeg.avcodec_send_frame(encodeCodecContext, yuvFrame);
-                        if (sendResult < 0)
+                        if (sendResult < 0 && sendResult != ffmpeg.AVERROR(ffmpeg.EAGAIN) && sendResult != ffmpeg.AVERROR_EOF)
                         {
-                            if (sendResult != ffmpeg.AVERROR(ffmpeg.EAGAIN) && sendResult != ffmpeg.AVERROR_EOF)
-                            {
-                                Console.WriteLine($"发送帧到编码器失败: {GetFFmpegErrorDescription(sendResult)}");
-                            }
+                            Console.WriteLine($"发送帧到编码器失败: {GetFFmpegErrorDescription(sendResult)}");
                             return;
                         }
 
-                        // 8. 循环接收编码后的包（必须处理所有包，包括SPS/PPS）
+                        // 接收编码后的包
                         AVPacket* encodePacket = ffmpeg.av_packet_alloc();
                         if (encodePacket == null) return;
 
@@ -533,7 +570,7 @@ namespace FixVideoChannel
                             int receiveResult;
                             while ((receiveResult = ffmpeg.avcodec_receive_packet(encodeCodecContext, encodePacket)) == 0)
                             {
-                                // 时间基转换：编码器时间基 -> 流时间基
+                                // 时间基转换
                                 ffmpeg.av_packet_rescale_ts(encodePacket, encodeCodecContext->time_base,
                                     inputFormatContext->streams[_videoStreamIndex]->time_base);
 
@@ -541,14 +578,15 @@ namespace FixVideoChannel
                                 byte[] encodedH264Data = new byte[encodePacket->size];
                                 Marshal.Copy((IntPtr)encodePacket->data, encodedH264Data, 0, encodePacket->size);
 
-                                // 计算时间戳（毫秒）
+                                // 计算时间戳
                                 long timestampMs = (long)(encodePacket->pts * ffmpeg.av_q2d(inputFormatContext->streams[_videoStreamIndex]->time_base) * 1000);
 
-                                // 推送编码后的H264数据
+                                // 推送数据
                                 _zlPusher.PushH264Frame(encodedH264Data, timestampMs, isKeyFrame);
+
+                                ffmpeg.av_packet_unref(encodePacket);
                             }
 
-                            // 处理编码器的非致命错误
                             if (receiveResult != ffmpeg.AVERROR(ffmpeg.EAGAIN) && receiveResult != ffmpeg.AVERROR_EOF)
                             {
                                 Console.WriteLine($"接收编码包失败: {GetFFmpegErrorDescription(receiveResult)}");
@@ -556,7 +594,6 @@ namespace FixVideoChannel
                         }
                         finally
                         {
-                            // 释放编码数据包
                             ffmpeg.av_packet_free(&encodePacket);
                         }
                     }
@@ -567,7 +604,6 @@ namespace FixVideoChannel
                 Console.WriteLine($"处理视频帧失败: {ex.Message}");
             }
         }
-
         /// <summary>
         /// 处理音频帧
         /// </summary>

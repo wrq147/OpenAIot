@@ -16,6 +16,22 @@ services:
   #   networks:
   #     mynetwork:
   #       ipv4_address: 172.18.0.8
+  zlmediakit:
+    image: zlmediakit/zlmediakit:master
+    container_name: zlmediakit
+    restart: always
+    volumes:
+      - ./zlmediakit/log:/opt/zlmediakit/log
+      - ./zlmediakit/media:/opt/zlmediakit/media
+    ports:
+      - "3254:8554"    # RTSP服务端口
+      - "3235:1935"  # RTMP服务端口
+      - "3280:80"  # HTTP/HLS/API端口
+    environment:
+      - ZLMEDIAKIT_TZ
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.9
   mz-rabbitmq:
     image: rabbitmq:3.12.6-management
     ports:

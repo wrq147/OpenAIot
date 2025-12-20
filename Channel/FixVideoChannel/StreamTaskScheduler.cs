@@ -47,7 +47,7 @@ namespace FixVideoChannel
             // 启动流处理工作线程
             for (int i = 0; i < ProcessWorkerCount; i++)
             {
-                new Thread(ProcessWorkerWrapper)
+                new Thread(ProcessWorkerLoop)
                 {
                     IsBackground = true,
                     Name = $"StreamProcessWorker_{i}"
@@ -81,20 +81,16 @@ namespace FixVideoChannel
             _globalPushQueue.Enqueue(task);
             _pushEvent.Set();
         }
-        private void ProcessWorkerWrapper()
-        {
-            ProcessWorkerLoop().GetAwaiter().GetResult();
-        }
 
         /// <summary>
         /// 流处理工作线程循环
         /// </summary>
-        private async Task ProcessWorkerLoop()
+        private async void ProcessWorkerLoop()
         {
             while (!_stopToken.IsCancellationRequested)
             {
                 // 等待任务信号（超时避免无任务时阻塞）
-                _processEvent.WaitOne(100);
+                _processEvent.WaitOne();
 
                 // 批量处理队列中的任务
                 while (_processQueue.TryDequeue(out var task))
@@ -124,7 +120,7 @@ namespace FixVideoChannel
         {
             while (!_stopToken.IsCancellationRequested)
             {
-                _pushEvent.WaitOne(100);
+                _pushEvent.WaitOne();
 
                 while (_globalPushQueue.TryDequeue(out var task))
                 {

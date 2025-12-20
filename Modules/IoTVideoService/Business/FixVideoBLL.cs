@@ -20,12 +20,13 @@ namespace IoTVideoService.Business
         {
             _provider = provider;
         }
-        private async Task DownUpVideoItemMessage(string nodeid, VideoCaptureItem item)
+        private async Task DownUpVideoItemMessage(string nodeid, VideoCaptureItem item, List<AIDetectItem> detectList)
         {
             UpVideoItemMessage msg = new UpVideoItemMessage();
             msg.DeviceId = string.Empty;
             msg.ProductId = string.Empty;
             msg.Item = item;
+            msg.DetectList = detectList;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
@@ -103,7 +104,17 @@ namespace IoTVideoService.Business
                 cpitem.FrameInterval = titem.FrameInterval.Value;
                 cpitem.PullAddr = titem.PullAddr;
                 cpitem.PushAddr = GeneratePushAddr(titem.PullAddr, titem.VideoKey);
-                await DownUpVideoItemMessage(nodeid, cpitem);
+                List<AIDetectItem> detectList;
+                if (string.IsNullOrEmpty(titem.AITasks))
+                {
+                    detectList = new List<AIDetectItem>();
+                }
+                else
+                {
+                    detectList = System.Text.Json.JsonSerializer.Deserialize<List<AIDetectItem>>(titem.AITasks);
+                }
+
+                await DownUpVideoItemMessage(nodeid, cpitem, detectList);
             }
             if (tpagelist.List.Count > 0)
             {

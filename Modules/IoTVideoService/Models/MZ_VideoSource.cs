@@ -48,9 +48,9 @@ namespace IoTVideoService.Models
         /// </summary>
         public int? FrameInterval { get; set; }
         /// <summary>
-        /// AI检测参数
+        /// AI检测任务
         /// </summary>
-        public string AIParams { get; set; }
+        public string AITasks { get; set; }
         /// <summary>
         /// 当前拉流的节点名称，无为空
         /// </summary>

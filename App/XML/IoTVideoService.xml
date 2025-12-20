@@ -49,9 +49,9 @@
             AI检测帧间隔,默认25帧
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.AIParams">
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.AITasks">
             <summary>
-            AI检测参数
+            AI检测任务
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.PullNode">

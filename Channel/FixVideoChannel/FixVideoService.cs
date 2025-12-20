@@ -46,8 +46,6 @@ namespace FixVideoChannel
             {
                 ffmpeg.RootPath = _option.ffmpeg_path;
             }
-            ffmpeg.avformat_network_init();
-
         }
         public void UpdateAIDraw(string videoId, string detType, List<BoxItem> boxList)
         {
@@ -92,6 +90,7 @@ namespace FixVideoChannel
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            ffmpeg.avformat_network_init();
             var eventBus = _provider.GetService<ClientBusProxy>();
             eventBus.OnSubProductMessage += _deviceEventListener.OnDeviceDownMessage;
 
@@ -104,6 +103,11 @@ namespace FixVideoChannel
 
 
             await StreamTaskScheduler.Instance.StartAsync(stoppingToken);
+        }
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            ffmpeg.avformat_network_deinit();
+            return base.StopAsync(cancellationToken);
         }
 
         private async Task KeepAliveTask(CancellationToken cancellationToken)

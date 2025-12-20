@@ -468,7 +468,7 @@ namespace FixVideoChannel
             if (disposing)
             {
                 // 释放托管资源
-                _ = Disconnect();
+                Disconnect();
             }
 
             // 释放非托管资源

@@ -68,11 +68,15 @@ namespace FixVideoChannel
             }
             await listener.OnSendAIDetectRequest(videoId, _item, rgbFrame, width, height);
         }
-        public void Draw(byte[] rgbFrame, int width, int height)
+        public bool Draw(byte[] rgbFrame, int width, int height)
         {
             if (!_item.EnableDraw)
             {
-                return;
+                return false;
+            }
+            if (_boxs.Count == 0)
+            {
+                return false;
             }
             using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
 
@@ -106,6 +110,7 @@ namespace FixVideoChannel
 
             // 将绘制后的图像数据写回rgbFrame
             image.CopyPixelDataTo(rgbFrame);
+            return true;
         }
         /// <summary>
         /// 绘制矩形边框
