@@ -16,6 +16,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AirJointUI\AirJointUI.csproj" />
-    <ProjectReference Include="..\AirJointWebView\Platform\Desktop\Avalonia.WebView.Desktop\Avalonia.WebView.Desktop.csproj" />
   </ItemGroup>
 </Project>

@@ -136,22 +136,7 @@ public partial class IndexView : UserControl
             });
         });
     }
-    private void btn_GoView(object sender, PointerPressedEventArgs e)
-    {
-        GoViewBTT.IsEnabled = false;
-        goViewTxt.Text = Properties.Resources.ResourceManager.GetString("Doing", I18NExt.Culture);
 
-        Task.Run(async () =>
-        {
-            //跳转到设置页面
-            MyVMLocator.Instance.Window.ContentViewModel = MyVMLocator.Instance.GoWebViewModel;
-            await Dispatcher.UIThread.InvokeAsync(async () =>
-            {
-                goViewTxt.Text = Properties.Resources.ResourceManager.GetString("WebReport", I18NExt.Culture);
-                GoViewBTT.IsEnabled = true;
-            });
-        });
-    }
 
     private async void btn_restoreAll(object sender, PointerPressedEventArgs e)
     {

@@ -1195,6 +1195,7 @@ namespace IoTService.Business
             data.OwnerOrgId = null;
             data.UseOrgId = null;
             data.UseUserId = null;
+            data.DevType = null;
             if (data.DState == "")
             {
                 data.DState = "正常";
@@ -1348,6 +1349,7 @@ namespace IoTService.Business
             data.DeviceNumber = data.DeviceNumber.Trim();
             data.NeedUpdateKey = false;
             data.dBm ??= 0;
+            data.DevType ??= 0;
 
             var tclassDAL = _provider.GetService<IotClassDAL>();
             if (!string.IsNullOrEmpty(product.Path))

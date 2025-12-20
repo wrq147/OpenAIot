@@ -1,13 +1,12 @@
 ﻿using ChannelUtility.Message;
 using ChannelUtility.Tsl;
 using IoTService;
-using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
+using TemplateAction.Core;
 namespace IoTRulesService.DataParser.Js
 {
     /// <summary>
@@ -204,27 +203,41 @@ namespace IoTRulesService.DataParser.Js
                 var tmpss = _client.Print(_msg.DeviceId, "功能调用异常", "无法死循环调用同一个功能");
                 return null;
             }
-           
-            var tmpxxxe = TslCache.GetTslModelByDtuId(deviceId, false, _client.Provider);
-            var tsl = tmpxxxe.Result;
 
-            FunctionInvokeMessage msg = new FunctionInvokeMessage();
-            msg.DeviceId = deviceId;
-            msg.ProductId = tsl.ProductId;
-            msg.FunctionId = funId;
-            msg.Inputs = inputs ?? new Dictionary<string, object>();
-            msg.SourceFunction = string.IsNullOrEmpty(curfun.SourceFunction) ? (curfun.DeviceId + "|" + curfun.FunctionId) : (curfun.SourceFunction);
-            msg.MessageId = Guid.NewGuid().ToString("N");
-
-            var tmpres = _client.PublicWaitFuncReply(msg);
-            var res = tmpres.Result;
-            if (res == null)
+            if (deviceId == this._msg.DeviceId)
             {
-                this.Print($"功能{funId}调用超时");
-                return null;
-            }
+                FunctionInvokeMessage msg = new FunctionInvokeMessage();
+                msg.DeviceId = deviceId;
+                msg.ProductId = this._msg.ProductId;
+                msg.FunctionId = funId;
+                msg.Inputs = inputs ?? new Dictionary<string, object>();
+                msg.SourceFunction = string.IsNullOrEmpty(curfun.SourceFunction) ? (curfun.DeviceId + "|" + curfun.FunctionId) : (curfun.SourceFunction);
+                msg.MessageId = Guid.NewGuid().ToString("N");
 
-            return res.Outputs;
+                var tmpres = _client.PublicWaitFuncReply(msg);
+                var res = tmpres.Result;
+                if (res == null)
+                {
+                    this.Print($"功能{funId}调用超时");
+                    return null;
+                }
+
+                return res.Outputs;
+            }
+            else
+            {
+                var tmpxxxe = TslCache.GetTslModelByDtuId(deviceId, false, _client.Provider);
+                var tsl = tmpxxxe.Result;
+                var tmpres = this._client.Provider.GetService<ServerBusProxy>().DownFunction(tsl.ProductId, deviceId, funId, inputs ?? new Dictionary<string, object>());
+                var res = tmpres.Result;
+                if (!res.IsSuccess())
+                {
+                    this.Print($"功能{funId}调用异常：{res.Message}");
+                    return null;
+                }
+
+                return res.Data;
+            }
         }
     }
 }

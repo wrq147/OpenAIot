@@ -44,10 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AirJointWebView\Avalonia.WebView\Avalonia.WebView.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Component\VPortNumberKeyboard.axaml.cs">
       <DependentUpon>VPortNumberKeyboard.axaml</DependentUpon>
     </Compile>

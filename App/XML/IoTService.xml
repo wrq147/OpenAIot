@@ -2133,6 +2133,11 @@
             信号强度
             </summary>
         </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.DevType">
+            <summary>
+            设备类型：0为普通设备，1为视频设备
+            </summary>
+        </member>
         <member name="P:IoTService.Models.MZ_IotDevice.Tags">
             <summary>
             标签列表

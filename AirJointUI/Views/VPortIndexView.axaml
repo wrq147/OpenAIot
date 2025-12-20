@@ -115,13 +115,6 @@
 
 			<StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" Margin="0 0 40 0">
 
-				<Border IsVisible="{Binding EnableGoWeb}" Name="GoViewBTT" PointerPressed="btn_GoView" Width="136" Height="52" Background="#FFFFFF" CornerRadius="5" Margin="15 0 0 0">
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-						<Image Width="18" Source="avares://AirJointUI/Assets/Images/set2.png"></Image>
-						<TextBlock  Text="{lang:Resx WebReport}" Name="goViewTxt" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6 0 0 0" Foreground="#666666" FontSize="18">
-						</TextBlock>
-					</StackPanel>
-				</Border>
 				
 				<Border PointerPressed="btn_alarmPressed" Width="136" Height="52" Background="#FFFFFF" CornerRadius="5">
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">

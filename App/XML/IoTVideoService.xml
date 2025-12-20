@@ -49,6 +49,11 @@
             AI检测帧间隔,默认25帧
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.AIParams">
+            <summary>
+            AI检测参数
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.PullNode">
             <summary>
             当前拉流的节点名称，无为空

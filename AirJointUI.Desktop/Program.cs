@@ -6,7 +6,6 @@ using System.Threading;
 
 using Avalonia;
 using Avalonia.ReactiveUI;
-using Avalonia.WebView.Desktop;
 namespace AirJointUI.Desktop;
 
 class Program
@@ -43,8 +42,7 @@ class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .UseReactiveUI()
-            .UseDesktopWebView();
+            .UseReactiveUI();
 
     private static void SilenceConsole()
     {

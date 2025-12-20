@@ -177,17 +177,6 @@ namespace AirJointUI
                         }
                         return _preAlarmListView;
                     }
-                case "AirJointUI.Views.GoWebView":
-                    {
-                        if (_isPortraitDisplay)
-                        {
-                            return new VPortGoWebView();
-                        }
-                        else
-                        {
-                            return new GoWebView();
-                        }
-                    }
                 default:
                     return new TextBlock { Text = "Not Found: " + name };
             }
@@ -247,16 +236,7 @@ namespace AirJointUI
             set => _isPortraitDisplay = value;
         }
         public string WifiName { get; set; } = "wlan0";
-        public bool EnableWeb
-        {
-            get { return _indexViewModel.EnableGoWeb; }
-            set { _indexViewModel.EnableGoWeb = value; }
-        }
-        public string ReportUrl
-        {
-            get { return _goWebViewModel.ReportUrl; }
-            set { _goWebViewModel.ReportUrl = value; }
-        }
+
         public MyVMLocator()
         {
             _instance = this;
@@ -265,13 +245,7 @@ namespace AirJointUI
             _alarmListViewModel = new AlarmListViewModel();
             _window = new MainWindowViewModel();
             _loadViewModel = new LoadViewModel();
-            _goWebViewModel = new GoWebViewModel();
         }
 
-        private GoWebViewModel _goWebViewModel;
-        public GoWebViewModel GoWebViewModel
-        {
-            get => _goWebViewModel;
-        }
     }
 }

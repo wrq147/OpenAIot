@@ -111,22 +111,7 @@ public partial class VPortIndexView : UserControl
         }
     }
 
-    private void btn_GoView(object sender, PointerPressedEventArgs e)
-    {
-        GoViewBTT.IsEnabled = false;
-        goViewTxt.Text = Properties.Resources.ResourceManager.GetString("Doing", I18NExt.Culture);
 
-        Task.Run(async () =>
-        {
-            //跳转到设置页面
-            MyVMLocator.Instance.Window.ContentViewModel = MyVMLocator.Instance.GoWebViewModel;
-            await Dispatcher.UIThread.InvokeAsync(async () =>
-            {
-                goViewTxt.Text = Properties.Resources.ResourceManager.GetString("WebReport", I18NExt.Culture);
-                GoViewBTT.IsEnabled = true;
-            });
-        });
-    }
     private void btn_alarmPressed(object sender, PointerPressedEventArgs e)
     {
         //跳转告警提示页面

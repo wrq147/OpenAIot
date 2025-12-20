@@ -1,5 +1,4 @@
 ﻿
-using AirJointUI.Api;
 using AirJointUI.Utils;
 using AirJointUI.Views;
 
@@ -8,7 +7,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
-using AvaloniaWebView;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -28,11 +26,6 @@ public partial class App : Application
     {
         var ex = e.ExceptionObject as Exception;
         Console.WriteLine($"全局异常：{ex}");
-    }
-    public override void RegisterServices()
-    {
-        base.RegisterServices();
-        AvaloniaWebViewBuilder.Initialize(default);
     }
 
     int defX = 6;
@@ -95,20 +88,6 @@ public partial class App : Application
                 if (tarr[1] != "")
                 {
                     MyVMLocator.Instance.WifiName = tarr[1];
-                }
-            }
-            if (tarr.Length > 2)
-            {
-                if (tarr[2] != "")
-                {
-                    MyVMLocator.Instance.EnableWeb = Convert.ToBoolean(tarr[2]);
-                }
-            }
-            if (tarr.Length > 3)
-            {
-                if (tarr[3] != "")
-                {
-                    MyVMLocator.Instance.ReportUrl = tarr[3];
                 }
             }
         }
