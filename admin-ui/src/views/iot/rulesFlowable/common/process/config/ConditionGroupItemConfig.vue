@@ -337,6 +337,7 @@ export default {
         }
         );
       }
+
       return conditionItems;
     }
   },
@@ -390,18 +391,8 @@ export default {
     filterCondition(item, list) {
       let opobj = item.option !== undefined ? item.option : item;
       let curtype = opobj.type;
-      if (
-        item.code &&
-        (curtype == "int" ||
-          curtype == "float" ||
-          curtype == "string" ||
-          curtype == "date" ||
-          curtype == "boolean" ||
-          curtype == "enum")
-      ) {
-        if (curtype == "boolean" || curtype == "enum") {
-          //如果是布尔型和枚举型，需携带比较参数
-          if (curtype == "boolean") {
+      if (item.code) {
+        if (curtype == "boolean") {
             let boolArr = [];
             boolArr.push({ "key": opobj.trueText, "value": "true" });
             boolArr.push({ "key": opobj.falseText, "value": "false" });
@@ -410,10 +401,11 @@ export default {
               gname: item.gname,
               title: item.name,
               code: item.code,
-              valueType: curtype
+              valueType: curtype,
+              value: "true",
+              valueFrom: 0
             });
-          }
-          if (curtype == "enum") {
+        }else if(curtype == "enum"){
             let enumArr = [];
             for (let key in opobj.elements) {
               if (item.option !== undefined) {
@@ -428,15 +420,28 @@ export default {
               gname: item.gname,
               title: item.name,
               code: item.code,
-              valueType: curtype
+              valueType: curtype,
+              value: enumArr.length>0?enumArr[0].value:"",
+              valueFrom: 0
             });
-          }
-        } else {
+        } else if(curtype == "int" ||curtype == "float" ||curtype == "date"){
           list.push({
             gname: item.gname,
             title: item.name,
             code: item.code,
-            valueType: curtype
+            valueType: curtype,
+            value:0,
+            valueFrom: 0
+          });
+        }
+        else if(curtype == "string"){
+          list.push({
+            gname: item.gname,
+            title: item.name,
+            code: item.code,
+            valueType: curtype,
+            value:"",
+            valueFrom: 0
           });
         }
       }
@@ -455,7 +460,6 @@ export default {
           //新增条件
           let condition = { ...this.conditionList[index] };
           condition.compare = "";
-          condition.value = [];
           group.conditions.push(condition);
         }
       });
