@@ -2,34 +2,2242 @@
 branches: {
   }
 fileChange:
-  /admin-ui:
-    newFile: !uuid '43d7a5b64d6d9d6104fe4ce1266a7491b369d371'
-    oldFile: !uuid '6a9f0bf4869ec66947c943ce6c105c8312597e6c'
-  /admin-ui/src:
-    newFile: !uuid '67a9a3a2ee1233f8db77c2487a0e7b9b75f5ffe9'
-    oldFile: !uuid 'e84847900c604fa0c0b17a3697e0425faca16a3c'
-  /admin-ui/src/views:
-    newFile: !uuid '9ec99c8260a31b66e24f76e189c4d932ed8485c2'
-    oldFile: !uuid '4614fa948dbbd70cd868dd1e02382b738020f522'
-  /admin-ui/src/views/iot:
-    newFile: !uuid 'a9b64e829910defe06adbf1910bc5ad683e989b7'
-    oldFile: !uuid '11e70c5ea64c7555bbb46c718fa632a101e2265a'
-  /admin-ui/src/views/iot/rulesFlowable:
-    newFile: !uuid '4a0cac789d298324b5b4fd94a5311824344755cb'
-    oldFile: !uuid '197f480ead755bfe7d94cd5f81fd89dad047f1c4'
-  /admin-ui/src/views/iot/rulesFlowable/common:
-    newFile: !uuid '2511628267c177db02fbce33c5bd802ed917cf2a'
-    oldFile: !uuid 'd9bcbaba4375989184288b0f798403b600e83ead'
-  /admin-ui/src/views/iot/rulesFlowable/common/process:
-    newFile: !uuid '32af5bbd5b2854423bef01fcbecfc39471d9732f'
-    oldFile: !uuid '16e1e6465c990209e21be97e4e23e452c0d04747'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config:
-    newFile: !uuid '8a06fdcceb2389bc5bd3b2648fd009a5d50505bf'
-    oldFile: !uuid '54b2ec0f8d5be98d9ec73784f3be02b048881de4'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config/ConditionGroupItemConfig.vue:
-    newFile: !uuid '2f5aeb0a50f449dace38deb84ff4fbe5de8fb383'
-    oldFile: !uuid '60aaf04cbbaf402b7198a7297e41900ed49a70f8'
-gitCommitId: !uuid 'c8e69f0add2e1978aba20bf099430bba2b02b319'
+  /AirJointUI:
+    newFile: !uuid '5ecb2735b2048b7e5bce452955b56c770a3b3775'
+    oldFile: !uuid 'de0486c702e85d58f61b535fd0c7fcf4aaf5ab17'
+  /AirJointUI.Desktop:
+    newFile: !uuid '4c20bdf448d16ccaf800a01a1d6f8586e831b9b9'
+    oldFile: !uuid 'c7ba68b8ab252bda9d4b05b36c2f61e231e4a08d'
+  /AirJointUI.Desktop/AirJointUI.Desktop.csproj:
+    newFile: !uuid '7547c32ed4b0294a1e8820aad187ef4d2d5ff777'
+    oldFile: !uuid 'ef971ec80102fe95fdef08a5207fd800ad099b1d'
+  /AirJointUI.Desktop/Program.cs:
+    newFile: !uuid '8989b785e062718cf3c7ea81bd63b334efb13e24'
+    oldFile: !uuid '71b23213c7cfc4c2eec978323bf59d9f7fbbc000'
+  /AirJointUI/AirJointUI.csproj:
+    newFile: !uuid 'f609f5ee6ef70c93a93b390becf60025023d2771'
+    oldFile: !uuid '47e4872061ccdb8dd26ca781589532c7967c5ef9'
+  /AirJointUI/App.axaml.cs:
+    newFile: !uuid '0df3f95558a21ed7f80316b3705f34543efea317'
+    oldFile: !uuid '9374fb1d50e0f7609f48c5e1dbbe7aa34cb3825f'
+  /AirJointUI/MyVMLocator.cs:
+    newFile: !uuid '073bd5a204ea58c73881dc4f2558323f19a44ddd'
+    oldFile: !uuid '9897076f179b966dca9d431a2e6e41d8d958d4ad'
+  /AirJointUI/ViewModels:
+    newFile: !uuid '95cee7211f122732d232e8331bd59637dc387f30'
+    oldFile: !uuid '702aa3cebf2eaaccc52ee07e918da38cd4da5e7e'
+  /AirJointUI/ViewModels/GoWebViewModel.cs:
+    newFile: null
+    oldFile: !uuid '2c4d031afbcedc56fd8f99c618781aad9f890b52'
+  /AirJointUI/Views:
+    newFile: !uuid 'c3540d788461dbca8e413d998eb9f329d1df5c75'
+    oldFile: !uuid '5a62adfc54bcc96de4ac718c5194e11906746335'
+  /AirJointUI/Views/GoWebView.axaml:
+    newFile: null
+    oldFile: !uuid '11467b4222928a75ee9c0f7e9d10ce806e968e0e'
+  /AirJointUI/Views/GoWebView.axaml.cs:
+    newFile: null
+    oldFile: !uuid '11972879c94a8af9a2e429929cf81b6a4a3cefdd'
+  /AirJointUI/Views/IndexView.axaml:
+    newFile: !uuid '698f023d25ce8523678f6a5d6753c9a27e5f3ab2'
+    oldFile: !uuid '5fc0329b57c6fcd6d5ce08e894c28aaa93a1006e'
+  /AirJointUI/Views/IndexView.axaml.cs:
+    newFile: !uuid '3b80bb5a83314c3a56924216e62de598e179fae5'
+    oldFile: !uuid '5bfdfad99975964479597e54a377b89c302c9d37'
+  /AirJointUI/Views/VPortGoWebView.axaml:
+    newFile: null
+    oldFile: !uuid '40dc9c064aa1b7bd1816c96b5d0c9927d9e2b3a2'
+  /AirJointUI/Views/VPortGoWebView.axaml.cs:
+    newFile: null
+    oldFile: !uuid '95236ca7d126a22b4ab4b514cd3f67b133145a02'
+  /AirJointUI/Views/VPortIndexView.axaml:
+    newFile: !uuid '1ffdfc7a90ebc42744e02f56aabfe4c7b84df207'
+    oldFile: !uuid 'ac809426201e3deedaeb812c4ffa267a3ab2b8fc'
+  /AirJointUI/Views/VPortIndexView.axaml.cs:
+    newFile: !uuid 'a5a7fb0ade31658feb359573fcd5d3c8656a3d8b'
+    oldFile: !uuid '4f4cac2b4ddca9fc2d419be71ca9ea4269363674'
+  /AirJointWebView:
+    newFile: null
+    oldFile: !uuid 'b99e2b529dadf14580c5a5360d32eebf82cea7c5'
+  /AirJointWebView/Avalonia.WebView:
+    newFile: null
+    oldFile: !uuid 'bfb4948ff7ea41073e0eab30bf1d2e690e3397dd'
+  /AirJointWebView/Avalonia.WebView/Avalonia.WebView.csproj:
+    newFile: null
+    oldFile: !uuid '2c3a56e78e7ca932e831bb0633ba7eb11daa7d87'
+  /AirJointWebView/Avalonia.WebView/AvaloniaWebViewBuilder.cs:
+    newFile: null
+    oldFile: !uuid '6deccb8e3781dcb7e720ded3362bdf5e207106b6'
+  /AirJointWebView/Avalonia.WebView/Core:
+    newFile: null
+    oldFile: !uuid '9f193fdb66a70a92c9fca193b2bc39fcb533c907'
+  /AirJointWebView/Avalonia.WebView/Core/IEmptyView.cs:
+    newFile: null
+    oldFile: !uuid 'aaf1a904e211d99fe8d1a88ad93f6b80c6101dd3'
+  /AirJointWebView/Avalonia.WebView/Helpers:
+    newFile: null
+    oldFile: !uuid 'b76f478aaf9b5372ee8858b56279c6c4dcb5eb54'
+  /AirJointWebView/Avalonia.WebView/Helpers/BorderRenderHelper.cs:
+    newFile: null
+    oldFile: !uuid '04dee51ece01605f2ce3e74f4e486b2d1e6dd940'
+  /AirJointWebView/Avalonia.WebView/Properties:
+    newFile: null
+    oldFile: !uuid '4cc19d607790386f2f2f6a5258c2a60bfda43a69'
+  /AirJointWebView/Avalonia.WebView/Properties/AssemblyInfo.cs:
+    newFile: null
+    oldFile: !uuid '110055b1072604bcdfb6a86e18ecd0fc955b28a0'
+  /AirJointWebView/Avalonia.WebView/Properties/_globalusing.cs:
+    newFile: null
+    oldFile: !uuid 'c6b0796a3f459b5bc075bef7e00424fd3c22cd6a'
+  /AirJointWebView/Avalonia.WebView/WebView-AvaloniaProperty.cs:
+    newFile: null
+    oldFile: !uuid 'dd4d46006c84820cff54eba3b24a784674dc4cf9'
+  /AirJointWebView/Avalonia.WebView/WebView-Core.cs:
+    newFile: null
+    oldFile: !uuid '19b27165cddd6904409cbb648b978b97b662d6f2'
+  /AirJointWebView/Avalonia.WebView/WebView-Events.cs:
+    newFile: null
+    oldFile: !uuid '3cd68b9b80e9f3cdc55ca44b12d5734527bff521'
+  /AirJointWebView/Avalonia.WebView/WebView-Host-AvaloniaProperty.cs:
+    newFile: null
+    oldFile: !uuid '46e9b9a8e5f95397d181a282145ad60ca8ae933e'
+  /AirJointWebView/Avalonia.WebView/WebView-Override.cs:
+    newFile: null
+    oldFile: !uuid 'cdd34cbbda3758e38acba269652a6eb1288adaef'
+  /AirJointWebView/Avalonia.WebView/WebView-VirtualView.cs:
+    newFile: null
+    oldFile: !uuid 'cb15b0916277cd7dd1c168135ec8045260930f35'
+  /AirJointWebView/Avalonia.WebView/WebView-VirtualViewCallBack.cs:
+    newFile: null
+    oldFile: !uuid '64cef317e95f9c224e6019a570316e46eaa5a608'
+  /AirJointWebView/Avalonia.WebView/WebView-WebViewControl.cs:
+    newFile: null
+    oldFile: !uuid '9ec99f276a35bb1bc87fea6a9d6cb54e4ce550d7'
+  /AirJointWebView/Avalonia.WebView/WebView.cs:
+    newFile: null
+    oldFile: !uuid 'd9b66df0fa0aab24048f7c3dfaaa3759a9c49f28'
+  /AirJointWebView/AvaloniaWebView.Shared:
+    newFile: null
+    oldFile: !uuid '7f13e4a9f7aa75730c5e22f46b55b9d015bc5bc1'
+  /AirJointWebView/AvaloniaWebView.Shared/AppBuilderExtensions.cs:
+    newFile: null
+    oldFile: !uuid '082d54f77872d78e200e59ec29b01c5cdaf24d09'
+  /AirJointWebView/AvaloniaWebView.Shared/AvaloniaWebView.Shared.csproj:
+    newFile: null
+    oldFile: !uuid '60ba3ea75703a6af9bbff095f6787e67d6023d68'
+  /AirJointWebView/AvaloniaWebView.Shared/Core:
+    newFile: null
+    oldFile: !uuid '03a20f453e98813f7fa980d988cb3bdab77e6f3b'
+  /AirJointWebView/AvaloniaWebView.Shared/Core/AvaloniaHandlerCollection.cs:
+    newFile: null
+    oldFile: !uuid '4e6d13702b40f64532f4bcdfc26c635fe7b6184d'
+  /AirJointWebView/AvaloniaWebView.Shared/Extensions:
+    newFile: null
+    oldFile: !uuid 'd3e74f133e99846bcfdfef85f3d618f35d82a00d'
+  /AirJointWebView/AvaloniaWebView.Shared/Extensions/AvaloniaCommonExtensions.cs:
+    newFile: null
+    oldFile: !uuid '719a22e17ce704dcf87469fe0763076a3712e536'
+  /AirJointWebView/AvaloniaWebView.Shared/Handlers:
+    newFile: null
+    oldFile: !uuid '02887563328ef611f0b8b88c4e3aabd72b40a39e'
+  /AirJointWebView/AvaloniaWebView.Shared/Handlers/ViewHandler.cs:
+    newFile: null
+    oldFile: !uuid 'd67ddf299fe7e1276007a93c7ee2dd4528cda115'
+  /AirJointWebView/AvaloniaWebView.Shared/Handlers/ViewHandler@T.cs:
+    newFile: null
+    oldFile: !uuid 'd43ad6d920d4023e523e5bc286147f0b4bb68ee5'
+  /AirJointWebView/AvaloniaWebView.Shared/IAvaloniaHandlerCollection.cs:
+    newFile: null
+    oldFile: !uuid '764e3143811851394502f19c93197a40c65d1aa1'
+  /AirJointWebView/AvaloniaWebView.Shared/IAvaloniaHandlerCollectionExtensions.cs:
+    newFile: null
+    oldFile: !uuid 'ae15b794f35b42cb5e74a370a2ef6cb17538c8d3'
+  /AirJointWebView/AvaloniaWebView.Shared/IPropertyMapper.cs:
+    newFile: null
+    oldFile: !uuid 'c911e99a6bf9238266c1df05d60fd45b932f7929'
+  /AirJointWebView/AvaloniaWebView.Shared/IPropertyMapper@T.cs:
+    newFile: null
+    oldFile: !uuid '1bb596820ea8504f6e9af3a77502a9dc98a17ec4'
+  /AirJointWebView/AvaloniaWebView.Shared/IViewHandler.cs:
+    newFile: null
+    oldFile: !uuid 'c65fb475bad62af418caf88cf4b80d04311836bf'
+  /AirJointWebView/AvaloniaWebView.Shared/IViewHandlerProvider.cs:
+    newFile: null
+    oldFile: !uuid '0670e6c286ce9c58481d6e0f4dbdd1603c52cd1e'
+  /AirJointWebView/DryIoc.Shared:
+    newFile: null
+    oldFile: !uuid 'dc59be4f9671524bcaae9efbfb943360511f57ae'
+  /AirJointWebView/DryIoc.Shared/DryIoc.Shared.csproj:
+    newFile: null
+    oldFile: !uuid '1488101088d3ad6bd49fcfe1220786d7ecabdcc3'
+  /AirJointWebView/DryIoc.Shared/Extensions:
+    newFile: null
+    oldFile: !uuid 'c81a68d392d6313713dd2d2da018d93bb0750660'
+  /AirJointWebView/DryIoc.Shared/Extensions/DryIocExtensions.cs:
+    newFile: null
+    oldFile: !uuid 'afaba100f2c25175d9f7cd53711d14ad995ba0b3'
+  /AirJointWebView/DryIoc.Shared/Extensions/DryIocExtensionsEx.cs:
+    newFile: null
+    oldFile: !uuid 'b3e5db14e57369228795dea82ac46b6ec69aa1d1'
+  /AirJointWebView/DryIoc.Shared/Extensions/DryIocExtensionsTx.cs:
+    newFile: null
+    oldFile: !uuid '3cbe71b32271e682275fbcd05e4b98b024cdd74d'
+  /AirJointWebView/DryIoc.Shared/Extensions/RulesExtensions.cs:
+    newFile: null
+    oldFile: !uuid '03d29a4af68b7b7de2491a5eafccdaf4c0479625'
+  /AirJointWebView/Platform:
+    newFile: null
+    oldFile: !uuid '5620a4114142db607c9c98369e853d6307d5e117'
+  /AirJointWebView/Platform/Desktop:
+    newFile: null
+    oldFile: !uuid 'd895ce57c7823f0b66887067fdddf7bf1d14ac60'
+  /AirJointWebView/Platform/Desktop/Avalonia.WebView.Desktop:
+    newFile: null
+    oldFile: !uuid '3ec1a847659c9a11bd88f840c557d3db30aa2762'
+  /AirJointWebView/Platform/Desktop/Avalonia.WebView.Desktop/AppBuilderExtensions.cs:
+    newFile: null
+    oldFile: !uuid '061b658a85887acff87fe799009c1693d3f4c752'
+  /AirJointWebView/Platform/Desktop/Avalonia.WebView.Desktop/Avalonia.WebView.Desktop.csproj:
+    newFile: null
+    oldFile: !uuid '62520a34364ea1932b68da54410bb5bd050df325'
+  /AirJointWebView/Platform/Linux:
+    newFile: null
+    oldFile: !uuid '414bbbd30c5f8989435424a3a003937da5903eb5'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux:
+    newFile: null
+    oldFile: !uuid '47f75654447be7674cd19f8884e20d7c3b8822b2'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/AppBuilderExtensions.cs:
+    newFile: null
+    oldFile: !uuid '4b527fbd203edbcadee9d9cdcd9e231e75d37a29'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Avalonia.WebView.Linux.csproj:
+    newFile: null
+    oldFile: !uuid '9f6b64635ec450c9ac13c3898bc41d0102c264eb'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/BlazorWebViewHandlerProvider.cs:
+    newFile: null
+    oldFile: !uuid 'c9272e2f0304332e8a45c6a6271b1037538ae5df'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Core:
+    newFile: null
+    oldFile: !uuid 'fbdf4ccb52e70e80a9e4a22a44603155718cded5'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Core/LinuxWebViewCore-assist.cs:
+    newFile: null
+    oldFile: !uuid '0795852d7c4bfd25d1c40f2a27cc5351824f9441'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Core/LinuxWebViewCore-core.cs:
+    newFile: null
+    oldFile: !uuid '0d2bb67572707a5c9ef5926312d450639e785357'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Core/LinuxWebViewCore-event.cs:
+    newFile: null
+    oldFile: !uuid '655e80bba1adb26725c9c1e835eceef43c541d68'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Core/LinuxWebViewCore-override.cs:
+    newFile: null
+    oldFile: !uuid '78b78901c4c44d06ad578fcea74b4300e614e20c'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Core/LinuxWebViewCore.cs:
+    newFile: null
+    oldFile: !uuid '87297e394d9464f7459191f095d083af97a53db2'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Handlers:
+    newFile: null
+    oldFile: !uuid '048358020dc5b44792069122f2cf0510a6ef656f'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Handlers/JavaScriptValueCallback.cs:
+    newFile: null
+    oldFile: !uuid '93068d23a05fccdfa7f7bfc8a1c64bcb4ab7a1da'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Helpers:
+    newFile: null
+    oldFile: !uuid '985f7fa86f34a66a3d6a22c9679b859c563c1d40'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Helpers/BlazorScriptHelper.cs:
+    newFile: null
+    oldFile: !uuid '5048b202d17229762ff93bf6e4918a391839b265'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Properties:
+    newFile: null
+    oldFile: !uuid 'e3ca12a9d9ca326f64fb14ec75886ae8d11b1317'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/Properties/_globalusing.cs:
+    newFile: null
+    oldFile: !uuid '17b4ea13ed3aabe15daab16addad1eaebf11488a'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/ViewHandlerProvider.cs:
+    newFile: null
+    oldFile: !uuid '74a722bdd2e55a5c321f5ac9ff732cf203c090e0'
+  /AirJointWebView/Platform/Linux/Avalonia.WebView.Linux/WebViewHandler.cs:
+    newFile: null
+    oldFile: !uuid 'dc9bf4d287da7d8047046e287cfa3ad5bb4dd2db'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core:
+    newFile: null
+    oldFile: !uuid '6c0cc075d8e7500e999725ae5fe95a5b067fd784'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Core:
+    newFile: null
+    oldFile: !uuid '6daebd8dfa56ffd60c583c1dee8f1c6dae43d811'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Core/LinuxApplication.cs:
+    newFile: null
+    oldFile: !uuid '60224323e9461462818b6597dc3153001c2cb4ab'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Core/LinuxDispatcher.cs:
+    newFile: null
+    oldFile: !uuid 'f3c0ff7ba2aee31858131569e798ad8f3c87a2e0'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Extensions:
+    newFile: null
+    oldFile: !uuid '73d2860581e130c0bdb5ae93470861cd8830f93e'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Extensions/GtkWindowExtesnsions.cs:
+    newFile: null
+    oldFile: !uuid 'd3be889e6ca0674483089a4e2ee82619eded0cf7'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/ILinuxApplication.cs:
+    newFile: null
+    oldFile: !uuid 'c585fd42e78d17f6875c5e37f5d105ff60057aa8'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/ILinuxDispatcher.cs:
+    newFile: null
+    oldFile: !uuid 'a58ad323f7498fb1b75de3a9a514402fabd24dad'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates:
+    newFile: null
+    oldFile: !uuid '2ec3ce0dc9670f40782df854022a70d582137cae'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/GSList.cs:
+    newFile: null
+    oldFile: !uuid 'b9ecb5dfffdb1e50047fe42bcafa1867d4794c6b'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/GtkApi.cs:
+    newFile: null
+    oldFile: !uuid 'bb74889fafc4e964a4bb7130f1c574a0d58d05e3'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/Interop_gdk.cs:
+    newFile: null
+    oldFile: !uuid 'ca1db149bf9d31a8f7a3f34059e5a20d6a44608b'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/Interop_gdk_x11.cs:
+    newFile: null
+    oldFile: !uuid 'a59bb2f85c5dc3482590178b7d429f82e80f0546'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/Interop_glib.cs:
+    newFile: null
+    oldFile: !uuid '367a4c1110dfd8b4ecb8be164c4c2b6f699254aa'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/Interop_gobject.cs:
+    newFile: null
+    oldFile: !uuid '9bd9b3cbf719be1ddc0c91ea85facdebd05f9280'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/Interop_gtk.cs:
+    newFile: null
+    oldFile: !uuid '82cc7204257d4f9aac08a17dab5d976ecbcf77f7'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/Interop_webkit.cs:
+    newFile: null
+    oldFile: !uuid '2ae9485051308a0527a2fa1f0af1ea6e2956b740'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/LibraryLoader.cs:
+    newFile: null
+    oldFile: !uuid 'ac5ae00694f66e4210de370c46c83c357095839d'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Interoperates/gLibrary.cs:
+    newFile: null
+    oldFile: !uuid '3cba98c9cc1b28566d6afc734fc456e1f1f15702'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Linux.WebView.Core.csproj:
+    newFile: null
+    oldFile: !uuid 'fad8a2ba6c707977608c13ab7fce1f9c795f2ea0'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/LinuxApplicationBuilder.cs:
+    newFile: null
+    oldFile: !uuid '613d5cc73e0c451454410fd6aedf3689d5caee8e'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/LinuxApplicationManager.cs:
+    newFile: null
+    oldFile: !uuid 'dac6259a83af5d651250e670344ac62607c0ce7b'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Properties:
+    newFile: null
+    oldFile: !uuid 'a5071e8f8369d2426c57f02fd37e57820479d3f9'
+  /AirJointWebView/Platform/Linux/Linux.WebView.Core/Properties/_globalusing.cs:
+    newFile: null
+    oldFile: !uuid '05dc40fabd6ecbbe1a8d03cee98d5c3c2b12d113'
+  /AirJointWebView/Platform/Windows:
+    newFile: null
+    oldFile: !uuid 'ea7624e7008d1f683e8fa573c6b854b6d499d887'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows:
+    newFile: null
+    oldFile: !uuid '7871ae99dc95dabf7f6e10bfb47caeb073a095ee'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/AppBuilderExtensions.cs:
+    newFile: null
+    oldFile: !uuid 'bd22c1afc76729f77177be43ac0cf960da38b8ab'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Avalonia.WebView.Windows.csproj:
+    newFile: null
+    oldFile: !uuid '0286ecd416f8e9374adf39c60b29176c675cb59f'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/BlazorWebViewHandlerProvider.cs:
+    newFile: null
+    oldFile: !uuid '1b21570b039caba8da8c714c081ac3a4662ac437'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Core:
+    newFile: null
+    oldFile: !uuid '3096aa26b7e78415ee4aac5d62507be5e204370d'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Core/WebView2Core-assist.cs:
+    newFile: null
+    oldFile: !uuid '5e28cf3fc0720b82845ca0ce90e2eca223df455e'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Core/WebView2Core-core.cs:
+    newFile: null
+    oldFile: !uuid '1596ddad7f34d2fe56aa91076e64b10e96f02950'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Core/WebView2Core-event.cs:
+    newFile: null
+    oldFile: !uuid '4c6b1e36d635af0aa4cd799243495e27f93933f2'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Core/WebView2Core-override.cs:
+    newFile: null
+    oldFile: !uuid '7030367cea7ab86bca95d00f90b3fc4b97a8b66c'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Core/WebView2Core.cs:
+    newFile: null
+    oldFile: !uuid '052d90a506db4b8ce977e5afc4fb3c38fa030742'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Helpers:
+    newFile: null
+    oldFile: !uuid 'c39614e6d179495f0d8a48b3875410b2a0dbaa1f'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Helpers/BlazorScriptHelper.cs:
+    newFile: null
+    oldFile: !uuid '79ab44729eeb2aba2314d1644a4114fb690da852'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Properties:
+    newFile: null
+    oldFile: !uuid '029fa23e0d0c2259a8d535b0871aba9b52c35b6c'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/Properties/_globalusing.cs:
+    newFile: null
+    oldFile: !uuid 'c49c9cddbde8340bfe6c08a77fab1bb359ca2bc8'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/ViewHandlerProvider.cs:
+    newFile: null
+    oldFile: !uuid 'e7dc9afede09c7bb3fa56c3682fa8a75de61327a'
+  /AirJointWebView/Platform/Windows/Avalonia.WebView.Windows/WebViewHandler.cs:
+    newFile: null
+    oldFile: !uuid 'c8656fd189399a01e7abf19657fea6eb39b67895'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core:
+    newFile: null
+    oldFile: !uuid '8a69650d254df2d3950cf3bacda18f3496e69c33'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/COMDotNetTypeConverter.cs:
+    newFile: null
+    oldFile: !uuid '4ef4d045af4f0024b2ca6fd5a84df91e6be3d910'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/COMStreamWrapper.cs:
+    newFile: null
+    oldFile: !uuid '42ec36ac1018454f6a73f3daf84e89bb80bf0736'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2.cs:
+    newFile: null
+    oldFile: !uuid 'd9ca5cb89f5008b345d799c313065cd1c7f44aad'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2AcceleratorKeyPressedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '9e28618116cc64ec7bd7fb02865d95b844b92b9c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2AcceleratorKeyPressedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'f9775eeae8360561dabb16f24d723c3b8f392f32'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '533b5331e6b0cfff22faade30550f2b43921c8c5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BasicAuthenticationRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'cb72758d034eb32022046d05e28255d6a3d3cd12'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BasicAuthenticationRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '6d34fbf33b4136e1d4b96455f953908a9b658b6d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BasicAuthenticationResponse.cs:
+    newFile: null
+    oldFile: !uuid 'b2f34242ce0213f66d43524b628ffda7b732d9f3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BoundsMode.cs:
+    newFile: null
+    oldFile: !uuid '3175bd457da36ffd15226f6c8b86e9e6c986bc41'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BrowserProcessExitKind.cs:
+    newFile: null
+    oldFile: !uuid 'f60281eaff2b629fd667241cdad641f06d47f861'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BrowserProcessExitedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '32de5042ebbf2e868cb74ed7447f2f4c0eb328ae'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BrowserProcessExitedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'cf8b7730393cc0732fd85c390dc41d7c59d08833'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BrowsingDataKinds.cs:
+    newFile: null
+    oldFile: !uuid '15c0355ae079c174fedfb2ee99666f837233b0c5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2BytesReceivedChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '7c00c3aa634d69ef620be36ffbb2bb8f042bdbda'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CallDevToolsProtocolMethodCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'ac3e11d4bac8b19948b3dd7e53259f107c85c635'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CapturePreviewCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '3a79b30ce3d1f94f385cd1ed6cc3b53e53819f6e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CapturePreviewImageFormat.cs:
+    newFile: null
+    oldFile: !uuid 'd6c7aabc03d20d1e7edd324e3e114c771309f76a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Certificate.cs:
+    newFile: null
+    oldFile: !uuid '942554cd28eb0454339271a55a7290f6d5f1094a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClearBrowsingDataCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'd8d26b7c31b3d36d5e64edb123c46c5c9f854162'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClearCustomDataPartitionCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '1e691e0b127199f36616d47c14d61a7029d8a214'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClearServerCertificateErrorActionsCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '3bab96692198ca3bc8f9a9ae35e354a2cf640a5b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClientCertificate.cs:
+    newFile: null
+    oldFile: !uuid 'f6ab141e63670d26cc3531b2f14147f66087a00d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClientCertificateKind.cs:
+    newFile: null
+    oldFile: !uuid '54e046ebca809f06daf068bae05b76b3eb65fbf9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClientCertificateRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '3a187497df0c935a23ea08785bb60c739772ded5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ClientCertificateRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '6d7cc0897c3a3b30b5eca34ca71dcd9f20f7788d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Color.cs:
+    newFile: null
+    oldFile: !uuid '05ed2595f8d7c921504cf784ba8a7b79b7eb4afd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CompositionController.cs:
+    newFile: null
+    oldFile: !uuid '340a3726967eda0717ba6f74c6ee695c5cb07824'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContainsFullScreenElementChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '45ace28980ed7b12d02fa21d19d29d95101198b2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContentLoadingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '0f2fbf4f0099ea2d7133396e5e3cbcac7a98a76a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContentLoadingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'f5747ea54c0e995e9d66746ad6bd62233f11152e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContextMenuItem.cs:
+    newFile: null
+    oldFile: !uuid '525e556433e089cc2bac43418360147e337443a6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContextMenuItemKind.cs:
+    newFile: null
+    oldFile: !uuid '557aeca4fb023bbece2e7c5fe699b25d37e0d11c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContextMenuRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'c50281f566fcbc3e7e15168af242376874cf8ffa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContextMenuRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'c5fd7905b0f80a0aadd2e853c01cce97a76151d1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContextMenuTarget.cs:
+    newFile: null
+    oldFile: !uuid '89cae2365f9ec8f946325df605acbfc3b9c85020'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ContextMenuTargetKind.cs:
+    newFile: null
+    oldFile: !uuid '34cbbf00d93b765048c87794a112a66fe0ddcd0f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Controller.cs:
+    newFile: null
+    oldFile: !uuid '2fd35aee89cc6292caee36cd57e106904d2c26a4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ControllerOptions.cs:
+    newFile: null
+    oldFile: !uuid '22c2d7a1a2bd91e06640b93639f2298c441a19dd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Cookie.cs:
+    newFile: null
+    oldFile: !uuid '428902c353b16e0765bf9f4829869b77cfa4123c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CookieManager.cs:
+    newFile: null
+    oldFile: !uuid 'bc1616177bbcb149840256600129b739672d2428'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CookieSameSiteKind.cs:
+    newFile: null
+    oldFile: !uuid '6670d6f3e666d86c80c98562d25b48171bfce597'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '7db1759b84393dc429a73d6d42db14d151e59865'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CreateCoreWebView2ControllerCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '00ad090e9c24960e5e77e091172739b57fd7c084'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CreateCoreWebView2EnvironmentCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '1d00b25580874dc15e0fe90da522c02faeab74d4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CursorChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '24f3173478ac883dd79408a621238be9b9fcab07'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CustomItemSelectedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'f17ef5c2cad58535198e4bbfa985f0082959d1b7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2CustomSchemeRegistration.cs:
+    newFile: null
+    oldFile: !uuid 'ff58cf6763eb955ed55401f01918688e8bfd1815'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DOMContentLoadedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '2fea42e48e22310e620a135500f05fd46e8146e1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DOMContentLoadedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '273ddce4b8bb306ea9e7018dea0241a68aef96de'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DefaultDownloadDialogCornerAlignment.cs:
+    newFile: null
+    oldFile: !uuid '0651ddb9658dca0ef5b83e8835067514b335faa6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Deferral.cs:
+    newFile: null
+    oldFile: !uuid 'c246f6202993ea023fba8ecfa85fa8f0493cfd15'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DevToolsProtocolEventReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '3fd16532e29be05ca5e9bd102eefd5c662ffc87f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DevToolsProtocolEventReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '672a5d9586eb686ba59e5fea211797a72ea3e77a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DevToolsProtocolEventReceiver.cs:
+    newFile: null
+    oldFile: !uuid 'e5169972331b4e7ad66c74814ee7ad2b6d333201'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DocumentTitleChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b7488f2aa375c34e29abe56b1d068191db8924de'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DownloadInterruptReason.cs:
+    newFile: null
+    oldFile: !uuid '365b158029ff372bd0af4b37c016f7c4a7d9914c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DownloadOperation.cs:
+    newFile: null
+    oldFile: !uuid '313a9744f33eef06350225d7bd8152fd3e84ada1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DownloadStartingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '588a5beda23f0c8250c01bd44c791839b735b1b5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DownloadStartingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '147546ebcdba8959f64e5543b7338996eba4d84a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2DownloadState.cs:
+    newFile: null
+    oldFile: !uuid 'd61e9804e2e38a37efd25532bafdf0349d9c7e00'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Environment.cs:
+    newFile: null
+    oldFile: !uuid '44c35edbd1312ee5766a71850fbb802fc362c980'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2EnvironmentOptions.cs:
+    newFile: null
+    oldFile: !uuid '4c51850bfe454530b8233bcf8e6ae25cbae0fea1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2EstimatedEndTimeChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'e0058d8bd4bdba98cd9997b3eeff5a6c96a3953c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExecuteScriptCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '645be479105c67b878dcf4dbb3cee4fd0c3dea59'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExecuteScriptResult.cs:
+    newFile: null
+    oldFile: !uuid '2815e53ce1563f578b748ed2d4f8aa9ee871dc38'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExecuteScriptWithResultCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '7837e737f8e178e87b4c5a2902a7ec1dc4bbad8a'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalLaunchingExternalUriSchemeEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '627d53660804d2ec248d8f39afc876143978fcc1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalProfileDeletedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'e03b6de6cd77fe853b93904047f9ce284b7548a1'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalRasterizationScaleChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '3d84ece1c939d26efef6388187f18abd149f05fe'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalRenderAdapterLUIDChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid 'edc6fd918ba1ad6e9fa1a948d902f6951931f11c'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalTextureStreamErrorReceivedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '397ac190be2203fb360f4e5a728c5c0491fbbfaa'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalTextureStreamStartRequestedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '38e5a8f5dd016d3c47348b9f001fa64d856bcc09'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalTextureStreamStoppedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'e9badec96cfe879bc9f1e53ca63e761e3f234dd3'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalTextureStreamWebTextureReceivedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid 'dfb58790f68f103cf1e7729122e32f5cfd30ec87'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ExperimentalTextureStreamWebTextureStreamStoppedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid 'd854fb1c2ad4fed97e0c5c67973487bf49bf08f6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FaviconChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '6290998a47b99184a9ad1adcff6d3f0541f78f9e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FaviconImageFormat.cs:
+    newFile: null
+    oldFile: !uuid '0ad7b3da1172ce815760ff75a60c630eecfbf742'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2File.cs:
+    newFile: null
+    oldFile: !uuid '2e562dd13ecf0116c865a80d72ad2223ebeb22d9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FocusChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '2ab9aa720cd1167377c556c2eb214c7bc8e3ec0a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Frame.cs:
+    newFile: null
+    oldFile: !uuid '95f35acc8fc134c971ddf781322dac4eba45cb99'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameContentLoadingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '1e68bbb4c310be88e91f17ca40099df14c303eaa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameCreatedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '79043518b5710fc996c66aa44d84d64e2380e994'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameCreatedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '28645fd76085a66da155861dfda43c1a5a3e9f6c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameDOMContentLoadedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '64d5821c14eff1bdcf1f10aacfe54673d9c87d2a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameDestroyedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '285f7a332c4dd8a50069440bd630e6a8bc7673ac'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameInfo.cs:
+    newFile: null
+    oldFile: !uuid '4d1ec8ebe97943800d7ef51ca26013dc61b80aa8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameNameChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '05ce0b361358ea3ddbab4de5be5fce8b4a94f3c9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameNavigationCompletedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '0f5d993a3cba076a245db5154252265566fb5dc3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameNavigationStartingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '43b90b0b3c99b111876d51412f8591d37d3bba69'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FramePermissionRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '0083297aba83c342c49957169f8616e333e14559'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2FrameWebMessageReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'bb133933de665b5991f9dad7d93993389c423d8e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2GetCookiesCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'adf7650b20f98bc046b8f01489491829531ec5da'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2GetFaviconCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '17d43a87b7fab18c1f47a4f950a59af0a7f82050'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2GetNonDefaultPermissionSettingsCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '82e0aef1e318cf21586e9f0bed28e0fecf381917'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2HistoryChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'd16a8415489018699d80664b5f40a5c8ef7ba10b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2HostResourceAccessKind.cs:
+    newFile: null
+    oldFile: !uuid '40906db1a5a0bed34854a4f63b1d3da172126360'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2HttpHeadersCollectionIterator.cs:
+    newFile: null
+    oldFile: !uuid '718da12e95696834bc8374ea7bde8ec73248bf93'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2HttpRequestHeaders.cs:
+    newFile: null
+    oldFile: !uuid '5f2b64835884faceef71460f5668ffad2167e46b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2HttpResponseHeaders.cs:
+    newFile: null
+    oldFile: !uuid 'aed4f7f1012645884985102be55953d51f9e9ef2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2InitializationCompletedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '76ba32dbb9bfab430b52a7ea8d8f1c0180f08cef'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid 'be1956a52c497a725025fa1c6f3e121b20a62747'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2IsDocumentPlayingAudioChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'cf1e0657ff1cbf501d0b0912cedd49b15768236c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2IsMutedChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '78d4e7c16b10cb03c91c42f72217c9199a34e0ba'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2KeyEventKind.cs:
+    newFile: null
+    oldFile: !uuid '42b1adac61b26e0c80f3793b7a68e7ecae9993c0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2LaunchingExternalUriSchemeEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '178d41628d12c5cc784d1b8f4335fd32b6a17d0d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Matrix4x4.cs:
+    newFile: null
+    oldFile: !uuid '3413acf6374990de1f93b5d566431252026b673f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2MemoryUsageTargetLevel.cs:
+    newFile: null
+    oldFile: !uuid 'bfa366608be9d6fbb483a2fbf41897b0bba2fbc6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2MouseEventKind.cs:
+    newFile: null
+    oldFile: !uuid 'ad36391dabc24b433eea4c214184dd8ab288daa7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2MouseEventVirtualKeys.cs:
+    newFile: null
+    oldFile: !uuid '8f0cf910dfdb800632cf0dbedeaac6b10efa5af6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2MoveFocusReason.cs:
+    newFile: null
+    oldFile: !uuid '798450e6eba49a99c178842a4e81833e488e0644'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2MoveFocusRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'ca119051bf36eef2ad358886cf096d8689618fb9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2MoveFocusRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '64e7bb7b00d0b4bd045ba648d8703b37f855717f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NavigationCompletedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'b1c24acc7593c6cda671f19e9ed12da829b25206'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NavigationCompletedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '7759a34f4bd9c42c4b4a5e37e223f9ed6acfa374'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NavigationKind.cs:
+    newFile: null
+    oldFile: !uuid 'be0d25093853c88c1d3c53893c42e1ec8751246c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NavigationStartingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'e01d59ed10e4addfe00dc06b4170cacd8adbf528'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NavigationStartingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'c4a0f841d3fe663e34e20341686012828a3beddf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NewBrowserVersionAvailableEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '2db86a3da3bcab28087abb7e7472207a2ff0f870'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NewWindowRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'e0c2c6c507d393077046e3c5d8cbb42df2ec240f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2NewWindowRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '31aca54df47d52dd20860b126682b350f02cf8dd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PdfToolbarItems.cs:
+    newFile: null
+    oldFile: !uuid 'edf63dd4cb7a6e1720375d9c6dd8cc97383f4924'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PermissionKind.cs:
+    newFile: null
+    oldFile: !uuid '9f7bfed815d023cfa1c91ef56727a9fa5babc177'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PermissionRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '482f779107979ed00c061d1a09190de110cf8de3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PermissionRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '9d227381accac774acd9e24b9fbc9526c535f1f1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PermissionSetting.cs:
+    newFile: null
+    oldFile: !uuid '00c0a17a3e621ba29e5567b0999b109c55ff05be'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PermissionState.cs:
+    newFile: null
+    oldFile: !uuid 'f0e886afa1073489d1237e13774c167816bee5e7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PhysicalKeyStatus.cs:
+    newFile: null
+    oldFile: !uuid 'af0c35efbe2656de97c905124d3a2e1ff01c9214'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PointerEventKind.cs:
+    newFile: null
+    oldFile: !uuid 'f6e71c61b99f1e61338c0629f11b2782a76ab3a2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PointerInfo.cs:
+    newFile: null
+    oldFile: !uuid 'd1119bcbdcbfe65e6a01145101bbff4a217bde26'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PreferredColorScheme.cs:
+    newFile: null
+    oldFile: !uuid '137b7e367bbb1bf4dad2c8e8829a89748877ea80'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintCollation.cs:
+    newFile: null
+    oldFile: !uuid 'c5cbfb37ce7c38f043d827e8b328db3e955bccfa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintColorMode.cs:
+    newFile: null
+    oldFile: !uuid 'dd294f104050d350fe9b1293aced14a9bf6c60c9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'f685c4a45f82e9aee84454a444a63ff1629e46fb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintDialogKind.cs:
+    newFile: null
+    oldFile: !uuid '3e55f9b70e55c1ed054776e88e0218473332387a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintDuplex.cs:
+    newFile: null
+    oldFile: !uuid 'c30a1bab574b18cbf19718d779b077f03c905ab4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintMediaSize.cs:
+    newFile: null
+    oldFile: !uuid '37c2c3b63f098fa378d9aa8286e403bab0316577'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintOrientation.cs:
+    newFile: null
+    oldFile: !uuid 'c5ce824589b451eb255041e2d182484ba828bb45'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintSettings.cs:
+    newFile: null
+    oldFile: !uuid '6addb47a630a999006b99fbd241634288d1dbf35'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintStatus.cs:
+    newFile: null
+    oldFile: !uuid 'f15842b04d372525d48fcd9c4beebd9c64fcfd24'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintToPdfCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '9b6f0b3df5e0575c0979b5af0280e0b19b6397b9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrintToPdfStreamCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'c5521116bc9884ae9f33a3b2c831b563ad2c1535'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateContextMenuItem.cs:
+    newFile: null
+    oldFile: !uuid 'c23ba7efd5f86c1488052109e73828b59fa4eba5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateEnvironmentTesting.cs:
+    newFile: null
+    oldFile: !uuid '99b1ee540b877bb479e9fab593e8aa36f3f83dc2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateHostObjectAsyncMethodContinuation.cs:
+    newFile: null
+    oldFile: !uuid '155b51d9322e6401fed11103e4e0b757a2971513'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateHostObjectHelper.cs:
+    newFile: null
+    oldFile: !uuid '006e04782c94de6af56b9186be7f40a93c9ec4ca'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateKeyPressedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'dd6fb1685c27b1c8b8b422162e132ac2c0117df9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateKeyPressedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '0b1460f33d655d0d002a1f7c276e5a3bda1b90d0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2PrivateRemoteObjectProxy.cs:
+    newFile: null
+    oldFile: !uuid '6a532934f52c1cfe6c41afbd1beea72db39a6f67'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessFailedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '75870abcb7fe9fc3143a4eaf772745222360fc94'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessFailedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'd406e70e364495db218581db5115a1140649d2f2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessFailedKind.cs:
+    newFile: null
+    oldFile: !uuid 'e630ed973c98cb97d7ecbfe61e5d30a309924c4c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessFailedReason.cs:
+    newFile: null
+    oldFile: !uuid '660eff49cd5baebe3f2a3f9d29eef4dccbb01b9d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessInfo.cs:
+    newFile: null
+    oldFile: !uuid '80f31a0c0930aa091ff87e56f05b23303a84146d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessInfosChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '9da1d87f00447500379b7517a09eabc8cae09988'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ProcessKind.cs:
+    newFile: null
+    oldFile: !uuid '8ee7721e9dfb7edb8688831ece1f33ae9b0d0dd0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Profile.cs:
+    newFile: null
+    oldFile: !uuid 'ee843ba76a68910276fc68e88f6961279be533fd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2RasterizationScaleChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '3e48fdf4e1286acc3452ea8a273f386d0391ba5e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ScriptDialogKind.cs:
+    newFile: null
+    oldFile: !uuid '3d8fecb4805837cad7b0fb14d5c8b32215bbd230'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ScriptDialogOpeningEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'eace69935f4ea0e4f27cd52017352bc5955e6026'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ScriptDialogOpeningEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'bf150ddd2a157066676adae4d7c4003cbba09348'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ScriptException.cs:
+    newFile: null
+    oldFile: !uuid '5d1367c6cfa2f1114d1e357c932e91cd4c11bdf2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ServerCertificateErrorAction.cs:
+    newFile: null
+    oldFile: !uuid '9dc7fa2b10e21a474772b4bcd1309e3cd11a328a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ServerCertificateErrorDetectedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '84d5683dda551cffc3c270354af7736f823ab306'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ServerCertificateErrorDetectedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '9352fd330ee817bd80bbf58bde7a2852b0dd31b3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2SetPermissionStateCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '823e7fbab0a85b83db94db1f97cfed7445419ba5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Settings.cs:
+    newFile: null
+    oldFile: !uuid '07787f1a483e041276f07bd00cf1509b2a370d99'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2SharedBuffer.cs:
+    newFile: null
+    oldFile: !uuid '409df907ebfdc4dabfb6bba552d7df26e8360401'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2SharedBufferAccess.cs:
+    newFile: null
+    oldFile: !uuid '078113065b2fb7233ac0c251c34a42a74adb8faa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2SourceChangedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '86f6b4d0475b410c3a4c31f50717a958dd7f1c77'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2SourceChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '32792082ae936865e51a8a6b257c0c03e7473b07'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2StateChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '07acf7ebc8cf6a5143e9fa29c6f6f588a56490bd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2StatusBarTextChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'd74db03b1fe22f30a9b4d3ef661f8297a14ecf32'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2Texture.cs:
+    newFile: null
+    oldFile: !uuid '68470ed62dd031e318964f203947d5ff69153351'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2TextureStream.cs:
+    newFile: null
+    oldFile: !uuid '16b7a4c53adcd19473a338c47d587689b5734d88'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2TextureStreamErrorKind.cs:
+    newFile: null
+    oldFile: !uuid '0531874162d9e7e1b1e3655f71f48823d413df77'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2TextureStreamErrorReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'c3d0981b14f30737bc843202fe27d91761c230b4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2TextureStreamWebTextureReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '115ba35832369ed99928d684caaf3443c28c3bc2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2TrackingPreventionLevel.cs:
+    newFile: null
+    oldFile: !uuid 'bee3e249362f894010c1ecc72bc93185e3f73336'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2TrySuspendCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'a4fb0374101bb086e69bbaf5812086e4616926d4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2UpdateRuntimeCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '23316cbb780bd3d99479db6c3b13802cb9e036c4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2UpdateRuntimeResult.cs:
+    newFile: null
+    oldFile: !uuid '06288097f61a87e26879d1202b088e16e2e967a5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2UpdateRuntimeStatus.cs:
+    newFile: null
+    oldFile: !uuid '0f03ebf7765a3c9082f403352f118c600157f87c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebErrorStatus.cs:
+    newFile: null
+    oldFile: !uuid '528efed18df14d758e294dd82ad1fe666922d6cb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebMessageReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '83e70df153c1e7452cb57d0251a2b62a1813d175'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebMessageReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '41a9dd1f753cd306b70fb9e85a0e0455dfa27201'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceContext.cs:
+    newFile: null
+    oldFile: !uuid '19325bcee46952f52cf0746d9728a003a4c0cf90'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceRequest.cs:
+    newFile: null
+    oldFile: !uuid '2ac74c0feeb5183867bc6c93fa1d56aca4be2d9e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceRequestSourceKinds.cs:
+    newFile: null
+    oldFile: !uuid '0ef99284ce5d8516d0f97ce9869632e17109fd63'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '2bc4be58a9eb205a3e692fd07b9d9a29109f52fc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '7185ca8a13268f7b3a0343a9f3ae3665065d442d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceResponse.cs:
+    newFile: null
+    oldFile: !uuid '1f4d9f066f39b743e226048d8500adab4226c446'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceResponseReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '496ae46b038beec275f1b925a069f7e9499716e3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceResponseReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '7a1d42cac694b21038c54954623da623c4b630b5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceResponseView.cs:
+    newFile: null
+    oldFile: !uuid '2bce30c3ba71f508d93d1bd7fabc2620cd1b3b17'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebResourceResponseViewGetContentCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '3c077b5be714d88960e51122b6e84e3687f6b1bf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WebTexture.cs:
+    newFile: null
+    oldFile: !uuid 'a048b0777ef203e53738036c6b3954ad3b2d6f69'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WindowCloseRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'd74ec75b64d8abd949c43aa9bdbc4e8e001698c4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2WindowFeatures.cs:
+    newFile: null
+    oldFile: !uuid '9a4c7d548e6df3ac568a4c393defc58bf9622756'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/CoreWebView2ZoomFactorChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '7ed89bd4d8a9f581c500645ea2a93cb6880718db'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Dispatchcontainerscriptbehavior.cs:
+    newFile: null
+    oldFile: !uuid 'ec5935e2e8525b28b43dffb362c25ebde036078d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/HostObjectHelper.cs:
+    newFile: null
+    oldFile: !uuid '74e25b5b0456d70875d73cac930289421478ff51'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/ManagedIStream.cs:
+    newFile: null
+    oldFile: !uuid 'f6043826698d755200b033a408be78ad0620a5f7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Microsoft.Web.WebView2.Core.csproj:
+    newFile: null
+    oldFile: !uuid 'a5c14eaef1a38125a902f2b8f9fe49e8ad03e445'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Properties:
+    newFile: null
+    oldFile: !uuid '9da6e8755729bbecb9beaf18b7d1bffd8229a25a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Properties/AssemblyInfo.cs:
+    newFile: null
+    oldFile: !uuid '907c290e8ffb45162cca2e796d0cc86fe1c16b7c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Properties/_globalusing.cs:
+    newFile: null
+    oldFile: !uuid '2fd8d3c4c1e22aae76b2939cb72c7e2b8a7d77cf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw:
+    newFile: null
+    oldFile: !uuid '7b7b1399cfe3b1ab345517773aad26ee83fc4ef0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/BrowserInfo.cs:
+    newFile: null
+    oldFile: !uuid '41760ba759826369b6f4f459c74d7de61b254f79'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_BOUNDS_MODE.cs:
+    newFile: null
+    oldFile: !uuid 'f0af88dbb5622f007fe5400dc7194975d4155842'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND.cs:
+    newFile: null
+    oldFile: !uuid '1d9a77533422481e33f958b67a7ebd5838f36f1b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_BROWSING_DATA_KINDS.cs:
+    newFile: null
+    oldFile: !uuid 'c5e29a452949224b2213561890fb07c2f7cd0772'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT.cs:
+    newFile: null
+    oldFile: !uuid '9bcb455750715cd696aca69ae980b9c900f9eb10'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_CLIENT_CERTIFICATE_KIND.cs:
+    newFile: null
+    oldFile: !uuid 'aa716dafacf0f818125eb75f749901bc5bbef937'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_COLOR.cs:
+    newFile: null
+    oldFile: !uuid '331755086be906c8981621844e7f02e0df7b9bbd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND.cs:
+    newFile: null
+    oldFile: !uuid '1b84750a17d69d043c635038b645a70bebcc863f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_CONTEXT_MENU_TARGET_KIND.cs:
+    newFile: null
+    oldFile: !uuid 'f3c0b7f256214afbd6d9e6dec168ad5e81caaa35'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_COOKIE_SAME_SITE_KIND.cs:
+    newFile: null
+    oldFile: !uuid '3c95b68912726047e65e7c2f8750ac9b6de3ebe1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT.cs:
+    newFile: null
+    oldFile: !uuid 'c4e219238e2d2bad375e394da84c62f371aedf68'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON.cs:
+    newFile: null
+    oldFile: !uuid '82e4f34ad51f5edd279596f31083ca9eab8e6627'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_DOWNLOAD_STATE.cs:
+    newFile: null
+    oldFile: !uuid 'ed64f2772ff21dab0c5e639cdd810ecf65b69d72'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_FAVICON_IMAGE_FORMAT.cs:
+    newFile: null
+    oldFile: !uuid 'f5aad9fb90989339890d7d436e05a80aafdca66f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND.cs:
+    newFile: null
+    oldFile: !uuid '904b0320df70dc52d85b3a44b24a011b5854a4e9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_KEY_EVENT_KIND.cs:
+    newFile: null
+    oldFile: !uuid 'df040a64e7fa1dde805de3cbe6f44f54a7454643'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_MATRIX_4X4.cs:
+    newFile: null
+    oldFile: !uuid 'de3454c2a8d9bbc5f9a279dcd5441d1e63897bac'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL.cs:
+    newFile: null
+    oldFile: !uuid '7b145bc59fa8b334f6df9186b43198b20878650f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_MOUSE_EVENT_KIND.cs:
+    newFile: null
+    oldFile: !uuid '1ce64cee37fb089646591f4c7f9481f3aa19b99d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS.cs:
+    newFile: null
+    oldFile: !uuid 'aada73b218e95f190be3cc835013d69fcea20d59'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_MOVE_FOCUS_REASON.cs:
+    newFile: null
+    oldFile: !uuid 'e1e7a8e492a708c7215434f88758ceb82b2dad45'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_NAVIGATION_KIND.cs:
+    newFile: null
+    oldFile: !uuid '33d5ea6e39fc2d87147c64f3b14708a1b3f35286'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PDF_TOOLBAR_ITEMS.cs:
+    newFile: null
+    oldFile: !uuid 'b9980e617e78bf21fc92dbde707a8a2295a0ee21'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PERMISSION_KIND.cs:
+    newFile: null
+    oldFile: !uuid '755eb901fa745c74cc09bb1f4915e2b90c7786f5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PERMISSION_STATE.cs:
+    newFile: null
+    oldFile: !uuid '6298785b02d1d9a24cbb8c4994c52bcec82be6e9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PHYSICAL_KEY_STATUS.cs:
+    newFile: null
+    oldFile: !uuid '929fad465eb07c913540e4617d0287747f66cbb1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_POINTER_EVENT_KIND.cs:
+    newFile: null
+    oldFile: !uuid '7b53ad21796144653571d72f8d4fb4be07490055'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PREFERRED_COLOR_SCHEME.cs:
+    newFile: null
+    oldFile: !uuid 'ac8378e459d5bb718313cd0e0c11dbfd0806b0e0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_COLLATION.cs:
+    newFile: null
+    oldFile: !uuid 'a36056a897d6ab648090ef85015b860b6728b4e7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_COLOR_MODE.cs:
+    newFile: null
+    oldFile: !uuid '029be07fe1049890d1f27f3132c1250a8f958705'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_DIALOG_KIND.cs:
+    newFile: null
+    oldFile: !uuid '27f5db93187aceb063ec337ad3276ad303f0e00e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_DUPLEX.cs:
+    newFile: null
+    oldFile: !uuid '50e10f7716fae2d4ebdb2c61912c6321b313eb6b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_MEDIA_SIZE.cs:
+    newFile: null
+    oldFile: !uuid '960f967dd1f12a2a617bc7fc9747a43661534b34'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_ORIENTATION.cs:
+    newFile: null
+    oldFile: !uuid 'eb80408a719cc11dfac09418443f63ac2a72f32a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PRINT_STATUS.cs:
+    newFile: null
+    oldFile: !uuid 'b97252c92aeb6165f53561cb96c44a82e03e548d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PROCESS_FAILED_KIND.cs:
+    newFile: null
+    oldFile: !uuid '84fc42566aac6003ec37d325971af807b89c61a3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PROCESS_FAILED_REASON.cs:
+    newFile: null
+    oldFile: !uuid 'f4e83c81796d00a83cf2290aadffa2c4b969a751'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_PROCESS_KIND.cs:
+    newFile: null
+    oldFile: !uuid 'f83dfc491e2421e371589e0fca517ad16557a4d9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_SCRIPT_DIALOG_KIND.cs:
+    newFile: null
+    oldFile: !uuid '3fc9c44c49529b4bd2d45beb9f393c9aa107c681'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION.cs:
+    newFile: null
+    oldFile: !uuid '4a5b0fcf9eedac6847fb2bbae4050604bead93d0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_SHARED_BUFFER_ACCESS.cs:
+    newFile: null
+    oldFile: !uuid '164bb579b1bcad7898f11b45b8d6baa6d6385728'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_TEXTURE_STREAM_ERROR_KIND.cs:
+    newFile: null
+    oldFile: !uuid '0b85aae08aa292b151f9f7f331dee5c35a4f3d1a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_TRACKING_PREVENTION_LEVEL.cs:
+    newFile: null
+    oldFile: !uuid '578db6c1945a0cbcccdd0593d7cacf9cf5099ac0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_UPDATE_RUNTIME_STATUS.cs:
+    newFile: null
+    oldFile: !uuid '4fe5aa4ef68f46fc25d24a6d2840f596f86cdd77'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_WEB_ERROR_STATUS.cs:
+    newFile: null
+    oldFile: !uuid 'bf5c7d7f099ff822d1a473152fa9854d965c685f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_WEB_RESOURCE_CONTEXT.cs:
+    newFile: null
+    oldFile: !uuid '4fad287358dd0cf2d29a62f2e7fd53c627792495'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS.cs:
+    newFile: null
+    oldFile: !uuid 'ea61a0da468e63cef19f449071800ceb95c8b035'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/EventRegistrationToken.cs:
+    newFile: null
+    oldFile: !uuid '1cf20bc1d4ec792fc3b769c8d8b357132bf6583e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2.cs:
+    newFile: null
+    oldFile: !uuid '6cbeba7255e311f7fdbbb9ff1d6e90f07ce13a7f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2AcceleratorKeyPressedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'a9f3283dfd98a66c91fbc8af1790f8f0f2cbc5a5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2AcceleratorKeyPressedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '68d8d291152649d84f822eccd68b5f0e09a6c399'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid 'd582843a9e4b0e615e34b17eee9136e6111d1aa4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2BasicAuthenticationRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'eca1b73f5f139ec7777ddb0e3f6c773c1b219ccc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2BasicAuthenticationRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'ae9755d84105355e501dd7cd157fbad0601f84db'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2BasicAuthenticationResponse.cs:
+    newFile: null
+    oldFile: !uuid '55e06697d837dfd3ea703334d4726843151c9a08'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2BrowserProcessExitedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'a50e721427db0687e106ea0e9243c16b32552b47'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2BrowserProcessExitedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'c0408fea26d4fa82271eab54630b14e0b2aa72e9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2BytesReceivedChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b33090073deb240ded710c6beea88b5ec8e433f5'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CallDevToolsProtocolMethodCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '4ad75dca39dd857d79a93be9f93d273730e30796'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CapturePreviewCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b8b29ade24fb35bb80c4ccb15fcf86a333c7fbc8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Certificate.cs:
+    newFile: null
+    oldFile: !uuid 'e294d6c4616c83a1ee81043d85837a7169417ebc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ClearBrowsingDataCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '0c32cb9021a4e57acc44100d4621261b5ed61885'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid 'ba767bddaae17cc1d95785073d9d9968a55dbda5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ClientCertificate.cs:
+    newFile: null
+    oldFile: !uuid 'a8b86e7cbe3ace4977ef6ea10e9fe6c560acb924'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ClientCertificateCollection.cs:
+    newFile: null
+    oldFile: !uuid 'c44f465e56e6cde33ad2ec64711f60f5dde71995'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ClientCertificateRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'f3461ea3e8d2802e288001712b99b1d190953a24'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ClientCertificateRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '9cc0d0773615d7d283309f38b1f5a143d8403a87'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CompositionController.cs:
+    newFile: null
+    oldFile: !uuid '8efca14356478155b0328576a7c1167f6a9128ae'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CompositionController2.cs:
+    newFile: null
+    oldFile: !uuid '1db86e2c30c6cf89d4b921e8f7f9edb216d32ed6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CompositionController3.cs:
+    newFile: null
+    oldFile: !uuid 'fc1bd9523c2093428ebe13cf5c606fc036fc9b3a'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContainsFullScreenElementChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '0876c3fd9b3304c5dba4da23f57d8b007d1a7edb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContentLoadingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'b844d67d902cd6fb2d30157d394cd93a3e082a0b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContentLoadingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '54ffcdba59669519c82acb00ea906218660ad608'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContextMenuItem.cs:
+    newFile: null
+    oldFile: !uuid '114319998972832ff96f1af68cb967c0ea19ad0e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContextMenuItemCollection.cs:
+    newFile: null
+    oldFile: !uuid '876a03d4c33ee86b4ee596299010221f1f5633f8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContextMenuRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '07bf0269aea77ce3ce6917e29d247ebed606fbdf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContextMenuRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'f248b623d74319b77049ae94b1d199567f119134'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ContextMenuTarget.cs:
+    newFile: null
+    oldFile: !uuid 'dac298f04a772430aa347306275323280864db3b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Controller.cs:
+    newFile: null
+    oldFile: !uuid 'adaed459b7c13a207b432dcc6484a8fa3b1f5086'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Controller2.cs:
+    newFile: null
+    oldFile: !uuid '510a94c6424b2a91937c548d26a1b5229a996367'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Controller3.cs:
+    newFile: null
+    oldFile: !uuid 'b9d4e02be39585b5b8541087d546379400832c0e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Controller4.cs:
+    newFile: null
+    oldFile: !uuid '2ea55ad5c42dafbaa9591991fee2f4424717c402'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ControllerOptions.cs:
+    newFile: null
+    oldFile: !uuid 'c9df1b58279c9d9957d9d14b865bdb36e55190ca'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ControllerOptions2.cs:
+    newFile: null
+    oldFile: !uuid 'd4056e3131afa5aec6c7733e2f07b4b2d2933c01'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Cookie.cs:
+    newFile: null
+    oldFile: !uuid '735713090c41aa5f7355df6dbdf5662968f5b01a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CookieList.cs:
+    newFile: null
+    oldFile: !uuid '7719ec51ade81b0fb5b43a4833a0edefa523d3ff'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CookieManager.cs:
+    newFile: null
+    oldFile: !uuid 'b2cd335f948957aaf37d9f507ce5ee0ef0b0c1f3'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '5660746887c8e8caf1ec8cdee243a17f646187c7'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CreateCoreWebView2ControllerCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '35cf8461e8a2fb1209ea20b689b1a6a49f158970'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '8bce0589a216386c5935640ec95b0e064fe8face'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CursorChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '81b1618854916ac2a4839290ce2d5ed2db42402b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CustomItemSelectedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b05872969eb8a3f57bd399bdedae828a795a3feb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2CustomSchemeRegistration.cs:
+    newFile: null
+    oldFile: !uuid '0c12dcbe4ae18cb7d1e3c4bd16d706705d60fa0e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DOMContentLoadedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '940c0898cc495bc247e8908dc3e2ee058c46be5b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DOMContentLoadedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '049ea30733f31dca8004565525aa9ddae085ab89'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Deferral.cs:
+    newFile: null
+    oldFile: !uuid '8e64588c8a49e56b57cea8ad7637cd98b693cbc6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DevToolsProtocolEventReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '45b3bc2f8d3a65d3f233bc345ec3de091b8e513d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DevToolsProtocolEventReceivedEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid 'bbd88e47f8cc90e646117605c37a299700e25ff7'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DevToolsProtocolEventReceivedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '1a8ca9532c28a2a71ce262465dbf0b3dcc5d05da'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DevToolsProtocolEventReceiver.cs:
+    newFile: null
+    oldFile: !uuid 'ab98a5ef5d91aa4efaf1fdf3b6c553cfbd7a9cc8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DocumentTitleChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'a752408e68cca501c4c355f299d9f12d01dec7ec'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DownloadOperation.cs:
+    newFile: null
+    oldFile: !uuid '0dadcbd0b64e4f547c4f4ba5b3ee38b8f6a29985'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DownloadStartingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'cbf2fc00f54bfac5da367e0502b525439bd3b6d9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2DownloadStartingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'ce48fa3ba24ed2cdabacc2e3a614b9df38865de0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment.cs:
+    newFile: null
+    oldFile: !uuid 'daa2e891e6a5088944d33d0c549827c94c2ad0ef'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment10.cs:
+    newFile: null
+    oldFile: !uuid '0bf42d790d9dc86c4c3746a4a09f92a82474886f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment11.cs:
+    newFile: null
+    oldFile: !uuid 'c0ecb8aca11e8f51f4f1510682b9b4ba67606fcb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment12.cs:
+    newFile: null
+    oldFile: !uuid '64af4cfc8951467a42e3fe9ae08ee16989d719e9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment2.cs:
+    newFile: null
+    oldFile: !uuid '566659c2a2859bc5434b82a941f852e5f6becb31'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment3.cs:
+    newFile: null
+    oldFile: !uuid '98b21cb03ceb59e0dae00bb18d4ab766b5caef2b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment4.cs:
+    newFile: null
+    oldFile: !uuid 'c681f1d7daf77f104be2ee86fab357b66c93f7ae'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment5.cs:
+    newFile: null
+    oldFile: !uuid 'ea208f715d9c2d16cad7e2b2e030b9627b4ce9e7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment6.cs:
+    newFile: null
+    oldFile: !uuid 'a6b765e73b65a8d825f97a9ea4b5a741fc897b69'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment7.cs:
+    newFile: null
+    oldFile: !uuid 'a0a7b0136de34b87220e219922abae83995e0595'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment8.cs:
+    newFile: null
+    oldFile: !uuid '8b62cad4cd9eb60e7f547fd401623a42e56386fd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Environment9.cs:
+    newFile: null
+    oldFile: !uuid '3da8d971e0249f903c94f21a0c578262dd603412'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2EnvironmentOptions.cs:
+    newFile: null
+    oldFile: !uuid '91b01839bf9120c4c598aadc7bde6cf7fa177cff'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2EnvironmentOptions2.cs:
+    newFile: null
+    oldFile: !uuid 'd2b4b73d20e6c2acc61d6d0a8b1dd091dd13db2b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2EnvironmentOptions3.cs:
+    newFile: null
+    oldFile: !uuid '644d64bbd48da6e7a2afe2b81a66e07cecbcd79d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2EnvironmentOptions4.cs:
+    newFile: null
+    oldFile: !uuid '43aa94784ca40b70230cba3d37e1bb082e474c25'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2EnvironmentOptions5.cs:
+    newFile: null
+    oldFile: !uuid 'e1b91050335bb79a7303c857be22495c1a236685'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2EstimatedEndTimeChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '370d22cc5788d580488013e01c30ea517d579dcd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExecuteScriptCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b9ac6e0dfbdbbabb6edaec1d6cf9774da92df3c8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental.cs:
+    newFile: null
+    oldFile: !uuid 'c1830788d78ef154900ddbc8b6533b9d5ba60f4a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental10.cs:
+    newFile: null
+    oldFile: !uuid 'd0ffa71f0924c25d7edc318afe1226556648ebee'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental11.cs:
+    newFile: null
+    oldFile: !uuid '70d951a01d0ac336a96e6db6ef31728b115f7000'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental12.cs:
+    newFile: null
+    oldFile: !uuid '8d44a26f31daaf90b15e378655c65d76878e29e2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental13.cs:
+    newFile: null
+    oldFile: !uuid '3d0f4210a71c1042458b13b97b170b7484805590'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental14.cs:
+    newFile: null
+    oldFile: !uuid '38022996a5442db3756b35f439d6740709b08347'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental15.cs:
+    newFile: null
+    oldFile: !uuid '1ad497ce6735f2375357a07cb56bfd083e055667'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental16.cs:
+    newFile: null
+    oldFile: !uuid '8b7ed754f2e0fa87f9ec70f548eb22c1337741de'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental17.cs:
+    newFile: null
+    oldFile: !uuid '9fcfa7fe40a1b05ba42dbeb5059c0189cede34db'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental18.cs:
+    newFile: null
+    oldFile: !uuid 'bb47a55406061d55c3ac5f9254b8107329f9b441'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental19.cs:
+    newFile: null
+    oldFile: !uuid 'c0da9ec9a0a31d09c3c6abe1bec5359d01db666e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental2.cs:
+    newFile: null
+    oldFile: !uuid 'eb456f83962e620ee1be1a92b33213aa7a040e76'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental20.cs:
+    newFile: null
+    oldFile: !uuid 'e86a66f044feb2fbb40d9e4f1bafba31c9352df8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental21.cs:
+    newFile: null
+    oldFile: !uuid 'b836b1fd4bde340de6f2c235c62dede3c2650b17'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental3.cs:
+    newFile: null
+    oldFile: !uuid '42976c1579ee2c56f5536271ffe474d60b0132ab'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental4.cs:
+    newFile: null
+    oldFile: !uuid 'cfe920ae838878845b24db269076b25d7cc7e675'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental5.cs:
+    newFile: null
+    oldFile: !uuid 'f8d46c0f8e5bdab7e65db63256a0cafaa91973b3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental6.cs:
+    newFile: null
+    oldFile: !uuid '6eb13514dfea53883ce1451d31f90b4dd07fdf2b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental7.cs:
+    newFile: null
+    oldFile: !uuid 'eb4666042ce3d0c88bebf5fcdfc5a263131dc8c4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental8.cs:
+    newFile: null
+    oldFile: !uuid '7776e53a247b5dad9f3d5fcd236160c6645f5647'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Experimental9.cs:
+    newFile: null
+    oldFile: !uuid '59d687cd025f2b60cc3c9b5be03fdeb9469565c2'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalClearCustomDataPartitionCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '379862468a556b0a23dd077fc7b1a4b6938fb9de'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalCompositionController3.cs:
+    newFile: null
+    oldFile: !uuid 'b5ce398f4cf624e5900737331962ad6b8426cbac'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalCompositionController4.cs:
+    newFile: null
+    oldFile: !uuid '6d65e95da0d3d03b2fb8a1fb48ea4314563351d3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalController.cs:
+    newFile: null
+    oldFile: !uuid '4ad1ca35fcfb04dd1fec177c391cecae9b0f2510'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalController2.cs:
+    newFile: null
+    oldFile: !uuid 'c676b91248fe55a455d087530b2e6ede42c9c829'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalControllerOptions.cs:
+    newFile: null
+    oldFile: !uuid '8005a92632b7ccb37e50268bf62c4854420aa192'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment.cs:
+    newFile: null
+    oldFile: !uuid 'b41b3a358694b207cc61a41c118a80ba4fc71753'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment10.cs:
+    newFile: null
+    oldFile: !uuid '5b6fb52af6bbdcd610dbd03af17e8d681b7bb4df'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment12.cs:
+    newFile: null
+    oldFile: !uuid 'e7e92bbd7d1f13dcbe73d3a3fc56581c46a1b5fe'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment2.cs:
+    newFile: null
+    oldFile: !uuid 'e8db6ab81399ea7b1d7604b72e35c3caff6da9e5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment3.cs:
+    newFile: null
+    oldFile: !uuid '9ce42cc175439c18945a36391176922b7b7e61b6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment4.cs:
+    newFile: null
+    oldFile: !uuid 'e9caaadb4a2edf3fc1bceaaf1a08f76a5a26de61'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment5.cs:
+    newFile: null
+    oldFile: !uuid '1f853e1f5b059f364c9c7595b5f901e55f6314cf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment6.cs:
+    newFile: null
+    oldFile: !uuid 'bad9c2fe034714ac23e698fbd364a434d5ad3fd1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment7.cs:
+    newFile: null
+    oldFile: !uuid '79d801be9fddb7e1a4e600c8a87ba12d3af9149d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment8.cs:
+    newFile: null
+    oldFile: !uuid '3d39cf0b1604391999db2296270449d4053d3f72'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalEnvironment9.cs:
+    newFile: null
+    oldFile: !uuid 'd6bca6d99a198e14458d614729892163203c09b9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalExecuteScriptResult.cs:
+    newFile: null
+    oldFile: !uuid 'c4e4c120b5e7db81382bb7dc2669fe2260fa4363'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalExecuteScriptWithResultCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid 'ecd72791ef9df2671b46889d2a0972f78843e756'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalFrame.cs:
+    newFile: null
+    oldFile: !uuid 'cf2463dbfbff0c3753625583d84277e15b287ff7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalFrame2.cs:
+    newFile: null
+    oldFile: !uuid '19db72e51c85c9d2847699cf78af065d7d9f0648'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalFrame3.cs:
+    newFile: null
+    oldFile: !uuid 'a266fc90195b365d05a4a6dc3065613965d3b4d1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalFrame4.cs:
+    newFile: null
+    oldFile: !uuid '8ed9293f65241dd29e6f1cbb26229a7d4aeb00ed'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalLaunchingExternalUriSchemeEventArgs.cs
+  : newFile: null
+    oldFile: !uuid '6ed639b968dfd4d4f9498434515cc1c2dec5208a'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalLaunchingExternalUriSchemeEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '0e2f637225da52e7d6cd73c8d4f458a20d53168e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalNavigationStartingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '52099963abfe21d4c40d8150f9e6ffaf66b322b8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalNavigationStartingEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid '867f7a43c972e0eec0dc92b8bc67788dad3905bd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalNewWindowRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '7d4c757b5c6b042f469555c2eec7aab1644d0042'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalPrintSettings2.cs:
+    newFile: null
+    oldFile: !uuid '118074984e1ddec008f1465f5eef51438224b23f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile10.cs:
+    newFile: null
+    oldFile: !uuid '411ca36ab47aa12c6a5dc470884a865536894339'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile11.cs:
+    newFile: null
+    oldFile: !uuid '53db24f5dc0630e22166e8ab7621994dd86642c7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile2.cs:
+    newFile: null
+    oldFile: !uuid '72cb3c876cfeb86b9432eaf96769cf4097a7eefa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile3.cs:
+    newFile: null
+    oldFile: !uuid '810fc3e52f962a30dd0585e7707c737e03d1cb3a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile4.cs:
+    newFile: null
+    oldFile: !uuid '5c41212368cd7aebd1fa1bcea70e08e43ea97056'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile5.cs:
+    newFile: null
+    oldFile: !uuid 'fe9852905a032b555771f16eb5620d3a84874253'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile6.cs:
+    newFile: null
+    oldFile: !uuid 'a410b7320ad076670a99426a304464d73ef07a58'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile7.cs:
+    newFile: null
+    oldFile: !uuid '7a8a23dfe81e4b1498425731e4d039ab7d70825b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfile8.cs:
+    newFile: null
+    oldFile: !uuid '3e3189740f41e7932eeb28c055f344bfd98d70e5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalProfileDeletedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'f7a8a76263a6be1d7f258986e3439af3bddb089e'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalRasterizationScaleChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '4e0199e22411bd97771a854280b925de6b05efbd'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalRenderAdapterLUIDChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid 'ef17d6f8976f7e0dc09448b4f446cdf0f14d4dbf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalScriptException.cs:
+    newFile: null
+    oldFile: !uuid '9ae6e73a738276ce911ca5ebf39a1dfdfeed9f55'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings.cs:
+    newFile: null
+    oldFile: !uuid 'f86110a934c2454300ad41ab1101f7ce92ccd46b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings2.cs:
+    newFile: null
+    oldFile: !uuid '9bfcd5fac905642b595331ab5d36aba5b9374595'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings3.cs:
+    newFile: null
+    oldFile: !uuid '61bc2abd8a48ac932b3bba023ff88efb16f5d10d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings4.cs:
+    newFile: null
+    oldFile: !uuid 'a5e0e1ab445bf51f39056455f87b2b9b8a9a0628'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings5.cs:
+    newFile: null
+    oldFile: !uuid 'c33771651011017c4c2f5856b0273b0ccb723f62'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings6.cs:
+    newFile: null
+    oldFile: !uuid '961941d064ebe8d3d9a034cc90518f6f10ee3399'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalSettings7.cs:
+    newFile: null
+    oldFile: !uuid 'fc9b23a192323cc9a6ad34156dbee8ea9f101e20'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTexture.cs:
+    newFile: null
+    oldFile: !uuid '87d9920c86a8910ad0503e87491e43998f17cff4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStream.cs:
+    newFile: null
+    oldFile: !uuid 'bf775d23fb4ba97fdf4887a806f7e55ff5538cc6'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamErrorReceivedEventArgs.cs
+  : newFile: null
+    oldFile: !uuid 'aac44b8ebabd073f024463866a71ea3220671f49'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamErrorReceivedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid 'a371d27bd6e3ee92d79b74435d9a5331400c2730'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamStartRequestedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '38aa6538c27e3684fa0148bcfa327fe939311df5'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamStoppedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '6e51de0186b8984f39a40b02a8a4b6ee99222ea1'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamWebTextureReceivedEventArgs.cs
+  : newFile: null
+    oldFile: !uuid 'c9e5386182a8954362e39f828429e10c840df183'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamWebTextureReceivedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '74d9bda8c994c776621d0d3905b6675b6d77f098'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalTextureStreamWebTextureStreamStoppedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '82c57100b2582fb1f59987077bfadf7c469dc8de'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalUpdateRuntimeCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '0da03915fc7d9ca44bc0920ce3a86637de1c21a8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalUpdateRuntimeResult.cs:
+    newFile: null
+    oldFile: !uuid '14999efc76572b8724a98c23e9b510ac025089a2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalWebMessageReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '4d8c301a4bf77fe9422250da23a1786bdd9d6779'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalWebResourceRequestedEventArgs.cs
+  : newFile: null
+    oldFile: !uuid 'b6b19eb1cd4eeb6014b864811978c9c2a7e60719'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ExperimentalWebTexture.cs:
+    newFile: null
+    oldFile: !uuid '893b91a201bf779d91f6e9508a4c5bf26dae4e55'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FaviconChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '83653ade3278db220ddaf39eecd2be7c122eadb2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2File.cs:
+    newFile: null
+    oldFile: !uuid 'c0782f2728ad87b026ea4e097ef94dced161a013'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FocusChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'ed7b3328e5ad2852b80e88f02448c7c4222fef0d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Frame.cs:
+    newFile: null
+    oldFile: !uuid 'f6204af3db8ef93aca80cecf7d895b0f9ce7a2b5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Frame2.cs:
+    newFile: null
+    oldFile: !uuid 'a05d1bce7f8f37b1cbce318b18f02069d0a68e49'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Frame3.cs:
+    newFile: null
+    oldFile: !uuid 'c8fe03cb364dbca89160a6a35f672f8156aaa447'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Frame4.cs:
+    newFile: null
+    oldFile: !uuid '899b23cb31fcf9595754377522c0caaa83b33872'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameContentLoadingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '0e517b193a34261d79a0f4c6919826de86950d52'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameCreatedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '7a0a8848075593c0b23e3ee5599b01c14a593825'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameCreatedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '88c13087d3e8096d1d4036087a6f00ac8735bad6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameDOMContentLoadedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '609f92afee6a45ec66ee564b3041e35850361cac'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameDestroyedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '76a686094a72704ddc9bc68a1170f0a1c44ffdcb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameInfo.cs:
+    newFile: null
+    oldFile: !uuid 'fe18c45aa2d9bc59ccccee5522ba15527f749a03'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameInfoCollection.cs:
+    newFile: null
+    oldFile: !uuid '440212efabd129318d4b827a9e853d1708c924e7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameInfoCollectionIterator.cs:
+    newFile: null
+    oldFile: !uuid '180d008b4e0c33ea9dcdc14a19ddb33b28876ab7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameNameChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'da434b49af86bddcb70d32922c5ed1df36386117'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameNavigationCompletedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'e4d489c4da82d9c1ec4f30b2d39529e2c8a027f2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameNavigationStartingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '27da7c23ddb51dc95f3b691385153bbe1bbb69a6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FramePermissionRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'ee460097301e012f4219655de65cadb46fde84c1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2FrameWebMessageReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '0fbf5222cfd8803cff9f678b18b1cdd8d427eb1e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2GetCookiesCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '1503b0efe57d521817db1bf97c71f5db1cf420b9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2GetFaviconCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '2e2655b88a045daacc68ec9e3108510915b649b1'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid '6a9458e9a64424eccbd60b15583e65a188b2b734'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2HistoryChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b41a2f0d34626ac468842604f13b3e73e2e1ad80'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2HttpHeadersCollectionIterator.cs:
+    newFile: null
+    oldFile: !uuid 'db5619787e911a8d4da002d269ec4af6b4df0caa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2HttpRequestHeaders.cs:
+    newFile: null
+    oldFile: !uuid '533ff80db06edccebcb9595c0c954a0da34205eb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2HttpResponseHeaders.cs:
+    newFile: null
+    oldFile: !uuid '9c02edb48df4d476cd62498923b4374a8c4940e8'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '27e0bb1a9fb81d7e1d537057371f661e7edac40b'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2IsDocumentPlayingAudioChangedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '4426270a05a0c26b0a8fc38e6ffd8786388649ef'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2IsMutedChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'bade4ccb4761bc4eac935e4ef533f6b815399c04'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2MoveFocusRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'b74233c1238df40e01bb8e859f8d2b72922dd81c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2MoveFocusRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'b33806ca3f493adaaf8f36b6fcece4d4ef603875'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NavigationCompletedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'ab9bad568722f69664b0d29b12b49d3dfe861579'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NavigationCompletedEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid 'ca40e8d748a12702f57a883386e40daf3e96fa62'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NavigationCompletedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '5bc3048fc60e656fbc2a77de86f69241ce46fdea'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NavigationStartingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '9487b835d4acca8c2f86447dac8bc7001a58b0f0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NavigationStartingEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid '568924017003d806532a3a75dad2a0bd7b60ed98'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NavigationStartingEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '668f3732619bce324a67beb0a1923a3690b57f79'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NewBrowserVersionAvailableEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '507f5a0ae1e17bac02a3a6dd6b59796d3c4a3c68'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NewWindowRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '5974984ba427d2798a151b0ff4f66c0700b0c7b6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NewWindowRequestedEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid '2a8b8ee35d181899436fd82ba8ff2ff180218490'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2NewWindowRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '14324e75fb6e593eddc337769e88d9750f8a2c55'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ObjectCollectionView.cs:
+    newFile: null
+    oldFile: !uuid '9e30a06b1fc258644eb0699258586e476aa53044'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PermissionRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '49b8be48b33ae3677140e1291f940e94ed6cdd96'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PermissionRequestedEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid '9f83c17f320ab658bed3106707e9fe6052fc942d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PermissionRequestedEventArgs3.cs:
+    newFile: null
+    oldFile: !uuid 'edecb9980256cd6669d029472cc29e274f1b9ff9'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PermissionRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'a8041b88e5ef1d9e232129cc7ad2bba2b0e430c7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PermissionSetting.cs:
+    newFile: null
+    oldFile: !uuid '1ba8a61100997f1e03247167e043b2aae5611e0a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PermissionSettingCollectionView.cs:
+    newFile: null
+    oldFile: !uuid 'f08c570543df192f49ee713258138484b4ac9f60'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PointerInfo.cs:
+    newFile: null
+    oldFile: !uuid '433d35e6e18fc30dc9cee08ced1b5f22d3c0a7cb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrintCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '8ff607e777b407b3404ad19bf537804ea73a5976'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrintSettings.cs:
+    newFile: null
+    oldFile: !uuid '0a7694ca94950932fde8fff14bee746c278fbf5c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrintSettings2.cs:
+    newFile: null
+    oldFile: !uuid '26fc330d644709aaac58cb57ece6111eb41b0d15'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrintToPdfCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'df16c87b34074d233bd92cd503ecf45c7fa9e763'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrintToPdfStreamCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '746f0f18e2b5ed5db21f4cbf44aada39d3cd52ec'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateContextMenuItem.cs:
+    newFile: null
+    oldFile: !uuid '9df5863f1684a65830643280b3feb19f442f4d4a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateEnvironmentTesting.cs:
+    newFile: null
+    oldFile: !uuid '303e1bb14e8d29d2e6f6f86e96e1f8bc8bb9d366'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateHostObjectAsyncMethodContinuation.cs:
+    newFile: null
+    oldFile: !uuid 'c4af03e0ea93ad431ebf792ff81c53b8b9b2ada0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateHostObjectHelper.cs:
+    newFile: null
+    oldFile: !uuid 'f1e7e38a080d8d6d4e367419b428bc2f513df3b5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateHostObjectHelper2.cs:
+    newFile: null
+    oldFile: !uuid '19d12cd42cd76262100eea2f05d172d496976e58'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateKeyPressedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '753e4aef767c1f820b77f75a60935e6de7ac0aaa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateKeyPressedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '502d5e1f8f304100ba3c11bc579ace4f264c6e54'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivatePartial.cs:
+    newFile: null
+    oldFile: !uuid '2183a9f0279dd3c9bb1542ee7630c88c6e46c125'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivatePartialController.cs:
+    newFile: null
+    oldFile: !uuid '6bfa45dba78cb84477f0a887b4f49298059f3bd4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2PrivateRemoteObjectProxy.cs:
+    newFile: null
+    oldFile: !uuid '98a6baf944c143cf62fa320a75ba0654728e77dd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ProcessFailedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'e460679b57bcdb03811fbd90773d9b1c4c6c295e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ProcessFailedEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid 'f43969390c7e42c186d86f6e34a41a141bd0d503'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ProcessFailedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'bbd3c873692cb14048b41140f3e60eb2af8b408d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ProcessInfo.cs:
+    newFile: null
+    oldFile: !uuid '0762af9051b6b521b93b21f68f54fa63393572d6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ProcessInfoCollection.cs:
+    newFile: null
+    oldFile: !uuid 'c93a68e5e0beb7512870beec1e4703e150970db6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ProcessInfosChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '9ac34b6cd595bd8fdfa975dbaa251af904b17d09'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Profile.cs:
+    newFile: null
+    oldFile: !uuid '258fefe939573a9e0cd5c0d05884c885c55db4ed'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Profile2.cs:
+    newFile: null
+    oldFile: !uuid '65ca47818d469ce68dc39a701378eee46465b72b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Profile3.cs:
+    newFile: null
+    oldFile: !uuid 'c5ed78b619b9c21c43de8f539c273d9d95e09f91'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Profile4.cs:
+    newFile: null
+    oldFile: !uuid 'b7338b5c7480cdb6b52056e2dd0468f738e33713'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Profile5.cs:
+    newFile: null
+    oldFile: !uuid 'e3743b29e14c339f2eb4dc5eeee2f2cc478647de'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Profile6.cs:
+    newFile: null
+    oldFile: !uuid '5da80d19f01e77ec0652837bf74244a514f9bcdb'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2RasterizationScaleChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'a313057c22339b275540e96d86fee1d7d697c33f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ScriptDialogOpeningEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'ce0d1b49dff2e9eb0deb1f05f0e261d8514534b8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ScriptDialogOpeningEventHandler.cs:
+    newFile: null
+    oldFile: !uuid 'e79603967d8c363c4869384613c3bf92ec8e7652'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ServerCertificateErrorDetectedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '37e31cf476ba42038f4823b88123fb22acf3e8f2'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ServerCertificateErrorDetectedEventHandler.cs
+  : newFile: null
+    oldFile: !uuid '33d3555272fe364579e82ef9d7b65527d28d3902'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2SetPermissionStateCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid '4ad584007cec8091d94a98605dc37aea25689205'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings.cs:
+    newFile: null
+    oldFile: !uuid 'c64704676d2cbc5d435f72d195113f5426b63fed'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings2.cs:
+    newFile: null
+    oldFile: !uuid '7d9a65c80ca6182ebb04df5895aa9096fefb5cb3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings3.cs:
+    newFile: null
+    oldFile: !uuid '097a37da206ed0f009dd72cb8f8a9ce7814e9a84'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings4.cs:
+    newFile: null
+    oldFile: !uuid 'e9ce71d2f037a26aa0755ba3595e89487159b521'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings5.cs:
+    newFile: null
+    oldFile: !uuid 'bb6e1d0c7b23da00efa384da6e131cf6237c9a67'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings6.cs:
+    newFile: null
+    oldFile: !uuid '7b0ae16e641ebd37fdcae19c6f85c430a4895347'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings7.cs:
+    newFile: null
+    oldFile: !uuid '2222e57d4c5b1a423098dd546aa5530f0f58a7f5'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2Settings8.cs:
+    newFile: null
+    oldFile: !uuid '8d9d39d0dda6b30af08c3da4c0024ebea791fcd6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2SharedBuffer.cs:
+    newFile: null
+    oldFile: !uuid '6529a536cac27c497c51f39aedcbf9bc3f61dd46'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2SourceChangedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '49fff597019da7f7df7c1744aecfd5f5ec4d9cf7'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2SourceChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '25cda455c9fecc61a02cdf5a6e58e50cc77905cf'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2StateChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '7a5fd1ed3e10d72b3c8786fc4bdbf41ab6c475f4'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2StatusBarTextChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '43e22cc77cdc6f8b5bc6320265c333e1140690bc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2StringCollection.cs:
+    newFile: null
+    oldFile: !uuid '81a1e92581ed906fb262c3b4a949ec31f7371dfc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2TrySuspendCompletedHandler.cs:
+    newFile: null
+    oldFile: !uuid 'fc1095fb0fe42dc8f27e56a494964b9115ded873'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebMessageReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '8b5be8ce4da9b5caaecd6862079d1216ef453f93'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebMessageReceivedEventArgs2.cs:
+    newFile: null
+    oldFile: !uuid '0e0d6fdb255cd4cb5b6fa785ea0adad8d2b1be70'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebMessageReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '4faa6e5b62a5380b872cd04a787bcafa3578493d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceRequest.cs:
+    newFile: null
+    oldFile: !uuid 'db94b424cee8598074a006c1b5a24a7d06f16d60'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceRequestedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'fe10d0fa2f0c436b18cd4b3862089b60e57af35b'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '5fbaf27286cfa7b6b757963681477b011a724e78'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceResponse.cs:
+    newFile: null
+    oldFile: !uuid '7f12232adf746830c2757f7d60640764049739fa'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceResponseReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'b25e43539dfdf572d0178e171387b01cf8dc4a0c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceResponseReceivedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '4c2d9593f9027abc18dbfd36e27f36bb0da3b9ac'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceResponseView.cs:
+    newFile: null
+    oldFile: !uuid '6066fb158df512bb4b33777552778ba9369ee242'
+  ? /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WebResourceResponseViewGetContentCompletedHandler.cs
+  : newFile: null
+    oldFile: !uuid 'acd3a4677bdef4fddb1e17ab97a0306575d3e7ea'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WindowCloseRequestedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '1fa0a0c379ee9dfa6ba7727ddfc2ebde628437bc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2WindowFeatures.cs:
+    newFile: null
+    oldFile: !uuid 'be2de254344fa5953b577da18503c53124ee67c3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2ZoomFactorChangedEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '3f474039b1c7024cbb07ccd850d4cd339559d00a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_10.cs:
+    newFile: null
+    oldFile: !uuid '3ecd0ef6bff9ec9883c6dfeca5b5fecf0d5b5c3f'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_11.cs:
+    newFile: null
+    oldFile: !uuid 'fae800baa0bddc590c556933f078aa476bb98bf8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_12.cs:
+    newFile: null
+    oldFile: !uuid '58634b91072a36606450a13fae9ce84db2b6cdcc'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_13.cs:
+    newFile: null
+    oldFile: !uuid 'af48b7137a16a8637c264317ccab59e56d2248d6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_14.cs:
+    newFile: null
+    oldFile: !uuid 'b29b925005bdd05e994ca19808d7aaf3d47aaab3'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_15.cs:
+    newFile: null
+    oldFile: !uuid 'ae6d259df8009817b1b56ae7e182099cb19cc866'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_16.cs:
+    newFile: null
+    oldFile: !uuid '38bcbc9ed4408c95b6adc41216bd6b56bb796c5d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_17.cs:
+    newFile: null
+    oldFile: !uuid '9a1294bfd6a93e135f95a5a52697b53c0fa16e3a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_2.cs:
+    newFile: null
+    oldFile: !uuid '9cb902621893e050c20a9764b242c640ded54c78'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_3.cs:
+    newFile: null
+    oldFile: !uuid '2933a470040e762701bdd6aef067b3ce0d543edd'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_4.cs:
+    newFile: null
+    oldFile: !uuid 'b0c2bc8d12c7b5fb2eb472a2d2457594d8f34ef6'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_5.cs:
+    newFile: null
+    oldFile: !uuid '6806297d6473191254cd6667bfaf4ece8ce92da8'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_6.cs:
+    newFile: null
+    oldFile: !uuid 'fe038d47cc5284ba20733470e2a270d3b179f949'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_7.cs:
+    newFile: null
+    oldFile: !uuid 'af216f486ab2bd943d8f0d202b325c64b0379448'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_8.cs:
+    newFile: null
+    oldFile: !uuid '784dd1771ae72c906b7113a22e3619852429844c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/ICoreWebView2_9.cs:
+    newFile: null
+    oldFile: !uuid 'ab849c38c7d401a506f0b81fe22d5b6f4949f36c'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/tagPOINT.cs:
+    newFile: null
+    oldFile: !uuid 'c89832eb03a598fd7cf7c016a72f0d71c917c1f1'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/Raw/tagRECT.cs:
+    newFile: null
+    oldFile: !uuid '4cbdb88cf4a2af210ef3c1cc3a231a58b6322a2e'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/WebView2RuntimeNotFoundException.cs:
+    newFile: null
+    oldFile: !uuid '2f1a6c56b6a4a038ae66e3c22b67b4dcb5978c8a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes:
+    newFile: null
+    oldFile: !uuid '70d1c8bf931cac6509b58e2eb0758b7080bcafb0'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-arm64:
+    newFile: null
+    oldFile: !uuid '2855c3595960966ca414e9c9268880e7b4d9aa9d'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-arm64/native:
+    newFile: null
+    oldFile: !uuid '520582d463dd1078c66520c59730557df0e31f58'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-arm64/native/WebView2Loader.dll:
+    newFile: null
+    oldFile: !uuid '02eb7988f74e4771b9319c19909bfcabf3302310'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-x64:
+    newFile: null
+    oldFile: !uuid 'e6c281a810fa010aaa7736f4418a9d3a493a2132'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-x64/native:
+    newFile: null
+    oldFile: !uuid '917ff789e92d4faca6e039b167173801e11c4bec'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-x64/native/WebView2Loader.dll:
+    newFile: null
+    oldFile: !uuid 'df2fc2a815096c9cb34f64f99c8e2dac080397b2'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-x86:
+    newFile: null
+    oldFile: !uuid 'e661494b23cd4cdf2405a90e533157c6e2a48456'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-x86/native:
+    newFile: null
+    oldFile: !uuid 'd6ea9c273c426644cb480e150ff6ba9ad44fe46a'
+  /AirJointWebView/Platform/Windows/Microsoft.Web.WebView2.Core/runtimes/win-x86/native/WebView2Loader.dll:
+    newFile: null
+    oldFile: !uuid '6399c9f74876a32349b3b502eff1baa8a8bfb63f'
+  /AirJointWebView/WebView.Core:
+    newFile: null
+    oldFile: !uuid '7be79c3d4b6b9c7396dbfa025d6f491e83558e0e'
+  /AirJointWebView/WebView.Core/Configurations:
+    newFile: null
+    oldFile: !uuid '7c9fc9bb4d0da2d971f060e24b0172dee97c6466'
+  /AirJointWebView/WebView.Core/Configurations/WebViewCreationProperties.cs:
+    newFile: null
+    oldFile: !uuid 'd1273627cd7da01818246cee4dd1236b48d8ed85'
+  /AirJointWebView/WebView.Core/Enums:
+    newFile: null
+    oldFile: !uuid 'a990e37dde46b1876e5de6828f86d4eac408670b'
+  /AirJointWebView/WebView.Core/Enums/UrlRequestStrategy.cs:
+    newFile: null
+    oldFile: !uuid '9ae7b3e8d6824e814a3a8676b5fc6f6cd34b8027'
+  /AirJointWebView/WebView.Core/Events:
+    newFile: null
+    oldFile: !uuid 'beb17fa3b435ea181b263e0941db285659a87c06'
+  /AirJointWebView/WebView.Core/Events/WebViewCreatedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'ce1184eda37c68c310cb125c0c0c893bac231847'
+  /AirJointWebView/WebView.Core/Events/WebViewCreatingEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'cc692db1c5385220fcf39d81d20d5721aa3a286a'
+  /AirJointWebView/WebView.Core/Events/WebViewMessageReceivedEventArgs.cs:
+    newFile: null
+    oldFile: !uuid 'e8f842bdc705b3383d70c6729065a7eb60e8ead4'
+  /AirJointWebView/WebView.Core/Events/WebViewNewWindowEventArgs.cs:
+    newFile: null
+    oldFile: !uuid '12c7681c1621de392e8398e73d9bd97269e49e29'
+  /AirJointWebView/WebView.Core/Events/WebViewUrlLoadedEventArg.cs:
+    newFile: null
+    oldFile: !uuid 'af9369832be828c727aebb738136c3282e104a3e'
+  /AirJointWebView/WebView.Core/Events/WebViewUrlLoadingEventArg.cs:
+    newFile: null
+    oldFile: !uuid '415898e66f878f2cc9ead9dc579e8e118b37f3ef'
+  /AirJointWebView/WebView.Core/Extensions:
+    newFile: null
+    oldFile: !uuid '2677c9b9ba8e1f43239f0dcd3946d4618543a700'
+  /AirJointWebView/WebView.Core/Extensions/TaskExtensions.cs:
+    newFile: null
+    oldFile: !uuid '0e51dcf1d4e5c24e7599effec95f155f505b92b2'
+  /AirJointWebView/WebView.Core/Extensions/UriExtensions.cs:
+    newFile: null
+    oldFile: !uuid '45ee0e08c67d6e60cca837673b205b9e4c76ae2f'
+  /AirJointWebView/WebView.Core/Helpers:
+    newFile: null
+    oldFile: !uuid '4101a8da1a1b48d500f3880bb36f8bd66a243b78'
+  /AirJointWebView/WebView.Core/Helpers/OpenUriHelper.cs:
+    newFile: null
+    oldFile: !uuid 'd268ad76a07bac778823df3837b33806b14bba7b'
+  /AirJointWebView/WebView.Core/Helpers/QueryStringHelper.cs:
+    newFile: null
+    oldFile: !uuid '4b7ec9c6ebacc62644b66c2ddf18e164961167db'
+  /AirJointWebView/WebView.Core/IPlatformBlazorWebViewProvider.cs:
+    newFile: null
+    oldFile: !uuid 'b2f24de8e0e9ee7bc51c066224ef7079faf47a25'
+  /AirJointWebView/WebView.Core/IPlatformWebView.cs:
+    newFile: null
+    oldFile: !uuid '82a543730c3ebbe91b4a29d34a249645abe4ff68'
+  /AirJointWebView/WebView.Core/IPlatformWebView@T.cs:
+    newFile: null
+    oldFile: !uuid '352e97df0ce1e28ca3e2bef9516e2046127940a2'
+  /AirJointWebView/WebView.Core/IVirtualBlazorWebViewProvider.cs:
+    newFile: null
+    oldFile: !uuid 'cfe88d4c0168120ddd5522650c60515ff3b07989'
+  /AirJointWebView/WebView.Core/IVirtualWebView.cs:
+    newFile: null
+    oldFile: !uuid 'ff2b9c3c7eec7e2465bb04b7fb835fa9e3af7614'
+  /AirJointWebView/WebView.Core/IVirtualWebView@T.cs:
+    newFile: null
+    oldFile: !uuid '694249140c06c1ed8c61903ab6473c6970f77542'
+  /AirJointWebView/WebView.Core/IVirtualWebViewControlCallBack.cs:
+    newFile: null
+    oldFile: !uuid 'f36050e4cf2d5b62004f513351b9612a676f0414'
+  /AirJointWebView/WebView.Core/IVirtualWebViewProvider.cs:
+    newFile: null
+    oldFile: !uuid 'f766fe861e817ff8d175fdab78f3d72bf46d0210'
+  /AirJointWebView/WebView.Core/IWebViewControl.cs:
+    newFile: null
+    oldFile: !uuid 'eefc6e5a7f07f310e499391aca4b73d627ebc91e'
+  /AirJointWebView/WebView.Core/IWebViewEventHandler.cs:
+    newFile: null
+    oldFile: !uuid '6cae93bd8722ad7b7c8e1075bf2f880d53c62e9b'
+  /AirJointWebView/WebView.Core/Ioc:
+    newFile: null
+    oldFile: !uuid '2a281a3b0bc4d50aa04aefe4b3894c4405a4f4f9'
+  /AirJointWebView/WebView.Core/Ioc/WebViewLocator.cs:
+    newFile: null
+    oldFile: !uuid 'd6387fa1423b5d0ce335a6afabd507b40940b6f4'
+  /AirJointWebView/WebView.Core/Models:
+    newFile: null
+    oldFile: !uuid 'ff6ba56425d6a21a2fb7e29fdd2a972284e65192'
+  /AirJointWebView/WebView.Core/Models/WebResourceRequest.cs:
+    newFile: null
+    oldFile: !uuid 'c5d4e3c7fea1c9aaa268b4f13702fd59563273d7'
+  /AirJointWebView/WebView.Core/Models/WebResourceResponse.cs:
+    newFile: null
+    oldFile: !uuid '0608facb43f7bf98b7fa27bf8277cf0c5765ff65'
+  /AirJointWebView/WebView.Core/Models/WebScheme.cs:
+    newFile: null
+    oldFile: !uuid '096cbf8a35701b47df2b12242be149e59638469a'
+  /AirJointWebView/WebView.Core/Properties:
+    newFile: null
+    oldFile: !uuid '7c1693aa21e5fc873109e0293094ae92bea915eb'
+  /AirJointWebView/WebView.Core/Properties/AssemblyInfo.cs:
+    newFile: null
+    oldFile: !uuid 'b769eff85645c30d5476ff0633660d3b1a67c2b2'
+  /AirJointWebView/WebView.Core/WebView.Core.csproj:
+    newFile: null
+    oldFile: !uuid 'cc91857e6fac5c61b6cd6d8a086b6e6501d1cff6'
+  /App:
+    newFile: !uuid '6bd447ec352e2e16a2139e5f38c96b6ee15beb72'
+    oldFile: !uuid '28d28eb80d524711791e44f4e7bc5a2d8099fc9e'
+  /App/XML:
+    newFile: !uuid '4935ec1102a440878c3487d71b7eb0a4e1237b81'
+    oldFile: !uuid '540e655d5ad021ce53641954d46767e2cbf1a47e'
+  /App/XML/IoTService.xml:
+    newFile: !uuid 'a1903516bfd181480888d16381df4865f6e95f6f'
+    oldFile: !uuid 'e6d2790c9a906e37960f6dad4ad0ea5b05dcbb4a'
+  /App/XML/IoTVideoService.xml:
+    newFile: !uuid '008d3546fb24f0174e4aa5521ddab6be5c487fac'
+    oldFile: !uuid '49ca9db78c8e30673f64de147fc47e1c6b2e6e10'
+  /Channel:
+    newFile: !uuid 'b417202f601c55bdd83e94dd96b921d6b00d822e'
+    oldFile: !uuid 'bb6c2c676e1dceb260ec3ef0b631f07dc5cc1ff5'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'c6c0fbd4bc6a008055ed410bf7356207175d5716'
+    oldFile: !uuid 'fdbb33202951957850490c7aee936c750abbbb8e'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid 'c1932acec573ce5c4af333f771b43208887512dd'
+    oldFile: !uuid '5f8174fce6fdff03ba4237922c1bfdaa82a88a9d'
+  /Channel/ChannelUtility/Tsl/TslJsonSerializerContext.cs:
+    newFile: !uuid '08f81f4aeaff53594fd5eae6eaccc5f2979374ed'
+    oldFile: !uuid '65653f896dec87a0f46ffca1a4c34520cb8cdee8'
+  /DigitalCard.sln:
+    newFile: !uuid 'a2fe85446bbf4de13ab475ec6047888543f69548'
+    oldFile: !uuid '3990f09e6cf47f4893cdadd55fc459584d847caf'
+  /Modules:
+    newFile: !uuid '1f497bab0459b23d294046d06b279535e731b839'
+    oldFile: !uuid 'ae5a98560327e5dc19467a39e193698d5821423a'
+  /Modules/IoTRulesService:
+    newFile: !uuid '4047da18f6bef5f2f8e457082dfed9048fe65bff'
+    oldFile: !uuid 'b8a5357be22b616903c8d1985bcb4394ba18ae00'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid 'd81f75de5ed863c9a5a04cb6213766a891295310'
+    oldFile: !uuid '397b8ceee6441ba656040f0e2298cf5ec26e485e'
+  /Modules/IoTRulesService/DataParser/Js:
+    newFile: !uuid '278be1ee5b345e5ee738a775a39fb6644dd7014f'
+    oldFile: !uuid 'c8e01580edf2af8c53b30783474bbb391acc6c0f'
+  /Modules/IoTRulesService/DataParser/Js/FuncMessageContext.cs:
+    newFile: !uuid 'f499ee910188572b082535b83ef89711bd85a059'
+    oldFile: !uuid 'ceb9952a3b8f3b5759a7539608cc8d7ba65aee3f'
+  /Modules/IoTService:
+    newFile: !uuid '74e456c3769967d92f8b0fb736d0ee8dab947517'
+    oldFile: !uuid '4da8d3acebf536b6d47bb937efc3e89d6f070264'
+  /Modules/IoTService/Business:
+    newFile: !uuid 'a5a7c0c52f38fb6c9a7f25aae0888404be740308'
+    oldFile: !uuid '2fc21edee2d1df175ad7dae09181d7e40242a32c'
+  /Modules/IoTService/Business/IotDeviceBLL.cs:
+    newFile: !uuid '1275d915216c4b884dad16b9dcf5bc8fae7a5de7'
+    oldFile: !uuid '6232b2790916098dbc1bc9e979325fe9999783ec'
+  /Modules/IoTService/Migrations:
+    newFile: !uuid '4e2ae904a766f1fe942a47b23cb43ccde5160f54'
+    oldFile: !uuid 'ee84840e21c86dd39dc5b8f904bba6ee222a3c72'
+  /Modules/IoTService/Migrations/IotMigrator.cs:
+    newFile: !uuid '1abb40a50195ca016fc078a725202ff3b411792a'
+    oldFile: !uuid 'f0fd13e9cf13ff44051ba1c922207e0c7f3b6c84'
+  /Modules/IoTService/Models:
+    newFile: !uuid '1c9b91f0cfdc8ed4e61120672b2adb135ac15194'
+    oldFile: !uuid '5da11877229f80fa76e26d3f679eefd253ff96a9'
+  /Modules/IoTService/Models/MZ_IotDevice.cs:
+    newFile: !uuid '45df6e5de4ce19d10ae22303ed0b0431c453a366'
+    oldFile: !uuid '25776b680ee4c6c65be7b9d5a8318227b821c8e2'
+  /Modules/IoTVideoService:
+    newFile: !uuid '1dafb91b142b4900517bb2f68f2ca573271316ec'
+    oldFile: !uuid '29f2b320670961eb688816598fb3f05be0c84332'
+  /Modules/IoTVideoService/IoTVideoMigrator.cs:
+    newFile: !uuid '715b34a5afa6dd0e592480a4d37f0725b8db6c0a'
+    oldFile: !uuid 'e0ef7f5ca5aa39e056decd700bb5cfda819abb33'
+  /Modules/IoTVideoService/Models:
+    newFile: !uuid 'a1c581111895c012d880f60bb15fe71b2ae76568'
+    oldFile: !uuid '13f992a06f12fd496478f4e37a6a70b9f47fa325'
+  /Modules/IoTVideoService/Models/MZ_VideoSource.cs:
+    newFile: !uuid '601fa7ad7c7a1a4b1a5c29c69a784089eb8a19bd'
+    oldFile: !uuid '7b31e96eb922a8c62e30d290cdb4bea7ef59f17c'
+gitCommitId: !uuid 'cd9e25ff716c7376f3542a73380b5bfbf8615ddd'
 renames: {
   }
-revisionId: 77
+revisionId: 78
