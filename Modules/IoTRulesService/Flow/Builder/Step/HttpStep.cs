@@ -1,7 +1,10 @@
-﻿using IoTRulesService.Flow.Node;
+﻿using Common.Json;
+using IoTRulesService.Flow.Node;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,25 +17,48 @@ namespace IoTRulesService.Flow.Builder.Step
     {
         private static HttpClient client = new HttpClient();
         public HttpProps props { get; set; }
-        private async Task ReplaceDictValue(RuleExecutionContext context, JObject dict)
+        private async Task ReplaceDictValue(RuleExecutionContext context, IDictionary<string, object> dict)
         {
-            IEnumerable<JProperty> properties = dict.Properties();
-            foreach (var pd in properties)
+            foreach (var pd in dict)
             {
                 if (pd.Value == null)
                 {
                     continue;
                 }
-                if (pd.Value.Type == JTokenType.Object)
+                if (pd.Value is IDictionary<string, object> tmpdictx)
                 {
-                    await ReplaceDictValue(context, pd.Value.ToObject<JObject>());
+                    await ReplaceDictValue(context, tmpdictx);
                 }
-                else if (pd.Value.Type == JTokenType.String)
+                else if (pd.Value is IList tmplist)
                 {
-                    string kvst = pd.Value.ToString();
+                    for (int i = 0; i < tmplist.Count; i++)
+                    {
+                        var tmpiitt = tmplist[i];
+                        if (tmpiitt == null)
+                        {
+                            continue;
+                        }
+                        if (tmpiitt is IDictionary<string, object> tmpsubobj)
+                        {
+                            await ReplaceDictValue(context, tmpsubobj);
+                        }
+                        else if (tmpiitt is string tmpstttr)
+                        {
+                            string arrayStr = tmpstttr;
+                            if (arrayStr.StartsWith("$"))
+                            {
+                                tmplist[i] = await context.ReadSourceString(arrayStr);
+                            }
+                        }
+                    }
+
+                }
+                else if (pd.Value is string tmpxxzstr)
+                {
+                    string kvst = tmpxxzstr;
                     if (kvst.StartsWith("$"))
                     {
-                        pd.Value = await context.ReadSourceString(kvst);
+                        dict[pd.Key] = await context.ReadSourceString(kvst);
                     }
                 }
             }
@@ -72,7 +98,7 @@ namespace IoTRulesService.Flow.Builder.Step
                             reqparams.Add(pd.name, pd.value);
                         }
                     }
-                    string jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(reqparams);
+                    string jsonstr = System.Text.Json.JsonSerializer.Serialize(reqparams, MyDefaultTextJsonConfig.DefaultOptions);
                     req.Content = new StringContent(jsonstr, Encoding.UTF8, "application/json");
                     if (context.IsDebug)
                     {
@@ -110,7 +136,7 @@ namespace IoTRulesService.Flow.Builder.Step
                     string tmpjson = string.Empty;
                     if (!string.IsNullOrEmpty(props.rawString))
                     {
-                        JObject tmpobj = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(props.rawString);
+                        var tmpobj = System.Text.Json.JsonSerializer.Deserialize<IDictionary<string, object>>(props.rawString, MyDefaultTextJsonConfig.DefaultOptions);
                         await ReplaceDictValue(context, tmpobj);
                         tmpjson = Newtonsoft.Json.JsonConvert.SerializeObject(tmpobj);
                     }

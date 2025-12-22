@@ -690,7 +690,12 @@ namespace IoTRulesService.Flow.Builder
             {
                 var props = await DeviceProp(this.Source.DeviceId);
                 object tmpval;
-                if (props.TryGetValue(key, out tmpval))
+                string tmpkey = key;
+                if (tmpkey.StartsWith("$"))
+                {
+                    tmpkey = tmpkey.Substring(1);
+                }
+                if (props.TryGetValue(tmpkey, out tmpval))
                 {
                     return tmpval;
                 }

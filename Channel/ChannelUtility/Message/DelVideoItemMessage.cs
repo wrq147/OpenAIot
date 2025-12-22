@@ -12,6 +12,5 @@ namespace ChannelUtility.Message
         {
             MsgType = "DelVItem";
         }
-        public string ItemId { get; set; }
     }
 }

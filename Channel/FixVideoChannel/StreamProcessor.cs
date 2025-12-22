@@ -48,7 +48,8 @@ namespace FixVideoChannel
         {
             _item = item;
             _inputUrl = item.PullAddr;
-            _pushUrl = item.PushAddr;
+            string tmpsche= _inputUrl.Substring(0, _inputUrl.IndexOf(":"));
+            _pushUrl = tmpsche + "://" + item.PushAddr;
             // 初始化组件
             _aiDetectTaskList = tasks;
             _zlPusher = new ZLMediaKitPusher();
@@ -355,7 +356,6 @@ namespace FixVideoChannel
                 {
                     _isProcessing = false;
                     _zlPusher.Disconnect();
-                    CleanupFFmpegResources();
                     await _listener.OnEventOffline(_item);
                 }
                 return;

@@ -4,6 +4,61 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="P:IoTVideoService.HookResult.code">
+            <summary>
+            返回代码，为0为正确，1~9不提示，大于9提示
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.HookResult.msg">
+            <summary>
+            提示信息
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.mediaServerId">
+            <summary>
+            服务器 id,通过配置文件设置
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.app">
+            <summary>
+            流应用名
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.id">
+            <summary>
+            TCP 链接唯一 ID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.ip">
+            <summary>
+            播放器 ip
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.params">
+            <summary>
+            播放 url 参数
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.port">
+            <summary>
+            播放器端口号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.schema">
+            <summary>
+            播放的协议，可能是 rtsp、rtmp
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.stream">
+            <summary>
+            流 ID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_HookNotFound.vhost">
+            <summary>
+            流虚拟主机
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.Id">
             <summary>
             视频源Id
@@ -59,27 +114,27 @@
             当前拉流的节点名称，无为空
             </summary>
         </member>
-        <member name="P:IoTVideoService.VideoOption.ZLMediaKitSecret">
+        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitSecret">
             <summary>
             ZLMediaKit接口密钥
             </summary>
         </member>
-        <member name="P:IoTVideoService.VideoOption.ZLMediaKitIp">
+        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitIp">
             <summary>
             ZLMediaKit的Ip地址
             </summary>
         </member>
-        <member name="P:IoTVideoService.VideoOption.ZLMediaKitRTSPPort">
+        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitRTSPPort">
             <summary>
             ZLMediaKit的RTSP端口号
             </summary>
         </member>
-        <member name="P:IoTVideoService.VideoOption.ZLMediaKitRTMPPort">
+        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitRTMPPort">
             <summary>
             ZLMediaKit的RTMP端口号
             </summary>
         </member>
-        <member name="P:IoTVideoService.VideoOption.ZLMediaKitApp">
+        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitApp">
             <summary>
             ZLMediaKit的应用名
             </summary>

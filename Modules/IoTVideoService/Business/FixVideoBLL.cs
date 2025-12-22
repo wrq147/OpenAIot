@@ -7,6 +7,7 @@ using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
+using Quartz.Impl.Triggers;
 using System;
 using System.Text;
 using TemplateAction.Core;
@@ -31,26 +32,41 @@ namespace IoTVideoService.Business
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
         }
-        private string GeneratePushAddr(string pullAddr, string key)
+        private async Task DownDelVideoItemMessage(string nodeid, string videoId)
+        {
+            DelVideoItemMessage msg = new DelVideoItemMessage();
+            msg.DeviceId = videoId;
+            msg.ProductId = string.Empty;
+            var bus = _provider.GetService<RabbitScope>().Bus;
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
+        }
+        private string GeneratePushAddr(string key)
         {
             var tmpoption = _provider.GetService<IOptions<VideoOption>>();
-            var trimAddr = pullAddr.Trim();
-            var uri = new Uri(trimAddr);
-            var tsche = uri.Scheme.ToLowerInvariant();
-            if (tsche == "rtmp")
+            var tservers = tmpoption.Value.Servers;
+            int pos = Math.Abs(key.GetHashCode() % tservers.Length);
+
+            return $"{tservers[pos].ZLMediaKitIp}:{tservers[pos].ZLMediaKitRTMPPort}/{tservers[pos].ZLMediaKitApp}/{key}";
+        }
+        public virtual async Task DelVideo(string streamId)
+        {
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            string tkey = streamId;
+            var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
+            if (tlist.Count > 0)
             {
-                return $"rtmp://{tmpoption.Value.ZLMediaKitIp}:{tmpoption.Value.ZLMediaKitRTMPPort}/{tmpoption.Value.ZLMediaKitApp}/{key}";
-            }
-            else if (tsche == "rtsp")
-            {
-                return $"rtsp://{tmpoption.Value.ZLMediaKitIp}:{tmpoption.Value.ZLMediaKitRTMPPort}/{tmpoption.Value.ZLMediaKitApp}/{key}";
-            }
-            else
-            {
-                return string.Empty;
+                if (!string.IsNullOrEmpty(tlist[0].PullNode))
+                {
+                    MZ_VideoSource tsource = new MZ_VideoSource();
+                    tsource.PullNode = string.Empty;
+                    tsource.Id = tlist[0].Id;
+                    await videoSourceDAL.Update(tsource);
+                    await DownDelVideoItemMessage(tlist[0].PullNode, tlist[0].Id);
+                }
             }
         }
-        public virtual async Task CollectVideo()
+        public virtual async Task CollectVideo(string streamId)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             //获取所有固定地址采集节点
@@ -87,12 +103,11 @@ namespace IoTVideoService.Business
             if (onlineNames == null || onlineNames.Count == 0) return;
 
             //给在线节点分配视频采集
-            In_VideoSourcePage query = new In_VideoSourcePage();
-            query.pageNum = 1;
-            query.pageSize = 1000;
-            var tpagelist = await videoSourceDAL.SelectPage(x => x.VideoType == 0 && x.PullNode == "", query, string.Empty);
-            foreach (var titem in tpagelist.List)
+            string tkey = streamId;
+            var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
+            if (tlist.Count > 0)
             {
+                var titem = tlist[0];
                 int pos = Math.Abs(titem.Id.GetHashCode() % onlineNames.Count);
                 string nodeid = onlineNames[pos];
                 MZ_VideoSource tsource = new MZ_VideoSource();
@@ -103,7 +118,7 @@ namespace IoTVideoService.Business
                 cpitem.Id = titem.Id;
                 cpitem.FrameInterval = titem.FrameInterval.Value;
                 cpitem.PullAddr = titem.PullAddr;
-                cpitem.PushAddr = GeneratePushAddr(titem.PullAddr, titem.VideoKey);
+                cpitem.PushAddr = GeneratePushAddr(titem.VideoKey);
                 List<AIDetectItem> detectList;
                 if (string.IsNullOrEmpty(titem.AITasks))
                 {
@@ -116,10 +131,9 @@ namespace IoTVideoService.Business
 
                 await DownUpVideoItemMessage(nodeid, cpitem, detectList);
             }
-            if (tpagelist.List.Count > 0)
-            {
-                await this.CollectVideo();
-            }
+
         }
+
+
     }
 }

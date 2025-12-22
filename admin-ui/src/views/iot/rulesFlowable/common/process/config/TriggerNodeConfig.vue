@@ -126,9 +126,12 @@ export default {
         });
       }
       else {
-        this.$store.state.rulesFlowable.rulesProductAttr.forEach(item =>
-          this.filterItem(item, paramItems)
-        );
+        this.$store.state.rulesFlowable.rulesProductAttr.forEach(item =>{
+          let newitem = JSON.parse(JSON.stringify(item));
+          newitem.name = item.name;
+          newitem.code = "$" + item.code;
+          this.filterItem(newitem, paramItems);
+        });
       }
 
 

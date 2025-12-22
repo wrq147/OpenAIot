@@ -8,6 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
@@ -15,11 +16,10 @@ namespace FixVideoChannel
 {
     public class FixVideoService : BackgroundService
     {
-        private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(50);
+        private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(20);
         private Thread _timerThread;
         private IServiceProvider _provider;
         private ConcurrentDictionary<string, StreamProcessor> _processorDict = new ConcurrentDictionary<string, StreamProcessor>();
-        private ConcurrentDictionary<string, string> _resetProcessors = new ConcurrentDictionary<string, string>();
         private FixVideoDeviceEventListener _deviceEventListener;
         private FixVideoOption _option;
         public FixVideoService(IServiceProvider provider)
@@ -73,17 +73,19 @@ namespace FixVideoChannel
                 }
 
                 var tmpProccess = new StreamProcessor(msg.Item, tasklist, _deviceEventListener);
-                if (!await tmpProccess.StartAsync())
+                if (await tmpProccess.StartAsync())
                 {
-                    tmpProccess.CleanupFFmpegResources();
-                    _resetProcessors.TryAdd(item.Id, item.Id);
+                    _processorDict.TryAdd(item.Id, tmpProccess);
                 }
-                _processorDict.TryAdd(item.Id, tmpProccess);
+                else
+                {
+                    tmpProccess.Dispose();
+                }
             }
         }
-        public async Task DelCaptureItemEvent(DelVideoItemMessage msg)
+        public async Task DelVideo(string id)
         {
-            if (_processorDict.TryRemove(msg.ItemId, out StreamProcessor tmp))
+            if (_processorDict.TryRemove(id, out StreamProcessor tmp))
             {
                 tmp.Dispose();
             }
@@ -152,27 +154,7 @@ namespace FixVideoChannel
         {
             //节点保活
             var eventBus = _provider.GetService<ClientBusProxy>();
-            await eventBus.RedisHelper.HashSetAsync("FixVideoNode", eventBus.NodeGuid, DateTime.Now.AddSeconds(60).ToString("o"));
-
-
-            //重新处理
-            var tmparr = _resetProcessors.ToArray();
-            foreach (var item in tmparr)
-            {
-                if (_processorDict.TryGetValue(item.Key, out StreamProcessor tmpProccess))
-                {
-                    if (!await tmpProccess.StartAsync())
-                    {
-                        tmpProccess.CleanupFFmpegResources();
-                    }
-                    else
-                    {
-                        _resetProcessors.TryRemove(item);
-                    }
-                }
-
-            }
-
+            await eventBus.RedisHelper.HashSetAsync("FixVideoNode", eventBus.NodeGuid, DateTime.Now.AddSeconds(30).ToString("o"));
         }
     }
 }

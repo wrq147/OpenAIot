@@ -8,6 +8,10 @@ namespace IoTVideoService
 {
     public class VideoOption
     {
+        public ZLMediaKitItem[] Servers { get; set; }
+    }
+    public class ZLMediaKitItem
+    {
         /// <summary>
         /// ZLMediaKit接口密钥
         /// </summary>
@@ -19,7 +23,7 @@ namespace IoTVideoService
         /// <summary>
         /// ZLMediaKit的RTSP端口号
         /// </summary>
-        public int ZLMediaKitRTSPPort { get; set; } = 8554;
+        public int ZLMediaKitRTSPPort { get; set; } = 554;
         /// <summary>
         /// ZLMediaKit的RTMP端口号
         /// </summary>
@@ -29,4 +33,5 @@ namespace IoTVideoService
         /// </summary>
         public string ZLMediaKitApp { get; set; } = "live";
     }
+
 }
