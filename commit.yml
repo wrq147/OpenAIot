@@ -2,424 +2,61 @@
 branches: {
   }
 fileChange:
-  /.env:
-    newFile: !uuid '17fe096def8253ce95a153a2feeb3d48f6fca738'
-    oldFile: !uuid '0ddc63183aa7dee05dd9dd3042dfc2ae57465b04'
   /App:
-    newFile: !uuid '7ed0539f3465581432119748f7ad1e56ed00b14c'
-    oldFile: !uuid 'e1ebde9792c088dbbb57b826e50d43dd3f9c5463'
+    newFile: !uuid '51881aa00308e975cb5217fcc26827f94249ee14'
+    oldFile: !uuid '7ed0539f3465581432119748f7ad1e56ed00b14c'
   /App/XML:
-    newFile: !uuid '144c29732561f1727d4c8b5798c23166bfe5cc25'
-    oldFile: !uuid 'd171769747d31bb26dd76dd5976a20c5499da941'
+    newFile: !uuid '09e4380277403548d8e0713be2d8eb13e7b58cfc'
+    oldFile: !uuid '144c29732561f1727d4c8b5798c23166bfe5cc25'
   /App/XML/IoTVideoService.xml:
-    newFile: !uuid '98c389ade8528570d12f9fd68ec9e8ec1adb7327'
-    oldFile: !uuid '53569a93b69d65b290de5b77015ffa4b5f3128f1'
-  /App/appsettings.json:
-    newFile: !uuid '4f237e89a73fade1d901ba3d6c95eed782ba140c'
-    oldFile: !uuid 'ddb56fadc4f70a1707625e503fc1c42d7812f440'
+    newFile: !uuid 'cbf79e9694d5529493c70937a65818c6dcf1e28b'
+    oldFile: !uuid '98c389ade8528570d12f9fd68ec9e8ec1adb7327'
   /Channel:
-    newFile: !uuid '392f4153dc7f170f1d594a1006771d700917669b'
-    oldFile: !uuid '29d50344c3e169bce9ce6310c3ab035016de137f'
-  /Channel/ChannelUtility:
-    newFile: !uuid '7dbe210e4516a7c436f894f16dceeebc09280332'
-    oldFile: !uuid 'c6c0fbd4bc6a008055ed410bf7356207175d5716'
-  /Channel/ChannelUtility/Message:
-    newFile: !uuid '248af045da2608bc82b2ff9dc31cf8b92a203fd6'
-    oldFile: !uuid '6c2e677c67f1848ce164f73b533b0aad782a5d63'
-  /Channel/ChannelUtility/Message/DelVideoItemMessage.cs:
-    newFile: !uuid '4f93c3aa3b82a0c206c2dae2bc0e814135d39cd8'
-    oldFile: !uuid '50d2c3bc45b1dc4df93b669e683e6be6223fcbe0'
+    newFile: !uuid '3a845b5aabdb5dae4e94774a4c7c148a6a1369d3'
+    oldFile: !uuid '392f4153dc7f170f1d594a1006771d700917669b'
   /Channel/FixVideoChannel:
-    newFile: !uuid '5df5261190c493a63b3b22cfef8f639d2f32728e'
-    oldFile: !uuid '2953f7d38680e64d75636db53da88ad4e3f4b518'
+    newFile: !uuid 'b1ae06310f4c67d739e2aa251ef00484297efc17'
+    oldFile: !uuid '5df5261190c493a63b3b22cfef8f639d2f32728e'
   /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
-    newFile: !uuid 'df513a9cfdbcdd3b7227f80175ad5292bb34f5b2'
-    oldFile: !uuid '166e7fe17cf938639a8a15cd00960f8c96d3d39e'
+    newFile: !uuid '27e629faacf0d096a24665dea5f00eedc28407a0'
+    oldFile: !uuid 'df513a9cfdbcdd3b7227f80175ad5292bb34f5b2'
   /Channel/FixVideoChannel/FixVideoService.cs:
-    newFile: !uuid 'cd11ee699eb59eba8b9a1d576f79ed26db974cec'
-    oldFile: !uuid '3021c78a3b527dafc33360a83f866d6d740516cf'
+    newFile: !uuid '1255c3e8cf05b6d7225261b073317b08ced54971'
+    oldFile: !uuid 'cd11ee699eb59eba8b9a1d576f79ed26db974cec'
+  /Channel/FixVideoChannel/H264Utils.cs:
+    newFile: !uuid 'c667c8f4f99872de90fc64fb272294ef6acf3424'
+    oldFile: null
   /Channel/FixVideoChannel/StreamProcessor.cs:
-    newFile: !uuid '0f917bfe95cebe94525f9df2b86375533e6cc06f'
-    oldFile: !uuid '1d87b8799dcd3c2a527b04a6d44e33913fc2d39b'
+    newFile: !uuid '26855951f7297fedf9e217dad4f2c4c3d2dd5269'
+    oldFile: !uuid '0f917bfe95cebe94525f9df2b86375533e6cc06f'
+  /Channel/FixVideoChannel/StreamTaskScheduler.cs:
+    newFile: !uuid 'da45e0564ec7ee72b2be0a07f624b8aa00e24bbd'
+    oldFile: !uuid '523e0abac32af01bd245af04dc026070ae6831a8'
+  /Channel/FixVideoChannel/ZLMediaKitPusher .cs:
+    newFile: !uuid '7755a326ce17bbc3490dd29b845ccf6598c038ad'
+    oldFile: !uuid '955532830d9ab3cf89f2f6b6ed2c6af935272141'
   /Modules:
-    newFile: !uuid '853800647b4e0614a91342bfcd3b91b727661f3b'
-    oldFile: !uuid '66a632ec839846fa3036373a24da9c585786211f'
-  /Modules/IoTRulesService:
-    newFile: !uuid 'ace7e77241515f9cbeca0e67b6b89e48f387f173'
-    oldFile: !uuid '4047da18f6bef5f2f8e457082dfed9048fe65bff'
-  /Modules/IoTRulesService/Flow:
-    newFile: !uuid '5b1532496e93ac01d30ada349ae2d56c18fdbafe'
-    oldFile: !uuid '2959380f734aadd1991d72af01f868bc27d53818'
-  /Modules/IoTRulesService/Flow/Builder:
-    newFile: !uuid '2e89ac0738151ee68273b6a8a570eac2376835b0'
-    oldFile: !uuid '4dac2d2827fe9c37f650fb34d38a569c8fc97d57'
-  /Modules/IoTRulesService/Flow/Builder/RuleExecutionContext.cs:
-    newFile: !uuid 'abc2408a6327c34db13d783237b425fe9210e774'
-    oldFile: !uuid '24fbe9366f7ba5664624b46a905ffc5d8a9cd5be'
-  /Modules/IoTRulesService/Flow/Builder/Step:
-    newFile: !uuid '6a387f5142d3f7e73a59b13787aa176ad4aad6fc'
-    oldFile: !uuid '1587046756cfd34db7eab4473f559efde7df630d'
-  /Modules/IoTRulesService/Flow/Builder/Step/HttpStep.cs:
-    newFile: !uuid '6a72f01aedaee2687c756d5be635dd03b562688b'
-    oldFile: !uuid '38795b1a41a6929acdca7686be818813a58ef481'
+    newFile: !uuid '698ebb9b71040508fc0404b40de2262711869f14'
+    oldFile: !uuid '853800647b4e0614a91342bfcd3b91b727661f3b'
   /Modules/IoTVideoService:
-    newFile: !uuid '7f1f5bea090901fb1c0a7cf16fd45057c4b1c76d'
-    oldFile: !uuid 'f90db2b11eebde57a85b6a18b52f5220d8d2a9ec'
+    newFile: !uuid '1746780dd7c0e102d0a8ef141faa560517396199'
+    oldFile: !uuid '7f1f5bea090901fb1c0a7cf16fd45057c4b1c76d'
   /Modules/IoTVideoService/Business:
-    newFile: !uuid 'd74bb585474a2228ffef30a8777498009309468a'
-    oldFile: !uuid 'df80654ef423c78242b9f492609777ce6ae934b7'
+    newFile: !uuid '87db99b03a50f78a5e3b259da62aafb588305212'
+    oldFile: !uuid 'd74bb585474a2228ffef30a8777498009309468a'
   /Modules/IoTVideoService/Business/FixVideoBLL.cs:
-    newFile: !uuid 'a2a5f44d5f6ac00855e6d566fdfdcff0df404c21'
-    oldFile: !uuid 'f2e2ae750057755441c37bbc05ab632d24798982'
-  /Modules/IoTVideoService/Controller:
-    newFile: !uuid 'da168cd0cd87488feda9c3c77d6cecd2c5a4c65c'
-    oldFile: null
-  /Modules/IoTVideoService/Controller/ZLMediaHook.cs:
-    newFile: !uuid '3aefd75aa15b246052a0b162cc407ce56efafaa3'
-    oldFile: null
-  /Modules/IoTVideoService/HookNoneRResult.cs:
-    newFile: !uuid 'beb54f45e74143371b8cc8b72aee0297053f6627'
-    oldFile: null
-  /Modules/IoTVideoService/HookResult.cs:
-    newFile: !uuid 'bb161cbbda21e6ae06bfc2f2d49551d204bf0245'
-    oldFile: null
-  /Modules/IoTVideoService/IoTVideoService.csproj:
-    newFile: !uuid '9d056256c74a525bfc05b9f9a84f0a2d241c9c1d'
-    oldFile: !uuid '9f52b0b533049b9b6b18d18a4deab5404715298a'
-  /Modules/IoTVideoService/Models:
-    newFile: !uuid '8ca7c61f3d01e368d9a1ff6eae08aefb6ee2088b'
-    oldFile: !uuid 'd649dc7f6c6a361cb2a21c2d59956e55580fa160'
-  /Modules/IoTVideoService/Models/In_HookNoneReader.cs:
-    newFile: !uuid '9e366ff4982033845abe8047046cbeef8409811d'
-    oldFile: null
-  /Modules/IoTVideoService/Models/In_HookNotFound.cs:
-    newFile: !uuid '2ebadc8dd0a0fff0604fd594c0e11b829257b49f'
-    oldFile: null
-  /Modules/IoTVideoService/PluginConfig.cs:
-    newFile: !uuid '2d6f4594c65213f352b47e6049ee34f0cff6bb85'
-    oldFile: !uuid 'b862102b45e192f0ca3dc170378233a3a63743bc'
-  /Modules/IoTVideoService/VideoOption.cs:
-    newFile: !uuid '57732983f52cc575dd7c81689226662bdf3a415b'
-    oldFile: !uuid 'a554687ba0c6377703407e72be96c7fed1460e2b'
+    newFile: !uuid 'cd187156c07143bc2afb555edb5e5504b58486b5'
+    oldFile: !uuid 'a2a5f44d5f6ac00855e6d566fdfdcff0df404c21'
   /ZLMediaKit:
-    newFile: !uuid '11a8942fa1543e3f4337001fcfe051ed32c73627'
-    oldFile: null
-  /ZLMediaKit/Linux:
-    newFile: !uuid 'd8642f6e4e57c121d2a6268af47816b2cf534fe2'
-    oldFile: null
-  /ZLMediaKit/Linux/x64:
-    newFile: !uuid '9968225312c8413198ddf3b6b1c1b6c0bd338ace'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/MediaServer:
-    newFile: !uuid 'd6ad7a0eb8501161f908e8a7284f03cefaa38080'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/config.ini:
-    newFile: !uuid '016f354515e29d88e75686e72e66622f7f075ee8'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/default.pem:
-    newFile: !uuid 'e0ec11322c5536309f29e82dcaf0f4f27224686f'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/libmk_api.so:
-    newFile: !uuid '5bc0c1d45bb11b322b84875676bdc2ca841207ad'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www:
-    newFile: !uuid '9f745a646356f6d9e397f40d63b3eb6e52253b68'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/ZLMRTCClient.js:
-    newFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/ZLMRTCClient.js.map:
-    newFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/logo.ico:
-    newFile: !uuid '132a1ec59e14b92a9a69f41c6f89e9694bb22312'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/logo.png:
-    newFile: !uuid 'dd1379cb408d98e0119b014f70e6c1f3ee485452'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist:
-    newFile: !uuid '27440f329447bf92941ee767e94ec2af6c5560e3'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/LICENSE:
-    newFile: !uuid '4a9f0b7060725e917b006f281ac7a38b89f23dc9'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/README.md:
-    newFile: !uuid '37aca3e47ab585a1e2c40b1612158b5f67c1a262'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/README_EN.md:
-    newFile: !uuid '484c37f75940897dbfd93eef1986195694f4a587'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets:
-    newFile: !uuid '6ec42f2d8c3a271182a12e823d42aaa620b4a266'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui:
-    newFile: !uuid 'd150678d93dccbc73e1952ce918f597f6c8764e0'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/fonts:
-    newFile: !uuid 'f340496161ad88922dba2c1887e5ce0da5bd030a'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/fonts/element-icons.woff:
-    newFile: !uuid '02b9a2539e425a7a8c244faba92527602be76212'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/index.css:
-    newFile: !uuid '2e1eab506a5238a5c0bf76bcb0ef34c0bedf3477'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/index.js:
-    newFile: !uuid '6d6592fe059d53fc5c8814460ec2566978ded59f'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/favicon.ico:
-    newFile: !uuid 'ca4d9dc2e41be7514aadf6ce017fcc1f04aff3c9'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/assets/logo.png:
-    newFile: !uuid '21c4d2c3d287f655d65ba80e10ab0dee083598de'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/index.html:
-    newFile: !uuid 'a77457695ad16fc4c8e573618e4cd9204be068c9'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js:
-    newFile: !uuid '78eeeb02ea9bded9f4156a68633e674c21456388'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/ZLMRTCClient.js:
-    newFile: !uuid 'dd93e81df2c9f0cd6d6ab2ae35ffd4aeafc6de86'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/ZLMRTCClient.js.map:
-    newFile: !uuid 'deadb787821ce21210c1a5d3c8001fbc129e1edd'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/axios.min.js:
-    newFile: !uuid 'e4046bbd0acb806d2d1a10c8a5e71c44d9f4abbe'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/echarts.min.js:
-    newFile: !uuid '044cdafcf549873a156d2688bcd44df6a879d424'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/qs.js:
-    newFile: !uuid '4a92bdaac7c59f37befb3c2047ffff3ed3ad5610'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/utils.js:
-    newFile: !uuid '57cd6163560092c712e7d41879e708a2e485d9e5'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webassist/js/vue.min.js:
-    newFile: !uuid 'efebcc61f587d3fb39c511d0075925f3f71ec32b'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webrtc:
-    newFile: !uuid '48762167c9b24c581ae3571fb61db89bd167982a'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webrtc/ZLMRTCClient.js:
-    newFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webrtc/ZLMRTCClient.js.map:
-    newFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webrtc/index.html:
-    newFile: !uuid '718e7d0011e67cf3a2edbe3df9a0727616819062'
-    oldFile: null
-  /ZLMediaKit/Linux/x64/www/webrtc/readme.txt:
-    newFile: !uuid 'ba651b40b41089e8f512c6ae1085c78d911b23fe'
-    oldFile: null
+    newFile: !uuid '13fd72afa35bac9d24ef8a0bce101c2f3052f259'
+    oldFile: !uuid '11a8942fa1543e3f4337001fcfe051ed32c73627'
   /ZLMediaKit/Windows:
-    newFile: !uuid '645676ed09bc053a4d5c5197d337de422e78c285'
-    oldFile: null
-  /ZLMediaKit/Windows/MediaServer.exe:
-    newFile: !uuid 'c44b40870f7e9efac67af8af57cf3284c6fab5c7'
-    oldFile: null
+    newFile: !uuid 'cc2af9568099885414539de4425a6d9d8bd93bfb'
+    oldFile: !uuid '645676ed09bc053a4d5c5197d337de422e78c285'
   /ZLMediaKit/Windows/config.ini:
-    newFile: !uuid '9f5a8f742a114068d6df8558a9b035293689ff10'
-    oldFile: null
-  /ZLMediaKit/Windows/default.pem:
-    newFile: !uuid 'e0ec11322c5536309f29e82dcaf0f4f27224686f'
-    oldFile: null
-  /ZLMediaKit/Windows/mk_api.dll:
-    newFile: !uuid '3b15762a07161005224a58ac9fb208f55ec82f86'
-    oldFile: null
-  /ZLMediaKit/Windows/www:
-    newFile: !uuid '18fb02211a4374be3ee8330d8e5e2dd1122032d5'
-    oldFile: null
-  /ZLMediaKit/Windows/www/ZLMRTCClient.js:
-    newFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-    oldFile: null
-  /ZLMediaKit/Windows/www/ZLMRTCClient.js.map:
-    newFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-    oldFile: null
-  /ZLMediaKit/Windows/www/logo.ico:
-    newFile: !uuid '132a1ec59e14b92a9a69f41c6f89e9694bb22312'
-    oldFile: null
-  /ZLMediaKit/Windows/www/logo.png:
-    newFile: !uuid 'dd1379cb408d98e0119b014f70e6c1f3ee485452'
-    oldFile: null
-  /ZLMediaKit/Windows/www/readme:
-    newFile: !uuid '147cb1f26486391bd20a23083611ad30f70f5932'
-    oldFile: null
-  /ZLMediaKit/Windows/www/readme/index.html:
-    newFile: !uuid '5adb4a6d31966a70967382b24a335de3ba5994c5'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger:
-    newFile: !uuid 'dcba8bdac71363ab12981ff92216eb9c8c6e5af1'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/favicon-16x16.png:
-    newFile: !uuid '8b194e617af1c135e6b37939591d24ac3a5efa18'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/favicon-32x32.png:
-    newFile: !uuid '249737fe44558e679f0b67134e274461d988fa98'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/index.css:
-    newFile: !uuid 'f2376fdaa842b12ecf6a191409ff0b0a03c4b0f8'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/index.html:
-    newFile: !uuid '84ae62d3dad6004f2ba250cf69b4148eeb7c253d'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/oauth2-redirect.html:
-    newFile: !uuid '56409171811d4594c24ef540844741b8d12e9da2'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/openapi.json:
-    newFile: !uuid '480c977cb150daa2ef63a385540441f8c4396432'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-initializer.js:
-    newFile: !uuid '612ae82f7efb3a62192cdbd12bc1eee6dca480df'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-bundle.js:
-    newFile: !uuid '6878058e3a1d1e5f174dcef58bae613181b0d697'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-bundle.js.map:
-    newFile: !uuid 'e1a0e5e1a7e93cf340db0e7f6d58cb8e765e6c25'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle-core.js:
-    newFile: !uuid 'a72eba2981310ab12ee1e503be98527f84cb26e9'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle-core.js.map:
-    newFile: !uuid '9b25a13ed950e7044bd9fdcf89a147aa203e3d6f'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle.js:
-    newFile: !uuid '09b76a5535f04f29607359795b2c85d3d6b581e2'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle.js.map:
-    newFile: !uuid 'a25f081913b0f32bfc0cdbd4e732d524ad06d0eb'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-standalone-preset.js:
-    newFile: !uuid '2ede1a83494818a8a3f38e1b6ac6135a43286e11'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-standalone-preset.js.map:
-    newFile: !uuid 'd0cc02bd4f30f49b027d106ed2b7dcd9d3fcfc98'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.css:
-    newFile: !uuid 'a360ae155f027acfb255dccfdc4f8e0bf5e1d74e'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.css.map:
-    newFile: !uuid '03b48ea36b36b97eb807579de2dee60970c807c7'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.js:
-    newFile: !uuid 'a1fcdf6e13a4d8d1c9bb4a74e42787f34ef95e7d'
-    oldFile: null
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.js.map:
-    newFile: !uuid '16cf64ea390cc37e3998d8e662a7716c5e88a512'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist:
-    newFile: !uuid '27440f329447bf92941ee767e94ec2af6c5560e3'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/LICENSE:
-    newFile: !uuid '4a9f0b7060725e917b006f281ac7a38b89f23dc9'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/README.md:
-    newFile: !uuid '37aca3e47ab585a1e2c40b1612158b5f67c1a262'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/README_EN.md:
-    newFile: !uuid '484c37f75940897dbfd93eef1986195694f4a587'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets:
-    newFile: !uuid '6ec42f2d8c3a271182a12e823d42aaa620b4a266'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/elementui:
-    newFile: !uuid 'd150678d93dccbc73e1952ce918f597f6c8764e0'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/fonts:
-    newFile: !uuid 'f340496161ad88922dba2c1887e5ce0da5bd030a'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/fonts/element-icons.woff:
-    newFile: !uuid '02b9a2539e425a7a8c244faba92527602be76212'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/index.css:
-    newFile: !uuid '2e1eab506a5238a5c0bf76bcb0ef34c0bedf3477'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/index.js:
-    newFile: !uuid '6d6592fe059d53fc5c8814460ec2566978ded59f'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/favicon.ico:
-    newFile: !uuid 'ca4d9dc2e41be7514aadf6ce017fcc1f04aff3c9'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/assets/logo.png:
-    newFile: !uuid '21c4d2c3d287f655d65ba80e10ab0dee083598de'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/index.html:
-    newFile: !uuid 'a77457695ad16fc4c8e573618e4cd9204be068c9'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js:
-    newFile: !uuid '78eeeb02ea9bded9f4156a68633e674c21456388'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/ZLMRTCClient.js:
-    newFile: !uuid 'dd93e81df2c9f0cd6d6ab2ae35ffd4aeafc6de86'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/ZLMRTCClient.js.map:
-    newFile: !uuid 'deadb787821ce21210c1a5d3c8001fbc129e1edd'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/axios.min.js:
-    newFile: !uuid 'e4046bbd0acb806d2d1a10c8a5e71c44d9f4abbe'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/echarts.min.js:
-    newFile: !uuid '044cdafcf549873a156d2688bcd44df6a879d424'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/qs.js:
-    newFile: !uuid '4a92bdaac7c59f37befb3c2047ffff3ed3ad5610'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/utils.js:
-    newFile: !uuid '57cd6163560092c712e7d41879e708a2e485d9e5'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webassist/js/vue.min.js:
-    newFile: !uuid 'efebcc61f587d3fb39c511d0075925f3f71ec32b'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webrtc:
-    newFile: !uuid '48762167c9b24c581ae3571fb61db89bd167982a'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webrtc/ZLMRTCClient.js:
-    newFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webrtc/ZLMRTCClient.js.map:
-    newFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webrtc/index.html:
-    newFile: !uuid '718e7d0011e67cf3a2edbe3df9a0727616819062'
-    oldFile: null
-  /ZLMediaKit/Windows/www/webrtc/readme.txt:
-    newFile: !uuid 'ba651b40b41089e8f512c6ae1085c78d911b23fe'
-    oldFile: null
-  /admin-ui:
-    newFile: !uuid '6037c7d7bd37f1d12c6a205f4d53db25ff1db9f9'
-    oldFile: !uuid '43d7a5b64d6d9d6104fe4ce1266a7491b369d371'
-  /admin-ui/src:
-    newFile: !uuid 'f27fc94b75b893f76ade7b0b6846ad28e805ab5e'
-    oldFile: !uuid '67a9a3a2ee1233f8db77c2487a0e7b9b75f5ffe9'
-  /admin-ui/src/views:
-    newFile: !uuid '662bd9c13d900fc9b417eaaff1a2dda089fb95d3'
-    oldFile: !uuid '9ec99c8260a31b66e24f76e189c4d932ed8485c2'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '68a3288737a88a187f36d624cee1fafcdd9fbad2'
-    oldFile: !uuid 'a9b64e829910defe06adbf1910bc5ad683e989b7'
-  /admin-ui/src/views/iot/rulesFlowable:
-    newFile: !uuid 'a802a0a984cbf9693971dfb4da0d9f553482f929'
-    oldFile: !uuid '4a0cac789d298324b5b4fd94a5311824344755cb'
-  /admin-ui/src/views/iot/rulesFlowable/common:
-    newFile: !uuid 'a56e0d382aa99877976b9e0c131696df657e3b45'
-    oldFile: !uuid '2511628267c177db02fbce33c5bd802ed917cf2a'
-  /admin-ui/src/views/iot/rulesFlowable/common/process:
-    newFile: !uuid '481f4b69aee6dd147e64e06a219c0d6780a354c4'
-    oldFile: !uuid '32af5bbd5b2854423bef01fcbecfc39471d9732f'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config:
-    newFile: !uuid '7aa7317d28c09738cbc6b36f48de3f770a1c937d'
-    oldFile: !uuid '8a06fdcceb2389bc5bd3b2648fd009a5d50505bf'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config/TriggerNodeConfig.vue:
-    newFile: !uuid 'cf6f508947e4f11c2d64429c0e951a98072685a7'
-    oldFile: !uuid '997c1db675d368cd6de7681acbfd1340f190c47e'
-  /docker-compose.yml:
-    newFile: !uuid 'ea0d3003063c919db256153b803d22785f2f0afa'
-    oldFile: !uuid 'f4e217857caf5934a169ac230b1da4d6244d2d70'
-gitCommitId: !uuid '4699f022c00a1947e76c5bf207a3abbe89765a43'
+    newFile: !uuid 'f286468a4e90776f42a3c9cf23f1f5498c91505a'
+    oldFile: !uuid '9f5a8f742a114068d6df8558a9b035293689ff10'
+gitCommitId: !uuid '47b84b45e424895d4652d71e39c8fb5db639dd99'
 renames: {
   }
-revisionId: 80
+revisionId: 81
