@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FixVideoChannel
 {
@@ -26,6 +27,8 @@ namespace FixVideoChannel
     // 视频编码参数
     public class VideoCodecParams
     {
+        public byte[] sps { get; set; }
+        public byte[] pps { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public AVRational TimeBase { get; set; }
@@ -56,51 +59,81 @@ namespace FixVideoChannel
         private int _audioStreamIndex = -1;
         private long _videoPts = 0;
         private long _audioPts = 0;
+        private long _lastVideoPts = 0;
+        private long _videoFrameDuration = 3000; // 30fps默认帧间隔（90000/30）
 
-        // 从外部传入的编码参数
         private VideoCodecParams _videoParams;
         private AudioCodecParams _audioParams;
 
         private bool _isConnected;
+        private const int AV_INPUT_BUFFER_PADDING_SIZE = 8;
 
         #endregion
 
         #region 公共属性
-        /// <summary>
-        /// 是否已连接
-        /// </summary>
         public bool IsConnected => _isConnected;
         #endregion
 
-        public ZLMediaKitPusher() { }
+        private string _videoId;
+        public string VideoId => _videoId;
 
-        /// <summary>
-        /// 初始化编码参数（必须在Connect前调用）
-        /// </summary>
-        /// <param name="videoParams">视频编码参数</param>
-        /// <param name="audioParams">音频编码参数</param>
-        public void InitializeCodecParams(VideoCodecParams videoParams, AudioCodecParams audioParams = null)
+        private enum PushProtocol
         {
-            // 初始化FFmpeg数据包
-            unsafe
-            {
-                _packetPtr = (IntPtr)ffmpeg.av_packet_alloc();
-                if (_packetPtr == IntPtr.Zero)
-                {
-                    throw new OutOfMemoryException("无法分配AVPacket");
-                }
-            }
-            _videoParams = videoParams ?? throw new ArgumentNullException(nameof(videoParams));
-            _audioParams = audioParams;
+            RTMP,
+            RTSP,
+            Unknown
         }
 
-        /// <summary>
-        /// 连接ZLMediaKit并初始化推流上下文
-        /// </summary>
-        /// <param name="pushUrl">推流地址 (rtmp://或rtsp://)</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidOperationException"></exception>
+        private PushProtocol _pushProtocol;
+
+        public ZLMediaKitPusher(string vid)
+        {
+            _videoId = vid;
+        }
+
+
+
+        public void InitializeCodecParams(VideoCodecParams videoParams, AudioCodecParams audioParams = null)
+        {
+            unsafe
+            {
+                if (_packetPtr != IntPtr.Zero)
+                {
+                    AVPacket* pkt = (AVPacket*)_packetPtr;
+                    ffmpeg.av_packet_free(&pkt);
+                }
+
+                _packetPtr = (IntPtr)ffmpeg.av_packet_alloc();
+                if (_packetPtr == IntPtr.Zero)
+                    throw new OutOfMemoryException("无法分配AVPacket");
+            }
+
+            _videoParams = videoParams ?? throw new ArgumentNullException(nameof(videoParams));
+            _audioParams = audioParams;
+
+            // 修复：计算视频帧间隔时增加非零校验
+            if (_videoParams.TimeBase.num > 0 && _videoParams.TimeBase.den > 0)
+            {
+                double fps = (double)_videoParams.TimeBase.den / _videoParams.TimeBase.num;
+                fps = Math.Clamp(fps, 1, 60); // 限制帧率范围
+                _videoFrameDuration = (long)(90000 / fps);
+            }
+            else
+            {
+                _videoFrameDuration = 3000; // 兜底30fps
+            }
+
+            // 音频参数非零校验
+            if (_audioParams != null)
+            {
+                _audioParams.SampleRate = _audioParams.SampleRate <= 0 ? 44100 : _audioParams.SampleRate;
+                if (_audioParams.TimeBase.num <= 0 || _audioParams.TimeBase.den <= 0)
+                {
+                    _audioParams.TimeBase = new AVRational { num = 1, den = _audioParams.SampleRate };
+                }
+            }
+        }
+
         public void Connect(string pushUrl)
         {
             if (string.IsNullOrEmpty(pushUrl))
@@ -112,51 +145,74 @@ namespace FixVideoChannel
             if (_isConnected)
                 return;
 
+            if (pushUrl.StartsWith("rtmp://", StringComparison.OrdinalIgnoreCase))
+            {
+                _pushProtocol = PushProtocol.RTMP;
+            }
+            else if (pushUrl.StartsWith("rtsp://", StringComparison.OrdinalIgnoreCase))
+            {
+                _pushProtocol = PushProtocol.RTSP;
+            }
+            else
+            {
+                throw new NotSupportedException($"不支持的推流协议：{pushUrl}");
+            }
+
             try
             {
-                // 初始化FFmpeg推流上下文
                 unsafe
                 {
-                    // 1. 分配输出格式上下文
                     AVFormatContext* fmtCtx = null;
-                    int errorCode = ffmpeg.avformat_alloc_output_context2(&fmtCtx, null, null, pushUrl);
+                    string formatName = _pushProtocol == PushProtocol.RTMP ? "flv" : "rtsp";
+
+                    int errorCode = ffmpeg.avformat_alloc_output_context2(&fmtCtx, null, formatName, pushUrl);
                     if (errorCode < 0 || fmtCtx == null)
-                    {
                         throw new InvalidOperationException($"无法分配输出格式上下文: {GetFFmpegErrorDescription(errorCode)}");
-                    }
+
                     _fmtCtxPtr = (IntPtr)fmtCtx;
 
-                    // 2. 打开输出IO
+                    // 设置推流参数
+                    AVDictionary* options = null;
+                    if (_pushProtocol == PushProtocol.RTMP)
+                    {
+                        ffmpeg.av_dict_set(&options, "flush_packets", "1", 0);
+                        ffmpeg.av_dict_set(&options, "max_interleave_delta", "100", 0);
+                        ffmpeg.av_dict_set(&options, "rtmp_buffer", "2048", 0);
+                        ffmpeg.av_dict_set(&options, "rtmp_timeout", "5000000", 0);
+                        ffmpeg.av_dict_set(&options, "max_delay", "500000", 0);
+                    }
+                    else if (_pushProtocol == PushProtocol.RTSP)
+                    {
+                        ffmpeg.av_dict_set(&options, "rtsp_transport", "tcp", 0);
+                        ffmpeg.av_dict_set(&options, "stimeout", "5000000", 0);
+                        ffmpeg.av_dict_set(&options, "max_delay", "1000000", 0);
+                    }
+
+                    // 打开输出IO
                     if ((fmtCtx->oformat->flags & ffmpeg.AVFMT_NOFILE) == 0)
                     {
                         errorCode = ffmpeg.avio_open(&fmtCtx->pb, pushUrl, ffmpeg.AVIO_FLAG_WRITE);
                         if (errorCode < 0)
                         {
+                            ffmpeg.av_dict_free(&options);
                             ffmpeg.avformat_free_context(fmtCtx);
                             _fmtCtxPtr = IntPtr.Zero;
                             throw new InvalidOperationException($"无法打开推流IO: {GetFFmpegErrorDescription(errorCode)}");
                         }
                     }
+
+                    ffmpeg.av_dict_free(&options);
                 }
 
-                // 标记为已连接
                 _isConnected = true;
             }
             catch
             {
+                Dispose();
                 throw;
             }
         }
 
-        /// <summary>
-        /// 推送H264帧到ZLMediaKit
-        /// </summary>
-        /// <param name="frameData">H264裸数据 (包含NALU头)</param>
-        /// <param name="timestampMs">时间戳（毫秒）</param>
-        /// <param name="isKeyFrame">是否为关键帧</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         public void PushH264Frame(byte[] frameData, long timestampMs, bool isKeyFrame)
         {
             if (!_isConnected)
@@ -165,7 +221,7 @@ namespace FixVideoChannel
             if (frameData == null || frameData.Length == 0)
                 throw new ArgumentNullException(nameof(frameData));
 
-            // 创建任务并加入队列
+
             var task = new PushTask
             {
                 Type = PushTaskType.H264Frame,
@@ -178,14 +234,6 @@ namespace FixVideoChannel
             StreamTaskScheduler.Instance.EnqueuePushTask(task);
         }
 
-        /// <summary>
-        /// 推送AAC帧到ZLMediaKit
-        /// </summary>
-        /// <param name="frameData">AAC裸数据 (ADTS头可选)</param>
-        /// <param name="timestampMs">时间戳（毫秒）</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         public void PushAacFrame(byte[] frameData, long timestampMs)
         {
             if (!_isConnected)
@@ -197,7 +245,6 @@ namespace FixVideoChannel
             if (_audioParams == null)
                 throw new InvalidOperationException("未初始化音频编码参数");
 
-            // 创建任务并加入队列
             var task = new PushTask
             {
                 Type = PushTaskType.AACFrame,
@@ -209,38 +256,30 @@ namespace FixVideoChannel
             StreamTaskScheduler.Instance.EnqueuePushTask(task);
         }
 
-        /// <summary>
-        /// 断开与ZLMediaKit的连接
-        /// </summary>
-        /// <returns></returns>
         public void Disconnect()
         {
             if (!_isConnected)
                 return;
 
-            // 清理资源
             _isConnected = false;
+            unsafe
+            {
+                ProcessDisconnect();
+            }
         }
 
-
-
-
-        /// <summary>
-        /// 处理H264帧推送（单线程执行）
-        /// </summary>
-        /// <param name="task">推流任务</param>
         public unsafe void ProcessH264Frame(PushTask task)
         {
+            if (!_isConnected)
+                throw new InvalidOperationException("未连接到ZLMediaKit");
+
             AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
             AVPacket* packet = (AVPacket*)_packetPtr;
 
-            // 1. 首次推送时创建视频流
             if (_videoStreamIndex == -1)
-            {
                 CreateVideoStream(fmtCtx);
-            }
 
-            // 2. 初始化数据包
+            // 初始化数据包
             ffmpeg.av_packet_unref(packet);
             fixed (byte* dataPtr = task.Data)
             {
@@ -248,45 +287,59 @@ namespace FixVideoChannel
                 packet->size = task.Data.Length;
             }
 
-            // 3. 设置时间戳
-            _videoPts = task.TimestampMs * _videoParams.TimeBase.den / _videoParams.TimeBase.num;
+            // 计算PTS
+            AVStream* videoStream = (AVStream*)_videoStreamPtr;
+            if (_pushProtocol == PushProtocol.RTMP)
+            {
+                _videoPts = task.TimestampMs * 90;
+            }
+            else if (_pushProtocol == PushProtocol.RTSP)
+            {
+                double fps = videoStream->avg_frame_rate.num > 0 && videoStream->avg_frame_rate.den > 0
+                    ? (double)videoStream->avg_frame_rate.den / videoStream->avg_frame_rate.num
+                    : 30;
+                _videoPts = (long)(task.TimestampMs * fps / 1000);
+            }
+
+            // 避免PTS回退
+            if (_videoPts <= _lastVideoPts)
+                _videoPts = _lastVideoPts + _videoFrameDuration;
+            _lastVideoPts = _videoPts;
+
             packet->pts = _videoPts;
-            packet->dts = _videoPts;
+            packet->dts = task.IsKeyFrame ? _videoPts : packet->pts;
             packet->stream_index = _videoStreamIndex;
 
-            // 4. 设置关键帧标记
             if (task.IsKeyFrame)
-            {
                 packet->flags |= ffmpeg.AV_PKT_FLAG_KEY;
+
+            // 时间基转换（安全校验）
+            AVRational srcTimeBase = new AVRational { num = 1, den = 1000 };
+            AVRational dstTimeBase = videoStream->time_base;
+            if (dstTimeBase.num <= 0 || dstTimeBase.den <= 0)
+            {
+                dstTimeBase = new AVRational { num = 1, den = 90000 };
             }
+            ffmpeg.av_packet_rescale_ts(packet, srcTimeBase, dstTimeBase);
 
-            // 5. 时间基转换
-            ffmpeg.av_packet_rescale_ts(packet, _videoParams.TimeBase, ((AVStream*)_videoStreamPtr)->time_base);
-
-            // 6. 写入数据包
+            // 写入数据包
             int errorCode = ffmpeg.av_interleaved_write_frame(fmtCtx, packet);
             if (errorCode < 0)
-            {
                 throw new InvalidOperationException($"推送H264帧失败: {GetFFmpegErrorDescription(errorCode)}");
-            }
         }
 
-        /// <summary>
-        /// 处理AAC帧推送（单线程执行）
-        /// </summary>
-        /// <param name="task">推流任务</param>
         public unsafe void ProcessAacFrame(PushTask task)
         {
+            if (!_isConnected)
+                throw new InvalidOperationException("未连接到ZLMediaKit");
+
             AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
             AVPacket* packet = (AVPacket*)_packetPtr;
 
-            // 1. 首次推送时创建音频流
             if (_audioStreamIndex == -1)
-            {
                 CreateAudioStream(fmtCtx);
-            }
 
-            // 2. 初始化数据包
+            // 初始化数据包
             ffmpeg.av_packet_unref(packet);
             fixed (byte* dataPtr = task.Data)
             {
@@ -294,68 +347,118 @@ namespace FixVideoChannel
                 packet->size = task.Data.Length;
             }
 
-            // 3. 设置时间戳
-            _audioPts = task.TimestampMs * _audioParams.TimeBase.den / _audioParams.TimeBase.num;
+            // 获取音频流并验证时间基
+            AVStream* audioStream = (AVStream*)_audioStreamPtr;
+
+            // 验证并修复音频流时间基
+            AVRational audioTimeBase = audioStream->time_base;
+            if (audioTimeBase.num <= 0 || audioTimeBase.den <= 0)
+            {
+                audioTimeBase = new AVRational { num = 1, den = _audioParams?.SampleRate > 0 ? _audioParams.SampleRate : 44100 };
+                audioStream->time_base = audioTimeBase;
+            }
+
+            // 使用毫秒时间戳计算音频PTS
+            int sampleRate = _audioParams?.SampleRate > 0 ? _audioParams.SampleRate : 44100;
+
+            // 确保采样率有效
+            if (sampleRate <= 0)
+            {
+                sampleRate = 44100;
+                Console.WriteLine("警告：采样率无效，已设置为默认值44100Hz");
+            }
+
+            // 计算PTS：毫秒转采样点数
+            _audioPts = task.TimestampMs * sampleRate / 1000;
+
+            // 避免PTS回退
+            if (_audioPts <= 0)
+            {
+                _audioPts = sampleRate / 10; // 给一个合理的初始值（100ms）
+            }
+
             packet->pts = _audioPts;
             packet->dts = _audioPts;
             packet->stream_index = _audioStreamIndex;
 
-            // 4. 时间基转换
-            ffmpeg.av_packet_rescale_ts(packet, _audioParams.TimeBase, ((AVStream*)_audioStreamPtr)->time_base);
+            AVRational srcTimeBase = new AVRational { num = 1, den = sampleRate };
+            // 目标时间基：音频流的时间基
+            AVRational dstTimeBase = audioStream->time_base;
 
-            // 5. 写入数据包
+            // 校验时间基有效性
+            if (dstTimeBase.num <= 0 || dstTimeBase.den <= 0)
+            {
+                dstTimeBase = new AVRational { num = 1, den = 90000 }; // 兜底为90000（RTMP标准）
+                audioStream->time_base = dstTimeBase;
+            }
+
+            // 使用FFmpeg原生方法进行时间基转换（高精度、安全）
+            if (packet->pts != ffmpeg.AV_NOPTS_VALUE)
+            {
+                ffmpeg.av_packet_rescale_ts(packet, srcTimeBase, dstTimeBase);
+            }
+
+            int frameSize = 1024; // AAC 标准帧大小
+            long duration = frameSize; // 采样点数
+            packet->duration = duration;
+            // 时间基转换时，同时转换 duration
+            if (packet->duration != ffmpeg.AV_NOPTS_VALUE)
+            {
+                packet->duration = ffmpeg.av_rescale_q(packet->duration, srcTimeBase, dstTimeBase);
+            }
+
+            // 写入数据包
             int errorCode = ffmpeg.av_interleaved_write_frame(fmtCtx, packet);
             if (errorCode < 0)
             {
-                throw new InvalidOperationException($"推送AAC帧失败: {GetFFmpegErrorDescription(errorCode)}");
+                ffmpeg.av_packet_unref(packet);
+                string errorMsg = $"推送AAC帧失败: {GetFFmpegErrorDescription(errorCode)}, " +
+                           $"采样率: {sampleRate}, PTS: {_audioPts}, " +
+                           $"时间基: {audioStream->time_base.num}/{audioStream->time_base.den}, " +
+                           $"流索引: {_audioStreamIndex}";
+                throw new InvalidOperationException(errorMsg);
             }
         }
 
-        /// <summary>
-        /// 处理断开连接（单线程执行）
-        /// </summary>
         public unsafe void ProcessDisconnect()
         {
             AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
             if (fmtCtx != null)
             {
-                // 写入文件尾
-                ffmpeg.av_write_trailer(fmtCtx);
+                try
+                {
+                    if (_isConnected)
+                        ffmpeg.av_write_trailer(fmtCtx);
+                }
+                catch { }
 
-                // 关闭IO
                 if ((fmtCtx->oformat->flags & ffmpeg.AVFMT_NOFILE) == 0 && fmtCtx->pb != null)
                 {
                     ffmpeg.avio_closep(&fmtCtx->pb);
                 }
 
-                // 释放格式上下文
                 ffmpeg.avformat_free_context(fmtCtx);
                 _fmtCtxPtr = IntPtr.Zero;
             }
 
-            // 重置流索引
+            // 重置状态
             _videoStreamIndex = -1;
             _audioStreamIndex = -1;
             _videoStreamPtr = IntPtr.Zero;
             _audioStreamPtr = IntPtr.Zero;
+            _lastVideoPts = 0;
         }
-
-        /// <summary>
-        /// 创建视频流并初始化编码参数（使用外部传入的参数）
-        /// </summary>
-        /// <param name="fmtCtx">格式上下文</param>
+        private bool _headerWritten = false;
         private unsafe void CreateVideoStream(AVFormatContext* fmtCtx)
         {
-            // 1. 创建视频流
             AVStream* videoStream = ffmpeg.avformat_new_stream(fmtCtx, null);
             if (videoStream == null)
-            {
                 throw new InvalidOperationException("无法创建视频流");
-            }
+
             _videoStreamPtr = (IntPtr)videoStream;
             _videoStreamIndex = videoStream->index;
 
-            // 2. 设置H264编码参数（从外部传入）
+            // 设置编码参数
             AVCodecParameters* codecPar = videoStream->codecpar;
             codecPar->codec_id = AVCodecID.AV_CODEC_ID_H264;
             codecPar->codec_type = AVMediaType.AVMEDIA_TYPE_VIDEO;
@@ -364,66 +467,174 @@ namespace FixVideoChannel
             codecPar->height = _videoParams.Height;
             codecPar->bit_rate = _videoParams.BitRate;
 
-            // 3. 设置时间基
-            videoStream->time_base = _videoParams.TimeBase;
-            videoStream->avg_frame_rate = ffmpeg.av_inv_q(_videoParams.TimeBase);
-
-            // 4. 写入流头
-            if (ffmpeg.avformat_write_header(fmtCtx, null) < 0)
+            // 封装SPS/PPS到extradata
+            if (_pushProtocol == PushProtocol.RTMP && _videoParams.sps != null && _videoParams.pps != null)
             {
-                throw new InvalidOperationException("无法写入流头");
+                byte[] pureSps = H264Utils.RemoveAnnexBStartCode(_videoParams.sps);
+                byte[] purePps = H264Utils.RemoveAnnexBStartCode(_videoParams.pps);
+
+                if (pureSps.Length == 0 || purePps.Length == 0)
+                    throw new InvalidOperationException("SPS/PPS数据为空（需去掉Annex-B起始码）");
+
+                int extradataTotalSize = 6 + 2 + pureSps.Length + 1 + 2 + purePps.Length;
+                byte* extradata = (byte*)ffmpeg.av_mallocz((ulong)(extradataTotalSize + ffmpeg.AV_INPUT_BUFFER_PADDING_SIZE));
+                if (extradata == null)
+                    throw new OutOfMemoryException("无法分配extradata内存");
+
+                try
+                {
+                    int offset = 0;
+                    extradata[offset++] = 0x01;
+                    extradata[offset++] = pureSps[1];
+                    extradata[offset++] = pureSps[2];
+                    extradata[offset++] = pureSps[3];
+                    extradata[offset++] = (byte)(0xFC | 0x03);
+                    extradata[offset++] = (byte)(0xE0 | 0x01);
+
+                    extradata[offset++] = (byte)(pureSps.Length >> 8);
+                    extradata[offset++] = (byte)(pureSps.Length & 0xFF);
+                    Marshal.Copy(pureSps, 0, (IntPtr)(extradata + offset), pureSps.Length);
+                    offset += pureSps.Length;
+
+                    extradata[offset++] = 0x01;
+                    extradata[offset++] = (byte)(purePps.Length >> 8);
+                    extradata[offset++] = (byte)(purePps.Length & 0xFF);
+                    Marshal.Copy(purePps, 0, (IntPtr)(extradata + offset), purePps.Length);
+
+                    codecPar->extradata = extradata;
+                    codecPar->extradata_size = extradataTotalSize;
+                }
+                catch
+                {
+                    ffmpeg.av_free(extradata);
+                    throw;
+                }
+            }
+
+            // 设置时间基（安全赋值）
+            if (_pushProtocol == PushProtocol.RTMP)
+            {
+                videoStream->time_base = new AVRational { num = 1, den = 90000 };
+                videoStream->avg_frame_rate = new AVRational { num = 30, den = 1 };
+                videoStream->r_frame_rate = videoStream->avg_frame_rate;
+                _videoFrameDuration = 3000;
+            }
+            else if (_pushProtocol == PushProtocol.RTSP)
+            {
+                AVRational videoTimeBase = new AVRational { num = 1, den = 90000 }; // 标准RTSP视频时间基
+                if (_videoParams.TimeBase.num > 0 && _videoParams.TimeBase.den > 0)
+                {
+                    videoTimeBase = _videoParams.TimeBase;
+                }
+                videoStream->time_base = videoTimeBase;
+                // 帧率设置（avg_frame_rate 是帧率，如30/1）
+                AVRational videoFps = new AVRational { num = 30, den = 1 };
+                if (_videoParams.TimeBase.num > 0 && _videoParams.TimeBase.den > 0)
+                {
+                    videoFps = new AVRational { num = _videoParams.TimeBase.den, den = _videoParams.TimeBase.num };
+                }
+                videoStream->avg_frame_rate = videoFps;
+                videoStream->r_frame_rate = videoFps;
+                // 计算帧间隔（90000/帧率）
+                _videoFrameDuration = (long)(videoTimeBase.den / (double)videoFps.den * videoFps.num);
+            }
+
+            // 写入流头
+            if (!_headerWritten)
+            {
+                WriteStreamHeader(fmtCtx);
+                _headerWritten = true;
             }
         }
 
-        /// <summary>
-        /// 创建音频流并初始化编码参数（使用外部传入的参数）
-        /// </summary>
-        /// <param name="fmtCtx">格式上下文</param>
         private unsafe void CreateAudioStream(AVFormatContext* fmtCtx)
         {
-            // 1. 创建音频流
             AVStream* audioStream = ffmpeg.avformat_new_stream(fmtCtx, null);
             if (audioStream == null)
-            {
                 throw new InvalidOperationException("无法创建音频流");
-            }
+
             _audioStreamPtr = (IntPtr)audioStream;
             _audioStreamIndex = audioStream->index;
 
-            // 2. 设置AAC编码参数（从外部传入）
+            // 设置编码参数
             AVCodecParameters* codecPar = audioStream->codecpar;
             codecPar->codec_id = AVCodecID.AV_CODEC_ID_AAC;
             codecPar->codec_type = AVMediaType.AVMEDIA_TYPE_AUDIO;
             codecPar->format = (int)_audioParams.SampleFormat;
 
-            int ret = ffmpeg.av_channel_layout_from_mask(&codecPar->ch_layout, _audioParams.ChannelLayout);
-            if (ret < 0)
+            // 初始化声道布局（优先使用新的 API）
+            if (_audioParams.ChannelLayout != 0)
             {
-                throw new InvalidOperationException($"初始化声道布局失败: {GetFFmpegErrorDescription(ret)}");
+                int ret = ffmpeg.av_channel_layout_from_mask(&codecPar->ch_layout, _audioParams.ChannelLayout);
+                if (ret < 0)
+                {
+                    // 失败时使用默认布局
+                    ffmpeg.av_channel_layout_default(&codecPar->ch_layout, _audioParams.Channels);
+                    Console.WriteLine($"警告：从mask初始化声道布局失败，已回退到默认: {GetFFmpegErrorDescription(ret)}");
+                }
+            }
+            else
+            {
+                ffmpeg.av_channel_layout_default(&codecPar->ch_layout, _audioParams.Channels);
+            }
+            if (codecPar->ch_layout.nb_channels <= 0)
+            {
+                codecPar->ch_layout.nb_channels = _audioParams.Channels;
+                Console.WriteLine($"警告：声道数无效，已重置为: {_audioParams.Channels}");
             }
 
-            codecPar->sample_rate = _audioParams.SampleRate;
+            int sampleRate = _audioParams.SampleRate > 0 ? _audioParams.SampleRate : 44100;
+            if (sampleRate <= 0)
+            {
+                sampleRate = 44100;
+            }
+            codecPar->sample_rate = sampleRate;
             codecPar->bit_rate = _audioParams.BitRate;
             codecPar->ch_layout.nb_channels = _audioParams.Channels;
 
-            // 3. 设置时间基
-            audioStream->time_base = _audioParams.TimeBase;
+            audioStream->avg_frame_rate = new AVRational { num = codecPar->sample_rate, den = 1024 };
+            audioStream->r_frame_rate = audioStream->avg_frame_rate;
 
-            // 若视频流已创建，无需重复写入头
-            if (_videoStreamIndex == -1)
+            if (_pushProtocol == PushProtocol.RTMP)
             {
-                if (ffmpeg.avformat_write_header(fmtCtx, null) < 0)
+                // RTMP: 音频通常使用采样率作为时间基
+                audioStream->time_base = new AVRational { num = 1, den = sampleRate };
+            }
+            else if (_pushProtocol == PushProtocol.RTSP)
+            {
+                // RTSP: 根据音频参数设置时间基
+                if (_audioParams.TimeBase.num > 0 && _audioParams.TimeBase.den > 0)
                 {
-                    throw new InvalidOperationException("无法写入流头");
+                    audioStream->time_base = _audioParams.TimeBase;
+                }
+                else
+                {
+                    audioStream->time_base = new AVRational { num = 1, den = sampleRate };
                 }
             }
-        }
 
-        /// <summary>
-        /// 获取FFmpeg错误描述
-        /// </summary>
-        /// <param name="errorCode">错误码</param>
-        /// <returns></returns>
+            // 验证时间基有效性
+            if (audioStream->time_base.num <= 0 || audioStream->time_base.den <= 0)
+            {
+                audioStream->time_base = new AVRational { num = 1, den = sampleRate };
+                Console.WriteLine($"警告：音频流时间基无效，已重置为: 1/{sampleRate}");
+            }
+
+            // 写入流头
+            if (!_headerWritten)
+            {
+                WriteStreamHeader(fmtCtx);
+                _headerWritten = true;
+            }
+        }
+        private unsafe void WriteStreamHeader(AVFormatContext* fmtCtx)
+        {
+            AVDictionary* options = null;
+            int ret = ffmpeg.avformat_write_header(fmtCtx, &options);
+            ffmpeg.av_dict_free(&options);
+            if (ret < 0)
+                throw new InvalidOperationException($"无法写入流头: {GetFFmpegErrorDescription(ret)}");
+        }
         private static string GetFFmpegErrorDescription(int errorCode)
         {
             unsafe
@@ -440,23 +651,15 @@ namespace FixVideoChannel
         {
             unsafe
             {
-                if (_fmtCtxPtr != IntPtr.Zero)
-                {
-                    AVFormatContext* fmtCtx = (AVFormatContext*)_fmtCtxPtr;
-                    ffmpeg.avformat_close_input(&fmtCtx);
-                    _fmtCtxPtr = IntPtr.Zero;
-                }
-
-                // 释放数据包
                 if (_packetPtr != IntPtr.Zero)
                 {
                     AVPacket* pkt = (AVPacket*)_packetPtr;
                     ffmpeg.av_packet_free(&pkt);
                     _packetPtr = IntPtr.Zero;
                 }
-
             }
         }
+
         public void Dispose()
         {
             Dispose(true);
@@ -467,12 +670,10 @@ namespace FixVideoChannel
         {
             if (disposing)
             {
-                // 释放托管资源
                 Disconnect();
             }
 
-            // 释放非托管资源
-            this.CleanupFFmpegResources();
+            CleanupFFmpegResources();
         }
 
         ~ZLMediaKitPusher()

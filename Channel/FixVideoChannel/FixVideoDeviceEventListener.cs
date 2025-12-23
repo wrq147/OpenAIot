@@ -23,7 +23,7 @@ namespace FixVideoChannel
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
             await eventBus.Disconnect(item.Id);
-            await _service.DelVideo(item.Id);
+            _service.DelVideo(item.Id);
         }
 
         public async Task OnEventOnline(VideoCaptureItem item)
@@ -62,7 +62,7 @@ namespace FixVideoChannel
             }
             else if (msg is DelVideoItemMessage delItemResponse)
             {
-                await _service.DelVideo(delItemResponse.DeviceId);
+                _service.DelVideo(delItemResponse.DeviceId);
             }
         }
 

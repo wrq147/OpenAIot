@@ -110,6 +110,11 @@ namespace IoTVideoService.Business
                 var titem = tlist[0];
                 int pos = Math.Abs(titem.Id.GetHashCode() % onlineNames.Count);
                 string nodeid = onlineNames[pos];
+
+                if (!string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeid))
+                {
+                    await DownDelVideoItemMessage(titem.PullNode, titem.Id);
+                }
                 MZ_VideoSource tsource = new MZ_VideoSource();
                 tsource.PullNode = nodeid;
                 tsource.Id = titem.Id;

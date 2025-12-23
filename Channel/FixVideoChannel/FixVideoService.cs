@@ -79,11 +79,11 @@ namespace FixVideoChannel
                 }
                 else
                 {
-                    tmpProccess.Dispose();
+                    DelVideo(item.Id);
                 }
             }
         }
-        public async Task DelVideo(string id)
+        public void DelVideo(string id)
         {
             if (_processorDict.TryRemove(id, out StreamProcessor tmp))
             {
