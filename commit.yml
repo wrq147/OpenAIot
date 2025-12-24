@@ -3,60 +3,234 @@ branches: {
   }
 fileChange:
   /App:
-    newFile: !uuid '51881aa00308e975cb5217fcc26827f94249ee14'
-    oldFile: !uuid '7ed0539f3465581432119748f7ad1e56ed00b14c'
+    newFile: !uuid '205607e23d7416bdc9eb95a4591a99a0d8aed46e'
+    oldFile: !uuid '51881aa00308e975cb5217fcc26827f94249ee14'
   /App/XML:
-    newFile: !uuid '09e4380277403548d8e0713be2d8eb13e7b58cfc'
-    oldFile: !uuid '144c29732561f1727d4c8b5798c23166bfe5cc25'
+    newFile: !uuid '424ac6b9d127e250733d925ccf88cc28c7b630f4'
+    oldFile: !uuid '09e4380277403548d8e0713be2d8eb13e7b58cfc'
   /App/XML/IoTVideoService.xml:
-    newFile: !uuid 'cbf79e9694d5529493c70937a65818c6dcf1e28b'
-    oldFile: !uuid '98c389ade8528570d12f9fd68ec9e8ec1adb7327'
+    newFile: !uuid 'ca56867cd4999f771ad446880813c20a14560b83'
+    oldFile: !uuid 'cbf79e9694d5529493c70937a65818c6dcf1e28b'
+  /App/appsettings.json:
+    newFile: !uuid '457d13dabee4943b09e1c936f8ff64a909b20a64'
+    oldFile: !uuid '4f237e89a73fade1d901ba3d6c95eed782ba140c'
   /Channel:
-    newFile: !uuid '3a845b5aabdb5dae4e94774a4c7c148a6a1369d3'
-    oldFile: !uuid '392f4153dc7f170f1d594a1006771d700917669b'
-  /Channel/FixVideoChannel:
-    newFile: !uuid 'b1ae06310f4c67d739e2aa251ef00484297efc17'
-    oldFile: !uuid '5df5261190c493a63b3b22cfef8f639d2f32728e'
-  /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
-    newFile: !uuid '27e629faacf0d096a24665dea5f00eedc28407a0'
-    oldFile: !uuid 'df513a9cfdbcdd3b7227f80175ad5292bb34f5b2'
-  /Channel/FixVideoChannel/FixVideoService.cs:
-    newFile: !uuid '1255c3e8cf05b6d7225261b073317b08ced54971'
-    oldFile: !uuid 'cd11ee699eb59eba8b9a1d576f79ed26db974cec'
-  /Channel/FixVideoChannel/H264Utils.cs:
-    newFile: !uuid 'c667c8f4f99872de90fc64fb272294ef6acf3424'
+    newFile: !uuid 'c26392273bc621969e47606cb6dbe493e906714f'
+    oldFile: !uuid '3a845b5aabdb5dae4e94774a4c7c148a6a1369d3'
+  /Channel/ChannelUtility:
+    newFile: !uuid '323ad77ee16eeade31c1d5a66c36a51a4ac686df'
+    oldFile: !uuid '7dbe210e4516a7c436f894f16dceeebc09280332'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid '2ed14d799c7827ab7cf4f6aca6ac1664a3b33bd8'
+    oldFile: !uuid '91d37e259ea804275fda33998711c4c1e858b3f3'
+  /Channel/ChannelUtility/JsonMessageConverter.cs:
+    newFile: !uuid '9ea4b64f67cec7e047a4cb4f7a73c79fe7027cb3'
+    oldFile: !uuid '1662aca3bdbb1fe76666ae27d057df4fd4675770'
+  /Channel/ChannelUtility/JsonMessageSerializerContext.cs:
+    newFile: !uuid '6b76b48982eef8a7ef8d9ced4b6d7e402d43d60c'
+    oldFile: !uuid 'ef2994fbfab8527381f36e544e1f6b4e5f775b2e'
+  /Channel/ChannelUtility/Message:
+    newFile: !uuid 'cbad110ff8e959498897788fec37b06dff7ed404'
+    oldFile: !uuid '248af045da2608bc82b2ff9dc31cf8b92a203fd6'
+  /Channel/ChannelUtility/Message/MediaNotFoundMessage.cs:
+    newFile: !uuid '61a2534de731dd65c6f8d2408e1ba681f3c03994'
     oldFile: null
+  /Channel/ChannelUtility/Message/MediaNotReaderMessage.cs:
+    newFile: !uuid '56b08e944f0f56c1aace700a27274c9ad4625540'
+    oldFile: null
+  /Channel/ChannelUtility/Message/UpVideoItemMessage.cs:
+    newFile: !uuid '30b826548018f13b972a9999af8b026dd5c90497'
+    oldFile: !uuid 'c8fbd42e08c94cb4b63c797367484a2fd9cf6fdc'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '8d0e81a9d4b55e3fc964da1eec798a640644ff5e'
+    oldFile: !uuid 'b1ae06310f4c67d739e2aa251ef00484297efc17'
+  /Channel/FixVideoChannel/FFmpegLibs:
+    newFile: !uuid 'a6a04d44543ad9a5752bb5e329a7774764291b84'
+    oldFile: !uuid 'b43f6cfb6222816ec04deeaee096c7340b659350'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux:
+    newFile: !uuid 'f59880d9ddc032d3c350f2af3251a020b6b803ac'
+    oldFile: !uuid '5f33f02beebde972632daa6be05848073ac19b67'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64:
+    newFile: !uuid '5e665b8c5d5788a79e0cb5087903d3fc6bade1f3'
+    oldFile: !uuid '246f66435194b70e2a182573b7b6c1e572b865ba'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavcodec.so:
+    newFile: !uuid 'cc861aa53458bb618ad7c442ecff1b95a089c6f7'
+    oldFile: !uuid '4232c0271fe8ed6ee68387a454ecc29834ef07e7'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavdevice.so:
+    newFile: !uuid 'dec1f245169b4887db15a1b2f183080e30f3c3a8'
+    oldFile: !uuid '164dea2ff252bf92a3f9618900a76d94bc4faf3e'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavfilter.so:
+    newFile: !uuid 'e266c1850a40c3c9ad97d2add79ecf148ee1a82f'
+    oldFile: !uuid '0ad47673ec4737cba4465974ad0b70436004af52'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavformat.so:
+    newFile: !uuid 'edf09c9066bd965a9af511902105f9960782bf30'
+    oldFile: !uuid 'b067749f717d77216ae6e3011ce2e8823f181319'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavutil.so:
+    newFile: !uuid 'b597567943fbcf9f2442a2519b9b8f326825e50a'
+    oldFile: !uuid '05d7b235109de909149f4d60b292d1bf3c1d2ee1'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libswresample.so:
+    newFile: !uuid '2e889d71aee34f2bb0a20f5a97913013515fdaec'
+    oldFile: !uuid 'a3c8faf87d332ba3c36106a0fd63c3db1d307af4'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libswscale.so:
+    newFile: !uuid 'd014847d2a424be40b318ce36967b5389202379a'
+    oldFile: !uuid '9b85f3232174ebc8f4c631a3271fef4e370253a4'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64:
+    newFile: !uuid 'b254b59308951e8f0e9934446d51acb3a189fdc7'
+    oldFile: !uuid '5b72358cfb2b2b78da86abed35cf707bb4486175'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavcodec.so:
+    newFile: !uuid '27408b1e2d1fd4cd474bdba7f3fe76e831aca8ba'
+    oldFile: !uuid 'bdc6647006bc7e018cd38eb6826596bdbd15cb70'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavdevice.so:
+    newFile: !uuid '514f27f0dea04cf147346399ce031ddadcc11080'
+    oldFile: !uuid '03b3bade29cea1765b890492dbdd2500743b7b8e'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavfilter.so:
+    newFile: !uuid 'd6bc69e9e1f5c22b1c4e892031f3b6c30090b260'
+    oldFile: !uuid '95dd2b6cce758af8a9edc638f6dc0821a31f45b9'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavformat.so:
+    newFile: !uuid 'ec2309e7993a5c898368fde3c91ea4a9f6d676d0'
+    oldFile: !uuid 'f6d8bca2847b8eaf10a7324d3cadcc5a6ead2936'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavutil.so:
+    newFile: !uuid 'c238a716da4ad72a4295f95f2366f767ec91e077'
+    oldFile: !uuid '840d004f371a6856136c50cb3800fb12a6493575'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libswresample.so:
+    newFile: !uuid '8794b5f9fde47489a1c3be727c34ba1dbc3c383b'
+    oldFile: !uuid '019980c8ac220b2f15a1980a0f0bc9477ef8afce'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libswscale.so:
+    newFile: !uuid 'c2a7d624add8cbcb5a5780421e13e257b2fdc505'
+    oldFile: !uuid '6f4849af515e9813de3abd97a94bac0a87d8b42e'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows:
+    newFile: null
+    oldFile: !uuid '9a2c722865138035afa14fbbcb68d3e37f498a93'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64:
+    newFile: null
+    oldFile: !uuid '61dacf41628ef784fa30f7e2577e6a3bdef3b05d'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avcodec-62.dll:
+    newFile: null
+    oldFile: !uuid '359ed3915a8788995e1e04fa446b561fc57b7fdf'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avdevice-62.dll:
+    newFile: null
+    oldFile: !uuid '13baf7fdef4d3931f2a93819f925a0a852859119'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avfilter-11.dll:
+    newFile: null
+    oldFile: !uuid 'b86a0b40f1b43967baaf9b32dcb18fbe51a7f599'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avformat-62.dll:
+    newFile: null
+    oldFile: !uuid '5834ef72abf363edeb0b73553445acf7fb6cf331'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avutil-60.dll:
+    newFile: null
+    oldFile: !uuid 'd63844b1e61d71f78560062f95ab222cca26817a'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swresample-6.dll:
+    newFile: null
+    oldFile: !uuid '333c46c0c38cf7eafd74439ece73255ce584281c'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swscale-9.dll:
+    newFile: null
+    oldFile: !uuid '62d83d0b63840711df2a687a68f21728722e34cc'
+  /Channel/FixVideoChannel/FixVideoChannel.csproj:
+    newFile: !uuid 'c08e4bd9c1a1cb9d5bb31e9194e02173d32e494d'
+    oldFile: !uuid 'd3dc65919c6ec117a7e7127010f4619e1ef462f2'
+  /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
+    newFile: !uuid '51e04cf3534f858894d8af09bbc28c7797a54f41'
+    oldFile: !uuid '27e629faacf0d096a24665dea5f00eedc28407a0'
+  /Channel/FixVideoChannel/FixVideoOption.cs:
+    newFile: !uuid '796e5b723b4e4ff7046e98eb8cf28def84f72905'
+    oldFile: !uuid 'f583cd05372b1b9b509442e75bd4d75f2d99856f'
+  /Channel/FixVideoChannel/FixVideoService.cs:
+    newFile: !uuid 'deae2911973515f61a601b224c5bc613ca9b96c5'
+    oldFile: !uuid '1255c3e8cf05b6d7225261b073317b08ced54971'
   /Channel/FixVideoChannel/StreamProcessor.cs:
-    newFile: !uuid '26855951f7297fedf9e217dad4f2c4c3d2dd5269'
-    oldFile: !uuid '0f917bfe95cebe94525f9df2b86375533e6cc06f'
-  /Channel/FixVideoChannel/StreamTaskScheduler.cs:
-    newFile: !uuid 'da45e0564ec7ee72b2be0a07f624b8aa00e24bbd'
-    oldFile: !uuid '523e0abac32af01bd245af04dc026070ae6831a8'
+    newFile: !uuid '9a846f6fed902125ca10a830c5b8ea511944ab06'
+    oldFile: !uuid '26855951f7297fedf9e217dad4f2c4c3d2dd5269'
   /Channel/FixVideoChannel/ZLMediaKitPusher .cs:
-    newFile: !uuid '7755a326ce17bbc3490dd29b845ccf6598c038ad'
-    oldFile: !uuid '955532830d9ab3cf89f2f6b6ed2c6af935272141'
+    newFile: !uuid '5fda39814597fda31920302f0fb51dd971977ede'
+    oldFile: !uuid '7755a326ce17bbc3490dd29b845ccf6598c038ad'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid '84bfbf687494724d43c9bd0daecdaeeb2dc37bc7'
+    oldFile: null
+  /Channel/FixVideoChannel/appsettings.json:
+    newFile: !uuid 'e31f95f81de986810ceae510f9daca55a18d31b3'
+    oldFile: !uuid '25127846265673e941c330656f5e0f8ce98b3040'
+  /Channel/FixVideoChannel/config.ini:
+    newFile: !uuid '025fce9a96cfd3caa4a4f5f5b783fb2344ac90e2'
+    oldFile: null
+  /Channel/FixVideoChannel/default.pem:
+    newFile: !uuid 'e0ec11322c5536309f29e82dcaf0f4f27224686f'
+    oldFile: null
+  /DigitalCard.sln:
+    newFile: !uuid 'c697fc30646f19e43c63401bd99f8f13437af196'
+    oldFile: !uuid 'a2fe85446bbf4de13ab475ec6047888543f69548'
   /Modules:
-    newFile: !uuid '698ebb9b71040508fc0404b40de2262711869f14'
-    oldFile: !uuid '853800647b4e0614a91342bfcd3b91b727661f3b'
+    newFile: !uuid 'f53c652b401689d2e04f9a79752d9df966d5182b'
+    oldFile: !uuid '698ebb9b71040508fc0404b40de2262711869f14'
   /Modules/IoTVideoService:
-    newFile: !uuid '1746780dd7c0e102d0a8ef141faa560517396199'
-    oldFile: !uuid '7f1f5bea090901fb1c0a7cf16fd45057c4b1c76d'
+    newFile: !uuid '1c17238dccd4b919d70d7e745bb2d76b58083329'
+    oldFile: !uuid '1746780dd7c0e102d0a8ef141faa560517396199'
   /Modules/IoTVideoService/Business:
-    newFile: !uuid '87db99b03a50f78a5e3b259da62aafb588305212'
-    oldFile: !uuid 'd74bb585474a2228ffef30a8777498009309468a'
+    newFile: !uuid 'fe41169dcd24cbb53db8afe246d8fde2205df392'
+    oldFile: !uuid '87db99b03a50f78a5e3b259da62aafb588305212'
   /Modules/IoTVideoService/Business/FixVideoBLL.cs:
-    newFile: !uuid 'cd187156c07143bc2afb555edb5e5504b58486b5'
-    oldFile: !uuid 'a2a5f44d5f6ac00855e6d566fdfdcff0df404c21'
+    newFile: !uuid 'dcf712a784fef3492fc853b216a387dafda13aa0'
+    oldFile: !uuid 'cd187156c07143bc2afb555edb5e5504b58486b5'
+  /Modules/IoTVideoService/Controller:
+    newFile: null
+    oldFile: !uuid 'da168cd0cd87488feda9c3c77d6cecd2c5a4c65c'
+  /Modules/IoTVideoService/Controller/ZLMediaHook.cs:
+    newFile: null
+    oldFile: !uuid '3aefd75aa15b246052a0b162cc407ce56efafaa3'
+  /Modules/IoTVideoService/HookNoneRResult.cs:
+    newFile: null
+    oldFile: !uuid 'beb54f45e74143371b8cc8b72aee0297053f6627'
+  /Modules/IoTVideoService/HookResult.cs:
+    newFile: null
+    oldFile: !uuid 'bb161cbbda21e6ae06bfc2f2d49551d204bf0245'
+  /Modules/IoTVideoService/IoTVideoService.csproj:
+    newFile: !uuid 'fa2ff80d81e9fc0d8b33da39f745bf2213e596c9'
+    oldFile: !uuid '9d056256c74a525bfc05b9f9a84f0a2d241c9c1d'
+  /Modules/IoTVideoService/PluginConfig.cs:
+    newFile: !uuid '61119347387931b1267c3172e7b9e47a391e2344'
+    oldFile: !uuid '2d6f4594c65213f352b47e6049ee34f0cff6bb85'
+  /Modules/IoTVideoService/VideoOption.cs:
+    newFile: !uuid '8b865c0184b7c362d36dd7589082b1c73f6ed1d9'
+    oldFile: !uuid '57732983f52cc575dd7c81689226662bdf3a415b'
+  /Third:
+    newFile: !uuid '807258fcfd38c9b511c0ce751096a4cdb35b1f05'
+    oldFile: !uuid 'c93f559523481cc0213d3bf27195755eba9680c8'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid 'dba6a2aac0a35b1afab2253ceed01c26c98cbdff'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/Constants.cs:
+    newFile: !uuid '8514644a0af1bb8fab2ea52a1466572100dddab1'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/MarshalUtil.cs:
+    newFile: !uuid 'b3795a206548ee8ec06cd27b47e8b0986a83e727'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/SymbolResolver.cs:
+    newFile: !uuid 'e90336ebd3abcaaab50c0c2774d61561e40a08fb'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/UTF32Marshaller.cs:
+    newFile: !uuid 'b16db1603a6ddde6d22201c764badde364eec73a'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/UTF8Marshaller.cs:
+    newFile: !uuid 'e85d2f185bd8061884a413d996918b9ccb6c9f4e'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
+    newFile: !uuid '60089e98241532828ee9aaa665d7d346c9dcb30d'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.Operator.cs:
+    newFile: !uuid '355228368e541ccf97fd7d56d12b57eba58063d7'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
+    newFile: !uuid '05256367b73a1cda650e45fd661386a774ece552'
+    oldFile: null
   /ZLMediaKit:
-    newFile: !uuid '13fd72afa35bac9d24ef8a0bce101c2f3052f259'
-    oldFile: !uuid '11a8942fa1543e3f4337001fcfe051ed32c73627'
+    newFile: !uuid 'c680824a3e3d300fd10b5342a731324d5ee90dc5'
+    oldFile: !uuid '13fd72afa35bac9d24ef8a0bce101c2f3052f259'
   /ZLMediaKit/Windows:
-    newFile: !uuid 'cc2af9568099885414539de4425a6d9d8bd93bfb'
-    oldFile: !uuid '645676ed09bc053a4d5c5197d337de422e78c285'
+    newFile: !uuid '9f3b0fd65ae1620367f724e5b955dfa75b230350'
+    oldFile: !uuid 'cc2af9568099885414539de4425a6d9d8bd93bfb'
   /ZLMediaKit/Windows/config.ini:
-    newFile: !uuid 'f286468a4e90776f42a3c9cf23f1f5498c91505a'
-    oldFile: !uuid '9f5a8f742a114068d6df8558a9b035293689ff10'
-gitCommitId: !uuid '47b84b45e424895d4652d71e39c8fb5db639dd99'
+    newFile: !uuid '025fce9a96cfd3caa4a4f5f5b783fb2344ac90e2'
+    oldFile: !uuid 'f286468a4e90776f42a3c9cf23f1f5498c91505a'
+gitCommitId: !uuid 'f67007342e2a613918e0c2680c284d0743aeea6f'
 renames: {
   }
-revisionId: 81
+revisionId: 82
