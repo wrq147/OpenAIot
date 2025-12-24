@@ -2,323 +2,46 @@
 branches: {
   }
 fileChange:
-  /Third:
-    newFile: !uuid '813c1999423c4d4bf357e1e9d2abbe4ce16f6ac4'
-    oldFile: !uuid '807258fcfd38c9b511c0ce751096a4cdb35b1f05'
-  /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '44f17f3c0bfafd40ddc89a200124ccd2af3e1c0b'
-    oldFile: !uuid 'dba6a2aac0a35b1afab2253ceed01c26c98cbdff'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: !uuid 'bd75e566ba822af98b6a0e5509f9660c26dc8c20'
+  /Channel:
+    newFile: !uuid '7d161d8066a6108fcf0914655b9dca364800ede7'
+    oldFile: !uuid 'c26392273bc621969e47606cb6dbe493e906714f'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '4ae03223f4d1cfa75f70177a69f32eb092d42bcc'
+    oldFile: !uuid '8d0e81a9d4b55e3fc964da1eec798a640644ff5e'
+  /Channel/FixVideoChannel/FFmpegLibs:
+    newFile: !uuid '7fa6e3b92f034279e87cbbe90ad5849c3c1a88fd'
+    oldFile: !uuid 'a6a04d44543ad9a5752bb5e329a7774764291b84'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows:
+    newFile: !uuid 'a7d3b2ca574e3322bdba66495200262829eefdca'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
-    newFile: !uuid '47b802ff2eda7e89479bc9f27c948eefb13a30fd'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64:
+    newFile: !uuid 'a467c3f44d5dc0e3f5bd3057e07f2fb86cb58bea'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
-    newFile: !uuid '5746303a9695be1152df2be10f02aae61561f937'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avcodec-61.dll:
+    newFile: !uuid '3cea49676a29e3d6b4278f371858b00b112dfd82'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libmk_api.so:
-    newFile: !uuid '5bc0c1d45bb11b322b84875676bdc2ca841207ad'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avdevice-61.dll:
+    newFile: !uuid 'c83c7b177940f5e7efd78b27b440f0d28d7ed27b'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
-    newFile: !uuid '9cb1ec48f3ccc8b98667e713da8ad3ef75aa9d4c'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avfilter-10.dll:
+    newFile: !uuid '825d6e39836eb4e56e3c984b5b0cca55d26506ba'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
-    newFile: !uuid 'd41ddad63e501527e4874b6d1b762c3739fc1ac5'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avformat-61.dll:
+    newFile: !uuid 'e65cb5dab91e9f7cc0d1dd3b44e549777042ee9e'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/mk_api.dll:
-    newFile: !uuid '3b15762a07161005224a58ac9fb208f55ec82f86'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avutil-59.dll:
+    newFile: !uuid '24154bee05cd8d4ae69ac154c3430b3419737e65'
     oldFile: null
-  /ZLMediaKit:
-    newFile: null
-    oldFile: !uuid 'c680824a3e3d300fd10b5342a731324d5ee90dc5'
-  /ZLMediaKit/Linux:
-    newFile: null
-    oldFile: !uuid 'd8642f6e4e57c121d2a6268af47816b2cf534fe2'
-  /ZLMediaKit/Linux/x64:
-    newFile: null
-    oldFile: !uuid '9968225312c8413198ddf3b6b1c1b6c0bd338ace'
-  /ZLMediaKit/Linux/x64/MediaServer:
-    newFile: null
-    oldFile: !uuid 'd6ad7a0eb8501161f908e8a7284f03cefaa38080'
-  /ZLMediaKit/Linux/x64/config.ini:
-    newFile: null
-    oldFile: !uuid '016f354515e29d88e75686e72e66622f7f075ee8'
-  /ZLMediaKit/Linux/x64/default.pem:
-    newFile: null
-    oldFile: !uuid 'e0ec11322c5536309f29e82dcaf0f4f27224686f'
-  /ZLMediaKit/Linux/x64/libmk_api.so:
-    newFile: null
-    oldFile: !uuid '5bc0c1d45bb11b322b84875676bdc2ca841207ad'
-  /ZLMediaKit/Linux/x64/www:
-    newFile: null
-    oldFile: !uuid '9f745a646356f6d9e397f40d63b3eb6e52253b68'
-  /ZLMediaKit/Linux/x64/www/ZLMRTCClient.js:
-    newFile: null
-    oldFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-  /ZLMediaKit/Linux/x64/www/ZLMRTCClient.js.map:
-    newFile: null
-    oldFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-  /ZLMediaKit/Linux/x64/www/logo.ico:
-    newFile: null
-    oldFile: !uuid '132a1ec59e14b92a9a69f41c6f89e9694bb22312'
-  /ZLMediaKit/Linux/x64/www/logo.png:
-    newFile: null
-    oldFile: !uuid 'dd1379cb408d98e0119b014f70e6c1f3ee485452'
-  /ZLMediaKit/Linux/x64/www/webassist:
-    newFile: null
-    oldFile: !uuid '27440f329447bf92941ee767e94ec2af6c5560e3'
-  /ZLMediaKit/Linux/x64/www/webassist/LICENSE:
-    newFile: null
-    oldFile: !uuid '4a9f0b7060725e917b006f281ac7a38b89f23dc9'
-  /ZLMediaKit/Linux/x64/www/webassist/README.md:
-    newFile: null
-    oldFile: !uuid '37aca3e47ab585a1e2c40b1612158b5f67c1a262'
-  /ZLMediaKit/Linux/x64/www/webassist/README_EN.md:
-    newFile: null
-    oldFile: !uuid '484c37f75940897dbfd93eef1986195694f4a587'
-  /ZLMediaKit/Linux/x64/www/webassist/assets:
-    newFile: null
-    oldFile: !uuid '6ec42f2d8c3a271182a12e823d42aaa620b4a266'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui:
-    newFile: null
-    oldFile: !uuid 'd150678d93dccbc73e1952ce918f597f6c8764e0'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/fonts:
-    newFile: null
-    oldFile: !uuid 'f340496161ad88922dba2c1887e5ce0da5bd030a'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/fonts/element-icons.woff:
-    newFile: null
-    oldFile: !uuid '02b9a2539e425a7a8c244faba92527602be76212'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/index.css:
-    newFile: null
-    oldFile: !uuid '2e1eab506a5238a5c0bf76bcb0ef34c0bedf3477'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/elementui/index.js:
-    newFile: null
-    oldFile: !uuid '6d6592fe059d53fc5c8814460ec2566978ded59f'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/favicon.ico:
-    newFile: null
-    oldFile: !uuid 'ca4d9dc2e41be7514aadf6ce017fcc1f04aff3c9'
-  /ZLMediaKit/Linux/x64/www/webassist/assets/logo.png:
-    newFile: null
-    oldFile: !uuid '21c4d2c3d287f655d65ba80e10ab0dee083598de'
-  /ZLMediaKit/Linux/x64/www/webassist/index.html:
-    newFile: null
-    oldFile: !uuid 'a77457695ad16fc4c8e573618e4cd9204be068c9'
-  /ZLMediaKit/Linux/x64/www/webassist/js:
-    newFile: null
-    oldFile: !uuid '78eeeb02ea9bded9f4156a68633e674c21456388'
-  /ZLMediaKit/Linux/x64/www/webassist/js/ZLMRTCClient.js:
-    newFile: null
-    oldFile: !uuid 'dd93e81df2c9f0cd6d6ab2ae35ffd4aeafc6de86'
-  /ZLMediaKit/Linux/x64/www/webassist/js/ZLMRTCClient.js.map:
-    newFile: null
-    oldFile: !uuid 'deadb787821ce21210c1a5d3c8001fbc129e1edd'
-  /ZLMediaKit/Linux/x64/www/webassist/js/axios.min.js:
-    newFile: null
-    oldFile: !uuid 'e4046bbd0acb806d2d1a10c8a5e71c44d9f4abbe'
-  /ZLMediaKit/Linux/x64/www/webassist/js/echarts.min.js:
-    newFile: null
-    oldFile: !uuid '044cdafcf549873a156d2688bcd44df6a879d424'
-  /ZLMediaKit/Linux/x64/www/webassist/js/qs.js:
-    newFile: null
-    oldFile: !uuid '4a92bdaac7c59f37befb3c2047ffff3ed3ad5610'
-  /ZLMediaKit/Linux/x64/www/webassist/js/utils.js:
-    newFile: null
-    oldFile: !uuid '57cd6163560092c712e7d41879e708a2e485d9e5'
-  /ZLMediaKit/Linux/x64/www/webassist/js/vue.min.js:
-    newFile: null
-    oldFile: !uuid 'efebcc61f587d3fb39c511d0075925f3f71ec32b'
-  /ZLMediaKit/Linux/x64/www/webrtc:
-    newFile: null
-    oldFile: !uuid '48762167c9b24c581ae3571fb61db89bd167982a'
-  /ZLMediaKit/Linux/x64/www/webrtc/ZLMRTCClient.js:
-    newFile: null
-    oldFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-  /ZLMediaKit/Linux/x64/www/webrtc/ZLMRTCClient.js.map:
-    newFile: null
-    oldFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-  /ZLMediaKit/Linux/x64/www/webrtc/index.html:
-    newFile: null
-    oldFile: !uuid '718e7d0011e67cf3a2edbe3df9a0727616819062'
-  /ZLMediaKit/Linux/x64/www/webrtc/readme.txt:
-    newFile: null
-    oldFile: !uuid 'ba651b40b41089e8f512c6ae1085c78d911b23fe'
-  /ZLMediaKit/Windows:
-    newFile: null
-    oldFile: !uuid '9f3b0fd65ae1620367f724e5b955dfa75b230350'
-  /ZLMediaKit/Windows/MediaServer.exe:
-    newFile: null
-    oldFile: !uuid 'c44b40870f7e9efac67af8af57cf3284c6fab5c7'
-  /ZLMediaKit/Windows/config.ini:
-    newFile: null
-    oldFile: !uuid '025fce9a96cfd3caa4a4f5f5b783fb2344ac90e2'
-  /ZLMediaKit/Windows/default.pem:
-    newFile: null
-    oldFile: !uuid 'e0ec11322c5536309f29e82dcaf0f4f27224686f'
-  /ZLMediaKit/Windows/mk_api.dll:
-    newFile: null
-    oldFile: !uuid '3b15762a07161005224a58ac9fb208f55ec82f86'
-  /ZLMediaKit/Windows/www:
-    newFile: null
-    oldFile: !uuid '18fb02211a4374be3ee8330d8e5e2dd1122032d5'
-  /ZLMediaKit/Windows/www/ZLMRTCClient.js:
-    newFile: null
-    oldFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-  /ZLMediaKit/Windows/www/ZLMRTCClient.js.map:
-    newFile: null
-    oldFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-  /ZLMediaKit/Windows/www/logo.ico:
-    newFile: null
-    oldFile: !uuid '132a1ec59e14b92a9a69f41c6f89e9694bb22312'
-  /ZLMediaKit/Windows/www/logo.png:
-    newFile: null
-    oldFile: !uuid 'dd1379cb408d98e0119b014f70e6c1f3ee485452'
-  /ZLMediaKit/Windows/www/readme:
-    newFile: null
-    oldFile: !uuid '147cb1f26486391bd20a23083611ad30f70f5932'
-  /ZLMediaKit/Windows/www/readme/index.html:
-    newFile: null
-    oldFile: !uuid '5adb4a6d31966a70967382b24a335de3ba5994c5'
-  /ZLMediaKit/Windows/www/swagger:
-    newFile: null
-    oldFile: !uuid 'dcba8bdac71363ab12981ff92216eb9c8c6e5af1'
-  /ZLMediaKit/Windows/www/swagger/favicon-16x16.png:
-    newFile: null
-    oldFile: !uuid '8b194e617af1c135e6b37939591d24ac3a5efa18'
-  /ZLMediaKit/Windows/www/swagger/favicon-32x32.png:
-    newFile: null
-    oldFile: !uuid '249737fe44558e679f0b67134e274461d988fa98'
-  /ZLMediaKit/Windows/www/swagger/index.css:
-    newFile: null
-    oldFile: !uuid 'f2376fdaa842b12ecf6a191409ff0b0a03c4b0f8'
-  /ZLMediaKit/Windows/www/swagger/index.html:
-    newFile: null
-    oldFile: !uuid '84ae62d3dad6004f2ba250cf69b4148eeb7c253d'
-  /ZLMediaKit/Windows/www/swagger/oauth2-redirect.html:
-    newFile: null
-    oldFile: !uuid '56409171811d4594c24ef540844741b8d12e9da2'
-  /ZLMediaKit/Windows/www/swagger/openapi.json:
-    newFile: null
-    oldFile: !uuid '480c977cb150daa2ef63a385540441f8c4396432'
-  /ZLMediaKit/Windows/www/swagger/swagger-initializer.js:
-    newFile: null
-    oldFile: !uuid '612ae82f7efb3a62192cdbd12bc1eee6dca480df'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-bundle.js:
-    newFile: null
-    oldFile: !uuid '6878058e3a1d1e5f174dcef58bae613181b0d697'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-bundle.js.map:
-    newFile: null
-    oldFile: !uuid 'e1a0e5e1a7e93cf340db0e7f6d58cb8e765e6c25'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle-core.js:
-    newFile: null
-    oldFile: !uuid 'a72eba2981310ab12ee1e503be98527f84cb26e9'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle-core.js.map:
-    newFile: null
-    oldFile: !uuid '9b25a13ed950e7044bd9fdcf89a147aa203e3d6f'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle.js:
-    newFile: null
-    oldFile: !uuid '09b76a5535f04f29607359795b2c85d3d6b581e2'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-es-bundle.js.map:
-    newFile: null
-    oldFile: !uuid 'a25f081913b0f32bfc0cdbd4e732d524ad06d0eb'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-standalone-preset.js:
-    newFile: null
-    oldFile: !uuid '2ede1a83494818a8a3f38e1b6ac6135a43286e11'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui-standalone-preset.js.map:
-    newFile: null
-    oldFile: !uuid 'd0cc02bd4f30f49b027d106ed2b7dcd9d3fcfc98'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.css:
-    newFile: null
-    oldFile: !uuid 'a360ae155f027acfb255dccfdc4f8e0bf5e1d74e'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.css.map:
-    newFile: null
-    oldFile: !uuid '03b48ea36b36b97eb807579de2dee60970c807c7'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.js:
-    newFile: null
-    oldFile: !uuid 'a1fcdf6e13a4d8d1c9bb4a74e42787f34ef95e7d'
-  /ZLMediaKit/Windows/www/swagger/swagger-ui.js.map:
-    newFile: null
-    oldFile: !uuid '16cf64ea390cc37e3998d8e662a7716c5e88a512'
-  /ZLMediaKit/Windows/www/webassist:
-    newFile: null
-    oldFile: !uuid '27440f329447bf92941ee767e94ec2af6c5560e3'
-  /ZLMediaKit/Windows/www/webassist/LICENSE:
-    newFile: null
-    oldFile: !uuid '4a9f0b7060725e917b006f281ac7a38b89f23dc9'
-  /ZLMediaKit/Windows/www/webassist/README.md:
-    newFile: null
-    oldFile: !uuid '37aca3e47ab585a1e2c40b1612158b5f67c1a262'
-  /ZLMediaKit/Windows/www/webassist/README_EN.md:
-    newFile: null
-    oldFile: !uuid '484c37f75940897dbfd93eef1986195694f4a587'
-  /ZLMediaKit/Windows/www/webassist/assets:
-    newFile: null
-    oldFile: !uuid '6ec42f2d8c3a271182a12e823d42aaa620b4a266'
-  /ZLMediaKit/Windows/www/webassist/assets/elementui:
-    newFile: null
-    oldFile: !uuid 'd150678d93dccbc73e1952ce918f597f6c8764e0'
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/fonts:
-    newFile: null
-    oldFile: !uuid 'f340496161ad88922dba2c1887e5ce0da5bd030a'
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/fonts/element-icons.woff:
-    newFile: null
-    oldFile: !uuid '02b9a2539e425a7a8c244faba92527602be76212'
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/index.css:
-    newFile: null
-    oldFile: !uuid '2e1eab506a5238a5c0bf76bcb0ef34c0bedf3477'
-  /ZLMediaKit/Windows/www/webassist/assets/elementui/index.js:
-    newFile: null
-    oldFile: !uuid '6d6592fe059d53fc5c8814460ec2566978ded59f'
-  /ZLMediaKit/Windows/www/webassist/assets/favicon.ico:
-    newFile: null
-    oldFile: !uuid 'ca4d9dc2e41be7514aadf6ce017fcc1f04aff3c9'
-  /ZLMediaKit/Windows/www/webassist/assets/logo.png:
-    newFile: null
-    oldFile: !uuid '21c4d2c3d287f655d65ba80e10ab0dee083598de'
-  /ZLMediaKit/Windows/www/webassist/index.html:
-    newFile: null
-    oldFile: !uuid 'a77457695ad16fc4c8e573618e4cd9204be068c9'
-  /ZLMediaKit/Windows/www/webassist/js:
-    newFile: null
-    oldFile: !uuid '78eeeb02ea9bded9f4156a68633e674c21456388'
-  /ZLMediaKit/Windows/www/webassist/js/ZLMRTCClient.js:
-    newFile: null
-    oldFile: !uuid 'dd93e81df2c9f0cd6d6ab2ae35ffd4aeafc6de86'
-  /ZLMediaKit/Windows/www/webassist/js/ZLMRTCClient.js.map:
-    newFile: null
-    oldFile: !uuid 'deadb787821ce21210c1a5d3c8001fbc129e1edd'
-  /ZLMediaKit/Windows/www/webassist/js/axios.min.js:
-    newFile: null
-    oldFile: !uuid 'e4046bbd0acb806d2d1a10c8a5e71c44d9f4abbe'
-  /ZLMediaKit/Windows/www/webassist/js/echarts.min.js:
-    newFile: null
-    oldFile: !uuid '044cdafcf549873a156d2688bcd44df6a879d424'
-  /ZLMediaKit/Windows/www/webassist/js/qs.js:
-    newFile: null
-    oldFile: !uuid '4a92bdaac7c59f37befb3c2047ffff3ed3ad5610'
-  /ZLMediaKit/Windows/www/webassist/js/utils.js:
-    newFile: null
-    oldFile: !uuid '57cd6163560092c712e7d41879e708a2e485d9e5'
-  /ZLMediaKit/Windows/www/webassist/js/vue.min.js:
-    newFile: null
-    oldFile: !uuid 'efebcc61f587d3fb39c511d0075925f3f71ec32b'
-  /ZLMediaKit/Windows/www/webrtc:
-    newFile: null
-    oldFile: !uuid '48762167c9b24c581ae3571fb61db89bd167982a'
-  /ZLMediaKit/Windows/www/webrtc/ZLMRTCClient.js:
-    newFile: null
-    oldFile: !uuid 'ebf01d7a965afab16a0c9fd74e94858b0fd1fac7'
-  /ZLMediaKit/Windows/www/webrtc/ZLMRTCClient.js.map:
-    newFile: null
-    oldFile: !uuid '7c0d45351b27f5d8fb9410ce199329efb9ea2f45'
-  /ZLMediaKit/Windows/www/webrtc/index.html:
-    newFile: null
-    oldFile: !uuid '718e7d0011e67cf3a2edbe3df9a0727616819062'
-  /ZLMediaKit/Windows/www/webrtc/readme.txt:
-    newFile: null
-    oldFile: !uuid 'ba651b40b41089e8f512c6ae1085c78d911b23fe'
-gitCommitId: !uuid 'cd2ee9b5ef976c2c37dff7f30ff01c237639e69a'
-renames:
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libmk_api.so: /ZLMediaKit/Linux/x64/libmk_api.so
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/mk_api.dll: /ZLMediaKit/Windows/mk_api.dll
-revisionId: 83
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/postproc-58.dll:
+    newFile: !uuid 'dd40d1ac8210e404003121d2aed5868738155dbc'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swresample-5.dll:
+    newFile: !uuid '4c30ac54e288e6950cd6e08900662d9f90cb7c34'
+    oldFile: null
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swscale-8.dll:
+    newFile: !uuid '08469774f04365b71b765a4183f828979426e608'
+    oldFile: null
+gitCommitId: !uuid '1eb1b18cb70792c3fea444e4f276993153ff253c'
+renames: {
+  }
+revisionId: 84
