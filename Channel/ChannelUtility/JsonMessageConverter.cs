@@ -34,7 +34,9 @@ namespace ChannelUtility
             { "DelVItem", typeof(DelVideoItemMessage) },
             { "UpVItem", typeof(UpVideoItemMessage) },
             { "AIDetectReq",typeof(AIDetectRequestMeesage) },
-            { "AIDetectResp",typeof(AIDetectResponseMessage) }
+            { "AIDetectResp",typeof(AIDetectResponseMessage) },
+            { "MediaNF",typeof(MediaNotFoundMessage) },
+            { "MediaNR",typeof(MediaNotReaderMessage) }
 
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions

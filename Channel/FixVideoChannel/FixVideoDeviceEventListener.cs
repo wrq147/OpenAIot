@@ -11,11 +11,9 @@ namespace FixVideoChannel
     public class FixVideoDeviceEventListener : IDeviceEventListener
     {
         private IServiceProvider _serviceProvider;
-        private FixVideoService _service;
-        public FixVideoDeviceEventListener(IServiceProvider provider, FixVideoService service)
+        public FixVideoDeviceEventListener(IServiceProvider provider)
         {
             _serviceProvider = provider;
-            _service = service;
         }
 
 
@@ -23,7 +21,7 @@ namespace FixVideoChannel
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
             await eventBus.Disconnect(item.Id);
-            _service.DelVideo(item.Id);
+            ZLMediaKitServer.Instance.RemovePullProxy(item.Id);
         }
 
         public async Task OnEventOnline(VideoCaptureItem item)
@@ -54,15 +52,15 @@ namespace FixVideoChannel
         {
             if (msg is AIDetectResponseMessage aiResponse)
             {
-                _service.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
+                //_server.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
             }
             else if (msg is UpVideoItemMessage upItemResponse)
             {
-                await _service.VideoCaptureItemEvent(upItemResponse);
+                ZLMediaKitServer.Instance.AddPullProxy(upItemResponse.Item);
             }
             else if (msg is DelVideoItemMessage delItemResponse)
             {
-                _service.DelVideo(delItemResponse.DeviceId);
+                ZLMediaKitServer.Instance.RemovePullProxy(delItemResponse.DeviceId);
             }
         }
 

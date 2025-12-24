@@ -4,16 +4,6 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
-        <member name="P:IoTVideoService.HookResult.code">
-            <summary>
-            返回代码，为0为正确，1~9不提示，大于9提示
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.HookResult.msg">
-            <summary>
-            提示信息
-            </summary>
-        </member>
         <member name="P:IoTVideoService.Models.In_HookNoneReader.app">
             <summary>
             流应用名
@@ -137,31 +127,6 @@
         <member name="P:IoTVideoService.Models.MZ_VideoSource.PullNode">
             <summary>
             当前拉流的节点名称，无为空
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitSecret">
-            <summary>
-            ZLMediaKit接口密钥
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitIp">
-            <summary>
-            ZLMediaKit的Ip地址
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitRTSPPort">
-            <summary>
-            ZLMediaKit的RTSP端口号
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitRTMPPort">
-            <summary>
-            ZLMediaKit的RTMP端口号
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.ZLMediaKitItem.ZLMediaKitApp">
-            <summary>
-            ZLMediaKit的应用名
             </summary>
         </member>
     </members>

@@ -134,80 +134,76 @@ namespace FixVideoChannel
             }
         }
 
-        public void Connect(string pushUrl)
+        public unsafe void Connect(string pushUrl)
         {
             if (string.IsNullOrEmpty(pushUrl))
                 throw new ArgumentNullException(nameof(pushUrl));
-
             if (_videoParams == null)
-                throw new InvalidOperationException("必须先调用InitializeCodecParams初始化编码参数");
-
+                throw new InvalidOperationException("必须先初始化编码参数");
             if (_isConnected)
                 return;
 
-            if (pushUrl.StartsWith("rtmp://", StringComparison.OrdinalIgnoreCase))
-            {
-                _pushProtocol = PushProtocol.RTMP;
-            }
-            else if (pushUrl.StartsWith("rtsp://", StringComparison.OrdinalIgnoreCase))
-            {
-                _pushProtocol = PushProtocol.RTSP;
-            }
-            else
-            {
-                throw new NotSupportedException($"不支持的推流协议：{pushUrl}");
-            }
+            string formatName = null;
+            AVDictionary* options = null;
+            _pushProtocol = PushProtocol.Unknown;
 
             try
             {
-                unsafe
+                // 1. 识别协议并设置格式名（让 FFmpeg 自动处理 AVFMT_NOFILE）
+                if (pushUrl.StartsWith("rtmp://", StringComparison.OrdinalIgnoreCase))
                 {
-                    AVFormatContext* fmtCtx = null;
-                    string formatName = _pushProtocol == PushProtocol.RTMP ? "flv" : "rtsp";
-
-                    int errorCode = ffmpeg.avformat_alloc_output_context2(&fmtCtx, null, formatName, pushUrl);
-                    if (errorCode < 0 || fmtCtx == null)
-                        throw new InvalidOperationException($"无法分配输出格式上下文: {GetFFmpegErrorDescription(errorCode)}");
-
-                    _fmtCtxPtr = (IntPtr)fmtCtx;
-
-                    // 设置推流参数
-                    AVDictionary* options = null;
-                    if (_pushProtocol == PushProtocol.RTMP)
-                    {
-                        ffmpeg.av_dict_set(&options, "flush_packets", "1", 0);
-                        ffmpeg.av_dict_set(&options, "max_interleave_delta", "100", 0);
-                        ffmpeg.av_dict_set(&options, "rtmp_buffer", "2048", 0);
-                        ffmpeg.av_dict_set(&options, "rtmp_timeout", "5000000", 0);
-                        ffmpeg.av_dict_set(&options, "max_delay", "500000", 0);
-                    }
-                    else if (_pushProtocol == PushProtocol.RTSP)
-                    {
-                        ffmpeg.av_dict_set(&options, "rtsp_transport", "tcp", 0);
-                        ffmpeg.av_dict_set(&options, "stimeout", "5000000", 0);
-                        ffmpeg.av_dict_set(&options, "max_delay", "1000000", 0);
-                    }
-
-                    // 打开输出IO
-                    if ((fmtCtx->oformat->flags & ffmpeg.AVFMT_NOFILE) == 0)
-                    {
-                        errorCode = ffmpeg.avio_open(&fmtCtx->pb, pushUrl, ffmpeg.AVIO_FLAG_WRITE);
-                        if (errorCode < 0)
-                        {
-                            ffmpeg.av_dict_free(&options);
-                            ffmpeg.avformat_free_context(fmtCtx);
-                            _fmtCtxPtr = IntPtr.Zero;
-                            throw new InvalidOperationException($"无法打开推流IO: {GetFFmpegErrorDescription(errorCode)}");
-                        }
-                    }
-
-                    ffmpeg.av_dict_free(&options);
+                    _pushProtocol = PushProtocol.RTMP;
+                    formatName = "flv";
+                    ffmpeg.av_dict_set(&options, "flvflags", "no_duration_filesize", 0);
+                    ffmpeg.av_dict_set(&options, "rtmp_live", "1", 0);
+                }
+                else if (pushUrl.StartsWith("rtsp://", StringComparison.OrdinalIgnoreCase))
+                {
+                    _pushProtocol = PushProtocol.RTSP;
+                    formatName = "rtsp";
+                    ffmpeg.av_dict_set(&options, "rtsp_transport", "tcp", 0);
+                    ffmpeg.av_dict_set(&options, "stimeout", "5000000", 0);
+                }
+                else
+                {
+                    throw new NotSupportedException($"不支持的推流协议：{pushUrl}");
                 }
 
+                // 2. 分配格式上下文（FFmpeg 自动设置 oformat 标志）
+                AVFormatContext* fmtCtx = null;
+                int ret = ffmpeg.avformat_alloc_output_context2(&fmtCtx, null, formatName, pushUrl);
+                if (ret < 0 || fmtCtx == null)
+                {
+                    throw new InvalidOperationException($"分配输出格式上下文失败: {GetFFmpegErrorDescription(ret)}");
+                }
+                _fmtCtxPtr = (IntPtr)fmtCtx;
+
+                // 3. 打开 IO 上下文（FFmpeg 自动判断是否需要文件 IO）
+                // 关键：仅当格式需要文件 IO 时才打开（由 FFmpeg 内部判断，无需手动干预）
+                if ((fmtCtx->oformat->flags & ffmpeg.AVFMT_NOFILE) == 0)
+                {
+                    ret = ffmpeg.avio_open2(&fmtCtx->pb, pushUrl, ffmpeg.AVIO_FLAG_WRITE, null, &options);
+                    if (ret < 0)
+                    {
+                        ffmpeg.avformat_free_context(fmtCtx);
+                        _fmtCtxPtr = IntPtr.Zero;
+                        throw new InvalidOperationException($"无法打开推流IO: {GetFFmpegErrorDescription(ret)}");
+                    }
+                }
+
+                // 4. 安全设置格式上下文参数
+                fmtCtx->max_delay = 500000; // 500ms 延迟
+                if (fmtCtx->pb != null)
+                {
+                    fmtCtx->pb->seekable = 0; // 直播流禁用 seek（仅当 pb 非空时操作）
+                }
+
+                ffmpeg.av_dict_free(&options);
                 _isConnected = true;
             }
             catch
             {
+                ffmpeg.av_dict_free(&options); // 确保字典释放
                 Dispose();
                 throw;
             }

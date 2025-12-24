@@ -55,12 +55,12 @@ namespace FixVideoChannel
             _inputUrl = item.PullAddr ?? throw new ArgumentNullException(nameof(item.PullAddr));
 
             // 修复推流地址拼接逻辑
-            if (string.IsNullOrEmpty(item.PushAddr))
+            if (string.IsNullOrEmpty(item.PushKey))
             {
-                throw new ArgumentNullException(nameof(item.PushAddr));
+                throw new ArgumentNullException(nameof(item.PushKey));
             }
             var uri = new Uri(_inputUrl);
-            _pushUrl = $"{uri.Scheme}://{item.PushAddr}";
+            _pushUrl = $"{uri.Scheme}://{item.PushKey}";
 
             // 初始化组件
             _aiDetectTaskList = tasks ?? new List<AIDetectorTask>();
@@ -389,6 +389,10 @@ namespace FixVideoChannel
             unsafe
             {
                 AVFormatContext* inputFormatContext = (AVFormatContext*)_inputFormatContextPtr;
+                if (_packetPtr == IntPtr.Zero)
+                {
+                    return;
+                }
                 AVPacket* packet = (AVPacket*)_packetPtr;
                 errorCode = ffmpeg.av_read_frame(inputFormatContext, packet);
             }

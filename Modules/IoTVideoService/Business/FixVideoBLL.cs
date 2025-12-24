@@ -5,9 +5,7 @@ using EasyNetQ;
 using IoTService;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
-using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
-using Quartz.Impl.Triggers;
 using System;
 using System.Text;
 using TemplateAction.Core;
@@ -41,18 +39,11 @@ namespace IoTVideoService.Business
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
         }
-        private string GeneratePushAddr(string key)
-        {
-            var tmpoption = _provider.GetService<IOptions<VideoOption>>();
-            var tservers = tmpoption.Value.Servers;
-            int pos = Math.Abs(key.GetHashCode() % tservers.Length);
 
-            return $"{tservers[pos].ZLMediaKitIp}:{tservers[pos].ZLMediaKitRTMPPort}/{tservers[pos].ZLMediaKitApp}/{key}";
-        }
-        public virtual async Task DelVideo(string streamId)
+        public virtual async Task DelVideo(MediaNotReaderMessage msg)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            string tkey = streamId;
+            string tkey = msg.StreamId;
             var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
             if (tlist.Count > 0)
             {
@@ -66,9 +57,8 @@ namespace IoTVideoService.Business
                 }
             }
         }
-        public virtual async Task CollectVideo(string streamId)
+        private async Task UpdateFixNode()
         {
-            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             //获取所有固定地址采集节点
             var redisHelper = _provider.GetService<IotRedisHelper>();
             var dict = await redisHelper.HashGetAllAsync<string>("FixVideoNode");
@@ -98,19 +88,22 @@ namespace IoTVideoService.Business
                 await redisHelper.HashDeleteAsync("FixVideoNode", offlineNames.ToArray());
                 MZ_VideoSource vs = new MZ_VideoSource();
                 vs.PullNode = string.Empty;
+                var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
                 await videoSourceDAL.Update(vs, x => onlineNames.NotContains(x.PullNode));
             }
-            if (onlineNames == null || onlineNames.Count == 0) return;
+        }
+        public virtual async Task CollectVideo(MediaNotFoundMessage msg)
+        {
+            await this.UpdateFixNode();
 
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             //给在线节点分配视频采集
-            string tkey = streamId;
+            string tkey = msg.StreamId;
             var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
             if (tlist.Count > 0)
             {
                 var titem = tlist[0];
-                int pos = Math.Abs(titem.Id.GetHashCode() % onlineNames.Count);
-                string nodeid = onlineNames[pos];
-
+                string nodeid = msg.DeviceId;
                 if (!string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeid))
                 {
                     await DownDelVideoItemMessage(titem.PullNode, titem.Id);
@@ -123,7 +116,7 @@ namespace IoTVideoService.Business
                 cpitem.Id = titem.Id;
                 cpitem.FrameInterval = titem.FrameInterval.Value;
                 cpitem.PullAddr = titem.PullAddr;
-                cpitem.PushAddr = GeneratePushAddr(titem.VideoKey);
+                cpitem.PushKey = titem.VideoKey;
                 List<AIDetectItem> detectList;
                 if (string.IsNullOrEmpty(titem.AITasks))
                 {

@@ -26,9 +26,9 @@ namespace ChannelUtility.Message
         /// </summary>
         public string PullAddr { get; set; }
         /// <summary>
-        /// 推流地址
+        /// 推流的流Id
         /// </summary>
-        public string PushAddr { get; set; }
+        public string PushKey { get; set; }
         /// <summary>
         /// AI检测帧间隔,默认25帧
         /// </summary>

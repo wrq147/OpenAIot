@@ -111,6 +111,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixVideoChannel", "Channel\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfficiencyService", "Modules\EfficiencyService\EfficiencyService.csproj", "{327CE319-504D-65C2-1E06-355443F68E07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZLMediaKit.Autogen", "Third\ZLMediaKit.Autogen\ZLMediaKit.Autogen.csproj", "{73BBB617-9E28-8F55-659D-AF2CE5C91655}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -317,6 +319,10 @@ Global
 		{327CE319-504D-65C2-1E06-355443F68E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{327CE319-504D-65C2-1E06-355443F68E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{327CE319-504D-65C2-1E06-355443F68E07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73BBB617-9E28-8F55-659D-AF2CE5C91655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73BBB617-9E28-8F55-659D-AF2CE5C91655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73BBB617-9E28-8F55-659D-AF2CE5C91655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73BBB617-9E28-8F55-659D-AF2CE5C91655}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -363,6 +369,7 @@ Global
 		{741912E9-57C9-9963-B5E3-319C8B83E7FA} = {C4F73D91-B2AD-4365-9714-D119D7E056D5}
 		{AF1161AE-34E0-4F74-A801-495ED69EDE75} = {C26B908B-B010-4265-8BDE-BFB935C899BF}
 		{327CE319-504D-65C2-1E06-355443F68E07} = {CD28CBED-71E7-423E-8599-1521EBFBEF44}
+		{73BBB617-9E28-8F55-659D-AF2CE5C91655} = {C4F73D91-B2AD-4365-9714-D119D7E056D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {77EA5F0A-9A22-4C84-A103-055F8596621C}

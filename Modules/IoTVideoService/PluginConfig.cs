@@ -37,7 +37,14 @@ namespace IoTVideoService
         {
             switch (msg.MsgType)
             {
-
+                case "MediaNF":
+                    MediaNotFoundMessage nfmsg = (MediaNotFoundMessage)msg;
+                    await _provider.GetService<FixVideoBLL>().CollectVideo(nfmsg);
+                    break;
+                case "MediaNR":
+                    MediaNotReaderMessage nrmsg = (MediaNotReaderMessage)msg;
+                    await _provider.GetService<FixVideoBLL>().DelVideo(nrmsg);
+                    break;
             }
         }
     }

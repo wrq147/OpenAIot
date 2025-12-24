@@ -19,13 +19,12 @@ namespace FixVideoChannel
         private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(20);
         private Thread _timerThread;
         private IServiceProvider _provider;
-        private ConcurrentDictionary<string, StreamProcessor> _processorDict = new ConcurrentDictionary<string, StreamProcessor>();
         private FixVideoDeviceEventListener _deviceEventListener;
         private FixVideoOption _option;
         public FixVideoService(IServiceProvider provider)
         {
             _provider = provider;
-            _deviceEventListener = new FixVideoDeviceEventListener(provider, this);
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X64)
             {
                 ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Windows", "x64");
@@ -46,50 +45,16 @@ namespace FixVideoChannel
             {
                 ffmpeg.RootPath = _option.ffmpeg_path;
             }
+            _deviceEventListener = new FixVideoDeviceEventListener(provider);
         }
         public void UpdateAIDraw(string videoId, string detType, List<BoxItem> boxList)
         {
-            if (_processorDict.TryGetValue(videoId, out StreamProcessor sp))
-            {
-                sp.UpdateAIDraw(detType, boxList);
-            }
+            //if (_processorDict.TryGetValue(videoId, out StreamProcessor sp))
+            //{
+            //    sp.UpdateAIDraw(detType, boxList);
+            //}
         }
-        public async Task VideoCaptureItemEvent(UpVideoItemMessage msg)
-        {
-            var item = msg.Item;
-            if (_processorDict.TryGetValue(item.Id, out StreamProcessor tmp))
-            {
-                tmp.UpdateItem(item);
-            }
-            else
-            {
-                List<AIDetectorTask> tasklist = new List<AIDetectorTask>();
-                if (msg.DetectList != null)
-                {
-                    foreach (var ditem in msg.DetectList)
-                    {
-                        tasklist.Add(new AIDetectorTask(ditem));
-                    }
-                }
 
-                var tmpProccess = new StreamProcessor(msg.Item, tasklist, _deviceEventListener);
-                if (await tmpProccess.StartAsync())
-                {
-                    _processorDict.TryAdd(item.Id, tmpProccess);
-                }
-                else
-                {
-                    DelVideo(item.Id);
-                }
-            }
-        }
-        public void DelVideo(string id)
-        {
-            if (_processorDict.TryRemove(id, out StreamProcessor tmp))
-            {
-                tmp.Dispose();
-            }
-        }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             ffmpeg.avformat_network_init();
@@ -103,12 +68,12 @@ namespace FixVideoChannel
             };
             _timerThread.Start();
 
-
-            await StreamTaskScheduler.Instance.StartAsync(stoppingToken);
+            ZLMediaKitServer.Instance.Start(_option, _provider);
         }
         public override Task StopAsync(CancellationToken cancellationToken)
         {
             ffmpeg.avformat_network_deinit();
+            ZLMediaKitServer.Instance.Stop();
             return base.StopAsync(cancellationToken);
         }
 
@@ -157,4 +122,5 @@ namespace FixVideoChannel
             await eventBus.RedisHelper.HashSetAsync("FixVideoNode", eventBus.NodeGuid, DateTime.Now.AddSeconds(30).ToString("o"));
         }
     }
+
 }

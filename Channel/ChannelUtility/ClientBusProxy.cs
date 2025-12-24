@@ -49,7 +49,7 @@ namespace ChannelUtility
             _provider = provider;
             _option = provider.GetService<ChannelOption>();
             _redis = provider.GetService<GeneralRedisHelper>();
-            _nodeGuid = Guid.NewGuid().ToString("N");
+            _nodeGuid = "NC" + Guid.NewGuid().ToString("N");
 
             _memoryCache = provider.GetService<IMemoryCache>();
             _bus = RabbitHutch.CreateBus(_option.EventConn, x =>
@@ -392,6 +392,23 @@ namespace ChannelUtility
             msg.Height = height;
             msg.NodeId = this._nodeGuid;
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+        }
+
+        public void PublishMediaNotFound(string streamId)
+        {
+            MediaNotFoundMessage msg = new MediaNotFoundMessage();
+            msg.DeviceId = this._nodeGuid;
+            msg.ProductId = string.Empty;
+            msg.StreamId = streamId;
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(this._nodeGuid));
+        }
+        public void PublishMediaNotReader(string streamId)
+        {
+            MediaNotReaderMessage msg = new MediaNotReaderMessage();
+            msg.DeviceId = this._nodeGuid;
+            msg.ProductId = string.Empty;
+            msg.StreamId = streamId;
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(this._nodeGuid));
         }
         /// <summary>
         /// 发送确认回复包（异步）
