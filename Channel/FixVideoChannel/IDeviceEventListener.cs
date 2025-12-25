@@ -28,7 +28,7 @@ namespace FixVideoChannel
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] rgbFrame, int width, int height);
+        Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] bgrFrame, int width, int height);
 
         /// <summary>
         /// 处理平台下发消息

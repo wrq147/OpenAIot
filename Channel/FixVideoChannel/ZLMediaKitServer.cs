@@ -2,9 +2,8 @@
 using ChannelUtility.Message;
 using FFmpeg.AutoGen;
 using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client.Exceptions;
+using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.Concurrent;
-
 using System.Runtime.InteropServices;
 using System.Text;
 using ZLMediaKit;
@@ -50,10 +49,11 @@ namespace FixVideoChannel
             {
                 if (item.DetectList.Count > 0)
                 {
-                    mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 1);
+                    mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 1);
                     return;
                 }
             }
+            context.LastFrame = mkFrame;
             mk_media.MkMediaInputFrame(context.Media, mkFrame);
         }
         private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
@@ -64,35 +64,6 @@ namespace FixVideoChannel
             int w = mk_transcode.MkGetAvFrameWidth(avFrame);
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
-            int linesizeLength = 4;
-            switch (pixFmt)
-            {
-                case (int)AVPixelFormat.AV_PIX_FMT_YUV420P:
-                    linesizeLength = 3;
-                    break;
-                case (int)AVPixelFormat.AV_PIX_FMT_YUV422P:
-                    linesizeLength = 3;
-                    break;
-                case (int)AVPixelFormat.AV_PIX_FMT_YUV444P:
-                    linesizeLength = 3;
-                    break;
-                case (int)AVPixelFormat.AV_PIX_FMT_NV12:
-                    linesizeLength = 2;
-                    break;
-                case (int)AVPixelFormat.AV_PIX_FMT_RGB24:
-                    linesizeLength = 1;
-                    break;
-                case (int)AVPixelFormat.AV_PIX_FMT_BGR24:
-                    linesizeLength = 1;
-                    break;
-            }
-            int[] tmplinesize = new int[linesizeLength];
-            unsafe
-            {
-                int* linesizePtr = mk_transcode.MkGetAvFrameLineSize(avFrame);
-                Marshal.Copy((IntPtr)linesizePtr, tmplinesize, 0, linesizeLength);
-            }
-
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
             int align = 32;
             int pixel_size = 3;
@@ -100,12 +71,12 @@ namespace FixVideoChannel
             // 对齐后的宽度
             int aligned_linesize = (raw_linesize + align - 1) & ~(align - 1);
             int total_size = aligned_linesize * h;
-            byte[] brg24 = new byte[total_size];
+            byte[] bgr24 = new byte[total_size];
             unsafe
             {
-                fixed (byte* pRgb = brg24)
+                fixed (byte* pBgr = bgr24)
                 {
-                    mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                    mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pBgr);
                 }
             }
 
@@ -114,25 +85,34 @@ namespace FixVideoChannel
                 bool hasDraw = false;
                 var detectTasks = item.DetectList.ToArray();
                 // 执行AI检测
-                detectTasks.Select(t => t.Detect(item.Item.Id, brg24, w, h, _listener));
+                detectTasks.Select(t => t.Detect(item.Item.Id, bgr24, w, h, _listener));
                 // 执行绘制
                 foreach (var t in detectTasks)
                 {
-                    if (t.Draw(brg24, w, h))
+                    if (t.Draw(bgr24, w, h))
                     {
                         hasDraw = true;
                     }
                 }
                 if (hasDraw)
                 {
-                    //long pts = mk_frame.MkAvFrameGetPts(ref avFrame);
-                    string[] yuv = new string[0];
-                    mk_media.MkMediaInputYuv(context.Media, yuv, tmplinesize, (ulong)lpts);
+                    byte[] yuvData;
+                    int[] yuvLineSizes;
+                    if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, aligned_linesize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                    {
+                        return;
+                    }
 
-
+                    // 2. 拆分YUV平面数据指针（适配ZLMediaKit的string[]参数）
+                    string[] yuvPlanes = ZLUtility.SplitYuvPlanes(yuvData, w, h, (AVPixelFormat)pixFmt);
+                    mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
+                    return;
                 }
             }
-
+            if (context.LastFrame != null)
+            {
+                mk_media.MkMediaInputFrame(context.Media, context.LastFrame);
+            }
 
         }
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
@@ -228,16 +208,8 @@ namespace FixVideoChannel
             {
                 return;
             }
-            //创建拉流代理
+            //创建播放器
             MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
-            //MkProxyPlayerT mk_proxy = mk_proxyplayer.MkProxyPlayerCreate4("__defaultVhost__", "live", data.Item.PushKey, option, 3);
-            ////设置代理参数 rtp_type  rtsp播放方式:RTP_TCP = 0, RTP_UDP = 1, RTP_MULTICAST = 2
-            //mk_proxyplayer.MkProxyPlayerSetOption(mk_proxy, "rtp_type", "1");
-            ////设置代理参数 protocol_timeout_ms  协议超时时间 毫秒 更多参数参见mk_proxy_player_set_option注释
-            //mk_proxyplayer.MkProxyPlayerSetOption(mk_proxy, "protocol_timeout_ms", "2000");
-            //如果是rtsp回放流支持配置开始倍速
-            //ZLM_API.mk_proxy_player_set_option(mk_proxy, "rtsp_speed", "1.5");
-            //开始播放代理地址
             mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
             FrameContext context = new FrameContext();
             context.VideoKey = data.Item.PushKey;
@@ -266,6 +238,20 @@ namespace FixVideoChannel
                 mk_player.MkPlayerRelease(tmpt);
             }
         }
+        public void UpdateAIDraw(string videoId, string detType, List<BoxItem> boxList)
+        {
+            if (_IdToKeys.TryGetValue(videoId, out string tmpkey))
+            {
+                if (_videoKeyItems.TryGetValue(tmpkey, out VideoData tmpval))
+                {
+                    foreach(var item in tmpval.DetectList)
+                    {
+                        item.UpdateBoxList(detType, boxList);
+                    }
+                }
+            }
+        }
+
         public void Start(FixVideoOption option, IServiceProvider provider, IDeviceEventListener listener)
         {
             _provider = provider;
@@ -333,6 +319,7 @@ namespace FixVideoChannel
         public MkDecoderT VideoDecoder { get; set; }
         public MkTrackT Track { get; set; }
         public MkSwscaleT Swscale { get; set; }
+        public MkFrameT LastFrame { get; set; }
     }
     public static class CallbackHelper
     {

@@ -30,9 +30,9 @@ namespace FixVideoChannel
             await eventBus.Connected(item.Id);
         }
 
-        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] rgbFrame, int width, int height)
+        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] bgrFrame, int width, int height)
         {
-            using (var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height))
+            using (var image = Image.LoadPixelData<Bgr24>(bgrFrame, width, height))
             using (var ms = new MemoryStream())
             {
                 // 配置WebP有损压缩参数
@@ -52,7 +52,7 @@ namespace FixVideoChannel
         {
             if (msg is AIDetectResponseMessage aiResponse)
             {
-                //_server.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
+                ZLMediaKitServer.Instance.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
             }
             else if (msg is UpVideoItemMessage upItemResponse)
             {

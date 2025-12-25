@@ -47,13 +47,6 @@ namespace FixVideoChannel
             }
             _deviceEventListener = new FixVideoDeviceEventListener(provider);
         }
-        public void UpdateAIDraw(string videoId, string detType, List<BoxItem> boxList)
-        {
-            //if (_processorDict.TryGetValue(videoId, out StreamProcessor sp))
-            //{
-            //    sp.UpdateAIDraw(detType, boxList);
-            //}
-        }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

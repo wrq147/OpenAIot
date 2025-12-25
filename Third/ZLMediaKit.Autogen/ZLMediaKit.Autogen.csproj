@@ -20,6 +20,10 @@
     <None Remove="Libs\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="ZLMediaLibs\Windows\x64\ext-codec.lib" />
+    <None Remove="ZLMediaLibs\Windows\x64\zlmediakit.lib" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="ZLMediaLibs\Linux\x64\libmk_api.so">
 		<Link>libmk_api.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
