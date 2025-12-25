@@ -68,7 +68,7 @@ namespace FixVideoChannel
             };
             _timerThread.Start();
 
-            ZLMediaKitServer.Instance.Start(_option, _provider);
+            ZLMediaKitServer.Instance.Start(_option, _provider, _deviceEventListener);
         }
         public override Task StopAsync(CancellationToken cancellationToken)
         {

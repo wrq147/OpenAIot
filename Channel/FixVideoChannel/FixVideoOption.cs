@@ -29,9 +29,5 @@ namespace FixVideoChannel
         /// ZLMediaKit的RTMP端口号
         /// </summary>
         public int RTMPPort { get; set; } = 1935;
-        /// <summary>
-        /// ZLMediaKit的应用名
-        /// </summary>
-        public string App { get; set; } = "live";
     }
 }

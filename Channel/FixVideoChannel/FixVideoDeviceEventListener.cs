@@ -56,7 +56,16 @@ namespace FixVideoChannel
             }
             else if (msg is UpVideoItemMessage upItemResponse)
             {
-                ZLMediaKitServer.Instance.AddPullProxy(upItemResponse.Item);
+                List<AIDetectorTask> tasks = new List<AIDetectorTask>();
+                foreach (var it in upItemResponse.DetectList)
+                {
+                    tasks.Add(new AIDetectorTask(it));
+                }
+                ZLMediaKitServer.Instance.AddPullProxy(new VideoData()
+                {
+                    Item = upItemResponse.Item,
+                    DetectList = tasks
+                });
             }
             else if (msg is DelVideoItemMessage delItemResponse)
             {

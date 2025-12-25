@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -23,13 +23,27 @@
     <None Remove="FFmpegLibs\Linux\x64\libavutil.so" />
     <None Remove="FFmpegLibs\Linux\x64\libswresample.so" />
     <None Remove="FFmpegLibs\Linux\x64\libswscale.so" />
+    <None Remove="FFmpegLibs\Windows\x64\avcodec-61.dll" />
     <None Remove="FFmpegLibs\Windows\x64\avcodec-62.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avdevice-61.dll" />
     <None Remove="FFmpegLibs\Windows\x64\avdevice-62.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avfilter-10.dll" />
     <None Remove="FFmpegLibs\Windows\x64\avfilter-11.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avformat-61.dll" />
     <None Remove="FFmpegLibs\Windows\x64\avformat-62.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\avutil-59.dll" />
     <None Remove="FFmpegLibs\Windows\x64\avutil-60.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\postproc-58.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\swresample-5.dll" />
     <None Remove="FFmpegLibs\Windows\x64\swresample-6.dll" />
+    <None Remove="FFmpegLibs\Windows\x64\swscale-8.dll" />
     <None Remove="FFmpegLibs\Windows\x64\swscale-9.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="FFmpegLibs\Windows\x64\swscale-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +89,27 @@
     <Content Include="FFmpegLibs\Linux\x64\libswscale.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avcodec-61.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avdevice-61.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avfilter-10.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avformat-61.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\avutil-59.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\postproc-58.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FFmpegLibs\Windows\x64\swresample-5.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="FFmpeg.AutoGen" Version="7.1.1" />
@@ -97,30 +132,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="default.pem">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\avcodec-61.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\avdevice-61.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\avfilter-10.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\avformat-61.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\avutil-59.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\postproc-58.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\swresample-5.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FFmpegLibs\Windows\x64\swscale-8.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

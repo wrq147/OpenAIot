@@ -2,8 +2,10 @@
 using ChannelUtility.Message;
 using FFmpeg.AutoGen;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using RabbitMQ.Client.Exceptions;
 using System.Collections.Concurrent;
+
+using System.Runtime.InteropServices;
 using System.Text;
 using ZLMediaKit;
 
@@ -13,11 +15,16 @@ namespace FixVideoChannel
     {
         private IServiceProvider _provider;
         private FixVideoOption _option;
-        private ConcurrentDictionary<string, MkProxyPlayerT> _players;
+        private ConcurrentDictionary<string, MkPlayerT> _players;
+        private ConcurrentDictionary<string, VideoData> _videoKeyItems;
+        private ConcurrentDictionary<string, string> _IdToKeys;
+        private ConcurrentDictionary<string, FrameContext> _contextMap;
+        private ConcurrentDictionary<string, IntPtr> _contextPtrMap;
+        private IDeviceEventListener _listener;
         private MkEvents _mkEvents;
         private static readonly Lazy<ZLMediaKitServer> _instance = new Lazy<ZLMediaKitServer>(() => new ZLMediaKitServer());
         public static ZLMediaKitServer Instance => _instance.Value;
-        private ZLMediaKitServer(){}
+        private ZLMediaKitServer() { }
 
         private int On_mk_media_not_found(IntPtr url,
                                         IntPtr sock)
@@ -34,6 +41,99 @@ namespace FixVideoChannel
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
             eventBus.PublishMediaNotReader(streamId);
+        }
+        private void OnParseFrame(IntPtr user_data, IntPtr frame)
+        {
+            var mkFrame = (MkFrameT)frame;
+            FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
+            {
+                if (item.DetectList.Count > 0)
+                {
+                    mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 1);
+                    return;
+                }
+            }
+            mk_media.MkMediaInputFrame(context.Media, mkFrame);
+        }
+        private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
+        {
+            MkFramePixT pixFrame = (MkFramePixT)yuvFrame;
+            ZLMediaKit.AVFrame avFrame = mk_transcode.MkFramePixGetAvFrame(pixFrame);
+            long lpts = mk_transcode.MkGetAvFramePts(avFrame);
+            int w = mk_transcode.MkGetAvFrameWidth(avFrame);
+            int h = mk_transcode.MkGetAvFrameHeight(avFrame);
+            int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
+            int linesizeLength = 4;
+            switch (pixFmt)
+            {
+                case (int)AVPixelFormat.AV_PIX_FMT_YUV420P:
+                    linesizeLength = 3;
+                    break;
+                case (int)AVPixelFormat.AV_PIX_FMT_YUV422P:
+                    linesizeLength = 3;
+                    break;
+                case (int)AVPixelFormat.AV_PIX_FMT_YUV444P:
+                    linesizeLength = 3;
+                    break;
+                case (int)AVPixelFormat.AV_PIX_FMT_NV12:
+                    linesizeLength = 2;
+                    break;
+                case (int)AVPixelFormat.AV_PIX_FMT_RGB24:
+                    linesizeLength = 1;
+                    break;
+                case (int)AVPixelFormat.AV_PIX_FMT_BGR24:
+                    linesizeLength = 1;
+                    break;
+            }
+            int[] tmplinesize = new int[linesizeLength];
+            unsafe
+            {
+                int* linesizePtr = mk_transcode.MkGetAvFrameLineSize(avFrame);
+                Marshal.Copy((IntPtr)linesizePtr, tmplinesize, 0, linesizeLength);
+            }
+
+            FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            int align = 32;
+            int pixel_size = 3;
+            int raw_linesize = w * pixel_size;
+            // 对齐后的宽度
+            int aligned_linesize = (raw_linesize + align - 1) & ~(align - 1);
+            int total_size = aligned_linesize * h;
+            byte[] brg24 = new byte[total_size];
+            unsafe
+            {
+                fixed (byte* pRgb = brg24)
+                {
+                    mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                }
+            }
+
+            if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
+            {
+                bool hasDraw = false;
+                var detectTasks = item.DetectList.ToArray();
+                // 执行AI检测
+                detectTasks.Select(t => t.Detect(item.Item.Id, brg24, w, h, _listener));
+                // 执行绘制
+                foreach (var t in detectTasks)
+                {
+                    if (t.Draw(brg24, w, h))
+                    {
+                        hasDraw = true;
+                    }
+                }
+                if (hasDraw)
+                {
+                    //long pts = mk_frame.MkAvFrameGetPts(ref avFrame);
+                    string[] yuv = new string[0];
+                    mk_media.MkMediaInputYuv(context.Media, yuv, tmplinesize, (ulong)lpts);
+
+
+                }
+            }
+
+
         }
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
@@ -53,11 +153,11 @@ namespace FixVideoChannel
             //允许播放
             mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
         }
-        private unsafe  void On_mk_http_request(IntPtr parserPtr,
+        private unsafe void On_mk_http_request(IntPtr parserPtr,
                                       IntPtr invoker, int* consumed,
                                       IntPtr sock)
         {
-        
+
         }
         private void On_mk_http_access(IntPtr parserPtr,
                                        string path,
@@ -67,51 +167,15 @@ namespace FixVideoChannel
         {
             var parser = (MkParserT)parserPtr;
             var sender = (MkSockInfoT)sock;
-   
+
             //有访问权限,每次访问文件都需要鉴权
             mk_events_objects.MkHttpAccessPathInvokerDo((MkHttpAccessPathInvokerT)invoker, null, null, 0);
         }
-        private unsafe void On_mk_http_before_access(IntPtr parserPtr,
-                                           sbyte* path,
-                                           IntPtr sock)
-        {
-            var parser = (MkParserT)parserPtr;
-            var sender = (MkSockInfoT)sock;
 
-        }
-        private void On_mk_rtsp_get_realm(IntPtr url,
-                                         IntPtr invoker,
-                                         IntPtr sock)
-        {
-   
-            //rtsp播放默认鉴权
-            mk_events_objects.MkRtspGetRealmInvokerDo((MkRtspGetRealmInvokerT)invoker, "zlmediakit");
-        }
-        private void On_mk_rtsp_auth(IntPtr url,
-                                    string realm,
-                                    string user_name,
-                                    int must_no_encrypt,
-                                    IntPtr invoker,
-                                    IntPtr sock)
-        {
-            var url_info = (MkMediaInfoT)url;
-            var sender = (MkSockInfoT)sock;
-
-            //rtsp播放用户名跟密码一致
-            mk_events_objects.MkRtspAuthInvokerDo((MkRtspAuthInvokerT)invoker, 0, user_name);
-        }
         private void On_mk_record_mp4(IntPtr mp4Ptr)
         {
         }
-        private void On_mk_shell_login(string user_name,
-                                     string passwd,
-                                     IntPtr invoker,
-                                     IntPtr sock)
-        {
 
-            //允许登录shell
-            mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
-        }
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,
                                       ulong total_seconds,
@@ -120,47 +184,98 @@ namespace FixVideoChannel
         {
 
         }
-        public void AddPullProxy(VideoCaptureItem item)
+        private void OnPlay(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
         {
-            MkIniT option = mk_util.MkIniCreate();
-            mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_audio", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_rtsp", 1);
-            mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
-            //ZLM_API.mk_ini_set_option_int(option, "mp4_max_second", 3600);
-            //！！非有必要，不要配置下面两个参数，否则会导致无法播放
-            //ZLM_API.mk_ini_set_option(option,"mp4_save_path","D:/record");
-            //ZLM_API.mk_ini_set_option(option,"hls_save_path","D:/record");
-            mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
-            mk_util.MkIniSetOptionInt(option, "auto_close", 0);
+            FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            context.Media = mk_media.MkMediaCreate("_defaultVhost_", "live", context.VideoKey, 0, 0, 0);
+            for (int i = 0; i < track_count; i++)
+            {
+                MkTrackT mkTrack = (MkTrackT)tracks[i];
+                if (mk_track.MkTrackIsVideo(mkTrack) > 0)
+                {
+                    MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
+                    context.VideoDecoder = mkDecoder;
+                    context.Track = mkTrack;
+                    context.Swscale = mk_transcode.MkSwscaleCreate(3, 0, 0);
+
+                    mk_transcode.MkDecoderSetCb(mkDecoder, OnDecodeFrame, user_data);
+                    mk_track.MkTrackAddDelegate(mkTrack, OnParseFrame, user_data);
+                    break;
+                }
+            }
+            _contextMap.TryAdd(context.VideoKey, context);
+        }
+        private void OnShutdown(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
+        {
+            FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            if (context.Swscale != null)
+            {
+                mk_transcode.MkSwscaleRelease(context.Swscale);
+            }
+            if (context.VideoDecoder != null)
+            {
+                mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
+            }
+            if (context.Media != null)
+            {
+                mk_media.MkMediaRelease(context.Media);
+            }
+            _contextMap.TryRemove(context.VideoKey, out FrameContext handle);
+        }
+        public void AddPullProxy(VideoData data)
+        {
+            if (_players.ContainsKey(data.Item.Id))
+            {
+                return;
+            }
             //创建拉流代理
-            MkProxyPlayerT mk_proxy = mk_proxyplayer.MkProxyPlayerCreate4("__defaultVhost__", _option.zlmedia_server.App, item.PushKey, option, 3);
-            //设置代理参数 rtp_type  rtsp播放方式:RTP_TCP = 0, RTP_UDP = 1, RTP_MULTICAST = 2
-            mk_proxyplayer.MkProxyPlayerSetOption(mk_proxy, "rtp_type", "1");
-            //设置代理参数 protocol_timeout_ms  协议超时时间 毫秒 更多参数参见mk_proxy_player_set_option注释
-            mk_proxyplayer.MkProxyPlayerSetOption(mk_proxy, "protocol_timeout_ms", "2000");
+            MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
+            //MkProxyPlayerT mk_proxy = mk_proxyplayer.MkProxyPlayerCreate4("__defaultVhost__", "live", data.Item.PushKey, option, 3);
+            ////设置代理参数 rtp_type  rtsp播放方式:RTP_TCP = 0, RTP_UDP = 1, RTP_MULTICAST = 2
+            //mk_proxyplayer.MkProxyPlayerSetOption(mk_proxy, "rtp_type", "1");
+            ////设置代理参数 protocol_timeout_ms  协议超时时间 毫秒 更多参数参见mk_proxy_player_set_option注释
+            //mk_proxyplayer.MkProxyPlayerSetOption(mk_proxy, "protocol_timeout_ms", "2000");
             //如果是rtsp回放流支持配置开始倍速
             //ZLM_API.mk_proxy_player_set_option(mk_proxy, "rtsp_speed", "1.5");
             //开始播放代理地址
-            mk_proxyplayer.MkProxyPlayerPlay(mk_proxy, item.PullAddr);
-            _players.TryAdd(item.Id, mk_proxy);
-            mk_util.MkIniRelease(option);
+            mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
+            FrameContext context = new FrameContext();
+            context.VideoKey = data.Item.PushKey;
+            IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
+            _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
+
+            mk_player.MkPlayerSetOnResult(mkPlayer, OnPlay, contextPtr);
+            mk_player.MkPlayerSetOnShutdown(mkPlayer, OnShutdown, contextPtr);
+
+            _players.TryAdd(data.Item.Id, mkPlayer);
+            _IdToKeys.TryAdd(data.Item.Id, data.Item.PushKey);
+            _videoKeyItems.TryAdd(data.Item.PushKey, data);
         }
         public void RemovePullProxy(string id)
         {
-            if (_players.TryGetValue(id, out MkProxyPlayerT tmpt))
+            if (_players.TryRemove(id, out MkPlayerT tmpt))
             {
-                mk_proxyplayer.MkProxyPlayerRelease(tmpt);
+                if (_IdToKeys.TryRemove(id, out string tkey))
+                {
+                    _videoKeyItems.TryRemove(tkey, out VideoData tmpval);
+                    if (_contextPtrMap.TryRemove(tkey, out IntPtr contextPtr))
+                    {
+                        CallbackHelper.FreeInstancePtr(contextPtr);
+                    }
+                }
+                mk_player.MkPlayerRelease(tmpt);
             }
         }
-        public void Start(FixVideoOption option, IServiceProvider provider)
+        public void Start(FixVideoOption option, IServiceProvider provider, IDeviceEventListener listener)
         {
             _provider = provider;
             _option = option;
-            _players = new ConcurrentDictionary<string, MkProxyPlayerT>();
+            _listener = listener;
+            _players = new ConcurrentDictionary<string, MkPlayerT>();
+            _videoKeyItems = new ConcurrentDictionary<string, VideoData>();
+            _IdToKeys = new ConcurrentDictionary<string, string>();
+            _contextMap = new ConcurrentDictionary<string, FrameContext>();
+            _contextPtrMap = new ConcurrentDictionary<string, IntPtr>();
             unsafe
             {
 
@@ -193,11 +308,7 @@ namespace FixVideoChannel
                     OnMkMediaPlay = On_mk_media_play,
                     OnMkHttpRequest = On_mk_http_request,
                     OnMkHttpAccess = On_mk_http_access,
-                    OnMkHttpBeforeAccess = On_mk_http_before_access,
-                    OnMkRtspGetRealm = On_mk_rtsp_get_realm,
-                    OnMkRtspAuth = On_mk_rtsp_auth,
                     OnMkRecordMp4 = On_mk_record_mp4,
-                    OnMkShellLogin = On_mk_shell_login,
                     OnMkFlowReport = On_mk_flow_report
                 };
                 MkEvents.MkEventsListen(_mkEvents);
@@ -208,6 +319,69 @@ namespace FixVideoChannel
         public void Stop()
         {
             mk_common.MkStopAllServer();
+        }
+    }
+    public class VideoData
+    {
+        public VideoCaptureItem Item { get; set; }
+        public List<AIDetectorTask> DetectList { get; set; }
+    }
+    public class FrameContext
+    {
+        public string VideoKey { get; set; }
+        public MkMediaT Media { get; set; }
+        public MkDecoderT VideoDecoder { get; set; }
+        public MkTrackT Track { get; set; }
+        public MkSwscaleT Swscale { get; set; }
+    }
+    public static class CallbackHelper
+    {
+        /// <summary>
+        /// 将实例绑定到GCHandle
+        /// </summary>
+        public static IntPtr WrapInstanceToIntPtr(object instance)
+        {
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+            GCHandle handle = GCHandle.Alloc(instance);
+            return GCHandle.ToIntPtr(handle);
+        }
+
+        /// <summary>
+        /// 仅获取实例
+        /// </summary>
+        public static T? UnwrapIntPtrToInstance<T>(IntPtr ptr) where T : class
+        {
+            if (ptr == IntPtr.Zero) return null;
+
+            try
+            {
+                GCHandle handle = GCHandle.FromIntPtr(ptr);
+                return handle.Target as T;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 手动释放句柄（仅在注销时调用）
+        /// </summary>
+        public static void FreeInstancePtr(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero) return;
+
+            try
+            {
+                GCHandle handle = GCHandle.FromIntPtr(ptr);
+                if (handle.IsAllocated)
+                    handle.Free();
+            }
+            catch (Exception)
+            {
+                // 忽略释放失败（比如已释放）
+            }
         }
     }
 }
