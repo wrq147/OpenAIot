@@ -3,42 +3,138 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '6588458ad4a0bbc8ce132fa670a971db3febb1f0'
-    oldFile: !uuid '7d161d8066a6108fcf0914655b9dca364800ede7'
+    newFile: !uuid '018ea7986e140bce00060f9a592dc9a5d3a16134'
+    oldFile: !uuid '6588458ad4a0bbc8ce132fa670a971db3febb1f0'
   /Channel/FixVideoChannel:
-    newFile: !uuid 'd9afdd8a060745e6d5dd2974573662b0ed389d94'
-    oldFile: !uuid '4ae03223f4d1cfa75f70177a69f32eb092d42bcc'
+    newFile: !uuid '4072a66ae827c14edffeb094be0bf61af2faa198'
+    oldFile: !uuid 'd9afdd8a060745e6d5dd2974573662b0ed389d94'
+  /Channel/FixVideoChannel/AIDetectorTask.cs:
+    newFile: !uuid 'c8e72493bb6cc7386b46ec04da2fe4ff40a41d07'
+    oldFile: !uuid 'fd8d4352744b4f5324a80ce31ce5898c8c9b8b73'
+  /Channel/FixVideoChannel/FFmpegLibs:
+    newFile: null
+    oldFile: !uuid '7fa6e3b92f034279e87cbbe90ad5849c3c1a88fd'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux:
+    newFile: null
+    oldFile: !uuid 'f59880d9ddc032d3c350f2af3251a020b6b803ac'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64:
+    newFile: null
+    oldFile: !uuid '5e665b8c5d5788a79e0cb5087903d3fc6bade1f3'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavcodec.so:
+    newFile: null
+    oldFile: !uuid 'cc861aa53458bb618ad7c442ecff1b95a089c6f7'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavdevice.so:
+    newFile: null
+    oldFile: !uuid 'dec1f245169b4887db15a1b2f183080e30f3c3a8'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavfilter.so:
+    newFile: null
+    oldFile: !uuid 'e266c1850a40c3c9ad97d2add79ecf148ee1a82f'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavformat.so:
+    newFile: null
+    oldFile: !uuid 'edf09c9066bd965a9af511902105f9960782bf30'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libavutil.so:
+    newFile: null
+    oldFile: !uuid 'b597567943fbcf9f2442a2519b9b8f326825e50a'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libswresample.so:
+    newFile: null
+    oldFile: !uuid '2e889d71aee34f2bb0a20f5a97913013515fdaec'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/arm64/libswscale.so:
+    newFile: null
+    oldFile: !uuid 'd014847d2a424be40b318ce36967b5389202379a'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64:
+    newFile: null
+    oldFile: !uuid 'b254b59308951e8f0e9934446d51acb3a189fdc7'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavcodec.so:
+    newFile: null
+    oldFile: !uuid '27408b1e2d1fd4cd474bdba7f3fe76e831aca8ba'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavdevice.so:
+    newFile: null
+    oldFile: !uuid '514f27f0dea04cf147346399ce031ddadcc11080'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavfilter.so:
+    newFile: null
+    oldFile: !uuid 'd6bc69e9e1f5c22b1c4e892031f3b6c30090b260'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavformat.so:
+    newFile: null
+    oldFile: !uuid 'ec2309e7993a5c898368fde3c91ea4a9f6d676d0'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libavutil.so:
+    newFile: null
+    oldFile: !uuid 'c238a716da4ad72a4295f95f2366f767ec91e077'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libswresample.so:
+    newFile: null
+    oldFile: !uuid '8794b5f9fde47489a1c3be727c34ba1dbc3c383b'
+  /Channel/FixVideoChannel/FFmpegLibs/Linux/x64/libswscale.so:
+    newFile: null
+    oldFile: !uuid 'c2a7d624add8cbcb5a5780421e13e257b2fdc505'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows:
+    newFile: null
+    oldFile: !uuid 'a7d3b2ca574e3322bdba66495200262829eefdca'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64:
+    newFile: null
+    oldFile: !uuid 'a467c3f44d5dc0e3f5bd3057e07f2fb86cb58bea'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avcodec-61.dll:
+    newFile: null
+    oldFile: !uuid '3cea49676a29e3d6b4278f371858b00b112dfd82'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avdevice-61.dll:
+    newFile: null
+    oldFile: !uuid 'c83c7b177940f5e7efd78b27b440f0d28d7ed27b'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avfilter-10.dll:
+    newFile: null
+    oldFile: !uuid '825d6e39836eb4e56e3c984b5b0cca55d26506ba'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avformat-61.dll:
+    newFile: null
+    oldFile: !uuid 'e65cb5dab91e9f7cc0d1dd3b44e549777042ee9e'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avutil-59.dll:
+    newFile: null
+    oldFile: !uuid '24154bee05cd8d4ae69ac154c3430b3419737e65'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/postproc-58.dll:
+    newFile: null
+    oldFile: !uuid 'dd40d1ac8210e404003121d2aed5868738155dbc'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swresample-5.dll:
+    newFile: null
+    oldFile: !uuid '4c30ac54e288e6950cd6e08900662d9f90cb7c34'
+  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swscale-8.dll:
+    newFile: null
+    oldFile: !uuid '08469774f04365b71b765a4183f828979426e608'
   /Channel/FixVideoChannel/FixVideoChannel.csproj:
-    newFile: !uuid 'a853b18610cf754675c1f76e172c71707b53b44f'
-    oldFile: !uuid 'c08e4bd9c1a1cb9d5bb31e9194e02173d32e494d'
+    newFile: !uuid 'c6c55f332eac2da80b211b81bb00416cd64f15c8'
+    oldFile: !uuid 'a853b18610cf754675c1f76e172c71707b53b44f'
   /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
-    newFile: !uuid 'ff7ba9c50005bbd65886bef2288263dd8c080443'
-    oldFile: !uuid '51e04cf3534f858894d8af09bbc28c7797a54f41'
-  /Channel/FixVideoChannel/FixVideoOption.cs:
-    newFile: !uuid 'afd367b3efefc08107abff08d990c0df4b2e028d'
-    oldFile: !uuid '796e5b723b4e4ff7046e98eb8cf28def84f72905'
+    newFile: !uuid '343b8017e6ff87d4338512672dfe95a4e2bc5427'
+    oldFile: !uuid 'ff7ba9c50005bbd65886bef2288263dd8c080443'
   /Channel/FixVideoChannel/FixVideoService.cs:
-    newFile: !uuid '7a055f9c49128d60f7095c0fb5e81b4b62857cc1'
-    oldFile: !uuid 'deae2911973515f61a601b224c5bc613ca9b96c5'
-  /Channel/FixVideoChannel/H264Utils.cs:
-    newFile: null
-    oldFile: !uuid 'c667c8f4f99872de90fc64fb272294ef6acf3424'
-  /Channel/FixVideoChannel/StreamProcessor.cs:
-    newFile: null
-    oldFile: !uuid '9a846f6fed902125ca10a830c5b8ea511944ab06'
-  /Channel/FixVideoChannel/StreamTaskScheduler.cs:
-    newFile: null
-    oldFile: !uuid 'da45e0564ec7ee72b2be0a07f624b8aa00e24bbd'
-  /Channel/FixVideoChannel/ZLMediaKitPusher .cs:
-    newFile: null
-    oldFile: !uuid '5fda39814597fda31920302f0fb51dd971977ede'
+    newFile: !uuid '5d605cecf76da6470e6fb579b96ca51be0a74b37'
+    oldFile: !uuid '7a055f9c49128d60f7095c0fb5e81b4b62857cc1'
+  /Channel/FixVideoChannel/IDeviceEventListener.cs:
+    newFile: !uuid 'dfa3930e02e5b03562a6c6b9668388b2e27e3a09'
+    oldFile: !uuid '4fa60be640883cea642acc3251c0235f290d032e'
   /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid 'c459753a7eaf8ec0754bda3ba65d2f578771014a'
-    oldFile: !uuid '84bfbf687494724d43c9bd0daecdaeeb2dc37bc7'
-  /Channel/FixVideoChannel/appsettings.json:
-    newFile: !uuid 'be7195601e269c9bc820ed9213ba45563edf28b2'
-    oldFile: !uuid 'e31f95f81de986810ceae510f9daca55a18d31b3'
-gitCommitId: !uuid 'c0a78e8345a67e6de9fa96d572a2b1a3c4ddd4f0'
+    newFile: !uuid '80ffd5bfcd9b8196cafb41edafc2ff3bf7104aee'
+    oldFile: !uuid 'c459753a7eaf8ec0754bda3ba65d2f578771014a'
+  /Channel/FixVideoChannel/ZLUtility.cs:
+    newFile: !uuid '53c279e0321533303ae93a7e45749e8598173142'
+    oldFile: null
+  /Third:
+    newFile: !uuid 'f823a7593a94ca2941f4cc7bad6dcb917d175078'
+    oldFile: !uuid '813c1999423c4d4bf357e1e9d2abbe4ce16f6ac4'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid '1bbadf965ce3bf52c56bb1ccafb842602a646a02'
+    oldFile: !uuid '44f17f3c0bfafd40ddc89a200124ccd2af3e1c0b'
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
+    newFile: !uuid '1f26a1ecdf72fcd7179035c3144bd1388952b2d4'
+    oldFile: !uuid '60089e98241532828ee9aaa665d7d346c9dcb30d'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid '8426fd96be548a4d4c45bd1f1c6571a1fe6edcc6'
+    oldFile: !uuid 'bd75e566ba822af98b6a0e5509f9660c26dc8c20'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
+    newFile: !uuid '6ebe58d0fc159b2cc4ff9ffb592770384f34e8c4'
+    oldFile: !uuid '47b802ff2eda7e89479bc9f27c948eefb13a30fd'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/arm:
+    newFile: !uuid '4b6b68b7d3009fceb38b9f38386fd05f60f9e829'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/arm/libmk_api.so:
+    newFile: !uuid 'e50a7a15058f727590e979dba9c4222f4ab64a29'
+    oldFile: null
+gitCommitId: !uuid '4b5cb35ef6897af631512c2437b7a3bdffec333e'
 renames: {
   }
-revisionId: 85
+revisionId: 86
