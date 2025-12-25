@@ -3,45 +3,42 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '7d161d8066a6108fcf0914655b9dca364800ede7'
-    oldFile: !uuid 'c26392273bc621969e47606cb6dbe493e906714f'
+    newFile: !uuid '6588458ad4a0bbc8ce132fa670a971db3febb1f0'
+    oldFile: !uuid '7d161d8066a6108fcf0914655b9dca364800ede7'
   /Channel/FixVideoChannel:
-    newFile: !uuid '4ae03223f4d1cfa75f70177a69f32eb092d42bcc'
-    oldFile: !uuid '8d0e81a9d4b55e3fc964da1eec798a640644ff5e'
-  /Channel/FixVideoChannel/FFmpegLibs:
-    newFile: !uuid '7fa6e3b92f034279e87cbbe90ad5849c3c1a88fd'
-    oldFile: !uuid 'a6a04d44543ad9a5752bb5e329a7774764291b84'
-  /Channel/FixVideoChannel/FFmpegLibs/Windows:
-    newFile: !uuid 'a7d3b2ca574e3322bdba66495200262829eefdca'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64:
-    newFile: !uuid 'a467c3f44d5dc0e3f5bd3057e07f2fb86cb58bea'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avcodec-61.dll:
-    newFile: !uuid '3cea49676a29e3d6b4278f371858b00b112dfd82'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avdevice-61.dll:
-    newFile: !uuid 'c83c7b177940f5e7efd78b27b440f0d28d7ed27b'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avfilter-10.dll:
-    newFile: !uuid '825d6e39836eb4e56e3c984b5b0cca55d26506ba'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avformat-61.dll:
-    newFile: !uuid 'e65cb5dab91e9f7cc0d1dd3b44e549777042ee9e'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/avutil-59.dll:
-    newFile: !uuid '24154bee05cd8d4ae69ac154c3430b3419737e65'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/postproc-58.dll:
-    newFile: !uuid 'dd40d1ac8210e404003121d2aed5868738155dbc'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swresample-5.dll:
-    newFile: !uuid '4c30ac54e288e6950cd6e08900662d9f90cb7c34'
-    oldFile: null
-  /Channel/FixVideoChannel/FFmpegLibs/Windows/x64/swscale-8.dll:
-    newFile: !uuid '08469774f04365b71b765a4183f828979426e608'
-    oldFile: null
-gitCommitId: !uuid '1eb1b18cb70792c3fea444e4f276993153ff253c'
+    newFile: !uuid 'd9afdd8a060745e6d5dd2974573662b0ed389d94'
+    oldFile: !uuid '4ae03223f4d1cfa75f70177a69f32eb092d42bcc'
+  /Channel/FixVideoChannel/FixVideoChannel.csproj:
+    newFile: !uuid 'a853b18610cf754675c1f76e172c71707b53b44f'
+    oldFile: !uuid 'c08e4bd9c1a1cb9d5bb31e9194e02173d32e494d'
+  /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
+    newFile: !uuid 'ff7ba9c50005bbd65886bef2288263dd8c080443'
+    oldFile: !uuid '51e04cf3534f858894d8af09bbc28c7797a54f41'
+  /Channel/FixVideoChannel/FixVideoOption.cs:
+    newFile: !uuid 'afd367b3efefc08107abff08d990c0df4b2e028d'
+    oldFile: !uuid '796e5b723b4e4ff7046e98eb8cf28def84f72905'
+  /Channel/FixVideoChannel/FixVideoService.cs:
+    newFile: !uuid '7a055f9c49128d60f7095c0fb5e81b4b62857cc1'
+    oldFile: !uuid 'deae2911973515f61a601b224c5bc613ca9b96c5'
+  /Channel/FixVideoChannel/H264Utils.cs:
+    newFile: null
+    oldFile: !uuid 'c667c8f4f99872de90fc64fb272294ef6acf3424'
+  /Channel/FixVideoChannel/StreamProcessor.cs:
+    newFile: null
+    oldFile: !uuid '9a846f6fed902125ca10a830c5b8ea511944ab06'
+  /Channel/FixVideoChannel/StreamTaskScheduler.cs:
+    newFile: null
+    oldFile: !uuid 'da45e0564ec7ee72b2be0a07f624b8aa00e24bbd'
+  /Channel/FixVideoChannel/ZLMediaKitPusher .cs:
+    newFile: null
+    oldFile: !uuid '5fda39814597fda31920302f0fb51dd971977ede'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid 'c459753a7eaf8ec0754bda3ba65d2f578771014a'
+    oldFile: !uuid '84bfbf687494724d43c9bd0daecdaeeb2dc37bc7'
+  /Channel/FixVideoChannel/appsettings.json:
+    newFile: !uuid 'be7195601e269c9bc820ed9213ba45563edf28b2'
+    oldFile: !uuid 'e31f95f81de986810ceae510f9daca55a18d31b3'
+gitCommitId: !uuid 'c0a78e8345a67e6de9fa96d572a2b1a3c4ddd4f0'
 renames: {
   }
-revisionId: 84
+revisionId: 85
