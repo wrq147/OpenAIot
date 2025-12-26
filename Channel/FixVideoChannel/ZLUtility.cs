@@ -1,5 +1,4 @@
-﻿using FFmpeg.AutoGen;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -270,5 +269,19 @@ namespace FixVideoChannel
 
             return planes.ToArray();
         }
+    }
+
+    public enum AVPixelFormat
+    {
+        // 未定义/无效格式
+        AV_PIX_FMT_NONE = -1,
+        // YUV 系列
+        AV_PIX_FMT_YUV420P = 0,     // YUV420P（最常用）
+        AV_PIX_FMT_YUV422P = 4,     // YUV422P
+        AV_PIX_FMT_YUV444P = 5,     // YUV444P
+        AV_PIX_FMT_NV12 = 23,       // NV12（Y + UV 交错）
+                                    // RGB/BGR 系列
+        AV_PIX_FMT_RGB24 = 2,       // RGB24（R→G→B）
+        AV_PIX_FMT_BGR24 = 3        // BGR24（B→G→R，ZLMediaKit 默认）
     }
 }

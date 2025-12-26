@@ -30,7 +30,7 @@ services:
       mynetwork:
         ipv4_address: 172.18.0.2
   database-influxdb:
-    container_name: hdcenter-db-influxdb
+    container_name: mz-db-influxdb
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_BUCKET
@@ -52,7 +52,7 @@ services:
       mynetwork:
         ipv4_address: 172.18.0.3
   database-mysql:
-    container_name: hdcenter-db-mysql
+    container_name: mz-db-mysql
     command: ["mysqld","--innodb_ft_min_token_size=1","--ft_min_word_len=1"]
     environment:
       - MYSQL_ROOT_PASSWORD
@@ -73,7 +73,7 @@ services:
         ipv4_address: 172.18.0.4
   mz-emqx:
     image: emqx:5.7.2
-    container_name: hdcenter-emqx
+    container_name: mz-emqx
     restart: always
     environment:
       - EMQX_LISTENERS__TCP__DEFAULT__BIND
@@ -90,7 +90,7 @@ services:
         ipv4_address: 172.18.0.5
   database-redis:
     command: ${REDIS_COMMAND}
-    container_name: hdcenter-db-redis
+    container_name: mz-db-redis
     ports:
     - mode: ingress
       target: 6379
@@ -102,7 +102,7 @@ services:
       mynetwork:
         ipv4_address: 172.18.0.6
   db-admin-phpmyadmin:
-    container_name: hdcenter-dbadmin-phpmyadmin
+    container_name: mz-dbadmin-phpmyadmin
     environment:
       PMA_HOST: hdcenter-db-mysql
       PMA_PORT: 3306

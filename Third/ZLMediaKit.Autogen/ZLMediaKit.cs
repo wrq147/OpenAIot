@@ -9908,97 +9908,97 @@ namespace ZLMediaKit
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_create", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_create", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkDecoderCreate(IntPtr track, int thread_num);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_create2", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_create2", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkDecoderCreate2(IntPtr track, int thread_num, [MarshalAs(UnmanagedType.LPArray)] string[] codec_name_list);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_release", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_release", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkDecoderRelease(IntPtr ctx, int flush_frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_decode", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_decode", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkDecoderDecode(IntPtr ctx, IntPtr frame, int async, int enable_merge);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_set_max_async_frame_size", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_set_max_async_frame_size", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkDecoderSetMaxAsyncFrameSize(IntPtr ctx, ulong size);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_set_cb", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_set_cb", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkDecoderSetCb(IntPtr ctx, IntPtr cb, IntPtr user_data);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_set_cb2", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_set_cb2", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkDecoderSetCb2(IntPtr ctx, IntPtr cb, IntPtr user_data, IntPtr user_data_free);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_decoder_get_context", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_decoder_get_context", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkDecoderGetContext(IntPtr ctx);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_frame_pix_ref", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_frame_pix_ref", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkFramePixRef(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_frame_pix_unref", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_frame_pix_unref", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkFramePixUnref(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_frame_pix_from_av_frame", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_frame_pix_from_av_frame", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkFramePixFromAvFrame(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_frame_pix_from_buffer", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_frame_pix_from_buffer", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkFramePixFromBuffer(IntPtr[] plane_data, int[] line_size, int plane);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_frame_pix_get_av_frame", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_frame_pix_get_av_frame", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkFramePixGetAvFrame(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_swscale_create", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_swscale_create", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkSwscaleCreate(int output, int width, int height);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_swscale_release", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_swscale_release", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSwscaleRelease(IntPtr ctx);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_swscale_input_frame", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_swscale_input_frame", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkSwscaleInputFrame(IntPtr ctx, IntPtr frame, byte* @out);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_swscale_input_frame2", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_swscale_input_frame2", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkSwscaleInputFrame2(IntPtr ctx, IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_data", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_data", CallingConvention = CallingConvention.Cdecl)]
             internal static extern byte** MkGetAvFrameData(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_data", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_data", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFrameData(IntPtr frame, byte* data, int plane);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_line_size", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_line_size", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int* MkGetAvFrameLineSize(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_line_size", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_line_size", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFrameLineSize(IntPtr frame, int line_size, int plane);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_dts", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_dts", CallingConvention = CallingConvention.Cdecl)]
             internal static extern long MkGetAvFrameDts(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_dts", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_dts", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFrameDts(IntPtr frame, long dts);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_pts", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_pts", CallingConvention = CallingConvention.Cdecl)]
             internal static extern long MkGetAvFramePts(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_pts", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_pts", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFramePts(IntPtr frame, long pts);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_width", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_width", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkGetAvFrameWidth(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_width", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_width", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFrameWidth(IntPtr frame, int width);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_height", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_height", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkGetAvFrameHeight(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_height", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_height", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFrameHeight(IntPtr frame, int height);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_get_av_frame_format", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_format", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkGetAvFrameFormat(IntPtr frame);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("ZLMediaKit", EntryPoint = "mk_set_av_frame_format", CallingConvention = CallingConvention.Cdecl)]
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_format", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkSetAvFrameFormat(IntPtr frame, int format);
         }
 

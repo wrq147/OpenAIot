@@ -1,15 +1,7 @@
 ﻿using ChannelUtility;
-using ChannelUtility.Message;
-using FFmpeg.AutoGen;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 
 namespace FixVideoChannel
@@ -24,33 +16,12 @@ namespace FixVideoChannel
         public FixVideoService(IServiceProvider provider)
         {
             _provider = provider;
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X64)
-            {
-                ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Windows", "x64");
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                if (RuntimeInformation.OSArchitecture == Architecture.X64)
-                {
-                    ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Linux", "x64");
-                }
-                else if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
-                {
-                    ffmpeg.RootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FFmpegLibs", "Linux", "arm64");
-                }
-            }
             _option = provider.GetService<IOptions<FixVideoOption>>().Value;
-            if (string.IsNullOrEmpty(ffmpeg.RootPath))
-            {
-                ffmpeg.RootPath = _option.ffmpeg_path;
-            }
             _deviceEventListener = new FixVideoDeviceEventListener(provider);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            ffmpeg.avformat_network_init();
             var eventBus = _provider.GetService<ClientBusProxy>();
             eventBus.OnSubProductMessage += _deviceEventListener.OnDeviceDownMessage;
 
@@ -65,7 +36,6 @@ namespace FixVideoChannel
         }
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            ffmpeg.avformat_network_deinit();
             ZLMediaKitServer.Instance.Stop();
             return base.StopAsync(cancellationToken);
         }

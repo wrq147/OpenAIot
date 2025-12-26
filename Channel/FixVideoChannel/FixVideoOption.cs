@@ -1,5 +1,4 @@
-﻿using FFmpeg.AutoGen;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +10,6 @@ namespace FixVideoChannel
     {
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
-        public string ffmpeg_path { get; set; }
-        public string zlmedia_path { get; set; }
         public ZLMediaKitItem zlmedia_server { get; set; }
     }
     public class ZLMediaKitItem

@@ -1,6 +1,5 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
-using FFmpeg.AutoGen;
 using Microsoft.Extensions.DependencyInjection;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.Concurrent;
@@ -167,12 +166,19 @@ namespace FixVideoChannel
         private void OnPlay(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
         {
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
-            context.Media = mk_media.MkMediaCreate("_defaultVhost_", "live", context.VideoKey, 0, 0, 0);
             for (int i = 0; i < track_count; i++)
             {
                 MkTrackT mkTrack = (MkTrackT)tracks[i];
                 if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                 {
+                    int videow = mk_track.MkTrackVideoWidth(mkTrack);
+                    int videoh = mk_track.MkTrackVideoHeight(mkTrack);
+                    int codecid = mk_track.MkTrackCodecId(mkTrack);
+                    int vfps = mk_track.MkTrackVideoFps(mkTrack);
+                    int bitrate = mk_track.MkTrackBitRate(mkTrack);
+                    //创建视频轨道
+                    mk_media.MkMediaInitVideo(context.Media, codecid, videow, videoh, vfps, bitrate);
+
                     MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                     context.VideoDecoder = mkDecoder;
                     context.Track = mkTrack;
@@ -182,8 +188,19 @@ namespace FixVideoChannel
                     mk_track.MkTrackAddDelegate(mkTrack, OnParseFrame, user_data);
                     break;
                 }
+                else
+                {
+                    int codecid = mk_track.MkTrackCodecId(mkTrack);
+                    int samplerate = mk_track.MkTrackAudioSampleRate(mkTrack);
+                    int chann = mk_track.MkTrackAudioChannel(mkTrack);
+                    int samplebit = mk_track.MkTrackAudioSampleBit(mkTrack);
+                    //创建音频轨道
+                    mk_media.MkMediaInitAudio(context.Media, codecid, samplerate, chann, samplebit);
+                    break;
+                }
             }
-            _contextMap.TryAdd(context.VideoKey, context);
+
+
         }
         private void OnShutdown(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
         {
@@ -196,11 +213,7 @@ namespace FixVideoChannel
             {
                 mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
             }
-            if (context.Media != null)
-            {
-                mk_media.MkMediaRelease(context.Media);
-            }
-            _contextMap.TryRemove(context.VideoKey, out FrameContext handle);
+
         }
         public void AddPullProxy(VideoData data)
         {
@@ -210,7 +223,6 @@ namespace FixVideoChannel
             }
             //创建播放器
             MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
-            mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
             FrameContext context = new FrameContext();
             context.VideoKey = data.Item.PushKey;
             IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
@@ -222,6 +234,21 @@ namespace FixVideoChannel
             _players.TryAdd(data.Item.Id, mkPlayer);
             _IdToKeys.TryAdd(data.Item.Id, data.Item.PushKey);
             _videoKeyItems.TryAdd(data.Item.PushKey, data);
+            mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
+
+            MkIniT option = mk_util.MkIniCreate();
+            mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_audio", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_rtsp", 1);
+            mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
+            mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
+            mk_util.MkIniSetOptionInt(option, "auto_close", 0);
+            context.Media = mk_media.MkMediaCreate2("_defaultVhost_", "live", context.VideoKey, 0, option);
+            mk_util.MkIniRelease(option);
+            _contextMap.TryAdd(context.VideoKey, context);
         }
         public void RemovePullProxy(string id)
         {
@@ -234,6 +261,13 @@ namespace FixVideoChannel
                     {
                         CallbackHelper.FreeInstancePtr(contextPtr);
                     }
+                    if (_contextMap.TryRemove(tkey, out FrameContext handle))
+                    {
+                        if (handle.Media != null)
+                        {
+                            mk_media.MkMediaRelease(handle.Media);
+                        }
+                    }
                 }
                 mk_player.MkPlayerRelease(tmpt);
             }
@@ -244,7 +278,7 @@ namespace FixVideoChannel
             {
                 if (_videoKeyItems.TryGetValue(tmpkey, out VideoData tmpval))
                 {
-                    foreach(var item in tmpval.DetectList)
+                    foreach (var item in tmpval.DetectList)
                     {
                         item.UpdateBoxList(detType, boxList);
                     }

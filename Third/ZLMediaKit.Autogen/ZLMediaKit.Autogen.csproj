@@ -28,8 +28,44 @@
 		<Link>libmk_api.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="ZLMediaLibs\Windows\x64\avcodec-62.dll">
+		<Link>avcodec-62.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\avdevice-62.dll">
+		<Link>avdevice-62.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\avfilter-11.dll">
+		<Link>avfilter-11.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\avformat-62.dll">
+		<Link>avformat-62.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\avutil-60.dll">
+		<Link>avutil-60.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\libcrypto-3-x64.dll">
+		<Link>libcrypto-3-x64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\libssl-3-x64.dll">
+		<Link>libssl-3-x64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ZLMediaLibs\Windows\x64\mk_api.dll">
 	    <Link>mk_api.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\swresample-6.dll">
+		<Link>swresample-6.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\swscale-9.dll">
+		<Link>swscale-9.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
