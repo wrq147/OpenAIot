@@ -1,10 +1,14 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Common.EventBus;
+using Common.IdGenerator;
+using Common.Share;
 using EasyNetQ;
 using IoTService;
+using IoTService.Models;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
+using JiebaNet.Segmenter;
 using MyAccess.DB.Builder.WhereToSql;
 using System;
 using System.Text;
@@ -18,6 +22,20 @@ namespace IoTVideoService.Business
         public FixVideoBLL(ITAServiceProvider provider)
         {
             _provider = provider;
+        }
+        public virtual async Task<BusResponse<int>> Insert(MZ_VideoSource data, IUserInfo user)
+        {
+            if (user.OrgId <= 0)
+            {
+                return BusResponse<int>.Error(112, "非企业用户无法添加视频源");
+            }
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            data.Id = "VI-" + snowflake.NextId();
+            data.OrgId = user.OrgId;
+            data.VideoKey = MyAccess.Core.StringTool.GetGUID();
+
+            int rs = await _provider.GetService<VideoSourceDAL>().Insert(data);
+            return BusResponse<int>.Success(rs);
         }
         private async Task DownUpVideoItemMessage(string nodeid, VideoCaptureItem item, List<AIDetectItem> detectList)
         {

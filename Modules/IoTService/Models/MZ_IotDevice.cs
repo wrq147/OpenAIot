@@ -122,10 +122,7 @@ namespace IoTService.Models
         /// 信号强度
         /// </summary>
         public float? dBm { get; set; }
-        /// <summary>
-        /// 设备类型：0为普通设备，1为视频设备
-        /// </summary>
-        public byte? DevType { get; set; }
+
         /// <summary>
         /// 标签列表
         /// </summary>
