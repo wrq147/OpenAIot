@@ -2,82 +2,40 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '4ec5cd1af937eaeb4c9204f01fefd185a5f9a9b9'
-    oldFile: !uuid '018ea7986e140bce00060f9a592dc9a5d3a16134'
-  /Channel/FixVideoChannel:
-    newFile: !uuid 'a9d95d490843115170d994a53946aec4634ac5ee'
-    oldFile: !uuid '4072a66ae827c14edffeb094be0bf61af2faa198'
-  /Channel/FixVideoChannel/FixVideoOption.cs:
-    newFile: !uuid '9c790606f29f8ca7149aba75248c1c04a0638c3a'
-    oldFile: !uuid 'afd367b3efefc08107abff08d990c0df4b2e028d'
-  /Channel/FixVideoChannel/FixVideoService.cs:
-    newFile: !uuid '7ea98a2bc53dddc1ff7364371d48acf0524308ab'
-    oldFile: !uuid '5d605cecf76da6470e6fb579b96ca51be0a74b37'
-  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid 'e0a03faf046477395e10abb1ff39ee652eb87fa7'
-    oldFile: !uuid '80ffd5bfcd9b8196cafb41edafc2ff3bf7104aee'
-  /Channel/FixVideoChannel/ZLUtility.cs:
-    newFile: !uuid '84d9ce595857a39dbbe27cfc5622409bc0d2d1d1'
-    oldFile: !uuid '53c279e0321533303ae93a7e45749e8598173142'
-  /Channel/FixVideoChannel/appsettings.json:
-    newFile: !uuid 'b9310de9159533f7ee377c88bbc56b120eab7db4'
-    oldFile: !uuid 'be7195601e269c9bc820ed9213ba45563edf28b2'
-  /Third:
-    newFile: !uuid '8657cfe31b9fa683724d39b602121d8bdd98d260'
-    oldFile: !uuid 'e07c43ec9e21f4e2b8796d13d819740119bfc74b'
-  /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '13a3d638fc2651796e03dc4323dd4315910b7563'
-    oldFile: !uuid '011528562887e57ab30184985a7c969fe790d0fe'
-  /Third/ZLMediaKit.Autogen/MarshalUtil.cs:
-    newFile: !uuid '1f8242be52f67086c8ec63a69d70167e8b6e5c69'
-    oldFile: !uuid 'b3795a206548ee8ec06cd27b47e8b0986a83e727'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
-    newFile: !uuid '6eb6b402db58efaa8cd811c8279f2ff97be3d33e'
-    oldFile: !uuid '1f26a1ecdf72fcd7179035c3144bd1388952b2d4'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
-    newFile: !uuid 'd3c5627d9e431bd70c66c407533c6f35daced44d'
-    oldFile: !uuid '05256367b73a1cda650e45fd661386a774ece552'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: !uuid 'acd1b96ebd72c39758f12d34e7f93951122faee6'
-    oldFile: !uuid '0859fae32e32b089033d650415d54fae71eed78a'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
-    newFile: !uuid 'b9b188f5af326a1254bf7112cd9e080babcae7c6'
-    oldFile: !uuid '9f923a01029ae1b36e52c69bf6b9436c12f589e9'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
-    newFile: !uuid '0881ddccb9e2ff85a98d41c593ba283d13983f09'
-    oldFile: !uuid 'd43f1235076f91181da539aeb365132c565c5256'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avcodec-62.dll:
-    newFile: !uuid '359ed3915a8788995e1e04fa446b561fc57b7fdf'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avdevice-62.dll:
-    newFile: !uuid '13baf7fdef4d3931f2a93819f925a0a852859119'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avfilter-11.dll:
-    newFile: !uuid 'b86a0b40f1b43967baaf9b32dcb18fbe51a7f599'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avformat-62.dll:
-    newFile: !uuid '5834ef72abf363edeb0b73553445acf7fb6cf331'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avutil-60.dll:
-    newFile: !uuid 'd63844b1e61d71f78560062f95ab222cca26817a'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/libcrypto-3-x64.dll:
-    newFile: !uuid '9be8d3b2c821bea34d122b0c0e147d8f2256750c'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/libssl-3-x64.dll:
-    newFile: !uuid 'f6d8bdc934f8159f574c4d6af54aff79d71e0713'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swresample-6.dll:
-    newFile: !uuid '333c46c0c38cf7eafd74439ece73255ce584281c'
-    oldFile: null
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swscale-9.dll:
-    newFile: !uuid '62d83d0b63840711df2a687a68f21728722e34cc'
-    oldFile: null
-  /docker-compose.yml:
-    newFile: !uuid 'e98b69214129b2c4363785c3ec852df36298b164'
-    oldFile: !uuid 'ea0d3003063c919db256153b803d22785f2f0afa'
-gitCommitId: !uuid '59e80a8f5aee5063dc7b90327fe2afed8daa2e5b'
+  /Modules:
+    newFile: !uuid 'f700973f5f393df943658ed561b8bc0dcdaf2a50'
+    oldFile: !uuid 'f53c652b401689d2e04f9a79752d9df966d5182b'
+  /Modules/IoTService:
+    newFile: !uuid 'a722306552c7bc23e8f8222de876131905fd253d'
+    oldFile: !uuid '74e456c3769967d92f8b0fb736d0ee8dab947517'
+  /Modules/IoTService/Business:
+    newFile: !uuid '414a6609d41ff70a1fc9af3c5412e93032f6b28e'
+    oldFile: !uuid 'a5a7c0c52f38fb6c9a7f25aae0888404be740308'
+  /Modules/IoTService/Business/IotDeviceBLL.cs:
+    newFile: !uuid '485c5faceefa167901bce3fd1550ebff4fb3849c'
+    oldFile: !uuid '1275d915216c4b884dad16b9dcf5bc8fae7a5de7'
+  /Modules/IoTService/Migrations:
+    newFile: !uuid 'ee84840e21c86dd39dc5b8f904bba6ee222a3c72'
+    oldFile: !uuid '4e2ae904a766f1fe942a47b23cb43ccde5160f54'
+  /Modules/IoTService/Migrations/IotMigrator.cs:
+    newFile: !uuid 'f0fd13e9cf13ff44051ba1c922207e0c7f3b6c84'
+    oldFile: !uuid '1abb40a50195ca016fc078a725202ff3b411792a'
+  /Modules/IoTService/Models:
+    newFile: !uuid '15c7eddc0a7bf57d50f2a81827aff368a1651e0c'
+    oldFile: !uuid '1c9b91f0cfdc8ed4e61120672b2adb135ac15194'
+  /Modules/IoTService/Models/MZ_IotDevice.cs:
+    newFile: !uuid '5cf0987bafc13bcc03c3ab63b5353df462e5781c'
+    oldFile: !uuid '45df6e5de4ce19d10ae22303ed0b0431c453a366'
+  /Modules/IoTVideoService:
+    newFile: !uuid '78dd02c0f5a9f0fc8be1c4b651a70c26f0ae96aa'
+    oldFile: !uuid '1c17238dccd4b919d70d7e745bb2d76b58083329'
+  /Modules/IoTVideoService/Business:
+    newFile: !uuid '2076d65fd0ee1fc6f3902c6c4ec72ec43a301b15'
+    oldFile: !uuid 'fe41169dcd24cbb53db8afe246d8fde2205df392'
+  /Modules/IoTVideoService/Business/FixVideoBLL.cs:
+    newFile: !uuid '9fc7ef1e1f46ce322fbc6e492ead7c00f55e8346'
+    oldFile: !uuid 'dcf712a784fef3492fc853b216a387dafda13aa0'
+gitCommitId: !uuid 'f6695b8246bab88842f19ff6720a0c9b4fb76e67'
 renames: {
   }
-revisionId: 88
+revisionId: 89
