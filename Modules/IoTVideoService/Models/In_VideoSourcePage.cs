@@ -9,5 +9,6 @@ namespace IoTVideoService.Models
 {
     public class In_VideoSourcePage : BaseQueryParam
     {
+        public string Key { get; set; }
     }
 }

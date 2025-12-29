@@ -293,7 +293,12 @@ namespace AfterService.DAL
             {
                 curcategory = await new SqlBuilder(help).Query<MZ_RoomCategory>().Where(x => x.Id == query.RoomCategory).ToFirstAsync();
             }
-            var tsql = new SqlBuilder(help).Query<Out_KfDevice>().Append("select d.*,p.ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId where ");
+            string roomOn = string.Empty;
+            if (user.OrgId > 0)
+            {
+                roomOn = " and rd.OrgId=" + user.OrgId;
+            }
+            var tsql = new SqlBuilder(help).Query<Out_KfDevice>().Append("select d.*,p.ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where ");
             tsql.Append("(d.UseUserId=" + user.UserId);
 
             if (user.OrgId > 0)
@@ -304,11 +309,12 @@ namespace AfterService.DAL
             }
             tsql.Append(")");
 
+
             if (query.TargetOrgId != null)
             {
                 List<string> keys = new List<string>();
                 keys.Add(query.TargetOrgId.ToString());
-                tsql.Append(" and (").FullSearch("d.OwnerOrgPath", keys).Append(" or rd.TargetOrgId='" + query.TargetOrgId + "')");
+                tsql.Append(" and ").FullSearch("d.OwnerOrgPath", keys);
             }
 
             string scopestr = string.Empty;

@@ -13,8 +13,5 @@
     <ProjectReference Include="..\IoTRulesService\IoTRulesService.csproj" />
     <ProjectReference Include="..\IoTService\IoTService.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controller\" />
-  </ItemGroup>
 
 </Project>

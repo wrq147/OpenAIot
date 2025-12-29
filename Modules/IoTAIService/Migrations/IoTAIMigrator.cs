@@ -58,6 +58,7 @@ namespace IoTAIService.Migrations
                 createId = 0,
                 updateId = 0
             });
+
         }
         public override void Down()
         {

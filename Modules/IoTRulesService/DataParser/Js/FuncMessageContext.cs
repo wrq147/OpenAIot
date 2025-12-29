@@ -226,9 +226,7 @@ namespace IoTRulesService.DataParser.Js
             }
             else
             {
-                var tmpxxxe = TslCache.GetTslModelByDtuId(deviceId, false, _client.Provider);
-                var tsl = tmpxxxe.Result;
-                var tmpres = this._client.Provider.GetService<ServerBusProxy>().DownFunction(tsl.ProductId, deviceId, funId, inputs ?? new Dictionary<string, object>());
+                var tmpres = this._client.Provider.GetService<ServerBusProxy>().DownFunction(string.Empty, deviceId, funId, inputs ?? new Dictionary<string, object>());
                 var res = tmpres.Result;
                 if (!res.IsSuccess())
                 {

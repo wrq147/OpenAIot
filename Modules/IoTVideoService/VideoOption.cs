@@ -9,6 +9,4 @@ namespace IoTVideoService
     public class VideoOption
     {
     }
-   
-
 }

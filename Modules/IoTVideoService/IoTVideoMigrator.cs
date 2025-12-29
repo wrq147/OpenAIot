@@ -3,15 +3,41 @@ using System;
 
 namespace IoTVideoService
 {
-    [Migration(20251219005)]
+    [Migration(20251229001)]
     public class IoTVideoMigrator : Migration
     {
         public override void Up()
         {
+            this.Execute.Sql("delete FROM mz_menu where menu_id=4501");
+            Insert.IntoTable("mz_menu").Row(new
+            {
+                menu_id = 4502,
+                menu_name = "视频源",
+                parent_id = 4000,
+                order_num = 14,
+                path = "video/list",
+                component = "iot/video/list",
+                query = string.Empty,
+                is_frame = 0,
+                is_cache = 0,
+                menu_type = "C",
+                visible = "0",
+                status = "0",
+                perms = "/IoTAIService/Face/ListPage",
+                icon = "haocaiguanli",
+                scope = 0,
+                create_time = DateTime.Now,
+                update_time = DateTime.Now,
+                createId = 0,
+                updateId = 0
+            });
+
+
             Execute.Sql("DROP TABLE IF EXISTS mz_iot_video_source");
             Create.Table("mz_iot_video_source").WithDescription("视频源表")
 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("视频源Id")
 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
+.WithColumn("Position").AsString(50).WithColumnDescription("视频源位置")
 .WithColumn("VideoType").AsByte().WithColumnDescription("摄像头类型:0为固定地址,1为GB/T28181")
 .WithColumn("VideoKey").AsString(128).Unique().WithColumnDescription("ZLMediaKit的视频Key")
 .WithColumn("PullAddr").AsString(255).WithColumnDescription("拉流地址")
@@ -30,7 +56,7 @@ namespace IoTVideoService
             {
                 Id = 731,
                 Name = "智能摄像头",
-                ParentId = 3,
+                ParentId = 1,
                 Sort = 11
             });
 

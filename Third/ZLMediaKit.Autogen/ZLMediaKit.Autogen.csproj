@@ -69,4 +69,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ZLMediaLibs\Linux\arm\" />
+  </ItemGroup>
 </Project>

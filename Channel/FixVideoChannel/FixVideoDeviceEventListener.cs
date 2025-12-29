@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
+using System.Threading.Tasks;
 
 namespace FixVideoChannel
 {
@@ -30,22 +31,10 @@ namespace FixVideoChannel
             await eventBus.Connected(item.Id);
         }
 
-        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] bgrFrame, int width, int height)
+        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] pressData, int width, int height)
         {
-            using (var image = Image.LoadPixelData<Bgr24>(bgrFrame, width, height))
-            using (var ms = new MemoryStream())
-            {
-                // 配置WebP有损压缩参数
-                var webpEncoder = new WebpEncoder
-                {
-                    Method = WebpEncodingMethod.Default
-                };
-
-                image.Save(ms, webpEncoder);
-                byte[] pressData = ms.ToArray();
-                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.PublishAIDetectRequest(videoId, item.DetectType, item.DetectParams, item.EnableDraw, pressData, width, height);
-            }
+            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+            await eventBus.PublishAIDetectRequest(videoId, item.DetectType, item.DetectParams, item.EnableDraw, pressData, width, height);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg)

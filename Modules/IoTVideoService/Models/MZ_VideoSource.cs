@@ -20,7 +20,11 @@ namespace IoTVideoService.Models
         /// </summary>
         public long? OrgId { get; set; }
         /// <summary>
-        /// 摄像头类型:0为固定地址,1为GB/T28181
+        /// 视频源位置
+        /// </summary>
+        public string Position { get; set; }
+        /// <summary>
+        /// 摄像头类型:0为固定地址,1为GB28181
         /// </summary>
         public byte? VideoType { get; set; }
         /// <summary>
@@ -32,11 +36,11 @@ namespace IoTVideoService.Models
         /// </summary>
         public string PullAddr { get; set; }
         /// <summary>
-        /// 用户名
+        /// 注册用户名
         /// </summary>
         public string UserName { get; set; }
         /// <summary>
-        /// 密码
+        /// 注册密码
         /// </summary>
         public string UserPwd { get; set; }
         /// <summary>

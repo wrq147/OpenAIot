@@ -24,11 +24,11 @@ namespace FixVideoChannel
         /// </summary>
         /// <param name="videoId"></param>
         /// <param name="item"></param>
-        /// <param name="rgbFrame"></param>
+        /// <param name="pressData"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] bgrFrame, int width, int height);
+        Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] pressData, int width, int height);
 
         /// <summary>
         /// 处理平台下发消息

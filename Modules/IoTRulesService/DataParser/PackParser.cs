@@ -404,7 +404,15 @@ namespace IoTRulesService.DataParser
         {
             if (ret == null)
             {
-                ret = await TslCache.GetTslModel(msg.ProductId, _provider).ConfigureAwait(false);
+                if (string.IsNullOrEmpty(msg.ProductId))
+                {
+                    ret = await TslCache.GetTslModelByDtuId(msg.DeviceId, false, _provider).ConfigureAwait(false);
+                    msg.ProductId = ret.ProductId;
+                }
+                else
+                {
+                    ret = await TslCache.GetTslModel(msg.ProductId, _provider).ConfigureAwait(false);
+                }
             }
 
             if (msg is RawDataMessage rawdata)

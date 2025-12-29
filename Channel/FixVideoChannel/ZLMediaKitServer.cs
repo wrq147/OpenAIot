@@ -1,11 +1,14 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using System.Text;
 using ZLMediaKit;
+using static ZLMediaKit.CodecArgs;
 
 namespace FixVideoChannel
 {
@@ -44,6 +47,7 @@ namespace FixVideoChannel
         {
             var mkFrame = (MkFrameT)frame;
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            context.CurrentFrame++;
             if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
             {
                 if (item.DetectList.Count > 0)
@@ -64,13 +68,7 @@ namespace FixVideoChannel
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
-            int align = 32;
-            int pixel_size = 3;
-            int raw_linesize = w * pixel_size;
-            // 对齐后的宽度
-            int aligned_linesize = (raw_linesize + align - 1) & ~(align - 1);
-            int total_size = aligned_linesize * h;
-            byte[] bgr24 = new byte[total_size];
+            byte[] bgr24 = FrameBufferPool.GetBgr24Buffer(context.VideoKey, w, h);
             unsafe
             {
                 fixed (byte* pBgr = bgr24)
@@ -82,9 +80,34 @@ namespace FixVideoChannel
             if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
             {
                 bool hasDraw = false;
-                var detectTasks = item.DetectList.ToArray();
-                // 执行AI检测
-                detectTasks.Select(t => t.Detect(item.Item.Id, bgr24, w, h, _listener));
+                var detectTasks = item.DetectList;
+                if (context.CurrentFrame > item.Item.FrameInterval)
+                {
+                    // 压缩数据
+                    byte[] pressData = null;
+                    using (var image = Image.LoadPixelData<Bgr24>(bgr24, w, h))
+                    using (var ms = new MemoryStream())
+                    {
+                        // 配置WebP有损压缩参数
+                        var webpEncoder = new WebpEncoder
+                        {
+                            Method = WebpEncodingMethod.Default
+                        };
+
+                        image.Save(ms, webpEncoder);
+                        pressData = ms.ToArray();
+                    }
+                    // 执行AI检测
+                    if (pressData != null)
+                    {
+                        foreach (var task in detectTasks)
+                        {
+                            task.Detect(item.Item.Id, pressData, w, h, _listener);
+                        }
+                    }
+   
+                    context.CurrentFrame = 0;
+                }
                 // 执行绘制
                 foreach (var t in detectTasks)
                 {
@@ -97,7 +120,8 @@ namespace FixVideoChannel
                 {
                     byte[] yuvData;
                     int[] yuvLineSizes;
-                    if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, aligned_linesize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                    int alignedLineSize = (w * 3 + 31) & ~31;
+                    if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                     {
                         return;
                     }
@@ -105,14 +129,17 @@ namespace FixVideoChannel
                     // 2. 拆分YUV平面数据指针（适配ZLMediaKit的string[]参数）
                     string[] yuvPlanes = ZLUtility.SplitYuvPlanes(yuvData, w, h, (AVPixelFormat)pixFmt);
                     mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
+
+                    FrameBufferPool.ReturnBgr24Buffer(context.VideoKey, bgr24);
                     return;
                 }
             }
+
             if (context.LastFrame != null)
             {
                 mk_media.MkMediaInputFrame(context.Media, context.LastFrame);
             }
-
+            FrameBufferPool.ReturnBgr24Buffer(context.VideoKey, bgr24);
         }
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
@@ -224,6 +251,7 @@ namespace FixVideoChannel
             //创建播放器
             MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
             FrameContext context = new FrameContext();
+            context.CurrentFrame = 0;
             context.VideoKey = data.Item.PushKey;
             IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
             _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
@@ -348,6 +376,7 @@ namespace FixVideoChannel
     }
     public class FrameContext
     {
+        public int CurrentFrame { get; set; }
         public string VideoKey { get; set; }
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }

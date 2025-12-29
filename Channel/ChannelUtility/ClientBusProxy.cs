@@ -375,11 +375,11 @@ namespace ChannelUtility
         /// <param name="detectType"></param>
         /// <param name="detParams"></param>
         /// <param name="isDraw"></param>
-        /// <param name="rgbFrame"></param>
+        /// <param name="frameData"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, string> detParams, bool isDraw, byte[] rgbFrame, int width, int height)
+        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, string> detParams, bool isDraw, byte[] frameData, int width, int height)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
@@ -387,7 +387,7 @@ namespace ChannelUtility
             msg.DetType = detectType;
             msg.IsDraw = isDraw;
             msg.DetParams = detParams;
-            msg.RgbFrame = rgbFrame;
+            msg.RgbFrame = frameData;
             msg.Width = width;
             msg.Height = height;
             msg.NodeId = this._nodeGuid;

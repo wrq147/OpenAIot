@@ -112,7 +112,7 @@ namespace IoTService.Business
             List<Out_DeviceRunStatistics> tlist = new List<Out_DeviceRunStatistics>();
             foreach (string item in data.StateList)
             {
-                if (data.OrgId > 0)
+                if (data.OrgId > 0 && data.OrgId != user.OrgId)
                 {
                     var tmpcount = await _deviceDAL.SelectDStatusByOrgId(user, data.OrgId, item);
                     tlist.Add(new Out_DeviceRunStatistics()

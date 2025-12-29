@@ -1,9 +1,12 @@
-﻿using ChannelUtility.Message;
+﻿using ChannelUtility;
+using ChannelUtility.Message;
+using Microsoft.Extensions.DependencyInjection;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Fonts;
 using System;
 namespace FixVideoChannel
 {
@@ -60,13 +63,13 @@ namespace FixVideoChannel
             }
         }
         // AI检测
-        public async Task Detect(string videoId, byte[] bgrFrame, int width, int height, IDeviceEventListener listener)
+        public void Detect(string videoId, byte[] pressData, int width, int height, IDeviceEventListener listener)
         {
             if (listener == null)
             {
                 return;
             }
-            await listener.OnSendAIDetectRequest(videoId, _item, bgrFrame, width, height);
+            listener.OnSendAIDetectRequest(videoId, _item, pressData, width, height);
         }
         public bool Draw(byte[] bgrFrame, int width, int height)
         {
@@ -74,14 +77,15 @@ namespace FixVideoChannel
             {
                 return false;
             }
-            if (_boxs.Count == 0)
+            var tmpboxArr = _boxs;
+            if (tmpboxArr.Count == 0)
             {
                 return false;
             }
             using var image = Image.LoadPixelData<Bgr24>(bgrFrame, width, height);
 
             // 遍历所有检测框
-            foreach (var box in _boxs)
+            foreach (var box in tmpboxArr)
             {
                 // 1. 坐标校验与裁剪（防止越界）
                 int x1 = (int)Math.Max(0, box.x1);

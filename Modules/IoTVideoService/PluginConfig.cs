@@ -20,7 +20,7 @@ namespace IoTVideoService
 
         protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
         {
-            services.AddBLL<FixVideoBLL>();
+            services.AddBLL<VideoSourceBLL>();
             services.AddDAL<VideoSourceDAL>();
             services.Configure<VideoOption>(config.GetSection("IoTVideoService"));
         }
@@ -39,11 +39,11 @@ namespace IoTVideoService
             {
                 case "MediaNF":
                     MediaNotFoundMessage nfmsg = (MediaNotFoundMessage)msg;
-                    await _provider.GetService<FixVideoBLL>().CollectVideo(nfmsg);
+                    await _provider.GetService<VideoSourceBLL>().CollectVideo(nfmsg);
                     break;
                 case "MediaNR":
                     MediaNotReaderMessage nrmsg = (MediaNotReaderMessage)msg;
-                    await _provider.GetService<FixVideoBLL>().DelVideo(nrmsg);
+                    await _provider.GetService<VideoSourceBLL>().DelVideo(nrmsg);
                     break;
             }
         }

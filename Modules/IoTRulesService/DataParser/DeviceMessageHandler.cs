@@ -317,7 +317,16 @@ namespace IoTRulesService.DataParser
                         {
                             ReadPropertyMessageReply rdmsg = (ReadPropertyMessageReply)rs;
                             //根据物模型转换设备属性
-                            model = await TslCache.GetTslModel(rs.ProductId, redis, _provider);
+                            if (string.IsNullOrEmpty(rdmsg.ProductId))
+                            {
+                                model = await TslCache.GetTslModelByDtuId(rdmsg.DeviceId, false, _provider);
+                                rdmsg.ProductId = model.ProductId;
+                            }
+                            else
+                            {
+                                model = await TslCache.GetTslModel(rs.ProductId, redis, _provider);
+                            }
+     
                             var deviceCahce = _provider.GetService<DeviceCache>();
                             //获取所有旧属性数据
                             var allDict = await deviceCahce.GetDevice(rdmsg.DeviceId);
