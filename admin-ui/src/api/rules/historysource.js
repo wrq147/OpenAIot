@@ -34,7 +34,7 @@ export function addHistorySource(data) {
         data: data
     })
 }
-// 供应商编辑
+
 export function editHistorySource(data) {
     return request({
         url: '/IoTService/IotSource/Edit',

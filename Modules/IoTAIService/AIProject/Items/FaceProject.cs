@@ -16,6 +16,7 @@ namespace IoTAIService.AIProject.Items
             await redis.HashSetAsync("AI-Items", "Face", new AIProjectInfo()
             {
                 Name = "人脸识别",
+                Code = "Face",
                 Remark = "人脸检测与识别是基于人工智能的生物识别技术，通过设备采集人脸图像，先检测定位人脸区域，再提取人脸特征并进行比对，实现快速确认人员身份、精准核验等功能。",
                 ParamList = new List<AIProjectParam>()
                 {

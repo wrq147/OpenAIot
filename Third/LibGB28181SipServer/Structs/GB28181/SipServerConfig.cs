@@ -94,23 +94,6 @@ namespace LibGB28181SipServer.Structs.GB28181
             set => _authentication = value;
         }
 
-        /// <summary>
-        /// sip用户名
-        /// </summary>
-        public string? SipUsername
-        {
-            get => _sipUsername;
-            set => _sipUsername = value;
-        }
-
-        /// <summary>
-        /// sip密码
-        /// </summary>
-        public string? SipPassword
-        {
-            get => _sipPassword;
-            set => _sipPassword = value;
-        }
 
         /// <summary>
         /// sip消息使用的协议

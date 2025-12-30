@@ -1,15 +1,7 @@
 <template>
   <!-- AI配置中心弹窗 -->
-  <el-dialog
-    title="AI项目配置中心"
-    :visible.sync="visible"
-    width="90%"
-    height="90vh"
-    append-to-body
-    :close-on-click-modal="false"
-    :destroy-on-close="true"
-    class="ai-config-dialog"
-  >
+  <el-dialog v-if="visible" title="AI项目配置中心" :visible.sync="visible" width="90%" height="90vh" append-to-body
+    :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog">
     <div class="ai-config-container">
       <!-- 页面标题 -->
       <div class="page-header">
@@ -28,58 +20,29 @@
                 <span class="header-title">可选AI项目</span>
                 <el-badge :value="optionalProjects.length" class="count-badge" />
               </div>
-              <el-input
-                v-model="optionalSearchText"
-                placeholder="搜索项目名称..."
-                size="small"
-                class="search-input"
-                prefix-icon="el-icon-search"
-                @input="handleOptionalSearch"
-              />
+              <el-input v-model="optionalSearchText" placeholder="搜索项目名称..." size="small" class="search-input"
+                prefix-icon="el-icon-search" @input="handleOptionalSearch" />
             </div>
 
             <!-- 空状态 -->
             <div v-if="filteredOptionalProjects.length === 0" class="empty-state">
               <el-empty :image-size="120">
                 <template slot="description">
-                  <span>暂无可选项目</span><br/>
+                  <span>暂无可选项目</span><br />
                   <span>所有项目已添加至配置列表</span>
                 </template>
-                <el-button
-                  type="text"
-                  @click="clearAllConfigured"
-                  v-if="configuredProjects.length > 0"
-                >
+                <el-button type="text" @click="clearAllConfigured" v-if="configuredProjects.length > 0">
                   清空已配置列表
                 </el-button>
               </el-empty>
             </div>
 
             <!-- 可选项目表格 -->
-            <el-table
-              v-else
-              :data="filteredOptionalProjects"
-              border
-              stripe
-              style="width: 100%"
-              v-loading="loading"
-              @selection-change="handleSelectionChange"
-              :row-class-name="tableRowClassName"
-              class="project-table"
-            >
+            <el-table v-else :data="filteredOptionalProjects" border stripe style="width: 100%" v-loading="loading"
+              @selection-change="handleSelectionChange" :row-class-name="tableRowClassName" class="project-table">
               <el-table-column type="selection" width="55" />
-              <el-table-column
-                label="项目名称"
-                prop="Name"
-                width="180"
-                align="center"
-              />
-              <el-table-column
-                label="项目描述"
-                prop="Remark"
-                show-overflow-tooltip
-                min-width="200"
-              >
+              <el-table-column label="项目名称" prop="Name" width="180" align="center" />
+              <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip min-width="200">
                 <template slot-scope="scope">
                   <div class="remark-text">{{ scope.row.Remark }}</div>
                 </template>
@@ -88,14 +51,8 @@
 
             <!-- 列尾：操作按钮 -->
             <div class="column-footer">
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                @click="addSelectedProjects"
-                :disabled="selectedProjects.length === 0"
-                class="action-btn"
-                :loading="addLoading"
-              >
+              <el-button type="primary" icon="el-icon-plus" @click="addSelectedProjects"
+                :disabled="selectedProjects.length === 0" class="action-btn" :loading="addLoading">
                 添加选中项目 ({{ selectedProjects.length }})
               </el-button>
             </div>
@@ -115,13 +72,8 @@
                 <span class="header-title">已配置AI项目</span>
                 <el-badge :value="configuredProjects.length" class="count-badge" type="primary" />
               </div>
-              <el-button
-                type="text"
-                icon="el-icon-delete"
-                @click="batchRemoveConfigured"
-                :disabled="configuredProjects.length === 0"
-                class="batch-remove-btn"
-              >
+              <el-button type="text" icon="el-icon-delete" @click="batchRemoveConfigured"
+                :disabled="configuredProjects.length === 0" class="batch-remove-btn">
                 批量移除
               </el-button>
             </div>
@@ -130,82 +82,37 @@
             <div v-if="configuredProjects.length === 0" class="empty-state">
               <el-empty :image-size="120">
                 <template slot="description">
-                  <span>暂无已配置项目</span><br/>
+                  <span>暂无已配置项目</span><br />
                   <span>从左侧选择项目添加</span>
                 </template>
               </el-empty>
             </div>
 
             <!-- 已配置项目表格 -->
-            <el-table
-              v-else
-              :data="configuredProjects"
-              border
-              stripe
-              style="width: 100%"
-              v-loading="loading"
-              class="project-table"
-              row-key="Name"
-              :default-sort="{prop: 'Name', order: 'ascending'}"
-              @sort-change="handleSortChange"
-            >
-              <el-table-column
-                label="项目名称"
-                prop="Name"
-                width="180"
-                sortable="custom"
-                align="center"
-              />
-              <el-table-column
-                label="项目描述"
-                prop="Remark"
-                show-overflow-tooltip
-                min-width="200"
-              >
+            <el-table v-else :data="configuredProjects" border stripe style="width: 100%" v-loading="loading"
+              class="project-table" row-key="Name" :default-sort="{ prop: 'Name', order: 'ascending' }"
+              @sort-change="handleSortChange">
+              <el-table-column label="项目名称" prop="Name" width="180" sortable="custom" align="center" />
+              <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip min-width="200">
                 <template slot-scope="scope">
                   <div class="remark-text">{{ scope.row.Remark }}</div>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="是否启用绘制"
-                width="140"
-                align="center"
-              >
+              <el-table-column label="是否启用绘制" width="140" align="center">
                 <template slot-scope="scope">
-                  <el-switch
-                    v-model="scope.row.enableDraw"
-                    active-text="是"
-                    inactive-text="否"
-                    @change="handleDrawSwitchChange(scope.row)"
-                    class="draw-switch"
-                    active-color="#67c23a"
-                    inactive-color="#909399"
-                  />
+                  <el-switch v-model="scope.row.enableDraw" active-text="是" inactive-text="否"
+                    @change="handleDrawSwitchChange(scope.row)" class="draw-switch" active-color="#67c23a"
+                    inactive-color="#909399" />
                 </template>
               </el-table-column>
-              <el-table-column
-                label="操作"
-                width="200"
-                fixed="right"
-                align="center"
-              >
+              <el-table-column label="操作" width="200" fixed="right" align="center">
                 <template slot-scope="scope">
-                  <el-button
-                    type="primary"
-                    icon="el-icon-setting"
-                    size="mini"
-                    @click="openParamConfig(scope.row)"
-                    class="config-btn"
-                  >
+                  <el-button type="primary" icon="el-icon-setting" size="mini" @click="openParamConfig(scope.row)"
+                    class="config-btn">
                     参数配置
                   </el-button>
-                  <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    size="mini"
-                    @click="removeConfiguredProject(scope.row)"
-                    class="remove-btn"
-                  >
+                  <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeConfiguredProject(scope.row)"
+                    class="remove-btn">
                     移除
                   </el-button>
                 </template>
@@ -218,24 +125,14 @@
       <!-- 弹窗底部按钮 -->
       <div class="dialog-bottom-actions">
         <el-button @click="handleCancel">取消</el-button>
-        <el-button
-          type="primary"
-          @click="handleConfirm"
-          :loading="confirmLoading"
-        >
+        <el-button type="primary" @click="handleConfirm" :loading="confirmLoading">
           确认保存配置
         </el-button>
       </div>
 
       <!-- 参数配置弹窗 -->
-      <el-dialog
-        :title="dialogTitle"
-        :visible.sync="paramConfigDialogVisible"
-        width="70%"
-        append-to-body
-        :close-on-click-modal="false"
-        class="config-dialog"
-      >
+      <el-dialog :title="dialogTitle" :visible.sync="paramConfigDialogVisible" width="70%" append-to-body
+        :close-on-click-modal="false" class="config-dialog">
         <!-- 弹窗头部提示 -->
         <div v-if="currentProject" class="dialog-tips">
           <el-tag size="small" :type="currentProject.enableDraw ? 'success' : 'info'">
@@ -245,77 +142,31 @@
         </div>
 
         <!-- 参数表单 -->
-        <el-form
-          ref="paramForm"
-          :model="paramFormData"
-          label-width="140px"
-          v-if="currentProject"
-          style="margin-top: 20px;"
-          class="param-form"
-        >
-          <el-form-item
-            v-for="(param, index) in currentProject.ParamList"
-            :key="index"
-            :label="param.name"
-            class="param-form-item"
-          >
+        <el-form ref="paramForm" :model="paramFormData" label-width="140px" v-if="currentProject"
+          style="margin-top: 20px;" class="param-form">
+          <el-form-item v-for="(param, index) in currentProject.ParamList" :key="index" :label="param.name"
+            class="param-form-item">
             <!-- 参数类型：float -->
-            <el-input-number
-              v-if="param.type === 'float'"
-              v-model="paramFormData[param.code]"
-              :min="param.min"
-              :max="param.max"
-              :step="0.01"
-              :precision="2"
-              placeholder="请输入数值"
-              class="param-input"
-              size="default"
-            />
-            
+            <el-input-number v-if="param.type === 'float'" v-model="paramFormData[param.code]" :min="param.min"
+              :max="param.max" :step="0.01" :precision="2" placeholder="请输入数值" class="param-input" size="default" />
+
             <!-- 参数类型：boolean -->
-            <el-switch
-              v-else-if="param.type === 'boolean'"
-              v-model="paramFormData[param.code]"
-              active-text="是"
-              inactive-text="否"
-              active-color="#67c23a"
-              inactive-color="#909399"
-              class="param-switch"
-            />
-            
+            <el-switch v-else-if="param.type === 'boolean'" v-model="paramFormData[param.code]" active-text="是"
+              inactive-text="否" active-color="#67c23a" inactive-color="#909399" class="param-switch" />
+
             <!-- 参数类型：enum -->
-            <el-select
-              v-else-if="param.type === 'enum'"
-              v-model="paramFormData[param.code]"
-              placeholder="请选择"
-              class="param-select"
-              size="default"
-            >
-              <el-option
-                v-for="option in param.options || []"
-                :key="option.value"
-                :label="option.label"
-                :value="option.value"
-              />
+            <el-select v-else-if="param.type === 'enum'" v-model="paramFormData[param.code]" placeholder="请选择"
+              class="param-select" size="default">
+              <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
+                :value="option.value" />
             </el-select>
-            
+
             <!-- 参数类型：string -->
-            <el-input
-              v-else-if="param.type === 'string'"
-              v-model="paramFormData[param.code]"
-              placeholder="请输入文本"
-              class="param-input"
-              size="default"
-            />
+            <el-input v-else-if="param.type === 'string'" v-model="paramFormData[param.code]" placeholder="请输入文本"
+              class="param-input" size="default" />
 
             <!-- 帮助提示 -->
-            <el-tooltip
-              effect="dark"
-              :content="param.help"
-              placement="top"
-              enterable
-              class="help-tooltip"
-            >
+            <el-tooltip effect="dark" :content="param.help" placement="top" enterable class="help-tooltip">
               <i class="el-icon-question-circle"></i>
             </el-tooltip>
           </el-form-item>
@@ -324,12 +175,7 @@
         <!-- 弹窗底部 -->
         <div slot="footer" class="dialog-footer">
           <el-button @click="paramConfigDialogVisible = false" class="dialog-btn">取消</el-button>
-          <el-button
-            type="primary"
-            @click="saveParamConfig"
-            :loading="saveLoading"
-            class="dialog-btn primary-btn"
-          >
+          <el-button type="primary" @click="saveParamConfig" :loading="saveLoading" class="dialog-btn primary-btn">
             保存配置
           </el-button>
         </div>
@@ -339,22 +185,12 @@
 </template>
 
 <script>
+import { getAIProjectList } from "@/api/rules/video";
 export default {
   name: 'AIConfigDialog',
-  props: {
-    // 控制弹窗显示/隐藏
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    // 传入初始配置数据
-    initConfig: {
-      type: Array,
-      default: () => []
-    }
-  },
   data() {
     return {
+      visible:false,
       // 加载状态
       loading: false,
       saveLoading: false,
@@ -374,108 +210,11 @@ export default {
       optionalSearchText: '',
       // 过滤后的可选项目
       filteredOptionalProjects: [],
-      
-      // 所有AI项目数据源
-      allProjects: [
-        {
-          Name: '人脸识别',
-          Remark: '人脸检测与识别是基于人工智能的生物识别技术，通过设备采集人脸图像，先检测定位人脸区域，再提取人脸特征并进行比对，实现快速确认人员身份、精准核验等功能。',
-          ParamList: [
-            {
-              name: '人脸阈值',
-              code: 'threshold',
-              type: 'float',
-              min: 0,
-              max: 1,
-              help: '0~1的区间值,值越小对人脸的检测越模糊'
-            },
-            {
-              name: '交并阈值',
-              code: 'iou_threshold',
-              type: 'float',
-              min: 0,
-              max: 1,
-              help: '0~1的区间值,值越小越不会检测重合人脸'
-            },
-            {
-              name: '启用人脸库',
-              code: 'enable_house',
-              type: 'boolean',
-              help: '是否匹配人脸库，并触发相应事件'
-            }
-          ],
-          enableDraw: true
-        },
-        {
-          Name: '车辆识别',
-          Remark: '基于AI的车辆特征识别技术，可识别车牌、车型、颜色等信息，应用于交通管控、停车场管理等场景。',
-          ParamList: [
-            {
-              name: '识别精度',
-              code: 'accuracy',
-              type: 'float',
-              min: 0.5,
-              max: 1,
-              help: '识别精度阈值，值越高识别越精准'
-            },
-            {
-              name: '启用车牌识别',
-              code: 'enable_plate',
-              type: 'boolean',
-              help: '是否开启车牌识别功能'
-            }
-          ],
-          enableDraw: true
-        },
-        {
-          Name: '行为分析',
-          Remark: '基于视频流的人体行为分析技术，可识别跌倒、奔跑、聚集等异常行为，适用于安防监控场景。',
-          ParamList: [
-            {
-              name: '检测灵敏度',
-              code: 'sensitivity',
-              type: 'enum',
-              options: [
-                { label: '低', value: 'low' },
-                { label: '中', value: 'medium' },
-                { label: '高', value: 'high' }
-              ],
-              help: '行为检测灵敏度，越高越容易触发告警'
-            },
-            {
-              name: '告警推送地址',
-              code: 'alert_url',
-              type: 'string',
-              help: '异常行为告警的推送接口地址'
-            }
-          ],
-          enableDraw: true
-        }
-      ],
-      
+
       // 可选项目列表
       optionalProjects: [],
       // 已配置项目列表
       configuredProjects: []
-    }
-  },
-  watch: {
-    // 监听弹窗显示状态，初始化数据
-    visible(val) {
-      if (val) {
-        this.initData()
-      }
-    },
-    // 监听初始配置变化
-    initConfig: {
-      handler(val) {
-        if (this.visible) {
-          this.configuredProjects = JSON.parse(JSON.stringify(val))
-          this.initOptionalProjects()
-          this.handleOptionalSearch()
-        }
-      },
-      deep: true
     }
   },
   created() {
@@ -483,16 +222,15 @@ export default {
     this.initData()
   },
   methods: {
+    showDlg() {
+      this.initData();
+      this.visible = true;
+    },
     /**
      * 初始化弹窗数据
      */
     initData() {
-      // 如果有初始配置，使用初始配置
-      if (this.initConfig && this.initConfig.length > 0) {
-        this.configuredProjects = JSON.parse(JSON.stringify(this.initConfig))
-      } else {
-        this.configuredProjects = []
-      }
+      this.configuredProjects = [];
       // 初始化可选项目列表
       this.initOptionalProjects()
       this.filteredOptionalProjects = [].concat(this.optionalProjects)
@@ -504,9 +242,10 @@ export default {
     /**
      * 初始化可选项目列表
      */
-    initOptionalProjects() {
-      this.optionalProjects = this.allProjects.filter(project => {
-        return !this.configuredProjects.some(cp => cp.Name === project.Name)
+    async initOptionalProjects() {
+      let res = await getAIProjectList();
+      this.optionalProjects = res.data.filter(project => {
+        return !this.configuredProjects.some(cp => cp.Code === project.Code)
       })
     },
 
@@ -518,7 +257,7 @@ export default {
         this.filteredOptionalProjects = [].concat(this.optionalProjects)
         return
       }
-      
+
       // 模糊搜索项目名称
       this.filteredOptionalProjects = this.optionalProjects.filter(project => {
         return project.Name.toLowerCase().indexOf(this.optionalSearchText.toLowerCase()) > -1
@@ -570,16 +309,16 @@ export default {
           this.configuredProjects = this.configuredProjects.filter((item, index, self) => {
             return self.findIndex(v => v.Name === item.Name) === index
           })
-          
+
           // 更新可选列表
           this.initOptionalProjects()
           this.handleOptionalSearch() // 保持搜索状态
           this.selectedProjects = []
-          
+
           this.$message.success(`成功添加 ${this.selectedProjects.length} 个项目`)
           this.addLoading = false
         }, 300)
-        
+
       } catch (error) {
         this.$message.error('添加项目失败，请重试')
         this.addLoading = false
@@ -604,7 +343,7 @@ export default {
         // 更新可选列表
         this.initOptionalProjects()
         this.handleOptionalSearch()
-        
+
         this.$message.success('已移除【' + project.Name + '】项目')
       }).catch(() => {
         this.$message.info('已取消移除操作')
@@ -627,7 +366,7 @@ export default {
         this.configuredProjects = []
         this.initOptionalProjects()
         this.handleOptionalSearch()
-        
+
         this.$message.success('已清空所有已配置项目')
       }).catch(() => {
         this.$message.info('已取消批量移除操作')
@@ -659,7 +398,7 @@ export default {
       this.currentProject = JSON.parse(JSON.stringify(row)) // 深拷贝防止实时联动
       this.dialogTitle = this.currentProject.Name + ' - 参数配置'
       this.paramConfigDialogVisible = true
-      
+
       // 初始化表单数据（优先使用已保存的值，无则用默认值）
       this.paramFormData = {}
       row.ParamList.forEach(param => {
@@ -693,7 +432,7 @@ export default {
     saveParamConfig() {
       try {
         this.saveLoading = true
-        
+
         // 模拟接口请求
         setTimeout(() => {
           // 保存参数值到项目对象（实现配置记忆）
@@ -701,16 +440,16 @@ export default {
           if (targetProject) {
             targetProject.paramValues = JSON.parse(JSON.stringify(this.paramFormData))
           }
-          
+
           this.$message.success({
             message: '参数配置保存成功！',
             duration: 1500
           })
-          
+
           this.paramConfigDialogVisible = false
           this.saveLoading = false
         }, 800)
-        
+
       } catch (error) {
         this.$message.error('参数配置保存失败，请重试！')
         console.error('保存失败：', error)
@@ -732,7 +471,7 @@ export default {
     handleConfirm() {
       try {
         this.confirmLoading = true
-        
+
         // 模拟保存请求
         setTimeout(() => {
           // 发送配置数据给父组件
@@ -741,7 +480,7 @@ export default {
           this.$message.success('AI配置保存成功！')
           this.confirmLoading = false
         }, 500)
-        
+
       } catch (error) {
         this.$message.error('保存配置失败，请重试！')
         console.error('确认保存失败：', error)
@@ -923,7 +662,8 @@ export default {
   margin-bottom: 16px;
 }
 
-.param-input, .param-select {
+.param-input,
+.param-select {
   width: 300px;
 }
 

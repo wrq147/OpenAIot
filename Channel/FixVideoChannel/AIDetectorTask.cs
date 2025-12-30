@@ -62,7 +62,7 @@ namespace FixVideoChannel
             }
         }
         // AI检测
-        public void Detect(string videoId, byte[] pressData, int width, int height, IDeviceEventListener listener)
+        public void Detect(string videoId, byte[] pressData, int width, int height, FixVideoDeviceEventListener listener)
         {
             _currentFrame++;
             if (listener == null)
@@ -71,7 +71,7 @@ namespace FixVideoChannel
             }
             if (_currentFrame > _item.FraInter)
             {
-                listener.OnSendAIDetectRequest(videoId, _item, pressData, width, height);
+                Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width, height);
                 _currentFrame = 0;
             }
         }

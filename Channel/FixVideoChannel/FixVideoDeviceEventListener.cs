@@ -1,15 +1,10 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.Threading.Tasks;
 
 namespace FixVideoChannel
 {
-    public class FixVideoDeviceEventListener : IDeviceEventListener
+    public class FixVideoDeviceEventListener
     {
         private IServiceProvider _serviceProvider;
         public FixVideoDeviceEventListener(IServiceProvider provider)

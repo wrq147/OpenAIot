@@ -47,23 +47,10 @@ namespace LibGB28181SipServer
         /// </summary>
         private SIPUDPChannel _sipUdpIpV6Channel = null!;
 
-        public SipServer(ILogger<SipServer> logger, string outConfigPath = "")
+        public SipServer(ILogger<SipServer> logger, SipServerConfig config)
         {
-            ResponseStruct rs;
-            if (!string.IsNullOrEmpty(outConfigPath))
-            {
-                Common.SipServerConfigPath = outConfigPath + "SipServerConfig.json";
-            }
-            Common.Logger = logger;
-            var ret = Common.ReadSipServerConfig(out rs);
-
-            if (ret < 0 || !rs.Code.Equals(ErrorNumber.None))
-            {
-                throw new AkStreamException(rs);
-            }
-
+            Common.SipServerConfig = config;
             Common.SipServer = this;
-            Common.Logger.LogInformation($"[{Common.LoggerHead}]->加载配置文件成功->{Common.SipServerConfigPath}");
         }
 
         /// <summary>
@@ -1861,8 +1848,6 @@ namespace LibGB28181SipServer
             Common.Logger.LogInformation($"[{Common.LoggerHead}]->配置情况->Sip服务协议->{Common.SipServerConfig.MsgProtocol}");
             Common.Logger.LogInformation($"[{Common.LoggerHead}]->配置情况->GB28181协议版本->{Common.SipServerConfig.GbVersion}");
             Common.Logger.LogInformation($"[{Common.LoggerHead}]->配置情况->Sip服务是否启用鉴权->{Common.SipServerConfig.Authentication}");
-            Common.Logger.LogInformation($"[{Common.LoggerHead}]->配置情况->Sip服务鉴权用户名->{Common.SipServerConfig.SipUsername}");
-            Common.Logger.LogInformation($"[{Common.LoggerHead}]->配置情况->Sip服务鉴权密码->{Common.SipServerConfig.SipPassword}");
             Common.Logger.LogInformation($"[{Common.LoggerHead}]->配置情况->Sip服务域ID->{Common.SipServerConfig.Realm}");
             Common.Logger.LogInformation(
                 $"[{Common.LoggerHead}]->配置情况->Sip服务心跳周期（秒）->{Common.SipServerConfig.KeepAliveInterval}");

@@ -41,3 +41,10 @@ export function removeVideoSource(query) {
         params: query
     })
 }
+
+export function getAIProjectList() {
+    return request({
+        url: '/IoTVideoService/Source/AIProjectList',
+        method: 'get'
+    })
+}

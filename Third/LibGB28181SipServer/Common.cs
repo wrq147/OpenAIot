@@ -163,8 +163,6 @@ namespace LibGB28181SipServer
                 {
                     sipServerConfig = new SipServerConfig();
                     sipServerConfig.Authentication = true;
-                    sipServerConfig.SipUsername = "admin";
-                    sipServerConfig.SipPassword = "123#@!qwe";
                     sipServerConfig.GbVersion = "GB-2016";
                     sipServerConfig.MsgProtocol = "TCP"; //使用TCP可以完美支持tcp信令
                     sipServerConfig.SipPort = 5060;

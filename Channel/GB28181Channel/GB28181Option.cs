@@ -5,5 +5,6 @@ namespace GB28181Channel
     {
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
+        public bool ipv6_enable { get; set; }
     }
 }

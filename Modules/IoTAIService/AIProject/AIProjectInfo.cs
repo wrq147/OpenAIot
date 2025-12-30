@@ -13,6 +13,10 @@ namespace IoTAIService
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// AI项目代码
+        /// </summary>
+        public string Code { get; set; }
+        /// <summary>
         /// AI项目备注
         /// </summary>
         public string Remark { get; set; }

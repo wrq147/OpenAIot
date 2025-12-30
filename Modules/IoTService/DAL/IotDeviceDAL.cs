@@ -39,8 +39,11 @@ namespace IoTService.DAL
             {
                 roomOn = " and rd.OrgId=" + user.OrgId;
             }
-            return await new SqlBuilder(help).Query<int>().Append("select count(1) from  mz_iot_device d left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where d.DState=").AppendParam(dStatus).Append(" and (d.UseUserId=" + user.UserId + " or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", xxkeeys).Append(" or d.UseOrgId=" + user.OrgId + ") and ")
-                .FullSearch("d.OwnerOrgPath", keys).Append(scopestr).ToFirstAsync();
+            return await new SqlBuilder(help).Query<int>().Append("select count(1) from  mz_iot_device d left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where d.DState=").AppendParam(dStatus).Append(" and (d.UseUserId=" + user.UserId + " or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", xxkeeys).Append(" or d.UseOrgId=" + user.OrgId + ")")
+                .Then(orgId != user.OrgId, (sql) =>
+                {
+                    sql.Append(" and (").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + orgId + ")");
+                }).Append(scopestr).ToFirstAsync();
         }
         public virtual async Task<Out_DevStatus> SelectStatusByOrgId(Data_ServerTokenInfo user, long orgId)
         {
@@ -62,8 +65,11 @@ namespace IoTService.DAL
             {
                 roomOn = " and rd.OrgId=" + user.OrgId;
             }
-            return await new SqlBuilder(help).Query<Out_DevStatus>().Append("select sum(A) as TotalCount,sum(B) as OnlineCount,sum(C) as OfflineCount,sum(D) as UnknowCount from (select 1 as A,case when d.Online=1 then 1 else 0 end as B,case when d.Online=0 then 1 else 0 end as C,case when d.Online=2 then 1 else 0 end as D from mz_iot_device d left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where (d.UseUserId=" + user.UserId + " or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", tmpsss).Append(" or d.UseOrgId=" + user.OrgId + ") and ")
-                .FullSearch("d.OwnerOrgPath", keys).Append(scopestr + ") as ss").ToFirstAsync();
+            return await new SqlBuilder(help).Query<Out_DevStatus>().Append("select sum(A) as TotalCount,sum(B) as OnlineCount,sum(C) as OfflineCount,sum(D) as UnknowCount from (select 1 as A,case when d.Online=1 then 1 else 0 end as B,case when d.Online=0 then 1 else 0 end as C,case when d.Online=2 then 1 else 0 end as D from mz_iot_device d left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where (d.UseUserId=" + user.UserId + " or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", tmpsss).Append(" or d.UseOrgId=" + user.OrgId + ")")
+                .Then(orgId != user.OrgId, (sql) =>
+                {
+                    sql.Append(" and (").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + orgId + ")");
+                }).Append(scopestr + ") as ss").ToFirstAsync();
         }
         public virtual async Task<PageObject<MZ_IotDevice>> SelectWithGroupPage(In_DeviceListPage query, string classPath, IUserInfo user)
         {

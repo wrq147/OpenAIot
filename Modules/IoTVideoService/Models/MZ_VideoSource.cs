@@ -48,6 +48,14 @@ namespace IoTVideoService.Models
         /// </summary>
         public byte? BitType { get; set; }
         /// <summary>
+        /// GB28181服务的公网主机
+        /// </summary>
+        public string GBPublicAddr { get; set; }
+        /// <summary>
+        /// GB28181服务的公网主机端口
+        /// </summary>
+        public int? GBPublicPort { get; set; }
+        /// <summary>
         /// AI检测任务
         /// </summary>
         public string AITasks { get; set; }
@@ -55,5 +63,10 @@ namespace IoTVideoService.Models
         /// 当前拉流的节点名称，无为空
         /// </summary>
         public string PullNode { get; set; }
+        /// <summary>
+        /// 视频地址
+        /// </summary>
+        [DataIgnore]
+        public string VideoUrl { get; set; }
     }
 }

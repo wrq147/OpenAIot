@@ -182,12 +182,12 @@
                 align="center"
                 key="clearId"
                 prop="clearId"
-                v-if="columns[10].visible"
+                v-if="columns[9].visible"
                 :show-overflow-tooltip="true"
                 width="100"
               >
                 <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.UpdatedOn) }}</span>
+                  <span>{{ scope.row.ClearUser?scope.row.ClearUser.RealName:'' }}</span>
                 </template>
               </el-table-column>
               <el-table-column

@@ -21,6 +21,51 @@
             调整边界框到原始尺寸
             </summary>
         </member>
+        <member name="P:IoTAIService.AIProjectInfo.Name">
+            <summary>
+            AI项目名称
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectInfo.Code">
+            <summary>
+            AI项目代码
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectInfo.Remark">
+            <summary>
+            AI项目备注
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectInfo.ParamList">
+            <summary>
+            AI项目的配置参数
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectParam.name">
+            <summary>
+            参数名称
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectParam.code">
+            <summary>
+            参数标识符
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectParam.type">
+            <summary>
+            参数类型：boolean、enum、float、string
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectParam.help">
+            <summary>
+            参数说明
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectParam.elements">
+            <summary>
+            枚举元素
+            </summary>
+        </member>
         <member name="T:IoTAIService.Controller.Face">
             <summary>
             人脸接口

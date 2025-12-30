@@ -47,6 +47,9 @@ namespace IoTVideoService.Business
             data.OrgId = user.OrgId;
             data.VideoKey = MyAccess.Core.StringTool.GetGUID();
             data.PullNode = string.Empty;
+            data.AITasks ??= string.Empty;
+            data.GBPublicAddr ??= string.Empty;
+            data.GBPublicPort ??= 0;
 
             int rs = await _provider.GetService<VideoSourceDAL>().Insert(data);
             return BusResponse<int>.Success(rs);
@@ -61,6 +64,7 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<MZ_VideoSource>.Error(111, "视频源不存在");
             }
+            info.VideoUrl = $"rtmp://127.0.0.1:1935/live/{info.VideoKey}";
             return BusResponse<MZ_VideoSource>.Success(info);
         }
         public virtual async Task<BusResponse<int>> Update(MZ_VideoSource data, IUserInfo user)
@@ -81,6 +85,14 @@ namespace IoTVideoService.Business
             }
             data.VideoKey = null;
             data.OrgId = null;
+            data.PullNode = null;
+
+            if (old.VideoType == 0 && !string.IsNullOrEmpty(data.PullAddr) && old.PullAddr != data.PullAddr && !string.IsNullOrEmpty(old.PullNode))
+            {
+                //更新拉流
+                old.PullAddr = data.PullAddr;
+                await DownUpVideoItemMessage(old.PullNode, old);
+            }
             return BusResponse<int>.Success(await videoSourceDAL.Update(data));
         }
 
@@ -115,12 +127,26 @@ namespace IoTVideoService.Business
         }
 
 
-        private async Task DownUpVideoItemMessage(string nodeid, VideoCaptureItem item, List<AIDetectItem> detectList)
+        private async Task DownUpVideoItemMessage(string nodeid, MZ_VideoSource source)
         {
+            VideoCaptureItem cpitem = new VideoCaptureItem();
+            cpitem.Id = source.Id;
+            cpitem.PullAddr = source.PullAddr;
+            cpitem.PushKey = source.VideoKey;
+            List<AIDetectItem> detectList;
+            if (string.IsNullOrEmpty(source.AITasks))
+            {
+                detectList = new List<AIDetectItem>();
+            }
+            else
+            {
+                detectList = System.Text.Json.JsonSerializer.Deserialize<List<AIDetectItem>>(source.AITasks);
+            }
+
             UpVideoItemMessage msg = new UpVideoItemMessage();
             msg.DeviceId = string.Empty;
             msg.ProductId = string.Empty;
-            msg.Item = item;
+            msg.Item = cpitem;
             msg.DetectList = detectList;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
@@ -153,7 +179,7 @@ namespace IoTVideoService.Business
                 }
             }
         }
-        private async Task UpdateFixNode()
+        public async Task UpdateFixNode()
         {
             //获取所有固定地址采集节点
             var redisHelper = _provider.GetService<IotRedisHelper>();
@@ -185,9 +211,10 @@ namespace IoTVideoService.Business
                 MZ_VideoSource vs = new MZ_VideoSource();
                 vs.PullNode = string.Empty;
                 var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-                await videoSourceDAL.Update(vs, x => onlineNames.NotContains(x.PullNode));
+                await videoSourceDAL.Update(vs, x => x.VideoType == 0 && onlineNames.NotContains(x.PullNode));
             }
         }
+
         public virtual async Task CollectVideo(MediaNotFoundMessage msg)
         {
             await this.UpdateFixNode();
@@ -208,21 +235,8 @@ namespace IoTVideoService.Business
                 tsource.PullNode = nodeid;
                 tsource.Id = titem.Id;
                 await videoSourceDAL.Update(tsource);
-                VideoCaptureItem cpitem = new VideoCaptureItem();
-                cpitem.Id = titem.Id;
-                cpitem.PullAddr = titem.PullAddr;
-                cpitem.PushKey = titem.VideoKey;
-                List<AIDetectItem> detectList;
-                if (string.IsNullOrEmpty(titem.AITasks))
-                {
-                    detectList = new List<AIDetectItem>();
-                }
-                else
-                {
-                    detectList = System.Text.Json.JsonSerializer.Deserialize<List<AIDetectItem>>(titem.AITasks);
-                }
 
-                await DownUpVideoItemMessage(nodeid, cpitem, detectList);
+                await DownUpVideoItemMessage(nodeid, titem);
             }
 
         }

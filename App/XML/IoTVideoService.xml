@@ -39,6 +39,12 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTVideoService.Controller.Source.AIProjectList">
+            <summary>
+            获取所有AI项目
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:IoTVideoService.Models.In_HookNoneReader.app">
             <summary>
             流应用名

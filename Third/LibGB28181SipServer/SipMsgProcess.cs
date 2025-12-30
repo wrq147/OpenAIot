@@ -690,9 +690,7 @@ namespace LibGB28181SipServer
                             string ha1 = UtilsHelper.Md5(sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username +
                                                          ":" + sipRequest.Header.AuthenticationHeaders[0].SIPDigest
                                                              .Realm +
-                                                         ":" + (string.IsNullOrEmpty(password)
-                                                             ? Common.SipServerConfig.SipPassword
-                                                             : password));
+                                                         ":" + password);
 
                             string ha2 = UtilsHelper.Md5("REGISTER" + ":" +
                                                          sipRequest.Header.AuthenticationHeaders[0].SIPDigest.URI);

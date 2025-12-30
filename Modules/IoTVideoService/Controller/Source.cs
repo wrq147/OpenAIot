@@ -1,8 +1,6 @@
 ﻿using AuthService.Controller;
 using Common;
 using Common.Share;
-using IoTService.Business;
-using IoTService.Models;
 using IoTVideoService.Business;
 using IoTVideoService.Models;
 using System;
@@ -11,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Route;
+using TemplateAction.Core;
 namespace IoTVideoService.Controller
 {
     public class Source : AbstractLoginedController
@@ -75,6 +74,23 @@ namespace IoTVideoService.Controller
         public async Task<DefaultAjaxResult<int>> Remove(string id)
         {
             return (await _videoSourceBLL.Delete(id, GetUser())).ToAjaxResult();
+        }
+
+        /// <summary>
+        /// 获取所有AI项目
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<List<string>>> AIProjectList()
+        {
+            var redis = ServiceProvider.GetService<GeneralRedisHelper>();
+            var dict = await redis.HashGetAllAsync<string>("AI-Items");
+            List<string> rt = new List<string>();
+            foreach(var titem in dict)
+            {
+                rt.Add(titem.Value);
+            }
+            return this.Success(rt);
         }
     }
 }

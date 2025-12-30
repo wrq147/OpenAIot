@@ -24,34 +24,35 @@
                             </div>
                         </el-row>
 
-                        <el-table v-loading="loading" :data="sourceList" class="data_table" 
-                            :header-cell-style="cellSty" style="width:100%" :fit="true">
-                            <el-table-column label="视频源Id" align="center" :show-overflow-tooltip="true">
+                        <el-table v-loading="loading" :data="sourceList" class="data_table" :header-cell-style="cellSty"
+                            style="width:100%" :fit="true">
+                            <el-table-column label="通讯编码" align="center" width="200" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     <el-link @click.stop="handleAdd(scope.row)">{{ scope.row.Id }}</el-link>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="安装位置" prop="Position" :show-overflow-tooltip="true" />
-                            <el-table-column label="VideoType" align="center" width="80">
+                            <el-table-column label="安装位置" prop="Position" width="260" :show-overflow-tooltip="true" />
+                            <el-table-column label="VideoType" align="center" width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.VideoType == 0 ? "固定地址" : "GB28181" }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="视频Key" align="center" prop="VideoKey"
+                            <el-table-column label="视频Key" align="center" prop="VideoKey" width="260"
                                 :show-overflow-tooltip="true" />
-                            <el-table-column label="视频信息" width="260">
+                            <el-table-column label="视频信息">
                                 <template slot-scope="scope">
                                     <div v-if="scope.row.VideoType == 0">
-                                        <span>推流地址：{{ scope.row.PullAddr }},拉流节点：{{ scope.row.PullNode }}</span>
+                                        <div>推流地址：{{ scope.row.PullAddr }}</div>
+                                        <div>拉流节点：{{ scope.row.PullNode == "" ? "暂无" : scope.row.PullNode }}</div>
                                     </div>
                                     <div v-else>
-                                        <span>注册用户名：{{ scope.row.UserName }},注册密码：{{ scope.row.UserPwd }},码流类型：{{
-                                            scope.row.BitType==0?"主码流":"子码流" }}</span>
+                                        <div>注册用户名：{{ scope.row.UserName }},注册密码：{{ scope.row.UserPwd }}</div>
+                                        <div>码流类型：{{ scope.row.BitType == 0 ? "主码流" : "子码流" }}</div>
                                     </div>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center" class-name="small-padding fixed-width"
-                                width="150">
+                                width="220">
                                 <template slot-scope="scope">
                                     <el-button type="text" icon="el-icon-edit"
                                         @click="handleAdd(scope.row)">编辑</el-button>
@@ -69,7 +70,7 @@
             </el-row>
         </div>
         <!-- 新增/编辑视频源弹窗 -->
-        <addvsource ref="addVideo" />
+        <addvsource ref="addVideo" @ResetList="getList" />
         <!-- 配置视频源弹窗 -->
         <aconfig ref="setAconfig" />
     </div>
@@ -135,8 +136,8 @@ export default {
                 this.$refs.addVideo.showDlg(data.Id);
             }
         },
-        handleSet(data){
-
+        handleSet(data) {
+            this.$refs.setAconfig.showDlg();
         },
         /** 删除按钮操作 */
         handleDelete(row) {

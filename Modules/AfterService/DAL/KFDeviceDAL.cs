@@ -310,11 +310,11 @@ namespace AfterService.DAL
             tsql.Append(")");
 
 
-            if (query.TargetOrgId != null)
+            if (query.TargetOrgId != null && query.TargetOrgId != user.OrgId)
             {
                 List<string> keys = new List<string>();
                 keys.Add(query.TargetOrgId.ToString());
-                tsql.Append(" and ").FullSearch("d.OwnerOrgPath", keys);
+                tsql.Append(" and (").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + query.TargetOrgId + ")");
             }
 
             string scopestr = string.Empty;

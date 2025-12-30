@@ -87,18 +87,14 @@ namespace FixVideoChannel
             if (string.IsNullOrEmpty(videoKey) || buffer == null)
                 return;
 
-            // 1. 移除该Key对应的缓存项
+            // 移除该Key对应的缓存项
             if (_keyedBufferCache.TryRemove(videoKey, out var cacheItem) && cacheItem.Buffer == buffer)
             {
-                // 2. 清理缓冲区数据（可选，防止数据泄露）
-                Array.Clear(buffer, 0, Math.Min(buffer.Length, cacheItem.TotalSize));
-
-                // 3. 将缓冲区归还到公共池（不超过最大数量）
+                // 将缓冲区归还到公共池（不超过最大数量）
                 if (_byteBufferPool.Count < MaxPoolCount)
                 {
                     _byteBufferPool.Add(buffer);
                 }
-                // 超过最大数量则直接丢弃，交给GC回收
             }
         }
 
