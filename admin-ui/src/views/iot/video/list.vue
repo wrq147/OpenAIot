@@ -24,7 +24,7 @@
                             </div>
                         </el-row>
 
-                        <el-table v-loading="loading" :data="sourceList" class="data_table" :row-style="isRed"
+                        <el-table v-loading="loading" :data="sourceList" class="data_table" 
                             :header-cell-style="cellSty" style="width:100%" :fit="true">
                             <el-table-column label="视频源Id" align="center" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
@@ -45,13 +45,9 @@
                                         <span>推流地址：{{ scope.row.PullAddr }},拉流节点：{{ scope.row.PullNode }}</span>
                                     </div>
                                     <div v-else>
-
+                                        <span>注册用户名：{{ scope.row.UserName }},注册密码：{{ scope.row.UserPwd }},码流类型：{{
+                                            scope.row.BitType==0?"主码流":"子码流" }}</span>
                                     </div>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="AI检测间隔" prop="FrameInterval">
-                                <template slot-scope="scope">
-                                    <div>{{ scope.row.FrameInterval + "帧一次" }}</div>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center" class-name="small-padding fixed-width"
@@ -59,6 +55,8 @@
                                 <template slot-scope="scope">
                                     <el-button type="text" icon="el-icon-edit"
                                         @click="handleAdd(scope.row)">编辑</el-button>
+                                    <el-button type="text" icon="el-icon-setting"
+                                        @click="handleSet(scope.row)">配置</el-button>
                                     <el-button type="text" icon="el-icon-delete" style="color:red"
                                         @click="handleDelete(scope.row.Id)">删除</el-button>
                                 </template>
@@ -71,14 +69,24 @@
             </el-row>
         </div>
         <!-- 新增/编辑视频源弹窗 -->
-        <add-bom ref="addVideo" :title="title" :dialog-visible="open" @cancelForm="cancelForm" @getList="getList" />
+        <addvsource ref="addVideo" />
+        <!-- 配置视频源弹窗 -->
+        <aconfig ref="setAconfig" />
     </div>
 </template>
 
 <script>
 import { videoSourceList } from "@/api/rules/video";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
+import addvsource from './addvsource.vue'
+import aconfig from './aconfig.vue'
+import { removeVideoSource } from "@/api/rules/video";
+
 export default {
+    components: {
+        addvsource,
+        aconfig
+    },
     mixins: [resizeTableCon],
     data() {
         return {
@@ -93,21 +101,12 @@ export default {
             },
             total: 0,
             sourceList: [],
-            ids: [],
         }
     },
     created() {
         this.getList();
     },
     methods: {
-        isRed({ row }) {
-            let checkIdList = this.ids;
-            if (checkIdList.includes(row.Id)) {
-                return {
-                    backgroundColor: "#F6F9FF"
-                };
-            }
-        },
         getList() {
             this.open = false;
             this.loading = true;
@@ -129,36 +128,15 @@ export default {
         },
         /** 新增按钮操作 */
         handleAdd(data) {
-            if (data === '') {
-                this.title = '新增视频源';
-                this.$refs['addVideo'].ruleForm = {
-                    id: '',
-                    productId: '',
-                    productName: '',
-                    productFrom: '',
-                    specs: '',
-                    quantity: '',
-                    items: []
-                };
-            } else {
-                this.title = '编辑视频源';
-                bomInfo({ id: data.Id }).then((res) => {
-                    res.data.Items.forEach(element => {
-                        element.ProductName = element.ProInfo.ProductName;
-                    });
-                    this.$refs['addVideo'].ruleForm = {
-                        id: res.data.Id,
-                        productName: res.data.ProductName,
-                        productId: res.data.ProductId,
-                        productFrom: '',
-                        specs: '',
-                        quantity: '',
-                        items: res.data.Items
-                    };
-                    this.$refs['addVideo'].getProductInfo(data.ProductId);
-                })
+            if (data == '') {
+                this.$refs.addVideo.showDlg(null);
             }
-            this.open = true;
+            else {
+                this.$refs.addVideo.showDlg(data.Id);
+            }
+        },
+        handleSet(data){
+
         },
         /** 删除按钮操作 */
         handleDelete(row) {
@@ -167,7 +145,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                bomRemove({ id: row.Id }).then(res => {
+                removeVideoSource({ id: row.Id }).then(res => {
                     this.$message.success('删除成功!')
                     this.getList()
                 })

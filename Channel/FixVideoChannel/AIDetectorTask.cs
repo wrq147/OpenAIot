@@ -1,10 +1,8 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
-using Microsoft.Extensions.DependencyInjection;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -48,12 +46,13 @@ namespace FixVideoChannel
             }
         }
         #endregion
-
+        private int _currentFrame;
         private AIDetectItem _item;
         private volatile List<BoxItem> _boxs;
         public AIDetectorTask(AIDetectItem item)
         {
             _item = item;
+            _currentFrame = 0;
         }
         public void UpdateBoxList(string detType, List<BoxItem> items)
         {
@@ -65,11 +64,16 @@ namespace FixVideoChannel
         // AI检测
         public void Detect(string videoId, byte[] pressData, int width, int height, IDeviceEventListener listener)
         {
+            _currentFrame++;
             if (listener == null)
             {
                 return;
             }
-            listener.OnSendAIDetectRequest(videoId, _item, pressData, width, height);
+            if (_currentFrame > _item.FraInter)
+            {
+                listener.OnSendAIDetectRequest(videoId, _item, pressData, width, height);
+                _currentFrame = 0;
+            }
         }
         public bool Draw(byte[] bgrFrame, int width, int height)
         {

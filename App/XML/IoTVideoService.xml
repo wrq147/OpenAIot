@@ -4,6 +4,41 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="M:IoTVideoService.Controller.Source.ListPage(IoTVideoService.Models.In_VideoSourcePage)">
+            <summary>
+            视频源列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Source.Info(System.String)">
+            <summary>
+            获取视频源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Source.Add(IoTVideoService.Models.MZ_VideoSource)">
+            <summary>
+            添加视频源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Source.Edit(IoTVideoService.Models.MZ_VideoSource)">
+            <summary>
+            编辑视频源
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Source.Remove(System.String)">
+            <summary>
+            删除视频源
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="P:IoTVideoService.Models.In_HookNoneReader.app">
             <summary>
             流应用名
@@ -84,9 +119,14 @@
             所属组织ID
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.Position">
+            <summary>
+            视频源位置
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoType">
             <summary>
-            摄像头类型:0为固定地址,1为GB/T28181
+            摄像头类型:0为固定地址,1为GB28181
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoKey">
@@ -101,22 +141,17 @@
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.UserName">
             <summary>
-            用户名
+            注册用户名
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.UserPwd">
             <summary>
-            密码
+            注册密码
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.BitType">
             <summary>
             码流类型：0为主码流，1为子码流
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.FrameInterval">
-            <summary>
-            AI检测帧间隔,默认25帧
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.AITasks">

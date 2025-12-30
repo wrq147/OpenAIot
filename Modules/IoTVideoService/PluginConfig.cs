@@ -1,13 +1,9 @@
 ﻿using ChannelUtility.Message;
 using Common;
-using Common.EventBus;
 using IoTRulesService.DataParser;
-using IoTService;
 using IoTVideoService.Business;
 using IoTVideoService.DAL;
 using Microsoft.Extensions.Configuration;
-using MonitorService.Business;
-using MonitorService.Model;
 using System;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -28,8 +24,6 @@ namespace IoTVideoService
         protected override void Configure(ITAApplication app, PluginObject plg)
         {
             _provider = app.ServiceProvider;
-
-
             app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener += MessageHandler;
         }
 

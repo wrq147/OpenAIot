@@ -29,10 +29,6 @@ namespace ChannelUtility.Message
         /// 推流的流Id
         /// </summary>
         public string PushKey { get; set; }
-        /// <summary>
-        /// AI检测帧间隔,默认25帧
-        /// </summary>
-        public int FrameInterval { get; set; }
     }
     public class AIDetectItem
     {
@@ -44,6 +40,10 @@ namespace ChannelUtility.Message
         /// 是否启用绘制
         /// </summary>
         public bool EnableDraw { get; set; }
+        /// <summary>
+        /// AI检测帧间隔
+        /// </summary>
+        public int FraInter { get; set; }
         /// <summary>
         /// 检测参数
         /// </summary>

@@ -48,10 +48,6 @@ namespace IoTVideoService.Models
         /// </summary>
         public byte? BitType { get; set; }
         /// <summary>
-        /// AI检测帧间隔,默认25帧
-        /// </summary>
-        public int? FrameInterval { get; set; }
-        /// <summary>
         /// AI检测任务
         /// </summary>
         public string AITasks { get; set; }

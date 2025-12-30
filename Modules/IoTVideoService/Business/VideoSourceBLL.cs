@@ -46,6 +46,7 @@ namespace IoTVideoService.Business
             data.Id = "VI-" + snowflake.NextId();
             data.OrgId = user.OrgId;
             data.VideoKey = MyAccess.Core.StringTool.GetGUID();
+            data.PullNode = string.Empty;
 
             int rs = await _provider.GetService<VideoSourceDAL>().Insert(data);
             return BusResponse<int>.Success(rs);
@@ -93,8 +94,18 @@ namespace IoTVideoService.Business
             {
                 var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
                 var iotDeviceDAL = _provider.GetService<IotDeviceDAL>();
+                var info = await videoSourceDAL.Select(id);
+                if (info == null)
+                {
+                    return BusResponse<int>.Error(111, "视频源不存在");
+                }
+                if (!string.IsNullOrEmpty(info.PullNode))
+                {
+                    await DownDelVideoItemMessage(info.PullNode, info.Id);
+                }
                 var rs = await videoSourceDAL.Delete(x => x.OrgId == user.OrgId && x.Id == id);
                 await iotDeviceDAL.Delete(x => x.OrgId == user.OrgId && x.DeviceId == id);
+
                 return BusResponse<int>.Success(rs);
             }
             catch (Exception ex)
@@ -199,7 +210,6 @@ namespace IoTVideoService.Business
                 await videoSourceDAL.Update(tsource);
                 VideoCaptureItem cpitem = new VideoCaptureItem();
                 cpitem.Id = titem.Id;
-                cpitem.FrameInterval = titem.FrameInterval.Value;
                 cpitem.PullAddr = titem.PullAddr;
                 cpitem.PushKey = titem.VideoKey;
                 List<AIDetectItem> detectList;

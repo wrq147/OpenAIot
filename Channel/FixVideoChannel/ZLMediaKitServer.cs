@@ -47,7 +47,6 @@ namespace FixVideoChannel
         {
             var mkFrame = (MkFrameT)frame;
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
-            context.CurrentFrame++;
             if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
             {
                 if (item.DetectList.Count > 0)
@@ -81,33 +80,29 @@ namespace FixVideoChannel
             {
                 bool hasDraw = false;
                 var detectTasks = item.DetectList;
-                if (context.CurrentFrame > item.Item.FrameInterval)
+                // 压缩数据
+                byte[] pressData = null;
+                using (var image = Image.LoadPixelData<Bgr24>(bgr24, w, h))
+                using (var ms = new MemoryStream())
                 {
-                    // 压缩数据
-                    byte[] pressData = null;
-                    using (var image = Image.LoadPixelData<Bgr24>(bgr24, w, h))
-                    using (var ms = new MemoryStream())
+                    // 配置WebP有损压缩参数
+                    var webpEncoder = new WebpEncoder
                     {
-                        // 配置WebP有损压缩参数
-                        var webpEncoder = new WebpEncoder
-                        {
-                            Method = WebpEncodingMethod.Default
-                        };
+                        Method = WebpEncodingMethod.Default
+                    };
 
-                        image.Save(ms, webpEncoder);
-                        pressData = ms.ToArray();
-                    }
-                    // 执行AI检测
-                    if (pressData != null)
-                    {
-                        foreach (var task in detectTasks)
-                        {
-                            task.Detect(item.Item.Id, pressData, w, h, _listener);
-                        }
-                    }
-   
-                    context.CurrentFrame = 0;
+                    image.Save(ms, webpEncoder);
+                    pressData = ms.ToArray();
                 }
+                // 执行AI检测
+                if (pressData != null)
+                {
+                    foreach (var task in detectTasks)
+                    {
+                        task.Detect(item.Item.Id, pressData, w, h, _listener);
+                    }
+                }
+
                 // 执行绘制
                 foreach (var t in detectTasks)
                 {
@@ -251,7 +246,6 @@ namespace FixVideoChannel
             //创建播放器
             MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
             FrameContext context = new FrameContext();
-            context.CurrentFrame = 0;
             context.VideoKey = data.Item.PushKey;
             IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
             _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
@@ -376,7 +370,6 @@ namespace FixVideoChannel
     }
     public class FrameContext
     {
-        public int CurrentFrame { get; set; }
         public string VideoKey { get; set; }
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }

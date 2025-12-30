@@ -33,3 +33,11 @@ export function getVideoDetail(query) {
         params: query
     })
 }
+
+export function removeVideoSource(query) {
+    return request({
+        url: '/IoTVideoService/Source/Remove',
+        method: 'get',
+        params: query
+    })
+}

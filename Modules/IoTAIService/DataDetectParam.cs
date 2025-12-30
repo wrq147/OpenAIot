@@ -35,4 +35,5 @@ namespace IoTAIService
                 return def;
             }
         }
+    }
 }
