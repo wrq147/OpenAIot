@@ -23,12 +23,11 @@
         ]
     },
     "keywords": [
-        "vue",
-        "admin",
-        "dashboard",
-        "element-ui",
-        "flow",
-        "iot"
+        "中台",
+        "物联网",
+        "全生命周期",
+        "mes",
+        "crm"
     ],
     "dependencies": {
         "@handsontable-pro/vue": "^3.1.1",

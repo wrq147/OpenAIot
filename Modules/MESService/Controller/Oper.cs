@@ -43,7 +43,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_ProductOper>> Info(string id)
         {
-            return (await _operBLL.Info(id)).ToAjaxResult();
+            return (await _operBLL.Info(id, this.IntentAction)).ToAjaxResult();
         }
         /// <summary>
         /// 获取工艺路线明细

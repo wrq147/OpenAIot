@@ -260,7 +260,7 @@ export default {
             return false;
           }
         }
-        return !setFormItemHide(item, this.form.RepBat);
+        return !setFormItemHide(item, this.form.RepBat.ExtVals);
       });
       return newFields;
     },

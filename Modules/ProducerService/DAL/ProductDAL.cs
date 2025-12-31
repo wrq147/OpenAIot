@@ -1,4 +1,5 @@
 ﻿using AuthService;
+using AuthService.Fields;
 using Common;
 using Common.Share;
 using MyAccess.DB;
@@ -59,15 +60,7 @@ namespace ProducerService.DAL
                 expression = expression.And((a, b) => a.create_time <= query.endTime);
             }
             var tmpSql = new SqlBuilder(help).Query<MZ_Product>().LeftJoin<MZ_ProductType>((a, b) => a.TypeId == b.Id).Where(expression, "a.*,b.Name as TypeName");
-            if (query.Items != null && query.Items.Length > 0)
-            {
-                //过滤扩展字段
-                foreach (var item in query.Items)
-                {
-                    item.AppendFilter(tmpSql, "a.");
-                }
-            }
-
+            FieldUtility.AppendFilter(tmpSql, query.Items, "a.Id");
             return await tmpSql.GeneratePageObjectAsync(query, "a.create_time desc");
         }
         public virtual async Task<MZ_Product> SelectWithTypeById(string id)

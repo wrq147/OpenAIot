@@ -43,6 +43,8 @@ namespace ProducerService.Business
             }
             var tpage = await _productDAL.SelectByPage(query, user.OrgId, isAgent);
 
+            await FieldUtility.GenerateExtValList(_provider, tpage.List);
+
             //初始化供应商
             var supplierIds = tpage.List.Select(x => x.Supplier).Where(x => !string.IsNullOrEmpty(x)).ToList();
             if (supplierIds.Count > 0)
@@ -145,6 +147,7 @@ namespace ProducerService.Business
                 data.MinUnit = data.Unit;
             }
             data.SetCreateBy(user);
+            await FieldUtility.UpdateFieldEntity(_provider, data, user.OrgId);
             await _productDAL.Insert(data);
 
 
@@ -180,6 +183,7 @@ namespace ProducerService.Business
             {
                 data.IOTProductId = null;
             }
+            await FieldUtility.UpdateFieldEntity(_provider, data, user.OrgId);
             return BusResponse<int>.Success(await _productDAL.Update(data));
         }
 
@@ -194,6 +198,7 @@ namespace ProducerService.Business
             {
                 return BusResponse<int>.Error(112, "产品所属组织错误");
             }
+            await FieldUtility.DeleteFieldEntity(_provider, tmpproduct, user.OrgId);
             var res = await _productDAL.Delete(id);
             await _provider.GetService<ProductBatchDAL>().Delete(x => x.ProductId == id);
             return BusResponse<int>.Success(res);
@@ -234,7 +239,8 @@ namespace ProducerService.Business
                 }
             }
 
-            tmpproduct.ExtObjects = await FieldUtility.GenerateExtForm(_provider, tmpproduct, tmpproduct.OrgId.Value, "产品", ac);
+            await FieldUtility.GenerateExtObject(_provider, tmpproduct, tmpproduct.OrgId.Value, ac);
+            await FieldUtility.GenerateExtVals(_provider, tmpproduct);
             return BusResponse<MZ_Product>.Success(tmpproduct);
         }
 

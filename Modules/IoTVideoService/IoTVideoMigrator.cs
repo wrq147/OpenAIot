@@ -47,7 +47,8 @@ namespace IoTVideoService
 .WithColumn("GBPublicAddr").AsString(64).WithColumnDescription("GB28181服务的公网主机")
 .WithColumn("GBPublicPort").AsInt32().WithColumnDescription("GB28181服务的公网主机端口")
 .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")
-.WithColumn("PullNode").AsString(128).Indexed().WithColumnDescription("当前拉流的节点名称，无为空");
+.WithColumn("PullNode").AsString(128).Indexed().WithColumnDescription("节点GUID")
+.WithColumn("NodeId").AsString(50).Indexed().WithColumnDescription("服务器节点Id");
 
 
 

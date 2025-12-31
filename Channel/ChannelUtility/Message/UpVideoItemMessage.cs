@@ -35,7 +35,7 @@ namespace ChannelUtility.Message
         /// <summary>
         /// 检测类型
         /// </summary>
-        public string DetectType { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// 是否启用绘制
         /// </summary>

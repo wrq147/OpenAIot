@@ -72,43 +72,42 @@
         </el-row>
         <el-row :gutter="10" v-show="dialogName == 'custominfo'">
           <template v-for="(item, ix) in filedTableList">
-            <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,this.form)">
+            <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,this.form.ExtVals)">
               <el-form-item :label="item.name" :prop="item.mapid">
                 <el-select @change="customValChange" :disabled="item.is_readonly" :allow-create="item.is_add"
-                  :multiple="item.type == '复选框'" :clearable="!item.is_required" v-model="form[item.mapid]"
+                  :multiple="item.type == '复选框'" :clearable="!item.is_required" v-model="form.ExtVals[item.mapid]"
                   :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
                   v-if="(item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉')">
                   <template v-for="it in item.optionals">
                     <el-option :label="it" :value="it" :key="it + ix"></el-option>
                   </template>
                 </el-select>
-                <el-radio-group @change="customValChange" :disabled="item.is_readonly" v-model="form[item.mapid]"
+                <el-radio-group @change="customValChange" :disabled="item.is_readonly" v-model="form.ExtVals[item.mapid]"
                   v-if="item.type == '单选框' && item.show_way == '平铺'">
                   <template v-for="it in item.optionals">
                     <el-radio :label="it" :key="it + ix">{{ it }}</el-radio>
                   </template>
                 </el-radio-group>
-                <el-checkbox-group @change="customValChange" :disabled="item.is_readonly" v-model="form[item.mapid]"
+                <el-checkbox-group @change="customValChange" :disabled="item.is_readonly" v-model="form.ExtVals[item.mapid]"
                   v-if="item.type == '复选框' && item.show_way == '平铺'">
                   <template v-for="it in item.optionals">
                     <el-checkbox :label="it" :key="it + ix">{{ it }}</el-checkbox>
                   </template>
                 </el-checkbox-group>
                 <el-date-picker @change="customValChange" :disabled="item.is_readonly" v-if="item.type == '时间'"
-                  v-model="form[item.mapid]" type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+                  v-model="form.ExtVals[item.mapid]" type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
                   style="width: 100%" :value-format="item.format" :format="item.format"></el-date-picker>
                 <el-input @input="customValChange" :disabled="item.is_readonly" v-if="item.type == '文本'"
                   :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
-                  :type="item.is_multiple ? 'textarea' : 'text'" v-model="form[item.mapid]"></el-input>
+                  :type="item.is_multiple ? 'textarea' : 'text'" v-model="form.ExtVals[item.mapid]"></el-input>
                 <el-input @input="customValChange" :disabled="item.is_readonly" v-if="item.type == '数字'"
-                  :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number" v-model="form[item.mapid]"
+                  :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number" v-model="form.ExtVals[item.mapid]"
                   :precision="item.decimals"></el-input>
                 <el-link :disabled="item.is_readonly" v-if="item.type == '超链接'" href="#" target="_blank">{{
                   item.describe_text
                 }}</el-link>
-                <!-- <image-upload @input="customValChange" v-model="form[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
                 <div class="avatar_con" v-if="item.type == '图片'">
-                  <image-upload @input="customValChange($event, item)" v-model="form[item.mapid]" :limit="1"
+                  <image-upload @input="customValChange($event, item)" v-model="form.ExtVals[item.mapid]" :limit="1"
                     :isShowLeft="true">
                     <template #tip>
                       <div class="label_tip">
@@ -120,7 +119,7 @@
                     </template>
                   </image-upload>
                 </div>
-                <file-upload @input="customValChange($event, item)" v-model="form[item.mapid]" :limit="1"
+                <file-upload @input="customValChange($event, item)" v-model="form.ExtVals[item.mapid]" :limit="1"
                   v-if="item.type == '附件'" :isShowLeft="true">
                   <template #tip>
                     <div class="label_tip">
@@ -131,8 +130,8 @@
                     </div>
                   </template>
                 </file-upload>
-                <el-select @focus="afterValSearch(form[item.mapid], item)" :clearable="true"
-                  @change="customValChange2($event, item)" style="width: 100%" v-model="form[item.mapid]" filterable
+                <el-select @focus="afterValSearch(form.ExtVals[item.mapid], item)" :clearable="true"
+                  @change="customValChange2($event, item)" style="width: 100%" v-model="form.ExtVals[item.mapid]" filterable
                   remote reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
                   :remote-method="(query) => associationMethod(query, item)" :loading="Supplierloading"
                   v-if="item.type == '关联对象'">

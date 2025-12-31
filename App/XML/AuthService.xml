@@ -2009,7 +2009,6 @@
             <param name="formobj"></param>
             <param name="field"></param>
             <param name="val"></param>
-            <returns></returns>
         </member>
         <member name="M:AuthService.Fields.FieldUtility.CheckAddForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction,System.Collections.Generic.HashSet{System.String})">
             <summary>
@@ -2037,15 +2036,22 @@
             <param name="filterFields"></param>
             <returns></returns>
         </member>
-        <member name="M:AuthService.Fields.FieldUtility.GenerateExtForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction)">
+        <member name="M:AuthService.Fields.FieldUtility.GenerateExtVals``1(TemplateAction.Core.ITAServiceProvider,``0)">
             <summary>
-            生成表单的扩展信息
+            生成表单的扩展值
+            </summary>
+            <param name="provider"></param>
+            <param name="formobj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.GenerateExtObject``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,TemplateAction.Core.TAAction)">
+            <summary>
+            生成表单的扩展对象
             </summary>
             <typeparam name="T"></typeparam>
             <param name="provider"></param>
             <param name="formobj"></param>
             <param name="orgId"></param>
-            <param name="formName"></param>
             <param name="ac"></param>
             <returns></returns>
         </member>
@@ -2067,6 +2073,16 @@
         <member name="P:AuthService.Fields.HyperlinkField.describe_text">
             <summary>
             描述文字
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.IFieldEntity.ExtObjects">
+            <summary>
+            扩展对象
+            </summary>
+        </member>
+        <member name="P:AuthService.Fields.IFieldEntity.ExtVals">
+            <summary>
+            扩展值
             </summary>
         </member>
         <member name="T:AuthService.Fields.ImageField">
@@ -2733,6 +2749,36 @@
             </summary>
             <param name="ids"></param>
             <returns></returns>
+        </member>
+        <member name="P:AuthService.Model.MZ_FieldVal.Id">
+            <summary>
+            原表Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_FieldVal.FieldId">
+            <summary>
+            字段Id
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_FieldVal.TableName">
+            <summary>
+            原表名
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_FieldVal.LongValue">
+            <summary>
+            保存长文本数据
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_FieldVal.Value">
+            <summary>
+            文本值
+            </summary>
+        </member>
+        <member name="P:AuthService.Model.MZ_FieldVal.NumberValue">
+            <summary>
+            数值
+            </summary>
         </member>
         <member name="T:AuthService.Model.MZ_GroupView">
             <summary>

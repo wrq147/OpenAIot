@@ -1211,6 +1211,11 @@
             状态名称
             </summary>
         </member>
+        <member name="P:ProducerService.Model.MZ_Supplier.ExtVals">
+            <summary>
+            扩展值
+            </summary>
+        </member>
         <member name="P:ProducerService.Model.MZ_Supplier.ExtObjects">
             <summary>
             扩展的关联对象

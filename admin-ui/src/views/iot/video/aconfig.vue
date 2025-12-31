@@ -1,7 +1,7 @@
 <template>
   <!-- AI配置中心弹窗 -->
-  <el-dialog v-if="visible" title="AI项目配置中心" :visible.sync="visible" width="90%" height="90vh" append-to-body
-    :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog">
+  <el-dialog v-if="visible" title="AI项目配置中心" :visible.sync="visible" width="90%" append-to-body
+    :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog" top="2vh">
     <div class="ai-config-container">
       <!-- 页面标题 -->
       <div class="page-header">
@@ -9,7 +9,7 @@
       </div>
 
       <!-- 主内容区 -->
-      <el-card shadow="hover" class="main-card">
+      <div class="main-card">
         <div class="config-layout">
           <!-- 左侧：可选项目列表 -->
           <div class="config-column">
@@ -21,11 +21,11 @@
                 <el-badge :value="optionalProjects.length" class="count-badge" />
               </div>
               <el-input v-model="optionalSearchText" placeholder="搜索项目名称..." size="small" class="search-input"
-                prefix-icon="el-icon-search" @input="handleOptionalSearch" />
+                prefix-icon="el-icon-search" />
             </div>
 
             <!-- 空状态 -->
-            <div v-if="filteredOptionalProjects.length === 0" class="empty-state">
+            <div v-if="optionalProjects.length === 0" class="empty-state">
               <el-empty :image-size="120">
                 <template slot="description">
                   <span>暂无可选项目</span><br />
@@ -38,7 +38,7 @@
             </div>
 
             <!-- 可选项目表格 -->
-            <el-table v-else :data="filteredOptionalProjects" border stripe style="width: 100%" v-loading="loading"
+            <el-table v-else :data="optionalProjects" border stripe style="width: 100%" v-loading="loading"
               @selection-change="handleSelectionChange" :row-class-name="tableRowClassName" class="project-table">
               <el-table-column type="selection" width="55" />
               <el-table-column label="项目名称" prop="Name" width="180" align="center" />
@@ -90,26 +90,24 @@
 
             <!-- 已配置项目表格 -->
             <el-table v-else :data="configuredProjects" border stripe style="width: 100%" v-loading="loading"
-              class="project-table" row-key="Name" :default-sort="{ prop: 'Name', order: 'ascending' }"
-              @sort-change="handleSortChange">
-              <el-table-column label="项目名称" prop="Name" width="180" sortable="custom" align="center" />
-              <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip min-width="200">
+              class="project-table" row-key="Name">
+              <el-table-column label="项目名称" prop="Name" width="180" align="center" />
+              <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip>
                 <template slot-scope="scope">
                   <div class="remark-text">{{ scope.row.Remark }}</div>
                 </template>
               </el-table-column>
-              <el-table-column label="是否启用绘制" width="140" align="center">
+              <el-table-column label="启用绘制" width="80" align="center">
                 <template slot-scope="scope">
-                  <el-switch v-model="scope.row.enableDraw" active-text="是" inactive-text="否"
-                    @change="handleDrawSwitchChange(scope.row)" class="draw-switch" active-color="#67c23a"
-                    inactive-color="#909399" />
+                  <el-switch v-model="scope.row.enableDraw" @change="handleDrawSwitchChange(scope.row)" />
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="200" fixed="right" align="center">
+              <el-table-column label="帧间隔" prop="FraInter" width="80" align="center" />
+              <el-table-column label="操作" width="240" fixed="right" align="center">
                 <template slot-scope="scope">
                   <el-button type="primary" icon="el-icon-setting" size="mini" @click="openParamConfig(scope.row)"
                     class="config-btn">
-                    参数配置
+                    配置参数
                   </el-button>
                   <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeConfiguredProject(scope.row)"
                     class="remove-btn">
@@ -120,7 +118,7 @@
             </el-table>
           </div>
         </div>
-      </el-card>
+      </div>
 
       <!-- 弹窗底部按钮 -->
       <div class="dialog-bottom-actions">
@@ -185,12 +183,12 @@
 </template>
 
 <script>
-import { getAIProjectList } from "@/api/rules/video";
+import { getAIProjectList, getVideoDetail, editVideoSource } from "@/api/rules/video";
 export default {
   name: 'AIConfigDialog',
   data() {
     return {
-      visible:false,
+      visible: false,
       // 加载状态
       loading: false,
       saveLoading: false,
@@ -208,32 +206,70 @@ export default {
       selectedProjects: [],
       // 搜索文本
       optionalSearchText: '',
-      // 过滤后的可选项目
-      filteredOptionalProjects: [],
-
-      // 可选项目列表
-      optionalProjects: [],
       // 已配置项目列表
-      configuredProjects: []
+      configuredProjects: [],
+      allProjects: [],
+      projectId: null
     }
   },
-  created() {
-    // 初始化数据
-    this.initData()
+  computed: {
+    optionalProjects: function () {
+      let tmparr;
+      if (!this.optionalSearchText) {
+        tmparr = this.allProjects.filter(tmpProj => {
+          return !this.configuredProjects.some(cp => cp.Code === tmpProj.Code);
+        });
+      }
+      else {
+        tmparr = this.allProjects.filter(tmpProj => {
+          return !this.configuredProjects.some(cp => cp.Code === tmpProj.Code) && tmpProj.Name.toLowerCase().indexOf(this.optionalSearchText.toLowerCase()) > -1;
+        });
+      }
+
+      return tmparr;
+    }
   },
   methods: {
-    showDlg() {
-      this.initData();
+    showDlg(id) {
+      this.projectId = id;
+      this.initData(id);
       this.visible = true;
     },
     /**
      * 初始化弹窗数据
      */
-    initData() {
+    async initData(id) {
       this.configuredProjects = [];
       // 初始化可选项目列表
-      this.initOptionalProjects()
-      this.filteredOptionalProjects = [].concat(this.optionalProjects)
+      let res = await getAIProjectList();
+      let tmparr = [];
+      for (let i = 0; i < res.data.length; i++) {
+        let tmpProj = JSON.parse(res.data[i]);
+        tmparr.push(tmpProj);
+      }
+      this.allProjects = tmparr;
+      // 初始化已配置项
+      let cres = await getVideoDetail({ id: id });
+      let aitasks = [];
+      let configarr = [];
+      if (cres.data.AITasks != null && cres.data.AITasks != "") {
+        aitasks = JSON.parse(cres.data.AITasks);
+      }
+      if (aitasks.length > 0) {
+        for (let j = 0; j < aitasks.length; j++) {
+          let x = aitasks[j];
+          let prj = this.allProjects.find(x => x.Code == x.Code);
+          if (prj == null) {
+            continue;
+          }
+          x["Name"] = prj.Name;
+          x["Remark"] = prj.Remark;
+          x["ParamList"] = prj.ParamList;
+          configarr.push(x);
+        }
+
+      }
+      this.configuredProjects = configarr;
       // 重置状态
       this.selectedProjects = []
       this.optionalSearchText = ''
@@ -243,45 +279,15 @@ export default {
      * 初始化可选项目列表
      */
     async initOptionalProjects() {
-      let res = await getAIProjectList();
-      this.optionalProjects = res.data.filter(project => {
-        return !this.configuredProjects.some(cp => cp.Code === project.Code)
-      })
+
     },
 
-    /**
-     * 处理可选项目搜索
-     */
-    handleOptionalSearch() {
-      if (!this.optionalSearchText) {
-        this.filteredOptionalProjects = [].concat(this.optionalProjects)
-        return
-      }
-
-      // 模糊搜索项目名称
-      this.filteredOptionalProjects = this.optionalProjects.filter(project => {
-        return project.Name.toLowerCase().indexOf(this.optionalSearchText.toLowerCase()) > -1
-      })
-    },
 
     /**
      * 处理表格行样式
      */
     tableRowClassName(obj) {
       return obj.rowIndex % 2 === 0 ? 'row-even' : 'row-odd'
-    },
-
-    /**
-     * 处理表格排序
-     */
-    handleSortChange(obj) {
-      const prop = obj.prop
-      const order = obj.order
-      if (order === 'ascending') {
-        this.configuredProjects.sort((a, b) => a[prop].localeCompare(b[prop]))
-      } else if (order === 'descending') {
-        this.configuredProjects.sort((a, b) => b[prop].localeCompare(a[prop]))
-      }
     },
 
     /**
@@ -302,23 +308,16 @@ export default {
 
       try {
         this.addLoading = true
-        // 防抖处理
-        setTimeout(() => {
-          // 添加项目并去重
-          this.configuredProjects.push.apply(this.configuredProjects, this.selectedProjects)
-          this.configuredProjects = this.configuredProjects.filter((item, index, self) => {
-            return self.findIndex(v => v.Name === item.Name) === index
-          })
+        for (let i = 0; i < this.selectedProjects.length; i++) {
+          let newitem = JSON.parse(JSON.stringify(this.selectedProjects[i]));
+          newitem["EnableDraw"] = false;
+          newitem["FraInter"] = 25;
+          this.configuredProjects.push(newitem)
+        }
 
-          // 更新可选列表
-          this.initOptionalProjects()
-          this.handleOptionalSearch() // 保持搜索状态
-          this.selectedProjects = []
-
-          this.$message.success(`成功添加 ${this.selectedProjects.length} 个项目`)
-          this.addLoading = false
-        }, 300)
-
+        this.selectedProjects = []
+        this.$message.success(`成功添加 ${this.selectedProjects.length} 个项目`)
+        this.addLoading = false
       } catch (error) {
         this.$message.error('添加项目失败，请重试')
         this.addLoading = false
@@ -340,10 +339,6 @@ export default {
       ).then(() => {
         // 移除项目
         this.configuredProjects = this.configuredProjects.filter(p => p.Name !== project.Name)
-        // 更新可选列表
-        this.initOptionalProjects()
-        this.handleOptionalSearch()
-
         this.$message.success('已移除【' + project.Name + '】项目')
       }).catch(() => {
         this.$message.info('已取消移除操作')
@@ -364,9 +359,6 @@ export default {
         }
       ).then(() => {
         this.configuredProjects = []
-        this.initOptionalProjects()
-        this.handleOptionalSearch()
-
         this.$message.success('已清空所有已配置项目')
       }).catch(() => {
         this.$message.info('已取消批量移除操作')
@@ -429,30 +421,24 @@ export default {
     /**
      * 保存参数配置
      */
-    saveParamConfig() {
+    async saveParamConfig() {
       try {
-        this.saveLoading = true
-
-        // 模拟接口请求
-        setTimeout(() => {
-          // 保存参数值到项目对象（实现配置记忆）
-          const targetProject = this.configuredProjects.find(p => p.Name === this.currentProject.Name)
-          if (targetProject) {
-            targetProject.paramValues = JSON.parse(JSON.stringify(this.paramFormData))
-          }
-
-          this.$message.success({
-            message: '参数配置保存成功！',
-            duration: 1500
-          })
-
-          this.paramConfigDialogVisible = false
-          this.saveLoading = false
-        }, 800)
+        this.saveLoading = true;
+        for (let i = 0; i < this.configuredProjects.length; i++) {
+          delete this.configuredProjects[i]["Name"];
+          delete this.configuredProjects[i]["Remark"];
+          delete this.configuredProjects[i]["ParamList"];
+        }
+        await editVideoSource({ "Id": this.projectId, "AITasks": JSON.stringify(this.configuredProjects) })
+        this.$message.success({
+          message: '参数配置保存成功！',
+          duration: 1500
+        })
+        this.paramConfigDialogVisible = false
+        this.saveLoading = false
 
       } catch (error) {
         this.$message.error('参数配置保存失败，请重试！')
-        console.error('保存失败：', error)
         this.saveLoading = false
       }
     },
@@ -461,8 +447,7 @@ export default {
      * 取消操作，关闭弹窗
      */
     handleCancel() {
-      this.$emit('update:visible', false)
-      this.$emit('cancel')
+      this.visible = false;
     },
 
     /**
@@ -500,16 +485,17 @@ export default {
 
 /* 全局容器 */
 .ai-config-container {
-  padding: 10px;
   background-color: #f5f7fa;
-  height: calc(90vh - 60px);
+  height: calc(85vh - 60px);
   display: flex;
   flex-direction: column;
 }
 
 /* 页面标题 */
 .page-header {
-  margin-bottom: 10px;
+  margin-left: 25px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .page-header h2 {
@@ -527,8 +513,6 @@ export default {
 
 /* 主卡片 */
 .main-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
   overflow: hidden;
   flex: 1;
   display: flex;
@@ -539,7 +523,9 @@ export default {
 .config-layout {
   display: flex;
   gap: 16px;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
   flex: 1;
   overflow: hidden;
 }
@@ -705,11 +691,5 @@ export default {
 
 ::v-deep .row-odd {
   background-color: #fff;
-}
-
-/* 开关样式 */
-.draw-switch {
-  margin: 0 auto;
-  display: block;
 }
 </style>

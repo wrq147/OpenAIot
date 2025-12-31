@@ -43,7 +43,7 @@
                                 <template slot-scope="scope">
                                     <div v-if="scope.row.VideoType == 0">
                                         <div>推流地址：{{ scope.row.PullAddr }}</div>
-                                        <div>拉流节点：{{ scope.row.PullNode == "" ? "暂无" : scope.row.PullNode }}</div>
+                                        <div>拉流节点：{{ scope.row.NodeId == "" ? "暂无" : scope.row.NodeId }}</div>
                                     </div>
                                     <div v-else>
                                         <div>注册用户名：{{ scope.row.UserName }},注册密码：{{ scope.row.UserPwd }}</div>
@@ -137,7 +137,7 @@ export default {
             }
         },
         handleSet(data) {
-            this.$refs.setAconfig.showDlg();
+            this.$refs.setAconfig.showDlg(data.Id);
         },
         /** 删除按钮操作 */
         handleDelete(row) {

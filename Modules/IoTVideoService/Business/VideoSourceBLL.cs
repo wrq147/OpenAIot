@@ -6,14 +6,12 @@ using Common.Share;
 using EasyNetQ;
 using IoTService;
 using IoTService.DAL;
-using IoTService.Models;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
-using JiebaNet.Segmenter;
+using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
 using System;
 using System.Linq.Expressions;
-using System.Text;
 using TemplateAction.Core;
 
 namespace IoTVideoService.Business
@@ -47,6 +45,7 @@ namespace IoTVideoService.Business
             data.OrgId = user.OrgId;
             data.VideoKey = MyAccess.Core.StringTool.GetGUID();
             data.PullNode = string.Empty;
+            data.NodeId = string.Empty;
             data.AITasks ??= string.Empty;
             data.GBPublicAddr ??= string.Empty;
             data.GBPublicPort ??= 0;
@@ -64,7 +63,32 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<MZ_VideoSource>.Error(111, "视频源不存在");
             }
-            info.VideoUrl = $"rtmp://127.0.0.1:1935/live/{info.VideoKey}";
+            ServerInfo serverInfo = null;
+            if (string.IsNullOrEmpty(info.NodeId))
+            {
+                if (info.VideoType == 0)
+                {
+                    var option = _provider.GetService<IOptions<VideoOption>>();
+                    if (option.Value.VideoServers.Count > 0)
+                    {
+                        int pos = Math.Abs(id.GetHashCode() % option.Value.VideoServers.Count);
+                        serverInfo = option.Value.VideoServers[pos];
+                    }
+                }
+            }
+            else
+            {
+                var option = _provider.GetService<IOptions<VideoOption>>();
+                serverInfo = option.Value.VideoServers.Where(x => x.NodeId == info.NodeId).FirstOrDefault();
+            }
+            if (serverInfo != null)
+            {
+                info.VideoUrl = $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{info.VideoKey}";
+            }
+            else
+            {
+                info.VideoUrl = string.Empty;
+            }
             return BusResponse<MZ_VideoSource>.Success(info);
         }
         public virtual async Task<BusResponse<int>> Update(MZ_VideoSource data, IUserInfo user)
@@ -127,7 +151,7 @@ namespace IoTVideoService.Business
         }
 
 
-        private async Task DownUpVideoItemMessage(string nodeid, MZ_VideoSource source)
+        private async Task DownUpVideoItemMessage(string nodeguid, MZ_VideoSource source)
         {
             VideoCaptureItem cpitem = new VideoCaptureItem();
             cpitem.Id = source.Id;
@@ -150,7 +174,7 @@ namespace IoTVideoService.Business
             msg.DetectList = detectList;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
+            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeguid + ".guid").ConfigureAwait(false);
         }
         private async Task DownDelVideoItemMessage(string nodeid, string videoId)
         {
@@ -173,6 +197,7 @@ namespace IoTVideoService.Business
                 {
                     MZ_VideoSource tsource = new MZ_VideoSource();
                     tsource.PullNode = string.Empty;
+                    tsource.NodeId = string.Empty;
                     tsource.Id = tlist[0].Id;
                     await videoSourceDAL.Update(tsource);
                     await DownDelVideoItemMessage(tlist[0].PullNode, tlist[0].Id);
@@ -226,17 +251,18 @@ namespace IoTVideoService.Business
             if (tlist.Count > 0)
             {
                 var titem = tlist[0];
-                string nodeid = msg.DeviceId;
-                if (!string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeid))
+                string nodeguid = msg.DeviceId;
+                if (!string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeguid))
                 {
                     await DownDelVideoItemMessage(titem.PullNode, titem.Id);
                 }
                 MZ_VideoSource tsource = new MZ_VideoSource();
-                tsource.PullNode = nodeid;
+                tsource.PullNode = nodeguid;
+                tsource.NodeId = msg.NodeId;
                 tsource.Id = titem.Id;
                 await videoSourceDAL.Update(tsource);
 
-                await DownUpVideoItemMessage(nodeid, titem);
+                await DownUpVideoItemMessage(nodeguid, titem);
             }
 
         }

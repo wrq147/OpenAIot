@@ -33,7 +33,7 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var url_info = (MkMediaInfoT)url;
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            eventBus.PublishMediaNotFound(streamId);
+            eventBus.PublishMediaNotFound(_option.node_id, streamId);
             return 0;
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)

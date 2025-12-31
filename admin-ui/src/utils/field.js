@@ -4,7 +4,8 @@ import {
 var dayjs = require("@/utils/day.js");
 //显示自定义字段
 export function getFieldShow(model, field) {
-    let modelval = model[field.mapid];
+    let formext = model["ExtVals"];
+    let modelval = formext[field.mapid];
     switch (field.type) {
         case "时间":
             return parseTime(modelval);
@@ -26,34 +27,43 @@ export function getFieldShow(model, field) {
 }
 
 export function checkBeforeSave(filedTableList, form) {
+    let formext = form["ExtVals"];
     for (let i = 0; i < filedTableList.length; i++) {
         let row = filedTableList[i];
         if (row.type == "时间") {
-            form[row.mapid] = dayjs(form[row.mapid]).valueOf();
+            formext[row.mapid] = dayjs(formext[row.mapid]).valueOf();
         } else if (row.type == "复选框") {
-            if (form[row.mapid] && form[row.mapid].length > 0) {
-                form[row.mapid] = form[row.mapid].join(",");
+            if (formext[row.mapid] && formext[row.mapid].length > 0) {
+                formext[row.mapid] = formext[row.mapid].join(",");
             }
         }
     }
 }
 
 //初始化自定义表单
-export function setCustomDefaultValue(filedTableList, form, formRules, initForm, pre) {
+export function setCustomDefaultValue(filedTableList, form, formRules, initFormRaw, pre) {
     //设置自定义的变量初始化
+    let formext;
+    if (form["ExtVals"] == null) {
+        formext = {};
+    }
+    else {
+        formext = form["ExtVals"];
+    }
+    initForm = initFormRaw["ExtVals"];
     filedTableList.map((rw) => {
         if (initForm) {
             if (rw.type == "时间") {
                 let newStr = rw.format.replace(/y/g, "Y");
                 newStr = newStr.replace(/d/g, "D");
-                form[rw.mapid] = dayjs(initForm[rw.mapid]).format(newStr);
+                formext[rw.mapid] = dayjs(initForm[rw.mapid]).format(newStr);
             } else {
                 if (rw.type == "数字") {
-                    form[rw.mapid] = Number(initForm[rw.mapid]);
+                    formext[rw.mapid] = Number(initForm[rw.mapid]);
                 } else if (rw.type == "复选框") {
-                    form[rw.mapid] = initForm[rw.mapid].split(",");
+                    formext[rw.mapid] = initForm[rw.mapid].split(",");
                 } else {
-                    form[rw.mapid] = initForm[rw.mapid];
+                    formext[rw.mapid] = initForm[rw.mapid];
                 }
             }
         } else {
@@ -61,19 +71,19 @@ export function setCustomDefaultValue(filedTableList, form, formRules, initForm,
                 if (rw.type == "时间") {
                     let newStr = rw.format.replace(/y/g, "Y");
                     newStr = newStr.replace(/d/g, "D");
-                    form[rw.mapid] = dayjs(rw.defval).format(newStr);
+                    formext[rw.mapid] = dayjs(rw.defval).format(newStr);
                 } else {
                     if (rw.type == "数字") {
-                        form[rw.mapid] = Number(rw.defval);
+                        formext[rw.mapid] = Number(rw.defval);
                     } else {
-                        form[rw.mapid] = rw.defval;
+                        formext[rw.mapid] = rw.defval;
                     }
                 }
             } else {
                 if (rw.type == "复选框") {
-                    form[rw.mapid] = [];
+                    formext[rw.mapid] = [];
                 } else if (rw.type == "时间") {
-                    form[rw.mapid] = '';
+                    formext[rw.mapid] = '';
                 }
             }
         }
@@ -86,19 +96,19 @@ export function setCustomDefaultValue(filedTableList, form, formRules, initForm,
                         message: "请选择" + rw.name,
                     },
                 ];
-                formRules[pre + rw.mapid] = rowRules;
+                formRules[pre + "ExtVals." + rw.mapid] = rowRules;
             } else {
                 let rowRules = [
                     { required: true, trigger: "blur", message: "请输入" + rw.name },
                 ];
-                formRules[pre + rw.mapid] = rowRules;
+                formRules[pre + "ExtVals." + rw.mapid] = rowRules;
             }
         }
     });
 }
 
 
-export function setFormItemHide(item, form) {
+export function setFormItemHide(item, formext) {
     //判断字段是否隐藏
     if (item.conditions && item.conditions.length > 0) {
         let result = false;
@@ -110,7 +120,7 @@ export function setFormItemHide(item, form) {
                 row.compare,
                 row.val,
                 row.valtype,
-                form
+                formext
             );
         }
         for (let i = 0; i < conditionsResArr.length; i++) {

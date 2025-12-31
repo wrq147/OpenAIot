@@ -394,11 +394,12 @@ namespace ChannelUtility
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
 
-        public void PublishMediaNotFound(string streamId)
+        public void PublishMediaNotFound(string nodeId, string streamId)
         {
             MediaNotFoundMessage msg = new MediaNotFoundMessage();
             msg.DeviceId = this._nodeGuid;
             msg.ProductId = string.Empty;
+            msg.NodeId = nodeId;
             msg.StreamId = streamId;
             _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(this._nodeGuid));
         }

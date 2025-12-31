@@ -56,7 +56,7 @@ namespace FixVideoChannel
         }
         public void UpdateBoxList(string detType, List<BoxItem> items)
         {
-            if (_item.DetectType == detType)
+            if (_item.Code == detType)
             {
                 _boxs = items;
             }

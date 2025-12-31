@@ -23,16 +23,20 @@ namespace MESService.Business
         }
         public virtual async Task<PageObject<MZ_ProductOper>> SelectList(In_OperList query, IUserInfo user)
         {
-            return await _operDAL.SelectByPage(query, user.OrgId);
+            var tpage = await _operDAL.SelectByPage(query, user.OrgId);
+            await FieldUtility.GenerateExtValList(_provider, tpage.List);
+            return tpage;
         }
 
-        public virtual async Task<BusResponse<MZ_ProductOper>> Info(string id)
+        public virtual async Task<BusResponse<MZ_ProductOper>> Info(string id, TAAction ac)
         {
             var info = await _operDAL.Select(id);
             if (info == null)
             {
                 return BusResponse<MZ_ProductOper>.Error(111, "工序不存在");
             }
+            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value, ac);
+            await FieldUtility.GenerateExtVals(_provider, info);
             return BusResponse<MZ_ProductOper>.Success(info);
         }
         public virtual async Task<BusResponse<MZ_ProductRouteOper>> RouteInfo(string id)
@@ -64,6 +68,7 @@ namespace MESService.Business
             data.ReportFields ??= string.Empty;
             data.FieldsInit ??= string.Empty;
             data.SetCreateBy(user);
+            await FieldUtility.UpdateFieldEntity(_provider, data, user.OrgId);
             await _operDAL.Insert(data);
             return BusResponse<string>.Success(data.Id);
         }
@@ -87,6 +92,7 @@ namespace MESService.Business
             }
 
             data.SetUpdateBy(user);
+            await FieldUtility.UpdateFieldEntity(_provider, data, user.OrgId);
             return BusResponse<int>.Success(await _operDAL.Update(data));
         }
 
@@ -101,7 +107,7 @@ namespace MESService.Business
             {
                 return BusResponse<int>.Error(112, "所属组织错误");
             }
-
+            await FieldUtility.DeleteFieldEntity(_provider, old, user.OrgId);
             return BusResponse<int>.Success(await _operDAL.Delete(id));
         }
     }

@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using AuthService.Fields;
+using Common;
 using Common.Share;
 using MESService.Model;
 using MyAccess.DB;
@@ -44,15 +45,7 @@ namespace MESService.DAL
             }
             var tmpSql = new SqlBuilder(help).Query<MZ_WorkReport>()
                 .Include(a => a.RepBat, x => x.BatchNo).Include(a => a.WorkOrder, x => x.WorkOrderId).Include(a => a.Oper, x => x.OperId).Include(a => a.ReportMem, x => x.createId).Where(expression);
-            if (query.Items != null && query.Items.Length > 0)
-            {
-                //过滤扩展字段
-                foreach (var item in query.Items)
-                {
-                    item.AppendFilter(tmpSql, "RepBat.");
-                }
-            }
-
+            FieldUtility.AppendFilter(tmpSql, query.Items, "b.Id");
             return await tmpSql.GeneratePageObjectAsync(query, "a.create_time desc");
         }
         public virtual async Task<Out_WorkTaskInfo> SelectTotal(string taskId)

@@ -46,7 +46,8 @@ namespace ProducerService.Business
                 }
             }
             var tpage = await _supplierDAL.SelectByPage(query, user.OrgId);
-            foreach(var item in tpage.List)
+            await FieldUtility.GenerateExtValList(_provider, tpage.List);
+            foreach (var item in tpage.List)
             {
                 item.StatusName = item.Status == "0" ? "停用" : "正常";
             }
@@ -64,7 +65,8 @@ namespace ProducerService.Business
             {
                 return BusResponse<MZ_Supplier>.Error(111, "供应商不存在");
             }
-            supplierInfo.ExtObjects = await FieldUtility.GenerateExtForm(_provider, supplierInfo, supplierInfo.OrgId.Value, "供应商", ac);
+            await FieldUtility.GenerateExtObject(_provider, supplierInfo, supplierInfo.OrgId.Value, ac);
+            await FieldUtility.GenerateExtVals(_provider, supplierInfo);
             return BusResponse<MZ_Supplier>.Success(supplierInfo);
         }
         public virtual async Task<BusResponse<string>> Add(MZ_Supplier data, IUserInfo user, TAAction action)
@@ -113,6 +115,7 @@ namespace ProducerService.Business
             data.AddressName ??= string.Empty;
             data.AddressDetail ??= string.Empty;
             data.SetCreateBy(user);
+            await FieldUtility.UpdateFieldEntity(_provider, data, user.OrgId);
             await _supplierDAL.Insert(data);
             return BusResponse<string>.Success(data.Id);
         }
@@ -143,6 +146,7 @@ namespace ProducerService.Business
             {
                 data.Geo = MyAccess.Core.GeoHash.Encode(data.Lat.Value, data.Lng.Value);
             }
+            await FieldUtility.UpdateFieldEntity(_provider, data, user.OrgId);
             return BusResponse<int>.Success(await _supplierDAL.Update(data));
         }
 
@@ -157,7 +161,7 @@ namespace ProducerService.Business
             {
                 return BusResponse<int>.Error(112, "供应商所属组织错误");
             }
-
+            await FieldUtility.DeleteFieldEntity(_provider, old, user.OrgId);
             return BusResponse<int>.Success(await _supplierDAL.Delete(id));
         }
 

@@ -160,6 +160,16 @@
             码流类型：0为主码流，1为子码流
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.GBPublicAddr">
+            <summary>
+            GB28181服务的公网主机
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.GBPublicPort">
+            <summary>
+            GB28181服务的公网主机端口
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.AITasks">
             <summary>
             AI检测任务
@@ -168,6 +178,16 @@
         <member name="P:IoTVideoService.Models.MZ_VideoSource.PullNode">
             <summary>
             当前拉流的节点名称，无为空
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.NodeId">
+            <summary>
+            服务器节点Id
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoUrl">
+            <summary>
+            视频地址
             </summary>
         </member>
     </members>

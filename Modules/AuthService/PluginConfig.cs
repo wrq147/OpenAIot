@@ -49,6 +49,7 @@ namespace AuthService
                 services.AddDAL<StyleDAL>();
                 services.AddDAL<OrgStyleDAL>();
                 services.AddDAL<GroupViewDAL>();
+                services.AddDAL<FieldValDAL>();
 
                 services.AddSingleton<ConfigCache>();
             }

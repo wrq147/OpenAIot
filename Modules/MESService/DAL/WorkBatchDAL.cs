@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using AuthService.Fields;
+using Common;
 using Common.Share;
 using MESService.Model;
 using MyAccess.DB;
@@ -23,15 +24,7 @@ namespace MESService.DAL
                 expression = expression.And((a) => a.Id.Contains(query.Key) || a.LNumber.Contains(query.Key));
             }
             var tmpSql = new SqlBuilder(help).Query<MZ_WorkBatch>().Where(expression);
-            if (query.Items != null && query.Items.Length > 0)
-            {
-                //过滤扩展字段
-                foreach (var item in query.Items)
-                {
-                    item.AppendFilter(tmpSql, string.Empty);
-                }
-            }
-
+            FieldUtility.AppendFilter(tmpSql, query.Items, "Id");
             return await tmpSql.GeneratePageObjectAsync(query);
         }
 

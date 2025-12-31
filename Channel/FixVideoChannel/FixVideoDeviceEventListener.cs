@@ -29,7 +29,7 @@ namespace FixVideoChannel
         public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] pressData, int width, int height)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishAIDetectRequest(videoId, item.DetectType, item.DetectParams, item.EnableDraw, pressData, width, height);
+            await eventBus.PublishAIDetectRequest(videoId, item.Code, item.DetectParams, item.EnableDraw, pressData, width, height);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg)

@@ -64,6 +64,10 @@ namespace IoTVideoService.Models
         /// </summary>
         public string PullNode { get; set; }
         /// <summary>
+        /// 服务器节点Id
+        /// </summary>
+        public string NodeId { get; set; }
+        /// <summary>
         /// 视频地址
         /// </summary>
         [DataIgnore]
