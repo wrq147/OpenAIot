@@ -53,7 +53,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_ProductRouteOper>> RouteInfo(string id)
         {
-            return (await _operBLL.RouteInfo(id)).ToAjaxResult();
+            return (await _operBLL.RouteInfo(id, this.IntentAction)).ToAjaxResult();
         }
         /// <summary>
         /// 添加工序

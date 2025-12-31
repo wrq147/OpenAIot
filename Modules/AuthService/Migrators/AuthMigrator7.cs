@@ -40,7 +40,7 @@ namespace AuthService.Migrators
             Create.Table("mz_field_val").WithDescription("通用自定义字段存储值")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("原表Id")
                 .WithColumn("FieldId").AsString(50).PrimaryKey().WithColumnDescription("字段Id")
-                .WithColumn("TableName").AsString(50).PrimaryKey().WithColumnDescription("原表名")
+                .WithColumn("TableName").AsString(50).WithColumnDescription("原表名")
                 .WithColumn("LongValue").AsString(50000).Nullable().WithColumnDescription("保存长文本数据")
                 .WithColumn("Value").AsString(500).Indexed().Nullable().WithColumnDescription("文本值")
                 .WithColumn("NumberValue").AsDouble().Indexed().Nullable().WithColumnDescription("数值");

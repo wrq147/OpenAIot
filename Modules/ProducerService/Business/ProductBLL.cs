@@ -198,7 +198,7 @@ namespace ProducerService.Business
             {
                 return BusResponse<int>.Error(112, "产品所属组织错误");
             }
-            await FieldUtility.DeleteFieldEntity(_provider, tmpproduct, user.OrgId);
+            await FieldUtility.DeleteFieldEntity(_provider, tmpproduct);
             var res = await _productDAL.Delete(id);
             await _provider.GetService<ProductBatchDAL>().Delete(x => x.ProductId == id);
             return BusResponse<int>.Success(res);

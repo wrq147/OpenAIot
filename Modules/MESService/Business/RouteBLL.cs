@@ -1,4 +1,5 @@
 ﻿using AuthService;
+using AuthService.Fields;
 using Common.IdGenerator;
 using Common.Share;
 using MESService.DAL;
@@ -43,6 +44,8 @@ namespace MESService.Business
                 }
             }
             var ids = pagelist.List.Select(x => x.Id).ToList();
+
+            List<MZ_ProductRouteOper> allpropre = new List<MZ_ProductRouteOper>();
             if (ids.Count > 0)
             {
                 var routeOpers = await _provider.GetService<RouteOperDAL>().SelectList(x => ids.Contains(x.RouteId));
@@ -56,10 +59,11 @@ namespace MESService.Business
                             routeItem.Items = new List<MZ_ProductRouteOper>();
                         }
                         routeItem.Items.Add(routeOper);
+                        allpropre.Add(routeOper);
                     }
                 }
             }
-
+            await FieldUtility.GenerateExtValList(_provider, allpropre);
             return pagelist;
         }
         public virtual async Task<BusResponse<MZ_ProductRoute>> Info(string id)
@@ -70,8 +74,10 @@ namespace MESService.Business
                 return BusResponse<MZ_ProductRoute>.Error(111, "工艺路线不存在");
             }
             var routeOpers = await _provider.GetService<RouteOperDAL>().SelectList(x => x.RouteId == id);
+            await FieldUtility.GenerateExtValList(_provider, routeOpers);
             info.Items = new List<MZ_ProductRouteOper>();
             info.Items.AddRange(routeOpers);
+            await FieldUtility.GenerateExtValList(_provider, info.Items);
             return BusResponse<MZ_ProductRoute>.Success(info);
         }
 
@@ -101,7 +107,9 @@ namespace MESService.Business
                     item.RouteId = data.Id;
                 }
                 await routeOperDAL.Insert(data.Items);
+                await FieldUtility.UpdateFieldEntityList(_provider, data.Items, user.OrgId);
             }
+
             return BusResponse<string>.Success(data.Id);
         }
 
@@ -132,6 +140,7 @@ namespace MESService.Business
                     item.RouteId = data.Id;
                 }
                 await routeOperDAL.Insert(data.Items);
+                await FieldUtility.UpdateFieldEntityList(_provider, data.Items, user.OrgId);
             }
 
             return BusResponse<int>.Success(rs);
@@ -149,8 +158,10 @@ namespace MESService.Business
                 return BusResponse<int>.Error(112, "所属组织错误");
             }
             var rs = await _routeDAL.Delete(id);
+            var routeOpers = await _provider.GetService<RouteOperDAL>().SelectList(x => x.RouteId == id);
             var routeOperDAL = _provider.GetService<RouteOperDAL>();
             await routeOperDAL.Delete(x => x.RouteId == id);
+            await FieldUtility.DeleteFieldEntityList(_provider, routeOpers);
             return BusResponse<int>.Success(rs);
         }
 

@@ -18,7 +18,6 @@ namespace AuthService.Model
         /// <summary>
         /// 原表名
         /// </summary>
-        [ID(false)]
         public string TableName { get; set; }
 
         /// <summary>

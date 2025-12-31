@@ -383,12 +383,70 @@ namespace AuthService.Fields
             }
             return BusResponse<int>.Success();
         }
-        public static async Task DeleteFieldEntity<T>(ITAServiceProvider provider, T formobj, long orgId) where T : IFieldEntity
+        public static async Task DeleteFieldEntity<T>(ITAServiceProvider provider, T formobj) where T : IFieldEntity
         {
             var fieldValDAL = provider.GetService<FieldValDAL>();
             string formId = formobj.GetFormId();
             string formName = formobj.GetFormName();
             await fieldValDAL.Delete(x => x.Id == formId && x.TableName == formName);
+        }
+        public static async Task DeleteFieldEntityList<T>(ITAServiceProvider provider, List<T> formobjList) where T : IFieldEntity
+        {
+            if (formobjList.Count == 0)
+            {
+                return;
+            }
+            var fieldValDAL = provider.GetService<FieldValDAL>();
+            List<string> formIds = formobjList.Select(x => x.GetFormId()).ToList();
+            string formName = formobjList[0].GetFormName();
+            await fieldValDAL.Delete(x => formIds.Contains(x.Id) && x.TableName == formName);
+        }
+        public static async Task UpdateFieldEntityList<T>(ITAServiceProvider provider, List<T> formobjList, long orgId) where T : IFieldEntity
+        {
+            if (formobjList.Count == 0)
+            {
+                return;
+            }
+            var fieldValDAL = provider.GetService<FieldValDAL>();
+            List<string> formIds = formobjList.Select(x => x.GetFormId()).ToList();
+            string formName = formobjList[0].GetFormName();
+            await fieldValDAL.Delete(x => formIds.Contains(x.Id) && x.TableName == formName);
+
+            var extObjects = new Dictionary<string, object>();
+            var extfields = await provider.GetService<OrgBLL>().GetExtFormFields(orgId, formName);
+            List<MZ_FieldVal> insertmodels = new List<MZ_FieldVal>();
+            foreach (var ext in extfields)
+            {
+                foreach (var formobj in formobjList)
+                {
+                    if (formobj.ExtVals.TryGetValue(ext.mapid, out object tmpval))
+                    {
+                        MZ_FieldVal fieldVal = new MZ_FieldVal();
+                        fieldVal.Id = formobj.GetFormId();
+                        fieldVal.FieldId = ext.mapid;
+                        insertmodels.Add(fieldVal);
+                        if (ext.type == "数字" || ext.type == "时间")
+                        {
+                            fieldVal.NumberValue = Convert.ToDouble(tmpval);
+                            continue;
+                        }
+                        else if (ext.type == "文本")
+                        {
+                            if (((TextField)ext).is_multiple)
+                            {
+                                fieldVal.LongValue = tmpval.ToString();
+                                continue;
+                            }
+                        }
+                        fieldVal.Value = tmpval.ToString();
+                    }
+                }
+
+            }
+            if (insertmodels.Count > 0)
+            {
+                await fieldValDAL.Insert(insertmodels);
+            }
         }
         public static async Task UpdateFieldEntity<T>(ITAServiceProvider provider, T formobj, long orgId) where T : IFieldEntity
         {
@@ -403,11 +461,15 @@ namespace AuthService.Fields
             {
                 return;
             }
+            List<MZ_FieldVal> insertmodels = new List<MZ_FieldVal>();
             foreach (var ext in extfields)
             {
                 if (formobj.ExtVals.TryGetValue(ext.mapid, out object tmpval))
                 {
                     MZ_FieldVal fieldVal = new MZ_FieldVal();
+                    fieldVal.Id = formobj.GetFormId();
+                    fieldVal.FieldId = ext.mapid;
+                    insertmodels.Add(fieldVal);
                     if (ext.type == "数字" || ext.type == "时间")
                     {
                         fieldVal.NumberValue = Convert.ToDouble(tmpval);
@@ -422,7 +484,12 @@ namespace AuthService.Fields
                         }
                     }
                     fieldVal.Value = tmpval.ToString();
+
                 }
+            }
+            if (insertmodels.Count > 0)
+            {
+                await fieldValDAL.Insert(insertmodels);
             }
         }
 

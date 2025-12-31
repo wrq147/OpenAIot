@@ -62,7 +62,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_WorkReport>> Info(string id)
         {
-            return (await _reportBLL.Info(id)).ToAjaxResult();
+            return (await _reportBLL.Info(id, this.IntentAction)).ToAjaxResult();
         }
         /// <summary>
         /// 修改生产报工

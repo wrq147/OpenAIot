@@ -45,6 +45,8 @@ namespace MESService.Business
                 }
             }
             var tmppage = await reportDAL.SelectByPage(query, user);
+            var repBatList = tmppage.List.Select(x => x.RepBat).ToList();
+            await FieldUtility.GenerateExtValList(_provider, repBatList);
             if (tmppage.List.Count > 0)
             {
                 var repIds = tmppage.List.Select(x => x.Id).ToList();
@@ -58,7 +60,7 @@ namespace MESService.Business
 
             return tmppage;
         }
-        public virtual async Task<BusResponse<MZ_WorkReport>> Info(string id)
+        public virtual async Task<BusResponse<MZ_WorkReport>> Info(string id, TAAction ac)
         {
             WorkReportDAL reportDAL = _provider.GetService<WorkReportDAL>();
             var info = await reportDAL.Select(id);
@@ -67,6 +69,8 @@ namespace MESService.Business
                 return BusResponse<MZ_WorkReport>.Error(111, "报工单不存在");
             }
             info.RepBat = await _provider.GetService<WorkBatchDAL>().Select(info.BatchNo);
+            await FieldUtility.GenerateExtObject(_provider, info.RepBat, info.RepBat.OrgId.Value, ac);
+            await FieldUtility.GenerateExtVals(_provider, info.RepBat);
             var wkorder = await _provider.GetService<WorkOrderDAL>().Select(info.WorkOrderId);
             if (wkorder != null)
             {
@@ -186,6 +190,7 @@ namespace MESService.Business
                             return BusResponse<int>.Error(299, "批次编号已被其它生产工单使用");
                         }
                         data.RepBat.UpdatedOn = DateTime.Now;
+                        await FieldUtility.UpdateFieldEntity(_provider, data.RepBat, user.OrgId);
                         await wkbatchDAL.Update(data.RepBat);
                     }
                     else
@@ -194,6 +199,7 @@ namespace MESService.Business
                         data.RepBat.IsFinish = false;
                         data.RepBat.CreatedOn = DateTime.Now;
                         data.RepBat.UpdatedOn = data.RepBat.CreatedOn;
+                        await FieldUtility.UpdateFieldEntity(_provider, data.RepBat, user.OrgId);
                         await wkbatchDAL.Insert(data.RepBat);
                     }
                 }
@@ -340,6 +346,7 @@ namespace MESService.Business
                     return BusResponse<string>.Error(299, "批次编号已被其它生产工单使用");
                 }
                 data.RepBat.UpdatedOn = DateTime.Now;
+                await FieldUtility.UpdateFieldEntity(_provider, data.RepBat, user.OrgId);
                 await wkbatchDAL.Update(data.RepBat);
             }
             else
@@ -347,6 +354,7 @@ namespace MESService.Business
                 data.RepBat.IsFinish = false;
                 data.RepBat.CreatedOn = DateTime.Now;
                 data.RepBat.UpdatedOn = data.RepBat.CreatedOn;
+                await FieldUtility.UpdateFieldEntity(_provider, data.RepBat, user.OrgId);
                 await wkbatchDAL.Insert(data.RepBat);
             }
             data.SetCreateBy(user);

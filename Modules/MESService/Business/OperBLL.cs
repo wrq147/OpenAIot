@@ -39,13 +39,15 @@ namespace MESService.Business
             await FieldUtility.GenerateExtVals(_provider, info);
             return BusResponse<MZ_ProductOper>.Success(info);
         }
-        public virtual async Task<BusResponse<MZ_ProductRouteOper>> RouteInfo(string id)
+        public virtual async Task<BusResponse<MZ_ProductRouteOper>> RouteInfo(string id, TAAction ac)
         {
             var info = await _provider.GetService<RouteOperDAL>().Select(id);
             if (info == null)
             {
                 return BusResponse<MZ_ProductRouteOper>.Error(111, "工艺路线明细不存在");
             }
+            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value, ac);
+            await FieldUtility.GenerateExtVals(_provider, info);
             return BusResponse<MZ_ProductRouteOper>.Success(info);
         }
 
@@ -107,7 +109,7 @@ namespace MESService.Business
             {
                 return BusResponse<int>.Error(112, "所属组织错误");
             }
-            await FieldUtility.DeleteFieldEntity(_provider, old, user.OrgId);
+            await FieldUtility.DeleteFieldEntity(_provider, old);
             return BusResponse<int>.Success(await _operDAL.Delete(id));
         }
     }

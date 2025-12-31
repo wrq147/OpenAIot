@@ -1,4 +1,5 @@
-﻿using Common.Share;
+﻿using AuthService.Fields;
+using Common.Share;
 using MESService.DAL;
 using MESService.Model;
 using ProducerService.DAL;
@@ -24,16 +25,19 @@ namespace MESService.Business
         public virtual async Task<PageObject<MZ_WorkBatch>> SelectByPage(In_WorkBatchList query, IUserInfo user)
         {
             var listpage = await _workBatchDAL.SelectByPage(query, user.OrgId);
+            await FieldUtility.GenerateExtValList(_provider, listpage.List);
             return listpage;
         }
 
-        public virtual async Task<BusResponse<MZ_WorkBatch>> Info(string id, IUserInfo user)
+        public virtual async Task<BusResponse<MZ_WorkBatch>> Info(string id, IUserInfo user, TAAction ac)
         {
             var info = (await _workBatchDAL.SelectList(x => x.Id == id && x.OrgId == user.OrgId)).FirstOrDefault();
             if (info == null)
             {
                 return BusResponse<MZ_WorkBatch>.Error(3, "生产批次不存在");
             }
+            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value, ac);
+            await FieldUtility.GenerateExtVals(_provider, info);
             return BusResponse<MZ_WorkBatch>.Success(info);
         }
     }

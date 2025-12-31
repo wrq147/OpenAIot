@@ -14,7 +14,7 @@ namespace MESService.Model
     /// 产品工艺路线明细
     /// </summary>
     [TableName("mz_product_route_oper")]
-    public class MZ_ProductRouteOper
+    public class MZ_ProductRouteOper : IFieldEntity
     {
         /// <summary>
         /// Id编号
@@ -46,6 +46,23 @@ namespace MESService.Model
         /// 工序顺序
         /// </summary>
         public int? Sequence { get; set; }
-      
+        /// <summary>
+        /// 扩展的关联对象
+        /// </summary>
+        [DataIgnore]
+        [JsonConverter(typeof(OnlySeriaize))]
+        public Dictionary<string, object> ExtObjects { get; set; }
+        [DataIgnore]
+        public Dictionary<string, object> ExtVals { get; set; }
+
+        public string GetFormId()
+        {
+            return this.Id;
+        }
+
+        public string GetFormName()
+        {
+            return "工序";
+        }
     }
 }

@@ -71,6 +71,7 @@ namespace MESService.Model
         [DataIgnore]
         [JsonConverter(typeof(OnlySeriaize))]
         public Dictionary<string, object> ExtObjects { get; set; }
+        [DataIgnore]
         public Dictionary<string, object> ExtVals { get; set; }
 
         public string GetFormId()
