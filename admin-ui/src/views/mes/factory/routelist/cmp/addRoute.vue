@@ -69,26 +69,25 @@
           <template slot-scope="scope">
             <div>
               <el-select :disabled="item.is_readonly" :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
-                  v-model="scope.row[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
+                  v-model="scope.row.ExtVals[item.mapid]" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%"
                   v-if=" (item.type == '单选框' && item.show_way == '下拉') || (item.type == '复选框' && item.show_way == '下拉') ">
                     <el-option v-for="(it, ix) in item.optionals" :label="it" :value="it" :key="ix"></el-option>
                 </el-select>
-                <el-radio-group :disabled="item.is_readonly" v-model="scope.row[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
+                <el-radio-group :disabled="item.is_readonly" v-model="scope.row.ExtVals[item.mapid]" v-if="item.type == '单选框' && item.show_way == '平铺'">
                     <el-radio v-for="(it, ix) in item.optionals" :label="it" :key="ix">{{ it }}</el-radio>
                 </el-radio-group>
-                <el-checkbox-group :disabled="item.is_readonly" v-model="scope.row[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
+                <el-checkbox-group :disabled="item.is_readonly" v-model="scope.row.ExtVals[item.mapid]" v-if="item.type == '复选框' && item.show_way == '平铺'">
                     <el-checkbox v-for="(it, ix) in item.optionals" :label="it" :key="ix">{{ it }}</el-checkbox>
                 </el-checkbox-group>
-                <el-date-picker :disabled="item.is_readonly" v-if="item.type == '时间'" v-model="scope.row[item.mapid]"
+                <el-date-picker :disabled="item.is_readonly" v-if="item.type == '时间'" v-model="scope.row.ExtVals[item.mapid]"
                   type="datetime" :placeholder="item.prompt_text ? item.prompt_text : '请选择'" style="width: 100%" :value-format="item.format" :format="item.format"></el-date-picker>
                 <el-input :disabled="item.is_readonly" v-if="item.type == '文本'" :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
-                  :type="item.is_multiple ? 'textarea' : 'text'" v-model="scope.row[item.mapid]"></el-input>
+                  :type="item.is_multiple ? 'textarea' : 'text'" v-model="scope.row.ExtVals[item.mapid]"></el-input>
                 <el-input :disabled="item.is_readonly" v-if="item.type == '数字'" :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
-                  type="number" v-model="scope.row[item.mapid]" :precision="item.decimals"></el-input>
+                  type="number" v-model="scope.row.ExtVals[item.mapid]" :precision="item.decimals"></el-input>
                 <el-link :disabled="item.is_readonly" v-if="item.type == '超链接'" href="#" target="_blank">{{ item.describe_text }}</el-link>
-                <!-- <image-upload v-model="scope.row[item.mapid]" :limit="1" v-if="item.type == '图片'"></image-upload> -->
                 <div class="avatar_con" v-if="item.type == '图片'">
-                  <image-upload v-model="scope.row[item.mapid]" :limit="1" :isShowLeft="true">
+                  <image-upload v-model="scope.row.ExtVals[item.mapid]" :limit="1" :isShowLeft="true">
                       <template #tip>
                           <div class="label_tip">
                           <div class="label_text">　　</div>
@@ -99,7 +98,7 @@
                       </template>
                   </image-upload>
                 </div>
-                <file-upload v-model="scope.row[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
+                <file-upload v-model="scope.row.ExtVals[item.mapid]" :limit="1" v-if="item.type == '附件'" :isShowLeft="true">
                   <template #tip>
                       <div class="label_tip">
                           <div class="label_text">　　</div>
@@ -109,7 +108,7 @@
                       </div>
                   </template>
                 </file-upload>
-                <el-select @focus="afterValSearch(scope.row[item.mapid],item)" :clearable="true" style="width: 100%" v-model="scope.row[item.mapid]" filterable remote reserve-keyword
+                <el-select @focus="afterValSearch(scope.row.ExtVals[item.mapid],item)" :clearable="true" style="width: 100%" v-model="scope.row.ExtVals[item.mapid]" filterable remote reserve-keyword
                   :placeholder="item.prompt_text ? item.prompt_text : '请选择'" :remote-method="(query)=>associationMethod(query,item)" :loading="Supplierloading" v-if="item.type == '关联对象'">
                   <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name" :value="ite.Value+','+ite.ValueName">{{ite.Name}}</el-option>
                 </el-select>
@@ -247,7 +246,7 @@
           WorkTime: '',
           Sequence: '',
           // 添加所有mapid作为属性，初始值为空字符串
-          ...this.filedTableList.reduce((acc, item) => {
+          ExtVals:this.filedTableList.reduce((acc, item) => {
               acc[item.mapid] = ''; // 初始化为空值
               return acc;
           }, {}),

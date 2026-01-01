@@ -120,8 +120,7 @@ export default {
           toHouseId: '',
           items: [
             {
-              // 添加所有mapid作为属性，初始值为空字符串
-              ...this.filedTableList.reduce((acc, item) => {
+              ExtVals:this.filedTableList.reduce((acc, item) => {
                 acc[item.mapid] = ''; // 初始化为空值
                 return acc;
               }, {}),

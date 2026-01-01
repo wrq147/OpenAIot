@@ -2,17 +2,6 @@
   <div style="padding:20px 20px 0 20px" id="big_con">
     
     <div style="background:#ffffff;border-radius:10px">
-      <!-- <div style="padding:10px 20px 0">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="全部" name="all">
-                <div slot="label" class="product_type_title">
-                    <span><i class="el-icon-date"></i> 供应商</span>
-                    <i class="el-icon-more right_icon"></i>
-                    <div class="line"></div>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
-      </div> -->
       <secondaryGrouping ref="secondaryGrouping" @handleGroupClick="handleGroupClick" table="供应商" :filterFiledList="supplierFiledList" @setFilterProp="setFilterProp"></secondaryGrouping>
       <el-row :gutter="20">
         <!--供应商数据-->
@@ -26,18 +15,6 @@
                     <span style="margin-left:6px">创建供应商</span>
                   </el-button>
                 </el-col>
-                <!-- <el-col :span="1.5">
-                  <el-button type="primary" plain @click="onClear">
-                    <i class="zhongtaiiconfont zhongtai-icon-daoru"></i>
-                    <span style="margin-left:6px">导入</span>
-                  </el-button>
-                </el-col>
-                <el-col :span="1.5">
-                  <el-button type="primary" plain @click="onClear">
-                    <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
-                    <span style="margin-left:6px">导出</span>
-                  </el-button>
-                </el-col> -->
               </div>
               <div>
                 <el-col :span="1.5">

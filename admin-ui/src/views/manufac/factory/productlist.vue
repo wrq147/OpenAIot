@@ -101,12 +101,6 @@
                 </el-table-column>
               </template>
 
-              <!-- <el-table-column label="产品名称" align="center" key="ProductName" prop="ProductName" v-if="columns[1].visible" :show-overflow-tooltip="true"/>
-              <el-table-column label="更新时间" align="center" key="updateTime" prop="updateTime" v-if="columns[6].visible" width="140">
-                <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.updateTime) }}</span>
-                </template>
-              </el-table-column> -->
               <el-table-column label="操作" align="center" width="248" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
                   <el-button type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -154,16 +148,6 @@ export default {
       dateRange: [],
       showSearch: true,
       dateTableList: [],
-      // 列信息
-      columns: [
-        { key: 0, label: `设备名称`, visible: true },
-        { key: 1, label: `产品名称`, visible: true },
-        { key: 2, label: `尝试更新的次数`, visible: true },
-        { key: 3, label: `更新的目标版本`, visible: true },
-        { key: 4, label: `更新失败的原因`, visible: true },
-        { key: 5, label: `更新状态`, visible: true },
-        { key: 6, label: `更新时间`, visible: true }
-      ],
       loading: false,
       ids: [],//选择的产品
       productTypeList: [],//产品分组列表
