@@ -305,6 +305,7 @@ namespace Common.EventBus
                         {
                             await bus.SendReceive.SendAsync("dispatch.response." + bs.MessageId, QuartzExeResponse.Error(99, ex.Message));
                         }
+                        Console.Write(ex.Message);
                     }
                 }, cfg =>
                 {

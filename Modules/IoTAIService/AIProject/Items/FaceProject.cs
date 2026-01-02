@@ -27,6 +27,7 @@ namespace IoTAIService.AIProject.Items
                         type="float",
                         min=0,
                         max=1,
+                        defval=0.8f,
                         help="0~1的区间值,值越小对人脸的检测越模糊"
                     },
                     new AIProjectParam()
@@ -36,6 +37,7 @@ namespace IoTAIService.AIProject.Items
                         type="float",
                         min=0,
                         max=1,
+                        defval=0.2f,
                         help="0~1的区间值,值越小越不会检测重合人脸"
                     },
                     new AIProjectParam()
@@ -43,6 +45,7 @@ namespace IoTAIService.AIProject.Items
                         name="启用人脸库",
                         code="enable_house",
                         type="boolean",
+                        defval=true,
                         help="是否匹配人脸库，并触发相应事件"
                     },
                 }

@@ -8,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using System.Text;
 using ZLMediaKit;
-using static ZLMediaKit.CodecArgs;
 
 namespace FixVideoChannel
 {
@@ -47,16 +46,23 @@ namespace FixVideoChannel
         {
             var mkFrame = (MkFrameT)frame;
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            context.LastFrame = mkFrame;
+
             if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
             {
                 if (item.DetectList.Count > 0)
                 {
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 1);
+                    if (context.LastFrame != null)
+                    {
+                        mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                        context.LastFrame = null;
+                    }
                     return;
                 }
             }
-            context.LastFrame = mkFrame;
             mk_media.MkMediaInputFrame(context.Media, mkFrame);
+            context.LastFrame = null;
         }
         private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
         {
@@ -126,6 +132,7 @@ namespace FixVideoChannel
                         // 2. 拆分YUV平面数据指针（适配ZLMediaKit的string[]参数）
                         string[] yuvPlanes = ZLUtility.SplitYuvPlanes(yuvData, w, h, (AVPixelFormat)pixFmt);
                         mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
+                        context.LastFrame = null;
                         return;
                     }
                 }
@@ -133,6 +140,7 @@ namespace FixVideoChannel
                 if (context.LastFrame != null)
                 {
                     mk_media.MkMediaInputFrame(context.Media, context.LastFrame);
+                    context.LastFrame = null;
                 }
             }
             finally
@@ -210,6 +218,7 @@ namespace FixVideoChannel
                     context.Track = mkTrack;
                     context.Swscale = mk_transcode.MkSwscaleCreate(3, 0, 0);
 
+                    
                     mk_transcode.MkDecoderSetCb(mkDecoder, OnDecodeFrame, user_data);
                     mk_track.MkTrackAddDelegate(mkTrack, OnParseFrame, user_data);
                     break;

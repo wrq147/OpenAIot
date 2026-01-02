@@ -46,6 +46,7 @@ namespace IoTAIService
 
         public float min { get; set; }
         public float max { get; set; }
+        public object defval { get; set; }
         /// <summary>
         /// 枚举元素
         /// </summary>

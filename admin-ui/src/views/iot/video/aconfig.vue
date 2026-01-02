@@ -2,7 +2,7 @@
   <!-- AI配置中心弹窗 -->
   <el-dialog v-if="visible" title="AI项目配置中心" :visible.sync="visible" width="90%" append-to-body
     :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog" top="2vh">
-    <div class="ai-config-container">
+    <div class="ai-config-container" v-loading="allloading">
       <!-- 页面标题 -->
       <div class="page-header">
         <p class="sub-title">选择并配置需要启用的AI功能模块</p>
@@ -12,7 +12,7 @@
       <div class="main-card">
         <div class="config-layout">
           <!-- 左侧：可选项目列表 -->
-          <div class="config-column">
+          <div class="config-column-left">
             <!-- 列头：标题+搜索 -->
             <div class="column-header">
               <div class="header-left">
@@ -41,10 +41,12 @@
             <el-table v-else :data="optionalProjects" border stripe style="width: 100%" v-loading="loading"
               @selection-change="handleSelectionChange" :row-class-name="tableRowClassName" class="project-table">
               <el-table-column type="selection" width="55" />
-              <el-table-column label="项目名称" prop="Name" width="180" align="center" />
-              <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip min-width="200">
+              <el-table-column label="项目名称" prop="Name" width="120" align="center" />
+              <el-table-column label="项目描述" prop="Remark">
                 <template slot-scope="scope">
-                  <div class="remark-text">{{ scope.row.Remark }}</div>
+                  <div class="remark-text">
+                    <CollapseText :text="scope.row.Remark" :max-lines="3" :line-height="18" />
+                  </div>
                 </template>
               </el-table-column>
             </el-table>
@@ -64,8 +66,8 @@
           </div>
 
           <!-- 右侧：已配置项目列表 -->
-          <div class="config-column">
-            <!-- 列头：标题+操作 -->
+          <div class="config-column-right">
+            <!-- 原有代码保持不变 -->
             <div class="column-header">
               <div class="header-left">
                 <i class="el-icon-setting header-icon"></i>
@@ -90,25 +92,73 @@
 
             <!-- 已配置项目表格 -->
             <el-table v-else :data="configuredProjects" border stripe style="width: 100%" v-loading="loading"
-              class="project-table" row-key="Name">
-              <el-table-column label="项目名称" prop="Name" width="180" align="center" />
+              class="project-table" row-key="Code">
+              <el-table-column label="项目名称" prop="Name" width="120" align="center" />
               <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip>
                 <template slot-scope="scope">
-                  <div class="remark-text">{{ scope.row.Remark }}</div>
+                  <div class="remark-text">
+                    <CollapseText :text="scope.row.Remark" :max-lines="3" :line-height="18" />
+                  </div>
                 </template>
               </el-table-column>
               <el-table-column label="启用绘制" width="80" align="center">
                 <template slot-scope="scope">
-                  <el-switch v-model="scope.row.enableDraw" @change="handleDrawSwitchChange(scope.row)" />
+                  <el-switch v-model="scope.row.enableDraw" />
                 </template>
               </el-table-column>
-              <el-table-column label="帧间隔" prop="FraInter" width="80" align="center" />
+              <el-table-column label="帧间隔" width="160" align="center">
+                <template slot-scope="scope">
+                  <el-input-number v-model="scope.row.FraInter" size="mini" :min="1" :max="9999"
+                    label="请输入检测的帧间隔"></el-input-number>
+                </template>
+              </el-table-column>
               <el-table-column label="操作" width="240" fixed="right" align="center">
                 <template slot-scope="scope">
-                  <el-button type="primary" icon="el-icon-setting" size="mini" @click="openParamConfig(scope.row)"
-                    class="config-btn">
-                    配置参数
-                  </el-button>
+                  <el-popover placement="left" width="500" trigger="click"
+                    :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0" popper-class="param-popover"
+                    :append-to-body="true">
+                    <!-- Popover内容：参数配置表单 -->
+                    <div class="param-config-content">
+                      <el-form :model="scope.row.paramValues" label-width="120px" class="param-form">
+                        <el-form-item v-for="(param, index) in scope.row.ParamList" :key="index" :label="param.name"
+                          class="param-form-item">
+                          <!-- 参数类型：float -->
+                          <el-input-number v-if="param.type === 'float'" v-model="scope.row.paramValues[param.code]"
+                            :min="param.min" :max="param.max" :step="0.01" :precision="2" placeholder="请输入数值"
+                            class="param-input" size="small" />
+
+                          <!-- 参数类型：boolean -->
+                          <el-switch v-else-if="param.type === 'boolean'" v-model="scope.row.paramValues[param.code]"
+                            active-text="是" inactive-text="否" active-color="#67c23a" inactive-color="#909399"
+                            class="param-switch" />
+
+                          <!-- 参数类型：enum -->
+                          <el-select v-else-if="param.type === 'enum'" v-model="scope.row.paramValues[param.code]"
+                            placeholder="请选择" class="param-select" size="small">
+                            <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
+                              :value="option.value" />
+                          </el-select>
+
+                          <!-- 参数类型：string -->
+                          <el-input v-else-if="param.type === 'string'" v-model="scope.row.paramValues[param.code]"
+                            placeholder="请输入文本" class="param-input" size="small" />
+
+                          <!-- 帮助提示 -->
+                          <el-tooltip effect="dark" :content="param.help" placement="top" enterable
+                            class="help-tooltip">
+                            <i class="el-icon-question-circle"></i>
+                          </el-tooltip>
+                        </el-form-item>
+                      </el-form>
+                    </div>
+
+                    <!-- Popover触发按钮 -->
+                    <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini" class="config-btn"
+                      @click.stop>
+                      配置参数
+                    </el-button>
+                  </el-popover>
+
                   <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeConfiguredProject(scope.row)"
                     class="remove-btn">
                     移除
@@ -127,81 +177,27 @@
           确认保存配置
         </el-button>
       </div>
-
-      <!-- 参数配置弹窗 -->
-      <el-dialog :title="dialogTitle" :visible.sync="paramConfigDialogVisible" width="70%" append-to-body
-        :close-on-click-modal="false" class="config-dialog">
-        <!-- 弹窗头部提示 -->
-        <div v-if="currentProject" class="dialog-tips">
-          <el-tag size="small" :type="currentProject.enableDraw ? 'success' : 'info'">
-            <i class="el-icon-paintbrush"></i>
-            当前{{ currentProject.enableDraw ? '启用' : '禁用' }}绘制
-          </el-tag>
-        </div>
-
-        <!-- 参数表单 -->
-        <el-form ref="paramForm" :model="paramFormData" label-width="140px" v-if="currentProject"
-          style="margin-top: 20px;" class="param-form">
-          <el-form-item v-for="(param, index) in currentProject.ParamList" :key="index" :label="param.name"
-            class="param-form-item">
-            <!-- 参数类型：float -->
-            <el-input-number v-if="param.type === 'float'" v-model="paramFormData[param.code]" :min="param.min"
-              :max="param.max" :step="0.01" :precision="2" placeholder="请输入数值" class="param-input" size="default" />
-
-            <!-- 参数类型：boolean -->
-            <el-switch v-else-if="param.type === 'boolean'" v-model="paramFormData[param.code]" active-text="是"
-              inactive-text="否" active-color="#67c23a" inactive-color="#909399" class="param-switch" />
-
-            <!-- 参数类型：enum -->
-            <el-select v-else-if="param.type === 'enum'" v-model="paramFormData[param.code]" placeholder="请选择"
-              class="param-select" size="default">
-              <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
-                :value="option.value" />
-            </el-select>
-
-            <!-- 参数类型：string -->
-            <el-input v-else-if="param.type === 'string'" v-model="paramFormData[param.code]" placeholder="请输入文本"
-              class="param-input" size="default" />
-
-            <!-- 帮助提示 -->
-            <el-tooltip effect="dark" :content="param.help" placement="top" enterable class="help-tooltip">
-              <i class="el-icon-question-circle"></i>
-            </el-tooltip>
-          </el-form-item>
-        </el-form>
-
-        <!-- 弹窗底部 -->
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="paramConfigDialogVisible = false" class="dialog-btn">取消</el-button>
-          <el-button type="primary" @click="saveParamConfig" :loading="saveLoading" class="dialog-btn primary-btn">
-            保存配置
-          </el-button>
-        </div>
-      </el-dialog>
     </div>
+
   </el-dialog>
 </template>
 
 <script>
+import CollapseText from '@/components/CollapseText/index.vue';
 import { getAIProjectList, getVideoDetail, editVideoSource } from "@/api/rules/video";
 export default {
   name: 'AIConfigDialog',
+  components: {
+    CollapseText
+  },
   data() {
     return {
       visible: false,
+      allloading:false,
       // 加载状态
       loading: false,
-      saveLoading: false,
       addLoading: false,
       confirmLoading: false,
-      // 弹窗状态
-      paramConfigDialogVisible: false,
-      // 当前选中项目
-      currentProject: null,
-      // 弹窗标题
-      dialogTitle: '',
-      // 参数表单数据
-      paramFormData: {},
       // 选中的可选项目
       selectedProjects: [],
       // 搜索文本
@@ -230,10 +226,13 @@ export default {
     }
   },
   methods: {
-    showDlg(id) {
+    async showDlg(id) {
       this.projectId = id;
-      this.initData(id);
       this.visible = true;
+      this.allloading=true;
+      await this.initData(id);
+      this.allloading=false;
+
     },
     /**
      * 初始化弹窗数据
@@ -258,17 +257,19 @@ export default {
       if (aitasks.length > 0) {
         for (let j = 0; j < aitasks.length; j++) {
           let x = aitasks[j];
-          let prj = this.allProjects.find(x => x.Code == x.Code);
+          let prj = this.allProjects.find(item => item.Code == x.Code);
           if (prj == null) {
             continue;
           }
           x["Name"] = prj.Name;
           x["Remark"] = prj.Remark;
-          x["ParamList"] = prj.ParamList;
+          x["ParamList"] = prj.ParamList || [];
+          // 初始化参数值
+          x["paramValues"] = x.paramValues || this.initParamValues(prj.ParamList || []);
           configarr.push(x);
         }
-
       }
+
       this.configuredProjects = configarr;
       // 重置状态
       this.selectedProjects = []
@@ -276,12 +277,15 @@ export default {
     },
 
     /**
-     * 初始化可选项目列表
+     * 初始化参数默认值
      */
-    async initOptionalProjects() {
-
+    initParamValues(paramList = []) {
+      const paramValues = {};
+      paramList.forEach(param => {
+        paramValues[param.code] = param.defval;
+      });
+      return paramValues;
     },
-
 
     /**
      * 处理表格行样式
@@ -310,18 +314,40 @@ export default {
         this.addLoading = true
         for (let i = 0; i < this.selectedProjects.length; i++) {
           let newitem = JSON.parse(JSON.stringify(this.selectedProjects[i]));
-          newitem["EnableDraw"] = false;
+          newitem["enableDraw"] = false;
           newitem["FraInter"] = 25;
+          // 初始化参数值
+          newitem["paramValues"] = this.initParamValues(newitem.ParamList || []);
           this.configuredProjects.push(newitem)
         }
 
         this.selectedProjects = []
-        this.$message.success(`成功添加 ${this.selectedProjects.length} 个项目`)
+        this.$message.success(`成功添加 ${this.configuredProjects.length} 个项目`)
         this.addLoading = false
       } catch (error) {
         this.$message.error('添加项目失败，请重试')
         this.addLoading = false
       }
+    },
+
+    /**
+     * 关闭Popover弹窗
+     */
+    closePopover(row) {
+      // 手动关闭所有Popover（Element UI点击触发模式下的通用关闭方式）
+      const popovers = document.querySelectorAll('.el-popover');
+      popovers.forEach(popover => {
+        if (popover.textContent.includes(row.Name)) {
+          popover.style.display = 'none';
+        }
+      });
+      // 或者使用Element UI的内置方法
+      this.$nextTick(() => {
+        const trigger = document.querySelector(`.el-button:contains("配置参数")`);
+        if (trigger) {
+          trigger.click();
+        }
+      });
     },
 
     /**
@@ -338,7 +364,7 @@ export default {
         }
       ).then(() => {
         // 移除项目
-        this.configuredProjects = this.configuredProjects.filter(p => p.Name !== project.Name)
+        this.configuredProjects = this.configuredProjects.filter(p => p.Code !== project.Code)
         this.$message.success('已移除【' + project.Name + '】项目')
       }).catch(() => {
         this.$message.info('已取消移除操作')
@@ -373,77 +399,6 @@ export default {
     },
 
     /**
-     * 切换绘制状态
-     */
-    handleDrawSwitchChange(row) {
-      this.$message({
-        type: 'info',
-        message: row.Name + ' 的绘制状态已' + (row.enableDraw ? '启用' : '禁用'),
-        duration: 1500
-      })
-    },
-
-    /**
-     * 打开参数配置弹窗
-     */
-    openParamConfig(row) {
-      this.currentProject = JSON.parse(JSON.stringify(row)) // 深拷贝防止实时联动
-      this.dialogTitle = this.currentProject.Name + ' - 参数配置'
-      this.paramConfigDialogVisible = true
-
-      // 初始化表单数据（优先使用已保存的值，无则用默认值）
-      this.paramFormData = {}
-      row.ParamList.forEach(param => {
-        // 如果有已保存的值则使用，否则用默认值
-        if (row.paramValues && row.paramValues[param.code] !== undefined) {
-          this.paramFormData[param.code] = row.paramValues[param.code]
-        } else {
-          switch (param.type) {
-            case 'float':
-              this.paramFormData[param.code] = param.min + (param.max - param.min) / 2
-              break
-            case 'boolean':
-              this.paramFormData[param.code] = true
-              break
-            case 'enum':
-              this.paramFormData[param.code] = param.options && param.options[0] ? param.options[0].value : ''
-              break
-            case 'string':
-              this.paramFormData[param.code] = ''
-              break
-            default:
-              this.paramFormData[param.code] = ''
-          }
-        }
-      })
-    },
-
-    /**
-     * 保存参数配置
-     */
-    async saveParamConfig() {
-      try {
-        this.saveLoading = true;
-        for (let i = 0; i < this.configuredProjects.length; i++) {
-          delete this.configuredProjects[i]["Name"];
-          delete this.configuredProjects[i]["Remark"];
-          delete this.configuredProjects[i]["ParamList"];
-        }
-        await editVideoSource({ "Id": this.projectId, "AITasks": JSON.stringify(this.configuredProjects) })
-        this.$message.success({
-          message: '参数配置保存成功！',
-          duration: 1500
-        })
-        this.paramConfigDialogVisible = false
-        this.saveLoading = false
-
-      } catch (error) {
-        this.$message.error('参数配置保存失败，请重试！')
-        this.saveLoading = false
-      }
-    },
-
-    /**
      * 取消操作，关闭弹窗
      */
     handleCancel() {
@@ -451,24 +406,26 @@ export default {
     },
 
     /**
-     * 确认保存配置
+     * 保存配置
      */
-    handleConfirm() {
+    async handleConfirm() {
       try {
-        this.confirmLoading = true
-
-        // 模拟保存请求
-        setTimeout(() => {
-          // 发送配置数据给父组件
-          this.$emit('confirm', JSON.parse(JSON.stringify(this.configuredProjects)))
-          this.$emit('update:visible', false)
-          this.$message.success('AI配置保存成功！')
-          this.confirmLoading = false
-        }, 500)
+        this.confirmLoading = true;
+        // 准备提交数据（只保留必要字段）
+        const submitData = this.configuredProjects.map(item => {
+          const { Name, Remark, ParamList, ...rest } = item;
+          return rest;
+        });
+        await editVideoSource({ "Id": this.projectId, "AITasks": JSON.stringify(submitData) })
+        this.$message.success({
+          message: '参数配置保存成功！',
+          duration: 1500
+        })
+        this.visible = false
+        this.confirmLoading = false
 
       } catch (error) {
-        this.$message.error('保存配置失败，请重试！')
-        console.error('确认保存失败：', error)
+        this.$message.error('参数配置保存失败，请重试！')
         this.confirmLoading = false
       }
     }
@@ -530,8 +487,8 @@ export default {
   overflow: hidden;
 }
 
-.config-column {
-  flex: 1;
+.config-column-left,
+.config-column-right {
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -539,6 +496,14 @@ export default {
   padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   height: 100%;
+}
+
+.config-column-left {
+  width: 400px;
+}
+
+.config-column-right {
+  flex: 1;
 }
 
 /* 列头 */
@@ -590,7 +555,7 @@ export default {
 
 .divider-icon {
   font-size: 24px;
-  padding: 0 8px;
+  padding: 16px 8px;
 }
 
 /* 空状态 */
@@ -613,6 +578,7 @@ export default {
   line-height: 1.4;
 }
 
+
 /* 按钮样式 */
 .column-footer {
   margin-top: 16px;
@@ -628,52 +594,50 @@ export default {
   margin-right: 8px;
 }
 
-/* 弹窗样式 */
-.config-dialog {
-  border-radius: 8px;
+/* Popover参数配置样式 - 关键修复 */
+::v-deep .param-popover {
+  padding: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  z-index: 9999 !important;
 }
 
-.dialog-tips {
-  padding: 8px 10px;
-  background: #f5f7fa;
-  border-radius: 4px;
+::v-deep .el-popover__reference {
+  position: relative;
+  z-index: 10000;
+}
+
+.param-config-content {
+  width: 100%;
+  padding: 0;
 }
 
 .param-form {
-  max-height: 500px;
+  padding: 16px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
 .param-form-item {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .param-input,
 .param-select {
-  width: 300px;
+  width: 220px;
+}
+
+.param-switch {
+  margin-right: 8px;
 }
 
 .help-tooltip {
   margin-left: 8px;
   color: #409eff;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
 }
 
-.dialog-footer {
-  text-align: right;
-}
-
-.dialog-btn {
-  border-radius: 6px;
-  padding: 8px 16px;
-  margin-left: 8px;
-}
-
-.primary-btn {
-  background-color: #409eff;
-  border-color: #409eff;
-}
 
 /* 弹窗底部操作按钮 */
 .dialog-bottom-actions {
@@ -691,5 +655,15 @@ export default {
 
 ::v-deep .row-odd {
   background-color: #fff;
+}
+
+/* 修复层级问题 */
+::v-deep .el-dialog {
+  z-index: 9000 !important;
+}
+
+::v-deep .el-table {
+  position: relative;
+  z-index: 1;
 }
 </style>
