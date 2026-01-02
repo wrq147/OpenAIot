@@ -72,7 +72,7 @@
         </el-row>
         <el-row :gutter="10" v-show="dialogName == 'custominfo'">
           <template v-for="(item, ix) in filedTableList">
-            <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,this.form.ExtVals)">
+            <el-col :span="12" :key="'custom_filed' + ix" v-if="!inSetFormItemHide(item,this.form.ExtVals)">
               <el-form-item :label="item.name" :prop="item.mapid">
                 <el-select @change="customValChange" :disabled="item.is_readonly" :allow-create="item.is_add"
                   :multiple="item.type == '复选框'" :clearable="!item.is_required" v-model="form.ExtVals[item.mapid]"
@@ -162,7 +162,6 @@ import {
   factorySupplierInfo,
   editSupplierSave,
 } from "@/api/factory/supplier";
-import dayjs from "dayjs";
 import { setCustomDefaultValue, checkBeforeSave,setFormItemHide } from '@/utils/field.js'
 export default {
   name: "AdminUiProductAdd",
@@ -192,6 +191,7 @@ export default {
         AddressCode: "", //区域代码
         AddressName: "", //地址名称
         AddressDetail: "", //地址详情
+        ExtVals:{}
       },
       rules: {
         SupplierName: [
@@ -214,6 +214,9 @@ export default {
   mounted() { },
 
   methods: {
+    inSetFormItemHide(item, extdata) {
+      setFormItemHide(item, extdata);
+    },
     afterValSearch(val, item) {//关联对象回显时获取列表
       if (val && val.indexOf(',') > -1) {
         let keyVal = val.split(',')
@@ -304,6 +307,7 @@ export default {
           AddressCode: supplierInfo.AddressCode, //区域代码
           AddressName: supplierInfo.AddressName, //地址名称
           AddressDetail: supplierInfo.AddressDetail, //地址详情
+          ExtVals:{},
         };
         setCustomDefaultValue(this.filedTableList, this.form, this.rules, supplierInfo);
       } else {
@@ -318,6 +322,7 @@ export default {
           AddressCode: "", //区域代码
           AddressName: "", //地址名称
           AddressDetail: "", //地址详情
+          ExtVals:{}
         }
         setCustomDefaultValue(this.filedTableList, this.form, this.rules);
         // console.log("表单初始化",this.form);

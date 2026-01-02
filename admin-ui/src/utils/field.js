@@ -4,9 +4,31 @@ import {
 var dayjs = require("@/utils/day.js");
 //显示自定义字段
 export function getFieldShow(model, field) {
-    let formext = model["ExtVals"];
-    let modelval = formext[field.mapid];
-    switch (field.type) {
+    let modelval;
+    let modeltype;
+    if ("field" in field) {
+        modeltype = field.type;
+        if (field.field.indexOf("Ext") == 0) {
+            let formext = model["ExtVals"];
+            modelval = formext[field.field];
+        }
+        else {
+            modelval = model[field.field];
+        }
+    }
+    else {
+        modeltype = field.type;
+        if (field.mapid.indexOf("Ext") == 0) {
+            let formext = model["ExtVals"];
+            modelval = formext[field.mapid];
+        }
+        else {
+            modelval = model[field.mapid];
+        }
+    }
+
+
+    switch (modeltype) {
         case "时间":
             return parseTime(modelval);
         case "图片":
@@ -41,16 +63,20 @@ export function checkBeforeSave(filedTableList, form) {
 }
 
 //初始化自定义表单
-export function setCustomDefaultValue(filedTableList, form, formRules, initFormRaw, pre) {
+export function setCustomDefaultValue(filedTableList, form, formRules, rawInitForm, pre) {
     //设置自定义的变量初始化
     let formext;
-    if (form["ExtVals"] == null) {
-        formext = {};
-    }
-    else {
+    if ('ExtVals' in form) {
         formext = form["ExtVals"];
     }
-    initForm = initFormRaw["ExtVals"];
+    else {
+        formext = {};
+    }
+    let initForm = null;
+    if (rawInitForm != null) {
+        initForm = rawInitForm["ExtVals"];
+    }
+
     filedTableList.map((rw) => {
         if (initForm) {
             if (rw.type == "时间") {

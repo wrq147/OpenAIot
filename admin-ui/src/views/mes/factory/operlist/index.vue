@@ -33,14 +33,7 @@
                 <template v-for="ite in activeFiledList">
                   <el-table-column :fixed="ite.isFixed ? 'left' : false" v-if="ite.isShow" :key="ite.field" :label="ite.fieldName" align="center" :prop="ite.field" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                      <span v-if="ite.type == '时间'">{{parseTime(scope.row[ite.field])}}</span>
-                      <span v-else-if="ite.type == '图片'">
-                        <el-image fit="cover" style="width: 54px; height: 54px" :src="scope.row[ite.field] + '?wh=500x500'">
-                          <div slot="error" class="image-slot"><i class="el-icon-picture-outline"></i></div>
-                        </el-image>
-                      </span>
-                      <span v-else-if="ite.type == '关联对象'">{{returnObjectName(scope.row[ite.field])}}</span>
-                      <span v-else>{{ scope.row[ite.field] }}</span>
+                      <div v-html="ingetFieldShow(scope.row, ite)"></div>
                     </template>
                   </el-table-column>
                 </template>
@@ -69,6 +62,7 @@ import addOper from "./cmp/addOper.vue";
 import secondaryGrouping from "@/views/manufac/factory/component/secondaryGrouping.vue";
 import filterPopover from "@/views/manufac/factory/component/filterPopover.vue";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
+import { getFieldShow } from '@/utils/field.js'
 export default {
   name: "BatchList",
   mixins: [resizeTableCon],
@@ -159,6 +153,9 @@ export default {
     });
   },
   methods: {
+    ingetFieldShow(obj, field) {
+      return getFieldShow(obj, field);
+    },
     getList() {
       this.open = false;
       this.loading = true;

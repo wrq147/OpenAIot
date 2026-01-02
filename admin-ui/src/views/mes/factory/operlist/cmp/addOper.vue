@@ -132,7 +132,7 @@
             </el-row>
             <el-row v-show="dialogName == 'custominfo'">
                 <template v-for="(item, ix) in filedTableList">
-                    <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,ruleForm.ExtVals)">
+                    <el-col :span="12" :key="'custom_filed' + ix" v-if="!inSetFormItemHide(item, ruleForm.ExtVals)">
                         <el-form-item :label="item.name" :prop="item.mapid">
                             <el-select @change="customValChange" :disabled="item.is_readonly"
                                 :allow-create="item.is_add" :multiple="item.type === '复选框'"
@@ -143,13 +143,15 @@
                                     :key="it + ix"></el-option>
                             </el-select>
                             <el-radio-group @change="customValChange" :disabled="item.is_readonly"
-                                v-model="ruleForm.ExtVals[item.mapid]" v-if="item.type === '单选框' && item.show_way === '平铺'">
+                                v-model="ruleForm.ExtVals[item.mapid]"
+                                v-if="item.type === '单选框' && item.show_way === '平铺'">
                                 <el-radio v-for="it in item.optionals" :label="it" :key="it + ix">{{ it }}</el-radio>
                             </el-radio-group>
                             <el-checkbox-group @change="customValChange" :disabled="item.is_readonly"
-                                v-model="ruleForm.ExtVals[item.mapid]" v-if="item.type === '复选框' && item.show_way === '平铺'">
+                                v-model="ruleForm.ExtVals[item.mapid]"
+                                v-if="item.type === '复选框' && item.show_way === '平铺'">
                                 <el-checkbox v-for="it in item.optionals" :label="it" :key="it + ix">{{ it
-                                    }}</el-checkbox>
+                                }}</el-checkbox>
                             </el-checkbox-group>
                             <el-date-picker @change="customValChange" :disabled="item.is_readonly"
                                 v-if="item.type === '时间'" v-model="ruleForm.ExtVals[item.mapid]" type="datetime"
@@ -164,10 +166,10 @@
                                 v-model="ruleForm.ExtVals[item.mapid]" :precision="item.decimals"></el-input>
                             <el-link :disabled="item.is_readonly" v-if="item.type === '超链接'" href="#" target="_blank">{{
                                 item.describe_text }}</el-link>
-   
+
                             <div class="avatar_con" v-if="item.type == '图片'">
-                                <image-upload @input="customValChange($event, item)" v-model="ruleForm.ExtVals[item.mapid]"
-                                    :limit="1" :isShowLeft="true">
+                                <image-upload @input="customValChange($event, item)"
+                                    v-model="ruleForm.ExtVals[item.mapid]" :limit="1" :isShowLeft="true">
                                     <template #tip>
                                         <div class="label_tip">
                                             <div class="label_text">　　</div>
@@ -222,7 +224,7 @@ import { factorySearchObject } from "@/api/factory/product";
 import addPeople from '@/views/flowable/common/OrgPicker.vue';
 import addEquipment from './addEquipment.vue'
 import { defectList } from "@/api/mes/defect";
-import { setCustomDefaultValue, checkBeforeSave,setFormItemHide } from '@/utils/field.js'
+import { setCustomDefaultValue, checkBeforeSave, setFormItemHide } from '@/utils/field.js'
 export default {
     name: 'addDefect',
     components: {
@@ -290,6 +292,9 @@ export default {
         }
     },
     methods: {
+        inSetFormItemHide(item, extdata) {
+            setFormItemHide(item, extdata);
+        },
         //关联对象回显时获取列表
         afterValSearch(val, item) {
             if (val && val.indexOf(',') > -1) {
@@ -371,7 +376,7 @@ export default {
                 }
             })
         },
-        
+
         customValChange() {
             let ruleForm = JSON.parse(JSON.stringify(this.ruleForm));
             this.ruleForm = JSON.parse(JSON.stringify(ruleForm));

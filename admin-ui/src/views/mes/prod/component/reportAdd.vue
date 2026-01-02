@@ -204,12 +204,11 @@ export default {
         EndWork: "",//结束时间
         WorkTime: 0, //报工时长
         OverReason: "", //超时原因改备注
-        // FlowId: 0, //流程表单id
-        RepBat: {},
+        RepBat: {ExtVals:{}},
         PhotoUrl: '',
         WorkOrderId: '',
         WorkTaskId: '',
-        OperId: '',
+        OperId: ''
       },
       rules: {
         GoodNum: [
@@ -266,9 +265,7 @@ export default {
     },
   },
   mounted() {
-
   },
-
   methods: {
     async chgBatchNo(val) {
       if (val == "") return;
@@ -474,7 +471,7 @@ export default {
           WorkOrderId: '',
           WorkTaskId: '',
           OperId: '',
-          RepBat: { "Id": "" }
+          RepBat: { "Id": "","ExtVals":{} }
         }
 
         let numres = await GeneratePlaneNumber()//获取报工编号

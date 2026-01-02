@@ -3,11 +3,8 @@ using AuthService.Model;
 using Common.EventBus;
 using Common.Share;
 using Microsoft.Extensions.Options;
-using Minio.DataModel;
 using MyAccess.DB;
 using MyAccess.DB.Builder.WhereToSql;
-using NPOI.OpenXmlFormats.Dml.Diagram;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +20,29 @@ namespace AuthService.Fields
         public static void AppendFilter<A>(ISqlBuilder<A> sql, FieldFilterItem[] items, string rawId) where A : ISqlBuilder<A>
         {
             if (items == null || items.Length == 0)
+            {
+                return;
+            }
+            bool hasitems = false;
+            foreach (var preitem in items)
+            {
+                if(preitem.val_num != null)
+                {
+                    hasitems = true;
+                    break;
+                }
+                else if (preitem.val_arr != null && preitem.val_arr.Length > 0)
+                {
+                    hasitems = true;
+                    break;
+                }
+                else if (preitem.val != null)
+                {
+                    hasitems = true;
+                    break;
+                }
+            }
+            if (!hasitems)
             {
                 return;
             }
@@ -150,10 +170,6 @@ namespace AuthService.Fields
                             }
                             break;
                     }
-                }
-                else
-                {
-                    sql.Append(" and 1=2");
                 }
                 sql.Append(")");
                 kl++;
@@ -424,6 +440,7 @@ namespace AuthService.Fields
                         MZ_FieldVal fieldVal = new MZ_FieldVal();
                         fieldVal.Id = formobj.GetFormId();
                         fieldVal.FieldId = ext.mapid;
+                        fieldVal.TableName = formobj.GetFormName();
                         insertmodels.Add(fieldVal);
                         if (ext.type == "数字" || ext.type == "时间")
                         {
@@ -469,6 +486,7 @@ namespace AuthService.Fields
                     MZ_FieldVal fieldVal = new MZ_FieldVal();
                     fieldVal.Id = formobj.GetFormId();
                     fieldVal.FieldId = ext.mapid;
+                    fieldVal.TableName = formobj.GetFormName();
                     insertmodels.Add(fieldVal);
                     if (ext.type == "数字" || ext.type == "时间")
                     {

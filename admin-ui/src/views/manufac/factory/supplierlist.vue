@@ -33,16 +33,7 @@
                 <el-table-column :fixed="ite.isFixed ? 'left' : false" v-if="ite.isShow" :key="ite.field"
                   :label="ite.fieldName" align="center" :prop="ite.field" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
-                    <span v-if="ite.type == '时间'">{{ parseTime(scope.row[ite.field]) }}</span>
-                    <span v-else-if="ite.type == '图片'">
-                      <el-image fit="cover" style="width:54px;height:54px" :src="scope.row[ite.field] + '?wh=500x500'">
-                        <div slot="error" class="image-slot">
-                          <i class="el-icon-picture-outline"></i>
-                        </div>
-                      </el-image>
-                    </span>
-                    <span v-else-if="ite.type == '关联对象'">{{ returnObjectName(scope.row[ite.field]) }}</span>
-                    <span v-else>{{ scope.row[ite.field] }}</span>
+                    <div v-html="ingetFieldShow(scope.row, ite)"></div>
                   </template>
                 </el-table-column>
               </template>
@@ -72,6 +63,7 @@ import mapSelectCompt from "@/views/iot/deviceManage/mapSelectCompt";
 import {orgFormFields} from '@/api/factory/customFields'
 import filterPopover from './component/filterPopover.vue'
 import secondaryGrouping from './component/secondaryGrouping.vue'
+import { getFieldShow } from '@/utils/field.js'
 export default {
   name: 'AdminUiProductlist',
   mixins: [resizeTableCon],
@@ -117,6 +109,9 @@ export default {
   },
 
   methods: {
+    ingetFieldShow(obj, field) {
+      return getFieldShow(obj, field);
+    },
     setSaveFilterList(filterList) {
       //筛选另存为新分组
       this.$refs.secondaryGrouping.setSaveFilterList(filterList)

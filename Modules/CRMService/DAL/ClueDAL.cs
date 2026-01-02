@@ -27,7 +27,7 @@ namespace CRMService.DAL
                     string tsqlmatch = sql.Sql.Comparable.FullSearch("Helper", keys);
                     sql.Append(scope.GenerateFilter("DeptId", "LeaderId", "LeaderId=" + user.UserId + " or " + tsqlmatch));
                 })
-            .GeneratePageObjectAsync(query, "create_time desc");
+            .GeneratePageObjectAsync(query, string.Empty);
         }
 
         public virtual async Task AutoToPublic(long orgId, int day)

@@ -27,9 +27,6 @@
                   <el-date-picker class="set_radius" v-model="dateRange" style="width: 250px"
                     value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="-" start-placeholder="开始时间"
                     end-placeholder="结束时间"></el-date-picker>
-                  <!-- <el-input @input="getList" v-model="queryParams.BatchNo" placeholder="请输入报工批次编号" clearable>
-                    <i slot="suffix" class="el-input__icon el-icon-search"></i>
-                  </el-input> -->
                 </el-col>
                 <el-col :span="1.5">
                   <filterPopover :filterFiledList="supplierFiledList" :hasSaveButton="true" @finishSelect="finishSelect"
@@ -44,25 +41,14 @@
                 <el-table-column :fixed="ite.isFixed ? 'left' : false" v-if="ite.isShow" :key="ite.field"
                   :label="ite.fieldName" align="center" :prop="ite.field" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
-                    <span v-if="ite.type == '时间'">{{ parseTime(getRowItem(scope.row, ite.field)) }}</span>
-                    <span v-else-if="ite.type == '图片'">
-                      <el-image fit="cover" style="width:54px;height:54px"
-                        :src="getRowItem(scope.row, ite.field) + '?wh=500x500'">
-                        <div slot="error" class="image-slot">
-                          <i class="el-icon-picture-outline"></i>
-                        </div>
-                      </el-image>
-                    </span>
-                    <span v-else-if="ite.type == '关联对象'">{{ returnObjectName(getRowItem(scope.row, ite.field)) }}</span>
-
-                    <template slot-scope="scope" v-else-if="ite.field == 'Status'">
+                    <template v-if="ite.field == 'Status'" slot-scope="scope">
                       <el-tag v-if="scope.row.Status == 0" type="warning">待提交</el-tag>
                       <el-tag v-if="scope.row.Status == 1" type="warning">待审核</el-tag>
                       <el-tag v-if="scope.row.Status == 2" type="success">已审核</el-tag>
                       <el-tag v-if="scope.row.Status == 3" type="danger">已取消</el-tag>
                       <el-tag v-if="scope.row.Status == 4" type="danger">已驳回</el-tag>
                     </template>
-                    <span v-else>{{ getRowItem(scope.row, ite.field) }}</span>
+                    <div v-else v-html="ingetFieldShow(scope.row, ite)"></div>
                   </template>
                 </el-table-column>
               </template>
@@ -99,6 +85,7 @@ import reportAdd from '@/views/mes/prod/component/reportAdd'
 import slectTaskList from '@/views/mes/prod/component/slectTaskList'
 import { ReportList, reportRemove } from '@/api/mes/report'
 import { orgFormFields } from '@/api/factory/customFields'
+import { getFieldShow } from '@/utils/field.js'
 export default {
   name: 'AdminUiReportlist',
   mixins: [resizeTableCon],
@@ -154,14 +141,8 @@ export default {
   },
 
   methods: {
-    getRowItem(row, field) {
-      let sparr = field.split('.');
-      if (sparr.length == 1) {
-        return row[field];
-      }
-      else {
-        return row[sparr[0]][sparr[1]];
-      }
+    ingetFieldShow(obj, field) {
+      return getFieldShow(obj, field);
     },
     taskCancelForm() {
       this.taskDialogVisible = false

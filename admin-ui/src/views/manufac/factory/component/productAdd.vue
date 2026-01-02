@@ -160,7 +160,7 @@
       </el-row>
       <el-row :gutter="10" v-show="dialogName == 'custominfo'">
         <template v-for="(item, ix) in filedTableList">
-          <el-col :span="12" :key="'custom_filed' + ix" v-if="!setFormItemHide(item,form.ExtVals)">
+          <el-col :span="12" :key="'custom_filed' + ix" v-if="!inSetFormItemHide(item, form.ExtVals)">
             <el-form-item :label="item.name" :prop="item.mapid">
               <el-select @change="customValChange($event, item)" :disabled="item.is_readonly" :filterable="item.is_add"
                 :allow-create="item.is_add" :multiple="item.type == '复选框'" :clearable="!item.is_required"
@@ -191,8 +191,8 @@
                 :placeholder="item.prompt_text ? item.prompt_text : '请输入'"
                 :type="item.is_multiple ? 'textarea' : 'text'" v-model="form.ExtVals[item.mapid]"></el-input>
               <el-input @input="customValChange($event, item)" :disabled="item.is_readonly" v-if="item.type == '数字'"
-                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number" v-model="form.ExtVals[item.mapid]"
-                :precision="item.decimals"></el-input>
+                :placeholder="item.prompt_text ? item.prompt_text : '请输入'" type="number"
+                v-model="form.ExtVals[item.mapid]" :precision="item.decimals"></el-input>
               <el-link style="line-height:30px;height:35px" :disabled="item.is_readonly" v-if="item.type == '超链接'"
                 href="#" target="_blank">{{ item.describe_text }}</el-link>
 
@@ -221,8 +221,8 @@
                 </template>
               </file-upload>
               <el-select @focus="afterValSearch(form.ExtVals[item.mapid], item)" :clearable="true"
-                @change="customValChange($event, item)" style="width: 100%" v-model="form.ExtVals[item.mapid]" filterable remote
-                reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
+                @change="customValChange($event, item)" style="width: 100%" v-model="form.ExtVals[item.mapid]"
+                filterable remote reserve-keyword :placeholder="item.prompt_text ? item.prompt_text : '请选择'"
                 :remote-method="(query) => associationMethod(query, item)" :loading="Supplierloading"
                 v-if="item.type == '关联对象'">
                 <el-option v-for="ite in associationObject[item.mapid]" :key="ite.Value" :label="ite.Name"
@@ -257,7 +257,7 @@ import {
   productList
 } from "@/api/rules/productModel";
 import { checkPermi } from "@/utils/permission";
-import { setCustomDefaultValue, checkBeforeSave,setFormItemHide } from '@/utils/field.js'
+import { setCustomDefaultValue, checkBeforeSave, setFormItemHide } from '@/utils/field.js'
 export default {
   name: "AdminUiProductAdd",
   props: {
@@ -282,7 +282,7 @@ export default {
       IOTProductloading: false,//物联网产品加载
       Unitoptions: [],//单位列表
       dialogName: "baseinfo",
-      labelList: [{ label: "原材料", value: "M" },{ label: "半成品", value: "U" }, { label: "成品", value: "F" }],
+      labelList: [{ label: "原材料", value: "M" }, { label: "半成品", value: "U" }, { label: "成品", value: "F" }],
       typeList: [],
       dialogVisible: false,
       form: {
@@ -301,7 +301,7 @@ export default {
         Route: "", //工艺路线，
         Supplier: "", //供应商，
         Remark: "", //备注说明
-        ExtVals:{}
+        ExtVals: {}
       },
       rules: {
         SkuNumber: [{ required: true, trigger: "blur", message: "产品编码不能为空" },],
@@ -340,7 +340,6 @@ export default {
       if (this.isCheckPermi(['/IoTService/IotProduct/ListPage'])) {
         await this.getIOTProductList()//物联网产品
       }
-      await this.getUnitList()//单位
     }
     await this.IOTProductRemoteMethod("");
     await this.routeRemoteMethod("");
@@ -348,6 +347,9 @@ export default {
   },
 
   methods: {
+    inSetFormItemHide(item, extdata) {
+      setFormItemHide(item, extdata);
+    },
     isCheckPermi(val) {
       return checkPermi(val)
     },
@@ -497,7 +499,7 @@ export default {
       }
 
     },
-   
+
     customValChange(val, fidItem) {//数据发生变化后刷新，并验证表单
       // console.log("看看关联对象选择后有没有出现",fidItem);
       let form = JSON.parse(JSON.stringify(this.form));
@@ -530,7 +532,6 @@ export default {
         await this.getProductCustomFiled();
         if (id) {
           let res = await factoryProductInfo({ id: id });
-          console.log("productinfo,产品详情", res,);
           let productinfo = res.data;
           this.form = {
             Id: productinfo.Id,
@@ -554,6 +555,7 @@ export default {
             Supplier: productinfo.Supplier, //供应商，
             SupplierName: productinfo.SupplierName,
             Remark: productinfo.Remark, //备注说明
+            ExtVals:{}
           };
           this.resetForm("form");
           this.productTypeChange()
@@ -582,6 +584,7 @@ export default {
             Supplier: "", //供应商，
             SupplierName: "",
             Remark: "", //备注说明
+            ExtVals:{}
           }
           this.resetForm("form");
           setCustomDefaultValue(this.filedTableList, this.form, this.rules, null);
@@ -589,6 +592,7 @@ export default {
         }
         let form = JSON.parse(JSON.stringify(this.form))
         this.form = JSON.parse(JSON.stringify(form))
+        await this.getUnitList();
         this.dialogVisible = true;
 
       } catch (error) {

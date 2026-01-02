@@ -20,7 +20,7 @@ namespace ProducerService.DAL
                 })
                 .Then(query.beginTime != null, sq => sq.Append(" and f.create_time >= ").AppendParam(query.beginTime))
                 .Then(query.endTime != null, sq => sq.Append(" and f.create_time <= ").AppendParam(query.endTime))
-            .GeneratePageObjectAsync(query, "f.create_time desc");
+            .GeneratePageObjectAsync(query, string.Empty);
         }
     }
 }

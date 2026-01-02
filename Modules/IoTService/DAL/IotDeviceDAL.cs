@@ -87,11 +87,9 @@ namespace IoTService.DAL
             .Then(!string.IsNullOrEmpty(query.Key), sq =>
             {
                 string tkey = query.Key.SqlLikeFilter();
-                var keyarr = new JiebaSegmenter().CutForSearch(query.Key);
                 sq.Append(" and (d.DeviceId like ").AppendParam(tkey + "%")
                 .Append(" or d.DeviceNumber like ").AppendParam(tkey + "%")
                 .Append(" or d.Name like ").AppendParam("%" + tkey + "%")
-                .Append(" or ").FullSearch("d.KeyWords", keyarr)
                 .Append(")");
             })
             .Then(!string.IsNullOrEmpty(query.Keywords), sq =>
@@ -271,7 +269,7 @@ namespace IoTService.DAL
             })
             .Then(query.beginTime != null, sq => sq.Append(" and d.CreateOn >= ").AppendParam(query.beginTime))
             .Then(query.endTime != null, sq => sq.Append(" and d.CreateOn <= ").AppendParam(query.endTime))
-            .GeneratePageObjectAsync(query, "d.Id desc");
+            .GeneratePageObjectAsync(query, string.Empty);
         }
         /// <summary>
         /// 查询指定协议的所有设备Id列表

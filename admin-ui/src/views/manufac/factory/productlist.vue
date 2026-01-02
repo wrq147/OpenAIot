@@ -34,7 +34,8 @@
         </el-tabs>
       </div>
       <div class="prop_ul" v-if="activePropsList && activePropsList.length > 0">
-        <div class="prop_li" @click="setFilterProp('')" :key="'typeprop'" :class="{ 'active_prop': activeProp == '' }">全部
+        <div class="prop_li" @click="setFilterProp('')" :key="'typeprop'" :class="{ 'active_prop': activeProp == '' }">
+          全部
         </div>
         <div class="prop_li" @click="setFilterProp(it)" v-for="it in activePropsList" :key="'typeprop' + it"
           :class="{ 'active_prop': it == activeProp }">{{ it }}</div>
@@ -85,18 +86,8 @@
                 <el-table-column :fixed="ite.isFixed ? 'left' : false" v-if="ite.isShow" :key="ite.field"
                   :label="ite.fieldName" align="center" :prop="ite.field" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
-                    <span v-if="ite.type == '时间'">{{ parseTime(scope.row[ite.field]) }}</span>
-                    <span v-else-if="ite.type == '图片'">
-                      <el-image fit="cover" style="width:54px;height:54px" :src="scope.row[ite.field] + '?wh=500x500'">
-                        <div slot="error" class="image-slot">
-                          <i class="el-icon-picture-outline"></i>
-                        </div>
-                      </el-image>
-                    </span>
-                    <span v-else-if="ite.type == '关联对象'">{{ returnObjectName(scope.row[ite.field]) }}</span>
-                    <span v-else-if="ite.field == 'ProductLabel'">{{ returnProductLabelName(scope.row[ite.field])
-                      }}</span>
-                    <span v-else>{{ scope.row[ite.field] }}</span>
+                    <span v-if="ite.field == 'ProductLabel'">{{ returnProductLabelName(scope.row[ite.field])}}</span>
+                    <div v-else v-html="ingetFieldShow(scope.row, ite)"></div>
                   </template>
                 </el-table-column>
               </template>
@@ -130,6 +121,7 @@ import productViewList from './component/productViewList.vue'//分组列表
 import productViewEdit from './component/productViewEdit.vue'//分组编辑
 import { factoryProductListPost, factoryProductRemove, factoryProductTypeListGet, factoryProductTypeInfo, factoryProductTypeRemove } from '@/api/factory/product'
 import { orgFormFields } from '@/api/factory/customFields'
+import { getFieldShow } from '@/utils/field.js'
 export default {
   name: 'AdminUiProductlist',
   mixins: [resizeTableCon],
@@ -155,8 +147,8 @@ export default {
       activePropsList: [],//产品分组对应的属性
       activeProp: '',
       activeFiledList: [],//当前分类显示的产品
-      activeFilter:[],//筛选框的筛选
-      typeConditionJson:[],//分组的过滤筛选
+      activeFilter: [],//筛选框的筛选
+      typeConditionJson: [],//分组的过滤筛选
     };
   },
 
@@ -177,6 +169,9 @@ export default {
   },
 
   methods: {
+    ingetFieldShow(obj, field) {
+      return getFieldShow(obj, field);
+    },
     returnProductLabelName(val) {
       switch (val) {
         case 'M':
@@ -185,14 +180,6 @@ export default {
           return '成品';
         case 'U':
           return '半成品';
-      }
-    },
-    returnObjectName(val) {//显示关联对象字段的名称
-      if (val && val.indexOf(',') > -1) {
-        let arr = val.split(',')
-        return arr[1]
-      } else {
-        return ''
       }
     },
     setFilterProp(val) {
@@ -207,13 +194,13 @@ export default {
       this.getList()
     },
     finishSelect(items) {//进行筛选
-      this.activeFilter=items?JSON.parse(JSON.stringify(items)):[]
+      this.activeFilter = items ? JSON.parse(JSON.stringify(items)) : []
       if (items && items.length > 0) {
-        this.queryParams.items=[...items,...this.typeConditionJson]
+        this.queryParams.items = [...items, ...this.typeConditionJson]
       } else {
-        if(this.typeConditionJson&&this.typeConditionJson.length>0){
-          this.queryParams.items=[...this.typeConditionJson]
-        }else{
+        if (this.typeConditionJson && this.typeConditionJson.length > 0) {
+          this.queryParams.items = [...this.typeConditionJson]
+        } else {
           delete this.queryParams.items
         }
       }
@@ -285,25 +272,25 @@ export default {
           // console.log('findTypeRow',findTypeRow.ListFieldsJson);
           this.activePropsList = findTypeRow.PropList ? findTypeRow.PropList.split(',') : []//属性
           this.activeFiledList = findTypeRow.ListFieldsJson ? JSON.parse(findTypeRow.ListFieldsJson) : []//字段相关设置
-          if(findTypeRow){
-            let ConditionJson=findTypeRow.ConditionJson?JSON.parse(findTypeRow.ConditionJson):[]
-            if(ConditionJson&&ConditionJson.length>0){
-              ConditionJson=ConditionJson.map(rw=>{
-                if(rw.val_num||rw.val_num==0){}else{
+          if (findTypeRow) {
+            let ConditionJson = findTypeRow.ConditionJson ? JSON.parse(findTypeRow.ConditionJson) : []
+            if (ConditionJson && ConditionJson.length > 0) {
+              ConditionJson = ConditionJson.map(rw => {
+                if (rw.val_num || rw.val_num == 0) { } else {
                   delete rw.val_num
                 }
-                if(rw.val_arr&&rw.val_arr.length>0){}else{
+                if (rw.val_arr && rw.val_arr.length > 0) { } else {
                   delete rw.val_arr
                 }
                 return rw
               })
             }
-            this.typeConditionJson=JSON.parse(JSON.stringify(ConditionJson))
-            this.queryParams.items=[...this.activeFilter,...ConditionJson]
-          }else{
-            this.typeConditionJson=[]
+            this.typeConditionJson = JSON.parse(JSON.stringify(ConditionJson))
+            this.queryParams.items = [...this.activeFilter, ...ConditionJson]
+          } else {
+            this.typeConditionJson = []
           }
-          
+
           // this.queryParams.typeId = this.activeName
           delete this.queryParams.prop
           this.queryParams.pageNum = 1
@@ -321,11 +308,11 @@ export default {
             { "field": "SalesPrice", "fieldName": "销售单价", "type": "数字", "isShow": true, "isFixed": false }
           ]
           this.activePropsList = []
-          this.typeConditionJson=[]
+          this.typeConditionJson = []
           // delete this.queryParams.typeId
-          if(this.activeFilter&&this.activeFilter.length>0){
-            this.queryParams.items=this.activeFilter
-          }else{
+          if (this.activeFilter && this.activeFilter.length > 0) {
+            this.queryParams.items = this.activeFilter
+          } else {
             delete this.queryParams.items
           }
           delete this.queryParams.prop

@@ -102,7 +102,7 @@ namespace AfterService.DAL
             {
                 expression = expression.And(x => x.CreatedOn <= query.endTime);
             }
-            return await new SqlBuilder(help).Query<MZ_PlaneTask>().Include(x => x.TargetDevice, x => x.TargetId).Include(x => x.FlowInfo, x => x.FlowId).Where(expression).GeneratePageObjectAsync(query, "a.CreatedOn desc");
+            return await new SqlBuilder(help).Query<MZ_PlaneTask>().Include(x => x.TargetDevice, x => x.TargetId).Include(x => x.FlowInfo, x => x.FlowId).Where(expression).GeneratePageObjectAsync(query, string.Empty);
         }
     }
 }

@@ -1905,7 +1905,7 @@
         </member>
         <member name="P:AuthService.Fields.FieldBase.mapid">
             <summary>
-            映射的字段：字符串：StrExt1~StrExt30，数值：NumExt1~NumExt10
+            映射的字段：Ext1~100
             </summary>
         </member>
         <member name="P:AuthService.Fields.FieldBase.name">
@@ -2034,6 +2034,15 @@
             <param name="formName"></param>
             <param name="ac"></param>
             <param name="filterFields"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Fields.FieldUtility.GenerateExtValList``1(TemplateAction.Core.ITAServiceProvider,System.Collections.Generic.List{``0})">
+            <summary>
+            生成列表的扩展值
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider"></param>
+            <param name="formobjList"></param>
             <returns></returns>
         </member>
         <member name="M:AuthService.Fields.FieldUtility.GenerateExtVals``1(TemplateAction.Core.ITAServiceProvider,``0)">

@@ -36,7 +36,7 @@ namespace ReportService.DAL
                     x.Append(" and ").FullSearch("Tag", keys);
                 })
                 .Then(!string.IsNullOrEmpty(query.Status), x => x.Append(" and Status=").AppendParam(query.Status))
-            .GeneratePageObjectAsync(query, "create_time desc");
+            .GeneratePageObjectAsync(query, string.Empty);
         }
 
         public virtual async Task<DateTime?> SelectReportUpdateTime(string id)

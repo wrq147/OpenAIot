@@ -332,11 +332,9 @@ namespace AfterService.DAL
             .Then(!string.IsNullOrEmpty(query.Key), sq =>
             {
                 var tmpkey = query.Key.SqlLikeFilter();
-                var keyarr = new JiebaSegmenter().CutForSearch(query.Key);
                 sq.Append(" and (d.DeviceNumber like ").AppendParam(tmpkey + "%")
                 .Append(" or d.DeviceId like ").AppendParam(tmpkey + "%")
                 .Append(" or d.Name like ").AppendParam("%" + tmpkey + "%")
-                .Append(" or ").FullSearch("d.KeyWords", keyarr)
                 .Append(")");
             })
             .Then(!string.IsNullOrEmpty(query.Keywords), sq =>
@@ -361,7 +359,7 @@ namespace AfterService.DAL
             .Then(!string.IsNullOrEmpty(query.DState), sq => sq.Append(" and d.DState like ").AppendParam(query.DState + "%"))
             .Then(query.beginTime != null, sq => sq.Append(" and d.CreateOn >= ").AppendParam(query.beginTime))
             .Then(query.endTime != null, sq => sq.Append(" and d.CreateOn <= ").AppendParam(query.endTime))
-            .GeneratePageObjectAsync(query, "d.CreateOn desc");
+            .GeneratePageObjectAsync(query, string.Empty);
         }
     }
 }

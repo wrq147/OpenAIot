@@ -50,6 +50,8 @@ namespace Common.EventBus
             exeEvt.MethodName = methodName;
             exeEvt.MethodParams = methodParams;
             exeEvt.DisConcurrent = false;
+            exeEvt.Context = context;
+            exeEvt.JobId = jobId;
             string moduleName = className.Substring(0, className.IndexOf('.'));
             await TAEventDispatcher.Instance.Dispatch($"{QuartzExeEvent.EventKey}.{moduleName}", exeEvt);
         }

@@ -114,7 +114,8 @@
               circle></el-button>
           </el-col>
         </el-row>
-        <el-row :gutter="10" style="margin-top:10px;margin-left:-60px" v-if="form.conditions && form.conditions.length > 1">
+        <el-row :gutter="10" style="margin-top:10px;margin-left:-60px"
+          v-if="form.conditions && form.conditions.length > 1">
           <template v-for="(item2, index) in form.conditions">
             <el-col :span="2" :key="'groups' + index" v-if="index == 0">条件{{ index + 1 }}:</el-col>
             <el-col :span="3" v-if="index > 0" :key="'groups2' + index">
@@ -551,60 +552,30 @@ export default {
           let mapidArr = []
           let filedTableList = JSON.parse(JSON.stringify(this.filedTableList))
           if (filedTableList && filedTableList.length > 0) {
-            if (this.form.type == '数字' || this.form.type == '时间') {
-              let filterArr = filedTableList.filter(rw => rw.mapid.indexOf('NumExt') > -1)
-              if (filterArr) {
-                mapidArr = (filterArr.map(row => {
-                  if (row.mapid) {
-                    return Number(row.mapid.slice(6))
-                  }
-                })).filter(rw => rw != undefined)
-              }
-              let arr = []
-              if (mapidArr && mapidArr.length > 0) {
-                arr = this.findMissingNumbers(1, this.MaxFieldCount, mapidArr)
-                // console.log(arr);
-                if (arr && arr.length > 0) {
-                  const min = Math.min(...arr);
-                  this.form.mapid = 'NumExt' + min
-                } else {
-                  const max = Math.max(...mapidArr);
-                  this.form.mapid = 'NumExt' + Number(max + 1)
+            let filterArr = filedTableList.filter(rw => rw.mapid.indexOf('Ext') > -1)
+            if (filterArr) {
+              mapidArr = (filterArr.map(row => {
+                if (row.mapid) {
+                  return Number(row.mapid.slice(6))
                 }
+              })).filter(rw => rw != undefined)
+            }
+            let arr = []
+            if (mapidArr && mapidArr.length > 0) {
+              arr = this.findMissingNumbers(1, this.MaxFieldCount, mapidArr)
+              // console.log(arr);
+              if (arr && arr.length > 0) {
+                const min = Math.min(...arr);
+                this.form.mapid = 'Ext' + min
               } else {
-                this.form.mapid = 'NumExt1'
+                const max = Math.max(...mapidArr);
+                this.form.mapid = 'Ext' + Number(max + 1)
               }
             } else {
-              let filterArr = filedTableList.filter(rw => rw.mapid.indexOf('StrExt') > -1)
-              if (filterArr) {
-                mapidArr = (filterArr.map(row => {
-                  if (row.mapid) {
-                    return Number(row.mapid.slice(6))
-                  }
-                })).filter(rw => rw != undefined)
-              }
-
-              let arr = []
-              if (mapidArr && mapidArr.length > 0) {
-                arr = this.findMissingNumbers(1, this.MaxFieldCount, mapidArr)//获取中间间断的数据
-                if (arr && arr.length > 0) {
-                  const min = Math.min(...arr);
-                  this.form.mapid = 'StrExt' + min
-                } else {
-                  const max = Math.max(...mapidArr);
-                  this.form.mapid = 'StrExt' + Number(max + 1)
-                }
-              } else {
-                this.form.mapid = 'StrExt1'
-              }
-
+              this.form.mapid = 'Ext1'
             }
           } else {
-            if (this.form.type == '数字' || this.form.type == '时间') {
-              this.form.mapid = 'NumExt1'
-            } else {
-              this.form.mapid = 'StrExt1'
-            }
+            this.form.mapid = 'Ext1'
           }
         }
 

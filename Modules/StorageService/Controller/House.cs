@@ -29,7 +29,6 @@ namespace StorageService.Controller
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [About]
         [HttpGet]
         public async Task<DefaultAjaxResult<PageObject<MZ_StoreHouse>>> List(In_HouseList query)
         {

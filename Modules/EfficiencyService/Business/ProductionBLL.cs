@@ -4023,25 +4023,6 @@ namespace EfficiencyService.Business
             var context = _provider.GetService<ITAContext>();
             var user = Data_ServerTokenInfo.From(context);
 
-            //if (orgId > 0)
-            //{
-            //    var staticInfo = await _deviceDAL.SelectStatusByOrgId(user, orgId);
-            //    res.TotalCount = staticInfo.TotalCount;
-            //    res.OnlineCount = staticInfo.OnlineCount;
-            //    res.OfflineCount = staticInfo.OfflineCount;
-            //    res.UnknowCount = staticInfo.UnknowCount;
-            //    res.EventCount = await _warningDAL.SelectWaitCountByOrgId(user, orgId);
-            //}
-            //else
-            //{
-            //    List<string> keys = new List<string>();
-            //    keys.Add(user.OrgId.ToString());
-            //    res.OnlineCount = await _deviceDAL.Count(x => (x.OrgId == user.OrgId || SonSqlFun.FullSearch("OwnerOrgPath", keys) || x.UseOrgId == user.OrgId || x.UseUserId == user.UserId) && x.Online == 1);
-            //    res.OfflineCount = await _deviceDAL.Count(x => (x.OrgId == user.OrgId || SonSqlFun.FullSearch("OwnerOrgPath", keys) || x.UseOrgId == user.OrgId || x.UseUserId == user.UserId) && x.Online == 0);
-            //    res.UnknowCount = await _deviceDAL.Count(x => (x.OrgId == user.OrgId || SonSqlFun.FullSearch("OwnerOrgPath", keys) || x.UseOrgId == user.OrgId || x.UseUserId == user.UserId) && x.Online == 2);
-            //    res.TotalCount = res.OnlineCount + res.OfflineCount + res.UnknowCount;
-            //    res.EventCount = await _warningDAL.SelectWaitCount(user);
-            //}
 
             res.EventCount = await _warningDAL.SelectWaitCountByOrgId(user, inCalEnergy.orgId);
             //设备总数

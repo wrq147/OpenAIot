@@ -4,7 +4,7 @@ namespace AuthService.Fields
     public class FieldBase
     {
         /// <summary>
-        /// 映射的字段：字符串：StrExt1~StrExt30，数值：NumExt1~NumExt10
+        /// 映射的字段：Ext1~100
         /// </summary>
         public string mapid { get; set; }
         /// <summary>
