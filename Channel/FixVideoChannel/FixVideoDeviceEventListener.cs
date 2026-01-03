@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FixVideoChannel
 {
-    public class FixVideoDeviceEventListener
+    public class FixVideoDeviceEventListener : IVideoDeviceEventListener
     {
         private IServiceProvider _serviceProvider;
         public FixVideoDeviceEventListener(IServiceProvider provider)

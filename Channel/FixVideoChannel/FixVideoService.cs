@@ -11,7 +11,7 @@ namespace FixVideoChannel
         private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(20);
         private Thread _timerThread;
         private IServiceProvider _provider;
-        private FixVideoDeviceEventListener _deviceEventListener;
+        private IVideoDeviceEventListener _deviceEventListener;
         private FixVideoOption _option;
         public FixVideoService(IServiceProvider provider)
         {

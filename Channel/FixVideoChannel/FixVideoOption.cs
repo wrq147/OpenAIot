@@ -16,10 +16,6 @@ namespace FixVideoChannel
     public class ZLMediaKitItem
     {
         /// <summary>
-        /// ZLMediaKit接口密钥
-        /// </summary>
-        public string Secret { get; set; }
-        /// <summary>
         /// ZLMediaKit的RTSP端口号
         /// </summary>
         public int RTSPPort { get; set; } = 554;
