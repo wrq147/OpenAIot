@@ -163,19 +163,38 @@ namespace FixVideoChannel
                     }
                     //if (hasDraw)
                     //{
-                        byte[] yuvData;
-                        int[] yuvLineSizes;
-                        int alignedLineSize = (w * 3 + 31) & ~31;
-                        if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
-                        {
-                            return;
-                        }
-
-                        // 2. 拆分YUV平面数据指针（适配ZLMediaKit的string[]参数）
-                        string[] yuvPlanes = ZLUtility.SplitYuvPlanes(yuvData, w, h, (AVPixelFormat)pixFmt);
-                        mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
-                        context.LastFrame = null;
+                    byte[] yuvData;
+                    int[] yuvLineSizes;
+                    int alignedLineSize = (w * 3 + 31) & ~31;
+                    if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                    {
                         return;
+                    }
+                    // 2. 校验行大小数组长度（必须为3）
+                    if (yuvLineSizes == null || yuvLineSizes.Length != 3)
+                    {
+                        Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
+                        return;
+                    }
+
+                    unsafe
+                    {
+                        // 3. 固定托管YUV数组，防止GC回收/移动
+                        fixed (byte* pYuvBase = yuvData)
+                        {
+                            // 4. 构建3个平面的指针数组（对应 C 层 const char* yuv[3]）
+                            IntPtr[] yuvPlanes = new IntPtr[3];
+                            // Y平面：起始地址
+                            yuvPlanes[0] = (IntPtr)pYuvBase;
+                            // U平面：Y平面后偏移 w*h 字节
+                            yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
+                            // V平面：U平面后偏移 (w/2)*(h/2) 字节
+                            yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
+
+                            mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
+                            context.LastFrame = null;
+                        }
+                    }
                     //}
                 }
 

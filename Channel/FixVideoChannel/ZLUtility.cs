@@ -223,52 +223,7 @@ namespace FixVideoChannel
             }
             return nv12;
         }
-        /// <summary>
-        /// 拆分YUV数据为平面指针数组（适配ZLMediaKit的string[]参数）
-        /// </summary>
-        public static string[] SplitYuvPlanes(byte[] yuvData, int width, int height, AVPixelFormat fmt)
-        {
-            List<string> planes = new List<string>();
-            int ySize = width * height;
-
-            unsafe
-            {
-                fixed (byte* pYuv = yuvData)
-                {
-                    switch (fmt)
-                    {
-                        case AVPixelFormat.AV_PIX_FMT_YUV420P:
-                            // Y平面 | U平面(ySize) | V平面(ySize*5/4)
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)pYuv));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize)));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize * 5 / 4)));
-                            break;
-
-                        case AVPixelFormat.AV_PIX_FMT_YUV422P:
-                            // Y平面 | U平面(ySize) | V平面(ySize*3/2)
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)pYuv));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize)));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize * 3 / 2)));
-                            break;
-
-                        case AVPixelFormat.AV_PIX_FMT_YUV444P:
-                            // Y平面 | U平面(ySize) | V平面(ySize*2)
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)pYuv));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize)));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize * 2)));
-                            break;
-
-                        case AVPixelFormat.AV_PIX_FMT_NV12:
-                            // Y平面 | UV平面(ySize)
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)pYuv));
-                            planes.Add(Marshal.PtrToStringAnsi((IntPtr)(pYuv + ySize)));
-                            break;
-                    }
-                }
-            }
-
-            return planes.ToArray();
-        }
+     
     }
 
     public enum AVPixelFormat

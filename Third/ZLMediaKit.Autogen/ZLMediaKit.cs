@@ -6914,7 +6914,7 @@ namespace ZLMediaKit
             internal static extern int MkMediaInputH265(IntPtr ctx, IntPtr data, int len, ulong dts, ulong pts);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_media_input_yuv", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern void MkMediaInputYuv(IntPtr ctx, [MarshalAs(UnmanagedType.LPArray)] string[] yuv, int[] linesize, ulong cts);
+            internal static extern void MkMediaInputYuv(IntPtr ctx, [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)] IntPtr[] yuv, int[] linesize, ulong cts);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_media_input_aac", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkMediaInputAac(IntPtr ctx, IntPtr data, int len, ulong dts, IntPtr adts);
@@ -7226,7 +7226,7 @@ namespace ZLMediaKit
         /// <param name="linesize">yuv420p linesize</param>
         /// <param name="cts">Video capture timestamp, unit milliseconds</param>
         /// <remarks>[AUTO-TRANSLATED:9c97805c]</remarks>
-        public static void MkMediaInputYuv(global::ZLMediaKit.MkMediaT ctx, string[] yuv, int[] linesize, ulong cts)
+        public static void MkMediaInputYuv(global::ZLMediaKit.MkMediaT ctx, IntPtr[] yuv, int[] linesize, ulong cts)
         {
             var __arg0 = ctx is null ? IntPtr.Zero : ctx.__Instance;
             if (yuv == null || yuv.Length != 3)
