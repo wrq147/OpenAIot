@@ -35,7 +35,7 @@ namespace MyAccess.Aop.Attribute
             // 1. 数据库连接初始化、事务控制
             DbHelp dbHelp = null;
             DbHelp threadDB = null;
-            bool issync = context.IsAsync();
+            bool isasync = context.IsAsync();
             if (TransAttribute.ThreadDbHelp.Value != null)
             {
                 threadDB = TransAttribute.ThreadDbHelp.Value.ThreadDb;
@@ -43,7 +43,7 @@ namespace MyAccess.Aop.Attribute
 
                 if (threadDB == null)
                 {
-                    if (issync)
+                    if (isasync)
                         await dbHelp.BeginTranAsync();
                     else
                         dbHelp.BeginTran();
@@ -69,7 +69,7 @@ namespace MyAccess.Aop.Attribute
                 //关闭数据库连接
                 if (threadDB == null)
                 {
-                    if (issync)
+                    if (isasync)
                         await dbHelp?.CloseAsync();
                     else
                         dbHelp?.Close();

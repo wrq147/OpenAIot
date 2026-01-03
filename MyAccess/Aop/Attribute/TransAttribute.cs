@@ -29,19 +29,19 @@ namespace MyAccess.Aop
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
             DBSupport support = GetTargetInstance<DBSupport>(context);
-            bool issync = context.IsAsync();
+            bool isasync = context.IsAsync();
             if (support != null && support.help != null)
             {
                 bool disableTrans = ThreadDbHelp.Value != null && ThreadDbHelp.Value.ThreadDb != null;
                 if (!disableTrans)
                 {
-                    if (issync)
+                    if (isasync)
                     {
-                        support.help.BeginTran();
+                        await support.help.BeginTranAsync();
                     }
                     else
                     {
-                        await support.help.BeginTranAsync();
+                        support.help.BeginTran();
                     }
                 }
 
@@ -50,13 +50,13 @@ namespace MyAccess.Aop
                     await next(context);
                     if (!disableTrans)
                     {
-                        if (issync)
+                        if (isasync)
                         {
-                            support.help.Commit();
+                            await support.help.CommitAsync();
                         }
                         else
                         {
-                            await support.help.CommitAsync();
+                            support.help.Commit();
                         }
                     }
                 }
@@ -64,13 +64,13 @@ namespace MyAccess.Aop
                 {
                     if (!disableTrans && support.help.IsTrans())
                     {
-                        if (issync)
+                        if (isasync)
                         {
-                            support.help.RollBack();
+                            await support.help.RollBackAsync();
                         }
                         else
                         {
-                            await support.help.RollBackAsync();
+                            support.help.RollBack();
                         }
                     }
                 }
@@ -100,13 +100,13 @@ namespace MyAccess.Aop
                         return;
                     }
                     // 完成
-                    if (issync)
+                    if (isasync)
                     {
-                        scope.Complete();
+                        await scope.CompleteAsync();
                     }
                     else
                     {
-                        await scope.CompleteAsync();
+                        scope.Complete();
                     }
                 }
             }

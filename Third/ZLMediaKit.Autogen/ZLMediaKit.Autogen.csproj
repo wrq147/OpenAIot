@@ -28,24 +28,24 @@
 		<Link>libmk_api.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avcodec-62.dll">
-		<Link>avcodec-62.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\avcodec-59.dll">
+		<Link>avcodec-59.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avdevice-62.dll">
-		<Link>avdevice-62.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\avdevice-59.dll">
+		<Link>avdevice-59.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avfilter-11.dll">
-		<Link>avfilter-11.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\avfilter-8.dll">
+		<Link>avfilter-8.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avformat-62.dll">
-		<Link>avformat-62.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\avformat-59.dll">
+		<Link>avformat-59.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avutil-60.dll">
-		<Link>avutil-60.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\avutil-57.dll">
+		<Link>avutil-57.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="ZLMediaLibs\Windows\x64\libcrypto-3-x64.dll">
@@ -57,15 +57,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="ZLMediaLibs\Windows\x64\mk_api.dll">
-	    <Link>mk_api.dll</Link>
+		<Link>mk_api.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\swresample-6.dll">
-		<Link>swresample-6.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\srtp2.dll">
+		<Link>srtp2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\swscale-9.dll">
-		<Link>swscale-9.dll</Link>
+    <None Update="ZLMediaLibs\Windows\x64\swresample-4.dll">
+		<Link>swresample-4.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZLMediaLibs\Windows\x64\swscale-6.dll">
+		<Link>swscale-6.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
