@@ -8,14 +8,14 @@ namespace IoTAIService
 {
     public class DataDetectParam
     {
-        private Dictionary<string, string> _param;
-        public DataDetectParam(Dictionary<string, string> param)
+        private Dictionary<string, object> _param;
+        public DataDetectParam(Dictionary<string, object> param)
         {
             _param = param;
         }
         public float GetFloat(string key, float def = 0)
         {
-            if (_param.TryGetValue(key, out string tval))
+            if (_param.TryGetValue(key, out object tval))
             {
                 return Convert.ToSingle(tval);
             }
@@ -26,7 +26,7 @@ namespace IoTAIService
         }
         public bool GetBool(string key, bool def = false)
         {
-            if (_param.TryGetValue(key, out string tval))
+            if (_param.TryGetValue(key, out object tval))
             {
                 return Convert.ToBoolean(tval);
             }

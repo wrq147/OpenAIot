@@ -47,6 +47,6 @@ namespace ChannelUtility.Message
         /// <summary>
         /// 检测参数
         /// </summary>
-        public Dictionary<string,string> DetectParams { get; set; }
+        public Dictionary<string, object> paramValues { get; set; }
     }
 }

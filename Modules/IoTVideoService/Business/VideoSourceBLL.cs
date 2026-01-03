@@ -2,6 +2,7 @@
 using ChannelUtility.Message;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using EasyNetQ;
 using IoTService;
@@ -164,7 +165,7 @@ namespace IoTVideoService.Business
             }
             else
             {
-                detectList = System.Text.Json.JsonSerializer.Deserialize<List<AIDetectItem>>(source.AITasks);
+                detectList = System.Text.Json.JsonSerializer.Deserialize<List<AIDetectItem>>(source.AITasks, MyDefaultTextJsonConfig.DefaultOptions);
             }
 
             UpVideoItemMessage msg = new UpVideoItemMessage();

@@ -3,6 +3,10 @@
 export DOTNET_ROOT=/root/.dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
+# 先清理旧进程，避免重复启动
+pkill -f App
+pkill -f MqttChannel
+
 
 cd /root/card
 chmod +x App

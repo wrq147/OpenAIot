@@ -84,21 +84,22 @@ namespace FixVideoChannel
         {
             var mkFrame = (MkFrameT)frame;
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            if (context == null)
+            {
+                return;
+            }
             context.LastFrame = mkFrame;
 
             if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
             {
                 if (item.DetectList.Count > 0)
                 {
-                    var tmpsss= mk_frame.MkFrameGetDataSize(mkFrame);
-                    var tmpssss=mk_frame.MkFrameGetDts(mkFrame);
+                    var tmpsss = mk_frame.MkFrameGetDataSize(mkFrame);
+                    var tmpssss = mk_frame.MkFrameGetDts(mkFrame);
                     var tmpsdfsdfsd = mk_frame.MkFrameGetPts(mkFrame);
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                    //if (context.LastFrame != null)
-                    //{
-                    //    mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                    //    context.LastFrame = null;
-                    //}
+                    //mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                    //context.LastFrame = null;
                     return;
                 }
             }
@@ -160,8 +161,8 @@ namespace FixVideoChannel
                             hasDraw = true;
                         }
                     }
-                    if (hasDraw)
-                    {
+                    //if (hasDraw)
+                    //{
                         byte[] yuvData;
                         int[] yuvLineSizes;
                         int alignedLineSize = (w * 3 + 31) & ~31;
@@ -175,14 +176,10 @@ namespace FixVideoChannel
                         mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
                         context.LastFrame = null;
                         return;
-                    }
+                    //}
                 }
 
-                if (context.LastFrame != null)
-                {
-                    mk_media.MkMediaInputFrame(context.Media, context.LastFrame);
-                    context.LastFrame = null;
-                }
+
             }
             finally
             {

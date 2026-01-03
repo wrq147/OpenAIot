@@ -379,7 +379,7 @@ namespace ChannelUtility
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, string> detParams, bool isDraw, byte[] frameData, int width, int height)
+        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, object> detParams, bool isDraw, byte[] frameData, int width, int height)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
