@@ -3,33 +3,96 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid 'ded3cb2b20a5e76c402f91a001c2b19901c5b565'
-    oldFile: !uuid 'd5b6df3823972f0a4f1c2d09635417d10ffd0914'
+    newFile: !uuid 'a5889b6c1f483647dd4e8d961d482f86103de79c'
+    oldFile: !uuid 'ded3cb2b20a5e76c402f91a001c2b19901c5b565'
   /Channel/FixVideoChannel:
-    newFile: !uuid '9fccec266cfcd1401a21d941e8a3259293eb6525'
-    oldFile: !uuid 'c3a75a028b0acf41e68779652f5874b2af036de7'
-  /Channel/FixVideoChannel/AIDetectorTask.cs:
-    newFile: !uuid '196e4939dffabea29df9b1f5472e8d0f01f0e156'
-    oldFile: !uuid 'a04372d5389a7a6ad2b1871f4f7faa4218647ed1'
-  /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
-    newFile: !uuid 'f430ad52d738827ecb8eb067e22cb3b72d987cfd'
-    oldFile: !uuid '57ab3f175532df1eb41e079d906ac20eeafb68e1'
-  /Channel/FixVideoChannel/FixVideoOption.cs:
-    newFile: !uuid '9d3479b3210e3ddb1d1fee077ee12f13d9e400f8'
-    oldFile: !uuid 'b11ffc4fb12ca2509731c360b10ccb4488b15e57'
-  /Channel/FixVideoChannel/FixVideoService.cs:
-    newFile: !uuid '421ebbb87e4d2b82e008f501fde64686953a981d'
-    oldFile: !uuid '7ea98a2bc53dddc1ff7364371d48acf0524308ab'
-  /Channel/FixVideoChannel/IVideoDeviceEventListener.cs:
-    newFile: !uuid '24a20e3e25a4c5054d12235d8097e22f166f0f90'
-    oldFile: null
+    newFile: !uuid '9278bc5bceb1a45761affcdb9fefeafb4e5f228c'
+    oldFile: !uuid '9fccec266cfcd1401a21d941e8a3259293eb6525'
   /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '1cc82f045b70507c088467a7faec3e58821595c9'
-    oldFile: !uuid '54a2f55f14c53b29c3630f22054073f819246965'
-  /Channel/FixVideoChannel/appsettings.json:
-    newFile: !uuid '81454197e0fc17250bda3ed761912983282052f6'
-    oldFile: !uuid '015cd0bc76801797fb7b344345ce039258b0c394'
-gitCommitId: !uuid '84f3220f394816549c4cae303632b05d407a36ac'
+    newFile: !uuid '85e6a21d7e414d0174056ad58078b0acc3dee408'
+    oldFile: !uuid '1cc82f045b70507c088467a7faec3e58821595c9'
+  /MyAccess:
+    newFile: !uuid '60bb7de9325b41ee17e34f12ad34210277741f8c'
+    oldFile: !uuid '1de7e806f40a094247dd6fbf5afcbe24b6f907a4'
+  /MyAccess/Aop:
+    newFile: !uuid '52b70b765b60ee9b1443a12646ef8bf17ceac8d2'
+    oldFile: !uuid '3b5ed8572c33cbb887600b78a6b2170bce5122f7'
+  /MyAccess/Aop/Attribute:
+    newFile: !uuid 'd1d1837df8ba51bc7d097b9c307e91865ab79a85'
+    oldFile: !uuid '8597c2e6b69ac925d8800d506740190e6f2e2900'
+  /MyAccess/Aop/Attribute/DALAopAttr.cs:
+    newFile: !uuid '7dae203be04e7cdfd7592d4742f950b669072460'
+    oldFile: !uuid '1a4b04c029c626eeda227a098b74e994f0a38cd4'
+  /MyAccess/Aop/Attribute/TransAttribute.cs:
+    newFile: !uuid 'f0b640965a9e2aa30d47e7f8a74ab04cdf3f7612'
+    oldFile: !uuid '2d6d0cbb5c363a138d4d174c48b92dd2a5760d79'
+  /Third:
+    newFile: !uuid 'f6071c7db6e4c811979d5ea4caea15a117f7b417'
+    oldFile: !uuid '6fbe206270075eaa1116eccd6648c5d4320fd0ac'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid 'dfcbe4b8d71db1f72e9474ae352c517845c01347'
+    oldFile: !uuid '958dc192c3cdd13f61d9259a7f68850d4982e655'
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
+    newFile: !uuid 'ede8745bfaf44d51e652292fae2110303d149249'
+    oldFile: !uuid '0b314909889c8c9e8568468ea10966255293019b'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid '49473a4cf339b832d2fcd2b5dd3223e5b4d28d6b'
+    oldFile: !uuid 'cecdbcc472bdad458e322124d2cdf2b1c7e55438'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
+    newFile: !uuid '07104ea94bc689df748028d2da44be6ed49e5d5e'
+    oldFile: !uuid 'b9b188f5af326a1254bf7112cd9e080babcae7c6'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
+    newFile: !uuid '3d460822dfb66a4683e1e9fd8a146aba61e39070'
+    oldFile: !uuid '0881ddccb9e2ff85a98d41c593ba283d13983f09'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avcodec-59.dll:
+    newFile: !uuid '0b882d2bb66d4d32305f7014c613a5685afd2f28'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avcodec-62.dll:
+    newFile: null
+    oldFile: !uuid '359ed3915a8788995e1e04fa446b561fc57b7fdf'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avdevice-59.dll:
+    newFile: !uuid '4bc8571d53ac8fb5470d8c7928d954fdc2918808'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avdevice-62.dll:
+    newFile: null
+    oldFile: !uuid '13baf7fdef4d3931f2a93819f925a0a852859119'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avfilter-11.dll:
+    newFile: null
+    oldFile: !uuid 'b86a0b40f1b43967baaf9b32dcb18fbe51a7f599'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avfilter-8.dll:
+    newFile: !uuid 'e46d9ad4b9d2cb12914ab7796bc450f39ca77c4e'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avformat-59.dll:
+    newFile: !uuid 'af46785b8c420bfba0c0c550a23ce008b9bb44b7'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avformat-62.dll:
+    newFile: null
+    oldFile: !uuid '5834ef72abf363edeb0b73553445acf7fb6cf331'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avutil-57.dll:
+    newFile: !uuid '48c1add7fdfc48841287679871eb189c24f3c50e'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avutil-60.dll:
+    newFile: null
+    oldFile: !uuid 'd63844b1e61d71f78560062f95ab222cca26817a'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/mk_api.dll:
+    newFile: !uuid 'ed6c8770288cafa28f31d9706974de50b30c9301'
+    oldFile: !uuid '5685d1c7b60ed56450e5e0c7f56df3407faa9630'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/srtp2.dll:
+    newFile: !uuid '35ebe5fb9c34c3b226a64e0f217b00615fc9bcf5'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swresample-4.dll:
+    newFile: !uuid 'ea7bb0ed0efd129a357279f8c0139cde1ed94ef2'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swresample-6.dll:
+    newFile: null
+    oldFile: !uuid '333c46c0c38cf7eafd74439ece73255ce584281c'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swscale-6.dll:
+    newFile: !uuid '32d438ce5bc9b4f32ea6e956c9f800f551c64d9d'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swscale-9.dll:
+    newFile: null
+    oldFile: !uuid '62d83d0b63840711df2a687a68f21728722e34cc'
+gitCommitId: !uuid '6a4a713af12b4f49d764fbb934e5e41cf346ebae'
 renames: {
   }
-revisionId: 98
+revisionId: 99
