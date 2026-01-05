@@ -3,9 +3,33 @@
   <el-dialog v-if="visible" title="AI项目配置中心" :visible.sync="visible" width="90%" append-to-body
     :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog" top="2vh">
     <div class="ai-config-container" v-loading="allloading">
-      <!-- 页面标题 -->
-      <div class="page-header">
-        <p class="sub-title">选择并配置需要启用的AI功能模块</p>
+      <!-- 检测间隔 -->
+      <div class="detection-config-card">
+        <div class="config-card-header">
+          <span class="config-card-title">检测间隔参数配置</span>
+        </div>
+        <div class="config-card-body">
+          <el-form :inline="true" :model="configForm" class="detection-form">
+            <el-form-item label="运动块占比阈值" prop="MotionRatio" class="form-item">
+              <el-input-number v-model="configForm.MotionRatio" :step="0.01" :precision="2" :min="0"
+                :max="1" placeholder="请输入0-1之间的数值" class="input-number">
+                <template slot="append">%</template>
+              </el-input-number>
+              <el-tooltip style="margin-left:5px;" effect="dark" content="检测到的运动块占画面的比例阈值，超过该值触发AI分析" placement="top">
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item label="冷却时间" prop="CoolDownMs" class="form-item">
+              <el-input-number v-model="configForm.CoolDownMs" :min="100" :max="99999" :step="100"
+                placeholder="请输入100-99999之间的数值" class="input-number">
+              </el-input-number>
+              <span style="margin-left:5px;">毫秒</span>
+              <el-tooltip style="margin-left:5px;" effect="dark" content="连续两次AI分析的最小间隔时间，避免频繁触发" placement="top">
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
 
       <!-- 主内容区 -->
@@ -106,12 +130,6 @@
                   <el-switch v-model="scope.row.enableDraw" />
                 </template>
               </el-table-column>
-              <el-table-column label="帧间隔" width="160" align="center">
-                <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.FraInter" size="mini" :min="1" :max="9999"
-                    label="请输入检测的帧间隔"></el-input-number>
-                </template>
-              </el-table-column>
               <el-table-column label="操作" width="240" fixed="right" align="center">
                 <template slot-scope="scope">
                   <el-popover placement="left" width="500" trigger="click"
@@ -193,7 +211,7 @@ export default {
   data() {
     return {
       visible: false,
-      allloading:false,
+      allloading: false,
       // 加载状态
       loading: false,
       addLoading: false,
@@ -205,6 +223,7 @@ export default {
       // 已配置项目列表
       configuredProjects: [],
       allProjects: [],
+      configForm: { "MotionRatio": 0.08, "CoolDownMs": 200, "Tasks": [] },
       projectId: null
     }
   },
@@ -229,9 +248,9 @@ export default {
     async showDlg(id) {
       this.projectId = id;
       this.visible = true;
-      this.allloading=true;
+      this.allloading = true;
       await this.initData(id);
-      this.allloading=false;
+      this.allloading = false;
 
     },
     /**
@@ -249,14 +268,13 @@ export default {
       this.allProjects = tmparr;
       // 初始化已配置项
       let cres = await getVideoDetail({ id: id });
-      let aitasks = [];
       let configarr = [];
       if (cres.data.AITasks != null && cres.data.AITasks != "") {
-        aitasks = JSON.parse(cres.data.AITasks);
+        this.configForm = JSON.parse(cres.data.AITasks);
       }
-      if (aitasks.length > 0) {
-        for (let j = 0; j < aitasks.length; j++) {
-          let x = aitasks[j];
+      if (this.configForm.Tasks.length > 0) {
+        for (let j = 0; j < this.configForm.Tasks.length; j++) {
+          let x = this.configForm.Tasks[j];
           let prj = this.allProjects.find(item => item.Code == x.Code);
           if (prj == null) {
             continue;
@@ -315,7 +333,6 @@ export default {
         for (let i = 0; i < this.selectedProjects.length; i++) {
           let newitem = JSON.parse(JSON.stringify(this.selectedProjects[i]));
           newitem["enableDraw"] = false;
-          newitem["FraInter"] = 25;
           // 初始化参数值
           newitem["paramValues"] = this.initParamValues(newitem.ParamList || []);
           this.configuredProjects.push(newitem)
@@ -416,7 +433,8 @@ export default {
           const { Name, Remark, ParamList, ...rest } = item;
           return rest;
         });
-        await editVideoSource({ "Id": this.projectId, "AITasks": JSON.stringify(submitData) })
+        this.configForm.Tasks = submitData;
+        await editVideoSource({ "Id": this.projectId, "AITasks": JSON.stringify(this.configForm) })
         this.$message.success({
           message: '参数配置保存成功！',
           duration: 1500
@@ -448,24 +466,37 @@ export default {
   flex-direction: column;
 }
 
-/* 页面标题 */
-.page-header {
-  margin-left: 25px;
-  margin-top: 15px;
-  margin-bottom: 15px;
+
+/* 检测参数配置 */
+.detection-config-card {
+  background: #fff;
+  margin: 20px 20px;
+  overflow: hidden;
 }
 
-.page-header h2 {
-  font-size: 20px;
+.config-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+}
+
+
+.config-card-title {
+  font-size: 15px;
   font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 8px 0;
+  color: #333;
 }
 
-.page-header .sub-title {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
+.config-card-body {
+  padding: 16px;
+}
+
+.detection-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
 }
 
 /* 主卡片 */
@@ -492,9 +523,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   height: 100%;
 }
 

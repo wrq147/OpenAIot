@@ -13,7 +13,7 @@ namespace ChannelUtility.Message
             MsgType = "UpVItem";
         }
         public VideoCaptureItem Item { get; set; }
-        public List<AIDetectItem> DetectList { get; set; }
+        public AIConfig Config { get; set; }
     }
     public class VideoCaptureItem
     {
@@ -30,6 +30,12 @@ namespace ChannelUtility.Message
         /// </summary>
         public string PushKey { get; set; }
     }
+    public class AIConfig
+    {
+        public float MotionRatio { get; set; }
+        public int CoolDownMs { get; set; }
+        public List<AIDetectItem> Tasks { get; set; }
+    }
     public class AIDetectItem
     {
         /// <summary>
@@ -40,10 +46,6 @@ namespace ChannelUtility.Message
         /// 是否启用绘制
         /// </summary>
         public bool EnableDraw { get; set; }
-        /// <summary>
-        /// AI检测帧间隔
-        /// </summary>
-        public int FraInter { get; set; }
         /// <summary>
         /// 检测参数
         /// </summary>

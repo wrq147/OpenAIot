@@ -40,16 +40,16 @@ namespace FixVideoChannel
             }
             else if (msg is UpVideoItemMessage upItemResponse)
             {
-                List<AIDetectorTask> tasks = new List<AIDetectorTask>();
-                foreach (var it in upItemResponse.DetectList)
+                VideoData videoData = new VideoData();
+                videoData.Item = upItemResponse.Item;
+                videoData.DetectList = new List<AIDetectorTask>();
+                foreach (var it in upItemResponse.Config.Tasks)
                 {
-                    tasks.Add(new AIDetectorTask(it));
+                    videoData.DetectList.Add(new AIDetectorTask(it));
                 }
-                ZLMediaKitServer.Instance.AddPullProxy(new VideoData()
-                {
-                    Item = upItemResponse.Item,
-                    DetectList = tasks
-                });
+                videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
+                videoData.MotionRatio = upItemResponse.Config.MotionRatio;
+                ZLMediaKitServer.Instance.AddPullProxy(videoData);
             }
             else if (msg is DelVideoItemMessage delItemResponse)
             {

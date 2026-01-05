@@ -18,8 +18,6 @@ namespace FixVideoChannel
         private static readonly ConcurrentDictionary<string, FrameBufferCacheItem> _keyedBufferCache =
             new ConcurrentDictionary<string, FrameBufferCacheItem>();
 
-        // 默认缓冲区尺寸（1080P BGR24）
-        private const int DefaultBufferSize = 1920 * 1080 * 3;
         // 最大缓存数量（防止内存过度占用）
         private const int MaxPoolCount = 100;
 

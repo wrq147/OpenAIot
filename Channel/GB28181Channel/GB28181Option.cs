@@ -6,5 +6,7 @@ namespace GB28181Channel
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
         public bool ipv6_enable { get; set; }
+        public string sip_service_id { get; set; }
+        public int sip_listen_port { get; set; }
     }
 }

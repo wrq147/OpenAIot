@@ -1,10 +1,6 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Bmp;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -132,15 +128,31 @@ namespace FixVideoChannel
 
                 if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
                 {
+                    if (context.Motion == null)
+                    {
+                        context.Motion = new MotionDetector();
+                    }
                     bool hasDraw = false;
                     var detectTasks = item.DetectList;
                     byte[] tdata = bgr24;
                     bool isPress = false;
+
+                    context.Motion.CoolDownMs = item.CoolDownMs;
+                    context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
                     // 执行AI检测
-                    foreach (var task in detectTasks)
+                    if (context.Motion.IsMotionKeyframe(bgr24, w, h))
                     {
-                        task.Detect(item.Item.Id, w, h, _listener, ref tdata, ref isPress);
+                        foreach (var task in detectTasks)
+                        {
+                            task.Detect(item.Item.Id, w, h, _listener, ref tdata, ref isPress);
+                        }
                     }
+                    else
+                    {
+                        Console.Write("dfsdf");
+                    }
+
+
 
                     // 执行绘制
                     foreach (var t in detectTasks)
@@ -426,6 +438,8 @@ namespace FixVideoChannel
     public class VideoData
     {
         public VideoCaptureItem Item { get; set; }
+        public float MotionRatio { get; set; }
+        public int CoolDownMs { get; set; }
         public List<AIDetectorTask> DetectList { get; set; }
     }
     public class FrameContext
@@ -435,6 +449,7 @@ namespace FixVideoChannel
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
         public MkFrameT LastFrame { get; set; }
+        public MotionDetector Motion { get; set; }
     }
     public static class CallbackHelper
     {

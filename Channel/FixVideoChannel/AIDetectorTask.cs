@@ -3,8 +3,6 @@ using ChannelUtility.Message;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -49,13 +47,11 @@ namespace FixVideoChannel
             }
         }
         #endregion
-        private int _currentFrame;
         private AIDetectItem _item;
         private volatile List<BoxItem> _boxs;
         public AIDetectorTask(AIDetectItem item)
         {
             _item = item;
-            _currentFrame = 0;
         }
         public void UpdateBoxList(string detType, List<BoxItem> items)
         {
@@ -116,24 +112,19 @@ namespace FixVideoChannel
         // AI检测
         public void Detect(string videoId, int width, int height, IVideoDeviceEventListener listener, ref byte[] data, ref bool isPress)
         {
-            _currentFrame++;
             if (listener == null)
             {
                 return;
             }
-            if (_currentFrame > _item.FraInter)
+            byte[] pressData = null;
+            if (!isPress)
             {
-                byte[] pressData = null;
-                if (!isPress)
-                {
-                    data = FastZlibCompress(data, width, height, 2);
-                    isPress = true;
-                }
-
-                pressData = data;
-                Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width / 2, height / 2);
-                _currentFrame = 0;
+                data = FastZlibCompress(data, width, height, 2);
+                isPress = true;
             }
+
+            pressData = data;
+            Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width / 2, height / 2);
         }
         public bool Draw(byte[] bgrFrame, int width, int height)
         {

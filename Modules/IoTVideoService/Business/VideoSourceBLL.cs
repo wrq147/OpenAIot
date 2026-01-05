@@ -158,21 +158,24 @@ namespace IoTVideoService.Business
             cpitem.Id = source.Id;
             cpitem.PullAddr = source.PullAddr;
             cpitem.PushKey = source.VideoKey;
-            List<AIDetectItem> detectList;
+            AIConfig aiConfig;
             if (string.IsNullOrEmpty(source.AITasks))
             {
-                detectList = new List<AIDetectItem>();
+                aiConfig = new AIConfig();
+                aiConfig.MotionRatio = 0.08f;
+                aiConfig.CoolDownMs = 200;
+                aiConfig.Tasks = new List<AIDetectItem>();
             }
             else
             {
-                detectList = System.Text.Json.JsonSerializer.Deserialize<List<AIDetectItem>>(source.AITasks, MyDefaultTextJsonConfig.DefaultOptions);
+                aiConfig = System.Text.Json.JsonSerializer.Deserialize<AIConfig>(source.AITasks, MyDefaultTextJsonConfig.DefaultOptions);
             }
 
             UpVideoItemMessage msg = new UpVideoItemMessage();
             msg.DeviceId = string.Empty;
             msg.ProductId = string.Empty;
             msg.Item = cpitem;
-            msg.DetectList = detectList;
+            msg.Config = aiConfig;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + nodeguid + ".guid").ConfigureAwait(false);

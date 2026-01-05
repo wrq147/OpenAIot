@@ -36,7 +36,7 @@ namespace GB28181Channel
 
             sipServerConfig.GbVersion = "GB-2016";
             sipServerConfig.MsgProtocol = "TCP"; //使用TCP可以完美支持tcp信令
-            sipServerConfig.SipPort = 5060;
+            sipServerConfig.SipPort = (ushort)_option.sip_listen_port;
             sipServerConfig.IpV6Enable = _option.ipv6_enable;
             if (sipServerConfig.IpV6Enable)
             {
@@ -56,18 +56,7 @@ namespace GB28181Channel
              *14 网络类型 0 监控专用网
              *15-20 设备序号 000001 1号设备
              */
-            sipServerConfig.ServerSipDeviceId = "33020000021180000001";
-            if (sipServerConfig.NoAuthenticationRequireds == null)
-            {
-                sipServerConfig.NoAuthenticationRequireds = new List<NoAuthenticationRequired>();
-            }
-
-            sipServerConfig.NoAuthenticationRequireds.Add(new NoAuthenticationRequired()
-            {
-                DeviceId = sipServerConfig.ServerSipDeviceId,
-                IpV4Address = sipServerConfig.SipIpAddress,
-                IpV6Address = sipServerConfig.SipIpV6Address,
-            });
+            sipServerConfig.ServerSipDeviceId = _option.sip_service_id;
             sipServerConfig.Realm = sipServerConfig.ServerSipDeviceId.Substring(0, 10);
             _server = new SipServer(logger, sipServerConfig);
         }
