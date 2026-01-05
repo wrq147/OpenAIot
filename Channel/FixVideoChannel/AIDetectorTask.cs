@@ -3,9 +3,12 @@ using ChannelUtility.Message;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
+using System.IO.Compression;
 namespace FixVideoChannel
 {
     public class AIDetectorTask
@@ -61,8 +64,57 @@ namespace FixVideoChannel
                 _boxs = items;
             }
         }
+        /// <summary>
+        /// Zlib快速压缩降采样后的BGR数据
+        /// </summary>
+        private byte[] FastZlibCompress(byte[] rawData, int width, int height, int scale = 2)
+        {
+            if (rawData == null || rawData.Length == 0)
+                return null;
+
+            // 第一步：先降采样
+            byte[] downsampled = UltraFastDownsample(rawData, width, height, scale);
+
+            // 第二步：Zlib快速压缩
+            using (var ms = new MemoryStream())
+            {
+                using (var zlib = new DeflateStream(ms, CompressionLevel.Fastest, true))
+                {
+                    zlib.Write(downsampled, 0, downsampled.Length);
+                }
+                return ms.ToArray();
+            }
+        }
+
+        // 复用之前的超极速降采样方法
+        private byte[] UltraFastDownsample(byte[] rawData, int width, int height, int scale)
+        {
+            if (rawData == null || rawData.Length == 0 || scale <= 1)
+                return rawData;
+
+            int newWidth = width / scale;
+            int newHeight = height / scale;
+            int pixelSize = 3;
+            byte[] result = new byte[newWidth * newHeight * pixelSize];
+
+            int destIndex = 0;
+            for (int y = 0; y < height; y += scale)
+            {
+                for (int x = 0; x < width; x += scale)
+                {
+                    int srcIndex = (y * width + x) * pixelSize;
+                    if (srcIndex + 2 >= rawData.Length) break;
+
+                    result[destIndex++] = rawData[srcIndex];
+                    result[destIndex++] = rawData[srcIndex + 1];
+                    result[destIndex++] = rawData[srcIndex + 2];
+                }
+            }
+            return result;
+        }
+
         // AI检测
-        public void Detect(string videoId, byte[] pressData, int width, int height, IVideoDeviceEventListener listener)
+        public void Detect(string videoId, int width, int height, IVideoDeviceEventListener listener, ref byte[] data, ref bool isPress)
         {
             _currentFrame++;
             if (listener == null)
@@ -71,7 +123,15 @@ namespace FixVideoChannel
             }
             if (_currentFrame > _item.FraInter)
             {
-                Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width, height);
+                byte[] pressData = null;
+                if (!isPress)
+                {
+                    data = FastZlibCompress(data, width, height, 2);
+                    isPress = true;
+                }
+
+                pressData = data;
+                Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width / 2, height / 2);
                 _currentFrame = 0;
             }
         }
@@ -92,10 +152,10 @@ namespace FixVideoChannel
             foreach (var box in tmpboxArr)
             {
                 // 1. 坐标校验与裁剪（防止越界）
-                int x1 = (int)Math.Max(0, box.x1);
-                int y1 = (int)Math.Max(0, box.y1);
-                int x2 = (int)Math.Min(width - 1, box.x2);
-                int y2 = (int)Math.Min(height - 1, box.y2);
+                int x1 = (int)Math.Max(0, box.x1 * 2);
+                int y1 = (int)Math.Max(0, box.y1 * 2);
+                int x2 = (int)Math.Min(width - 1, box.x2 * 2);
+                int y2 = (int)Math.Min(height - 1, box.y2 * 2);
 
                 // 跳过无效框
                 if (x1 >= x2 || y1 >= y2)

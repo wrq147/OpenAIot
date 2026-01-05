@@ -320,6 +320,10 @@ namespace IoTRulesService.DataParser
                             if (string.IsNullOrEmpty(rdmsg.ProductId))
                             {
                                 model = await TslCache.GetTslModelByDtuId(rdmsg.DeviceId, false, _provider);
+                                if (model == null)
+                                {
+                                    return;
+                                }
                                 rdmsg.ProductId = model.ProductId;
                             }
                             else

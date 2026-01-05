@@ -19,7 +19,7 @@ namespace ChannelUtility.Message
         /// </summary>
         public bool IsDraw { get; set; }
         public Dictionary<string, object> DetParams { get; set; }
-        public byte[] RgbFrame { get; set; }
+        public byte[] Frame { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
     }

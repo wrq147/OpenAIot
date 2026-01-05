@@ -98,8 +98,12 @@ namespace FixVideoChannel
                     var tmpssss = mk_frame.MkFrameGetDts(mkFrame);
                     var tmpsdfsdfsd = mk_frame.MkFrameGetPts(mkFrame);
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                    //mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                    //context.LastFrame = null;
+                    if (context.LastFrame != null)
+                    {
+                        mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                        context.LastFrame = null;
+                    }
+
                     return;
                 }
             }
@@ -130,27 +134,12 @@ namespace FixVideoChannel
                 {
                     bool hasDraw = false;
                     var detectTasks = item.DetectList;
-                    // 压缩数据
-                    byte[] pressData = null;
-                    using (var image = Image.LoadPixelData<Bgr24>(bgr24, w, h))
-                    using (var ms = new MemoryStream())
-                    {
-                        // 配置WebP有损压缩参数
-                        var webpEncoder = new WebpEncoder
-                        {
-                            Method = WebpEncodingMethod.Default
-                        };
-
-                        image.Save(ms, webpEncoder);
-                        pressData = ms.ToArray();
-                    }
+                    byte[] tdata = bgr24;
+                    bool isPress = false;
                     // 执行AI检测
-                    if (pressData != null)
+                    foreach (var task in detectTasks)
                     {
-                        foreach (var task in detectTasks)
-                        {
-                            task.Detect(item.Item.Id, pressData, w, h, _listener);
-                        }
+                        task.Detect(item.Item.Id, w, h, _listener, ref tdata, ref isPress);
                     }
 
                     // 执行绘制
@@ -161,44 +150,43 @@ namespace FixVideoChannel
                             hasDraw = true;
                         }
                     }
-                    //if (hasDraw)
-                    //{
-                    byte[] yuvData;
-                    int[] yuvLineSizes;
-                    int alignedLineSize = (w * 3 + 31) & ~31;
-                    if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
-                    {
-                        return;
-                    }
-                    // 2. 校验行大小数组长度（必须为3）
-                    if (yuvLineSizes == null || yuvLineSizes.Length != 3)
-                    {
-                        Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
-                        return;
-                    }
 
-                    unsafe
+                    if (hasDraw)
                     {
-                        // 3. 固定托管YUV数组，防止GC回收/移动
-                        fixed (byte* pYuvBase = yuvData)
+                        byte[] yuvData;
+                        int[] yuvLineSizes;
+                        int alignedLineSize = (w * 3 + 31) & ~31;
+                        if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                         {
-                            // 4. 构建3个平面的指针数组（对应 C 层 const char* yuv[3]）
-                            IntPtr[] yuvPlanes = new IntPtr[3];
-                            // Y平面：起始地址
-                            yuvPlanes[0] = (IntPtr)pYuvBase;
-                            // U平面：Y平面后偏移 w*h 字节
-                            yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
-                            // V平面：U平面后偏移 (w/2)*(h/2) 字节
-                            yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
+                            return;
+                        }
+                        // 2. 校验行大小数组长度（必须为3）
+                        if (yuvLineSizes == null || yuvLineSizes.Length != 3)
+                        {
+                            Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
+                            return;
+                        }
 
-                            mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
-                            context.LastFrame = null;
+                        unsafe
+                        {
+                            // 3. 固定托管YUV数组，防止GC回收/移动
+                            fixed (byte* pYuvBase = yuvData)
+                            {
+                                // 4. 构建3个平面的指针数组（对应 C 层 const char* yuv[3]）
+                                IntPtr[] yuvPlanes = new IntPtr[3];
+                                // Y平面：起始地址
+                                yuvPlanes[0] = (IntPtr)pYuvBase;
+                                // U平面：Y平面后偏移 w*h 字节
+                                yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
+                                // V平面：U平面后偏移 (w/2)*(h/2) 字节
+                                yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
+
+                                mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
+                                context.LastFrame = null;
+                            }
                         }
                     }
-                    //}
                 }
-
-
             }
             finally
             {

@@ -16,7 +16,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Asn1.Cms;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.ColorSpaces;
 using SixLabors.ImageSharp.PixelFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -64,7 +66,7 @@ namespace IoTAIService
                 //初始化AI项目
                 await app.ServiceProvider.GetService<AIProjectManager>().Init();
             });
-      
+
             app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener += MessageHandler;
 
         }
@@ -82,6 +84,70 @@ namespace IoTAIService
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
         }
+
+        private Image<Rgb24> FastZlibDecompressToRgb24Image(byte[] compressedData, int width, int height)
+        {
+            // 入参校验
+            if (compressedData == null || compressedData.Length == 0)
+            {
+                Console.WriteLine("压缩数据为空，解压失败");
+                return null;
+            }
+            if (width <= 0 || height <= 0)
+            {
+                Console.WriteLine("宽高参数非法");
+                return null;
+            }
+
+            try
+            {
+                int expectedLength = width * height * 3;
+
+                // 步骤2：Zlib解压得到BGR24原始数据
+                byte[] bgrData;
+                using (var msIn = new MemoryStream(compressedData))
+                using (var zlibStream = new DeflateStream(msIn, CompressionMode.Decompress))
+                using (var msOut = new MemoryStream(expectedLength))
+                {
+                    zlibStream.CopyTo(msOut);
+                    bgrData = msOut.ToArray();
+                }
+
+                // 校验解压后数据长度是否匹配
+                if (bgrData.Length != expectedLength)
+                {
+                    Console.WriteLine($"解压数据长度异常：实际{bgrData.Length}，预期{expectedLength}");
+                    return null;
+                }
+
+                Image<Rgb24> rgbImage = Image.LoadPixelData<Rgb24>(
+                    data: ConvertBgrToRgbInPlace(bgrData),
+                    width: width,
+                    height: height);
+
+                return rgbImage;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"解压并创建Image失败：{ex.Message}");
+                return null;
+            }
+        }
+        private byte[] ConvertBgrToRgbInPlace(byte[] bgrData)
+        {
+            if (bgrData == null || bgrData.Length % 3 != 0)
+            {
+                throw new ArgumentException("BGR数据格式非法，长度必须是3的倍数");
+            }
+
+            for (int i = 0; i < bgrData.Length; i += 3)
+            {
+                byte temp = bgrData[i];     // 保存B值
+                bgrData[i] = bgrData[i + 2];// R值放到原B位置
+                bgrData[i + 2] = temp;      // B值放到原R位置
+            }
+            return bgrData;
+        }
         private async Task MessageHandler(BaseDeviceMessage msg)
         {
             switch (msg.MsgType)
@@ -89,8 +155,8 @@ namespace IoTAIService
                 case "AIDetectReq":
                     {
                         AIDetectRequestMeesage detectReq = (AIDetectRequestMeesage)msg;
-                        using (var ms = new MemoryStream(detectReq.RgbFrame))
-                        using (var image = Image.Load<Rgb24>(ms))
+
+                        using (var image = FastZlibDecompressToRgb24Image(detectReq.Frame, detectReq.Width, detectReq.Height))
                         {
                             switch (detectReq.DetType)
                             {

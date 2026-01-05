@@ -387,7 +387,7 @@ namespace ChannelUtility
             msg.DetType = detectType;
             msg.IsDraw = isDraw;
             msg.DetParams = detParams;
-            msg.RgbFrame = frameData;
+            msg.Frame = frameData;
             msg.Width = width;
             msg.Height = height;
             msg.NodeId = this._nodeGuid;
