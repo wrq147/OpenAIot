@@ -2,28 +2,25 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '6e3675a45cfe0af0f946ed626b53b51d41718491'
-    oldFile: !uuid '520b4b10ef9ee9ef6507b592db20b4186780c69a'
-  /Channel/FixVideoChannel:
-    newFile: !uuid '1e95b28285fa9dfa1d825666085c3dd35ee0a31b'
-    oldFile: !uuid '0d0ce26bdce83bfa8f7cc610f5e32110a4b214e7'
-  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '0999bb8505bc943a3baf0b763425b610904ed8c0'
-    oldFile: !uuid '5ae2f59fd942664c013821abd2dc53b296f8a367'
-  /Channel/FixVideoChannel/ZLUtility.cs:
-    newFile: !uuid 'dbcab0d7e1c4a3933fa2adb520356f4f287b53ba'
-    oldFile: !uuid '84d9ce595857a39dbbe27cfc5622409bc0d2d1d1'
   /Third:
-    newFile: !uuid '09825cc7fda6748794bef7f3c2d58c73dd801fc2'
-    oldFile: !uuid 'bc2c13ae322ce2ed98592e3f4ff54b93b6bc796e'
+    newFile: !uuid '331b984afa037bd6dec3e6bb9ec72f5c9bb78c71'
+    oldFile: !uuid '09825cc7fda6748794bef7f3c2d58c73dd801fc2'
   /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '86213cadd7ecd2156b77554a1e4771c4642c411d'
-    oldFile: !uuid '189f92bd9b4307bf5273ed3c4f18f69d71302411'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
-    newFile: !uuid 'a562c1b6c6013bcf8cd3197564b6f24d65150b84'
-    oldFile: !uuid 'd3c5627d9e431bd70c66c407533c6f35daced44d'
-gitCommitId: !uuid '5505c3573e953357815f05f4a760cb01646c1a68'
+    newFile: !uuid 'c47a4b641fa480e7a16cfcbb851a23c9f4cae670'
+    oldFile: !uuid '86213cadd7ecd2156b77554a1e4771c4642c411d'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid '7a16a1bb66a0330b533482c15e1a72645d189630'
+    oldFile: !uuid 'a34cbc0a9b28eb664629f9476620b7dfb6b876c9'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
+    newFile: !uuid 'd4dfdf339794b3a49307089e12e5691cbf1c58fc'
+    oldFile: !uuid '407d65fe0c240129f080eb4a140c10e29dde2add'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
+    newFile: !uuid 'aad4ae8dd029657ed5d37761097cae6aa930c919'
+    oldFile: !uuid '259c36cae20cc3f375f7dd7221344af565b01f74'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libmk_api.so:
+    newFile: !uuid '2230ff4dfe136ecef4ca171a1233275208e829b0'
+    oldFile: !uuid 'cf9492378ac8179eee1b6644e719593ebdd5c56f'
+gitCommitId: !uuid '2a293dd95f615025734b60dc45e86a6f0009a9e9'
 renames: {
   }
-revisionId: 101
+revisionId: 102
