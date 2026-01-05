@@ -2,25 +2,49 @@
 branches: {
   }
 fileChange:
-  /Third:
-    newFile: !uuid '331b984afa037bd6dec3e6bb9ec72f5c9bb78c71'
-    oldFile: !uuid '09825cc7fda6748794bef7f3c2d58c73dd801fc2'
-  /Third/ZLMediaKit.Autogen:
-    newFile: !uuid 'c47a4b641fa480e7a16cfcbb851a23c9f4cae670'
-    oldFile: !uuid '86213cadd7ecd2156b77554a1e4771c4642c411d'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: !uuid '7a16a1bb66a0330b533482c15e1a72645d189630'
-    oldFile: !uuid 'a34cbc0a9b28eb664629f9476620b7dfb6b876c9'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
-    newFile: !uuid 'd4dfdf339794b3a49307089e12e5691cbf1c58fc'
-    oldFile: !uuid '407d65fe0c240129f080eb4a140c10e29dde2add'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
-    newFile: !uuid 'aad4ae8dd029657ed5d37761097cae6aa930c919'
-    oldFile: !uuid '259c36cae20cc3f375f7dd7221344af565b01f74'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libmk_api.so:
-    newFile: !uuid '2230ff4dfe136ecef4ca171a1233275208e829b0'
-    oldFile: !uuid 'cf9492378ac8179eee1b6644e719593ebdd5c56f'
-gitCommitId: !uuid '2a293dd95f615025734b60dc45e86a6f0009a9e9'
+  /Channel:
+    newFile: !uuid '84bb7bd8458d9a64095335a6a34629937979ab90'
+    oldFile: !uuid '6e3675a45cfe0af0f946ed626b53b51d41718491'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'd4aed1125761a6affb54c1be66e6c6420b2b6bb2'
+    oldFile: !uuid '47e34e58209878b3de631dc9152e526396c6bfed'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid '666cf56bf5a187ca14ee2e6c4ccd508dc45830f9'
+    oldFile: !uuid 'c7e8e5f25ca49b0f38532311d7df9db21c717bdc'
+  /Channel/ChannelUtility/Message:
+    newFile: !uuid 'aed97ae1d7b9bcd17ebf5e3de7b670c3c95ceeb6'
+    oldFile: !uuid 'adda6e552d528f981913dd88d141fe64a87a037f'
+  /Channel/ChannelUtility/Message/AIDetectRequestMeesage.cs:
+    newFile: !uuid 'f1b6f7de1f78a9a28c01580667c74bc5bc538c43'
+    oldFile: !uuid '32e43e7e2a2e9db0b0680353f8d31484a0483d58'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '4e21ea9cdbe94145206889e3089227f498166885'
+    oldFile: !uuid '1e95b28285fa9dfa1d825666085c3dd35ee0a31b'
+  /Channel/FixVideoChannel/AIDetectorTask.cs:
+    newFile: !uuid '96c247f8177c43cb433fce474512e3ac4a4375ab'
+    oldFile: !uuid '196e4939dffabea29df9b1f5472e8d0f01f0e156'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid '8cb052c2305a1087ac8d5f88c27604fcde33fc8c'
+    oldFile: !uuid '0999bb8505bc943a3baf0b763425b610904ed8c0'
+  /Modules:
+    newFile: !uuid 'd20043e66cafa60e2fd72aaee513a82abf2db5f3'
+    oldFile: !uuid '778104cdd71c2a75cf9edf65c804a57de14f730d'
+  /Modules/IoTAIService:
+    newFile: !uuid 'e2bbdb8f57d089dfc34cdf9a539fe073a3af9964'
+    oldFile: !uuid 'd530c9e8e672a7e3f5fd5c0b6c1a639236790743'
+  /Modules/IoTAIService/PluginConfig.cs:
+    newFile: !uuid '31e7bbb30eed9e60b9f0a8a1734b0ee1e97752e9'
+    oldFile: !uuid 'f8605589397fa12b1a6bf717f0a0babdb9813ab3'
+  /Modules/IoTRulesService:
+    newFile: !uuid '7aeaff4c03180fde819c3485b479d2691eadf542'
+    oldFile: !uuid 'b25613252be510d01bcfe68b44d0b6ab352bec35'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid '2ded86d62789bce4bf572de78170df33072bde0e'
+    oldFile: !uuid '398764bc46c2ba40b8cee2eb07f7fcecb72a4bd7'
+  /Modules/IoTRulesService/DataParser/DeviceMessageHandler.cs:
+    newFile: !uuid '682deff3e99e6080d1a7fdb4c3a8e226363eccd6'
+    oldFile: !uuid 'f6842d50b7acdc50b7343bf6b641d5f6a7ebb220'
+gitCommitId: !uuid '8e952e126620ff53565cd03a1aa569de7ac542be'
 renames: {
   }
-revisionId: 102
+revisionId: 103
