@@ -5,6 +5,9 @@ namespace MqttChannel
     {
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
+        /// <summary>
+        /// 可以指定emqx服务器或传空使用本地mqtt服务
+        /// </summary>
         public string mqtt_server { get; set; }
         public int mqtt_port { get; set; }
         public string mqtt_username { get; set; }

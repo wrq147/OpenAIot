@@ -115,14 +115,14 @@ namespace FixVideoChannel
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
-            byte[] bgr24 = FrameBufferPool.GetBgr24Buffer(context.VideoKey, w, h);
+            byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
             try
             {
                 unsafe
                 {
-                    fixed (byte* pBgr = bgr24)
+                    fixed (byte* pRgb = rgb24)
                     {
-                        mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pBgr);
+                        mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
                     }
                 }
 
@@ -134,13 +134,13 @@ namespace FixVideoChannel
                     }
                     bool hasDraw = false;
                     var detectTasks = item.DetectList;
-                    byte[] tdata = bgr24;
+                    byte[] tdata = rgb24;
                     bool isPress = false;
 
                     context.Motion.CoolDownMs = item.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
                     // 执行AI检测
-                    if (context.Motion.IsMotionKeyframe(bgr24, w, h))
+                    if (context.Motion.IsMotionKeyframe(rgb24, w, h))
                     {
                         foreach (var task in detectTasks)
                         {
@@ -157,7 +157,7 @@ namespace FixVideoChannel
                     // 执行绘制
                     foreach (var t in detectTasks)
                     {
-                        if (t.Draw(bgr24, w, h))
+                        if (t.Draw(rgb24, w, h))
                         {
                             hasDraw = true;
                         }
@@ -168,7 +168,7 @@ namespace FixVideoChannel
                         byte[] yuvData;
                         int[] yuvLineSizes;
                         int alignedLineSize = (w * 3 + 31) & ~31;
-                        if (!ZLUtility.ConvertBgr24ToTargetYuv(bgr24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                        if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                         {
                             return;
                         }
@@ -202,7 +202,7 @@ namespace FixVideoChannel
             }
             finally
             {
-                FrameBufferPool.ReturnBgr24Buffer(context.VideoKey, bgr24);
+                FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
             }
         }
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
@@ -272,7 +272,7 @@ namespace FixVideoChannel
 
                     MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                     context.VideoDecoder = mkDecoder;
-                    context.Swscale = mk_transcode.MkSwscaleCreate(3, 0, 0);
+                    context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
 
                     mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, user_data);
                     mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, user_data);

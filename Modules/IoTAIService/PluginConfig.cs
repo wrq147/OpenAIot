@@ -103,29 +103,15 @@ namespace IoTAIService
             {
                 int expectedLength = width * height * 3;
 
-                // 步骤2：Zlib解压得到BGR24原始数据
-                byte[] bgrData;
+                // 步骤2：Zlib解压得到RGB24原始数据
                 using (var msIn = new MemoryStream(compressedData))
                 using (var zlibStream = new DeflateStream(msIn, CompressionMode.Decompress))
                 using (var msOut = new MemoryStream(expectedLength))
                 {
                     zlibStream.CopyTo(msOut);
-                    bgrData = msOut.ToArray();
+                    Image<Rgb24> rgbImage = Image.Load<Rgb24>(msOut);
+                    return rgbImage;
                 }
-
-                // 校验解压后数据长度是否匹配
-                if (bgrData.Length != expectedLength)
-                {
-                    Console.WriteLine($"解压数据长度异常：实际{bgrData.Length}，预期{expectedLength}");
-                    return null;
-                }
-
-                Image<Rgb24> rgbImage = Image.LoadPixelData<Rgb24>(
-                    data: ConvertBgrToRgbInPlace(bgrData),
-                    width: width,
-                    height: height);
-
-                return rgbImage;
             }
             catch (Exception ex)
             {
@@ -133,21 +119,7 @@ namespace IoTAIService
                 return null;
             }
         }
-        private byte[] ConvertBgrToRgbInPlace(byte[] bgrData)
-        {
-            if (bgrData == null || bgrData.Length % 3 != 0)
-            {
-                throw new ArgumentException("BGR数据格式非法，长度必须是3的倍数");
-            }
 
-            for (int i = 0; i < bgrData.Length; i += 3)
-            {
-                byte temp = bgrData[i];     // 保存B值
-                bgrData[i] = bgrData[i + 2];// R值放到原B位置
-                bgrData[i + 2] = temp;      // B值放到原R位置
-            }
-            return bgrData;
-        }
         private async Task MessageHandler(BaseDeviceMessage msg)
         {
             switch (msg.MsgType)

@@ -71,23 +71,23 @@ services:
     networks:
       mynetwork:
         ipv4_address: 172.18.0.4
-  mz-emqx:
-    image: emqx:5.7.2
-    container_name: mz-emqx
-    restart: always
-    environment:
-      - EMQX_LISTENERS__TCP__DEFAULT__BIND
-      - EMQX_DASHBOARD__DEFAULT_PASSWORD
-      - EMQX_MQTT__SHARED_SUBSCRIPTION_STRATEGY
-    ports:
-      - 2883:2883
-      - 8083:8083
-      - 8084:8084
-      - 8883:8883
-      - 18883:18083
-    networks:
-      mynetwork:
-        ipv4_address: 172.18.0.5
+  # mz-emqx:
+  #   image: emqx:5.7.2
+  #   container_name: mz-emqx
+  #   restart: always
+  #   environment:
+  #     - EMQX_LISTENERS__TCP__DEFAULT__BIND
+  #     - EMQX_DASHBOARD__DEFAULT_PASSWORD
+  #     - EMQX_MQTT__SHARED_SUBSCRIPTION_STRATEGY
+  #   ports:
+  #     - 2883:2883
+  #     - 8083:8083
+  #     - 8084:8084
+  #     - 8883:8883
+  #     - 18883:18083
+  #   networks:
+  #     mynetwork:
+  #       ipv4_address: 172.18.0.5
   database-redis:
     command: ${REDIS_COMMAND}
     container_name: mz-db-redis

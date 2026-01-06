@@ -9,10 +9,10 @@ namespace FixVideoChannel
 {
     public static class ZLUtility
     {
-        // <summary>
-        /// BGR24转换到目标YUV格式
+        /// <summary>
+        /// RGB24转换到目标YUV格式
         /// </summary>
-        /// <param name="bgr24Data">输入BGR24数据</param>
+        /// <param name="rgb24Data">输入RGB24数据</param>
         /// <param name="width">宽度</param>
         /// <param name="height">高度</param>
         /// <param name="alignedLinesize">对齐后的行大小</param>
@@ -20,7 +20,7 @@ namespace FixVideoChannel
         /// <param name="yuvData">输出YUV数据</param>
         /// <param name="yuvLineSizes">输出YUV行大小数组</param>
         /// <returns>是否转换成功</returns>
-        public static bool ConvertBgr24ToTargetYuv(byte[] bgr24Data, int width, int height, int alignedLinesize, AVPixelFormat targetFmt, out byte[] yuvData, out int[] yuvLineSizes)
+        public static bool ConvertRgb24ToTargetYuv(byte[] rgb24Data, int width, int height, int alignedLinesize, AVPixelFormat targetFmt, out byte[] yuvData, out int[] yuvLineSizes)
         {
             yuvData = null;
             yuvLineSizes = null;
@@ -29,25 +29,25 @@ namespace FixVideoChannel
             switch (targetFmt)
             {
                 case AVPixelFormat.AV_PIX_FMT_YUV420P:
-                    yuvData = ConvertBgr24ToYuv420P(bgr24Data, width, height, alignedLinesize);
+                    yuvData = ConvertRgb24ToYuv420P(rgb24Data, width, height, alignedLinesize);
                     // Y:width, U:width/2, V:width/2
                     yuvLineSizes = new int[3] { width, width / 2, width / 2 };
                     return true;
 
                 case AVPixelFormat.AV_PIX_FMT_YUV422P:
-                    yuvData = ConvertBgr24ToYuv422P(bgr24Data, width, height, alignedLinesize);
+                    yuvData = ConvertRgb24ToYuv422P(rgb24Data, width, height, alignedLinesize);
                     // Y:width, U:width/2, V:width/2
                     yuvLineSizes = new int[3] { width, width / 2, width / 2 };
                     return true;
 
                 case AVPixelFormat.AV_PIX_FMT_YUV444P:
-                    yuvData = ConvertBgr24ToYuv444P(bgr24Data, width, height, alignedLinesize);
+                    yuvData = ConvertRgb24ToYuv444P(rgb24Data, width, height, alignedLinesize);
                     // Y/U/V均为width
                     yuvLineSizes = new int[3] { width, width, width };
                     return true;
 
                 case AVPixelFormat.AV_PIX_FMT_NV12:
-                    yuvData = ConvertBgr24ToNV12(bgr24Data, width, height, alignedLinesize);
+                    yuvData = ConvertRgb24ToNV12(rgb24Data, width, height, alignedLinesize);
                     // Y:width, UV:width
                     yuvLineSizes = new int[2] { width, width };
                     return true;
@@ -56,10 +56,11 @@ namespace FixVideoChannel
                     return false;
             }
         }
+
         /// <summary>
-        /// BGR24转YUV420P
+        /// RGB24转YUV420P
         /// </summary>
-        private static byte[] ConvertBgr24ToYuv420P(byte[] bgr24Data, int width, int height, int alignedLinesize)
+        private static byte[] ConvertRgb24ToYuv420P(byte[] rgb24Data, int width, int height, int alignedLinesize)
         {
             int ySize = width * height;
             int uvSize = ySize / 4;
@@ -67,7 +68,7 @@ namespace FixVideoChannel
 
             unsafe
             {
-                fixed (byte* pBgr = bgr24Data)
+                fixed (byte* pRgb = rgb24Data)
                 fixed (byte* pYuv = yuv420p)
                 {
                     byte* pY = pYuv;
@@ -76,12 +77,13 @@ namespace FixVideoChannel
 
                     for (int y = 0; y < height; y++)
                     {
-                        byte* pBgrRow = pBgr + y * alignedLinesize;
+                        byte* pRgbRow = pRgb + y * alignedLinesize;
                         for (int x = 0; x < width; x++)
                         {
-                            byte b = pBgrRow[x * 3];
-                            byte g = pBgrRow[x * 3 + 1];
-                            byte r = pBgrRow[x * 3 + 2];
+                            // RGB24格式：每个像素按 R → G → B 顺序存储
+                            byte r = pRgbRow[x * 3];
+                            byte g = pRgbRow[x * 3 + 1];
+                            byte b = pRgbRow[x * 3 + 2];
 
                             // Y分量计算
                             pY[y * width + x] = (byte)Math.Round(0.299 * r + 0.587 * g + 0.114 * b);
@@ -101,9 +103,9 @@ namespace FixVideoChannel
         }
 
         /// <summary>
-        /// BGR24转YUV422P
+        /// RGB24转YUV422P
         /// </summary>
-        private static byte[] ConvertBgr24ToYuv422P(byte[] bgr24Data, int width, int height, int alignedLinesize)
+        private static byte[] ConvertRgb24ToYuv422P(byte[] rgb24Data, int width, int height, int alignedLinesize)
         {
             int ySize = width * height;
             int uvSize = ySize / 2;
@@ -111,7 +113,7 @@ namespace FixVideoChannel
 
             unsafe
             {
-                fixed (byte* pBgr = bgr24Data)
+                fixed (byte* pRgb = rgb24Data)
                 fixed (byte* pYuv = yuv422p)
                 {
                     byte* pY = pYuv;
@@ -120,12 +122,13 @@ namespace FixVideoChannel
 
                     for (int y = 0; y < height; y++)
                     {
-                        byte* pBgrRow = pBgr + y * alignedLinesize;
+                        byte* pRgbRow = pRgb + y * alignedLinesize;
                         for (int x = 0; x < width; x++)
                         {
-                            byte b = pBgrRow[x * 3];
-                            byte g = pBgrRow[x * 3 + 1];
-                            byte r = pBgrRow[x * 3 + 2];
+                            // RGB24格式：每个像素按 R → G → B 顺序存储
+                            byte r = pRgbRow[x * 3];
+                            byte g = pRgbRow[x * 3 + 1];
+                            byte b = pRgbRow[x * 3 + 2];
 
                             pY[y * width + x] = (byte)Math.Round(0.299 * r + 0.587 * g + 0.114 * b);
 
@@ -144,16 +147,16 @@ namespace FixVideoChannel
         }
 
         /// <summary>
-        /// BGR24转YUV444P
+        /// RGB24转YUV444P
         /// </summary>
-        private static byte[] ConvertBgr24ToYuv444P(byte[] bgr24Data, int width, int height, int alignedLinesize)
+        private static byte[] ConvertRgb24ToYuv444P(byte[] rgb24Data, int width, int height, int alignedLinesize)
         {
             int ySize = width * height;
             byte[] yuv444p = new byte[ySize * 3];
 
             unsafe
             {
-                fixed (byte* pBgr = bgr24Data)
+                fixed (byte* pRgb = rgb24Data)
                 fixed (byte* pYuv = yuv444p)
                 {
                     byte* pY = pYuv;
@@ -162,12 +165,13 @@ namespace FixVideoChannel
 
                     for (int y = 0; y < height; y++)
                     {
-                        byte* pBgrRow = pBgr + y * alignedLinesize;
+                        byte* pRgbRow = pRgb + y * alignedLinesize;
                         for (int x = 0; x < width; x++)
                         {
-                            byte b = pBgrRow[x * 3];
-                            byte g = pBgrRow[x * 3 + 1];
-                            byte r = pBgrRow[x * 3 + 2];
+                            // RGB24格式：每个像素按 R → G → B 顺序存储
+                            byte r = pRgbRow[x * 3];
+                            byte g = pRgbRow[x * 3 + 1];
+                            byte b = pRgbRow[x * 3 + 2];
 
                             int idx = y * width + x;
                             pY[idx] = (byte)Math.Round(0.299 * r + 0.587 * g + 0.114 * b);
@@ -181,9 +185,9 @@ namespace FixVideoChannel
         }
 
         /// <summary>
-        /// BGR24转NV12（Y + UV交织）
+        /// RGB24转NV12（Y + UV交织）
         /// </summary>
-        private static byte[] ConvertBgr24ToNV12(byte[] bgr24Data, int width, int height, int alignedLinesize)
+        private static byte[] ConvertRgb24ToNV12(byte[] rgb24Data, int width, int height, int alignedLinesize)
         {
             int ySize = width * height;
             int uvSize = ySize / 2;
@@ -191,7 +195,7 @@ namespace FixVideoChannel
 
             unsafe
             {
-                fixed (byte* pBgr = bgr24Data)
+                fixed (byte* pRgb = rgb24Data)
                 fixed (byte* pNv12 = nv12)
                 {
                     byte* pY = pNv12;
@@ -199,12 +203,13 @@ namespace FixVideoChannel
 
                     for (int y = 0; y < height; y++)
                     {
-                        byte* pBgrRow = pBgr + y * alignedLinesize;
+                        byte* pRgbRow = pRgb + y * alignedLinesize;
                         for (int x = 0; x < width; x++)
                         {
-                            byte b = pBgrRow[x * 3];
-                            byte g = pBgrRow[x * 3 + 1];
-                            byte r = pBgrRow[x * 3 + 2];
+                            // RGB24格式：每个像素按 R → G → B 顺序存储
+                            byte r = pRgbRow[x * 3];
+                            byte g = pRgbRow[x * 3 + 1];
+                            byte b = pRgbRow[x * 3 + 2];
 
                             pY[y * width + x] = (byte)Math.Round(0.299 * r + 0.587 * g + 0.114 * b);
 
@@ -223,7 +228,6 @@ namespace FixVideoChannel
             }
             return nv12;
         }
-     
     }
 
     public enum AVPixelFormat

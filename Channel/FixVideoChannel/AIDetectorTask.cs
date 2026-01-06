@@ -126,7 +126,7 @@ namespace FixVideoChannel
             pressData = data;
             Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width / 2, height / 2);
         }
-        public bool Draw(byte[] bgrFrame, int width, int height)
+        public bool Draw(byte[] rgbFrame, int width, int height)
         {
             if (!_item.EnableDraw)
             {
@@ -137,7 +137,7 @@ namespace FixVideoChannel
             {
                 return false;
             }
-            using var image = Image.LoadPixelData<Bgr24>(bgrFrame, width, height);
+            using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
 
             // 遍历所有检测框
             foreach (var box in tmpboxArr)
@@ -156,7 +156,7 @@ namespace FixVideoChannel
 
                 // 2. 获取当前框的颜色
                 Color color = Color.Parse(box.color);
-                Bgr24 boxColor = color.ToPixel<Bgr24>();
+                Rgb24 boxColor = color.ToPixel<Rgb24>();
 
                 // 3. 绘制矩形边框
                 int lineWidth = 2;
@@ -167,14 +167,14 @@ namespace FixVideoChannel
                 DrawLabel(image, x1, y1, labelText, boxColor);
             }
 
-            // 将绘制后的图像数据写回bgrFrame
-            image.CopyPixelDataTo(bgrFrame);
+            // 将绘制后的图像数据写回rgbFrame
+            image.CopyPixelDataTo(rgbFrame);
             return true;
         }
         /// <summary>
         /// 绘制矩形边框
         /// </summary>
-        private void DrawRectangle(Image<Bgr24> image, int x1, int y1, int x2, int y2, Bgr24 color, int lineWidth)
+        private void DrawRectangle(Image<Rgb24> image, int x1, int y1, int x2, int y2, Rgb24 color, int lineWidth)
         {
             int width = image.Width;
             int height = image.Height;
@@ -219,7 +219,7 @@ namespace FixVideoChannel
         /// <summary>
         /// 绘制标签（背景框+文字）
         /// </summary>
-        private void DrawLabel(Image<Bgr24> image, int x, int y, string text, Bgr24 color)
+        private void DrawLabel(Image<Rgb24> image, int x, int y, string text, Rgb24 color)
         {
             if (string.IsNullOrEmpty(text)) return;
 

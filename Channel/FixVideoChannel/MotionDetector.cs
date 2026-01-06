@@ -49,11 +49,11 @@ namespace FixVideoChannel
         /// <summary>
         /// 判断当前BGR24帧是否为运动关键帧
         /// </summary>
-        /// <param name="bgr24Data">BGR24格式帧数据</param>
+        /// <param name="rgb24Data">RGB24格式帧数据</param>
         /// <param name="width">帧宽度</param>
         /// <param name="height">帧高度</param>
         /// <returns>是否需要执行AI检测</returns>
-        public bool IsMotionKeyframe(byte[] bgr24Data, int width, int height)
+        public bool IsMotionKeyframe(byte[] rgb24Data, int width, int height)
         {
             try
             {
@@ -64,9 +64,8 @@ namespace FixVideoChannel
                     return false;
                 }
 
-                // 2. 将BGR24字节数组转为ImageSharp图像
-                using var image = Bgr24ToImageSharp(bgr24Data, width, height);
-                // 仅转为灰度图
+                // 2. 将RGB24字节数组转为灰度图
+                using var image = Image.LoadPixelData<Rgb24>(rgb24Data, width, height);
                 using var grayImage = image.Clone(x => x.Grayscale());
 
                 // 3. 提取灰度像素数组
@@ -103,33 +102,12 @@ namespace FixVideoChannel
         }
 
         #region 核心工具方法（使用实例专属配置）
-        /// <summary>
-        /// BGR24字节数组转为ImageSharp的Image<Rgba32>
-        /// </summary>
-        private Image<Rgba32> Bgr24ToImageSharp(byte[] bgr24Data, int width, int height)
-        {
-            var image = new Image<Rgba32>(width, height);
-            int pixelIndex = 0;
-
-            // 遍历BGR24数组（BGR顺序 → ImageSharp的RGBA）
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    byte b = bgr24Data[pixelIndex++];
-                    byte g = bgr24Data[pixelIndex++];
-                    byte r = bgr24Data[pixelIndex++];
-                    image[x, y] = new Rgba32(r, g, b, 255); // BGR→RGB，Alpha=255
-                }
-            }
-
-            return image;
-        }
+   
 
         /// <summary>
         /// 提取灰度图像的像素数组（单通道）
         /// </summary>
-        private byte[] GetGrayPixelArray(Image<Rgba32> grayImage)
+        private byte[] GetGrayPixelArray(Image<Rgb24> grayImage)
         {
             int width = grayImage.Width;
             int height = grayImage.Height;

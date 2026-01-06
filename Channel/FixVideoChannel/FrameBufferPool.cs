@@ -22,14 +22,14 @@ namespace FixVideoChannel
         private const int MaxPoolCount = 100;
 
         /// <summary>
-        /// 获取指定尺寸的BGR24缓冲区（按视频Key缓存）
+        /// 获取指定尺寸的RGB24缓冲区（按视频Key缓存）
         /// </summary>
         /// <param name="videoKey">视频唯一标识</param>
         /// <param name="width">帧宽度</param>
         /// <param name="height">帧高度</param>
         /// <param name="align">内存对齐值（默认32）</param>
         /// <returns>复用的byte数组缓冲区</returns>
-        public static byte[] GetBgr24Buffer(string videoKey, int width, int height, int align = 32)
+        public static byte[] GetRgb24Buffer(string videoKey, int width, int height, int align = 32)
         {
             // 参数校验
             if (string.IsNullOrEmpty(videoKey))
@@ -38,7 +38,7 @@ namespace FixVideoChannel
                 throw new ArgumentOutOfRangeException($"宽度和高度必须大于0，当前：width={width}, height={height}");
 
             // 计算对齐后的缓冲区总大小
-            const int pixelSize = 3; // BGR24每个像素3字节
+            const int pixelSize = 3; // RGB24每个像素3字节
             int rawLineSize = width * pixelSize;
             int alignedLineSize = (rawLineSize + align - 1) & ~(align - 1);
             int totalSize = alignedLineSize * height;
@@ -76,11 +76,11 @@ namespace FixVideoChannel
         }
 
         /// <summary>
-        /// 归还BGR24缓冲区到缓存池
+        /// 归还RGB24缓冲区到缓存池
         /// </summary>
         /// <param name="videoKey">视频唯一标识</param>
         /// <param name="buffer">要归还的缓冲区</param>
-        public static void ReturnBgr24Buffer(string videoKey, byte[] buffer)
+        public static void ReturnRgb24Buffer(string videoKey, byte[] buffer)
         {
             if (string.IsNullOrEmpty(videoKey) || buffer == null)
                 return;
