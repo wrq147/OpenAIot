@@ -7,10 +7,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.31" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.1.31" />
-		<PackageReference Include="MQTTnet" Version="4.1.3.436" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Third\LibGB28181SipServer\LibGB28181SipServer.csproj" />
+	  <ProjectReference Include="..\..\Third\GB28181.SIPSorcery\GB28181.SIPSorcery.csproj" />
 	  <ProjectReference Include="..\ChannelUtility\ChannelUtility.csproj" />
 	</ItemGroup>
 

@@ -1,6 +1,7 @@
 ﻿
 using ChannelUtility;
 using ChannelUtility.Config;
+using GB28181Channel.Main;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +35,7 @@ namespace GB28181Channel
                 var configSec = configuration.GetSection("GB28181Option");
                 services.Configure<GB28181Option>(configSec);
 
-
+                services.AddGB28281();
                 services.AddEventBus(x =>
                 {
                     var option = configSec.Get<GB28181Option>();
