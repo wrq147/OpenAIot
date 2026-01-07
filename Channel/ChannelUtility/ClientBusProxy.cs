@@ -77,7 +77,7 @@ namespace ChannelUtility
                 }
             }, cfg =>
             {
-                cfg.WithTopic("/device." + _nodeGuid + ".guid");
+                cfg.WithTopic("/node." + _nodeGuid);
                 cfg.WithAutoDelete(true);
             });
 
@@ -393,24 +393,55 @@ namespace ChannelUtility
             msg.NodeId = this._nodeGuid;
             await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
+        public async Task<string> WaitPublishMediaUserVerify(string nodeId, string username)
+        {
+            //8秒后自动取消
+            using var cts = new CancellationTokenSource(8000);
+            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
 
+            string tmsgId = Guid.NewGuid().ToString("N");
+            using var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tmsgId, msg =>
+            {
+                tcs.TrySetResult(msg);
+            }, cfg =>
+            {
+                cfg.WithAutoDelete(true);
+            }, cts.Token).ConfigureAwait(false);
+
+            try
+            {
+                MediaUserVerifyMessage msg = new MediaUserVerifyMessage();
+                msg.DeviceId = username;
+                msg.ProductId = string.Empty;
+                msg.MessageId = tmsgId;
+                await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(username));
+                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
+                return reply;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public void PublishMediaNotFound(string nodeId, string streamId)
         {
             MediaNotFoundMessage msg = new MediaNotFoundMessage();
-            msg.DeviceId = this._nodeGuid;
+            msg.DeviceId = streamId;
             msg.ProductId = string.Empty;
             msg.NodeId = nodeId;
-            msg.StreamId = streamId;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(this._nodeGuid));
+            msg.NodeGuid = this._nodeGuid;
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(streamId));
         }
         public void PublishMediaNotReader(string streamId)
         {
             MediaNotReaderMessage msg = new MediaNotReaderMessage();
-            msg.DeviceId = this._nodeGuid;
+            msg.DeviceId = streamId;
             msg.ProductId = string.Empty;
-            msg.StreamId = streamId;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(this._nodeGuid));
+            msg.NodeGuid = this._nodeGuid;
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(streamId));
         }
+
+
         /// <summary>
         /// 发送确认回复包（异步）
         /// </summary>

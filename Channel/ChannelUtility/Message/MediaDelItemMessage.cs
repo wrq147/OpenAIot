@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChannelUtility.Message
 {
-    public class MediaNotReaderMessage : BaseDeviceMessage
+    public class MediaDelItemMessage : BaseDeviceMessage
     {
-        public MediaNotReaderMessage()
+        public MediaDelItemMessage()
         {
-            MsgType = "MediaNR";
+            MsgType = "DelVItem";
         }
-        public string NodeGuid { get; set; }
     }
 }

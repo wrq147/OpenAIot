@@ -31,12 +31,13 @@ namespace ChannelUtility
             { "ChangeProduct", typeof(ChangeProductMessage) },
             { "StartReadAll", typeof(StartReadAllMessage) },
             { "ModMatch", typeof(ModbusMatchMessage) },
-            { "DelVItem", typeof(DelVideoItemMessage) },
-            { "UpVItem", typeof(UpVideoItemMessage) },
             { "AIDetectReq",typeof(AIDetectRequestMeesage) },
             { "AIDetectResp",typeof(AIDetectResponseMessage) },
+            { "DelVItem", typeof(MediaDelItemMessage) },
+            { "UpVItem", typeof(MediaItemMessage) },
             { "MediaNF",typeof(MediaNotFoundMessage) },
-            { "MediaNR",typeof(MediaNotReaderMessage) }
+            { "MediaNR",typeof(MediaNotReaderMessage) },
+            { "MediaUser",typeof(MediaUserVerifyMessage) }
 
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions

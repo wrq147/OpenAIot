@@ -65,12 +65,31 @@ namespace IoTVideoService
             switch (msg.MsgType)
             {
                 case "MediaNF":
-                    MediaNotFoundMessage nfmsg = (MediaNotFoundMessage)msg;
-                    await _provider.GetService<VideoSourceBLL>().CollectVideo(nfmsg);
+                    {
+                        MediaNotFoundMessage nfmsg = (MediaNotFoundMessage)msg;
+                        await _provider.GetService<VideoSourceBLL>().CollectVideo(nfmsg);
+                    }
                     break;
                 case "MediaNR":
-                    MediaNotReaderMessage nrmsg = (MediaNotReaderMessage)msg;
-                    await _provider.GetService<VideoSourceBLL>().DelVideo(nrmsg);
+                    {
+                        MediaNotReaderMessage nrmsg = (MediaNotReaderMessage)msg;
+                        await _provider.GetService<VideoSourceBLL>().DelVideo(nrmsg);
+                    }
+                    break;
+                case "MediaUser":
+                    {
+                        var videoSourceBLL = _provider.GetService<VideoSourceBLL>();
+                        MediaUserVerifyMessage uvmsg = (MediaUserVerifyMessage)msg;
+                        var tpassword = await videoSourceBLL.GB28181Login(uvmsg.DeviceId);
+                        if (tpassword == null)
+                        {
+                            await videoSourceBLL.ResponseVerifyResult(uvmsg.MessageId, string.Empty);
+                        }
+                        else
+                        {
+                            await videoSourceBLL.ResponseVerifyResult(uvmsg.MessageId, tpassword);
+                        }
+                    }
                     break;
             }
         }

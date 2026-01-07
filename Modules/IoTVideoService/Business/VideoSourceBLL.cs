@@ -150,7 +150,19 @@ namespace IoTVideoService.Business
                 return BusResponse<int>.Error(111, ex.Message);
             }
         }
-
+        public virtual async Task<string> GB28181Login(string username)
+        {
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            var vvlist = await videoSourceDAL.SelectList(x => x.UserName == username);
+            if (vvlist.Count > 0)
+            {
+                return vvlist[0].UserPwd;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         private async Task DownUpVideoItemMessage(string nodeguid, MZ_VideoSource source)
         {
@@ -171,29 +183,33 @@ namespace IoTVideoService.Business
                 aiConfig = System.Text.Json.JsonSerializer.Deserialize<AIConfig>(source.AITasks, MyDefaultTextJsonConfig.DefaultOptions);
             }
 
-            UpVideoItemMessage msg = new UpVideoItemMessage();
+            MediaItemMessage msg = new MediaItemMessage();
             msg.DeviceId = string.Empty;
             msg.ProductId = string.Empty;
             msg.Item = cpitem;
             msg.Config = aiConfig;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeguid + ".guid").ConfigureAwait(false);
+            await bus.PubSub.PublishAsync(msgbody, "/node." + nodeguid).ConfigureAwait(false);
         }
-        private async Task DownDelVideoItemMessage(string nodeid, string videoId)
+        private async Task DownDelVideoItemMessage(string nodeguid, string videoId)
         {
-            DelVideoItemMessage msg = new DelVideoItemMessage();
+            MediaDelItemMessage msg = new MediaDelItemMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
+            await bus.PubSub.PublishAsync(msgbody, "/node." + nodeguid).ConfigureAwait(false);
         }
-
+        public async Task ResponseVerifyResult(string msgId, string rs)
+        {
+            var bus = _provider.GetService<RabbitScope>().Bus;
+            await bus.SendReceive.SendAsync("bus.response." + msgId, rs).ConfigureAwait(false);
+        }
         public virtual async Task DelVideo(MediaNotReaderMessage msg)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            string tkey = msg.StreamId;
+            string tkey = msg.DeviceId;
             var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
             if (tlist.Count > 0)
             {
@@ -250,13 +266,13 @@ namespace IoTVideoService.Business
 
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             //给在线节点分配视频采集
-            string tkey = msg.StreamId;
+            string tkey = msg.DeviceId;
             var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
             if (tlist.Count > 0)
             {
                 var titem = tlist[0];
-                string nodeguid = msg.DeviceId;
-                if (!string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeguid))
+                string nodeguid = msg.NodeGuid;
+                if (titem.VideoType == 0 && !string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeguid))
                 {
                     await DownDelVideoItemMessage(titem.PullNode, titem.Id);
                 }

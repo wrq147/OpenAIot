@@ -26,11 +26,9 @@ namespace IoTService
     public class ServerBusProxy
     {
         private ITAServiceProvider _provider;
-        private IotProductDAL _productDAL;
-        public ServerBusProxy(ITAServiceProvider provider, IotProductDAL productDAL)
+        public ServerBusProxy(ITAServiceProvider provider)
         {
             _provider = provider;
-            _productDAL = productDAL;
         }
         public async Task PublishKeyDel(string key)
         {

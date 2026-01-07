@@ -8,7 +8,7 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaNF";
         }
-        public string StreamId { get; set; }
+        public string NodeGuid { get; set; }
         public string NodeId { get; set; }
     }
 }

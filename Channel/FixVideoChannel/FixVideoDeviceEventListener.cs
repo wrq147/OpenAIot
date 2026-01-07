@@ -38,7 +38,7 @@ namespace FixVideoChannel
             {
                 ZLMediaKitServer.Instance.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
             }
-            else if (msg is UpVideoItemMessage upItemResponse)
+            else if (msg is MediaItemMessage upItemResponse)
             {
                 VideoData videoData = new VideoData();
                 videoData.Item = upItemResponse.Item;
@@ -51,7 +51,7 @@ namespace FixVideoChannel
                 videoData.MotionRatio = upItemResponse.Config.MotionRatio;
                 ZLMediaKitServer.Instance.AddPullProxy(videoData);
             }
-            else if (msg is DelVideoItemMessage delItemResponse)
+            else if (msg is MediaDelItemMessage delItemResponse)
             {
                 ZLMediaKitServer.Instance.RemovePullProxy(delItemResponse.DeviceId);
             }
