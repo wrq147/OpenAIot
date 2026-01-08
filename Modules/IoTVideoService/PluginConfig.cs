@@ -80,7 +80,7 @@ namespace IoTVideoService
                     {
                         var videoSourceBLL = _provider.GetService<VideoSourceBLL>();
                         MediaUserVerifyMessage uvmsg = (MediaUserVerifyMessage)msg;
-                        var tpassword = await videoSourceBLL.GB28181Login(uvmsg.DeviceId);
+                        var tpassword = await videoSourceBLL.GB28181Login(uvmsg.UserName);
                         if (tpassword == null)
                         {
                             await videoSourceBLL.ResponseVerifyResult(uvmsg.MessageId, string.Empty);

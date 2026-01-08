@@ -20,13 +20,13 @@ namespace GB28181Channel
         private GB28181Option _option;
         private IDeviceStorage _storage;
         private IMediaHandler _mediaHandler;
-        public GB28181HostService(IServiceProvider provider)
+        public GB28181HostService(IServiceProvider provider, IDeviceStorage storage, IMediaHandler mediaHandler)
         {
             _provider = provider;
             _option = provider.GetService<IOptions<GB28181Option>>().Value;
             _deviceEventListener = new GB28181DeviceEventListener(_provider);
-            _storage = new InMemoryDeviceStorage(_provider);
-            _mediaHandler = new BasicMediaHandler();
+            _storage = storage;
+            _mediaHandler = mediaHandler;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

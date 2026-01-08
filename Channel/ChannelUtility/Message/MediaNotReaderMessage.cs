@@ -12,6 +12,6 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaNR";
         }
-        public string NodeGuid { get; set; }
+        public string StreamId { get; set; }
     }
 }

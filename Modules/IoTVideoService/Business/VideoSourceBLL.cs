@@ -170,6 +170,7 @@ namespace IoTVideoService.Business
             cpitem.Id = source.Id;
             cpitem.PullAddr = source.PullAddr;
             cpitem.PushKey = source.VideoKey;
+            cpitem.UserName = source.UserName;
             AIConfig aiConfig;
             if (string.IsNullOrEmpty(source.AITasks))
             {
@@ -209,7 +210,7 @@ namespace IoTVideoService.Business
         public virtual async Task DelVideo(MediaNotReaderMessage msg)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            string tkey = msg.DeviceId;
+            string tkey = msg.StreamId;
             var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
             if (tlist.Count > 0)
             {
@@ -266,8 +267,20 @@ namespace IoTVideoService.Business
 
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             //给在线节点分配视频采集
-            string tkey = msg.DeviceId;
-            var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
+            string tkey = msg.StreamId;
+            List<MZ_VideoSource> tlist;
+            if (msg.VideoType == 0)
+            {
+                tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
+            }
+            else if (msg.VideoType == 1)
+            {
+                tlist = await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == tkey);
+            }
+            else
+            {
+                return;
+            }
             if (tlist.Count > 0)
             {
                 var titem = tlist[0];
@@ -278,7 +291,7 @@ namespace IoTVideoService.Business
                 }
                 MZ_VideoSource tsource = new MZ_VideoSource();
                 tsource.PullNode = nodeguid;
-                tsource.NodeId = msg.NodeId;
+                tsource.NodeId = msg.DeviceId;
                 tsource.Id = titem.Id;
                 await videoSourceDAL.Update(tsource);
 

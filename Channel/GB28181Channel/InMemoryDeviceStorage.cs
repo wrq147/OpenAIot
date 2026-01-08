@@ -41,15 +41,19 @@ namespace GB28181Channel
             return true;
         }
 
-        public bool UpdateDeviceStatus(string deviceId, DeviceStatus status, DateTime lastHeartbeatTime)
+        public bool RemoveDevice(string deviceId)
+        {
+            return _devices.TryRemove(deviceId, out var currentDevice);
+        }
+
+        public bool UpdateDeviceMediaInfo(string deviceId, string dtuId, string pushKey)
         {
             if (!_devices.TryGetValue(deviceId, out var currentDevice))
                 return false;
 
             var updatedDevice = currentDevice.Clone();
-            updatedDevice.Status = status;
-            updatedDevice.LastHeartbeatTime = lastHeartbeatTime;
-
+            updatedDevice.DtuId = dtuId;
+            updatedDevice.PushKey = pushKey;
             if (_devices.TryUpdate(deviceId, updatedDevice, currentDevice))
             {
                 return true;
@@ -59,7 +63,6 @@ namespace GB28181Channel
                 return false;
             }
         }
-
         public DeviceInfo GetDevice(string deviceId)
         {
             // 直接使用TryGetValue，无需锁

@@ -12,14 +12,11 @@ namespace GB28181Channel.GB28181.DTO
     /// </summary>
     public class DeviceInfo
     {
+        public string DtuId { get; set; }
+        public string PushKey { get; set; }
         public string DeviceId { get; set; }
-        public string DeviceName { get; set; }
-        public string Manufacturer { get; set; }
-        public string Model { get; set; }
-        public string FirmwareVersion { get; set; }
         public string DeviceIp { get; set; }
         public int DevicePort { get; set; }
-        public DeviceStatus Status { get; set; }
         public DateTime RegisterTime { get; set; }
         public DateTime LastHeartbeatTime { get; set; }
         public GB28181Version ProtocolVersion { get; set; }
@@ -32,14 +29,11 @@ namespace GB28181Channel.GB28181.DTO
         {
             return new DeviceInfo
             {
+                DtuId = this.DtuId,
+                PushKey = this.PushKey,
                 DeviceId = this.DeviceId,
-                DeviceName = this.DeviceName,
-                Manufacturer = this.Manufacturer,
-                Model = this.Model,
-                FirmwareVersion = this.FirmwareVersion,
                 DeviceIp = this.DeviceIp,
                 DevicePort = this.DevicePort,
-                Status = this.Status,
                 RegisterTime = this.RegisterTime,
                 LastHeartbeatTime = this.LastHeartbeatTime,
                 ProtocolVersion = this.ProtocolVersion

@@ -29,6 +29,10 @@ namespace ChannelUtility.Message
         /// 推流的流Id
         /// </summary>
         public string PushKey { get; set; }
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get; set; }
     }
     public class AIConfig
     {

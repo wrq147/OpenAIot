@@ -43,7 +43,6 @@ namespace IoTVideoService
 .WithColumn("PullAddr").AsString(255).WithColumnDescription("拉流地址")
 .WithColumn("UserName").AsString(50).WithColumnDescription("用户名")
 .WithColumn("UserPwd").AsString(50).WithColumnDescription("密码")
-.WithColumn("BitType").AsByte().WithColumnDescription("码流类型：0为主码流，1为子码流")
 .WithColumn("GBPublicAddr").AsString(64).WithColumnDescription("GB28181服务的公网主机")
 .WithColumn("GBPublicPort").AsInt32().WithColumnDescription("GB28181服务的公网主机端口")
 .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")

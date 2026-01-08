@@ -66,7 +66,7 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var url_info = (MkMediaInfoT)url;
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            eventBus.PublishMediaNotFound(_option.node_id, streamId);
+            eventBus.PublishMediaNotFound(_option.node_id, streamId, 0);
             return 0;
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)
@@ -74,7 +74,7 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
-            eventBus.PublishMediaNotReader(streamId);
+            eventBus.PublishMediaNotReader(_option.node_id, streamId);
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
         {
@@ -207,7 +207,19 @@ namespace FixVideoChannel
         }
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
-
+            MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
+            string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT);
+            if (_videoKeyItems.TryGetValue(streamId, out VideoData item))
+            {
+                if (regist == 1)
+                {
+                    _listener.OnEventOnline(item.Item);
+                }
+                else
+                {
+                    _listener.OnEventOffline(item.Item);
+                }
+            }
         }
         private void On_mk_media_publish(IntPtr url,
                           IntPtr invoker,

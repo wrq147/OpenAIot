@@ -82,7 +82,7 @@ namespace IoTAIService
             msg.ProductId = string.Empty;
             var bus = _provider.GetService<RabbitScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
+            await bus.PubSub.PublishAsync(msgbody, "/node." + nodeid).ConfigureAwait(false);
         }
 
         private Image<Rgb24> FastZlibDecompressToRgb24Image(byte[] compressedData, int width, int height)

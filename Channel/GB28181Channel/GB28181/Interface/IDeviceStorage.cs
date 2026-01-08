@@ -26,14 +26,19 @@ namespace GB28181Channel.GB28181.Interface
         /// <returns>是否成功</returns>
         bool SaveDevice(DeviceInfo device);
         /// <summary>
-        /// 更新设备状态
+        /// 移除设备信息
         /// </summary>
         /// <param name="deviceId">设备ID</param>
-        /// <param name="status">新状态</param>
-        /// <param name="lastHeartbeatTime">最后心跳时间</param>
         /// <returns>是否成功</returns>
-        bool UpdateDeviceStatus(string deviceId, DeviceStatus status, DateTime lastHeartbeatTime);
-
+        bool RemoveDevice(string deviceId);
+        /// <summary>
+        /// 更新设备的媒体信息
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="dtuId"></param>
+        /// <param name="pushKey"></param>
+        /// <returns></returns>
+        bool UpdateDeviceMediaInfo(string deviceId, string dtuId, string pushKey);
         /// <summary>
         /// 获取设备信息
         /// </summary>

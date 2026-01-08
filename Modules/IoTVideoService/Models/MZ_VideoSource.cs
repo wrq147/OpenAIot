@@ -44,10 +44,6 @@ namespace IoTVideoService.Models
         /// </summary>
         public string UserPwd { get; set; }
         /// <summary>
-        /// 码流类型：0为主码流，1为子码流
-        /// </summary>
-        public byte? BitType { get; set; }
-        /// <summary>
         /// GB28181服务的公网主机
         /// </summary>
         public string GBPublicAddr { get; set; }

@@ -1,6 +1,7 @@
 ﻿
 using ChannelUtility;
 using ChannelUtility.Config;
+using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,7 +34,8 @@ namespace GB28181Channel
             {
                 var configSec = configuration.GetSection("GB28181Option");
                 services.Configure<GB28181Option>(configSec);
-
+                services.AddSingleton<IDeviceStorage, InMemoryDeviceStorage>();
+                services.AddSingleton<IMediaHandler, BasicMediaHandler>();
                 services.AddEventBus(x =>
                 {
                     var option = configSec.Get<GB28181Option>();

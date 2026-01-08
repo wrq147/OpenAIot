@@ -14,5 +14,6 @@ namespace ChannelUtility.Message
             MsgType = "MediaUser";
         }
         public string MessageId { get; set; }
+        public string UserName { get; set; }
     }
 }

@@ -47,7 +47,6 @@
                                     </div>
                                     <div v-else>
                                         <div>注册用户名：{{ scope.row.UserName }},注册密码：{{ scope.row.UserPwd }}</div>
-                                        <div>码流类型：{{ scope.row.BitType == 0 ? "主码流" : "子码流" }}</div>
                                     </div>
                                 </template>
                             </el-table-column>

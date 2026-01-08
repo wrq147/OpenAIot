@@ -83,8 +83,12 @@ namespace Common.EventBus
             where T : ResponseEvent
             where Z : EvtResponse
         {
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
+            int waitTime = 8000;
+            if(evt is QuartzExeEvent)
+            {
+                waitTime = 60000;
+            }
+            using var cts = new CancellationTokenSource(waitTime);
             var tcs = new TaskCompletionSource<Z>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             using var rs = await Bus.SendReceive.ReceiveAsync<Z>("dispatch.response." + evt.MessageId, msg =>

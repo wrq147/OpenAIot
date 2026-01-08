@@ -23,12 +23,6 @@
       <el-form-item v-if="sourceForm.VideoType == 1" label="注册密码" prop="UserPwd">
         <el-input v-model="sourceForm.UserPwd" placeholder="请输入注册密码" />
       </el-form-item>
-      <el-form-item v-if="sourceForm.VideoType == 1" label="码流类型">
-        <el-radio-group v-model="sourceForm.BitType">
-          <el-radio :label="0">主码流</el-radio>
-          <el-radio :label="1">子码流</el-radio>
-        </el-radio-group>
-      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="cancel">取消</el-button>
@@ -67,8 +61,7 @@ export default {
           VideoKey: '',
           PullAddr: '',
           UserName: '',
-          UserPwd: '',
-          BitType: 0
+          UserPwd: ''
         };
       } else {
         this.title = "编辑视频源";
@@ -80,15 +73,13 @@ export default {
             VideoKey: res.data.VideoKey,
             PullAddr: res.data.PullAddr,
             UserName: res.data.UserName,
-            UserPwd: res.data.UserPwd,
-            BitType: res.data.BitType
+            UserPwd: res.data.UserPwd
           };
         })
       }
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
-        console.info(valid)
         if (valid) {
           try {
             if (this.formId == null) {

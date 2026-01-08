@@ -5,15 +5,13 @@ using GB28181Channel.GB28181.Interface;
 using SIPSorcery.Net;
 using SIPSorcery.SIP;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
-using WebSocketSharp;
 
 namespace GB28181Channel.GB28181
 {
@@ -23,26 +21,24 @@ namespace GB28181Channel.GB28181
     public class GB28181Server : IDisposable
     {
         #region 完整事件体系
-        public event EventHandler<DeviceRegisteredEventArgs> DeviceRegistered;
-        public event EventHandler<DeviceHeartbeatEventArgs> DeviceHeartbeatReceived;
-        public event EventHandler<DeviceOfflineEventArgs> DeviceOffline;
-        public event EventHandler<CatalogReceivedEventArgs> CatalogReceived;
-        public event EventHandler<AlarmReceivedEventArgs> AlarmReceived;
-        public event EventHandler<StreamPlayEventArgs> StreamPlayed;
-        public event EventHandler<PTZControlEventArgs> PTZControlled;
+        public event Func<object?, DeviceRegisteredEventArgs, Task> DeviceRegistered;
+        public event Func<object?, DeviceOfflineEventArgs, Task> DeviceOffline;
+        public event Func<object?, CatalogReceivedEventArgs, Task> CatalogReceived;
+        public event Func<object?, AlarmReceivedEventArgs, Task> AlarmReceived;
+        public event Func<object?, StreamPlayEventArgs, Task> StreamPlayed;
         #endregion
 
         // 核心字段
         private readonly SIPTransport _sipTransport;
         private readonly IDeviceStorage _deviceStorage;
         private readonly IMediaHandler _mediaHandler;
-        private readonly Dictionary<string, DateTime> _heartbeatMap = new Dictionary<string, DateTime>();
+        private readonly ConcurrentDictionary<string, DateTime> _heartbeatMap = new ConcurrentDictionary<string, DateTime>();
         private readonly System.Timers.Timer _heartbeatTimer;
         private readonly GB28181Version _protocolVersion;
         private readonly string _serverId;
         private readonly int _sipPort;
         private readonly string _serverIp;
-        private readonly int _heartbeatTimeout = 300;
+        private readonly int _heartbeatTimeout = 100;
         private readonly int _defaultRtpPort = 58200;
         // 传输协议（枚举类型）
         private readonly SIPTransportProtocol _transportProtocol;
@@ -101,7 +97,7 @@ namespace GB28181Channel.GB28181
             _sipTransport.SIPTransportRequestReceived += OnSIPRequestReceived;
 
             // 初始化心跳检查定时器
-            _heartbeatTimer = new System.Timers.Timer(60 * 1000);
+            _heartbeatTimer = new System.Timers.Timer(30 * 1000);
             _heartbeatTimer.Elapsed += OnHeartbeatCheck;
         }
 
@@ -186,19 +182,15 @@ namespace GB28181Channel.GB28181
 
             try
             {
-                // 1. 从设备存储中获取预配置的设备信息（包含密码）
-                var preConfiguredDevice = _deviceStorage.GetDevice(deviceId);
-                if (preConfiguredDevice == null)
-                {
-                    // 设备未配置，直接返回403 Forbidden
-                    var forbiddenResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Forbidden, "Device not configured");
-                    await _sipTransport.SendResponseAsync(forbiddenResp);
+                bool isUnregisterRequest = req.Header.Expires == 0 ||
+                              (req.Header.Contact != null && req.Header.Contact.Count > 0 && req.Header.Contact[0].Expires == 0);
 
-                    Console.WriteLine($"[注册失败] {deviceId}：设备未配置");
+                if (isUnregisterRequest)
+                {
+                    await HandleDeviceUnregister(deviceId, remoteEP, req);
                     return;
                 }
-
-                // 2. 检查是否携带Authorization头（设备是否已响应认证挑战）
+                // 检查是否携带Authorization头（设备是否已响应认证挑战）
                 if (req.Header.AuthenticationHeaders == null || req.Header.AuthenticationHeaders.Count == 0)
                 {
                     // 无认证信息，返回401 Unauthorized，发起认证挑战
@@ -235,17 +227,11 @@ namespace GB28181Channel.GB28181
                         return;
                     }
                     // 计算期望的认证摘要（与设备侧算法一致）
-                    var expectedResponse = GB28181Util.CalculateDigestResponse(
-                        username: deviceId,
-                        realm: realm,
-                        password: tpassword,
-                        method: req.Method.ToString(),
-                        uri: req.Header.From.FromURI.ToString(),
-                        nonce: nonce,
-                        cnonce: authHeader.SIPDigest.Cnonce != null ? authHeader.SIPDigest.Cnonce : "",
-                        qop: authHeader.SIPDigest.Qop != null ? authHeader.SIPDigest.Qop : "",
-                        nc: authHeader.SIPDigest.NonceCount.ToString()
-                    );
+
+                    var sipExpectedDigest = authHeader.SIPDigest.CopyOf();
+                    sipExpectedDigest.Password = tpassword;
+                    sipExpectedDigest.RequestType = "REGISTER";
+                    var expectedResponse = sipExpectedDigest.GetDigest();
 
                     // 验证摘要是否匹配
                     if (response != expectedResponse)
@@ -264,7 +250,6 @@ namespace GB28181Channel.GB28181
                         DevicePort = remoteEP.Port,
                         RegisterTime = DateTime.Now,
                         LastHeartbeatTime = DateTime.Now,
-                        Status = DeviceStatus.Online,
                         ProtocolVersion = _protocolVersion
                     };
 
@@ -273,17 +258,14 @@ namespace GB28181Channel.GB28181
                         deviceInfo.DevicePort = Convert.ToInt32(req.Header.Contact[0].ContactURI.HostPort);
                     }
 
-                    lock (_heartbeatMap)
-                    {
-                        _heartbeatMap[deviceId] = DateTime.Now;
-                    }
+                    _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
 
                     var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
                     okResp.Header.Expires = _protocolVersion == GB28181Version.V2016 ? 3600 : 7200;
                     okResp.Header.UnknownHeaders.Add("X-GB28181-Version: " + _protocolVersion.ToString());
                     await _sipTransport.SendResponseAsync(okResp);
 
-                    OnDeviceRegistered(new DeviceRegisteredEventArgs
+                    await OnDeviceRegistered(new DeviceRegisteredEventArgs
                     {
                         Device = deviceInfo,
                         OriginalRequest = req,
@@ -301,7 +283,44 @@ namespace GB28181Channel.GB28181
                 Console.WriteLine($"[注册失败] {deviceId}：{ex.Message}");
             }
         }
+        /// <summary>
+        /// 处理设备主动注销
+        /// </summary>
+        private async Task HandleDeviceUnregister(string deviceId, IPEndPoint remoteEP, SIPRequest req)
+        {
+            try
+            {
+                // 回复200 OK确认注销
+                var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "Unregistered successfully");
+                okResp.Header.Expires = 0; // 明确标识注销
+                okResp.Header.UnknownHeaders.Add("X-GB28181-Version: " + _protocolVersion.ToString());
+                await _sipTransport.SendResponseAsync(okResp);
 
+                // 触发注销事件
+                var offlineTime = DateTime.Now;
+                var offlineArgs = new DeviceOfflineEventArgs
+                {
+                    DeviceId = deviceId,
+                    OfflineTime = offlineTime,
+                    LastHeartbeat = offlineTime,
+                    Reason = "设备主动注销"
+                };
+
+                // 触发通用的离线事件
+                await OnDeviceOffline(offlineArgs);
+
+                // 清理心跳映射表
+                _heartbeatMap.TryRemove(deviceId, out _);
+                Console.WriteLine($"[注销成功] {deviceId}：设备主动注销");
+            }
+            catch (Exception ex)
+            {
+                var errorResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.InternalServerError, "Unregister failed");
+                await _sipTransport.SendResponseAsync(errorResp);
+
+                Console.WriteLine($"[注销失败] {deviceId}：{ex.Message}");
+            }
+        }
         /// <summary>
         /// 处理MESSAGE请求（心跳/目录/报警）
         /// </summary>
@@ -343,15 +362,8 @@ namespace GB28181Channel.GB28181
         /// </summary>
         private async Task HandleKeepaliveMessage(string deviceId, IPEndPoint remoteEP, SIPRequest req)
         {
-            bool needRegDevice = false;
-            lock (_heartbeatMap)
-            {
-                if (!_heartbeatMap.ContainsKey(deviceId))
-                {
-                    needRegDevice = true;
-                }
-                _heartbeatMap[deviceId] = DateTime.Now;
-            }
+            bool needRegDevice = !_heartbeatMap.ContainsKey(deviceId);
+            _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
 
             if (needRegDevice)
             {
@@ -372,13 +384,6 @@ namespace GB28181Channel.GB28181
             }
             else
             {
-                // 触发心跳事件（支持扩展）
-                OnDeviceHeartbeatReceived(new DeviceHeartbeatEventArgs
-                {
-                    DeviceId = deviceId,
-                    HeartbeatTime = DateTime.Now,
-                    RemoteEndPoint = remoteEP
-                });
                 var response = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
                 await _sipTransport.SendResponseAsync(response);
                 Console.WriteLine($"[心跳] {deviceId} @ {remoteEP}");
@@ -417,7 +422,7 @@ namespace GB28181Channel.GB28181
             await _sipTransport.SendResponseAsync(response);
 
             // 触发目录事件（支持扩展）
-            OnCatalogReceived(new CatalogReceivedEventArgs
+            await OnCatalogReceived(new CatalogReceivedEventArgs
             {
                 DeviceId = deviceId,
                 Channels = channels,
@@ -448,7 +453,7 @@ namespace GB28181Channel.GB28181
             await _sipTransport.SendResponseAsync(response);
 
             // 触发报警事件（支持扩展）
-            OnAlarmReceived(new AlarmReceivedEventArgs
+            await OnAlarmReceived(new AlarmReceivedEventArgs
             {
                 Alarm = alarmInfo,
                 OriginalXml = xmlDoc
@@ -497,7 +502,7 @@ namespace GB28181Channel.GB28181
                 await _sipTransport.SendResponseAsync(okResp);
 
                 // 触发点播事件（支持扩展）
-                OnStreamPlayed(new StreamPlayEventArgs
+                await OnStreamPlayed(new StreamPlayEventArgs
                 {
                     Params = playbackParams,
                     IsSuccess = true,
@@ -512,7 +517,7 @@ namespace GB28181Channel.GB28181
                 var errorResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.BadRequest, "Invite failed");
                 await _sipTransport.SendResponseAsync(errorResp);
 
-                OnStreamPlayed(new StreamPlayEventArgs
+                await OnStreamPlayed(new StreamPlayEventArgs
                 {
                     Params = new PlaybackParams { ChannelId = channelId },
                     IsSuccess = false,
@@ -537,7 +542,7 @@ namespace GB28181Channel.GB28181
             var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
             await _sipTransport.SendResponseAsync(resp);
 
-            OnStreamPlayed(new StreamPlayEventArgs
+            await OnStreamPlayed(new StreamPlayEventArgs
             {
                 Params = new PlaybackParams { ChannelId = channelId },
                 IsSuccess = stopResult,
@@ -551,39 +556,37 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 心跳检查（检测设备离线）
         /// </summary>
-        private void OnHeartbeatCheck(object sender, ElapsedEventArgs e)
+        private async void OnHeartbeatCheck(object sender, ElapsedEventArgs e)
         {
-            lock (_heartbeatMap)
+            var now = DateTime.Now;
+            var offlineDevices = new List<string>();
+
+            // 遍历ConcurrentDictionary的快照，无需锁
+            foreach (var kvp in _heartbeatMap)
             {
-                var now = DateTime.Now;
-                var offlineDevices = new List<string>();
+                var deviceId = kvp.Key;
+                var lastHeartbeat = kvp.Value;
 
-                foreach (var kvp in _heartbeatMap)
+                if ((now - lastHeartbeat).TotalSeconds > _heartbeatTimeout)
                 {
-                    var deviceId = kvp.Key;
-                    var lastHeartbeat = kvp.Value;
+                    offlineDevices.Add(deviceId);
 
-                    if (now.Subtract(lastHeartbeat).TotalSeconds > _heartbeatTimeout)
+                    await OnDeviceOffline(new DeviceOfflineEventArgs
                     {
-                        offlineDevices.Add(deviceId);
+                        DeviceId = deviceId,
+                        OfflineTime = now,
+                        LastHeartbeat = lastHeartbeat,
+                        Reason = $"心跳超时（{_heartbeatTimeout}秒）"
+                    });
 
-                        // 触发离线事件（支持扩展）
-                        OnDeviceOffline(new DeviceOfflineEventArgs
-                        {
-                            DeviceId = deviceId,
-                            OfflineTime = now,
-                            LastHeartbeat = lastHeartbeat,
-                            Reason = $"心跳超时（{_heartbeatTimeout}秒）"
-                        });
-
-                        Console.WriteLine($"[设备离线] {deviceId} - {_heartbeatTimeout}秒心跳超时");
-                    }
+                    Console.WriteLine($"[设备离线] {deviceId} - {_heartbeatTimeout}秒心跳超时");
                 }
+            }
 
-                foreach (var deviceId in offlineDevices)
-                {
-                    _heartbeatMap.Remove(deviceId);
-                }
+            // 批量移除离线设备，使用TryRemove原子操作
+            foreach (var deviceId in offlineDevices)
+            {
+                _heartbeatMap.TryRemove(deviceId, out _);
             }
         }
         #endregion
@@ -592,7 +595,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 发送PTZ控制命令（支持扩展）
         /// </summary>
-        public bool SendPTZControl(PTZControlParams @params)
+        public async Task<bool> SendPTZControl(PTZControlParams @params)
         {
             try
             {
@@ -602,14 +605,9 @@ namespace GB28181Channel.GB28181
                 }
 
                 var device = _deviceStorage.GetDevice(@params.DeviceId);
-                if (device == null || device.Status != DeviceStatus.Online)
+                if (device == null)
                 {
-                    OnPTZControlled(new PTZControlEventArgs
-                    {
-                        Params = @params,
-                        IsSuccess = false,
-                        Message = "设备离线或不存在"
-                    });
+                    Console.WriteLine("设备不存在");
                     return false;
                 }
 
@@ -619,23 +617,11 @@ namespace GB28181Channel.GB28181
                 // 异步发送PTZ控制命令（自动适配服务器启用的传输协议）
                 _ = _sipTransport.SendRequestAsync(sipRequest);
 
-                OnPTZControlled(new PTZControlEventArgs
-                {
-                    Params = @params,
-                    IsSuccess = true,
-                    Message = "PTZ控制命令发送成功"
-                });
-
                 return true;
             }
             catch (Exception ex)
             {
-                OnPTZControlled(new PTZControlEventArgs
-                {
-                    Params = @params,
-                    IsSuccess = false,
-                    Message = $"发送失败：{ex.Message}"
-                });
+                Console.WriteLine($"发送失败：{ex.Message}");
                 return false;
             }
         }
@@ -698,44 +684,35 @@ namespace GB28181Channel.GB28181
 
         #region 事件触发方法
 
-        protected virtual void OnDeviceRegistered(DeviceRegisteredEventArgs e)
+        protected virtual async Task OnDeviceRegistered(DeviceRegisteredEventArgs e)
         {
             _deviceStorage.SaveDevice(e.Device);
             DeviceRegistered?.Invoke(this, e);
         }
 
-        protected virtual void OnDeviceHeartbeatReceived(DeviceHeartbeatEventArgs e)
-        {
-            _deviceStorage.UpdateDeviceStatus(e.DeviceId, DeviceStatus.Online, DateTime.Now);
-            DeviceHeartbeatReceived?.Invoke(this, e);
-        }
 
-        protected virtual void OnDeviceOffline(DeviceOfflineEventArgs e)
+        protected virtual async Task OnDeviceOffline(DeviceOfflineEventArgs e)
         {
-            _deviceStorage.UpdateDeviceStatus(e.DeviceId, DeviceStatus.Offline, e.LastHeartbeat);
+            _deviceStorage.RemoveDevice(e.DeviceId);
             DeviceOffline?.Invoke(this, e);
         }
 
-        protected virtual void OnCatalogReceived(CatalogReceivedEventArgs e)
+        protected virtual async Task OnCatalogReceived(CatalogReceivedEventArgs e)
         {
             _deviceStorage.SaveChannels(e.Channels);
             CatalogReceived?.Invoke(this, e);
         }
 
-        protected virtual void OnAlarmReceived(AlarmReceivedEventArgs e)
+        protected virtual async Task OnAlarmReceived(AlarmReceivedEventArgs e)
         {
             AlarmReceived?.Invoke(this, e);
         }
 
-        protected virtual void OnStreamPlayed(StreamPlayEventArgs e)
+        protected virtual async Task OnStreamPlayed(StreamPlayEventArgs e)
         {
             StreamPlayed?.Invoke(this, e);
         }
 
-        protected virtual void OnPTZControlled(PTZControlEventArgs e)
-        {
-            PTZControlled?.Invoke(this, e);
-        }
         #endregion
 
         #region 资源释放

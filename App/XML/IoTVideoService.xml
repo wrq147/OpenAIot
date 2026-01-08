@@ -155,11 +155,6 @@
             注册密码
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.BitType">
-            <summary>
-            码流类型：0为主码流，1为子码流
-            </summary>
-        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.GBPublicAddr">
             <summary>
             GB28181服务的公网主机
