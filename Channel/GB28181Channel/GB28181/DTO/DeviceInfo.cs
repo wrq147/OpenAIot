@@ -1,4 +1,5 @@
 ﻿using GB28181Channel.GB28181.Enum;
+using SIPSorcery.SIP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,15 @@ namespace GB28181Channel.GB28181.DTO
         public string DtuId { get; set; }
         public string PushKey { get; set; }
         public string DeviceId { get; set; }
+        public string Password { get; set; }
         public string DeviceIp { get; set; }
         public int DevicePort { get; set; }
+        public string DeviceLocalIp { get; set; }
+        public int DeviceLocalPort { get; set; }
         public DateTime RegisterTime { get; set; }
         public DateTime LastHeartbeatTime { get; set; }
         public GB28181Version ProtocolVersion { get; set; }
-
+        public SIPProtocolsEnum TransportProtocol { get; set; }
         /// <summary>
         /// 创建当前 DeviceInfo 对象的深拷贝副本
         /// </summary>
@@ -32,11 +36,15 @@ namespace GB28181Channel.GB28181.DTO
                 DtuId = this.DtuId,
                 PushKey = this.PushKey,
                 DeviceId = this.DeviceId,
+                Password = this.Password,
                 DeviceIp = this.DeviceIp,
                 DevicePort = this.DevicePort,
+                DeviceLocalIp = this.DeviceLocalIp,
+                DeviceLocalPort = this.DeviceLocalPort,
                 RegisterTime = this.RegisterTime,
                 LastHeartbeatTime = this.LastHeartbeatTime,
-                ProtocolVersion = this.ProtocolVersion
+                ProtocolVersion = this.ProtocolVersion,
+                TransportProtocol = this.TransportProtocol
             };
         }
 

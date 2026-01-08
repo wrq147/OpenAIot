@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
@@ -43,8 +44,6 @@ namespace GB28181Channel.GB28181
         // 传输协议（枚举类型）
         private readonly SIPTransportProtocol _transportProtocol;
 
-        private int _cseqCounter = 1;
-        private readonly object _cseqLock = new object();
 
         /// <summary>
         /// 构造函数
@@ -69,7 +68,7 @@ namespace GB28181Channel.GB28181
             _transportProtocol = transportProtocol;
 
             _sipTransport = new SIPTransport();
-            var localEP = new IPEndPoint(IPAddress.Parse(_serverIp), _sipPort);
+            var localEP = new IPEndPoint(IPAddress.Any, _sipPort);
 
             // 根据枚举值绑定对应的传输通道
             switch (_transportProtocol)
@@ -173,13 +172,81 @@ namespace GB28181Channel.GB28181
 
         #region 核心业务处理（支持扩展）
         /// <summary>
+        /// 通用认证处理
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        private async Task<AuthResult> HandleAuth(SIPRequest req)
+        {
+            AuthResult rs = new AuthResult();
+            rs.IsSuccess = false;
+            var deviceId = req.Header.From.FromURI.User;
+            // 检查是否携带Authorization头（设备是否已响应认证挑战）
+            if (req.Header.AuthenticationHeaders == null || req.Header.AuthenticationHeaders.Count == 0)
+            {
+                // 无认证信息，返回401 Unauthorized，发起认证挑战
+                var challengeResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Unauthorized");
+                // 构造WWW-Authenticate头（SIP Digest认证标准）
+                var nonce = Guid.NewGuid().ToString("N"); // 随机挑战值
+                var realm = _serverId; // 认证域，通常用服务器ID
+                var sipDigest = new SIPAuthorisationDigest(SIPAuthorisationHeadersEnum.WWWAuthenticate, DigestAlgorithmsEnum.MD5);
+                sipDigest.Qop = "auth";
+                sipDigest.Nonce = nonce;
+                sipDigest.Realm = realm;
+                challengeResp.Header.AuthenticationHeaders = new List<SIPAuthenticationHeader> { new SIPAuthenticationHeader(sipDigest) };
+
+                await _sipTransport.SendResponseAsync(challengeResp);
+                Console.WriteLine($"[认证挑战] {deviceId}：发送401认证请求");
+                return rs;
+            }
+            else
+            {
+                // 有Authorization头，验证密码
+                var authHeader = req.Header.AuthenticationHeaders[0];
+                var response = authHeader.SIPDigest.Response;
+
+                var curDevice = _deviceStorage.GetDevice(deviceId);
+                string tpassword;
+                if (curDevice == null || string.IsNullOrEmpty(curDevice.Password))
+                {
+                    tpassword = await _deviceStorage.GetDevicePassword(deviceId);
+                }
+                else
+                {
+                    tpassword = curDevice.Password;
+                }
+                rs.Password = tpassword;
+                if (string.IsNullOrEmpty(tpassword))
+                {
+                    var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "The password cannot be empty");
+                    await _sipTransport.SendResponseAsync(unauthorizedResp);
+                    Console.WriteLine($"[认证失败] {deviceId}：密码不能为空");
+                    return rs;
+                }
+                // 计算期望的认证摘要（与设备侧算法一致）
+                var sipExpectedDigest = authHeader.SIPDigest.CopyOf();
+                sipExpectedDigest.Password = tpassword;
+                sipExpectedDigest.RequestType = req.Method.ToString();
+                var expectedResponse = sipExpectedDigest.GetDigest();
+
+                // 验证摘要是否匹配
+                if (response != expectedResponse)
+                {
+                    var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Password error");
+                    await _sipTransport.SendResponseAsync(unauthorizedResp);
+                    Console.WriteLine($"[认证失败] {deviceId}：密码验证失败");
+                    return rs;
+                }
+                rs.IsSuccess = true;
+                return rs;
+            }
+        }
+        /// <summary>
         /// 处理设备注册
         /// </summary>
         private async Task HandleRegister(SIPRequest req, IPEndPoint remoteEP)
         {
             var deviceId = req.Header.From.FromURI.User;
-            Console.WriteLine($"[注册请求] {deviceId} @ {remoteEP}");
-
             try
             {
                 bool isUnregisterRequest = req.Header.Expires == 0 ||
@@ -190,90 +257,52 @@ namespace GB28181Channel.GB28181
                     await HandleDeviceUnregister(deviceId, remoteEP, req);
                     return;
                 }
-                // 检查是否携带Authorization头（设备是否已响应认证挑战）
-                if (req.Header.AuthenticationHeaders == null || req.Header.AuthenticationHeaders.Count == 0)
+
+                var authRs = await HandleAuth(req);
+                if (!authRs.IsSuccess)
                 {
-                    // 无认证信息，返回401 Unauthorized，发起认证挑战
-                    var challengeResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Unauthorized");
-
-                    // 构造WWW-Authenticate头（SIP Digest认证标准）
-                    var nonce = Guid.NewGuid().ToString("N"); // 随机挑战值
-                    var realm = _serverId; // 认证域，通常用服务器ID
-                    var sipDigest = new SIPAuthorisationDigest(SIPAuthorisationHeadersEnum.WWWAuthenticate, DigestAlgorithmsEnum.MD5);
-                    sipDigest.Qop = "auth";
-                    sipDigest.Nonce = nonce;
-                    sipDigest.Realm = realm;
-                    challengeResp.Header.AuthenticationHeaders = new List<SIPAuthenticationHeader> { new SIPAuthenticationHeader(sipDigest) };
-
-                    await _sipTransport.SendResponseAsync(challengeResp);
-                    Console.WriteLine($"[认证挑战] {deviceId}：发送401认证请求");
                     return;
                 }
-                else
+                if (req.Header.Vias.Via.Count == 0)
                 {
-                    // 有Authorization头，验证密码
-                    var authHeader = req.Header.AuthenticationHeaders[0];
-                    var realm = authHeader.SIPDigest.Realm;
-                    var nonce = authHeader.SIPDigest.Nonce;
-                    var response = authHeader.SIPDigest.Response; // 设备生成的认证摘要
-
-
-                    string tpassword = await _deviceStorage.GetDevicePassword(deviceId);
-                    if (string.IsNullOrEmpty(tpassword))
-                    {
-                        var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "The password cannot be empty");
-                        await _sipTransport.SendResponseAsync(unauthorizedResp);
-                        Console.WriteLine($"[注册失败] {deviceId}：密码不能为空");
-                        return;
-                    }
-                    // 计算期望的认证摘要（与设备侧算法一致）
-
-                    var sipExpectedDigest = authHeader.SIPDigest.CopyOf();
-                    sipExpectedDigest.Password = tpassword;
-                    sipExpectedDigest.RequestType = "REGISTER";
-                    var expectedResponse = sipExpectedDigest.GetDigest();
-
-                    // 验证摘要是否匹配
-                    if (response != expectedResponse)
-                    {
-                        var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Password error");
-                        await _sipTransport.SendResponseAsync(unauthorizedResp);
-                        Console.WriteLine($"[注册失败] {deviceId}：密码验证失败");
-                        return;
-                    }
-
-                    // 3. 密码验证通过，完成注册流程
-                    var deviceInfo = new DeviceInfo
-                    {
-                        DeviceId = deviceId,
-                        DeviceIp = remoteEP.Address.ToString(),
-                        DevicePort = remoteEP.Port,
-                        RegisterTime = DateTime.Now,
-                        LastHeartbeatTime = DateTime.Now,
-                        ProtocolVersion = _protocolVersion
-                    };
-
-                    if (req.Header.Contact != null && req.Header.Contact.Count > 0)
-                    {
-                        deviceInfo.DevicePort = Convert.ToInt32(req.Header.Contact[0].ContactURI.HostPort);
-                    }
-
-                    _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
-
-                    var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
-                    okResp.Header.Expires = _protocolVersion == GB28181Version.V2016 ? 3600 : 7200;
-                    okResp.Header.UnknownHeaders.Add("X-GB28181-Version: " + _protocolVersion.ToString());
-                    await _sipTransport.SendResponseAsync(okResp);
-
-                    await OnDeviceRegistered(new DeviceRegisteredEventArgs
-                    {
-                        Device = deviceInfo,
-                        OriginalRequest = req,
-                        RemoteEndPoint = remoteEP
-                    });
-
-                    Console.WriteLine($"[注册成功] {deviceId}：密码验证通过");
+                    return;
                 }
+                // 密码验证通过，完成注册流程
+                var deviceInfo = new DeviceInfo
+                {
+                    DeviceId = deviceId,
+                    Password = authRs.Password,
+                    DeviceIp = remoteEP.Address.ToString(),
+                    DevicePort = remoteEP.Port,
+                    DeviceLocalIp = req.Header.Vias.Via[0].Host,
+                    DeviceLocalPort = req.Header.Vias.Via[0].Port,
+                    RegisterTime = DateTime.Now,
+                    LastHeartbeatTime = DateTime.Now,
+                    ProtocolVersion = _protocolVersion,
+                    TransportProtocol = req.URI.Protocol
+                };
+
+                if (req.Header.Contact != null && req.Header.Contact.Count > 0)
+                {
+                    deviceInfo.DevicePort = Convert.ToInt32(req.Header.Contact[0].ContactURI.HostPort);
+                }
+
+                _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
+
+                var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
+                okResp.Header.Expires = _protocolVersion == GB28181Version.V2016 ? 3600 : 7200;
+                okResp.Header.UnknownHeaders.Add("X-GB28181-Version: " + _protocolVersion.ToString());
+                await _sipTransport.SendResponseAsync(okResp);
+
+                await OnDeviceRegistered(new DeviceRegisteredEventArgs
+                {
+                    Device = deviceInfo,
+                    OriginalRequest = req,
+                    RemoteEndPoint = remoteEP
+                });
+
+                Console.WriteLine($"[注册成功] {deviceId}");
+
             }
             catch (Exception ex)
             {
@@ -290,6 +319,11 @@ namespace GB28181Channel.GB28181
         {
             try
             {
+                var authRs = await HandleAuth(req);
+                if (!authRs.IsSuccess)
+                {
+                    return;
+                }
                 // 回复200 OK确认注销
                 var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "Unregistered successfully");
                 okResp.Header.Expires = 0; // 明确标识注销
@@ -611,10 +645,10 @@ namespace GB28181Channel.GB28181
                     return false;
                 }
 
-                var controlXml = GeneratePTZControlXml(@params);
-                var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceIp, device.DevicePort, controlXml);
+                var controlXml = GB28181Util.GeneratePTZControlXml(@params);
+                var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceLocalIp, device.DeviceLocalPort, controlXml, device.TransportProtocol);
 
-                // 异步发送PTZ控制命令（自动适配服务器启用的传输协议）
+                // 异步发送PTZ控制命令
                 _ = _sipTransport.SendRequestAsync(sipRequest);
 
                 return true;
@@ -626,58 +660,55 @@ namespace GB28181Channel.GB28181
             }
         }
 
+
         /// <summary>
-        /// 生成PTZ控制XML
+        /// 发送目录查询请求到设备（核心方法）
         /// </summary>
-        private string GeneratePTZControlXml(PTZControlParams @params)
+        /// <param name="device">设备信息</param>
+        private async Task SendCatalogQuery(DeviceInfo device)
         {
-            var xml = new XDocument(
-                new XElement("Control",
-                    new XElement("CmdType", "DeviceControl"),
-                    new XElement("SN", new Random().Next(1000, 9999)),
-                    new XElement("DeviceID", @params.ChannelId),
-                    new XElement("PTZCmd", @params.CommandType.ToString()),
-                    new XElement("Speed", @params.Speed),
-                    new XElement("PresetID", @params.PresetId)
-                )
-            );
+            // 1. 构造符合GB28181标准的Catalog查询XML
+            var catalogXml = GB28181Util.GenerateCatalogQueryXml(device.DeviceId, _protocolVersion);
 
-            return xml.ToString(SaveOptions.DisableFormatting);
+            // 2. 创建SIP MESSAGE请求
+            var sipRequest = CreateSIPMessageRequest(
+                device.DeviceId,
+                device.DeviceLocalIp,
+                device.DeviceLocalPort,
+                catalogXml, device.TransportProtocol);
+
+            // 3. 异步发送请求
+            await _sipTransport.SendRequestAsync(sipRequest);
         }
-
         /// <summary>
         /// 创建SIP MESSAGE请求
         /// </summary>
-        private SIPRequest CreateSIPMessageRequest(string deviceId, string deviceIp, int devicePort, string body)
+        private SIPRequest CreateSIPMessageRequest(string deviceId, string deviceIp, int devicePort, string body, SIPProtocolsEnum protocol)
         {
-            var toUri = SIPURI.ParseSIPURI($"{deviceId}@{deviceIp}:{devicePort}");
-            var fromUri = SIPURI.ParseSIPURI($"{_serverId}@{_serverIp}:{_sipPort}");
+            var toUri = new SIPURI(deviceId, $"{deviceIp}:{devicePort}", null, SIPSchemesEnum.sip);
+            var fromUri = new SIPURI(_serverId, $"{_serverIp}:{_sipPort}", null, SIPSchemesEnum.sip);
+
+            string randTag = Guid.NewGuid().ToString("N");
+            string callId = Guid.NewGuid().ToString("N");
+            string viaBranch = $"z9hG4bK-{Guid.NewGuid():N}";
 
             var request = new SIPRequest(SIPMethodsEnum.MESSAGE, toUri);
-            request.Header.From = new SIPFromHeader(_serverId, fromUri, Guid.NewGuid().ToString());
+            request.Header = new SIPHeader();
+            var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, protocol);
+            // 添加Via头到请求（SIP请求只能有一个Via头）
+            request.Header.Vias.Via.Add(viaHeader);
+            request.Header.From = new SIPFromHeader(_serverId, fromUri, randTag);
             request.Header.To = new SIPToHeader(_serverId, toUri, null);
-            request.Header.CallId = Guid.NewGuid().ToString();
-
-            // 正确构造CSeq（线程安全自增）
-            int currentCseq;
-            lock (_cseqLock)
-            {
-                currentCseq = _cseqCounter++;
-                // 防止溢出，重置为1
-                if (_cseqCounter > int.MaxValue - 1000)
-                {
-                    _cseqCounter = 1;
-                }
-            }
-            request.Header.CSeq = _cseqCounter;
+            request.Header.CallId = callId;
+            request.Header.CSeq = GB28181Util.GenerateCSeq();
             request.Header.MaxForwards = 70;
             request.Header.Contact = new List<SIPContactHeader>()
             {
-                new SIPContactHeader(_serverId, SIPURI.ParseSIPURI($"{_serverId}@{_serverIp}:{_sipPort}"))
+                new SIPContactHeader(_serverId, fromUri)
             };
             request.Body = body;
             request.Header.ContentType = "application/xml";
-
+            request.Header.ContentLength = request.BodyBuffer.Length;
             return request;
         }
         #endregion
@@ -687,30 +718,46 @@ namespace GB28181Channel.GB28181
         protected virtual async Task OnDeviceRegistered(DeviceRegisteredEventArgs e)
         {
             _deviceStorage.SaveDevice(e.Device);
-            DeviceRegistered?.Invoke(this, e);
+            await SendCatalogQuery(e.Device);
+            if (DeviceRegistered != null)
+            {
+                await DeviceRegistered(this, e);
+            }
         }
 
 
         protected virtual async Task OnDeviceOffline(DeviceOfflineEventArgs e)
         {
+            if (DeviceOffline != null)
+            {
+                await DeviceOffline(this, e);
+            }
             _deviceStorage.RemoveDevice(e.DeviceId);
-            DeviceOffline?.Invoke(this, e);
         }
 
         protected virtual async Task OnCatalogReceived(CatalogReceivedEventArgs e)
         {
             _deviceStorage.SaveChannels(e.Channels);
-            CatalogReceived?.Invoke(this, e);
+            if (CatalogReceived != null)
+            {
+                await CatalogReceived(this, e);
+            }
         }
 
         protected virtual async Task OnAlarmReceived(AlarmReceivedEventArgs e)
         {
-            AlarmReceived?.Invoke(this, e);
+            if (AlarmReceived != null)
+            {
+                await AlarmReceived(this, e);
+            }
         }
 
         protected virtual async Task OnStreamPlayed(StreamPlayEventArgs e)
         {
-            StreamPlayed?.Invoke(this, e);
+            if (StreamPlayed != null)
+            {
+                await StreamPlayed(this, e);
+            }
         }
 
         #endregion

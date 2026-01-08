@@ -29,6 +29,11 @@ namespace GB28181Channel
                 var storage = _serviceProvider.GetService<IDeviceStorage>();
                 storage.UpdateDeviceMediaInfo(upItemResponse.Item.UserName, upItemResponse.Item.Id, upItemResponse.Item.PushKey);
                 var newdevice = storage.GetDevice(upItemResponse.Item.UserName);
+                if (newdevice == null)
+                {
+                    Console.WriteLine($"[异常] 设备{upItemResponse.Item.UserName}不存在");
+                    return;
+                }
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Connected(upItemResponse.Item.Id, newdevice.DeviceIp);
             }
