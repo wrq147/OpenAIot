@@ -43,6 +43,7 @@ namespace GB28181Channel
 
         public bool RemoveDevice(string deviceId)
         {
+            _channels.TryRemove(deviceId, out var channel);
             return _devices.TryRemove(deviceId, out var currentDevice);
         }
 
@@ -75,31 +76,22 @@ namespace GB28181Channel
             return _devices.Values.ToList();
         }
 
-        public bool SaveChannels(List<ChannelInfo> channels)
+        public async Task<bool> SaveChannels(string deviceId, List<ChannelInfo> channels)
         {
             if (channels == null || channels.Count == 0)
                 return false;
 
-            // 按设备ID分组处理，保证每个设备的通道更新是原子操作
-            foreach (var deviceGroup in channels.GroupBy(c => c.DeviceId))
-            {
-                var deviceId = deviceGroup.Key;
-                var newChannels = deviceGroup.ToList();
+            _channels.AddOrUpdate(
+                deviceId,
+                addValueFactory: _ => channels,
+                updateValueFactory: (_, existingChannels) => channels);
 
-                // 原子更新通道列表：不修改原有List，而是创建新List
-                _channels.AddOrUpdate(
-                    deviceId,
-                    addValueFactory: _ => new List<ChannelInfo>(newChannels),
-                    updateValueFactory: (_, existingChannels) =>
-                    {
-                        // 移除重复通道，合并新通道（创建新List避免并发修改）
-                        return existingChannels
-                            .Where(c => !newChannels.Any(n => n.ChannelId == c.ChannelId))
-                            .Concat(newChannels)
-                            .ToList();
-                    });
-            }
 
+            var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
+            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+            var channelIds = channels.Select(x => x.ChannelId).ToList();
+            var channelNames = channels.Select(x => x.ChannelName).ToList();
+            eventBus.PublishMediaChannels(option.sip_service_id, deviceId, channelIds, channelNames);
             return true;
         }
 

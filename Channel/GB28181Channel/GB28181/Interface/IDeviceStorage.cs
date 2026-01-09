@@ -55,9 +55,10 @@ namespace GB28181Channel.GB28181.Interface
         /// <summary>
         /// 保存通道信息
         /// </summary>
+        /// <param name="deviceId">设备ID</param>
         /// <param name="channels">通道列表</param>
         /// <returns>是否成功</returns>
-        bool SaveChannels(List<ChannelInfo> channels);
+        Task<bool> SaveChannels(string deviceId, List<ChannelInfo> channels);
 
         /// <summary>
         /// 获取设备的通道列表

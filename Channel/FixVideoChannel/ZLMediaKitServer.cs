@@ -74,7 +74,7 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
-            eventBus.PublishMediaNotReader(_option.node_id, streamId);
+            eventBus.PublishMediaNotReader(_option.node_id, streamId, 0);
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
         {
@@ -344,7 +344,7 @@ namespace FixVideoChannel
             mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
             mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
             mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_rtsp", 1);
+            mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
             mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
             mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
             mk_util.MkIniSetOptionInt(option, "auto_close", 0);
@@ -421,8 +421,7 @@ namespace FixVideoChannel
                 };
                 mk_common.MkEnvInit(config);
 
-                mk_common.MkRtspServerStart((ushort)_option.zlmedia_server.RTSPPort, 0);
-                mk_common.MkRtmpServerStart((ushort)_option.zlmedia_server.RTMPPort, 0);
+                mk_common.MkRtmpServerStart((ushort)_option.RTMPPort, 0);
 
                 _mkEvents = new MkEvents()
                 {

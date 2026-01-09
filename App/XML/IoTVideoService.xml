@@ -145,6 +145,11 @@
             拉流地址
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.ChannelId">
+            <summary>
+            通道Id
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.UserName">
             <summary>
             注册用户名
@@ -153,16 +158,6 @@
         <member name="P:IoTVideoService.Models.MZ_VideoSource.UserPwd">
             <summary>
             注册密码
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.GBPublicAddr">
-            <summary>
-            GB28181服务的公网主机
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.GBPublicPort">
-            <summary>
-            GB28181服务的公网主机端口
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.AITasks">

@@ -1,7 +1,5 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
-using EasyNetQ;
-using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,8 +60,10 @@ namespace GB28181Channel
             var device = storage.GetDevice(e.DeviceId);
             if (device != null && !string.IsNullOrEmpty(device.DtuId))
             {
+                var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Disconnect(device.DtuId);
+                eventBus.PublishMediaNotReader(option.sip_service_id, device.DeviceId, 1);
             }
         }
     }

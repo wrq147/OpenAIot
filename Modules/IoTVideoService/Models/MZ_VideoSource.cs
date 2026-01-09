@@ -36,6 +36,10 @@ namespace IoTVideoService.Models
         /// </summary>
         public string PullAddr { get; set; }
         /// <summary>
+        /// 通道Id
+        /// </summary>
+        public string ChannelId { get; set; }
+        /// <summary>
         /// 注册用户名
         /// </summary>
         public string UserName { get; set; }
@@ -43,14 +47,6 @@ namespace IoTVideoService.Models
         /// 注册密码
         /// </summary>
         public string UserPwd { get; set; }
-        /// <summary>
-        /// GB28181服务的公网主机
-        /// </summary>
-        public string GBPublicAddr { get; set; }
-        /// <summary>
-        /// GB28181服务的公网主机端口
-        /// </summary>
-        public int? GBPublicPort { get; set; }
         /// <summary>
         /// AI检测任务
         /// </summary>

@@ -34,7 +34,9 @@
                             <el-table-column label="安装位置" prop="Position" width="260" :show-overflow-tooltip="true" />
                             <el-table-column label="VideoType" align="center" width="100">
                                 <template slot-scope="scope">
-                                    {{ scope.row.VideoType == 0 ? "固定地址" : "GB28181" }}
+                                    <span v-if="scope.row.VideoType == 0">固定地址</span>
+                                    <span v-else-if="scope.row.VideoType == 1">GB28181设备</span>
+                                    <span v-else-if="scope.row.VideoType == 2">通道</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="视频Key" align="center" prop="VideoKey" width="260"
@@ -45,8 +47,11 @@
                                         <div>推流地址：{{ scope.row.PullAddr }}</div>
                                         <div>拉流节点：{{ scope.row.NodeId == "" ? "暂无" : scope.row.NodeId }}</div>
                                     </div>
-                                    <div v-else>
-                                        <div>注册用户名：{{ scope.row.UserName }},注册密码：{{ scope.row.UserPwd }}</div>
+                                    <div v-else-if="scope.row.VideoType == 1">
+                                        <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
+                                    </div>
+                                    <div v-else-if="scope.row.VideoType == 2">
+                                        <div>设备SIP：{{ scope.row.UserName }},通道Id{{ scope.row.ChannelId }}</div>
                                     </div>
                                 </template>
                             </el-table-column>
@@ -55,7 +60,7 @@
                                 <template slot-scope="scope">
                                     <el-button type="text" icon="el-icon-edit"
                                         @click="handleAdd(scope.row)">编辑</el-button>
-                                    <el-button type="text" icon="el-icon-setting"
+                                    <el-button v-if="scope.row.VideoType != 2" type="text" icon="el-icon-setting"
                                         @click="handleSet(scope.row)">配置</el-button>
                                     <el-button type="text" icon="el-icon-delete" style="color:red"
                                         @click="handleDelete(scope.row.Id)">删除</el-button>

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.31" />
@@ -10,10 +11,14 @@
 		<PackageReference Include="SIPSorcery" Version="8.0.23" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Third\ZLMediaKit.Autogen\ZLMediaKit.Autogen.csproj" />
 	  <ProjectReference Include="..\ChannelUtility\ChannelUtility.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="config.ini">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

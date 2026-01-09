@@ -15,6 +15,5 @@ namespace GB28181Channel.GB28181.Event
     {
         public string DeviceId { get; set; }
         public List<ChannelInfo> Channels { get; set; }
-        public XDocument OriginalXml { get; set; }
     }
 }

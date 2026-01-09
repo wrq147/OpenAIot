@@ -37,6 +37,7 @@ namespace ChannelUtility
             { "UpVItem", typeof(MediaItemMessage) },
             { "MediaNF",typeof(MediaNotFoundMessage) },
             { "MediaNR",typeof(MediaNotReaderMessage) },
+            { "MediaCH",typeof(MediaChannelMessage) },
             { "MediaUser",typeof(MediaUserVerifyMessage) }
 
         };

@@ -11,16 +11,8 @@ namespace FixVideoChannel
         public string event_conn { get; set; }
         public string redis_conn { get; set; }
         public string node_id { get; set; }
-        public ZLMediaKitItem zlmedia_server { get; set; }
-    }
-    public class ZLMediaKitItem
-    {
         /// <summary>
-        /// ZLMediaKit的RTSP端口号
-        /// </summary>
-        public int RTSPPort { get; set; } = 554;
-        /// <summary>
-        /// ZLMediaKit的RTMP端口号
+        /// ZLMediaKit的RTMP播放端口
         /// </summary>
         public int RTMPPort { get; set; } = 1935;
     }

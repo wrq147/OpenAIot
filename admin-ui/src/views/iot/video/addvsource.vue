@@ -6,7 +6,7 @@
         <el-input v-model="sourceForm.Position" placeholder="请输入安装位置" />
       </el-form-item>
       <el-form-item label="视频源类型">
-        <el-radio-group :disabled="formId!=null" v-model="sourceForm.VideoType">
+        <el-radio-group :disabled="formId != null" v-model="sourceForm.VideoType">
           <el-radio :label="0">固定地址</el-radio>
           <el-radio :label="1">GB28181</el-radio>
         </el-radio-group>
@@ -17,11 +17,11 @@
       <el-form-item v-if="sourceForm.VideoType == 0" label="拉流地址" prop="PullAddr">
         <el-input v-model="sourceForm.PullAddr" placeholder="请输入拉流地址" />
       </el-form-item>
-      <el-form-item v-if="sourceForm.VideoType == 1" label="注册用户名" prop="UserName">
+      <el-form-item v-if="sourceForm.VideoType == 1" label="设备SIP" prop="UserName">
         <el-input v-model="sourceForm.UserName" placeholder="请输入注册用户名" />
       </el-form-item>
-      <el-form-item v-if="sourceForm.VideoType == 1" label="注册密码" prop="UserPwd">
-        <el-input v-model="sourceForm.UserPwd" placeholder="请输入注册密码" />
+      <el-form-item v-if="sourceForm.VideoType == 1" label="设备密码" prop="UserPwd">
+        <el-input v-model="sourceForm.UserPwd" placeholder="请输入设备密码" />
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -61,7 +61,8 @@ export default {
           VideoKey: '',
           PullAddr: '',
           UserName: '',
-          UserPwd: ''
+          UserPwd: '',
+          ChannelId: ''
         };
       } else {
         this.title = "编辑视频源";
@@ -73,7 +74,8 @@ export default {
             VideoKey: res.data.VideoKey,
             PullAddr: res.data.PullAddr,
             UserName: res.data.UserName,
-            UserPwd: res.data.UserPwd
+            UserPwd: res.data.UserPwd,
+            ChannelId: res.data.ChannelId,
           };
         })
       }

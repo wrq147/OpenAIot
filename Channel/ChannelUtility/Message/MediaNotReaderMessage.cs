@@ -13,5 +13,6 @@ namespace ChannelUtility.Message
             MsgType = "MediaNR";
         }
         public string StreamId { get; set; }
+        public int VideoType { get; set; }
     }
 }

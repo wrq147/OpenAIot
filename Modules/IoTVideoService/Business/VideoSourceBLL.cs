@@ -10,6 +10,7 @@ using IoTService.DAL;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using Microsoft.Extensions.Options;
+using Minio.DataModel;
 using MyAccess.DB.Builder.WhereToSql;
 using System;
 using System.Linq.Expressions;
@@ -48,8 +49,29 @@ namespace IoTVideoService.Business
             data.PullNode = string.Empty;
             data.NodeId = string.Empty;
             data.AITasks ??= string.Empty;
-            data.GBPublicAddr ??= string.Empty;
-            data.GBPublicPort ??= 0;
+            data.UserName ??= string.Empty;
+            data.UserPwd ??= string.Empty;
+
+            if (data.VideoType == 0)
+            {
+                data.UserName = string.Empty;
+                data.UserPwd = string.Empty;
+                data.ChannelId = string.Empty;
+            }
+            else if (data.VideoType == 1)
+            {
+                if (string.IsNullOrEmpty(data.UserName) || string.IsNullOrEmpty(data.UserPwd))
+                {
+                    return BusResponse<int>.Error(113, "GB28181设备用户名和密码不能为空");
+                }
+                data.ChannelId = string.Empty;
+                data.PullAddr = string.Empty;
+            }
+            else if (data.VideoType == 2)
+            {
+                data.UserPwd = string.Empty;
+                data.PullAddr = string.Empty;
+            }
 
             int rs = await _provider.GetService<VideoSourceDAL>().Insert(data);
             return BusResponse<int>.Success(rs);
@@ -153,7 +175,7 @@ namespace IoTVideoService.Business
         public virtual async Task<string> GB28181Login(string username)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            var vvlist = await videoSourceDAL.SelectList(x => x.UserName == username);
+            var vvlist = await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == username);
             if (vvlist.Count > 0)
             {
                 return vvlist[0].UserPwd;
@@ -211,19 +233,86 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             string tkey = msg.StreamId;
-            var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
-            if (tlist.Count > 0)
+            if (msg.VideoType == 0)
             {
-                if (!string.IsNullOrEmpty(tlist[0].PullNode))
+                var tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
+                if (tlist.Count > 0)
                 {
-                    MZ_VideoSource tsource = new MZ_VideoSource();
-                    tsource.PullNode = string.Empty;
-                    tsource.NodeId = string.Empty;
-                    tsource.Id = tlist[0].Id;
-                    await videoSourceDAL.Update(tsource);
-                    await DownDelVideoItemMessage(tlist[0].PullNode, tlist[0].Id);
+                    if (!string.IsNullOrEmpty(tlist[0].PullNode))
+                    {
+                        MZ_VideoSource tsource = new MZ_VideoSource();
+                        tsource.PullNode = string.Empty;
+                        tsource.NodeId = string.Empty;
+                        tsource.Id = tlist[0].Id;
+                        await videoSourceDAL.Update(tsource);
+                        await DownDelVideoItemMessage(tlist[0].PullNode, tlist[0].Id);
+                    }
                 }
             }
+            else if (msg.VideoType == 1)
+            {
+                MZ_VideoSource videoSource = new MZ_VideoSource();
+                videoSource.NodeId = string.Empty;
+                videoSource.PullNode = string.Empty;
+                videoSource.ChannelId = string.Empty;
+                await videoSourceDAL.Update(videoSource, x => x.VideoType == 1 && x.UserName == msg.StreamId);
+                await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == msg.StreamId);
+            }
+        }
+        public virtual async Task InitChannels(string userName, string nodeId, string nodeGuid, List<string> channelIds, List<string> channelNames)
+        {
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            if (channelIds.Count == 1)
+            {
+                var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
+                if (parentSource == null)
+                {
+                    return;
+                }
+                MZ_VideoSource newsource = new MZ_VideoSource();
+                newsource.Id = parentSource.Id;
+                newsource.ChannelId = channelIds[0];
+                await videoSourceDAL.Update(newsource);
+            }
+            else
+            {
+                await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
+                for (int i = 0; i < channelIds.Count; i++)
+                {
+                    if (i >= channelNames.Count)
+                    {
+                        break;
+                    }
+                    var channelId = channelIds[i];
+                    var channelName = channelNames[i];
+                    var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
+                    if (parentSource == null)
+                    {
+                        return;
+                    }
+                    if (await videoSourceDAL.Some(x => x.VideoType == 2 && x.UserName == userName && x.ChannelId == channelId))
+                    {
+                        continue;
+                    }
+                    MZ_VideoSource videoSource = new MZ_VideoSource();
+                    var snowflake = _provider.GetService<SnowflakeHelper>();
+                    videoSource.Id = "VI-" + snowflake.NextId();
+                    videoSource.OrgId = parentSource.OrgId;
+                    videoSource.VideoType = 2;
+                    videoSource.VideoKey = MyAccess.Core.StringTool.GetGUID();
+                    videoSource.Position = channelName;
+                    videoSource.PullAddr = string.Empty;
+                    videoSource.ChannelId = channelId;
+                    videoSource.UserName = userName;
+                    videoSource.UserPwd = string.Empty;
+                    videoSource.AITasks = string.Empty;
+                    videoSource.PullNode = nodeGuid;
+                    videoSource.NodeId = nodeId;
+                    await videoSourceDAL.Insert(videoSource);
+                }
+
+            }
+
         }
         public async Task UpdateFixNode()
         {
@@ -272,31 +361,42 @@ namespace IoTVideoService.Business
             if (msg.VideoType == 0)
             {
                 tlist = await videoSourceDAL.SelectList(x => x.VideoType == 0 && x.VideoKey == tkey);
+                if (tlist.Count > 0)
+                {
+                    var titem = tlist[0];
+                    string nodeguid = msg.NodeGuid;
+                    if (!string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeguid))
+                    {
+                        await DownDelVideoItemMessage(titem.PullNode, titem.Id);
+                    }
+                    MZ_VideoSource tsource = new MZ_VideoSource();
+                    tsource.PullNode = nodeguid;
+                    tsource.NodeId = msg.DeviceId;
+                    tsource.Id = titem.Id;
+                    await videoSourceDAL.Update(tsource);
+
+                    await DownUpVideoItemMessage(nodeguid, titem);
+                }
             }
             else if (msg.VideoType == 1)
             {
                 tlist = await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == tkey);
+                if (tlist.Count > 0)
+                {
+                    string nodeguid = msg.NodeGuid;
+                    MZ_VideoSource tsource = new MZ_VideoSource();
+                    tsource.PullNode = nodeguid;
+                    tsource.NodeId = msg.DeviceId;
+                    tsource.Id = tlist[0].Id;
+                    await videoSourceDAL.Update(tsource);
+                    await DownUpVideoItemMessage(nodeguid, tlist[0]);
+                }
             }
             else
             {
                 return;
             }
-            if (tlist.Count > 0)
-            {
-                var titem = tlist[0];
-                string nodeguid = msg.NodeGuid;
-                if (titem.VideoType == 0 && !string.IsNullOrEmpty(titem.PullNode) && !string.Equals(titem.PullNode, nodeguid))
-                {
-                    await DownDelVideoItemMessage(titem.PullNode, titem.Id);
-                }
-                MZ_VideoSource tsource = new MZ_VideoSource();
-                tsource.PullNode = nodeguid;
-                tsource.NodeId = msg.DeviceId;
-                tsource.Id = titem.Id;
-                await videoSourceDAL.Update(tsource);
 
-                await DownUpVideoItemMessage(nodeguid, titem);
-            }
 
         }
 

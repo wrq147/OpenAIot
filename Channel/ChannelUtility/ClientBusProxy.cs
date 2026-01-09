@@ -415,7 +415,7 @@ namespace ChannelUtility
                 msg.ProductId = string.Empty;
                 msg.MessageId = tmsgId;
                 msg.UserName = username;
-                await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(username));
+                await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
                 var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
                 return reply;
             }
@@ -432,17 +432,28 @@ namespace ChannelUtility
             msg.StreamId = streamId;
             msg.NodeGuid = this._nodeGuid;
             msg.VideoType = videoType;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(streamId));
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
         }
-        public void PublishMediaNotReader(string nodeId, string streamId)
+        public void PublishMediaNotReader(string nodeId, string streamId, int videoType)
         {
             MediaNotReaderMessage msg = new MediaNotReaderMessage();
             msg.DeviceId = nodeId;
             msg.ProductId = string.Empty;
             msg.StreamId = streamId;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(streamId));
+            msg.VideoType = videoType;
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
         }
-
+        public void PublishMediaChannels(string nodeId, string username, List<string> channelIds, List<string> channelNames)
+        {
+            MediaChannelMessage msg = new MediaChannelMessage();
+            msg.DeviceId = nodeId;
+            msg.ProductId = string.Empty;
+            msg.UserName = username;
+            msg.NodeGuid = this._nodeGuid;
+            msg.ChannelIds = channelIds;
+            msg.ChannelNames = channelNames;
+            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
+        }
 
         /// <summary>
         /// 发送确认回复包（异步）

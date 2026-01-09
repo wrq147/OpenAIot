@@ -34,6 +34,7 @@ namespace ChannelUtility
     [JsonSerializable(typeof(IDictionary<string, string>))]
     [JsonSerializable(typeof(MediaNotReaderMessage))]
     [JsonSerializable(typeof(MediaNotFoundMessage))]
+    [JsonSerializable(typeof(MediaChannelMessage))]
     [JsonSerializable(typeof(MediaUserVerifyMessage))]
     [JsonSerializable(typeof(MediaDelItemMessage))]
     [JsonSerializable(typeof(MediaItemMessage))]
