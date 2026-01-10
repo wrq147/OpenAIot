@@ -443,15 +443,14 @@ namespace ChannelUtility
             msg.VideoType = videoType;
             _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
         }
-        public void PublishMediaChannels(string nodeId, string username, List<string> channelIds, List<string> channelNames)
+        public void PublishMediaChannels(string nodeId, string username, List<ChannelData> channelDatas)
         {
             MediaChannelMessage msg = new MediaChannelMessage();
             msg.DeviceId = nodeId;
             msg.ProductId = string.Empty;
             msg.UserName = username;
             msg.NodeGuid = this._nodeGuid;
-            msg.ChannelIds = channelIds;
-            msg.ChannelNames = channelNames;
+            msg.Channels = channelDatas;
             _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
         }
 

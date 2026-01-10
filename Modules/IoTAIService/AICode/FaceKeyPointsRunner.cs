@@ -16,7 +16,9 @@ namespace IoTAIService.AICode
 
         public FaceKeyPointsRunner(IOptions<IoTAIOption> option)
         {
-            _session = new InferenceSession(option.Value.FaceKeyPointsFile);
+            var sessionOptions = new SessionOptions();
+            AIUtility.TryEnableGpu(sessionOptions);
+            _session = new InferenceSession(option.Value.FaceKeyPointsFile, sessionOptions);
         }
         public Tensor<float> Predict(Image<Rgb24> image)
         {

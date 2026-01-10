@@ -13,14 +13,11 @@ namespace GB28181Channel.GB28181.DTO
     /// </summary>
     public class DeviceInfo
     {
-        public string DtuId { get; set; }
-        public string PushKey { get; set; }
+        public VideoData VideoData { get; set; }
         public string DeviceId { get; set; }
         public string Password { get; set; }
         public string DeviceIp { get; set; }
         public int DevicePort { get; set; }
-        public string DeviceLocalIp { get; set; }
-        public int DeviceLocalPort { get; set; }
         public DateTime RegisterTime { get; set; }
         public DateTime LastHeartbeatTime { get; set; }
         public GB28181Version ProtocolVersion { get; set; }
@@ -33,14 +30,11 @@ namespace GB28181Channel.GB28181.DTO
         {
             return new DeviceInfo
             {
-                DtuId = this.DtuId,
-                PushKey = this.PushKey,
+                VideoData = this.VideoData,
                 DeviceId = this.DeviceId,
                 Password = this.Password,
                 DeviceIp = this.DeviceIp,
                 DevicePort = this.DevicePort,
-                DeviceLocalIp = this.DeviceLocalIp,
-                DeviceLocalPort = this.DeviceLocalPort,
                 RegisterTime = this.RegisterTime,
                 LastHeartbeatTime = this.LastHeartbeatTime,
                 ProtocolVersion = this.ProtocolVersion,

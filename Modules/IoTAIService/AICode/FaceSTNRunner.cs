@@ -15,7 +15,9 @@ namespace IoTAIService.AICode
 
         public FaceSTNRunner(IOptions<IoTAIOption> option)
         {
-            _session = new InferenceSession(option.Value.FaceSTNFile);
+            var sessionOptions = new SessionOptions();
+            AIUtility.TryEnableGpu(sessionOptions);
+            _session = new InferenceSession(option.Value.FaceSTNFile, sessionOptions);
         }
         public Tensor<float> Predict(Image<Rgb24> image)
         {

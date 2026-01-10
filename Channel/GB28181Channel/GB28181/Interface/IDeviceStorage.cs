@@ -35,10 +35,9 @@ namespace GB28181Channel.GB28181.Interface
         /// 更新设备的媒体信息
         /// </summary>
         /// <param name="deviceId"></param>
-        /// <param name="dtuId"></param>
-        /// <param name="pushKey"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        bool UpdateDeviceMediaInfo(string deviceId, string dtuId, string pushKey);
+        bool UpdateDeviceMediaInfo(string deviceId, VideoData data);
         /// <summary>
         /// 获取设备信息
         /// </summary>

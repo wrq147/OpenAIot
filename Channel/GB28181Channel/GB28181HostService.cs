@@ -1,4 +1,5 @@
 ﻿using ChannelUtility;
+using ChannelUtility.Message;
 using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.Enum;
 using GB28181Channel.GB28181.Interface;
@@ -26,10 +27,14 @@ namespace GB28181Channel
             _deviceEventListener = new GB28181DeviceEventListener(_provider);
             _storage = storage;
         }
+        private async Task OnDeviceDownMessageHandler(BaseDeviceMessage msg)
+        {
+            await _deviceEventListener.OnDeviceDownMessage(msg, _server);
+        }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var eventBus = _provider.GetService<ClientBusProxy>();
-            eventBus.OnSubProductMessage += _deviceEventListener.OnDeviceDownMessage;
+            eventBus.OnSubProductMessage += OnDeviceDownMessageHandler;
             SIPTransportProtocol protocol = SIPTransportProtocol.Both;
             if (_option.sip_protocol == "udp")
             {
@@ -42,23 +47,18 @@ namespace GB28181Channel
             _server = new GB28181Server(_option.sip_ip, _option.sip_port, _option.sip_service_id, GB28181Version.V2016, _storage, protocol);
             _server.DeviceRegistered += _deviceEventListener.OnDeviceRegistered;
             _server.DeviceOffline += _deviceEventListener.OnDeviceOffline;
-            _server.CatalogReceived += _server_CatalogReceived;
+            _server.StreamPlayed += _deviceEventListener.OnStreamPlay;
+
             _server.Start();
 
-            ZLMediaKitServer.Instance.Start(_option, _provider, _deviceEventListener);
-        }
-
-        private async Task _server_CatalogReceived(object? arg1, GB28181.Event.CatalogReceivedEventArgs arg2)
-        {
-            var tserver = (GB28181Server)arg1;
-            await tserver.StartActiveStream(arg2.DeviceId, arg2.Channels[0].ChannelId, _option.rtp_port);
+            ZLMediaKitServer.Instance.Start(_option, _provider, _deviceEventListener, _server);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
+            ZLMediaKitServer.Instance.Stop();
             _server.Dispose();
             _server = null;
-            ZLMediaKitServer.Instance.Stop();
             return base.StopAsync(cancellationToken);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
+using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,18 +21,34 @@ namespace GB28181Channel
             _serviceProvider = serviceProvider;
         }
 
-        public async Task OnDeviceDownMessage(BaseDeviceMessage msg)
+        public async Task OnDeviceDownMessage(BaseDeviceMessage msg, GB28181Server server)
         {
             if (msg is MediaItemMessage upItemResponse)
             {
                 var storage = _serviceProvider.GetService<IDeviceStorage>();
-                storage.UpdateDeviceMediaInfo(upItemResponse.Item.UserName, upItemResponse.Item.Id, upItemResponse.Item.PushKey);
+
+                VideoData videoData = new VideoData();
+                videoData.Item = upItemResponse.Item;
+                videoData.DetectList = new List<AIDetectorTask>();
+                foreach (var it in upItemResponse.Config.Tasks)
+                {
+                    videoData.DetectList.Add(new AIDetectorTask(it));
+                }
+                videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
+                videoData.MotionRatio = upItemResponse.Config.MotionRatio;
+
+
+                storage.UpdateDeviceMediaInfo(upItemResponse.Item.UserName, videoData);
                 var newdevice = storage.GetDevice(upItemResponse.Item.UserName);
                 if (newdevice == null)
                 {
                     Console.WriteLine($"[异常] 设备{upItemResponse.Item.UserName}不存在");
                     return;
                 }
+
+                var device = storage.GetDevice(upItemResponse.Item.UserName);
+                await server.SendCatalogQuery(device);
+
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Connected(upItemResponse.Item.Id, newdevice.DeviceIp);
             }
@@ -58,12 +75,20 @@ namespace GB28181Channel
         {
             var storage = _serviceProvider.GetService<IDeviceStorage>();
             var device = storage.GetDevice(e.DeviceId);
-            if (device != null && !string.IsNullOrEmpty(device.DtuId))
+            if (device != null && !string.IsNullOrEmpty(device.VideoData.Item.Id))
             {
                 var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.Disconnect(device.DtuId);
+                await eventBus.Disconnect(device.VideoData.Item.Id);
                 eventBus.PublishMediaNotReader(option.sip_service_id, device.DeviceId, 1);
+            }
+        }
+
+        public async Task OnStreamPlay(object? sender, StreamPlayEventArgs e)
+        {
+            if (e.IsSuccess == true)
+            {
+                ZLMediaKitServer.Instance.BindSsrc(e);
             }
         }
     }

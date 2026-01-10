@@ -18,7 +18,9 @@ namespace IoTAIService.AICode
         public FaceDetOnnxRunner(IOptions<IoTAIOption> option)
         {
             // 初始化ONNX推理会话
-            _session = new InferenceSession(option.Value.FaceDetectionFile);
+            var sessionOptions = new SessionOptions();
+            AIUtility.TryEnableGpu(sessionOptions);
+            _session = new InferenceSession(option.Value.FaceDetectionFile, sessionOptions);
         }
 
         public List<BBox> Predict(Image<Rgb24> image, float conf_threshold = 0.8f, float iou_threshold = 0.2f)

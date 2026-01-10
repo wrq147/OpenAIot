@@ -12,9 +12,14 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaCH";
         }
-        public List<string> ChannelIds { get; set; }
-        public List<string> ChannelNames { get; set; }
+        public List<ChannelData> Channels { get; set; }
         public string UserName { get; set; }
         public string NodeGuid { get; set; }
+    }
+    public class ChannelData
+    {
+        public int Index { get; set; }
+        public string ChannelId { get; set; }
+        public string Name { get; set; }
     }
 }

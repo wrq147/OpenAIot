@@ -259,10 +259,10 @@ namespace IoTVideoService.Business
                 await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == msg.StreamId);
             }
         }
-        public virtual async Task InitChannels(string userName, string nodeId, string nodeGuid, List<string> channelIds, List<string> channelNames)
+        public virtual async Task InitChannels(string userName, string nodeId, string nodeGuid, List<ChannelData> channels)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            if (channelIds.Count == 1)
+            if (channels.Count == 1)
             {
                 var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
                 if (parentSource == null)
@@ -271,38 +271,28 @@ namespace IoTVideoService.Business
                 }
                 MZ_VideoSource newsource = new MZ_VideoSource();
                 newsource.Id = parentSource.Id;
-                newsource.ChannelId = channelIds[0];
+                newsource.ChannelId = channels[0].ChannelId;
                 await videoSourceDAL.Update(newsource);
             }
             else
             {
                 await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
-                for (int i = 0; i < channelIds.Count; i++)
+                for (int i = 0; i < channels.Count; i++)
                 {
-                    if (i >= channelNames.Count)
-                    {
-                        break;
-                    }
-                    var channelId = channelIds[i];
-                    var channelName = channelNames[i];
+                    var channel = channels[i];
                     var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
                     if (parentSource == null)
                     {
                         return;
                     }
-                    if (await videoSourceDAL.Some(x => x.VideoType == 2 && x.UserName == userName && x.ChannelId == channelId))
-                    {
-                        continue;
-                    }
                     MZ_VideoSource videoSource = new MZ_VideoSource();
-                    var snowflake = _provider.GetService<SnowflakeHelper>();
-                    videoSource.Id = "VI-" + snowflake.NextId();
+                    videoSource.Id = "VI-" + parentSource.Id + "_" + channel.Index;
                     videoSource.OrgId = parentSource.OrgId;
                     videoSource.VideoType = 2;
-                    videoSource.VideoKey = MyAccess.Core.StringTool.GetGUID();
-                    videoSource.Position = channelName;
+                    videoSource.VideoKey = parentSource.VideoKey + "_" + channel.Index;
+                    videoSource.Position = channel.Name;
                     videoSource.PullAddr = string.Empty;
-                    videoSource.ChannelId = channelId;
+                    videoSource.ChannelId = channel.ChannelId;
                     videoSource.UserName = userName;
                     videoSource.UserPwd = string.Empty;
                     videoSource.AITasks = string.Empty;

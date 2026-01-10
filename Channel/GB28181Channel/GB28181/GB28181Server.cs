@@ -27,7 +27,6 @@ namespace GB28181Channel.GB28181
         #region 完整事件体系
         public event Func<object?, DeviceRegisteredEventArgs, Task> DeviceRegistered;
         public event Func<object?, DeviceOfflineEventArgs, Task> DeviceOffline;
-        public event Func<object?, CatalogReceivedEventArgs, Task> CatalogReceived;
         public event Func<object?, AlarmReceivedEventArgs, Task> AlarmReceived;
         public event Func<object?, StreamPlayEventArgs, Task> StreamPlayed;
         #endregion
@@ -234,6 +233,11 @@ namespace GB28181Channel.GB28181
             var channelId = requestContext.ChannelId;
             var deviceId = requestContext.DeviceId;
 
+            var device = _deviceStorage.GetDevice(deviceId);
+            if (device == null)
+            {
+                return;
+            }
             var channelList = _deviceStorage.GetChannelsByDeviceId(deviceId);
             var channelInfo = channelList.Where(x => x.ChannelId == channelId).FirstOrDefault();
             if (channelInfo == null)
@@ -257,9 +261,6 @@ namespace GB28181Channel.GB28181
                             channelInfo.SessionStatus = StreamState.Playing;
                             channelInfo.RemoteRtpPort = media.Port;
 
-                            var ackReq = CreateAckRequest(resp, remoteEP);
-                            await _sipTransport.SendRequestAsync(ackReq);
-
                             // 触发点播成功事件
                             await OnStreamPlayed(new StreamPlayEventArgs
                             {
@@ -276,6 +277,10 @@ namespace GB28181Channel.GB28181
                                 SessionId = resp.Header.CallId,
                                 Message = "主动拉流成功"
                             });
+
+                            var ackReq = CreateAckRequest(resp, remoteEP);
+                            var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                            await _sipTransport.SendRequestAsync(dstEnd, ackReq);
                         }
                     }
                 }
@@ -528,8 +533,6 @@ namespace GB28181Channel.GB28181
                     Password = authRs.Password,
                     DeviceIp = remoteEP.Address.ToString(),
                     DevicePort = remoteEP.Port,
-                    DeviceLocalIp = req.Header.Vias.Via[0].Host,
-                    DeviceLocalPort = req.Header.Vias.Via[0].Port,
                     RegisterTime = DateTime.Now,
                     LastHeartbeatTime = DateTime.Now,
                     ProtocolVersion = _protocolVersion,
@@ -685,14 +688,23 @@ namespace GB28181Channel.GB28181
         {
             var xmlDoc = XDocument.Parse(req.Body);
             var channels = new List<ChannelInfo>();
-
+            var device = _deviceStorage.GetDevice(deviceId);
+            if (device == null)
+            {
+                return;
+            }
             var deviceList = xmlDoc.Descendants("DeviceList").FirstOrDefault();
             if (deviceList != null)
             {
+                int i = 0;
                 foreach (var deviceNode in deviceList.Descendants("Item"))
                 {
                     var channel = new ChannelInfo
                     {
+                        Index = i,
+                        DtuId = device.VideoData.Item.Id + "_" + i,
+                        PushKey = device.VideoData.Item.PushKey + "_" + i,
+                        DeviceId = deviceId,
                         ChannelId = deviceNode.Element("DeviceID")?.Value ?? string.Empty,
                         ChannelName = deviceNode.Element("Name")?.Value ?? string.Empty,
                         Manufacturer = deviceNode.Element("Manufacturer")?.Value ?? string.Empty,
@@ -701,8 +713,9 @@ namespace GB28181Channel.GB28181
                         SessionStatus = StreamState.None
                     };
 
-                    if (!string.IsNullOrEmpty(channel.ChannelId))
-                        channels.Add(channel);
+                    channels.Add(channel);
+
+                    ++i;
                 }
             }
 
@@ -905,7 +918,7 @@ namespace GB28181Channel.GB28181
                 }
 
                 var controlXml = GB28181Util.GeneratePTZControlXml(@params);
-                var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceLocalIp, device.DeviceLocalPort, controlXml, device.TransportProtocol);
+                var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceIp, device.DevicePort, controlXml, device.TransportProtocol);
 
                 // 保存请求上下文
                 _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
@@ -918,7 +931,8 @@ namespace GB28181Channel.GB28181
                 });
 
                 // 异步发送PTZ控制命令
-                await _sipTransport.SendRequestAsync(sipRequest);
+                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                await _sipTransport.SendRequestAsync(dstEnd, sipRequest);
 
                 return true;
             }
@@ -974,7 +988,8 @@ namespace GB28181Channel.GB28181
             // 发送INVITE请求到设备
             try
             {
-                await _sipTransport.SendRequestAsync(inviteRequest);
+                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                await _sipTransport.SendRequestAsync(dstEnd, inviteRequest);
                 Console.WriteLine($"[主动拉流] INVITE已发送：设备={deviceId} 通道={channelId} 会话={sessionId} RTP端口={rtpPort}");
                 return true;
             }
@@ -1033,7 +1048,8 @@ namespace GB28181Channel.GB28181
             // 发送BYE请求
             try
             {
-                await _sipTransport.SendRequestAsync(byeRequest);
+                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                await _sipTransport.SendRequestAsync(dstEnd, byeRequest);
                 return true;
             }
             catch (Exception ex)
@@ -1046,7 +1062,7 @@ namespace GB28181Channel.GB28181
         /// 发送目录查询请求到设备（核心方法）
         /// </summary>
         /// <param name="device">设备信息</param>
-        private async Task SendCatalogQuery(DeviceInfo device)
+        public async Task SendCatalogQuery(DeviceInfo device)
         {
             // 1. 构造符合GB28181标准的Catalog查询XML
             var catalogXml = GB28181Util.GenerateCatalogQueryXml(device.DeviceId, _protocolVersion);
@@ -1054,8 +1070,8 @@ namespace GB28181Channel.GB28181
             // 2. 创建SIP MESSAGE请求
             var sipRequest = CreateSIPMessageRequest(
                 device.DeviceId,
-                device.DeviceLocalIp,
-                device.DeviceLocalPort,
+                device.DeviceIp,
+                device.DevicePort,
                 catalogXml, device.TransportProtocol);
 
             // 保存请求上下文
@@ -1069,7 +1085,8 @@ namespace GB28181Channel.GB28181
             });
 
             // 3. 异步发送请求
-            await _sipTransport.SendRequestAsync(sipRequest);
+            var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+            await _sipTransport.SendRequestAsync(dstEnd, sipRequest);
         }
         /// <summary>
         /// 创建SIP MESSAGE请求
@@ -1171,7 +1188,6 @@ namespace GB28181Channel.GB28181
         protected virtual async Task OnDeviceRegistered(DeviceRegisteredEventArgs e)
         {
             _deviceStorage.SaveDevice(e.Device);
-            await SendCatalogQuery(e.Device);
             if (DeviceRegistered != null)
             {
                 await DeviceRegistered(this, e);
@@ -1191,10 +1207,6 @@ namespace GB28181Channel.GB28181
         protected virtual async Task OnCatalogReceived(CatalogReceivedEventArgs e)
         {
             await _deviceStorage.SaveChannels(e.DeviceId, e.Channels);
-            if (CatalogReceived != null)
-            {
-                await CatalogReceived(this, e);
-            }
         }
 
         protected virtual async Task OnAlarmReceived(AlarmReceivedEventArgs e)
