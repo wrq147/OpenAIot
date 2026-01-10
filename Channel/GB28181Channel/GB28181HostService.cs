@@ -19,14 +19,12 @@ namespace GB28181Channel
         private GB28181Server _server;
         private GB28181Option _option;
         private IDeviceStorage _storage;
-        private IMediaHandler _mediaHandler;
-        public GB28181HostService(IServiceProvider provider, IDeviceStorage storage, IMediaHandler mediaHandler)
+        public GB28181HostService(IServiceProvider provider, IDeviceStorage storage)
         {
             _provider = provider;
             _option = provider.GetService<IOptions<GB28181Option>>().Value;
             _deviceEventListener = new GB28181DeviceEventListener(_provider);
             _storage = storage;
-            _mediaHandler = mediaHandler;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -41,7 +39,7 @@ namespace GB28181Channel
             {
                 protocol = SIPTransportProtocol.TcpOnly;
             }
-            _server = new GB28181Server(_option.sip_ip, _option.sip_port, _option.sip_service_id, GB28181Version.V2016, _storage, _mediaHandler, protocol);
+            _server = new GB28181Server(_option.sip_ip, _option.sip_port, _option.sip_service_id, GB28181Version.V2016, _storage, protocol);
             _server.DeviceRegistered += _deviceEventListener.OnDeviceRegistered;
             _server.DeviceOffline += _deviceEventListener.OnDeviceOffline;
             _server.CatalogReceived += _server_CatalogReceived;

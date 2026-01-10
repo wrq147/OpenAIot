@@ -8,9 +8,9 @@ namespace GB28181Channel.GB28181.Enum
 {
     public enum StreamState
     {
+        None,
         Inviting,    // 已发送INVITE
-        Connecting,  // 设备正在处理
-        Streaming,   // 流已建立
+        Playing,   // 流已建立
         Stopped,     // 已停止
         Failed       // 失败
     }

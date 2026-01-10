@@ -1,4 +1,5 @@
-﻿using GB28181Channel.GB28181.DTO;
+﻿using ChannelUtility.Message;
+using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Enum;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
@@ -34,7 +35,6 @@ namespace GB28181Channel.GB28181
         // 核心字段
         private readonly SIPTransport _sipTransport;
         private readonly IDeviceStorage _deviceStorage;
-        private readonly IMediaHandler _mediaHandler;
         private readonly ConcurrentDictionary<string, DateTime> _heartbeatMap = new ConcurrentDictionary<string, DateTime>();
         private readonly System.Timers.Timer _heartbeatTimer;
         private readonly GB28181Version _protocolVersion;
@@ -44,6 +44,10 @@ namespace GB28181Channel.GB28181
         private readonly int _heartbeatTimeout = 100;
         // 传输协议（枚举类型）
         private readonly SIPTransportProtocol _transportProtocol;
+
+        // 用于存储主动请求的会话信息，便于响应匹配
+        private readonly ConcurrentDictionary<string, RequestContext> _requestContextMap = new ConcurrentDictionary<string, RequestContext>();
+
 
 
         /// <summary>
@@ -57,7 +61,7 @@ namespace GB28181Channel.GB28181
         /// <param name="mediaHandler">媒体处理接口</param>
         /// <param name="transportProtocol">SIP传输协议（默认：同时使用UDP+TCP）</param>
         public GB28181Server(string serverIp, int sipPort, string serverId,
-                             GB28181Version protocolVersion, IDeviceStorage deviceStorage, IMediaHandler mediaHandler,
+                             GB28181Version protocolVersion, IDeviceStorage deviceStorage,
                              SIPTransportProtocol transportProtocol = SIPTransportProtocol.Both)
         {
             _serverIp = serverIp ?? throw new ArgumentNullException(nameof(serverIp));
@@ -65,7 +69,6 @@ namespace GB28181Channel.GB28181
             _serverId = serverId ?? throw new ArgumentNullException(nameof(serverId));
             _protocolVersion = protocolVersion;
             _deviceStorage = deviceStorage ?? throw new ArgumentNullException(nameof(deviceStorage));
-            _mediaHandler = mediaHandler ?? throw new ArgumentNullException(nameof(mediaHandler));
             _transportProtocol = transportProtocol;
 
             _sipTransport = new SIPTransport();
@@ -95,6 +98,8 @@ namespace GB28181Channel.GB28181
 
             // 注册SIP请求处理器（UDP/TCP请求通用处理）
             _sipTransport.SIPTransportRequestReceived += OnSIPRequestReceived;
+            // 注册SIP响应处理器
+            _sipTransport.SIPTransportResponseReceived += OnSIPResponseReceived;
 
             // 初始化心跳检查定时器
             _heartbeatTimer = new System.Timers.Timer(30 * 1000);
@@ -141,21 +146,20 @@ namespace GB28181Channel.GB28181
                 var transportType = localEP.Protocol == SIPProtocolsEnum.udp ? "UDP" : "TCP";
                 Console.WriteLine($"[SIP请求] {req.Method} | {remoteEP} | 传输协议：{transportType}");
 
-                var remoteIpEP = new IPEndPoint(remoteEP.Address, remoteEP.Port);
 
                 switch (req.Method)
                 {
                     case SIPMethodsEnum.REGISTER:
-                        await HandleRegister(req, remoteIpEP);
+                        await HandleRegister(req, remoteEP);
                         break;
                     case SIPMethodsEnum.MESSAGE:
-                        await HandleMessage(req, remoteIpEP);
+                        await HandleMessage(req, remoteEP);
                         break;
                     case SIPMethodsEnum.INVITE:
-                        await HandleInvite(req, remoteIpEP);
+                        await HandleInvite(req, remoteEP);
                         break;
                     case SIPMethodsEnum.BYE:
-                        await HandleBye(req, remoteIpEP);
+                        await HandleBye(req, remoteEP);
                         break;
                     default:
                         var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.NotImplemented, "Method not supported");
@@ -168,6 +172,255 @@ namespace GB28181Channel.GB28181
                 Console.WriteLine($"处理SIP请求失败：{ex.Message}");
                 var errorResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.InternalServerError, "Server error");
                 await _sipTransport.SendResponseAsync(errorResp);
+            }
+        }
+
+        /// <summary>
+        /// 处理所有SIP响应
+        /// </summary>
+        private async Task OnSIPResponseReceived(SIPEndPoint localEP, SIPEndPoint remoteEP, SIPResponse resp)
+        {
+            try
+            {
+                // 输出响应的传输协议类型（UDP/TCP）
+                var transportType = localEP.Protocol == SIPProtocolsEnum.udp ? "UDP" : "TCP";
+                Console.WriteLine($"[SIP响应] {resp.Status} {resp.ReasonPhrase} | CallID: {resp.Header.CallId} | 传输协议：{transportType}");
+
+                // 根据CallId查找对应的请求上下文
+                if (_requestContextMap.TryGetValue(resp.Header.CallId, out var requestContext))
+                {
+                    switch (requestContext.RequestType)
+                    {
+                        case nameof(SIPMethodsEnum.INVITE):
+                            await HandleInviteResponse(resp, remoteEP, requestContext);
+                            break;
+                        case nameof(SIPMethodsEnum.MESSAGE):
+                            await HandleMessageResponse(resp, remoteEP, requestContext);
+                            break;
+                        case nameof(SIPMethodsEnum.BYE):
+                            await HandleByeResponse(resp, remoteEP, requestContext);
+                            break;
+                        default:
+                            Console.WriteLine($"[SIP响应] 未处理的响应类型: {requestContext.RequestType}");
+                            break;
+                    }
+
+
+                }
+                else
+                {
+                    // 处理没有上下文的响应（如设备主动发起的INVITE响应）
+                    if (resp.Header.CSeqMethod == SIPMethodsEnum.INVITE)
+                    {
+                        await HandleUncontextualInviteResponse(resp, remoteEP);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[SIP响应] 未找到对应的请求上下文 CallID: {resp.Header.CallId}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"处理SIP响应失败：{ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 处理INVITE请求的响应（主动拉流）
+        /// </summary>
+        private async Task HandleInviteResponse(SIPResponse resp, SIPEndPoint remoteEP, RequestContext requestContext)
+        {
+            var channelId = requestContext.ChannelId;
+            var deviceId = requestContext.DeviceId;
+
+            var channelList = _deviceStorage.GetChannelsByDeviceId(deviceId);
+            var channelInfo = channelList.Where(x => x.ChannelId == channelId).FirstOrDefault();
+            if (channelInfo == null)
+            {
+                return;
+            }
+            try
+            {
+                if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                {
+                    // 解析设备返回的SDP
+                    if (!string.IsNullOrEmpty(resp.Body))
+                    {
+                        var sdp = SDP.ParseSDPDescription(resp.Body);
+                        var media = sdp.Media.FirstOrDefault();
+                        if (media != null)
+                        {
+                            Console.WriteLine($"[主动拉流成功] 设备={deviceId} 通道={channelId} 远程RTP端口={media.Port}");
+
+                            // 更新通道会话状态
+                            channelInfo.SessionStatus = StreamState.Playing;
+                            channelInfo.RemoteRtpPort = media.Port;
+
+                            var ackReq = CreateAckRequest(resp, remoteEP);
+                            await _sipTransport.SendRequestAsync(ackReq);
+
+                            // 触发点播成功事件
+                            await OnStreamPlayed(new StreamPlayEventArgs
+                            {
+                                Params = new PlaybackParams
+                                {
+                                    ChannelId = channelId,
+                                    DeviceId = deviceId,
+                                    RemoteIp = remoteEP.Address.ToString(),
+                                    RemoteRtpPort = media.Port,
+                                    Ssrc = channelInfo.Ssrc,
+                                    IsLive = true
+                                },
+                                IsSuccess = true,
+                                SessionId = resp.Header.CallId,
+                                Message = "主动拉流成功"
+                            });
+                        }
+                    }
+                }
+                else if ((int)resp.Status >= 400)
+                {
+                    // 拉流失败
+                    Console.WriteLine($"[主动拉流失败] 设备={deviceId} 通道={channelId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+
+                    // 更新通道会话状态
+                    channelInfo.SessionStatus = StreamState.Failed;
+
+                    // 触发点播失败事件
+                    await OnStreamPlayed(new StreamPlayEventArgs
+                    {
+                        Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
+                        IsSuccess = false,
+                        SessionId = resp.Header.CallId,
+                        Message = $"主动拉流失败: {resp.ReasonPhrase}"
+                    });
+                }
+                else if (resp.Status == SIPResponseStatusCodesEnum.Trying || resp.Status == SIPResponseStatusCodesEnum.Ringing)
+                {
+                    // 临时响应，仅记录日志
+                    Console.WriteLine($"[主动拉流中] 设备={deviceId} 通道={channelId} 状态码={resp.Status}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"处理INVITE响应失败：设备={deviceId} 通道={channelId} 错误={ex.Message}");
+            }
+            finally
+            {
+                // 对于最终响应（2xx/4xx/5xx/6xx），清理上下文
+                if ((int)resp.Status >= 200)
+                {
+                    _requestContextMap.TryRemove(resp.Header.CallId, out _);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 处理没有上下文的INVITE响应（设备主动推流）
+        /// </summary>
+        private async Task HandleUncontextualInviteResponse(SIPResponse resp, SIPEndPoint remoteEP)
+        {
+            try
+            {
+                if (resp.Status == SIPResponseStatusCodesEnum.Ok && !string.IsNullOrEmpty(resp.Body))
+                {
+                    Console.WriteLine($"[设备主动推流响应] {remoteEP} SDP={resp.Body.Substring(0, Math.Min(100, resp.Body.Length))}...");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"处理无上下文INVITE响应失败：{ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 处理MESSAGE请求的响应（控制命令/目录查询）
+        /// </summary>
+        private async Task HandleMessageResponse(SIPResponse resp, SIPEndPoint remoteEP, RequestContext requestContext)
+        {
+            var deviceId = requestContext.DeviceId;
+
+            try
+            {
+                if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                {
+                    Console.WriteLine($"[MESSAGE响应成功] 设备={deviceId} 请求类型={requestContext.RequestType}");
+                }
+                else
+                {
+                    Console.WriteLine($"[MESSAGE响应失败] 设备={deviceId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"处理MESSAGE响应失败：设备={deviceId} 错误={ex.Message}");
+            }
+            finally
+            {
+                // 清理MESSAGE请求上下文
+                _requestContextMap.TryRemove(resp.Header.CallId, out _);
+            }
+        }
+
+        /// <summary>
+        /// 处理BYE请求的响应（停止拉流）
+        /// </summary>
+        private async Task HandleByeResponse(SIPResponse resp, SIPEndPoint remoteEP, RequestContext requestContext)
+        {
+            var channelId = requestContext.ChannelId;
+            var deviceId = requestContext.DeviceId;
+            var device = _deviceStorage.GetDevice(deviceId);
+            if (device == null)
+            {
+                return;
+            }
+            var channelList = _deviceStorage.GetChannelsByDeviceId(deviceId);
+            var channelInfo = channelList.Where(x => x.ChannelId == channelId).FirstOrDefault();
+            if (channelInfo == null)
+            {
+                return;
+            }
+            try
+            {
+                if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                {
+                    Console.WriteLine($"[停止拉流成功] 设备={deviceId} 通道={channelId}");
+
+                    // 更新通道会话状态
+                    channelInfo.SessionStatus = StreamState.Stopped;
+
+                    // 触发停止推流事件
+                    await OnStreamPlayed(new StreamPlayEventArgs
+                    {
+                        Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
+                        IsSuccess = false,
+                        SessionId = resp.Header.CallId,
+                        Message = "停止拉流成功"
+                    });
+                }
+                else
+                {
+                    Console.WriteLine($"[停止拉流失败] 设备={deviceId} 通道={channelId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+
+                    // 触发停止推流失败事件
+                    await OnStreamPlayed(new StreamPlayEventArgs
+                    {
+                        Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
+                        IsSuccess = false,
+                        SessionId = resp.Header.CallId,
+                        Message = $"停止拉流失败: {resp.ReasonPhrase}"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"处理BYE响应失败：设备={deviceId} 通道={channelId} 错误={ex.Message}");
+            }
+            finally
+            {
+                // 清理BYE请求上下文
+                _requestContextMap.TryRemove(resp.Header.CallId, out _);
             }
         }
 
@@ -245,7 +498,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理设备注册
         /// </summary>
-        private async Task HandleRegister(SIPRequest req, IPEndPoint remoteEP)
+        private async Task HandleRegister(SIPRequest req, SIPEndPoint remoteEP)
         {
             var deviceId = req.Header.From.FromURI.User;
             try
@@ -280,7 +533,7 @@ namespace GB28181Channel.GB28181
                     RegisterTime = DateTime.Now,
                     LastHeartbeatTime = DateTime.Now,
                     ProtocolVersion = _protocolVersion,
-                    TransportProtocol = req.URI.Protocol
+                    TransportProtocol = remoteEP.Protocol,
                 };
 
                 if (req.Header.Contact != null && req.Header.Contact.Count > 0)
@@ -316,7 +569,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理设备主动注销
         /// </summary>
-        private async Task HandleDeviceUnregister(string deviceId, IPEndPoint remoteEP, SIPRequest req)
+        private async Task HandleDeviceUnregister(string deviceId, SIPEndPoint remoteEP, SIPRequest req)
         {
             try
             {
@@ -359,7 +612,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理MESSAGE请求（心跳/目录/报警）
         /// </summary>
-        private async Task HandleMessage(SIPRequest req, IPEndPoint remoteEP)
+        private async Task HandleMessage(SIPRequest req, SIPEndPoint remoteEP)
         {
             var deviceId = req.Header.From.FromURI.User;
             var body = req.Body ?? string.Empty;
@@ -395,7 +648,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理心跳消息
         /// </summary>
-        private async Task HandleKeepaliveMessage(string deviceId, IPEndPoint remoteEP, SIPRequest req)
+        private async Task HandleKeepaliveMessage(string deviceId, SIPEndPoint remoteEP, SIPRequest req)
         {
             bool needRegDevice = !_heartbeatMap.ContainsKey(deviceId);
             _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
@@ -428,7 +681,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理目录消息
         /// </summary>
-        private async Task HandleCatalogMessage(string deviceId, IPEndPoint remoteEP, SIPRequest req)
+        private async Task HandleCatalogMessage(string deviceId, SIPEndPoint remoteEP, SIPRequest req)
         {
             var xmlDoc = XDocument.Parse(req.Body);
             var channels = new List<ChannelInfo>();
@@ -444,7 +697,8 @@ namespace GB28181Channel.GB28181
                         ChannelName = deviceNode.Element("Name")?.Value ?? string.Empty,
                         Manufacturer = deviceNode.Element("Manufacturer")?.Value ?? string.Empty,
                         Model = deviceNode.Element("Model")?.Value ?? string.Empty,
-                        Status = deviceNode.Element("Status")?.Value ?? "ON"
+                        Status = deviceNode.Element("Status")?.Value ?? "ON",
+                        SessionStatus = StreamState.None
                     };
 
                     if (!string.IsNullOrEmpty(channel.ChannelId))
@@ -468,7 +722,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理报警消息
         /// </summary>
-        private async Task HandleAlarmMessage(string deviceId, IPEndPoint remoteEP, SIPRequest req)
+        private async Task HandleAlarmMessage(string deviceId, SIPEndPoint remoteEP, SIPRequest req)
         {
             var xmlDoc = XDocument.Parse(req.Body);
             var alarmInfo = new AlarmInfo
@@ -498,7 +752,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理点播请求
         /// </summary>
-        private async Task HandleInvite(SIPRequest req, IPEndPoint remoteEP)
+        private async Task HandleInvite(SIPRequest req, SIPEndPoint remoteEP)
         {
             var channelId = req.Header.To.ToURI.User;
             Console.WriteLine($"[点播请求] {channelId} @ {remoteEP}");
@@ -522,10 +776,8 @@ namespace GB28181Channel.GB28181
                 await _sipTransport.SendResponseAsync(tryingResp);
 
                 // 生成SDP（通过IMediaHandler扩展）
-                var sdpResp = GB28181Util.BuildGB28181SDP(_serverId, _serverIp, playbackParams.RemoteRtpPort);
-
-                // 启动RTP接收（通过IMediaHandler扩展）
-                var sessionId = _mediaHandler.StartRtpReceiver(playbackParams);
+                var ssrc = GB28181Util.GetPlaySsrc(_serverId);
+                var sdpResp = GB28181Util.BuildGB28181SDP(_serverId, _serverIp, playbackParams.RemoteRtpPort, ssrc);
 
                 // 回复200 OK
                 var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
@@ -534,15 +786,15 @@ namespace GB28181Channel.GB28181
                 await _sipTransport.SendResponseAsync(okResp);
 
                 // 触发点播事件
-                //await OnStreamPlayed(new StreamPlayEventArgs
-                //{
-                //    Params = playbackParams,
-                //    IsSuccess = true,
-                //    SessionId = sessionId,
-                //    Message = "点播成功"
-                //});
+                await OnStreamPlayed(new StreamPlayEventArgs
+                {
+                    Params = playbackParams,
+                    IsSuccess = true,
+                    SessionId = req.Header.CallId,
+                    Message = "点播成功"
+                });
 
-                Console.WriteLine($"[点播成功] {channelId} SessionID: {sessionId} RTP端口：{playbackParams.LocalRtpPort}");
+                Console.WriteLine($"[点播成功] {channelId} SessionID: {req.Header.CallId} RTP端口：{playbackParams.RemoteRtpPort}");
             }
             catch (Exception ex)
             {
@@ -563,26 +815,35 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 处理停止推流
         /// </summary>
-        private async Task HandleBye(SIPRequest req, IPEndPoint remoteEP)
+        private async Task HandleBye(SIPRequest req, SIPEndPoint remoteEP)
         {
             var channelId = req.Header.From.FromURI.User;
             var sessionId = req.Header.CallId;
+            string devId = channelId.Substring(0, 20);
+            var device = _deviceStorage.GetDevice(devId);
+            if (device == null)
+            {
+                return;
+            }
+            var channelList = _deviceStorage.GetChannelsByDeviceId(devId);
+            var channelInfo = channelList.Where(x => x.ChannelId == channelId).FirstOrDefault();
+            if (channelInfo == null)
+            {
+                return;
+            }
 
-            // 停止RTP接收（通过IMediaHandler扩展）
-            //var stopResult = _mediaHandler.StopRtpReceiver(sessionId);
+            var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
+            await _sipTransport.SendResponseAsync(resp);
 
-            //var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
-            //await _sipTransport.SendResponseAsync(resp);
+            await OnStreamPlayed(new StreamPlayEventArgs
+            {
+                Params = new PlaybackParams { ChannelId = channelId },
+                IsSuccess = false,
+                SessionId = sessionId,
+                Message = "停止推流成功"
+            });
 
-            //await OnStreamPlayed(new StreamPlayEventArgs
-            //{
-            //    Params = new PlaybackParams { ChannelId = channelId },
-            //    IsSuccess = stopResult,
-            //    SessionId = sessionId,
-            //    Message = stopResult ? "停止推流成功" : "停止推流失败"
-            //});
-
-            //Console.WriteLine($"[停止推流] {channelId} SessionID: {sessionId} {(stopResult ? "成功" : "失败")}");
+            Console.WriteLine($"[停止推流] {channelId} SessionID: {sessionId} 成功");
         }
 
         /// <summary>
@@ -646,8 +907,18 @@ namespace GB28181Channel.GB28181
                 var controlXml = GB28181Util.GeneratePTZControlXml(@params);
                 var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceLocalIp, device.DeviceLocalPort, controlXml, device.TransportProtocol);
 
+                // 保存请求上下文
+                _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
+                {
+                    RequestType = nameof(SIPMethodsEnum.MESSAGE),
+                    DeviceId = device.DeviceId,
+                    ChannelId = @params.ChannelId,
+                    RequestTime = DateTime.Now,
+                    ExtraData = @params
+                });
+
                 // 异步发送PTZ控制命令
-                _ = _sipTransport.SendRequestAsync(sipRequest);
+                await _sipTransport.SendRequestAsync(sipRequest);
 
                 return true;
             }
@@ -680,22 +951,31 @@ namespace GB28181Channel.GB28181
             {
                 return false;
             }
-            if (string.IsNullOrEmpty(channelInfo.SessionId))
-            {
-                channelInfo.SessionId = Guid.NewGuid().ToString("N");
-                channelInfo.InviteTime = DateTime.Now;
-                channelInfo.SessionStatus = StreamState.Inviting;
-            }
 
+            string sessionId = Guid.NewGuid().ToString("N");
             // 构造符合GB28181标准的SDP
-            var sdp = GB28181Util.BuildGB28181SDP(_serverId, _serverIp, rtpPort);
+            var ssrc = GB28181Util.GetPlaySsrc(_serverId);
+            var sdp = GB28181Util.BuildGB28181SDP(_serverId, _serverIp, rtpPort, ssrc);
+            channelInfo.InviteTime = DateTime.Now;
+            channelInfo.SessionStatus = StreamState.Inviting;
+            channelInfo.Ssrc = ssrc;
             // 构造SIP INVITE请求
-            var inviteRequest = CreateInviteRequest(device, channelInfo, sdp);
+            var inviteRequest = CreateInviteRequest(device, channelInfo, sessionId, sdp, ssrc);
+
+            // 保存请求上下文
+            _requestContextMap.TryAdd(sessionId, new RequestContext
+            {
+                RequestType = nameof(SIPMethodsEnum.INVITE),
+                DeviceId = deviceId,
+                ChannelId = channelId,
+                RequestTime = DateTime.Now
+            });
+
             // 发送INVITE请求到设备
             try
             {
                 await _sipTransport.SendRequestAsync(inviteRequest);
-                Console.WriteLine($"[主动拉流] INVITE已发送：设备={deviceId} 通道={channelId} 会话={channelInfo.SessionId} RTP端口={rtpPort}");
+                Console.WriteLine($"[主动拉流] INVITE已发送：设备={deviceId} 通道={channelId} 会话={sessionId} RTP端口={rtpPort}");
                 return true;
             }
             catch (Exception ex)
@@ -725,6 +1005,7 @@ namespace GB28181Channel.GB28181
             {
                 return false;
             }
+            string sessionId = Guid.NewGuid().ToString("N");
             // 构造BYE请求
             var toUri = new SIPURI(channelId, $"{device.DeviceIp}:{device.DevicePort}", null, SIPSchemesEnum.sip);
             var fromUri = new SIPURI(_serverId, $"{_serverIp}:{_sipPort}", null, SIPSchemesEnum.sip);
@@ -733,17 +1014,26 @@ namespace GB28181Channel.GB28181
             string viaBranch = $"z9hG4bK-{Guid.NewGuid():N}";
             var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, device.TransportProtocol);
             byeRequest.Header.Vias.Via.Add(viaHeader);
-            byeRequest.Header.CallId = channelInfo.SessionId;
-            byeRequest.Header.From = new SIPFromHeader(_serverId, fromUri, channelInfo.SessionId);
-            byeRequest.Header.To = new SIPToHeader(channelId, toUri, null);
+            byeRequest.Header.CallId = sessionId;
+            byeRequest.Header.From = new SIPFromHeader(null, fromUri, sessionId);
+            byeRequest.Header.To = new SIPToHeader(null, toUri, null);
             byeRequest.Header.CSeq = GB28181Util.GenerateCSeq();
             byeRequest.Header.CSeqMethod = SIPMethodsEnum.BYE;
             byeRequest.Header.MaxForwards = 70;
+
+            // 保存请求上下文
+            _requestContextMap.TryAdd(sessionId, new RequestContext
+            {
+                RequestType = nameof(SIPMethodsEnum.BYE),
+                DeviceId = deviceId,
+                ChannelId = channelId,
+                RequestTime = DateTime.Now
+            });
+
             // 发送BYE请求
             try
             {
                 await _sipTransport.SendRequestAsync(byeRequest);
-                _mediaHandler.StopRtpReceiver(device, channelInfo);
                 return true;
             }
             catch (Exception ex)
@@ -768,6 +1058,16 @@ namespace GB28181Channel.GB28181
                 device.DeviceLocalPort,
                 catalogXml, device.TransportProtocol);
 
+            // 保存请求上下文
+            _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
+            {
+                RequestType = nameof(SIPMethodsEnum.MESSAGE),
+                DeviceId = device.DeviceId,
+                ChannelId = string.Empty,
+                RequestTime = DateTime.Now,
+                ExtraData = "CatalogQuery"
+            });
+
             // 3. 异步发送请求
             await _sipTransport.SendRequestAsync(sipRequest);
         }
@@ -787,18 +1087,19 @@ namespace GB28181Channel.GB28181
             request.Header = new SIPHeader();
             var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, protocol);
             request.Header.Vias.Via.Add(viaHeader);
-            request.Header.From = new SIPFromHeader(_serverId, fromUri, randTag);
-            request.Header.To = new SIPToHeader(_serverId, toUri, null);
+            request.Header.From = new SIPFromHeader(null, fromUri, randTag);
+            request.Header.To = new SIPToHeader(null, toUri, null);
             request.Header.CallId = callId;
             request.Header.CSeq = GB28181Util.GenerateCSeq();
             request.Header.CSeqMethod = SIPMethodsEnum.MESSAGE;
             request.Header.MaxForwards = 70;
+            request.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
             request.Header.Contact = new List<SIPContactHeader>()
             {
-                new SIPContactHeader(_serverId, fromUri)
+                new SIPContactHeader(null, fromUri)
             };
             request.Body = body;
-            request.Header.ContentType = "application/xml";
+            request.Header.ContentType = "Application/MANSCDP+xml";
             request.Header.ContentLength = request.BodyBuffer.Length;
             return request;
         }
@@ -806,7 +1107,7 @@ namespace GB28181Channel.GB28181
         /// <summary>
         /// 构造INVITE请求
         /// </summary>
-        private SIPRequest CreateInviteRequest(DeviceInfo device, ChannelInfo channel, string sdp)
+        private SIPRequest CreateInviteRequest(DeviceInfo device, ChannelInfo channel, string sessionId, string sdp, string ssrc)
         {
             // 请求URI：通道ID@设备IP:端口
             var toUri = new SIPURI(channel.ChannelId, $"{device.DeviceIp}:{device.DevicePort}", null, SIPSchemesEnum.sip);
@@ -814,9 +1115,9 @@ namespace GB28181Channel.GB28181
             var inviteRequest = new SIPRequest(SIPMethodsEnum.INVITE, toUri);
             // SIP头域
             inviteRequest.Header = new SIPHeader();
-            inviteRequest.Header.CallId = channel.SessionId;
-            inviteRequest.Header.From = new SIPFromHeader(_serverId, fromUri, channel.SessionId);
-            inviteRequest.Header.To = new SIPToHeader(channel.ChannelId, toUri, null);
+            inviteRequest.Header.CallId = sessionId;
+            inviteRequest.Header.From = new SIPFromHeader(null, fromUri, sessionId);
+            inviteRequest.Header.To = new SIPToHeader(null, toUri, null);
             inviteRequest.Header.CSeq = GB28181Util.GenerateCSeq();
             inviteRequest.Header.CSeqMethod = SIPMethodsEnum.INVITE;
             inviteRequest.Header.MaxForwards = 70;
@@ -825,15 +1126,43 @@ namespace GB28181Channel.GB28181
             inviteRequest.Header.Vias.Via.Add(viaHeader);
             inviteRequest.Header.Contact = new List<SIPContactHeader>()
             {
-                new SIPContactHeader(_serverId, fromUri)
+                new SIPContactHeader(null, fromUri)
             };
+            inviteRequest.Header.Subject = $"{channel.ChannelId}:{ssrc},{_serverId}:0";
 
             // 携带SDP
             inviteRequest.Body = sdp;
-            inviteRequest.Header.ContentType = "application/sdp";
+            inviteRequest.Header.ContentType = "APPLICATION/SDP";
             inviteRequest.Header.ContentLength = inviteRequest.BodyBuffer.Length;
             inviteRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
             return inviteRequest;
+        }
+        /// <summary>
+        /// 构造ACK请求
+        /// </summary>
+        /// <param name="inviteResp">INVITE响应</param>
+        /// <param name="remoteEP">设备端点</param>
+        private SIPRequest CreateAckRequest(SIPResponse inviteResp, SIPEndPoint remoteEP)
+        {
+            // 1. 构造ACK请求，必须复用INVITE响应的核心头域
+            var ackRequest = new SIPRequest(SIPMethodsEnum.ACK, inviteResp.Header.To.ToURI);
+            ackRequest.Header = new SIPHeader();
+            ackRequest.Header.CallId = inviteResp.Header.CallId;
+            ackRequest.Header.From = inviteResp.Header.From;
+            ackRequest.Header.To = inviteResp.Header.To;
+            ackRequest.Header.CSeq = inviteResp.Header.CSeq;
+            ackRequest.Header.CSeqMethod = SIPMethodsEnum.ACK;
+
+            // 2. 构造Via头（和INVITE请求保持一致）
+            string viaBranch = $"z9hG4bK-{Guid.NewGuid():N}";
+            var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, remoteEP.Protocol);
+            ackRequest.Header.Vias.Via.Add(viaHeader);
+
+            // 3. 其他必要头域
+            ackRequest.Header.MaxForwards = 70;
+            ackRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+
+            return ackRequest;
         }
         #endregion
 
@@ -878,11 +1207,16 @@ namespace GB28181Channel.GB28181
 
         protected virtual async Task OnStreamPlayed(StreamPlayEventArgs e)
         {
+            if (!e.IsSuccess && !string.IsNullOrEmpty(e.Params.Ssrc))
+            {
+                GB28181Util.ReleaseSsrc(e.Params.Ssrc);
+            }
             if (StreamPlayed != null)
             {
                 await StreamPlayed(this, e);
             }
         }
+
 
         #endregion
 
@@ -895,8 +1229,12 @@ namespace GB28181Channel.GB28181
             _sipTransport.Shutdown();
             _sipTransport.Dispose();
 
+            // 清理请求上下文
+            _requestContextMap.Clear();
+
             Console.WriteLine("[GB28181 Server] 已停止");
         }
         #endregion
     }
+
 }

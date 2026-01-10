@@ -12,9 +12,10 @@ namespace GB28181Channel.GB28181.DTO
     /// </summary>
     public class ChannelInfo
     {
-        public string SessionId { get; set; }
         public DateTime InviteTime { get; set; }
         public StreamState SessionStatus { get; set; }
+        public string Ssrc { get; set; }
+        public int RemoteRtpPort { get; set; }
         public string ChannelId { get; set; }
         public string ChannelName { get; set; }
         public string Manufacturer { get; set; }

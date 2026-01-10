@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml.Linq;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace GB28181Channel.GB28181
 {
@@ -49,6 +50,7 @@ namespace GB28181Channel.GB28181
 
             return xml.ToString(SaveOptions.DisableFormatting);
         }
+        private static Random random = new Random();
         /// <summary>
         /// 生成GB28181标准的目录查询XML
         /// </summary>
@@ -58,10 +60,10 @@ namespace GB28181Channel.GB28181
         {
             // 适配2016/2022版本的XML格式
             var xml = new XDocument(
-                new XDeclaration("1.0", "GB2312", "yes"),
+                new XDeclaration("1.0", "UTF-8", "yes"),
                 new XElement("Query",
                     new XElement("CmdType", "Catalog"),
-                    new XElement("SN", GB28181Util.GenerateCSeq()),
+                    new XElement("SN", random.Next(1000, 1000000)),
                     new XElement("DeviceID", deviceId),
                     // 2022版本新增范围参数，兼容2016
                     protocolVersion == GB28181Version.V2022 ? new XElement("Scope", "ALL") : null
@@ -71,10 +73,16 @@ namespace GB28181Channel.GB28181
             return xml.ToString(SaveOptions.DisableFormatting);
         }
 
+
         /// <summary>
         /// 构造GB28181标准SDP
         /// </summary>
-        public static string BuildGB28181SDP(string serverId, string serverIp, int rtpPort)
+        /// <param name="serverId"></param>
+        /// <param name="serverIp"></param>
+        /// <param name="rtpPort"></param>
+        /// <param name="ssrc"></param>
+        /// <returns></returns>
+        public static string BuildGB28181SDP(string serverId, string serverIp, int rtpPort, string ssrc)
         {
 
             var sdp = new SDP
@@ -89,7 +97,7 @@ namespace GB28181Channel.GB28181
                 Connection = new SDPConnectionInformation(IPAddress.Parse(serverIp)),
                 Media = new List<SDPMediaAnnouncement>()
             };
-            sdp.AddExtra($"y={GB28181Util.GetPlaySsrc(serverId)}");
+            sdp.AddExtra($"y={ssrc}");
             var videoFormats = new List<SDPAudioVideoMediaFormat>();
             videoFormats.Add(new SDPAudioVideoMediaFormat(SDPMediaTypesEnum.data, 96, "PS/90000"));
             videoFormats.Add(new SDPAudioVideoMediaFormat(SDPMediaTypesEnum.data, 97, "MPEG4/90000"));
@@ -97,6 +105,7 @@ namespace GB28181Channel.GB28181
             var videoMedia = new SDPMediaAnnouncement(SDPMediaTypesEnum.video, rtpPort, videoFormats);
             videoMedia.MediaStreamStatus = MediaStreamStatusEnum.RecvOnly;
             sdp.Media.Add(videoMedia);
+            
             return sdp.ToString();
         }
 

@@ -13,6 +13,9 @@ namespace GB28181Channel.GB28181.Event
     public class StreamPlayEventArgs : EventArgs
     {
         public PlaybackParams Params { get; set; }
+        /// <summary>
+        /// 是否成功点播
+        /// </summary>
         public bool IsSuccess { get; set; }
         public string SessionId { get; set; }
         public string Message { get; set; }
