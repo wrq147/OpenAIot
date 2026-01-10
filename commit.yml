@@ -3,66 +3,114 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '788335700e6566a03573c969b881adcd8b760263'
-    oldFile: !uuid '9d91f0f6f21891c171b8295b75b2a1c7b4906958'
+    newFile: !uuid '5aa612bb2fce9906cf4dc98decb9b545f32b7ec5'
+    oldFile: !uuid '788335700e6566a03573c969b881adcd8b760263'
+  /Channel/ChannelUtility:
+    newFile: !uuid '2b168ed004fb17bece45f4c48fcd137904a564ec'
+    oldFile: !uuid '8389d3d96fbf2d6330d50aa8de425244af7517ac'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid '6c7606252b2492e851a42896b930814788b15401'
+    oldFile: !uuid 'afe15b2f611b71cabe3fa4833a1d22bdadf79587'
+  /Channel/ChannelUtility/JsonMessageSerializerContext.cs:
+    newFile: !uuid '5ade1326a6b58aca9d010832a0e879fc86e3e0f2'
+    oldFile: !uuid '1580171cdd590ea3e10cebbb3a1c506a4fa68571'
+  /Channel/ChannelUtility/Message:
+    newFile: !uuid '67a712dac93e6861117841c8e6070977f94aa99a'
+    oldFile: !uuid 'a1eae3cdac30528602a0e8d73193e1b52cdcfbfd'
+  /Channel/ChannelUtility/Message/MediaChannelMessage.cs:
+    newFile: !uuid '34a6c185d23e4f6342620098ec825e4920699e77'
+    oldFile: !uuid '7a1cb3569708770583229e01fa1a7375e8e0e5a9'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid '5d15cbb75ae0c34a5a91a6b93b71cd24b96e1a60'
+    oldFile: !uuid 'c1932acec573ce5c4af333f771b43208887512dd'
+  /Channel/ChannelUtility/Tsl/TslJsonSerializerContext.cs:
+    newFile: !uuid '20ff152ae33fe17f58330798677b8b15a39e18a5'
+    oldFile: !uuid '08f81f4aeaff53594fd5eae6eaccc5f2979374ed'
   /Channel/GB28181Channel:
-    newFile: !uuid 'e239f10f79f0e3825dfa2aabcd90ea4156f0224f'
-    oldFile: !uuid 'b3502166d14c1f57f1c3820a60ebc129a2705093'
-  /Channel/GB28181Channel/BasicMediaHandler.cs:
-    newFile: null
-    oldFile: !uuid 'ba9ec97048f895285d020729cc0e20ccc1dbddbb'
+    newFile: !uuid 'd4c85428b2781bbb32a7707c8fddf4e894ce8f07'
+    oldFile: !uuid 'e239f10f79f0e3825dfa2aabcd90ea4156f0224f'
+  /Channel/GB28181Channel/AIDetectorTask.cs:
+    newFile: !uuid 'd2cfe72b99afa20dfadcfa3e79753ab04c37659c'
+    oldFile: null
   /Channel/GB28181Channel/GB28181:
-    newFile: !uuid '80de0c5e35cf87c89ead4b1b8a3c871b7b8fcc54'
-    oldFile: !uuid '5f00965d2e7fefe3e0b4bb41c800560c2a0d705b'
+    newFile: !uuid 'c34a526995cd127903928ddac73c29a5b3f5d1d2'
+    oldFile: !uuid '80de0c5e35cf87c89ead4b1b8a3c871b7b8fcc54'
   /Channel/GB28181Channel/GB28181/DTO:
-    newFile: !uuid 'e1a7fee7c0590b741547443893368c894d26627f'
-    oldFile: !uuid '9b3aee39fe89b6ff620f472fe936772b37f9d465'
+    newFile: !uuid 'fa93464ff99784b5e92d77dce4399b8fb02a7ac5'
+    oldFile: !uuid 'e1a7fee7c0590b741547443893368c894d26627f'
   /Channel/GB28181Channel/GB28181/DTO/ChannelInfo.cs:
-    newFile: !uuid '2b32cd401cd4cff71df0a88e01b994e2ff502494'
-    oldFile: !uuid 'c06ef825521e65a3cb86b97d440ea2aeb7ebcb97'
-  /Channel/GB28181Channel/GB28181/DTO/RequestContext.cs:
-    newFile: !uuid '78b0814df6eb049a5f50a4f9157c229b0e12cafe'
-    oldFile: null
-  /Channel/GB28181Channel/GB28181/Enum:
-    newFile: !uuid '72e36884726490521f19d51b97b3921c95815eda'
-    oldFile: !uuid 'a346ee35bebd92e3aa169ac12841417832aa9e28'
-  /Channel/GB28181Channel/GB28181/Enum/StreamState.cs:
-    newFile: !uuid '49db335a0cb1e9378ff599355de4876e5aefac7f'
-    oldFile: !uuid 'f99ec53229832b41a2cddfb6e9407a6e63d51d68'
-  /Channel/GB28181Channel/GB28181/Event:
-    newFile: !uuid '24824dcf7d34664d58d409a6128ea751b5bfaf3b'
-    oldFile: !uuid 'bb1de224c3b17eb1b02a81398e0b557f85c8f362'
-  /Channel/GB28181Channel/GB28181/Event/DeviceRegisteredEventArgs .cs:
-    newFile: !uuid '482fa7f14d978905224f09b3c01d98f3675ed08e'
-    oldFile: !uuid 'da7fe1edd6e582ff12bfb07c9e860bb6f86fd2f0'
-  /Channel/GB28181Channel/GB28181/Event/SIPResponseReceivedEventArgs.cs:
-    newFile: !uuid '552054162476e7efd35d9cf379a91bde7ed529f4'
-    oldFile: null
-  /Channel/GB28181Channel/GB28181/Event/StreamPlayEventArgs.cs:
-    newFile: !uuid '16b043e17aca4fe13c6b7ae6adadfa939d168d8c'
-    oldFile: !uuid '1a6899820ac91f0839308731e64efc648f8935eb'
+    newFile: !uuid '33d9e9bd8482c239716f175937ada816692c2a60'
+    oldFile: !uuid '2b32cd401cd4cff71df0a88e01b994e2ff502494'
+  /Channel/GB28181Channel/GB28181/DTO/DeviceInfo.cs:
+    newFile: !uuid 'd154ff93bbbf71cc73856bb7f8a4b507de7e13b3'
+    oldFile: !uuid 'e3f2c5c942b0d5de4f04649fbd1ff1508642d9d7'
   /Channel/GB28181Channel/GB28181/GB28181Server.cs:
-    newFile: !uuid '584496e298594b2d8653d894daec01ac8d6ade17'
-    oldFile: !uuid '76bd55ee1510089f78c1a885ebf5ecee32d4c3c0'
-  /Channel/GB28181Channel/GB28181/GB28181Util.cs:
-    newFile: !uuid 'aebf7201a03fdb1537bb68ac44cf9ff100682f9a'
-    oldFile: !uuid '0211df4defd294918cffc6e7b2959ea19f6d7686'
+    newFile: !uuid '7191245750187a8f86303f0b9793abdc52e17451'
+    oldFile: !uuid '584496e298594b2d8653d894daec01ac8d6ade17'
   /Channel/GB28181Channel/GB28181/Interface:
-    newFile: !uuid '7eedae8b92533b51fd1ed8917f3d4e2b4081492c'
-    oldFile: !uuid '09db7585bf802d5dbf3312598587167f177a337a'
-  /Channel/GB28181Channel/GB28181/Interface/IMediaHandler.cs:
-    newFile: null
-    oldFile: !uuid '818b6de56d076b876325ba90ec674da7d0ae8034'
+    newFile: !uuid 'ad4d24a01dd44d6a8e1afdae79300fd3802cbf6c'
+    oldFile: !uuid '7eedae8b92533b51fd1ed8917f3d4e2b4081492c'
+  /Channel/GB28181Channel/GB28181/Interface/IDeviceStorage.cs:
+    newFile: !uuid 'f5bfa9a775878d544109b4d64df8fca42123bf6a'
+    oldFile: !uuid '0f1d4373fde07ea82b12c3347cd74cf49f60ec10'
+  /Channel/GB28181Channel/GB28181DeviceEventListener.cs:
+    newFile: !uuid 'fcca820d4b51a6a0d7a2635b9b4126c13a9e8bdc'
+    oldFile: !uuid 'e795bc06c19df1d23a269f9cbb8cdbd38a31f4c7'
   /Channel/GB28181Channel/GB28181HostService.cs:
-    newFile: !uuid '38238853a4545b07f1e9ce16560e3dbb06dc7c3d'
-    oldFile: !uuid 'eccefdeab4f487c395b1d26a8819e54c31727b85'
-  /Channel/GB28181Channel/Program.cs:
-    newFile: !uuid 'fc9d22f0334b516abc8d3f7e76d8a221ece4858b'
-    oldFile: !uuid '50763559eed8ec6de50278b54f3bd96234e25a2a'
-  /Channel/GB28181Channel/appsettings.json:
-    newFile: !uuid '3890b3670fc25b8e733207c64ec8169147be207d'
-    oldFile: !uuid 'c4f7c4565d48f9a33603c2bb5ccef0bd4e7939fe'
-gitCommitId: !uuid '07b62142b9ad4f01541ec157f2db51ea750cf8a2'
+    newFile: !uuid '0056204ab8ca19b523ebdfd37d0ce6eacb50f1ae'
+    oldFile: !uuid '38238853a4545b07f1e9ce16560e3dbb06dc7c3d'
+  /Channel/GB28181Channel/InMemoryDeviceStorage.cs:
+    newFile: !uuid 'ec0d4a104106e1ae058e8ef5c604891793e70f1a'
+    oldFile: !uuid '2770a5ddd3fc7f3a2db21837e4aca8d9ac558caf'
+  /Channel/GB28181Channel/VideoData.cs:
+    newFile: !uuid 'fc044bc78e47d6fa7af32b64d56b6ec33690b40c'
+    oldFile: null
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid 'a7622f34a7e7f6158b77af5b3d2e0b0a686c7354'
+    oldFile: !uuid '27f9277a42ac1d4c1644b69f8e3e14372169ee49'
+  /Modules:
+    newFile: !uuid '967c6ab49acf8b0f724c0928f73bf2200c44a4bb'
+    oldFile: !uuid '7bb1714e4682583c970d3d9b277d3337f0bde0ce'
+  /Modules/IoTAIService:
+    newFile: !uuid '5bc9774baac529fc11bf662f93535322bad030ab'
+    oldFile: !uuid '8a699b5c33e2493944bcca53dd91504ee6d011ec'
+  /Modules/IoTAIService/AICode:
+    newFile: !uuid '34bbf89414bc8cffc60ec696bbdc96b0520f9525'
+    oldFile: !uuid 'c8555919d259f38569294fb76f0061345d6918f0'
+  /Modules/IoTAIService/AICode/AIUtility.cs:
+    newFile: !uuid 'ac2766c853d5229738dddb1c4027bd7e49ff154a'
+    oldFile: null
+  /Modules/IoTAIService/AICode/ExecutionProviderType.cs:
+    newFile: !uuid 'a09444f9d575a7f9ae4e53c0644914923bd2e837'
+    oldFile: null
+  /Modules/IoTAIService/AICode/FaceDetOnnxRunner.cs:
+    newFile: !uuid '20d8ddd88a60d41e3ded8972999e6572694cbc81'
+    oldFile: !uuid '1bfae242d46be026b5027316bc1fd9eb37a949fc'
+  /Modules/IoTAIService/AICode/FaceKeyPointsRunner.cs:
+    newFile: !uuid '01f6f59da9b3a55e2e5d459390512e533ad58d86'
+    oldFile: !uuid '5e25943c731ab6357ecdb069c9eab5800ab54f27'
+  /Modules/IoTAIService/AICode/FaceRecogRunner.cs:
+    newFile: !uuid '4b7bff32917673d9fb74152392d798d5b192e5c9'
+    oldFile: !uuid 'c3b42aabe570f39e63b47298c7331a5c5ef1c6a4'
+  /Modules/IoTAIService/AICode/FaceSTNRunner.cs:
+    newFile: !uuid '6730f7f690f9e43a514b77d9b90fe252bd89d016'
+    oldFile: !uuid '23a872e8d3c3a7972ce8ada09fb0ce569514a324'
+  /Modules/IoTAIService/IoTAIService.csproj:
+    newFile: !uuid '9284633b0f61b1043d147d70a2916cc0ae6beae5'
+    oldFile: !uuid 'fa236db6d7a2375e5eb30757db87b5af4d3674b3'
+  /Modules/IoTVideoService:
+    newFile: !uuid '0e4660ea951a153addd69754acf5039eae626223'
+    oldFile: !uuid '7c4133fd58c13ac1c28828bba76c89592282c7e7'
+  /Modules/IoTVideoService/Business:
+    newFile: !uuid '01ff9c97efd05421c3ed37d2b2e3f7739e60bb39'
+    oldFile: !uuid '4c5410e792ecbab29f5f5f2acf19cac6463e8594'
+  /Modules/IoTVideoService/Business/VideoSourceBLL.cs:
+    newFile: !uuid '6f176aff7981847c4f2369b452e859732574e0d5'
+    oldFile: !uuid '4a3bcd6d5158146133b2450cffa61df21bd4940a'
+  /Modules/IoTVideoService/PluginConfig.cs:
+    newFile: !uuid '943f6f32c142ac3b0b512068cbe8e66a272ebe08'
+    oldFile: !uuid 'afe98e0dc428b6a3a306a7e91a9ab4822885f567'
+gitCommitId: !uuid '4cb1e414d63d92aaa6e8e5aa0f3e56a8ace7d1ca'
 renames: {
   }
-revisionId: 111
+revisionId: 112
