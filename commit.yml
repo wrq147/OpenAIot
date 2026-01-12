@@ -3,15 +3,33 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '1382b2daa1fff53c2f837842688ea0a590dbb0b2'
-    oldFile: !uuid 'e9de03ca39789b6b7307852e54adae6405984c08'
+    newFile: !uuid '5fd0fd6b7ba82d9445d32be2d9eeb576d2d40b3c'
+    oldFile: !uuid '1382b2daa1fff53c2f837842688ea0a590dbb0b2'
   /Channel/ChannelUtility:
-    newFile: !uuid '195fb7d1cba2b8a9d8c9791701101b7aee063afd'
-    oldFile: !uuid 'e125d415f7ccbbdda71893400d306bb3231b8fbe'
+    newFile: !uuid 'ff1f3fe9e551bd2a268b1607859c7bde4e99fcd8'
+    oldFile: !uuid '195fb7d1cba2b8a9d8c9791701101b7aee063afd'
   /Channel/ChannelUtility/ClientBusProxy.cs:
-    newFile: !uuid '5b5d0904eff1c202c5d72d415a53a2e8aa489ac3'
-    oldFile: !uuid '40c698d21d9bceac3314c8e0eaebf2fe5a942f94'
-gitCommitId: !uuid '7a56c416860cdf0ef6c1805e07e83678e7f72c94'
+    newFile: !uuid '4a841a95625c9810bfbe7f042a80df4038db75e9'
+    oldFile: !uuid '5b5d0904eff1c202c5d72d415a53a2e8aa489ac3'
+  /Common:
+    newFile: !uuid 'cca9c27f9d71d0225a79667eb3dbf8900f7273b6'
+    oldFile: !uuid '8acfce61596d0f2c6903a6be9eb5faf80febc0bf'
+  /Common/EventBus:
+    newFile: !uuid '99b3b8a03b051db2c9d9379cb2761e2e3eb2af95'
+    oldFile: !uuid '12d18794e0a1f72a296c77f35805583ff460a727'
+  /Common/EventBus/NatsScope.cs:
+    newFile: !uuid '5ff379078ba25e353b9a41ed69ea627e2766b9a7'
+    oldFile: !uuid 'a53fe8689efda4d97b81ed0516845ed201db7f59'
+  /Modules:
+    newFile: !uuid 'c4c218f5f920e1f410c7abf7e2948fd7a47dc692'
+    oldFile: !uuid '64d04e4de16d488ff2e4c70cdd11be4685a9c4b7'
+  /Modules/IoTService:
+    newFile: !uuid '1218203073a0f95a18a0818f040845cd04fe2b12'
+    oldFile: !uuid '10a2a89ce87e073f1cc8e8d6c145f283e56d6b15'
+  /Modules/IoTService/ServerBusProxy.cs:
+    newFile: !uuid '2a6e1987157476f865415c1ab37fd5b24cd87b20'
+    oldFile: !uuid '96f590d8546b7053dc7119ba040f5e90257c826c'
+gitCommitId: !uuid 'd4f5fb5731e3c3ba46209b9a58001d1e50cc8df4'
 renames: {
   }
-revisionId: 114
+revisionId: 115
