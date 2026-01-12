@@ -44,6 +44,8 @@ namespace ModbusChannel
                 {
                     var option = configSec.Get<ModbusOption>();
                     x.EventConn = option.event_conn;
+                    x.EventUser = option.event_user;
+                    x.EventPass = option.event_pass;
                     x.RedisConn = option.redis_conn;
                     x.config = new ChannelUtility.Config.ChannelConfig();
                     x.config.Name = "Modbus直连接入";
@@ -60,7 +62,8 @@ namespace ModbusChannel
                 services.AddSingleton<LogHandler>().AddSingleton<SwapHandler>();
 
 
-            }).ConfigureLogging(loggingBuilder => {
+            }).ConfigureLogging(loggingBuilder =>
+            {
                 loggingBuilder.AddConfiguration(configuration.GetSection("Logging"));
                 loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();

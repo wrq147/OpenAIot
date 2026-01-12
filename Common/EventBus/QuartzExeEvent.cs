@@ -1,13 +1,5 @@
-﻿using Common.Json;
-using Common.Share;
-using EasyNetQ;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace Common.EventBus
@@ -15,7 +7,6 @@ namespace Common.EventBus
     /// <summary>
     /// Quartz任务执行事件
     /// </summary>
-    [QueueAttribute("quartz_queue", ExchangeName = "quartz_exchange")]
     public class QuartzExeEvent : ResponseEvent
     {
         public const string EventKey = "/EV.BUS.QUARTZ";

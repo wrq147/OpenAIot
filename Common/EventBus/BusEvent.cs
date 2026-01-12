@@ -1,20 +1,14 @@
 ﻿using Common.Json;
-using Common.Share;
-using EasyNetQ;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TemplateAction.Core;
+
 
 namespace Common.EventBus
 {
     /// <summary>
     /// 业务执行事件
     /// </summary>
-    [QueueAttribute("bus_queue", ExchangeName = "bus_exchange")]
     public class BusEvent
     {
         public const string EventKey = "/EV.BUS.BUSSIN";

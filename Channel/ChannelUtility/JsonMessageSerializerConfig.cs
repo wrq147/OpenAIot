@@ -11,7 +11,7 @@ namespace ChannelUtility
         public static readonly JsonSerializerOptions DefaultOptions = new JsonSerializerOptions
         {
             TypeInfoResolver = JsonMessageSerializerContext.Default,
-            Converters = { new JsonMessageConverter<BaseDeviceMessage>(), new JsonMessageConverter<BaseUpDeviceMessage>(), new JsonMessageConverter<RequestMessage>(), new JsonObjectConverter() },
+            Converters = { new JsonMessageConverter<BaseDeviceMessage>(), new JsonMessageConverter<BaseUpDeviceMessage>(), new JsonObjectConverter() },
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
         public static readonly JsonSerializerOptions ObjectOptions = new JsonSerializerOptions

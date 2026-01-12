@@ -16,19 +16,17 @@ services:
   #   networks:
   #     mynetwork:
   #       ipv4_address: 172.18.0.8
-  mz-rabbitmq:
-    image: rabbitmq:3.12.6-management
+  mz-nats:
+    command: ${NATS_COMMAND}
+    image: nats:2.12.3-linux
     ports:
-      - '5117:5672'
-      - '5118:15672'
-    environment:
-      - RABBITMQ_DEFAULT_VHOST
-      - RABBITMQ_DEFAULT_USER
-      - RABBITMQ_DEFAULT_PASS
+      - '2224:4222'
+      - '2226:6222'
+      - '2228:8222'
     restart: always
     networks:
       mynetwork:
-        ipv4_address: 172.18.0.2
+        ipv4_address: 172.18.0.9
   database-influxdb:
     container_name: mz-db-influxdb
     environment:
@@ -101,31 +99,31 @@ services:
     networks:
       mynetwork:
         ipv4_address: 172.18.0.6
-  db-admin-phpmyadmin:
-    container_name: mz-dbadmin-phpmyadmin
-    environment:
-      PMA_HOST: hdcenter-db-mysql
-      PMA_PORT: 3306
-      MAX_EXECUTION_TIME: 1800
-      UPLOAD_LIMIT: 200M
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    depends_on:
-      database-influxdb:
-        condition: service_started
-      database-mysql:
-        condition: service_started
-      database-redis:
-        condition: service_started
-    ports:
-    - mode: ingress
-      target: 80
-      published: "8088"
-      protocol: tcp
-    image: phpmyadmin:latest
-    restart: always
-    networks:
-      mynetwork:
-        ipv4_address: 172.18.0.7
+  # db-admin-phpmyadmin:
+  #   container_name: mz-dbadmin-phpmyadmin
+  #   environment:
+  #     PMA_HOST: hdcenter-db-mysql
+  #     PMA_PORT: 3306
+  #     MAX_EXECUTION_TIME: 1800
+  #     UPLOAD_LIMIT: 200M
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #   depends_on:
+  #     database-influxdb:
+  #       condition: service_started
+  #     database-mysql:
+  #       condition: service_started
+  #     database-redis:
+  #       condition: service_started
+  #   ports:
+  #   - mode: ingress
+  #     target: 80
+  #     published: "8088"
+  #     protocol: tcp
+  #   image: phpmyadmin:latest
+  #   restart: always
+  #   networks:
+  #     mynetwork:
+  #       ipv4_address: 172.18.0.7
 networks:
   mynetwork:
     ipam:

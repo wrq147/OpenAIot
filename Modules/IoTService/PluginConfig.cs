@@ -2,7 +2,6 @@
 using Common.DataAc;
 using Common.EventBus;
 using Common.Share;
-using EasyNetQ;
 using IoTService.Business;
 using IoTService.DAL;
 using IoTService.Models;
@@ -12,6 +11,7 @@ using MonitorService.Business;
 using MonitorService.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
 
@@ -190,14 +190,13 @@ namespace IoTService
                 var generalOption = app.ServiceProvider.GetService<IOptions<GeneralOption>>();
                 if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
                 {
-                    var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
-                    await bus.PubSub.SubscribeAsync<string>("RuleNode" + MyAccess.Core.StringTool.GetGUID(), (msg) =>
+                    var _ = Task.Run(async () =>
                     {
-                        app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
-                    }, cfg =>
-                    {
-                        cfg.WithTopic("/RuleNode.Change");
-                        cfg.WithAutoDelete(true);
+                        var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+                        await foreach (var msg in bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default))
+                        {
+                            app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
+                        }
                     });
 
                     //设置规则执行节点

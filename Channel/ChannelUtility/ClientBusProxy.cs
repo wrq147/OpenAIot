@@ -1,15 +1,14 @@
 ﻿using ChannelUtility.Message;
 using ChannelUtility.Redis;
 using ChannelUtility.Tsl;
-using EasyNetQ;
-using EasyNetQ.Consumer;
-using EasyNetQ.DI;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace ChannelUtility
@@ -25,8 +24,8 @@ namespace ChannelUtility
         /// 监听订阅的指定协议的消息
         /// </summary>
         public event SubProductMessage OnSubProductMessage;
-        private IBus _bus;
-        public IBus Bus
+        private INatsConnection _bus;
+        public INatsConnection Bus
         {
             get { return _bus; }
         }
@@ -52,71 +51,102 @@ namespace ChannelUtility
             _nodeGuid = "NC" + Guid.NewGuid().ToString("N");
 
             _memoryCache = provider.GetService<IMemoryCache>();
-            _bus = RabbitHutch.CreateBus(_option.EventConn, x =>
+            var opts = new NatsOpts
             {
-                x.Register<IConsumerErrorStrategy, ChannelAlwaysRequeueErrorStrategy>();
-            });
-            _bus.PubSub.Subscribe<string>("IotDown" + _option.config.Code, async (msg, tk) =>
-            {
-                var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
-                if (OnSubProductMessage != null)
+                Url = _option.EventConn,
+                AuthOpts = new NatsAuthOpts
                 {
-                    await OnSubProductMessage(rs).ConfigureAwait(false);
-                }
-            }, cfg =>
-            {
-                cfg.WithTopic("/device." + _option.config.Code + ".down");
-                cfg.WithAutoDelete(true);
-            });
-            _bus.PubSub.Subscribe<string>("IotGuid" + _nodeGuid, async (msg, tk) =>
-            {
-                var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
-                if (OnSubProductMessage != null)
-                {
-                    await OnSubProductMessage(rs).ConfigureAwait(false);
-                }
-            }, cfg =>
-            {
-                cfg.WithTopic("/node." + _nodeGuid);
-                cfg.WithAutoDelete(true);
-            });
+                    Username = _option.EventUser,
+                    Password = _option.EventPass
+                },
+                ConnectTimeout = TimeSpan.FromSeconds(5)
+            };
+            _bus = new NatsConnection(opts);
+            InitBus();
 
-            _bus.PubSub.Subscribe<string>("RuleNode" + Guid.NewGuid().ToString("N"), (msg) =>
-            {
-                UpdateUpList();
-            }, cfg =>
-            {
-                cfg.WithTopic("/RuleNode.Change");
-                cfg.WithAutoDelete(true);
-            });
-            _bus.PubSub.Subscribe<string>("IotKeyDel" + Guid.NewGuid().ToString("N"), (msg) =>
-            {
-                string tmpkey = msg;
-                if (tmpkey.StartsWith("Device:"))
-                {
-                    tmpkey = tmpkey + "$ProductId";
-                    _memoryCache.Remove(tmpkey);
-                }
-                else if (tmpkey.StartsWith("Offline:"))
-                {
-                    string devid = tmpkey.Split(":")[1];
-                    tmpkey = "Device:" + devid + "$ProductId";
-                    _memoryCache.Remove(tmpkey);
-                }
-                else
-                {
-                    _memoryCache.Remove(tmpkey);
-                }
-
-            }, cfg =>
-            {
-                cfg.WithTopic("/IotKey.Del");
-                cfg.WithAutoDelete(true);
-            });
             UpdateUpList();
         }
+        private void InitBus()
+        {
+            Task.Run(async () =>
+            {
+                await foreach (var msg in _bus.SubscribeAsync("/device." + _option.config.Code + ".down", "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                {
+                    if (string.IsNullOrEmpty(msg.Data))
+                    {
+                        continue;
+                    }
+                    
+                    var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
+                    if (!string.IsNullOrEmpty(msg.ReplyTo))
+                    {
+                        rs.MessageId = msg.ReplyTo;
+                    }
+  
+                    if (OnSubProductMessage != null)
+                    {
+                        await OnSubProductMessage(rs).ConfigureAwait(false);
+                    }
+                }
+            });
+            Task.Run(async () =>
+            {
+                await foreach (var msg in _bus.SubscribeAsync("/node." + _nodeGuid, "IotGuid" + _nodeGuid, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                {
+                    if (string.IsNullOrEmpty(msg.Data))
+                    {
+                        continue;
+                    }
+                    var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
+                    if (!string.IsNullOrEmpty(msg.ReplyTo))
+                    {
+                        rs.MessageId = msg.ReplyTo;
+                    }
 
-        public async Task DownRequestMessage(RequestMessage msg)
+                    if (OnSubProductMessage != null)
+                    {
+                        await OnSubProductMessage(rs).ConfigureAwait(false);
+                    }
+                }
+            });
+
+            Task.Run(async () =>
+            {
+                await foreach (var msg in _bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                {
+                    UpdateUpList();
+                }
+            });
+
+            Task.Run(async () =>
+            {
+                await foreach (var msg in _bus.SubscribeAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                {
+                    if (string.IsNullOrEmpty(msg.Data))
+                    {
+                        continue;
+                    }
+                    string tmpkey = msg.Data;
+                    if (tmpkey.StartsWith("Device:"))
+                    {
+                        tmpkey = tmpkey + "$ProductId";
+                        _memoryCache.Remove(tmpkey);
+                    }
+                    else if (tmpkey.StartsWith("Offline:"))
+                    {
+                        string devid = tmpkey.Split(":")[1];
+                        tmpkey = "Device:" + devid + "$ProductId";
+                        _memoryCache.Remove(tmpkey);
+                    }
+                    else
+                    {
+                        _memoryCache.Remove(tmpkey);
+                    }
+                }
+            });
+
+        }
+        public async Task DownRequestMessage(BaseDeviceMessage msg)
         {
             if (OnSubProductMessage != null)
             {
@@ -137,7 +167,11 @@ namespace ChannelUtility
             data.Add("console/" + devId);
             data.Add(tip + ":" + System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.SerializeOptions));
 
-            await _bus.PubSub.PublishAsync(data, "/MqttNotice.Msg").ConfigureAwait(false);
+            await Bus.PublishAsync(new NatsMsg<List<string>>()
+            {
+                Subject = "/MqttNotice.Msg",
+                Data = data
+            }, ChannelNatsJsonSerializer<List<string>>.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -304,7 +338,12 @@ namespace ChannelUtility
             msg.DeviceId = deviceId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.IpAddress = ip;
-            await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -319,7 +358,12 @@ namespace ChannelUtility
             msg.ProductId = string.Empty;
             msg.DeviceId = deviceId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
         }
         public async Task PublishRawUp(string deviceId, byte[] data, string prefix, bool enableNodeId = false)
@@ -337,16 +381,26 @@ namespace ChannelUtility
             {
                 msg.NodeId = string.Empty;
             }
-            await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         public async Task PushReply(string deviceId, string value, string msgId = null)
         {
-            if (string.IsNullOrEmpty(msgId))
+            string tkey = msgId;
+            if (string.IsNullOrEmpty(tkey))
             {
                 msgId = await _redis.ListLeftPopAsync<string>($"DeviceMsgId:{deviceId}").ConfigureAwait(false);
+                tkey = "subs:" + deviceId + msgId;
             }
-            string tkey = "subs:" + deviceId + msgId;
-            await _bus.SendReceive.SendAsync("bus.response." + tkey, value).ConfigureAwait(false);
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = tkey,
+                Data = value
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -365,7 +419,12 @@ namespace ChannelUtility
             msg.EventId = eventId;
             msg.Outputs = outputs;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -391,40 +450,34 @@ namespace ChannelUtility
             msg.Width = width;
             msg.Height = height;
             msg.NodeId = this._nodeGuid;
-            await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         public async Task<string> WaitPublishMediaUserVerify(string nodeId, string username)
         {
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            string tmsgId = Guid.NewGuid().ToString("N");
-            using var rs = await _bus.SendReceive.ReceiveAsync<string>("bus.response." + tmsgId, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token).ConfigureAwait(false);
-
             try
             {
                 MediaUserVerifyMessage msg = new MediaUserVerifyMessage();
                 msg.DeviceId = nodeId;
                 msg.ProductId = string.Empty;
-                msg.MessageId = tmsgId;
                 msg.UserName = username;
-                await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                return reply;
+                var replyMsg = await Bus.RequestAsync<string, string>(GetUpKey(nodeId), System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), null, ChannelNatsJsonSerializer<string>.Default, ChannelNatsJsonSerializer<string>.Default, null, new NatsSubOpts()
+                {
+                    Timeout = TimeSpan.FromSeconds(8)
+                });
+
+                return replyMsg.Data;
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
-        public void PublishMediaNotFound(string nodeId, string streamId, int videoType)
+        public async void PublishMediaNotFound(string nodeId, string streamId, int videoType)
         {
             MediaNotFoundMessage msg = new MediaNotFoundMessage();
             msg.DeviceId = nodeId;
@@ -432,18 +485,29 @@ namespace ChannelUtility
             msg.StreamId = streamId;
             msg.NodeGuid = this._nodeGuid;
             msg.VideoType = videoType;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(nodeId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+
         }
-        public void PublishMediaNotReader(string nodeId, string streamId, int videoType)
+        public async void PublishMediaNotReader(string nodeId, string streamId, int videoType)
         {
             MediaNotReaderMessage msg = new MediaNotReaderMessage();
             msg.DeviceId = nodeId;
             msg.ProductId = string.Empty;
             msg.StreamId = streamId;
             msg.VideoType = videoType;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(nodeId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
-        public void PublishMediaChannels(string nodeId, string username, List<ChannelData> channelDatas)
+        public async void PublishMediaChannels(string nodeId, string username, List<ChannelData> channelDatas)
         {
             MediaChannelMessage msg = new MediaChannelMessage();
             msg.DeviceId = nodeId;
@@ -451,7 +515,12 @@ namespace ChannelUtility
             msg.UserName = username;
             msg.NodeGuid = this._nodeGuid;
             msg.Channels = channelDatas;
-            _bus.PubSub.Publish(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(nodeId));
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(nodeId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -462,14 +531,18 @@ namespace ChannelUtility
         /// <returns></returns>
         public async Task ConfirmReplyAsync(string msgId, BaseUpDeviceMessage msg)
         {
+            string tkey = msgId;
             if (string.IsNullOrEmpty(msgId))
             {
-                await _bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(msg.DeviceId));
+                tkey = GetUpKey(msg.DeviceId);
             }
-            else
+
+            await _bus.PublishAsync(new NatsMsg<string>()
             {
-                await _bus.SendReceive.SendAsync("bus.response." + msgId, msg);
-            }
+                Subject = tkey,
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+     
         }
 
         //供程序员显式调用的Dispose方法

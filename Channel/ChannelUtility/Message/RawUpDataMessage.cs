@@ -1,9 +1,7 @@
-﻿using EasyNetQ;
-using System;
+﻿using System;
 
 namespace ChannelUtility.Message
 {
-    [QueueAttribute("raw_up_queue", ExchangeName = "raw_up_exchange")]
     public class RawUpDataMessage : BaseDeviceMessage
     {
         public byte[] Data { get; set; }

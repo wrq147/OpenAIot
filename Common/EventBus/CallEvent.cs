@@ -1,11 +1,8 @@
 ﻿using Common.Json;
 using Common.Share;
-using EasyNetQ;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using TemplateAction.Core;
 
 namespace Common.EventBus
@@ -13,7 +10,6 @@ namespace Common.EventBus
     /// <summary>
     /// 功能调用事件
     /// </summary>
-    [QueueAttribute("call_queue", ExchangeName = "call_important")]
     public class CallEvent : ResponseEvent
     {
         public const string EventKey = "/EV.BUS.CALL";

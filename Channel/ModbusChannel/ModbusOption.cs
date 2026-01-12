@@ -4,6 +4,8 @@ namespace ModbusChannel
     public class ModbusOption
     {
         public string event_conn { get; set; }
+        public string event_user { get; set; }
+        public string event_pass { get; set; }
         public string redis_conn { get; set; }
         /// <summary>
         /// 网络连接方式：0为自动选择、1为串口通信、2为tcp客户端通信、3为tcp服务端通信

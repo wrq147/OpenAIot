@@ -39,6 +39,8 @@ namespace FixVideoChannel
                 {
                     var option = configSec.Get<FixVideoOption>();
                     x.EventConn = option.event_conn;
+                    x.EventUser = option.event_user;
+                    x.EventPass = option.event_pass;
                     x.RedisConn = option.redis_conn;
                     ChannelConfig config = new ChannelConfig();
                     config.Name = "固定拉流接入";

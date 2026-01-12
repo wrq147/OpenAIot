@@ -42,7 +42,6 @@ namespace ChannelUtility
     [JsonSerializable(typeof(ChangeProductMessage))]
     [JsonSerializable(typeof(StartReadAllMessage))]
     [JsonSerializable(typeof(BaseUpDeviceMessage))]
-    [JsonSerializable(typeof(RequestMessage))]
     [JsonSerializable(typeof(BaseDeviceMessage))]
     public partial class JsonMessageSerializerContext : JsonSerializerContext
     {

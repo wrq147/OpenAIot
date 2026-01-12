@@ -1,13 +1,12 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Config;
 using ChannelUtility.Message;
-using ChannelUtility.Tsl;
 using Common.EventBus;
 using Common.Share;
-using EasyNetQ;
 using IoTService.DAL;
 using IoTService.Models;
 using Microsoft.Extensions.Options;
+using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,28 +31,39 @@ namespace IoTService
         }
         public async Task PublishKeyDel(string key)
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
-            await bus.PubSub.PublishAsync(key, "/IotKey.Del");
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/IotKey.Del",
+                Data = key
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
         public async Task Print(string devId, string tip, object msg)
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
 
             List<string> data = new List<string>();
             data.Add("console/" + devId);
             data.Add(tip + ":" + System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.SerializeOptions));
-
-            await bus.PubSub.PublishAsync(data, "/MqttNotice.Msg");
+            await bus.PublishAsync(new NatsMsg<List<string>>()
+            {
+                Subject = "/MqttNotice.Msg",
+                Data = data
+            }, DefalutNatsJsonSerializer<List<string>>.Default);
         }
         public async Task NoticeChange(string devId, string param = "")
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
 
             List<string> data = new List<string>();
             data.Add("newprop/" + devId);
             data.Add(param);
 
-            await bus.PubSub.PublishAsync(data, "/MqttNotice.Msg");
+            await bus.PublishAsync(new NatsMsg<List<string>>()
+            {
+                Subject = "/MqttNotice.Msg",
+                Data = data
+            }, DefalutNatsJsonSerializer<List<string>>.Default);
         }
 
         /// <summary>
@@ -91,27 +101,18 @@ namespace IoTService
             return sysdict;
         }
 
-        private async Task<T> WaitDown<I, T>(I msg) where I : RequestMessage where T : BaseUpDeviceMessage
+        private async Task<T> WaitDown<I, T>(I msg) where I : BaseDeviceMessage where T : BaseUpDeviceMessage
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
-
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            using var rs = await bus.SendReceive.ReceiveAsync<T>("bus.response." + msg.MessageId, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token);
             try
             {
+                var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                return reply;
+                var replyMsg = await bus.RequestAsync<string, T>(GetDownKey(msg.DeviceId), msgbody, null, DefalutNatsJsonSerializer<string>.Default, DefalutNatsJsonSerializer<T>.Default, null, new NatsSubOpts()
+                {
+                    Timeout = TimeSpan.FromSeconds(8)
+                });
+
+                return replyMsg.Data;
             }
             catch (Exception ex)
             {
@@ -150,7 +151,7 @@ namespace IoTService
             msg.ProductId = productId;
             msg.Properties = properties;
             msg.MessageId = string.Empty;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
@@ -160,7 +161,7 @@ namespace IoTService
             var proplist = msg.Properties.Select(x => x.Key).ToList();
             proplist.Sort();
             string msgId = $"Rd{msg.DeviceId}-{proplist.Count}-{UtilityTool.MD5(string.Join('#', proplist))}";
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.SendReceive.SendAsync("bus.response." + msgId, msg);
         }
 
@@ -201,7 +202,7 @@ namespace IoTService
             rawdata.MessageId = MyAccess.Core.StringTool.GetGUID();
             rawdata.ProductId = productId;
 
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, GetDownKey(deviceId));
         }
@@ -212,7 +213,7 @@ namespace IoTService
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
@@ -223,7 +224,7 @@ namespace IoTService
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
@@ -284,7 +285,7 @@ namespace IoTService
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.MatchName = matchName;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
         }
@@ -302,7 +303,7 @@ namespace IoTService
             {
                 redis.HashSet("RuleExeNodes", option.Value.node_name, DateTime.Now.AddSeconds(600).ToString("o"));
             }
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             bus.PubSub.Publish(string.Empty, "/RuleNode.Change");
         }
         /// <summary>
@@ -315,7 +316,7 @@ namespace IoTService
             IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
             await redis.HashSetAsync("RuleExeNodes", name, DateTime.Now.AddSeconds(600).ToString("o"));
 
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(string.Empty, "/RuleNode.Change");
         }
         /// <summary>
@@ -325,7 +326,7 @@ namespace IoTService
         /// <returns></returns>
         public async Task TestUpNode(string nodename)
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(string.Empty, "/device.up." + nodename);
         }
         /// <summary>
@@ -338,7 +339,7 @@ namespace IoTService
             IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
             await redis.HashDeleteAsync("RuleExeNodes", nodename);
 
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(string.Empty, "/RuleNode.Change");
         }
         public void UpdateUpList()
@@ -429,7 +430,7 @@ namespace IoTService
             msg.DeviceId = deviceId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.props = props;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
 
@@ -453,7 +454,7 @@ namespace IoTService
             msg.RedirectFromProductId = redirectFromProductId;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
 
@@ -478,7 +479,7 @@ namespace IoTService
             {
                 msg.IpAddress = ip;
             }
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
 
@@ -500,7 +501,7 @@ namespace IoTService
             msg.RedirectFromProductId = redirectFromProductId;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
 
@@ -538,7 +539,7 @@ namespace IoTService
             msg.IsTagSync = isTagSync;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
         }
 

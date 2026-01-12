@@ -27,9 +27,15 @@ namespace Common
         public const int ERROR_BUSY = 100;
         /// <summary>
         /// 错误代码
+        /// 数据解释异常
+        /// </summary>
+        public const int PARSE_ERR = 200;
+        /// <summary>
+        /// 错误代码
         /// 表示输入参数错误
         /// </summary>
         public const int PARAM_ERR = 9001;
+
         public static IDictionary<Type, string> TpMappings = new Dictionary<Type, string>()
         {
              {typeof(DateTime?), "DateTime"},

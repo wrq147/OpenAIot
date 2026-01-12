@@ -329,6 +329,8 @@ namespace FixVideoChannel
             context.VideoKey = data.Item.PushKey;
             IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
             _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
+            _contextMap.TryAdd(context.VideoKey, context);
+
 
             mk_player.MkPlayerSetOnResult(mkPlayer, _onPlayDelegate, contextPtr);
             mk_player.MkPlayerSetOnShutdown(mkPlayer, _onShutdownDelegate, contextPtr);
@@ -350,7 +352,7 @@ namespace FixVideoChannel
             mk_util.MkIniSetOptionInt(option, "auto_close", 0);
             context.Media = mk_media.MkMediaCreate2("_defaultVhost_", "live", context.VideoKey, 0, option);
             mk_util.MkIniRelease(option);
-            _contextMap.TryAdd(context.VideoKey, context);
+
 
             mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
         }

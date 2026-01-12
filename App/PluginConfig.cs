@@ -109,9 +109,9 @@ namespace App
 
             if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
             {
-                //添加Rabbit事件总线
-                services.AddSingleton<RabbitScope>();
-                TAEventDispatcher.Instance.AddScope(app.ServiceProvider.GetService<RabbitScope>());
+                //添加事件总线
+                services.AddSingleton<NatsScope>();
+                TAEventDispatcher.Instance.AddScope(app.ServiceProvider.GetService<NatsScope>());
             }
 
         }

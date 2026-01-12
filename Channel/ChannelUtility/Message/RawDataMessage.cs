@@ -9,7 +9,7 @@ namespace ChannelUtility.Message
     /// <summary>
     /// 原数据下发
     /// </summary>
-    public class RawDataMessage : RequestMessage
+    public class RawDataMessage : BaseDeviceMessage
     {
         public byte[] Data { get; set; }
         /// <summary>

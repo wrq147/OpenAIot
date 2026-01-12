@@ -5,7 +5,7 @@ namespace ChannelUtility.Message
     /// <summary>
     /// 读取设备属性
     /// </summary>
-    public class ReadPropertyMessage : RequestMessage
+    public class ReadPropertyMessage : BaseDeviceMessage
     {
         /// <summary>
         /// 可读取多个属性

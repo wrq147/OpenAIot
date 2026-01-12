@@ -38,14 +38,14 @@ namespace IoTRulesService.DataParser
             get { return _provider; }
         }
         private ConcurrentDictionary<string, CacheJsEngine> _scriptEngine = new ConcurrentDictionary<string, CacheJsEngine>();
-        private RabbitScope _busScope;
+        private NatsScope _busScope;
         private IotRedisHelper _iotRedis;
         public class CacheJsEngine
         {
             public Engine Engine { get; set; }
             public string Script { get; set; }
         }
-        public PackParser(ITAServiceProvider provider, RabbitScope busScope, IotRedisHelper iotRedis)
+        public PackParser(ITAServiceProvider provider, NatsScope busScope, IotRedisHelper iotRedis)
         {
             _provider = provider;
             _busScope = busScope;
@@ -389,7 +389,7 @@ namespace IoTRulesService.DataParser
             msg.DeviceId = string.Empty;
             msg.ProductId = string.Empty;
             msg.MatchList = list;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
         }
@@ -422,7 +422,7 @@ namespace IoTRulesService.DataParser
                 {
                     await Print(msg.DeviceId, "设备下发消息", FastBufferHelper.ByteToHexStr(rawdata.Data));
                 }
-                var bus = _provider.GetService<RabbitScope>().Bus;
+                var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
                 await bus.PubSub.PublishAsync(msgbody, "/device." + ret.NetworkWay + ".down").ConfigureAwait(false);
                 return;
@@ -431,7 +431,7 @@ namespace IoTRulesService.DataParser
             var newmsg = await this.toRawData(msg, ret).ConfigureAwait(false);
             if (newmsg != null)
             {
-                var bus = _provider.GetService<RabbitScope>().Bus;
+                var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
                 await bus.PubSub.PublishAsync(msgbody, "/device." + ret.NetworkWay + ".down").ConfigureAwait(false);
             }

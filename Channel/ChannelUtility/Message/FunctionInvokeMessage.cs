@@ -6,7 +6,7 @@ namespace ChannelUtility.Message
     /// <summary>
     /// 调用设备功能的消息
     /// </summary>
-    public class FunctionInvokeMessage : RequestMessage
+    public class FunctionInvokeMessage : BaseDeviceMessage
     {
         /// <summary>
         /// 通过其它功能执行时，会传入源功能

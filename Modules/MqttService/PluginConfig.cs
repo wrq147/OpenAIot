@@ -112,7 +112,7 @@ namespace MqttService
             {
                 if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
                 {
-                    var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     string tmpsubid = string.IsNullOrEmpty(option.Value.node_name) ? "Mqtt" : option.Value.node_name;
                     await bus.PubSub.SubscribeAsync<List<string>>(tmpsubid, async (msg, tk) =>
                     {

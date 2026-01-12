@@ -211,7 +211,7 @@ namespace IoTVideoService.Business
             msg.ProductId = string.Empty;
             msg.Item = cpitem;
             msg.Config = aiConfig;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/node." + nodeguid).ConfigureAwait(false);
         }
@@ -220,13 +220,13 @@ namespace IoTVideoService.Business
             MediaDelItemMessage msg = new MediaDelItemMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/node." + nodeguid).ConfigureAwait(false);
         }
         public async Task ResponseVerifyResult(string msgId, string rs)
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.SendReceive.SendAsync("bus.response." + msgId, rs).ConfigureAwait(false);
         }
         public virtual async Task DelVideo(MediaNotReaderMessage msg)

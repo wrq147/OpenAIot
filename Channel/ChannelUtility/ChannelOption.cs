@@ -9,6 +9,8 @@ namespace ChannelUtility
         /// rabbitmq连接字符串
         /// </summary>
         public string EventConn { get; set; }
+        public string EventUser { get; set; }
+        public string EventPass { get; set; }
         /// <summary>
         /// Redis连接字符串
         /// </summary>

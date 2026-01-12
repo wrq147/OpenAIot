@@ -114,7 +114,7 @@ namespace TemplateAction.NetCore
                     _configAC(p);
                     return Task.CompletedTask;
                 });
-                TAEventDispatcher.Instance.Register<IApplicationBuilder>(_appBuilderEvents);
+                TAEventDispatcher.Instance.RegisterInternal<IApplicationBuilder>(_appBuilderEvents);
             }
             if (_middleAC != null)
             {
@@ -122,7 +122,7 @@ namespace TemplateAction.NetCore
                     _middleAC(p);
                     return Task.CompletedTask;
                 });
-                TAEventDispatcher.Instance.Register<KestrelServerOptions>(_middlewareEvents);
+                TAEventDispatcher.Instance.RegisterInternal<KestrelServerOptions>(_middlewareEvents);
             }
             if (_loggingAC != null)
             {

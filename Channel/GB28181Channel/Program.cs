@@ -39,6 +39,8 @@ namespace GB28181Channel
                 {
                     var option = configSec.Get<GB28181Option>();
                     x.EventConn = option.event_conn;
+                    x.EventUser = option.event_user;
+                    x.EventPass = option.event_pass;
                     x.RedisConn = option.redis_conn;
                     ChannelConfig config = new ChannelConfig();
                     config.Name = "GB28181接入";

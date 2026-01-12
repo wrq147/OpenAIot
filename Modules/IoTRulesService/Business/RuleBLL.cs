@@ -71,7 +71,7 @@ namespace IoTRulesService.Business
             if (isneedupdate)
             {
                 //通知更新所有节点监听者
-                var bus = _provider.GetService<RabbitScope>().Bus;
+                var bus = _provider.GetService<NatsScope>().Bus;
                 bus.PubSub.Publish(string.Empty, "/RuleNode.Change");
             }
         }

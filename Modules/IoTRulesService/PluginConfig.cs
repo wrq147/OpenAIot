@@ -51,7 +51,7 @@ namespace IoTRulesService
             {
                 TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
                 {
-                    var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     await bus.PubSub.SubscribeAsync("IotRule", async (string msg) =>
                     {
                         await app.ServiceProvider.GetService<MessageRunner>().ParseExe(msg);
@@ -115,7 +115,7 @@ namespace IoTRulesService
                 //监听规则变更
                 TAAsyncHelper.RunSync(async () =>
                 {
-                    var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     string subid = string.IsNullOrEmpty(option.Value.node_name) ? "HelloWorld" : option.Value.node_name;
                     await bus.PubSub.SubscribeAsync<RuleChangeEvent>(subid, (msg, tk) =>
                     {
@@ -181,7 +181,7 @@ namespace IoTRulesService
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
                 var cache = app.ServiceProvider.GetService<CacheHelper>();
-                var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
+                var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                 bus.PubSub.Subscribe<string>("IotKeyDel" + Guid.NewGuid().ToString("N"), (msg) =>
                 {
                     string tmpkey = msg;

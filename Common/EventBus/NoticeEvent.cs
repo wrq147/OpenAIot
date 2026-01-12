@@ -1,11 +1,9 @@
-﻿using EasyNetQ;
-using System;
+﻿using System;
 namespace Common.EventBus
 {
     /// <summary>
     /// 消息事件
     /// </summary>
-    [QueueAttribute("notice_queue", ExchangeName = "notice_exchange")]
     public class NoticeEvent
     {
         public const string EventKey = "/EV.BUS.NOTICE";

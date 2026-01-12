@@ -310,6 +310,12 @@
             表示业务繁忙,请稍候重试
             </summary>
         </member>
+        <member name="F:Common.Constants.PARSE_ERR">
+            <summary>
+            错误代码
+            数据解释异常
+            </summary>
+        </member>
         <member name="F:Common.Constants.PARAM_ERR">
             <summary>
             错误代码
@@ -543,6 +549,28 @@
             业务名称
             </summary>
         </member>
+        <member name="M:Common.EventBus.DefalutNatsJsonSerializer`1.Deserialize(System.Buffers.ReadOnlySequence{System.Byte}@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Common.EventBus.NatsScope.Dispatch``1(System.String,``0)">
+            <summary>
+            分发事件
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="evt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Common.EventBus.NatsScope.DispathWait``2(System.String,``0)">
+            <summary>
+            分发事件并等待处理结果
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="Z"></typeparam>
+            <param name="key"></param>
+            <param name="evt"></param>
+            <returns></returns>
+        </member>
         <member name="T:Common.EventBus.NoticeEvent">
             <summary>
             消息事件
@@ -601,25 +629,6 @@
             <summary>
             获取method方法参数相关列表
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Common.EventBus.RabbitScope.Dispatch``1(System.String,``0)">
-            <summary>
-            分发事件
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="key"></param>
-            <param name="evt"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Common.EventBus.RabbitScope.DispathWait``2(System.String,``0)">
-            <summary>
-            分发事件并等待处理结果
-            </summary>
-            <typeparam name="T"></typeparam>
-            <typeparam name="Z"></typeparam>
-            <param name="key"></param>
-            <param name="evt"></param>
             <returns></returns>
         </member>
         <member name="M:Common.ExcelHelper.ExportToBuffer``1(System.String,System.Collections.Generic.List{``0},System.Collections.Generic.Dictionary{System.String,Common.ParamRenderToExcel{``0}})">

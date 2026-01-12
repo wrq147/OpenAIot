@@ -97,6 +97,8 @@ namespace Common.Share
         /// 事件总线连接字符串
         /// </summary>
         public string event_bus_conn { get; set; }
+        public string event_bus_user { get; set; }
+        public string event_bus_pass { get; set; }
         /// <summary>
         /// 临时文件上传key
         /// </summary>

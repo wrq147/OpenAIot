@@ -93,7 +93,7 @@ namespace TemplateAction.NetCore
         protected override void AfterInit()
         {
             TAAsyncHelper.RunSync(async () => {
-                await TAEventDispatcher.Instance.Dispatch(_kestrelServerOptions).ConfigureAwait(false);
+                await TAEventDispatcher.Instance.DispatchInternal(_kestrelServerOptions).ConfigureAwait(false);
             });
             _requestDelegate = _appBuilder.Build();
             base.AfterInit();

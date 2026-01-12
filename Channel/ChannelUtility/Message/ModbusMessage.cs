@@ -2,7 +2,7 @@
 
 namespace ChannelUtility.Message
 {
-    public class ModbusMessage : RequestMessage
+    public class ModbusMessage : BaseDeviceMessage
     {
         /// <summary>
         /// Modbus匹配规则名称

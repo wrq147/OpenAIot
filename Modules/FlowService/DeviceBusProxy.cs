@@ -82,13 +82,13 @@ namespace FlowService
             msg.EventId = eventId;
             msg.Outputs = outputs;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PubSub.PublishAsync(JsonConvert.SerializeObject(msg), GetUpKey(deviceId));
         }
 
         private async Task<FunctionInvokeMessageReply> WaitDown(Out_FlowDevice device, FunctionInvokeMessage msg)
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
 
             //8秒后自动取消
             using var cts = new CancellationTokenSource(8000);

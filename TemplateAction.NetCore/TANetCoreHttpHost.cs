@@ -81,7 +81,7 @@ namespace TemplateAction.NetCore
 
             TAAsyncHelper.RunSync(async () =>
             {
-                await TAEventDispatcher.Instance.Dispatch(_appBuilder).ConfigureAwait(false);
+                await TAEventDispatcher.Instance.DispatchInternal(_appBuilder).ConfigureAwait(false);
             });
             _app = new TANetCoreHttpApplication(_appBuilder, _kestrelOptions, services);
             _app.Init(_workroot, Assembly.GetEntryAssembly());

@@ -4,6 +4,8 @@ namespace MqttChannel
     public class MqttOption
     {
         public string event_conn { get; set; }
+        public string event_user { get; set; }
+        public string event_pass { get; set; }
         public string redis_conn { get; set; }
         /// <summary>
         /// 可以指定emqx服务器或传空使用本地mqtt服务

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TemplateAction.Common;
@@ -9,7 +8,7 @@ namespace TemplateAction.Core
     /// <summary>
     /// 全局事件分发器
     /// </summary>
-    public class TAEventDispatcher : AbstractEventDispatcher
+    public class TAEventDispatcher : IDispatcher
     {
         private List<IDispatcher> _scopelist = new List<IDispatcher>();
         private Dictionary<string, ITAEventHandler> _handlers;
@@ -20,7 +19,6 @@ namespace TemplateAction.Core
         private DefaultMultiHandler<PluginObject> _loadHandlers;
         private DefaultMultiHandler<string> _allLoadHandlers;
         private DefaultMultiHandler<PluginObject> _unloadHandlers;
-        private Dictionary<string, ITAResponseEventHandler> _responseHandlers;
         private class Nested
         {
             // 显式静态构造告诉C＃编译器未标记类型BeforeFieldInit
@@ -31,7 +29,6 @@ namespace TemplateAction.Core
         private TAEventDispatcher()
         {
             _handlers = new Dictionary<string, ITAEventHandler>();
-            _responseHandlers = new Dictionary<string, ITAResponseEventHandler>();
         }
         /// <summary>
         /// 事件分发扩展
@@ -54,16 +51,11 @@ namespace TemplateAction.Core
             }
         }
 
-        public override void Register(string key, ITAEventHandler handler)
+        public void RegisterInternal<T>(DefaultMultiHandler<T> handler) where T : class
         {
+            string key = typeof(T).ToString();
             _handlers[key] = handler;
         }
-
-        public override void RegisterReponse(string key, ITAResponseEventHandler handler)
-        {
-            _responseHandlers[key] = handler;
-        }
-
         /// <summary>
         /// 监听应用加载前初始化事件
         /// </summary>
@@ -71,11 +63,11 @@ namespace TemplateAction.Core
         /// <param name="ac"></param>
         public void RegisterLoadBefore<T>(Action<T> ac) where T : TAAbstractApplication
         {
-            Register(BEFORE_EVENT, new DefaultHandler<T>((p) =>
+            _handlers[BEFORE_EVENT] = new DefaultHandler<T>((p) =>
             {
                 ac(p);
                 return Task.CompletedTask;
-            }));
+            });
         }
 
         /// <summary>
@@ -93,7 +85,7 @@ namespace TemplateAction.Core
                     ac(p);
                     return Task.CompletedTask;
                 });
-                Register(PLUGIN_LOAD_EVENT, _loadHandlers);
+                _handlers[PLUGIN_LOAD_EVENT] = _loadHandlers;
             }
             else
             {
@@ -114,7 +106,7 @@ namespace TemplateAction.Core
             {
                 _allLoadHandlers = new DefaultMultiHandler<string>();
                 _allLoadHandlers.Register(ac);
-                Register(PLUGIN_ALL_LOAD_EVENT, _allLoadHandlers);
+                _handlers[PLUGIN_ALL_LOAD_EVENT] = _allLoadHandlers;
             }
             else
             {
@@ -136,7 +128,7 @@ namespace TemplateAction.Core
                     ac(p);
                     return Task.CompletedTask;
                 });
-                Register(PLUGIN_UNLOAD_EVENT, _unloadHandlers);
+                _handlers[PLUGIN_UNLOAD_EVENT] = _unloadHandlers;
             }
             else
             {
@@ -158,7 +150,7 @@ namespace TemplateAction.Core
         {
             TAAsyncHelper.RunSync(async () =>
             {
-                await Dispatch(PLUGIN_LOAD_EVENT, plugin).ConfigureAwait(false);
+                await DispatchInternal(PLUGIN_LOAD_EVENT, plugin).ConfigureAwait(false);
             });
         }
         /// <summary>
@@ -168,7 +160,7 @@ namespace TemplateAction.Core
         {
             TAAsyncHelper.RunSync(async () =>
             {
-                await Dispatch(PLUGIN_ALL_LOAD_EVENT, string.Empty).ConfigureAwait(false);
+                await DispatchInternal(PLUGIN_ALL_LOAD_EVENT, string.Empty).ConfigureAwait(false);
             });
         }
         /// <summary>
@@ -180,7 +172,7 @@ namespace TemplateAction.Core
         {
             TAAsyncHelper.RunSync(async () =>
             {
-                await Dispatch(PLUGIN_UNLOAD_EVENT, plugin).ConfigureAwait(false);
+                await DispatchInternal(PLUGIN_UNLOAD_EVENT, plugin).ConfigureAwait(false);
             });
         }
 
@@ -193,40 +185,48 @@ namespace TemplateAction.Core
         {
             TAAsyncHelper.RunSync(async () =>
             {
-                await Dispatch(BEFORE_EVENT, app).ConfigureAwait(false);
+                await DispatchInternal(BEFORE_EVENT, app).ConfigureAwait(false);
             });
 
         }
 
-        public async Task Dispatch<T>(T evt) where T : class
-        {
-            await Dispatch(typeof(T).ToString(), evt);
-        }
-        /// <summary>
-        /// 分发事件
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="evt"></param>
-        public override async Task Dispatch<T>(string key, T evt)
+
+        internal async Task DispatchInternal<T>(string key, T evt) where T : class
         {
             ITAEventHandler rt;
             if (_handlers.TryGetValue(key, out rt))
             {
                 await rt.OnEventAsync(evt);
             }
+        }
+
+        public async Task DispatchInternal<T>(T evt) where T : class
+        {
+            await DispatchInternal(typeof(T).ToString(), evt);
+        }
+        /// <summary>
+        /// 分发总线事件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="evt"></param>
+        public async Task Dispatch<T>(string key, T evt) where T : class
+        {
             for (int i = 0; i < _scopelist.Count; i++)
             {
                 await _scopelist[i].Dispatch(key, evt);
             }
         }
-        public override async Task<Z> DispathWait<T, Z>(string key, T evt)
+        /// <summary>
+        /// 分发总线事件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="Z"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="evt"></param>
+        /// <returns></returns>
+        public async Task<Z> DispathWait<T, Z>(string key, T evt) where T : ResponseEvent where Z : EvtResponse
         {
-            ITAResponseEventHandler rt;
-            if (_responseHandlers.TryGetValue(key, out rt))
-            {
-                return await rt.OnEventWaitAsync<T, Z>(evt);
-            }
             for (int i = 0; i < _scopelist.Count; i++)
             {
                 var rsp = await _scopelist[i].DispathWait<T, Z>(key, evt);

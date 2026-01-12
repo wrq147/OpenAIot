@@ -1,15 +1,12 @@
 ﻿using Common.Share;
-using EasyNetQ;
 using Microsoft.Extensions.Options;
+using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using TemplateAction.Common;
 using TemplateAction.Core;
 using TemplateAction.Core.Dispatcher;
+
 
 namespace Common.EventBus
 {
@@ -58,21 +55,25 @@ namespace Common.EventBus
                 }
                 else
                 {
-                    var bus = plg.Collection.GetService<RabbitScope>().Bus;
-                    bus.PubSub.SubscribeAsync<BusEvent>("Bussin" + plg.Name, async (bs) =>
+                    Task.Run(async () =>
                     {
-                        foreach (var item in newItems)
+                        var bus = plg.Collection.GetService<NatsScope>().Bus;
+                        await foreach (var msg in bus.SubscribeAsync(BusEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<BusEvent>.Default))
                         {
-                            if (item.name == bs.Name && item.func != null)
+                            if (msg.Data == null)
                             {
-                                await item.func.Invoke(bs);
+                                continue;
+                            }
+                            foreach (var item in newItems)
+                            {
+                                if (item.name == msg.Data.Name && item.func != null)
+                                {
+                                    await item.func.Invoke(msg.Data);
+                                }
                             }
                         }
-                    }, cfg =>
-                    {
-                        cfg.WithTopic(BusEvent.EventKey);
-                        cfg.WithAutoDelete(true);
                     });
+
                 }
             }
 
@@ -123,27 +124,35 @@ namespace Common.EventBus
                 }
                 else
                 {
-                    var bus = plg.Collection.GetService<RabbitScope>().Bus;
-                    bus.PubSub.SubscribeAsync<CallEvent>("Bussin" + plg.Name, async (bs) =>
+                    Task.Run(async () =>
                     {
-                        CallResponse rs = CallResponse.Next();
-                        foreach (var item in newItems)
+                        var bus = plg.Collection.GetService<NatsScope>().Bus;
+                        await foreach (var msg in bus.SubscribeAsync(CallEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<CallEvent>.Default))
                         {
-                            if (item.name == bs.Name && item.func != null)
+                            if (msg.Data == null)
                             {
-                                rs = await item.func.Invoke(bs);
-                                break;
+                                continue;
+                            }
+                            CallResponse rs = CallResponse.Next();
+                            foreach (var item in newItems)
+                            {
+                                if (item.name == msg.Data.Name && item.func != null)
+                                {
+                                    rs = await item.func.Invoke(msg.Data);
+                                    break;
+                                }
+                            }
+                            if (rs.IsDone && !string.IsNullOrEmpty(msg.ReplyTo))
+                            {
+                                await bus.PublishAsync<CallResponse>(new NatsMsg<CallResponse>()
+                                {
+                                    Subject = msg.ReplyTo,
+                                    Data = rs
+                                }, DefalutNatsJsonSerializer<CallResponse>.Default);
                             }
                         }
-                        if (rs.IsDone)
-                        {
-                            await bus.SendReceive.SendAsync("dispatch.response." + bs.MessageId, rs);
-                        }
-                    }, cfg =>
-                    {
-                        cfg.WithTopic(CallEvent.EventKey);
-                        cfg.WithAutoDelete(true);
                     });
+                 
                 }
             }
 
@@ -163,14 +172,17 @@ namespace Common.EventBus
             }
             else
             {
-                var bus = plg.Collection.GetService<RabbitScope>().Bus;
-                bus.PubSub.SubscribeAsync<NoticeEvent>("Bussin" + plg.Name, async (bs) =>
+                Task.Run(async () =>
                 {
-                    await ac.Invoke(bs);
-                }, cfg =>
-                {
-                    cfg.WithTopic(NoticeEvent.EventKey);
-                    cfg.WithAutoDelete(true);
+                    var bus = plg.Collection.GetService<NatsScope>().Bus;
+                    await foreach (var msg in bus.SubscribeAsync(NoticeEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<NoticeEvent>.Default))
+                    {
+                        if (msg.Data == null)
+                        {
+                            continue;
+                        }
+                        await ac.Invoke(msg.Data);
+                    }
                 });
             }
         }
@@ -184,15 +196,19 @@ namespace Common.EventBus
             }
             else
             {
-                var bus = plg.Collection.GetService<RabbitScope>().Bus;
-                bus.PubSub.SubscribeAsync<TimeEvent>("Bussin" + plg.Name, async (bs) =>
+                Task.Run(async () =>
                 {
-                    await ac.Invoke(bs);
-                }, cfg =>
-                {
-                    cfg.WithTopic(TimeEvent.EventKey);
-                    cfg.WithAutoDelete(true);
+                    var bus = plg.Collection.GetService<NatsScope>().Bus;
+                    await foreach (var msg in bus.SubscribeAsync(TimeEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<TimeEvent>.Default))
+                    {
+                        if (msg.Data == null)
+                        {
+                            continue;
+                        }
+                        await ac.Invoke(msg.Data);
+                    }
                 });
+
             }
         }
 
@@ -269,49 +285,64 @@ namespace Common.EventBus
             }
             else
             {
-                var bus = plg.Collection.GetService<RabbitScope>().Bus;
-                bus.PubSub.SubscribeAsync<QuartzExeEvent>("Quartz_" + plg.Name, async (bs) =>
+                Task.Run(async () =>
                 {
-                    try
+                    var bus = plg.Collection.GetService<NatsScope>().Bus;
+                    await foreach (var msg in bus.SubscribeAsync($"{QuartzExeEvent.EventKey}.{plg.Name}", "Quartz_" + plg.Name, DefalutNatsJsonSerializer<QuartzExeEvent>.Default))
                     {
-                        List<object> methodParams = bs.GetMethodParams();
-                        object obj = plg.Collection.GetService(bs.ClassName);
-                        if (obj == null)
+                        if (msg.Data == null)
                         {
-                            throw new Exception("获取不到类：" + bs.ClassName);
+                            continue;
                         }
-                        object rt;
-                        if (methodParams == null)
+                        try
                         {
-                            rt = obj.GetType().GetMethod(bs.MethodName)?.Invoke(obj, null);
-                        }
-                        else
-                        {
-                            rt = obj.GetType().GetMethod(bs.MethodName)?.Invoke(obj, methodParams.ToArray());
-                        }
+                            List<object> methodParams = msg.Data.GetMethodParams();
+                            object obj = plg.Collection.GetService(msg.Data.ClassName);
+                            if (obj == null)
+                            {
+                                throw new Exception("获取不到类：" + msg.Data.ClassName);
+                            }
+                            object rt;
+                            if (methodParams == null)
+                            {
+                                rt = obj.GetType().GetMethod(msg.Data.MethodName)?.Invoke(obj, null);
+                            }
+                            else
+                            {
+                                rt = obj.GetType().GetMethod(msg.Data.MethodName)?.Invoke(obj, methodParams.ToArray());
+                            }
 
-                        if (rt is Task t)
-                        {
-                            await t;
+                            if (rt is Task t)
+                            {
+                                await t;
+                            }
+                            if (msg.Data.DisConcurrent)
+                            {
+                                await bus.PublishAsync<QuartzExeResponse>(new NatsMsg<QuartzExeResponse>()
+                                {
+                                    Subject = msg.ReplyTo,
+                                    Data = QuartzExeResponse.Success()
+                                }, DefalutNatsJsonSerializer<QuartzExeResponse>.Default);
+                            }
                         }
-                        if (bs.DisConcurrent)
+                        catch (Exception ex)
                         {
-                            await bus.SendReceive.SendAsync("dispatch.response." + bs.MessageId, QuartzExeResponse.Success());
+                            if (msg.Data.DisConcurrent)
+                            {
+                                await bus.PublishAsync<QuartzExeResponse>(new NatsMsg<QuartzExeResponse>()
+                                {
+                                    Subject = msg.ReplyTo,
+                                    Data = QuartzExeResponse.Error(99, ex.Message)
+                                }, DefalutNatsJsonSerializer<QuartzExeResponse>.Default);
+                            }
+                            Console.Write(ex.Message);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        if (bs.DisConcurrent)
-                        {
-                            await bus.SendReceive.SendAsync("dispatch.response." + bs.MessageId, QuartzExeResponse.Error(99, ex.Message));
-                        }
-                        Console.Write(ex.Message);
-                    }
-                }, cfg =>
-                {
-                    cfg.WithTopic($"{QuartzExeEvent.EventKey}.{plg.Name}");
-                    cfg.WithAutoDelete(true);
                 });
+                
+
+
+
             }
 
         }

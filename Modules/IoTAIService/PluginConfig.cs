@@ -80,7 +80,7 @@ namespace IoTAIService
             AIDetectResponseMessage msg = new AIDetectResponseMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await bus.PubSub.PublishAsync(msgbody, "/node." + nodeid).ConfigureAwait(false);
         }

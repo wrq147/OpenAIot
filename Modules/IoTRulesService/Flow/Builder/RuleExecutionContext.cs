@@ -763,7 +763,7 @@ namespace IoTRulesService.Flow.Builder
         }
         public async Task Print(object msg)
         {
-            var bus = _provider.GetService<RabbitScope>().Bus;
+            var bus = _provider.GetService<NatsScope>().Bus;
 
             List<string> data = new List<string>();
             data.Add("console/zrule" + _ruleId);

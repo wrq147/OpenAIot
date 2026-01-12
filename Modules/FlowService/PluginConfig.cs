@@ -51,7 +51,7 @@ namespace FlowService
                 var generalOption = app.ServiceProvider.GetService<IOptions<GeneralOption>>();
                 if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
                 {
-                    var bus = app.ServiceProvider.GetService<RabbitScope>().Bus;
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     await bus.PubSub.SubscribeAsync<string>("RuleNode" + MyAccess.Core.StringTool.GetGUID(), (msg) =>
                     {
                         app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
