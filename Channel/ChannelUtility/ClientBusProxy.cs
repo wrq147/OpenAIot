@@ -222,7 +222,7 @@ namespace ChannelUtility
                             msg.DeviceId = deviceId;
                             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
 
-                            await ConfirmReplyAsync(null, msg).ConfigureAwait(false);
+                            await PublishAsync(msg).ConfigureAwait(false);
                             int tcount = 0;
                             while (tcount < 5)
                             {
@@ -388,20 +388,6 @@ namespace ChannelUtility
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
-        public async Task PushReply(string deviceId, string value, string msgId = null)
-        {
-            string tkey = msgId;
-            if (string.IsNullOrEmpty(tkey))
-            {
-                msgId = await _redis.ListLeftPopAsync<string>($"DeviceMsgId:{deviceId}").ConfigureAwait(false);
-                tkey = "subs:" + deviceId + msgId;
-            }
-            await _bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = tkey,
-                Data = value
-            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-        }
 
         /// <summary>
         /// 上报事件
@@ -524,22 +510,15 @@ namespace ChannelUtility
         }
 
         /// <summary>
-        /// 发送确认回复包（异步）
+        /// 发送指定消息
         /// </summary>
-        /// <param name="msgId"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public async Task ConfirmReplyAsync(string msgId, BaseUpDeviceMessage msg)
+        public async Task PublishAsync(BaseUpDeviceMessage msg)
         {
-            string tkey = msgId;
-            if (string.IsNullOrEmpty(msgId))
-            {
-                tkey = GetUpKey(msg.DeviceId);
-            }
-
             await _bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = tkey,
+                Subject = GetUpKey(msg.DeviceId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
      
