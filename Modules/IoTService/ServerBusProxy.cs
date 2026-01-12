@@ -5,6 +5,7 @@ using Common.EventBus;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
 using System;
@@ -25,9 +26,11 @@ namespace IoTService
     public class ServerBusProxy
     {
         private ITAServiceProvider _provider;
-        public ServerBusProxy(ITAServiceProvider provider)
+        private ILogger<ServerBusProxy> _log;
+        public ServerBusProxy(ITAServiceProvider provider, ILoggerFactory logFactory)
         {
             _provider = provider;
+            _log = logFactory.CreateLogger<ServerBusProxy>();
         }
         public async Task PublishKeyDel(string key)
         {
@@ -106,16 +109,29 @@ namespace IoTService
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
-                string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                var replyMsg = await bus.RequestAsync<string, T>(GetDownKey(msg.DeviceId), msgbody, null, DefalutNatsJsonSerializer<string>.Default, DefalutNatsJsonSerializer<T>.Default, null, new NatsSubOpts()
+                var requestTimeout = TimeSpan.FromSeconds(8);
+                await using var resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
-                    Timeout = TimeSpan.FromSeconds(8)
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
                 });
 
-                return replyMsg.Data;
+
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+                await bus.PublishAsync(GetDownKey(msg.DeviceId), msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default);
+
+                await foreach (var responseMsg in resSub.Msgs.ReadAllAsync())
+                {
+                    return responseMsg.Data;
+                }
+                throw new TimeoutException($"等待 {requestTimeout.TotalSeconds} 秒后未收到回复");
+
             }
             catch (Exception ex)
             {
+                _log.LogError(ex.Message);
                 return null;
             }
         }

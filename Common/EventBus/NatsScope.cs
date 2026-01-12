@@ -77,16 +77,19 @@ namespace Common.EventBus
             where T : ResponseEvent
             where Z : EvtResponse
         {
-            int waitTime = 8;
+            var requestTimeout = TimeSpan.FromSeconds(8);
             if (evt is QuartzExeEvent)
             {
-                waitTime = 60;
+                requestTimeout = TimeSpan.FromSeconds(60);
             }
             try
             {
                 var replyMsg = await Bus.RequestAsync<T, Z>(key, evt, null, DefalutNatsJsonSerializer<T>.Default, DefalutNatsJsonSerializer<Z>.Default, null, new NatsSubOpts()
                 {
-                    Timeout = TimeSpan.FromSeconds(waitTime)
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
                 });
                 if (replyMsg.Data == null)
                 {

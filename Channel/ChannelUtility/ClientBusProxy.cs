@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace ChannelUtility
@@ -451,9 +450,13 @@ namespace ChannelUtility
                 msg.DeviceId = nodeId;
                 msg.ProductId = string.Empty;
                 msg.UserName = username;
+                var requestTimeout = TimeSpan.FromSeconds(8);
                 var replyMsg = await Bus.RequestAsync<string, string>(GetUpKey(nodeId), System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), null, ChannelNatsJsonSerializer<string>.Default, ChannelNatsJsonSerializer<string>.Default, null, new NatsSubOpts()
                 {
-                    Timeout = TimeSpan.FromSeconds(8)
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
                 });
 
                 return replyMsg.Data;
