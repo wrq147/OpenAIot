@@ -102,9 +102,6 @@
           MsgType:String;
           ProductId:String;
           DeviceId:String;
-        }
-        declare class RequestMessage extends BaseDeviceMessage
-        {
           MessageId:String;
         }
         declare class BaseUpDeviceMessage extends BaseDeviceMessage
@@ -124,7 +121,7 @@
           EventId:String;
           Outputs:Object;
         }
-        declare class FunctionInvokeMessage extends RequestMessage
+        declare class FunctionInvokeMessage extends BaseDeviceMessage
         {
             FunctionId:String;
             Inputs:Object;
@@ -159,9 +156,9 @@
           GetProps():Object;
           /**
            * 获取当前下发消息
-           * @returns {RequestMessage} 返回请求消息
+           * @returns {BaseDeviceMessage} 返回请求消息
            */
-          Message():RequestMessage;
+          Message():BaseDeviceMessage;
           /**
            * 创建写用字节流
            * @returns {FastWriter} 返回写用字节流
@@ -363,7 +360,7 @@
          */
         PollTime:Number;
       }
-      declare class ReadPropertyMessage extends RequestMessage
+      declare class ReadPropertyMessage extends BaseDeviceMessage
       {
         /**
          * 可读取多个属性

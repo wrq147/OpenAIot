@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
@@ -14,9 +13,6 @@ using MQTTnet.Server;
 using Microsoft.AspNetCore.Builder;
 using Common.Share;
 using Common.EventBus;
-using TemplateAction.Common;
-using Common;
-using EasyNetQ;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
@@ -114,39 +110,45 @@ namespace MqttService
                 {
                     var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     string tmpsubid = string.IsNullOrEmpty(option.Value.node_name) ? "Mqtt" : option.Value.node_name;
-                    await bus.PubSub.SubscribeAsync<List<string>>(tmpsubid, async (msg, tk) =>
+                    Task t1 = Task.Run(async () =>
                     {
-                        if (!option.Value.enable_emqx)
+                        await foreach (var msg in bus.SubscribeAsync("/MqttNotice.Msg", tmpsubid, DefalutNatsJsonSerializer<List<string>>.Default))
                         {
-                            await app.ServiceProvider.GetService<MqttController>().NoticeData(msg[0], msg[1]);
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
+                            if (!option.Value.enable_emqx)
+                            {
+                                await app.ServiceProvider.GetService<MqttController>().NoticeData(msg.Data[0], msg.Data[1]);
+                            }
+                            else
+                            {
+                                await app.ServiceProvider.GetService<EmqxController>().NoticeData(msg.Data[0], msg.Data[1]);
+                            }
                         }
-                        else
-                        {
-                            await app.ServiceProvider.GetService<EmqxController>().NoticeData(msg[0], msg[1]);
-                        }
-                    }, cfg =>
-                    {
-                        cfg.WithTopic("/MqttNotice.Msg");
-                        cfg.WithAutoDelete(true);
                     });
 
-                    await bus.PubSub.SubscribeAsync<string>(tmpsubid, async (msg, token) =>
+                    Task t2 = Task.Run(async () =>
                     {
-                        //发送前端mqtt通知
-                        if (!option.Value.enable_emqx)
+                        await foreach (var msg in bus.SubscribeAsync("/Mqtt.User.New", tmpsubid, DefalutNatsJsonSerializer<string>.Default))
                         {
-                            await app.ServiceProvider.GetService<MqttController>().NoticeUpdate(msg);
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
+                            //发送前端mqtt通知
+                            if (!option.Value.enable_emqx)
+                            {
+                                await app.ServiceProvider.GetService<MqttController>().NoticeUpdate(msg.Data);
+                            }
+                            else
+                            {
+                                await app.ServiceProvider.GetService<EmqxController>().NoticeUpdate(msg.Data);
+                            }
                         }
-                        else
-                        {
-                            await app.ServiceProvider.GetService<EmqxController>().NoticeUpdate(msg);
-                        }
-
-                    }, cfg =>
-                    {
-                        cfg.WithTopic("/Mqtt.User.New");
-                        cfg.WithAutoDelete(true);
                     });
+
                 }
                 else
                 {

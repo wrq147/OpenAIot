@@ -11,18 +11,18 @@ namespace IoTRulesService.DataParser.Js
 {
     public class MessageContext
     {
-        protected RequestMessage _msg;
+        protected BaseDeviceMessage _msg;
         protected PackParser _client;
         protected TslModel _model;
         protected string _prefix;
-        public MessageContext(RequestMessage msg, PackParser client, TslModel model, string prefix)
+        public MessageContext(BaseDeviceMessage msg, PackParser client, TslModel model, string prefix)
         {
             _msg = msg;
             _client = client;
             _model = model;
             _prefix = prefix;
         }
-        public RequestMessage Message()
+        public BaseDeviceMessage Message()
         {
             return _msg;
         }

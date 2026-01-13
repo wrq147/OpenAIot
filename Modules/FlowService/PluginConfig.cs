@@ -9,10 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
-using EasyNetQ;
-using System.Threading.Tasks;
 
 namespace FlowService
 {
@@ -51,19 +50,15 @@ namespace FlowService
                 var generalOption = app.ServiceProvider.GetService<IOptions<GeneralOption>>();
                 if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
                 {
-                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                    await bus.PubSub.SubscribeAsync<string>("RuleNode" + MyAccess.Core.StringTool.GetGUID(), (msg) =>
+                    Task _ = Task.Run(async () =>
                     {
-                        app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
-                    }, cfg =>
-                    {
-                        cfg.WithTopic("/RuleNode.Change");
-                        cfg.WithAutoDelete(true);
+                        var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+                        await foreach (var msg in bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default))
+                        {
+                            app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
+                        }
                     });
-
                 }
-
-
             });
             //监听创建新的流程
             plg.RegisterCall("NewFlowTask", async (bs) =>

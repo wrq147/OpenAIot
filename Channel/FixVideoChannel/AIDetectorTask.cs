@@ -1,12 +1,15 @@
-﻿using ChannelUtility;
-using ChannelUtility.Message;
+﻿using ChannelUtility.Message;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Threading.Tasks;
 namespace FixVideoChannel
 {
     public class AIDetectorTask

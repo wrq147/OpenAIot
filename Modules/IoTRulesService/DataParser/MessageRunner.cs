@@ -23,13 +23,15 @@ namespace IoTRulesService.DataParser
         {
             _provider = provider;
         }
+
         /// <summary>
         /// 单线程处理所有的消息
         /// </summary>
         /// <param name="msg"></param>
+        /// <param name="replyTo"></param>
         /// <returns></returns>
 
-        public async Task ParseExe(string msg)
+        public async Task ParseExe(string msg, string replyTo)
         {
             if (string.IsNullOrEmpty(msg))
             {
@@ -40,6 +42,10 @@ namespace IoTRulesService.DataParser
             }
 
             var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+            if (string.IsNullOrEmpty(rs.MessageId))
+            {
+                rs.MessageId = replyTo;
+            }
             if (rs is RawUpDataMessage rawUpData)
             {
                 await _provider.GetService<DeviceMessageHandler>().ParseMessage(rawUpData);
@@ -56,13 +62,13 @@ namespace IoTRulesService.DataParser
                 }
             }
         }
-        public async Task ParseDown(RequestMessage msg)
+        public async Task ParseDown(BaseDeviceMessage msg)
         {
             await _provider.GetService<DeviceMessageHandler>().ParseDown(msg);
         }
         public async Task ParseDown(string msg)
         {
-            var rs = System.Text.Json.JsonSerializer.Deserialize<RequestMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+            var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
             await this.ParseDown(rs);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
+using Minio.Credentials;
 using NATS.Client.Core;
 using System;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace Common.EventBus
                                 ConnectTimeout = TimeSpan.FromSeconds(5)
                             };
                             _bus = new NatsConnection(opts);
+                            _bus.ConnectAsync().AsTask().Wait();
                         }
                     }
                 }

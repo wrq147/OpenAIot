@@ -4,16 +4,17 @@ using ChannelUtility.Message;
 using ChannelUtility.Tsl;
 using Common;
 using Common.EventBus;
-using EasyNetQ;
 using IoTRulesService.DataParser.GraphScript;
 using IoTRulesService.DataParser.Js;
 using IoTService;
-using IoTService.DAL;
 using Jint;
 using Jint.Native;
 using Jint.Runtime;
 using Jint.Runtime.Interop;
-using Org.BouncyCastle.Asn1.Pkcs;
+using log4net;
+using Microsoft.Extensions.Logging;
+using NATS.Client.Core;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -40,16 +41,18 @@ namespace IoTRulesService.DataParser
         private ConcurrentDictionary<string, CacheJsEngine> _scriptEngine = new ConcurrentDictionary<string, CacheJsEngine>();
         private NatsScope _busScope;
         private IotRedisHelper _iotRedis;
+        private ILogger<PackParser> _log;
         public class CacheJsEngine
         {
             public Engine Engine { get; set; }
             public string Script { get; set; }
         }
-        public PackParser(ITAServiceProvider provider, NatsScope busScope, IotRedisHelper iotRedis)
+        public PackParser(ITAServiceProvider provider, NatsScope busScope, IotRedisHelper iotRedis, ILoggerFactory logFactory)
         {
             _provider = provider;
             _busScope = busScope;
             _iotRedis = iotRedis;
+            _log = logFactory.CreateLogger<PackParser>();
         }
 
         private Engine GetJsEngine(string deviceId, string script)
@@ -137,7 +140,12 @@ namespace IoTRulesService.DataParser
             }
             else
             {
-                await _busScope.Bus.SendReceive.SendAsync("bus.response." + msgId, msg).ConfigureAwait(false);
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+                await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+                {
+                    Subject = msgId,
+                    Data = msgbody
+                }, DefalutNatsJsonSerializer<string>.Default);
             }
         }
         public async Task StartReadAllMessage(string productId, string deviceId, List<string> props)
@@ -149,57 +157,59 @@ namespace IoTRulesService.DataParser
             msg.props = props;
             await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
         }
-
-        public async Task<ReadPropertyMessageReply> PublicWaitReadProperty(ReadPropertyMessage msg)
+        private async Task<T> WaitDownPackage<I, T>(I msg) where I : BaseDeviceMessage where T : BaseUpDeviceMessage
         {
-            await StartReadAllMessage(msg.ProductId, msg.DeviceId, msg.Properties);
-
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<ReadPropertyMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            using var rs = await _busScope.Bus.SendReceive.ReceiveAsync<ReadPropertyMessageReply>("bus.response." + msg.MessageId, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token);
             try
             {
-                await this.PublicMessage(msg, null).ConfigureAwait(false);
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                return reply;
+                TslReturn ret = null;
+                if (string.IsNullOrEmpty(msg.ProductId))
+                {
+                    ret = await TslCache.GetTslModelByDtuId(msg.DeviceId, false, _provider).ConfigureAwait(false);
+                    msg.ProductId = ret.ProductId;
+                }
+                else
+                {
+                    ret = await TslCache.GetTslModel(msg.ProductId, _provider).ConfigureAwait(false);
+                }
+
+                var bus = _provider.GetService<NatsScope>().Bus;
+                var requestTimeout = TimeSpan.FromSeconds(8);
+                await using var resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
+                {
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
+                }).ConfigureAwait(false);
+
+
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+                await bus.PublishAsync("/device." + ret.NetworkWay + ".down", msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+
+                await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
+                {
+                    return responseMsg.Data;
+                }
+                throw new TimeoutException($"等待 {requestTimeout.TotalSeconds} 秒后未收到回复");
+
             }
             catch (Exception ex)
             {
+                _log.LogError(ex.Message);
                 return null;
             }
+        }
+        public async Task<ReadPropertyMessageReply> PublicWaitReadProperty(ReadPropertyMessage msg)
+        {
+            await StartReadAllMessage(msg.ProductId, msg.DeviceId, msg.Properties);
+            var reply = await WaitDownPackage<ReadPropertyMessage, ReadPropertyMessageReply>(msg).ConfigureAwait(false);
+            return reply;
         }
 
         public async Task<FunctionInvokeMessageReply> PublicWaitFuncReply(FunctionInvokeMessage msg)
         {
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            using var rs = await _busScope.Bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token).ConfigureAwait(false);
-            try
-            {
-                await this.PublicMessage(msg, null).ConfigureAwait(false);
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                return reply;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            var reply = await WaitDownPackage<FunctionInvokeMessage, FunctionInvokeMessageReply>(msg).ConfigureAwait(false);
+            return reply;
         }
         /// <summary>
         /// 向前端发送功能命令
@@ -212,7 +222,11 @@ namespace IoTRulesService.DataParser
             List<string> data = new List<string>();
             data.Add("newfun/" + devId);
             data.Add(cmd);
-            await _busScope.Bus.PubSub.PublishAsync(data, "/MqttNotice.Msg").ConfigureAwait(false);
+            await _busScope.Bus.PublishAsync(new NatsMsg<List<string>>()
+            {
+                Subject = "/MqttNotice.Msg",
+                Data = data
+            }, DefalutNatsJsonSerializer<List<string>>.Default).ConfigureAwait(false);
         }
         /// <summary>
         /// 获取指定设备的当前所有属性
@@ -283,8 +297,11 @@ namespace IoTRulesService.DataParser
             List<string> data = new List<string>();
             data.Add("console/" + devId);
             data.Add(tip + ":" + System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.SerializeOptions));
-
-            await _busScope.Bus.PubSub.PublishAsync(data, "/MqttNotice.Msg");
+            await _busScope.Bus.PublishAsync(new NatsMsg<List<string>>()
+            {
+                Subject = "/MqttNotice.Msg",
+                Data = data
+            }, DefalutNatsJsonSerializer<List<string>>.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -300,41 +317,43 @@ namespace IoTRulesService.DataParser
             {
                 msgId = await _iotRedis.ListLeftPopAsync<string>($"DeviceMsgId:{deviceId}").ConfigureAwait(false);
             }
-            string tkey = "subs:" + deviceId + msgId;
-            await _busScope.Bus.SendReceive.SendAsync("bus.response." + tkey, value).ConfigureAwait(false);
+
+            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = value
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         public async Task<string> WaitOnly(string deviceId, string msgId)
         {
             await _iotRedis.ListRightPushAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
-
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            string tkey = "subs:" + deviceId + msgId;
-            using var rs = await _busScope.Bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token).ConfigureAwait(false);
-
             try
             {
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                //清除系统消息Id
-                await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
-                return reply;
+                var requestTimeout = TimeSpan.FromSeconds(8);
+                await foreach (var msg in _busScope.Bus.SubscribeAsync(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
+                {
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
+                }).ConfigureAwait(false))
+                {
+                    //清除系统消息Id
+                    await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
+                    return msg.Data;
+                }
+                throw new TimeoutException($"等待 {requestTimeout.TotalSeconds} 秒后未收到回复");
             }
             catch (Exception ex)
             {
                 //清除系统消息Id
                 await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 await Print(deviceId, "异常", "未收到回复消息").ConfigureAwait(false);
+                _log.LogError(ex.Message);
                 return null;
             }
+
         }
 
         /// <summary>
@@ -352,33 +371,35 @@ namespace IoTRulesService.DataParser
             }
 
             await _iotRedis.ListRightPushAsync($"DeviceMsgId:{deviceId}", msgId);
-
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            string tkey = "subs:" + deviceId + msgId;
-            using var rs = await _busScope.Bus.SendReceive.ReceiveAsync<string>("bus.response." + tkey, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token).ConfigureAwait(false);
-
-            await ac.Invoke();
             try
             {
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                //清除系统消息Id
-                await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
-                return reply;
+                var bus = _provider.GetService<NatsScope>().Bus;
+                var requestTimeout = TimeSpan.FromSeconds(8);
+                await using var resSub = await bus.SubscribeCoreAsync<string>(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
+                {
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
+                }).ConfigureAwait(false);
+
+                await ac.Invoke();
+
+                await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
+                {          
+                    //清除系统消息Id
+                    await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
+                    return responseMsg.Data;
+                }
+                throw new TimeoutException($"等待 {requestTimeout.TotalSeconds} 秒后未收到回复");
+
             }
             catch (Exception ex)
             {
                 await Print(deviceId, "异常", "下发的消息无回复").ConfigureAwait(false);
                 //清除系统消息Id
                 await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
+                _log.LogError(ex.Message);
                 return null;
             }
         }
@@ -391,7 +412,12 @@ namespace IoTRulesService.DataParser
             msg.MatchList = list;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/device." + nodeid + ".guid").ConfigureAwait(false);
+
+            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/device." + nodeid + ".guid",
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         /// <summary>
         /// 直接调用下发消息
@@ -400,7 +426,7 @@ namespace IoTRulesService.DataParser
         /// <param name="ret"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task PublicMessage(RequestMessage msg, TslReturn ret)
+        public async Task PublicMessage(BaseDeviceMessage msg, TslReturn ret)
         {
             if (ret == null)
             {
@@ -424,7 +450,11 @@ namespace IoTRulesService.DataParser
                 }
                 var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PubSub.PublishAsync(msgbody, "/device." + ret.NetworkWay + ".down").ConfigureAwait(false);
+                await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+                {
+                    Subject = "/device." + ret.NetworkWay + ".down",
+                    Data = msgbody
+                }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
                 return;
             }
 
@@ -433,7 +463,12 @@ namespace IoTRulesService.DataParser
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PubSub.PublishAsync(msgbody, "/device." + ret.NetworkWay + ".down").ConfigureAwait(false);
+
+                await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+                {
+                    Subject = "/device." + ret.NetworkWay + ".down",
+                    Data = msgbody
+                }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             }
             else
             {
@@ -464,7 +499,12 @@ namespace IoTRulesService.DataParser
             msg.Error = errInfo;
             msg.Outputs = outputs;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            await _busScope.Bus.SendReceive.SendAsync("bus.response." + msgId, msg);
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         /// <summary>
         /// 发送设备绑定回复
@@ -483,7 +523,13 @@ namespace IoTRulesService.DataParser
             msg.IsSuccess = isSuccess;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.Reason = reason;
-            await _busScope.Bus.SendReceive.SendAsync("bus.response." + msgId, msg);
+
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         /// <summary>
         /// 解释自定义数据包
@@ -492,7 +538,7 @@ namespace IoTRulesService.DataParser
         /// <param name="model"></param>
         /// <param name="script"></param>
         /// <returns></returns>
-        private async Task<byte[]> ParseCustom(RequestMessage msg, TslModel model, string script)
+        private async Task<byte[]> ParseCustom(BaseDeviceMessage msg, TslModel model, string script)
         {
             if (!string.IsNullOrEmpty(script))
             {
@@ -1002,7 +1048,7 @@ namespace IoTRulesService.DataParser
                 await DownModbusMatch(datamsg.NodeId, newmmlist);
             }
         }
-        public async Task<RawDataMessage> toRawData(RequestMessage msg, TslReturn ret)
+        public async Task<RawDataMessage> toRawData(BaseDeviceMessage msg, TslReturn ret)
         {
 
             if (msg is ModbusMessage modbusMessage)

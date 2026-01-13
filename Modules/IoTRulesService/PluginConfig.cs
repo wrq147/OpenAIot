@@ -1,7 +1,7 @@
-﻿using Common;
+﻿using ChannelUtility;
+using Common;
 using Common.EventBus;
 using Common.Share;
-using EasyNetQ;
 using IoTRulesService.Business;
 using IoTRulesService.DAL;
 using IoTRulesService.DataParser;
@@ -52,36 +52,34 @@ namespace IoTRulesService
                 TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
                 {
                     var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                    await bus.PubSub.SubscribeAsync("IotRule", async (string msg) =>
+                    Task t1 = Task.Run(async () =>
                     {
-                        await app.ServiceProvider.GetService<MessageRunner>().ParseExe(msg);
-                    }, cfg =>
-                    {
+                        string tkey = "/device.up." + option.Value.node_name;
                         if (string.IsNullOrEmpty(option.Value.node_name))
                         {
-                            cfg.WithTopic("/device.up");
+                            tkey = "/device.up";
                         }
-                        else
+                        await foreach (var msg in bus.SubscribeAsync(tkey, "IotRule", DefalutNatsJsonSerializer<string>.Default))
                         {
-                            cfg.WithTopic("/device.up." + option.Value.node_name);
+                            await app.ServiceProvider.GetService<MessageRunner>().ParseExe(msg.Data, msg.ReplyTo);
                         }
-                        cfg.WithAutoDelete(true);
                     });
 
-                    await bus.PubSub.SubscribeAsync("IotDownM", async (string msg) =>
+                    Task t2 = Task.Run(async () =>
                     {
-                        await app.ServiceProvider.GetService<MessageRunner>().ParseDown(msg);
-                    }, cfg =>
-                    {
+                        string tkey = "/device.dwn." + option.Value.node_name;
                         if (string.IsNullOrEmpty(option.Value.node_name))
                         {
-                            cfg.WithTopic("/device.dwn");
+                            tkey = "/device.dwn";
                         }
-                        else
+                        await foreach (var msg in bus.SubscribeAsync(tkey, "IotDownM", DefalutNatsJsonSerializer<string>.Default))
                         {
-                            cfg.WithTopic("/device.dwn." + option.Value.node_name);
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
+                            await app.ServiceProvider.GetService<MessageRunner>().ParseDown(msg.Data);
                         }
-                        cfg.WithAutoDelete(true);
                     });
 
 
@@ -113,39 +111,39 @@ namespace IoTRulesService
 
 
                 //监听规则变更
-                TAAsyncHelper.RunSync(async () =>
+                Task.Run(async () =>
                 {
                     var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     string subid = string.IsNullOrEmpty(option.Value.node_name) ? "HelloWorld" : option.Value.node_name;
-                    await bus.PubSub.SubscribeAsync<RuleChangeEvent>(subid, (msg, tk) =>
+
+                    await foreach (var msg in bus.SubscribeAsync(RuleChangeEvent.EventKey, subid, DefalutNatsJsonSerializer<RuleChangeEvent>.Default))
                     {
-                        var tmpCache = app.ServiceProvider.GetService<RuleCache>();
-                        if (msg.ChangeType == 1)
+                        if (msg.Data == null)
                         {
-                            if (msg.IsDebug)
+                            continue;
+                        }
+                        var tmpCache = app.ServiceProvider.GetService<RuleCache>();
+                        if (msg.Data.ChangeType == 1)
+                        {
+                            if (msg.Data.IsDebug)
                             {
-                                tmpCache.StartDebug(msg.RuleId.ToString());
+                                tmpCache.StartDebug(msg.Data.RuleId.ToString());
                             }
                             else
                             {
-                                tmpCache.StopDebug(msg.RuleId.ToString());
+                                tmpCache.StopDebug(msg.Data.RuleId.ToString());
                             }
                         }
                         else
                         {
-                            foreach (var ruleItem in msg.Triggers)
+                            foreach (var ruleItem in msg.Data.Triggers)
                             {
                                 tmpCache.Clear(ruleItem.TopicDevice, ruleItem.TopicMsg);
                             }
                         }
-                        return Task.CompletedTask;
-                    }, cfg =>
-                    {
-
-                        cfg.WithTopic(RuleChangeEvent.EventKey);
-                        cfg.WithAutoDelete(true);
-                    }).ConfigureAwait(false);
+                    }
                 });
+
             }
             else
             {
@@ -180,25 +178,31 @@ namespace IoTRulesService
             //监听清除缓存
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
-                var cache = app.ServiceProvider.GetService<CacheHelper>();
-                var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                bus.PubSub.Subscribe<string>("IotKeyDel" + Guid.NewGuid().ToString("N"), (msg) =>
+
+                Task t1 = Task.Run(async () =>
                 {
-                    string tmpkey = msg;
-                    if (tmpkey.StartsWith("ProductSys:"))
+                    var cache = app.ServiceProvider.GetService<CacheHelper>();
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+
+
+                    await foreach (var msg in bus.SubscribeAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), DefalutNatsJsonSerializer<string>.Default))
                     {
-                        cache.RemoveCache(tmpkey);
+                        if (msg.Data == null)
+                        {
+                            continue;
+                        }
+                        string tmpkey = msg.Data;
+                        if (tmpkey.StartsWith("ProductSys:"))
+                        {
+                            cache.RemoveCache(tmpkey);
+                        }
+                        else if (tmpkey.StartsWith("Device:") || tmpkey.StartsWith("Offline:"))
+                        {
+                            string devid = tmpkey.Split(":")[1];
+                            app.ServiceProvider.GetService<DeviceCache>().ClearDevice(devid);
+                        }
+                        app.ServiceProvider.GetService<PackParser>().DelDevice(msg.Data);
                     }
-                    else if (tmpkey.StartsWith("Device:") || tmpkey.StartsWith("Offline:"))
-                    {
-                        string devid = tmpkey.Split(":")[1];
-                        app.ServiceProvider.GetService<DeviceCache>().ClearDevice(devid);
-                    }
-                    app.ServiceProvider.GetService<PackParser>().DelDevice(msg);
-                }, cfg =>
-                {
-                    cfg.WithTopic("/IotKey.Del");
-                    cfg.WithAutoDelete(true);
                 });
 
             });

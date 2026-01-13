@@ -1,28 +1,24 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
+using ChannelUtility.Tsl;
+using Common;
+using Common.EventBus;
 using IoTRulesService.Flow.Builder.Step;
+using IoTService;
+using IoTService.Business;
+using IoTService.DAL;
+using IoTService.Models;
 using Jint;
 using Jint.Native;
 using MonitorService.Model;
+using NATS.Client.Core;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using TemplateAction.Core;
 using System.Linq;
-using EasyNetQ;
-using Common.EventBus;
-using Common;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using ChannelUtility.Tsl;
-using IoTService;
-using Newtonsoft.Json;
-using IoTService.Business;
-using IoTService.Models;
-using IoTService.DAL;
-using AuthService.Model;
 using TemplateAction.Common;
-using NPOI.OpenXmlFormats.Dml;
-using System.Text.Json;
+using TemplateAction.Core;
 
 namespace IoTRulesService.Flow.Builder
 {
@@ -776,8 +772,11 @@ namespace IoTRulesService.Flow.Builder
                 data.Add("节点'" + this.Step.Name + "'" + ":" + Newtonsoft.Json.JsonConvert.SerializeObject(msg));
             }
 
-
-            await bus.PubSub.PublishAsync(data, "/MqttNotice.Msg").ConfigureAwait(false);
+            await bus.PublishAsync(new NatsMsg<List<string>>()
+            {
+                Subject = "/MqttNotice.Msg",
+                Data = data
+            }, DefalutNatsJsonSerializer<List<string>>.Default);
         }
 
         public async Task ExeScript(string name, string script)

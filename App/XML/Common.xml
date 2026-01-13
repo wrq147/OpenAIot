@@ -549,9 +549,6 @@
             业务名称
             </summary>
         </member>
-        <member name="M:Common.EventBus.DefalutNatsJsonSerializer`1.Deserialize(System.Buffers.ReadOnlySequence{System.Byte}@)">
-            <inheritdoc />
-        </member>
         <member name="M:Common.EventBus.NatsScope.Dispatch``1(System.String,``0)">
             <summary>
             分发事件

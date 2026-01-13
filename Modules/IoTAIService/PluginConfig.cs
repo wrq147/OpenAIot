@@ -1,22 +1,17 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
-using ChannelUtility.Tsl;
 using Common;
-using Common.DataAc;
 using Common.EventBus;
-using EasyNetQ;
 using IoTAIService.AICode;
 using IoTAIService.AIProject;
 using IoTAIService.Business;
 using IoTAIService.DAL;
-using IoTAIService.Models;
 using IoTRulesService.DataParser;
 using IoTService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Org.BouncyCastle.Asn1.Cms;
+using NATS.Client.Core;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.ColorSpaces;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -82,7 +77,12 @@ namespace IoTAIService
             msg.ProductId = string.Empty;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/node." + nodeid).ConfigureAwait(false);
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/node." + nodeid,
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         private Image<Rgb24> FastZlibDecompressToRgb24Image(byte[] compressedData, int width, int height)

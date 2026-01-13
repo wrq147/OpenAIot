@@ -1,5 +1,4 @@
-﻿using EasyNetQ;
-using IoTRulesService.Model;
+﻿using IoTRulesService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,6 @@ namespace IoTRulesService
     /// <summary>
     /// 规则变更事件
     /// </summary>
-    [QueueAttribute("rule_change_queue", ExchangeName = "rule_change_exchange")]
     public class RuleChangeEvent
     {
         public const string EventKey = "/EV.BUS.RULECHANGE";

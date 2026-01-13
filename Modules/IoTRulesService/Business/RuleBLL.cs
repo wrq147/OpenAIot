@@ -1,11 +1,9 @@
 ﻿using AuthService;
 using ChannelUtility.Message;
 using ChannelUtility.Tsl;
-using Common;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
-using EasyNetQ;
 using IoTRulesService.DAL;
 using IoTRulesService.Flow.Builder;
 using IoTRulesService.Model;
@@ -17,15 +15,12 @@ using MonitorService.Business;
 using MonitorService.Model;
 using MonitorService.Util;
 using MyAccess.Core;
-using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using TemplateAction.Label;
 
 namespace IoTRulesService.Business
 {
@@ -71,8 +66,7 @@ namespace IoTRulesService.Business
             if (isneedupdate)
             {
                 //通知更新所有节点监听者
-                var bus = _provider.GetService<NatsScope>().Bus;
-                bus.PubSub.Publish(string.Empty, "/RuleNode.Change");
+                await serverBus.PublishNodeChange();
             }
         }
         public virtual async Task ExecuteProductTime(TimeEvent evt)

@@ -36,7 +36,7 @@ namespace IoTRulesService.DataParser
             _runner = _provider.GetService<RuleWheelRuner>();
             _log = factory.CreateLogger<DeviceMessageHandler>();
         }
-        public async Task ParseDown(RequestMessage rs)
+        public async Task ParseDown(BaseDeviceMessage rs)
         {
             _runner.PushConcurrentTask(rs.DeviceId, async () =>
             {

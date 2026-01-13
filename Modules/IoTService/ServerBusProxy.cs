@@ -8,6 +8,7 @@ using IoTService.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,15 @@ namespace IoTService
             {
                 Subject = "/IotKey.Del",
                 Data = key
+            }, DefalutNatsJsonSerializer<string>.Default);
+        }
+        public async Task PublishNodeChange()
+        {
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/RuleNode.Change",
+                Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
         public async Task Print(string devId, string tip, object msg)
@@ -169,7 +179,12 @@ namespace IoTService
             msg.MessageId = string.Empty;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetDownKey(msg.DeviceId),
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         public async Task ConfirmPropertyReply(ReadPropertyMessageReply msg)
@@ -178,7 +193,12 @@ namespace IoTService
             proplist.Sort();
             string msgId = $"Rd{msg.DeviceId}-{proplist.Count}-{UtilityTool.MD5(string.Join('#', proplist))}";
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.SendReceive.SendAsync("bus.response." + msgId, msg);
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
 
@@ -220,7 +240,11 @@ namespace IoTService
 
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, GetDownKey(deviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetDownKey(deviceId),
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         public async Task DownBind(string productId, string deviceId)
@@ -231,7 +255,11 @@ namespace IoTService
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetDownKey(msg.DeviceId),
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         public async Task DownICCID(string productId, string deviceId)
@@ -242,7 +270,11 @@ namespace IoTService
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetDownKey(msg.DeviceId),
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
         /// <summary>
         /// 更新设备信息（发送设备绑定消息）
@@ -303,7 +335,12 @@ namespace IoTService
             msg.MatchName = matchName;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, GetDownKey(msg.DeviceId));
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetDownKey(msg.DeviceId),
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         private List<string> _upList;
@@ -320,7 +357,12 @@ namespace IoTService
                 redis.HashSet("RuleExeNodes", option.Value.node_name, DateTime.Now.AddSeconds(600).ToString("o"));
             }
             var bus = _provider.GetService<NatsScope>().Bus;
-            bus.PubSub.Publish(string.Empty, "/RuleNode.Change");
+
+            var t = bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/RuleNode.Change",
+                Data = string.Empty
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
         /// <summary>
         /// 注册新的规则处理节点（指定名称）
@@ -333,7 +375,12 @@ namespace IoTService
             await redis.HashSetAsync("RuleExeNodes", name, DateTime.Now.AddSeconds(600).ToString("o"));
 
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(string.Empty, "/RuleNode.Change");
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/RuleNode.Change",
+                Data = string.Empty
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
         /// <summary>
         /// 发送规则处理节点的心跳包
@@ -343,7 +390,11 @@ namespace IoTService
         public async Task TestUpNode(string nodename)
         {
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(string.Empty, "/device.up." + nodename);
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/device.up." + nodename,
+                Data = string.Empty
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
         /// <summary>
         /// 强制下线规则处理节点
@@ -356,7 +407,11 @@ namespace IoTService
             await redis.HashDeleteAsync("RuleExeNodes", nodename);
 
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(string.Empty, "/RuleNode.Change");
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/RuleNode.Change",
+                Data = string.Empty
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
         public void UpdateUpList()
         {
@@ -447,7 +502,11 @@ namespace IoTService
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.props = props;
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         /// <summary>
@@ -471,7 +530,11 @@ namespace IoTService
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         /// <summary>
@@ -496,7 +559,11 @@ namespace IoTService
                 msg.IpAddress = ip;
             }
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
 
@@ -518,7 +585,11 @@ namespace IoTService
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
 
@@ -556,9 +627,11 @@ namespace IoTService
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), GetUpKey(deviceId));
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
-
-
     }
 }

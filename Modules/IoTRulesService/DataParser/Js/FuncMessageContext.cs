@@ -5,7 +5,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 namespace IoTRulesService.DataParser.Js
 {
@@ -14,7 +13,7 @@ namespace IoTRulesService.DataParser.Js
     /// </summary>
     public class FuncMessageContext : MessageContext
     {
-        public FuncMessageContext(RequestMessage msg, PackParser client, TslModel model, string funPrefix) : base(msg, client, model, funPrefix)
+        public FuncMessageContext(BaseDeviceMessage msg, PackParser client, TslModel model, string funPrefix) : base(msg, client, model, funPrefix)
         {
         }
         /// <summary>

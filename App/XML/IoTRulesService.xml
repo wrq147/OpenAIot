@@ -593,11 +593,12 @@
             <param name="msgId"></param>
             <param name="msg"></param>
         </member>
-        <member name="M:IoTRulesService.DataParser.MessageRunner.ParseExe(System.String)">
+        <member name="M:IoTRulesService.DataParser.MessageRunner.ParseExe(System.String,System.String)">
             <summary>
             单线程处理所有的消息
             </summary>
             <param name="msg"></param>
+            <param name="replyTo"></param>
             <returns></returns>
         </member>
         <member name="F:IoTRulesService.DataParser.PackParser._lastReaderDict">
@@ -690,7 +691,7 @@
             <param name="ac"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.PackParser.PublicMessage(ChannelUtility.Message.RequestMessage,ChannelUtility.TslReturn)">
+        <member name="M:IoTRulesService.DataParser.PackParser.PublicMessage(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.TslReturn)">
             <summary>
             直接调用下发消息
             </summary>
@@ -722,7 +723,7 @@
             <param name="reason"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.RequestMessage,ChannelUtility.Tsl.TslModel,System.String)">
+        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.Tsl.TslModel,System.String)">
             <summary>
             解释自定义数据包
             </summary>

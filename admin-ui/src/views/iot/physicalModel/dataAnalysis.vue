@@ -319,9 +319,9 @@ export default {
         GetProps():Object;
         /**
          * 获取当前下发消息
-         * @returns {RequestMessage} 返回请求消息
+         * @returns {BaseDeviceMessage} 返回请求消息
          */
-        Message():RequestMessage;
+        Message():BaseDeviceMessage;
         /**
         * 对象转JSON字符串
         * @returns {String} 返回JSON字符串
@@ -478,16 +478,13 @@ export default {
         MsgType:String;
         ProductId:String;
         DeviceId:String;
-      }
-      declare class RequestMessage extends BaseDeviceMessage
-      {
         MessageId:String;
       }
       declare class BaseUpDeviceMessage extends BaseDeviceMessage
       {
         Timestamp:Number;
       }
-      declare class ReadPropertyMessage extends RequestMessage
+      declare class ReadPropertyMessage extends BaseDeviceMessage
       {
         /**
          * 可读取多个属性

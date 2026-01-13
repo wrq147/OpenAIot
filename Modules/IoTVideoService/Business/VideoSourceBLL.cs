@@ -4,15 +4,15 @@ using Common.EventBus;
 using Common.IdGenerator;
 using Common.Json;
 using Common.Share;
-using EasyNetQ;
 using IoTService;
 using IoTService.DAL;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using Microsoft.Extensions.Options;
-using Minio.DataModel;
 using MyAccess.DB.Builder.WhereToSql;
+using NATS.Client.Core;
 using System;
+using System.Data;
 using System.Linq.Expressions;
 using TemplateAction.Core;
 
@@ -213,7 +213,12 @@ namespace IoTVideoService.Business
             msg.Config = aiConfig;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/node." + nodeguid).ConfigureAwait(false);
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/node." + nodeguid,
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         private async Task DownDelVideoItemMessage(string nodeguid, string videoId)
         {
@@ -222,12 +227,22 @@ namespace IoTVideoService.Business
             msg.ProductId = string.Empty;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await bus.PubSub.PublishAsync(msgbody, "/node." + nodeguid).ConfigureAwait(false);
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "/node." + nodeguid,
+                Data = msgbody
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+
         }
         public async Task ResponseVerifyResult(string msgId, string rs)
         {
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.SendReceive.SendAsync("bus.response." + msgId, rs).ConfigureAwait(false);
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = rs
+            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
         public virtual async Task DelVideo(MediaNotReaderMessage msg)
         {

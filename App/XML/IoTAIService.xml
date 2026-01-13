@@ -4,6 +4,11 @@
         <name>IoTAIService</name>
     </assembly>
     <members>
+        <member name="T:IoTAIService.AICode.ExecutionProviderType">
+            <summary>
+            执行提供者类型
+            </summary>
+        </member>
         <member name="M:IoTAIService.AICode.FaceDetOnnxRunner.DecodePredictions(System.Collections.Generic.List{Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single}},System.Collections.Generic.List{Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single}},System.Int32[],System.Int32,System.Int32,System.Single)">
             <summary>
             解码预测结果为边界框

@@ -32,7 +32,6 @@ namespace ChannelUtility
             JsonSerializer.Serialize(writer, value, JsonMessageSerializerConfig.ObjectOptions);
         }
 
-        /// <inheritdoc />
         public T? Deserialize(in ReadOnlySequence<byte> buffer)
         {
             if (buffer.Length == 0)

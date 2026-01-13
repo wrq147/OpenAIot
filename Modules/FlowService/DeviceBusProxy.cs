@@ -1,20 +1,15 @@
 ﻿using ChannelUtility;
-using ChannelUtility.Config;
 using ChannelUtility.Message;
 using Common.EventBus;
 using Common.Share;
-using EasyNetQ;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using FlowService.Model;
+using Microsoft.Extensions.Logging;
+using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using System.Linq;
-using FlowService.FlowNode.Builder;
-using FlowService.Model;
 
 namespace FlowService
 {
@@ -22,10 +17,12 @@ namespace FlowService
     {
         private ITAServiceProvider _provider;
         private List<string> _upList;
+        private ILogger<DeviceBusProxy> _log;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
-        public DeviceBusProxy(ITAServiceProvider provider)
+        public DeviceBusProxy(ITAServiceProvider provider, ILoggerFactory logFactory)
         {
             _provider = provider;
+            _log = logFactory.CreateLogger<DeviceBusProxy>();
         }
         public void UpdateUpList()
         {
@@ -83,35 +80,45 @@ namespace FlowService
             msg.Outputs = outputs;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PubSub.PublishAsync(JsonConvert.SerializeObject(msg), GetUpKey(deviceId));
+
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
         }
 
         private async Task<FunctionInvokeMessageReply> WaitDown(Out_FlowDevice device, FunctionInvokeMessage msg)
         {
-            var bus = _provider.GetService<NatsScope>().Bus;
-
-            //8秒后自动取消
-            using var cts = new CancellationTokenSource(8000);
-            var tcs = new TaskCompletionSource<FunctionInvokeMessageReply>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            using var rs = await bus.SendReceive.ReceiveAsync<FunctionInvokeMessageReply>("bus.response." + msg.MessageId, msg =>
-            {
-                tcs.TrySetResult(msg);
-            }, cfg =>
-            {
-                cfg.WithAutoDelete(true);
-            }, cts.Token);
             try
             {
-                string msgbody = JsonConvert.SerializeObject(msg);
-                await bus.PubSub.PublishAsync(msgbody, "/device." + device.NetworkWay + ".down");
-                var reply = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-                return reply;
+                var bus = _provider.GetService<NatsScope>().Bus;
+                var requestTimeout = TimeSpan.FromSeconds(8);
+                await using var resSub = await bus.SubscribeCoreAsync(msg.MessageId, null, DefalutNatsJsonSerializer<FunctionInvokeMessageReply>.Default, new NatsSubOpts
+                {
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    StartUpTimeout = requestTimeout,
+                    ThrowIfNoResponders = true
+                }).ConfigureAwait(false);
+
+
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+                await bus.PublishAsync("/device." + device.NetworkWay + ".down", msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+
+                await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
+                {
+                    return responseMsg.Data;
+                }
+                throw new TimeoutException($"等待 {requestTimeout.TotalSeconds} 秒后未收到回复");
+
             }
             catch (Exception ex)
             {
+                _log.LogError(ex.Message);
                 return null;
             }
+
         }
 
         /// <summary>

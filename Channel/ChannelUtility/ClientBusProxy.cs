@@ -62,12 +62,12 @@ namespace ChannelUtility
             };
             _bus = new NatsConnection(opts);
             InitBus();
-
             UpdateUpList();
         }
-        private void InitBus()
+        private async void InitBus()
         {
-            Task.Run(async () =>
+            await _bus.ConnectAsync().ConfigureAwait(false);
+            Task t1 = Task.Run(async () =>
             {
                 await foreach (var msg in _bus.SubscribeAsync("/device." + _option.config.Code + ".down", "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
@@ -75,20 +75,20 @@ namespace ChannelUtility
                     {
                         continue;
                     }
-                    
+
                     var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
-                    if (!string.IsNullOrEmpty(msg.ReplyTo))
+                    if (string.IsNullOrEmpty(rs.MessageId))
                     {
                         rs.MessageId = msg.ReplyTo;
                     }
-  
+
                     if (OnSubProductMessage != null)
                     {
                         await OnSubProductMessage(rs).ConfigureAwait(false);
                     }
                 }
             });
-            Task.Run(async () =>
+            Task t2 = Task.Run(async () =>
             {
                 await foreach (var msg in _bus.SubscribeAsync("/node." + _nodeGuid, "IotGuid" + _nodeGuid, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
@@ -109,7 +109,7 @@ namespace ChannelUtility
                 }
             });
 
-            Task.Run(async () =>
+            Task t3 = Task.Run(async () =>
             {
                 await foreach (var msg in _bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
@@ -117,7 +117,7 @@ namespace ChannelUtility
                 }
             });
 
-            Task.Run(async () =>
+            Task t4 = Task.Run(async () =>
             {
                 await foreach (var msg in _bus.SubscribeAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
@@ -480,7 +480,6 @@ namespace ChannelUtility
                 Subject = GetUpKey(nodeId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-
         }
         public async void PublishMediaNotReader(string nodeId, string streamId, int videoType)
         {
@@ -524,7 +523,7 @@ namespace ChannelUtility
                 Subject = GetUpKey(msg.DeviceId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-     
+
         }
 
         //供程序员显式调用的Dispose方法
