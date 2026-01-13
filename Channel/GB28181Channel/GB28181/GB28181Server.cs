@@ -348,6 +348,10 @@ namespace GB28181Channel.GB28181
 
             try
             {
+                if (requestContext.ExtraData is PTZControlParams ptz)
+                {
+
+                }
                 if (resp.Status == SIPResponseStatusCodesEnum.Ok)
                 {
                     Console.WriteLine($"[MESSAGE响应成功] 设备={deviceId} 请求类型={requestContext.RequestType}");
@@ -702,7 +706,6 @@ namespace GB28181Channel.GB28181
                     var channel = new ChannelInfo
                     {
                         Index = i,
-                        DtuId = device.VideoData.Item.Id + "_" + i,
                         PushKey = device.VideoData.Item.PushKey + "_" + i,
                         DeviceId = deviceId,
                         ChannelId = deviceNode.Element("DeviceID")?.Value ?? string.Empty,
@@ -1080,8 +1083,7 @@ namespace GB28181Channel.GB28181
                 RequestType = nameof(SIPMethodsEnum.MESSAGE),
                 DeviceId = device.DeviceId,
                 ChannelId = string.Empty,
-                RequestTime = DateTime.Now,
-                ExtraData = "CatalogQuery"
+                RequestTime = DateTime.Now
             });
 
             // 3. 异步发送请求

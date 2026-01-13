@@ -17,6 +17,7 @@ namespace GB28181Channel
 {
     public class InMemoryDeviceStorage : IDeviceStorage
     {
+        private readonly ConcurrentDictionary<string, string> _dtuIdToDeviceIds = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, string> _keyToDeviceIds = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, DeviceInfo> _devices = new ConcurrentDictionary<string, DeviceInfo>();
         private readonly ConcurrentDictionary<string, List<ChannelInfo>> _channels = new ConcurrentDictionary<string, List<ChannelInfo>>();
@@ -97,6 +98,7 @@ namespace GB28181Channel
             if (_devices.TryRemove(deviceId, out var currentDevice))
             {
                 _keyToDeviceIds.TryRemove(currentDevice.VideoData.Item.PushKey, out string tdvid);
+                _dtuIdToDeviceIds.TryRemove(currentDevice.VideoData.Item.Id, out string tdxxx);
             }
             return true;
         }
@@ -111,6 +113,7 @@ namespace GB28181Channel
             if (_devices.TryUpdate(deviceId, updatedDevice, currentDevice))
             {
                 _keyToDeviceIds.AddOrUpdate(data.Item.PushKey, _ => deviceId, (_, existingChannels) => deviceId);
+                _dtuIdToDeviceIds.AddOrUpdate(data.Item.Id, _ => deviceId, (_, existingChannels) => deviceId);
                 return true;
             }
             else

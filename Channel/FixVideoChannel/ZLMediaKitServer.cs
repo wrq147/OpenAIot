@@ -147,10 +147,6 @@ namespace FixVideoChannel
                             task.Detect(item.Item.Id, w, h, _listener, ref tdata, ref isPress);
                         }
                     }
-                    else
-                    {
-                        Console.Write("dfsdf");
-                    }
 
 
 

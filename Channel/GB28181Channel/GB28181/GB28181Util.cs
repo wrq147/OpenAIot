@@ -1,16 +1,13 @@
 ﻿using ChannelUtility.Message;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Enum;
-using Org.BouncyCastle.Tls;
 using SIPSorcery.Net;
-using SIPSorcery.SIP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml.Linq;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace GB28181Channel.GB28181
 {
@@ -42,13 +39,149 @@ namespace GB28181Channel.GB28181
                     new XElement("CmdType", "DeviceControl"),
                     new XElement("SN", GB28181Util.GenerateCSeq()),
                     new XElement("DeviceID", @params.ChannelId),
-                    new XElement("PTZCmd", @params.CommandType.ToString()),
-                    new XElement("Speed", @params.Speed),
-                    new XElement("PresetID", @params.PresetId)
+                    new XElement("PTZCmd", GeneratePTZCmd(@params))
                 )
             );
 
             return xml.ToString(SaveOptions.DisableFormatting);
+        }
+        private static string GeneratePTZCmd(PTZControlParams @params)
+        {
+            byte[] ptzCmdBytes = new byte[8];
+            ptzCmdBytes[0] = 0xA5;
+            ptzCmdBytes[1] = 0x0F;
+            ptzCmdBytes[2] = 0x01;
+            ptzCmdBytes[3] = 0;
+            ptzCmdBytes[4] = 0;
+            ptzCmdBytes[5] = 0;
+            ptzCmdBytes[6] = 0;
+            ptzCmdBytes[7] = 0;
+            PTZCommandType actualType = @params.Speed == 0 ? PTZCommandType.Halt : @params.CommandType;
+            switch (actualType)
+            {
+                case PTZCommandType.Halt:
+                    ptzCmdBytes[3] = 0x00;
+                    break;
+                case PTZCommandType.Right:
+                    ptzCmdBytes[3] = 0x01;
+                    break;
+                case PTZCommandType.RightUp:
+                    ptzCmdBytes[3] = 0x09;
+                    break;
+                case PTZCommandType.Up:
+                    ptzCmdBytes[3] = 0x08;
+                    break;
+                case PTZCommandType.LeftUp:
+                    ptzCmdBytes[3] = 0x0A;
+                    break;
+                case PTZCommandType.Left:
+                    ptzCmdBytes[3] = 0x02;
+                    break;
+                case PTZCommandType.LeftDown:
+                    ptzCmdBytes[3] = 0x06;
+                    break;
+                case PTZCommandType.Down:
+                    ptzCmdBytes[3] = 0x04;
+                    break;
+                case PTZCommandType.RightDown:
+                    ptzCmdBytes[3] = 0x05;
+                    break;
+                case PTZCommandType.Zoom:
+                    if (@params.Speed > 0)
+                    {
+                        ptzCmdBytes[3] = 0x10;
+                    }
+                    else
+                    {
+                        ptzCmdBytes[3] = 0x20;
+                    }
+                    break;
+                case PTZCommandType.Iris:
+                    if (@params.Speed > 0)
+                    {
+                        ptzCmdBytes[3] = 0x44;
+                    }
+                    else
+                    {
+                        ptzCmdBytes[3] = 0x48;
+                    }
+                    break;
+                case PTZCommandType.Focus:
+                    if (@params.Speed > 0)
+                    {
+                        ptzCmdBytes[3] = 0x41;
+                    }
+                    else
+                    {
+                        ptzCmdBytes[3] = 0x42;
+                    }
+                    break;
+                case PTZCommandType.PresetSet:
+                    ptzCmdBytes[3] = 0x30;
+                    break;
+                case PTZCommandType.PresetGoto:
+                    ptzCmdBytes[3] = 0x31;
+                    break;
+                case PTZCommandType.PresetClear:
+                    ptzCmdBytes[3] = 0x32;
+                    break;
+                default:
+                    ptzCmdBytes[3] = 0x00;
+                    break;
+            }
+            byte speedByte = (byte)(@params.Speed & 0xFF);
+            byte presetByte = 0x00;
+            if (@params.PresetId.HasValue)
+            {
+                presetByte = (byte)(@params.PresetId.Value & 0xFF);
+            }
+            // 方向类指令（速度赋值）
+            if (actualType == PTZCommandType.Right || actualType == PTZCommandType.Left)
+            {
+                ptzCmdBytes[4] = speedByte;
+            }
+            else if (actualType == PTZCommandType.Up || actualType == PTZCommandType.Down)
+            {
+                ptzCmdBytes[5] = speedByte;
+            }
+            else if (actualType == PTZCommandType.RightUp || actualType == PTZCommandType.LeftUp
+                || actualType == PTZCommandType.LeftDown || actualType == PTZCommandType.RightDown)
+            {
+                ptzCmdBytes[4] = speedByte;
+                ptzCmdBytes[5] = speedByte;
+            }
+            // 变焦指令
+            else if (actualType == PTZCommandType.Zoom)
+            {
+                int absSpeed = Math.Abs(@params.Speed);
+                ptzCmdBytes[6] = (byte)((absSpeed & 0x0F) << 4);
+            }
+            // 光圈指令
+            else if (actualType == PTZCommandType.Iris)
+            {
+                ptzCmdBytes[5] = speedByte;
+            }
+            // 聚焦指令
+            else if (actualType == PTZCommandType.Focus)
+            {
+                ptzCmdBytes[4] = speedByte;
+            }
+            // 预置位指令
+            else if (actualType == PTZCommandType.PresetSet || actualType == PTZCommandType.PresetGoto
+                || actualType == PTZCommandType.PresetClear)
+            {
+                ptzCmdBytes[5] = presetByte;
+            }
+            // 停止指令
+            else if (actualType == PTZCommandType.Halt)
+            {
+                // 保持字节4-6为0
+            }
+
+            ptzCmdBytes[7] = (byte)((ptzCmdBytes[0] + ptzCmdBytes[1] + ptzCmdBytes[2] + ptzCmdBytes[3] + ptzCmdBytes[4] + ptzCmdBytes[5] + ptzCmdBytes[6]) % 256);
+            var sb = new StringBuilder();
+            foreach (byte b in ptzCmdBytes) sb.Append($"{b:X2}");
+            return sb.ToString();
         }
         private static Random random = new Random();
         /// <summary>
@@ -105,7 +238,7 @@ namespace GB28181Channel.GB28181
             var videoMedia = new SDPMediaAnnouncement(SDPMediaTypesEnum.video, rtpPort, videoFormats);
             videoMedia.MediaStreamStatus = MediaStreamStatusEnum.RecvOnly;
             sdp.Media.Add(videoMedia);
-            
+
             return sdp.ToString();
         }
 

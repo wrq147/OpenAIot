@@ -139,11 +139,6 @@ namespace GB28181Channel
                             task.Detect(device.VideoData.Item.Id, w, h, _listener, ref tdata, ref isPress);
                         }
                     }
-                    else
-                    {
-                        Console.Write("dfsdf");
-                    }
-
 
 
                     // 执行绘制

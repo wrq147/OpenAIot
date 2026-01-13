@@ -28,7 +28,7 @@ namespace IoTVideoService.Business
 
         public virtual async Task<PageObject<MZ_VideoSource>> SelectPage(In_VideoSourcePage query, IUserInfo user)
         {
-            Expression<Func<MZ_VideoSource, bool>> expression = x => x.OrgId == user.OrgId;
+            Expression<Func<MZ_VideoSource, bool>> expression = x => x.OrgId == user.OrgId && x.VideoType != 2;
             if (!string.IsNullOrEmpty(query.Key))
             {
                 expression = expression.And(x => x.Position.Contains(query.Key));
@@ -43,7 +43,7 @@ namespace IoTVideoService.Business
                 return BusResponse<int>.Error(112, "非企业用户无法添加视频源");
             }
             var snowflake = _provider.GetService<SnowflakeHelper>();
-            data.Id = "VI-" + snowflake.NextId();
+            data.Id = "VI_" + snowflake.NextId();
             data.OrgId = user.OrgId;
             data.VideoKey = MyAccess.Core.StringTool.GetGUID();
             data.PullNode = string.Empty;
@@ -277,6 +277,7 @@ namespace IoTVideoService.Business
         public virtual async Task InitChannels(string userName, string nodeId, string nodeGuid, List<ChannelData> channels)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
             if (channels.Count == 1)
             {
                 var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
@@ -291,7 +292,6 @@ namespace IoTVideoService.Business
             }
             else
             {
-                await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
                 for (int i = 0; i < channels.Count; i++)
                 {
                     var channel = channels[i];
@@ -301,7 +301,7 @@ namespace IoTVideoService.Business
                         return;
                     }
                     MZ_VideoSource videoSource = new MZ_VideoSource();
-                    videoSource.Id = "VI-" + parentSource.Id + "_" + channel.Index;
+                    videoSource.Id = parentSource.Id + "_" + channel.Index;
                     videoSource.OrgId = parentSource.OrgId;
                     videoSource.VideoType = 2;
                     videoSource.VideoKey = parentSource.VideoKey + "_" + channel.Index;
@@ -393,6 +393,7 @@ namespace IoTVideoService.Business
                     tsource.PullNode = nodeguid;
                     tsource.NodeId = msg.DeviceId;
                     tsource.Id = tlist[0].Id;
+                    tsource.ChannelId = string.Empty;
                     await videoSourceDAL.Update(tsource);
                     await DownUpVideoItemMessage(nodeguid, tlist[0]);
                 }
