@@ -56,8 +56,9 @@
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center" class-name="small-padding fixed-width"
-                                width="220">
+                                width="280">
                                 <template slot-scope="scope">
+                                    <el-button type="text" icon="el-icon-video-play" @click="handlePlay(scope.row)">播放</el-button>
                                     <el-button type="text" icon="el-icon-edit"
                                         @click="handleAdd(scope.row)">编辑</el-button>
                                     <el-button v-if="scope.row.VideoType != 2" type="text" icon="el-icon-setting"
@@ -77,6 +78,8 @@
         <addvsource ref="addVideo" @ResetList="getList" />
         <!-- 配置视频源弹窗 -->
         <aconfig ref="setAconfig" />
+        <!-- 视频播放弹窗 -->
+        <play ref="videoPlay" />
     </div>
 </template>
 
@@ -86,11 +89,13 @@ import { resizeTableCon } from "@/mixins/resizeTableCon";
 import addvsource from './addvsource.vue'
 import aconfig from './aconfig.vue'
 import { removeVideoSource } from "@/api/rules/video";
+import play from './play.vue'
 
 export default {
     components: {
         addvsource,
-        aconfig
+        aconfig,
+        play
     },
     mixins: [resizeTableCon],
     data() {

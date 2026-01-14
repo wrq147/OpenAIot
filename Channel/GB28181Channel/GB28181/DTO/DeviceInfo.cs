@@ -1,4 +1,5 @@
-﻿using GB28181Channel.GB28181.Enum;
+﻿using ChannelUtility.Message;
+using GB28181Channel.GB28181.Enum;
 using SIPSorcery.SIP;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace GB28181Channel.GB28181.DTO
     public class DeviceInfo
     {
         public VideoData VideoData { get; set; }
+        public List<PresetInfo> PresetList { get; set; }
         public string DeviceId { get; set; }
         public string Password { get; set; }
         public string DeviceIp { get; set; }

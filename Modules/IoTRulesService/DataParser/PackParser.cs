@@ -11,16 +11,13 @@ using Jint;
 using Jint.Native;
 using Jint.Runtime;
 using Jint.Runtime.Interop;
-using log4net;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
@@ -29,6 +26,19 @@ namespace IoTRulesService.DataParser
 {
     public class PackParser
     {
+        private ConcurrentDictionary<string, string> _deviceToNodeGuid = new ConcurrentDictionary<string, string>();
+        public void UpdateDeviceGuid(string dtuId, string guid)
+        {
+            _deviceToNodeGuid.AddOrUpdate(dtuId, guid, (k, v) => guid);
+        }
+        public string GetNodeGuid(string dtuId)
+        {
+            if (_deviceToNodeGuid.TryGetValue(dtuId, out string tguid))
+            {
+                return tguid;
+            }
+            return null;
+        }
         /// <summary>
         /// 拆包、拼包用
         /// </summary>
@@ -182,9 +192,13 @@ namespace IoTRulesService.DataParser
                     ThrowIfNoResponders = true
                 }).ConfigureAwait(false);
 
-
+                string tnodeguid = GetNodeGuid(msg.DeviceId);
+                if (tnodeguid == null)
+                {
+                    throw new TimeoutException($"通道节点 {tnodeguid} 不存在");
+                }
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PublishAsync("/device." + ret.NetworkWay + ".down", msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                await bus.PublishAsync("/node." + tnodeguid, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
                 await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {
@@ -386,7 +400,7 @@ namespace IoTRulesService.DataParser
                 await ac.Invoke();
 
                 await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
-                {          
+                {
                     //清除系统消息Id
                     await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                     return responseMsg.Data;
@@ -441,6 +455,7 @@ namespace IoTRulesService.DataParser
                 }
             }
 
+
             if (msg is RawDataMessage rawdata)
             {
                 //未发布打印
@@ -448,25 +463,36 @@ namespace IoTRulesService.DataParser
                 {
                     await Print(msg.DeviceId, "设备下发消息", FastBufferHelper.ByteToHexStr(rawdata.Data));
                 }
+                string tnodeguid = GetNodeGuid(msg.DeviceId);
+                if (tnodeguid == null)
+                {
+                    return;
+                }
                 var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
                 await _busScope.Bus.PublishAsync(new NatsMsg<string>()
                 {
-                    Subject = "/device." + ret.NetworkWay + ".down",
+                    Subject = "/node." + tnodeguid,
                     Data = msgbody
                 }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
                 return;
             }
 
+
             var newmsg = await this.toRawData(msg, ret).ConfigureAwait(false);
             if (newmsg != null)
             {
+                string tnodeguid = GetNodeGuid(msg.DeviceId);
+                if (tnodeguid == null)
+                {
+                    return;
+                }
                 var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
 
                 await _busScope.Bus.PublishAsync(new NatsMsg<string>()
                 {
-                    Subject = "/device." + ret.NetworkWay + ".down",
+                    Subject = "/node." + tnodeguid,
                     Data = msgbody
                 }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             }
@@ -1319,6 +1345,7 @@ namespace IoTRulesService.DataParser
                 //清除待处理包
                 _lastReaderDict.TryRemove(devid, out FastReader tmpout);
                 _scriptEngine.TryRemove(devid, out CacheJsEngine tmpcache);
+                _deviceToNodeGuid.TryRemove(devid, out string tmpguid);
             }
             else
             {

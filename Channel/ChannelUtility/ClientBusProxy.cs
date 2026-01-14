@@ -69,28 +69,7 @@ namespace ChannelUtility
             await _bus.ConnectAsync().ConfigureAwait(false);
             Task t1 = Task.Run(async () =>
             {
-                await foreach (var msg in _bus.SubscribeAsync("/device." + _option.config.Code + ".down", "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
-                {
-                    if (string.IsNullOrEmpty(msg.Data))
-                    {
-                        continue;
-                    }
-
-                    var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
-                    if (string.IsNullOrEmpty(rs.MessageId))
-                    {
-                        rs.MessageId = msg.ReplyTo;
-                    }
-
-                    if (OnSubProductMessage != null)
-                    {
-                        await OnSubProductMessage(rs).ConfigureAwait(false);
-                    }
-                }
-            });
-            Task t2 = Task.Run(async () =>
-            {
-                await foreach (var msg in _bus.SubscribeAsync("/node." + _nodeGuid, "IotGuid" + _nodeGuid, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                await foreach (var msg in _bus.SubscribeAsync("/node." + _nodeGuid, "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
                     if (string.IsNullOrEmpty(msg.Data))
                     {
@@ -109,7 +88,7 @@ namespace ChannelUtility
                 }
             });
 
-            Task t3 = Task.Run(async () =>
+            Task t2 = Task.Run(async () =>
             {
                 await foreach (var msg in _bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
@@ -117,7 +96,7 @@ namespace ChannelUtility
                 }
             });
 
-            Task t4 = Task.Run(async () =>
+            Task t3 = Task.Run(async () =>
             {
                 await foreach (var msg in _bus.SubscribeAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
                 {
@@ -337,7 +316,7 @@ namespace ChannelUtility
             msg.DeviceId = deviceId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.IpAddress = ip;
-
+            msg.NodeGuid = this._nodeGuid;
             await _bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = GetUpKey(deviceId),
@@ -510,7 +489,34 @@ namespace ChannelUtility
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
+        public async Task PublishMediaPresetReply(string msgId, string dtuId, string username, List<PresetInfo> data)
+        {
+            MediaPresetMessageReply msg = new MediaPresetMessageReply();
+            msg.DeviceId = dtuId;
+            msg.ProductId = string.Empty;
+            msg.UserName = username;
+            msg.Presets = data;
 
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+        }
+        public async Task PublishMediaPTZReply(string msgId, string dtuId, bool isSuccess, string reason)
+        {
+            MediaPTZMessageReply msg = new MediaPTZMessageReply();
+            msg.DeviceId = dtuId;
+            msg.ProductId = string.Empty;
+            msg.IsSuccess = isSuccess;
+            msg.Reason = reason;
+
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+        }
         /// <summary>
         /// 发送指定消息
         /// </summary>

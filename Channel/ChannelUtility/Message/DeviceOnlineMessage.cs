@@ -10,6 +10,7 @@ namespace ChannelUtility.Message
         /// 客户端Ip地址
         /// </summary>
         public string IpAddress { get; set; }
+        public string NodeGuid { get; set; }
         public DeviceOnlineMessage()
         {
             MsgType = "Online";

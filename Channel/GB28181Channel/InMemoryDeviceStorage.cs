@@ -108,18 +108,10 @@ namespace GB28181Channel
             if (!_devices.TryGetValue(deviceId, out var currentDevice))
                 return false;
 
-            var updatedDevice = currentDevice.Clone();
-            updatedDevice.VideoData = data;
-            if (_devices.TryUpdate(deviceId, updatedDevice, currentDevice))
-            {
-                _keyToDeviceIds.AddOrUpdate(data.Item.PushKey, _ => deviceId, (_, existingChannels) => deviceId);
-                _dtuIdToDeviceIds.AddOrUpdate(data.Item.Id, _ => deviceId, (_, existingChannels) => deviceId);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            currentDevice.VideoData = data;
+            _keyToDeviceIds.AddOrUpdate(data.Item.PushKey, _ => deviceId, (_, existingChannels) => deviceId);
+            _dtuIdToDeviceIds.AddOrUpdate(data.Item.Id, _ => deviceId, (_, existingChannels) => deviceId);
+            return true;
         }
         public DeviceInfo GetDevice(string deviceId)
         {

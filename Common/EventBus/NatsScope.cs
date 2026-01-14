@@ -1,6 +1,5 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
-using Minio.Credentials;
 using NATS.Client.Core;
 using System;
 using System.Threading.Tasks;

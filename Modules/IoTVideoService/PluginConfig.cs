@@ -21,6 +21,7 @@ namespace IoTVideoService
         protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
         {
             services.AddBLL<VideoSourceBLL>();
+            services.AddBLL<PtzBLL>();
             services.AddDAL<VideoSourceDAL>();
             services.Configure<VideoOption>(config.GetSection("IoTVideoService"));
         }

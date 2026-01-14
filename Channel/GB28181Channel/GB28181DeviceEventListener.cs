@@ -52,10 +52,44 @@ namespace GB28181Channel
                 }
 
                 var device = storage.GetDevice(upItemResponse.Item.UserName);
+                if (device == null)
+                {
+                    return;
+                }
                 await server.SendCatalogQuery(device);
 
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Connected(upItemResponse.Item.Id, newdevice.DeviceIp);
+            }
+            else if (msg is MediaPTZMessage ptzMessage)
+            {
+                await server.SendPTZControl(new GB28181.DTO.PTZControlParams()
+                {
+                    DeviceId = ptzMessage.UserName,
+                    ChannelId = ptzMessage.ChannelId,
+                    MessageId = ptzMessage.MessageId,
+                    CommandType = ptzMessage.CommandType,
+                    Speed = ptzMessage.Speed,
+                    PresetId = ptzMessage.PresetId
+                });
+            }
+            else if (msg is MediaPresetMessage presetMessage)
+            {
+                var storage = _serviceProvider.GetService<IDeviceStorage>();
+                var device = storage.GetDevice(presetMessage.UserName);
+                if (device == null)
+                {
+                    return;
+                }
+                if (device.PresetList != null)
+                {
+                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                    await eventBus.PublishMediaPresetReply(presetMessage.MessageId, presetMessage.DeviceId, presetMessage.UserName, device.PresetList);
+                }
+                else
+                {
+                    await server.GetPresetList(presetMessage.UserName, presetMessage.MessageId);
+                }
             }
         }
 
@@ -88,7 +122,36 @@ namespace GB28181Channel
                 eventBus.PublishMediaNotReader(option.sip_service_id, device.DeviceId, 1);
             }
         }
-
+        public async Task OnPresetListReceived(object? sender, PresetListReceivedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(e.MessageId))
+            {
+                return;
+            }
+            var storage = _serviceProvider.GetService<IDeviceStorage>();
+            var device = storage.GetDevice(e.DeviceId);
+            if (device == null)
+            {
+                return;
+            }
+            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+            await eventBus.PublishMediaPresetReply(e.MessageId, device.VideoData.Item.Id, e.DeviceId, device.PresetList);
+        }
+        public async Task OnPTZEventOk(object? sender, PTZEventOkArgs e)
+        {
+            if (string.IsNullOrEmpty(e.MessageId))
+            {
+                return;
+            }
+            var storage = _serviceProvider.GetService<IDeviceStorage>();
+            var device = storage.GetDevice(e.DeviceId);
+            if (device == null)
+            {
+                return;
+            }
+            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+            await eventBus.PublishMediaPTZReply(e.MessageId, device.VideoData.Item.Id, e.IsSuccess, e.Reason);
+        }
         public async Task OnStreamPlay(object? sender, StreamPlayEventArgs e)
         {
             if (e.IsSuccess == true)

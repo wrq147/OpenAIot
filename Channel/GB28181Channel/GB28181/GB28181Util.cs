@@ -13,6 +13,92 @@ namespace GB28181Channel.GB28181
 {
     public static class GB28181Util
     {
+        /// <summary>
+        /// 解析设备返回的真实预置位列表XML
+        /// </summary>
+        /// <param name="xmlContent">XML内容</param>
+        /// <param name="deviceId">设备ID</param>
+        /// <param name="snid">sn号</param>
+        /// <returns>预置位列表</returns>
+        public static List<PresetInfo> ParsePresetListXml(string xmlContent, string deviceId,out string snid)
+        {
+            var presetList = new List<PresetInfo>();
+            snid = null;
+            if (string.IsNullOrEmpty(xmlContent))
+            {
+                return presetList;
+            }
+
+            try
+            {
+                // 清理XML中的多余空格和换行
+                xmlContent = xmlContent.Trim();
+                var xmlDoc = XDocument.Parse(xmlContent);
+
+                // 定位到Response根节点
+                var responseNode = xmlDoc.Element("Response");
+                if (responseNode == null)
+                {
+                    Console.WriteLine("[解析预置位XML] 不是标准的Response格式");
+                    return presetList;
+                }
+
+                // 验证CmdType是否匹配
+                string cmdType = responseNode.Element("CmdType")?.Value;
+                if (cmdType != "PresetQuery")
+                {
+                    Console.WriteLine($"[解析预置位XML] CmdType不匹配：{cmdType}");
+                    return presetList;
+                }
+                snid = responseNode.Element("SN")?.Value;
+
+                // 解析PresetList节点
+                var presetListNode = responseNode.Element("PresetList");
+                if (presetListNode == null)
+                {
+                    Console.WriteLine("[解析预置位XML] 未找到PresetList节点");
+                    return presetList;
+                }
+
+                // 遍历所有Item节点
+                foreach (var itemNode in presetListNode.Elements("Item"))
+                {
+                    var presetInfo = new PresetInfo
+                    {
+                        DeviceId = deviceId
+                    };
+
+                    // 解析PresetID（必填）
+                    var presetIdNode = itemNode.Element("PresetID");
+                    if (presetIdNode != null && int.TryParse(presetIdNode.Value, out int presetId))
+                    {
+                        presetInfo.PresetId = presetId;
+                    }
+                    else
+                    {
+                        continue; // 无有效预置位ID，跳过
+                    }
+
+                    // 解析PresetName（可选）
+                    var presetNameNode = itemNode.Element("PresetName");
+                    presetInfo.PresetName = presetNameNode?.Value?.Trim() ?? $"预置点 {presetInfo.PresetId}";
+
+                    presetList.Add(presetInfo);
+                }
+
+                // 按预置位ID排序
+                presetList = presetList.OrderBy(p => p.PresetId).ToList();
+
+                Console.WriteLine($"[解析预置位XML] 成功解析{presetList.Count}个预置位");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[解析预置位列表XML] 失败：{ex.Message}");
+                Console.WriteLine($"[XML内容] {xmlContent}");
+            }
+
+            return presetList;
+        }
         private static int _cseqCounter = 1;
         private static readonly object _cseqLock = new object();
         public static int GenerateCSeq()
@@ -28,6 +114,20 @@ namespace GB28181Channel.GB28181
                 }
             }
             return currentCseq;
+        }
+        public static string GeneratePresetQueryXml(string deviceId,out string sn)
+        {
+            sn = GB28181Util.GenerateCSeq().ToString();
+            var xmlDoc = new XDocument(
+                new XElement("Query",
+                    new XElement("CmdType", "PresetQuery"),
+                    new XElement("SN", sn),
+                    new XElement("DeviceID", deviceId)
+                )
+            );
+
+            // 兼容不同厂商的XML格式
+            return xmlDoc.ToString(SaveOptions.DisableFormatting);
         }
         /// <summary>
         /// 生成PTZ控制XML

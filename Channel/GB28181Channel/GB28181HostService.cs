@@ -48,7 +48,8 @@ namespace GB28181Channel
             _server.DeviceRegistered += _deviceEventListener.OnDeviceRegistered;
             _server.DeviceOffline += _deviceEventListener.OnDeviceOffline;
             _server.StreamPlayed += _deviceEventListener.OnStreamPlay;
-
+            _server.PresetListReceived += _deviceEventListener.OnPresetListReceived;
+            _server.PTZEventOk += _deviceEventListener.OnPTZEventOk;
             _server.Start();
 
             ZLMediaKitServer.Instance.Start(_option, _provider, _deviceEventListener, _server);

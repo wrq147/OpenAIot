@@ -86,32 +86,7 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<MZ_VideoSource>.Error(111, "视频源不存在");
             }
-            ServerInfo serverInfo = null;
-            if (string.IsNullOrEmpty(info.NodeId))
-            {
-                if (info.VideoType == 0)
-                {
-                    var option = _provider.GetService<IOptions<VideoOption>>();
-                    if (option.Value.VideoServers.Count > 0)
-                    {
-                        int pos = Math.Abs(id.GetHashCode() % option.Value.VideoServers.Count);
-                        serverInfo = option.Value.VideoServers[pos];
-                    }
-                }
-            }
-            else
-            {
-                var option = _provider.GetService<IOptions<VideoOption>>();
-                serverInfo = option.Value.VideoServers.Where(x => x.NodeId == info.NodeId).FirstOrDefault();
-            }
-            if (serverInfo != null)
-            {
-                info.VideoUrl = $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{info.VideoKey}";
-            }
-            else
-            {
-                info.VideoUrl = string.Empty;
-            }
+          
             return BusResponse<MZ_VideoSource>.Success(info);
         }
         public virtual async Task<BusResponse<int>> Update(MZ_VideoSource data, IUserInfo user)
@@ -211,29 +186,14 @@ namespace IoTVideoService.Business
             msg.ProductId = string.Empty;
             msg.Item = cpitem;
             msg.Config = aiConfig;
-            var bus = _provider.GetService<NatsScope>().Bus;
-            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-
-            await bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = "/node." + nodeguid,
-                Data = msgbody
-            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            await _provider.GetService<NatsScope>().Public(nodeguid, msg);
         }
         private async Task DownDelVideoItemMessage(string nodeguid, string videoId)
         {
             MediaDelItemMessage msg = new MediaDelItemMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
-            var bus = _provider.GetService<NatsScope>().Bus;
-            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-
-            await bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = "/node." + nodeguid,
-                Data = msgbody
-            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-
+            await _provider.GetService<NatsScope>().Public(nodeguid, msg);
         }
         public async Task ResponseVerifyResult(string msgId, string rs)
         {

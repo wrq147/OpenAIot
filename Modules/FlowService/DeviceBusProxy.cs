@@ -60,8 +60,22 @@ namespace FlowService
             {
                 _lock.ExitReadLock();
             }
-
         }
+        private string GetDownKey(string deviceId)
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                if (_upList == null || _upList.Count == 0) return "/device.dwn";
+                int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
+                return "/device.dwn." + _upList[pos];
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+        }
+
         /// <summary>
         /// 发送服务端事件
         /// </summary>
@@ -69,7 +83,6 @@ namespace FlowService
         /// <param name="deviceId"></param>
         /// <param name="eventId"></param>
         /// <param name="outputs"></param>
-        /// <param name="redirectFromProductId"></param>
         /// <returns></returns>
         public async Task SendEvent(string productId, string deviceId, string eventId, IDictionary<string, object> outputs)
         {
@@ -104,7 +117,7 @@ namespace FlowService
 
 
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PublishAsync("/device." + device.NetworkWay + ".down", msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                await bus.PublishAsync(GetDownKey(msg.DeviceId), msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
                 await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {

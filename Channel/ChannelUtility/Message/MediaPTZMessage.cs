@@ -8,7 +8,7 @@ namespace ChannelUtility.Message
 {
     public class MediaPTZMessage : BaseDeviceMessage
     {
-        public string DeviceSIP { get; set; }
+        public string UserName { get; set; }
         public string ChannelId { get; set; }
         public PTZCommandType CommandType { get; set; }
         /// <summary>
@@ -21,7 +21,7 @@ namespace ChannelUtility.Message
         public byte? PresetId { get; set; }
         public MediaPTZMessage()
         {
-            MsgType = "ReadProp";
+            MsgType = "MediaPTZ";
         }
     }
 

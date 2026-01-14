@@ -1,9 +1,7 @@
-﻿using ChannelUtility.Message;
-using GB28181Channel.GB28181.DTO;
+﻿using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Enum;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
-using Org.BouncyCastle.Asn1.Ocsp;
 using SIPSorcery.Net;
 using SIPSorcery.SIP;
 using System;
@@ -29,6 +27,8 @@ namespace GB28181Channel.GB28181
         public event Func<object?, DeviceOfflineEventArgs, Task> DeviceOffline;
         public event Func<object?, AlarmReceivedEventArgs, Task> AlarmReceived;
         public event Func<object?, StreamPlayEventArgs, Task> StreamPlayed;
+        public event Func<object?, PresetListReceivedEventArgs, Task> PresetListReceived;
+        public event Func<object?, PTZEventOkArgs, Task> PTZEventOk;
         #endregion
 
         // 核心字段
@@ -345,21 +345,28 @@ namespace GB28181Channel.GB28181
         private async Task HandleMessageResponse(SIPResponse resp, SIPEndPoint remoteEP, RequestContext requestContext)
         {
             var deviceId = requestContext.DeviceId;
-
+            var device = _deviceStorage.GetDevice(deviceId);
+            if (device == null)
+            {
+                return;
+            }
             try
             {
-                if (requestContext.ExtraData is PTZControlParams ptz)
+                switch (requestContext.RequestType)
                 {
+                    case "PTZControl":
+                        {
+                            await OnPTZEventOk(new PTZEventOkArgs
+                            {
+                                DeviceId = deviceId,
+                                MessageId = (string)requestContext.ExtraData,
+                                IsSuccess = resp.Status == SIPResponseStatusCodesEnum.Ok,
+                                Reason = resp.ReasonPhrase
+                            });
+                        }
+                        break;
+                }
 
-                }
-                if (resp.Status == SIPResponseStatusCodesEnum.Ok)
-                {
-                    Console.WriteLine($"[MESSAGE响应成功] 设备={deviceId} 请求类型={requestContext.RequestType}");
-                }
-                else
-                {
-                    Console.WriteLine($"[MESSAGE响应失败] 设备={deviceId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
-                }
             }
             catch (Exception ex)
             {
@@ -638,6 +645,10 @@ namespace GB28181Channel.GB28181
                 {
                     await HandleAlarmMessage(deviceId, remoteEP, req);
                 }
+                else if (body.Contains("PresetQuery"))
+                {
+                    await HandlePresetQueryMessage(deviceId, remoteEP, req);
+                }
                 else
                 {
                     var response = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
@@ -684,7 +695,36 @@ namespace GB28181Channel.GB28181
                 Console.WriteLine($"[心跳] {deviceId} @ {remoteEP}");
             }
         }
-
+        private async Task HandlePresetQueryMessage(string deviceId, SIPEndPoint remoteEP, SIPRequest req)
+        {
+            var device = _deviceStorage.GetDevice(deviceId);
+            if (device == null)
+            {
+                return;
+            }
+            string snid;
+            var presetList = GB28181Util.ParsePresetListXml(req.Body, deviceId, out snid);
+            device.PresetList = presetList;
+            if (snid != null)
+            {
+                if (_requestContextMap.TryRemove(snid, out var requestContext))
+                {
+                    await OnPresetListReceived(new PresetListReceivedEventArgs
+                    {
+                        DeviceId = deviceId,
+                        PresetList = presetList,
+                        MessageId = (string)requestContext.ExtraData
+                    });
+                    return;
+                }
+            }
+            await OnPresetListReceived(new PresetListReceivedEventArgs
+            {
+                DeviceId = deviceId,
+                PresetList = presetList,
+                MessageId = null
+            });
+        }
         /// <summary>
         /// 处理目录消息
         /// </summary>
@@ -902,6 +942,64 @@ namespace GB28181Channel.GB28181
 
         #region 扩展功能
         /// <summary>
+        /// 获取设备通道的预置位列表
+        /// </summary>
+        /// <param name="deviceId">设备ID</param>
+        /// <param name="messageId">回复的消息Id</param>
+        /// <returns>是否发送成功</returns>
+        public async Task<bool> GetPresetList(string deviceId, string messageId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(deviceId))
+                {
+                    throw new ArgumentException("设备ID不能为空");
+                }
+
+                var device = _deviceStorage.GetDevice(deviceId);
+                if (device == null)
+                {
+                    Console.WriteLine($"[获取预置位列表] 设备{deviceId}不存在");
+                    return false;
+                }
+
+                // 生成GB28181标准的预置位查询XML
+                string tsnid;
+                var presetQueryXml = GB28181Util.GeneratePresetQueryXml(deviceId, out tsnid);
+
+                // 创建SIP MESSAGE请求
+                var sipRequest = CreateSIPMessageRequest(
+                    deviceId,
+                    device.DeviceIp,
+                    device.DevicePort,
+                    presetQueryXml,
+                    device.TransportProtocol);
+
+                // 保存请求上下文（携带预置位查询参数）
+                _requestContextMap.TryAdd(tsnid, new RequestContext
+                {
+                    RequestType = "PresetQuery",
+                    DeviceId = deviceId,
+                    ChannelId = string.Empty,
+                    RequestTime = DateTime.Now,
+                    ExtraData = messageId
+                });
+
+                // 发送预置位查询请求
+                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                await _sipTransport.SendRequestAsync(dstEnd, sipRequest);
+
+                Console.WriteLine($"[获取预置位列表] 请求已发送：设备={deviceId} CallID={sipRequest.Header.CallId}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[获取预置位列表] 发送失败：{ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 发送PTZ控制命令
         /// </summary>
         public async Task<bool> SendPTZControl(PTZControlParams @params)
@@ -926,11 +1024,11 @@ namespace GB28181Channel.GB28181
                 // 保存请求上下文
                 _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
                 {
-                    RequestType = nameof(SIPMethodsEnum.MESSAGE),
+                    RequestType = "PTZControl",
                     DeviceId = device.DeviceId,
                     ChannelId = @params.ChannelId,
                     RequestTime = DateTime.Now,
-                    ExtraData = @params
+                    ExtraData = @params.MessageId
                 });
 
                 // 异步发送PTZ控制命令
@@ -1077,14 +1175,14 @@ namespace GB28181Channel.GB28181
                 device.DevicePort,
                 catalogXml, device.TransportProtocol);
 
-            // 保存请求上下文
-            _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
-            {
-                RequestType = nameof(SIPMethodsEnum.MESSAGE),
-                DeviceId = device.DeviceId,
-                ChannelId = string.Empty,
-                RequestTime = DateTime.Now
-            });
+            //// 保存请求上下文
+            //_requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
+            //{
+            //    RequestType = "Catalog",
+            //    DeviceId = device.DeviceId,
+            //    ChannelId = string.Empty,
+            //    RequestTime = DateTime.Now
+            //});
 
             // 3. 异步发送请求
             var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
@@ -1231,6 +1329,20 @@ namespace GB28181Channel.GB28181
             }
         }
 
+        protected virtual async Task OnPresetListReceived(PresetListReceivedEventArgs e)
+        {
+            if (PresetListReceived != null)
+            {
+                await PresetListReceived(this, e);
+            }
+        }
+        protected virtual async Task OnPTZEventOk(PTZEventOkArgs e)
+        {
+            if (PTZEventOk != null)
+            {
+                await PTZEventOk(this, e);
+            }
+        }
 
         #endregion
 

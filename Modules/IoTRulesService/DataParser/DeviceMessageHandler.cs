@@ -77,6 +77,8 @@ namespace IoTRulesService.DataParser
                             var serverBus = _provider.GetService<ServerBusProxy>();
 
                             DeviceOnlineMessage rdmsg = (DeviceOnlineMessage)rs;
+                            //更新下发节点
+                            _provider.GetService<PackParser>().UpdateDeviceGuid(rdmsg.DeviceId, rdmsg.NodeGuid);
 
                             var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
                             if (devicelist.Count > 0)

@@ -38,6 +38,10 @@ namespace ChannelUtility
             { "MediaNF",typeof(MediaNotFoundMessage) },
             { "MediaNR",typeof(MediaNotReaderMessage) },
             { "MediaCH",typeof(MediaChannelMessage) },
+            { "MediaPTZ",typeof(MediaPTZMessage) },
+            { "MediaPTZOk",typeof(MediaPTZMessageReply) },
+            { "MediaPres",typeof(MediaPresetMessage) },
+            { "MediaPresReply",typeof(MediaPresetMessageReply) },
             { "MediaUser",typeof(MediaUserVerifyMessage) }
 
         };
