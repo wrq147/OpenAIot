@@ -1,16 +1,9 @@
-﻿using ChannelUtility;
-using ChannelUtility.Message;
+﻿using ChannelUtility.Message;
 using Common.EventBus;
 using Common.Share;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using Microsoft.Extensions.Options;
-using NATS.Client.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace IoTVideoService.Business
@@ -21,6 +14,77 @@ namespace IoTVideoService.Business
         public PtzBLL(ITAServiceProvider provider)
         {
             _provider = provider;
+        }
+        public async Task<BusResponse<string>> ControlPTZ(In_PtzControlParam data)
+        {
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == data.SourceId && x.VideoType == 1)).FirstOrDefault();
+            if (videoSource == null || string.IsNullOrEmpty(videoSource.PullNode))
+            {
+                return BusResponse<string>.Error(111, "视频源不存在");
+            }
+
+            MediaPTZMessage msg = new MediaPTZMessage();
+            msg.DeviceId = videoSource.Id;
+            msg.ProductId = string.Empty;
+            msg.MessageId = Guid.NewGuid().ToString("N");
+            msg.UserName = videoSource.UserName;
+            msg.ChannelId = videoSource.ChannelId;
+            if (data.Cmd < 0)
+            {
+                msg.CommandType = (PTZCommandType)Math.Abs(data.Cmd);
+                msg.Speed = -data.Speed;
+            }
+            else
+            {
+                msg.CommandType = (PTZCommandType)data.Cmd;
+                msg.Speed = data.Speed;
+            }
+
+            msg.PresetId = data.PresetId;
+
+            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaPTZMessageReply>(videoSource.PullNode, msg);
+            if (replyMsg == null)
+            {
+                return BusResponse<string>.Error(112, "控制命令无回复");
+            }
+            if (replyMsg.IsSuccess)
+            {
+                return BusResponse<string>.Success();
+            }
+            else
+            {
+                return BusResponse<string>.Error(113, replyMsg.Reason);
+            }
+        }
+        public async Task<List<Out_VideoChannel>> GetChannelList(string sid)
+        {
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sid && x.VideoType == 1)).FirstOrDefault();
+            if (videoSource == null || string.IsNullOrEmpty(videoSource.PullNode))
+            {
+                return new List<Out_VideoChannel>();
+            }
+            List<Out_VideoChannel> rtlist = new List<Out_VideoChannel>();
+            if (!string.IsNullOrEmpty(videoSource.ChannelId))
+            {
+                rtlist.Add(new Out_VideoChannel()
+                {
+                    ChannelId = videoSource.ChannelId,
+                    ChannelName = videoSource.Position
+                });
+                return rtlist;
+            }
+            var channelSourceList = await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoType == 2);
+            foreach (var channel in channelSourceList)
+            {
+                rtlist.Add(new Out_VideoChannel()
+                {
+                    ChannelId = channel.ChannelId,
+                    ChannelName = channel.Position
+                });
+            }
+            return rtlist;
         }
         public async Task<string> GetPlayUrl(string sId, string cId)
         {

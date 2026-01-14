@@ -2,7 +2,9 @@
 using ChannelUtility.Message;
 using Common;
 using Common.Share;
+using IoTService.Models;
 using IoTVideoService.Business;
+using IoTVideoService.Models;
 using System;
 using TemplateAction.Route;
 
@@ -18,12 +20,12 @@ namespace IoTVideoService.Controller
         /// <summary>
         /// 获取预置点列表
         /// </summary>
-        /// <param name="soureId"></param>
+        /// <param name="sid">设备源Id</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<DefaultAjaxResult<List<PresetInfo>>> GetPresetList(string sourceId)
+        public async Task<DefaultAjaxResult<List<PresetInfo>>> GetPresetList(string sid)
         {
-            return this.Success(await _ptzBLL.GetPresetList(sourceId));
+            return this.Success(await _ptzBLL.GetPresetList(sid));
         }
 
         /// <summary>
@@ -38,6 +40,27 @@ namespace IoTVideoService.Controller
             return this.Success(await _ptzBLL.GetPlayUrl(sid, cid));
         }
 
+        /// <summary>
+        /// 获取视频的通道列表
+        /// </summary>
+        /// <param name="sid">设备源Id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<List<Out_VideoChannel>>> GetChannelList(string sid)
+        {
+            return this.Success(await _ptzBLL.GetChannelList(sid));
+        }
 
+
+        /// <summary>
+        /// 执行PTZ控制
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<DefaultAjaxResult<string>> ControlPTZ(In_PtzControlParam data)
+        {
+            return (await _ptzBLL.ControlPTZ(data)).ToAjaxResult();
+        }
     }
 }

@@ -48,3 +48,37 @@ export function getAIProjectList() {
         method: 'get'
     })
 }
+
+
+export function getPresetList(sid) {
+    return request({
+        url: '/IoTVideoService/Ptz/GetPresetList',
+        method: 'get',
+        params: { sid }
+    })
+}
+
+export function getPlayUrl(sid, cid) {
+    return request({
+        url: '/IoTVideoService/Ptz/GetPlayUrl',
+        method: 'get',
+        params: { "sid": sid, "cid": cid }
+    })
+}
+
+
+export function getChannelList(sid) {
+    return request({
+        url: '/IoTVideoService/Ptz/GetChannelList',
+        method: 'get',
+        params: { "sid": sid }
+    })
+}
+
+export function controlPTZ(data) {
+    return request({
+        url: '/IoTVideoService/Ptz/ControlPTZ',
+        method: 'post',
+        data: data
+    })
+}

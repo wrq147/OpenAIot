@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IoTVideoService.Models
 {
-    public class Out_ChannelInfo
+    public class Out_VideoChannel
     {
         public string ChannelId { get; set; }
         public string ChannelName { get; set; }

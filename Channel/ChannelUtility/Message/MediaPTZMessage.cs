@@ -12,9 +12,9 @@ namespace ChannelUtility.Message
         public string ChannelId { get; set; }
         public PTZCommandType CommandType { get; set; }
         /// <summary>
-        /// 速度默认16（16进制10）
+        /// 速度
         /// </summary>
-        public byte Speed { get; set; } = 16;
+        public int Speed { get; set; }
         /// <summary>
         /// 预置位ID(仅预置位指令有效)
         /// </summary>
