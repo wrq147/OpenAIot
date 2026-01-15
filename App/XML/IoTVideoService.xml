@@ -4,6 +4,35 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="M:IoTVideoService.Controller.Ptz.GetPresetList(System.String)">
+            <summary>
+            获取预置点列表
+            </summary>
+            <param name="sid">设备源Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Ptz.GetPlayUrl(System.String,System.String)">
+            <summary>
+            获取视频播放Url
+            </summary>
+            <param name="sid">设备源Id</param>
+            <param name="cid">通道Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Ptz.GetChannelList(System.String)">
+            <summary>
+            获取视频的通道列表
+            </summary>
+            <param name="sid">设备源Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Ptz.ControlPTZ(IoTVideoService.Models.In_PtzControlParam)">
+            <summary>
+            执行PTZ控制
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTVideoService.Controller.Source.ListPage(IoTVideoService.Models.In_VideoSourcePage)">
             <summary>
             视频源列表
@@ -115,6 +144,21 @@
             流虚拟主机
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.In_PtzControlParam.Cmd">
+            <summary>
+            ptz控制命令
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_PtzControlParam.Speed">
+            <summary>
+            速度
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_PtzControlParam.PresetId">
+            <summary>
+            预置位ID
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.Id">
             <summary>
             视频源Id
@@ -173,11 +217,6 @@
         <member name="P:IoTVideoService.Models.MZ_VideoSource.NodeId">
             <summary>
             服务器节点Id
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoUrl">
-            <summary>
-            视频地址
             </summary>
         </member>
     </members>

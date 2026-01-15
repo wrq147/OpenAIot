@@ -45,23 +45,20 @@
                                 <template slot-scope="scope">
                                     <div v-if="scope.row.VideoType == 0">
                                         <div>推流地址：{{ scope.row.PullAddr }}</div>
-                                        <div>拉流节点：{{ scope.row.NodeId == "" ? "暂无" : scope.row.NodeId }}</div>
                                     </div>
                                     <div v-else-if="scope.row.VideoType == 1">
                                         <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
                                     </div>
-                                    <div v-else-if="scope.row.VideoType == 2">
-                                        <div>设备SIP：{{ scope.row.UserName }},通道Id{{ scope.row.ChannelId }}</div>
-                                    </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作" align="center" class-name="small-padding fixed-width"
-                                width="280">
+                            <el-table-column label="操作" align="center" fixed="right" class-name="small-padding"
+                                width="250">
                                 <template slot-scope="scope">
-                                    <el-button type="text" icon="el-icon-video-play" @click="handlePlay(scope.row)">播放</el-button>
+                                    <el-button type="text" icon="el-icon-video-play"
+                                        @click="handlePlay(scope.row)">播放</el-button>
                                     <el-button type="text" icon="el-icon-edit"
                                         @click="handleAdd(scope.row)">编辑</el-button>
-                                    <el-button v-if="scope.row.VideoType != 2" type="text" icon="el-icon-setting"
+                                    <el-button type="text" icon="el-icon-setting"
                                         @click="handleSet(scope.row)">配置</el-button>
                                     <el-button type="text" icon="el-icon-delete" style="color:red"
                                         @click="handleDelete(scope.row.Id)">删除</el-button>
@@ -101,7 +98,6 @@ export default {
     data() {
         return {
             loading: false,
-            open: false,
             title: '新增视频源',
             // 查询参数
             queryParams: {
@@ -118,7 +114,6 @@ export default {
     },
     methods: {
         getList() {
-            this.open = false;
             this.loading = true;
             videoSourceList(this.queryParams).then(response => {
                 this.sourceList = response.data.List;
@@ -161,9 +156,9 @@ export default {
                 })
             }).catch(() => { })
         },
-        cancelForm() {
-            this.open = false;
-        },
+        handlePlay(row) {
+            this.$refs.videoPlay.showDlg(row);
+        }
     }
 }
 </script>

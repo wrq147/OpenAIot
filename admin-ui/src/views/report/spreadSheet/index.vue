@@ -6,22 +6,19 @@
                     <div class="name-input-box">
                         <div class="info-name">
                             <div v-show="!isWorkbookName">
-                                <span style="margin-right: 15px;">{{ workbookName }}</span> 
-                                <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="workbookNameClick" />
+                                <span style="margin-right: 15px;">{{ workbookName }}</span>
+                                <el-button size="mini" type="primary" icon="el-icon-edit" circle
+                                    @click="workbookNameClick" />
                             </div>
-                            <el-input class="workbookNameInput" v-show="isWorkbookName" ref="inputRef" v-model="workbookName" @blur="isWorkbookName = !isWorkbookName" />
+                            <el-input class="workbookNameInput" v-show="isWorkbookName" ref="inputRef"
+                                v-model="workbookName" @blur="isWorkbookName = !isWorkbookName" />
                         </div>
                     </div>
                 </div>
                 <div class="action-box">
-                    <el-upload
-                        :file-list="fileList"
-                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                        class="upload-demo"
-                        :before-upload="beforeUpload"
-                        action=""
-                        :show-file-list="false"
-                    >
+                    <el-upload :file-list="fileList"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="upload-demo"
+                        :before-upload="beforeUpload" action="" :show-file-list="false">
                         <el-button size="mini" type="success">上传Excel</el-button>
                     </el-upload>
                     <el-button type="danger" size="mini" @click="previewSheet" style="margin-left: 10px;">预览</el-button>
@@ -29,7 +26,7 @@
                 </div>
             </div>
             <div class="report-design-content">
-               <div class="design-page">
+                <div class="design-page">
                     <div class="design-left">
                         <div class="lucky-sheet-page">
                             <div id="luckysheet" class="luckysheet-wrap"></div>
@@ -37,26 +34,29 @@
                     </div>
                     <div class="design-right">
                         <div class="com-setting-page">
-                            <information ref="information" :themeForm="themeForm" :cellData="cellData" @renewalData="renewalData" :keyList="keyList" @getSearchData="getSearchData"/>
-                            <dataGather :themeForm="themeForm" :drawingList="drawingList" @fieldData="fieldData" @getKeyList="getKeyList" />
+                            <information ref="information" :themeForm="themeForm" :cellData="cellData"
+                                @renewalData="renewalData" :keyList="keyList" @getSearchData="getSearchData" />
+                            <dataGather :themeForm="themeForm" :drawingList="drawingList" @fieldData="fieldData"
+                                @getKeyList="getKeyList" />
                         </div>
                     </div>
-               </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { rptInfo, editRpt} from "@/api/report/report";
+import { rptInfo, editRpt } from "@/api/report/report";
 import information from "./information";
 import dataGather from "./dataGather";
 import {
-  confirmValue,
-  getbaseData,
-  combinationTableColum,
-  combinationConfirmValue,
+    confirmValue,
+    getbaseData,
+    combinationTableColum,
+    combinationConfirmValue,
 } from "@/views/report/datav/LayerItems/commonRuning";
+import { loadLuckysheet } from '@/utils/luckysheetLoader.js'
 import LuckyExcel from 'luckyexcel'
 export default {
     name: 'spreadSheet',
@@ -91,7 +91,7 @@ export default {
                     timeout: 200
                 },
             },
-            luckysheetOldData: { "name": "Sheet1", color: "", "status": "1", "order": "0", "data": [], "config": {}, "index":0,  "defaultRowHeight": 30, "defaultColWidth": 120, 'row': 80 },
+            luckysheetOldData: { "name": "Sheet1", color: "", "status": "1", "order": "0", "data": [], "config": {}, "index": 0, "defaultRowHeight": 30, "defaultColWidth": 120, 'row': 80 },
             cellData: {
                 c: 0,
                 r: 0,
@@ -119,21 +119,19 @@ export default {
             fileList: [] // 上传文件
         }
     },
-    created() {
-        this.loadingQuery= this.$loading({//进入页面设置加载中效果，方便完成页面保存数据的初始化
+    async created() {
+        await loadLuckysheet();
+        this.loadingQuery = this.$loading({//进入页面设置加载中效果，方便完成页面保存数据的初始化
             lock: true,
             text: 'Loading',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 1)',
-            target:document.getElementById('container')
+            target: document.getElementById('container')
         });
         this.creationUser = {
             name: this.name
         }
         this.initDataDraw();
-    },
-    mounted(){
-       
     },
     methods: {
         async initDataDraw() {
@@ -155,7 +153,7 @@ export default {
                 let tmpoption = this.themeForm.globalData[i];
                 let ddtype = tmpoption.dataSourceType;
                 if (ddtype === "url") {
-                    let rawData = await confirmValue(tmpoption, this.drawingList,this.themeForm.globalData);
+                    let rawData = await confirmValue(tmpoption, this.drawingList, this.themeForm.globalData);
                     tmpoption.rawData = JSON.stringify(rawData);
                     this.$set(this.themeForm.globalData, i, tmpoption);
                 } else if (ddtype === "database") {
@@ -169,7 +167,7 @@ export default {
                         this.drawingList
                     );
                     tmpoption.combinationTable = tableColum;
-                    let rawData = combinationConfirmValue(tmpoption,this.themeForm.globalData);
+                    let rawData = combinationConfirmValue(tmpoption, this.themeForm.globalData);
                     tmpoption.rawData = JSON.stringify(rawData);
                     this.$set(this.themeForm.globalData, i, tmpoption);
                 }
@@ -199,12 +197,12 @@ export default {
                 hook: {
                     cellMousedown: function (cell, postion, sheetFile, ctx) {
                         that.cellMousedown(postion, cell)
-                        
+
                     },
-                    cellDragStop:  function (cell, postion, sheet, ctx, event) {
+                    cellDragStop: function (cell, postion, sheet, ctx, event) {
                         that.cellDragStop(postion)
                     },
-                    sheetCreateAfter: function(sheet) {
+                    sheetCreateAfter: function (sheet) {
                         sheet.sheet.defaultRowHeight = 30
                         sheet.sheet.defaultColWidth = 120
                         sheet.sheet.row = 80
@@ -253,11 +251,11 @@ export default {
             }
             luckysheet.setCellValue(cellData.r, cellData.c, cellAttr);
             let Height = {}, Width = {}
-            if (cellData.rowHeight !=='') {
+            if (cellData.rowHeight !== '') {
                 Height[cellData.r] = cellData.rowHeight
                 luckysheet.setRowHeight(Height);
             }
-            if (cellData.columnWidth !=='') {
+            if (cellData.columnWidth !== '') {
                 Width[cellData.c] = cellData.columnWidth
                 luckysheet.setColumnWidth(Width);
             }
@@ -305,10 +303,10 @@ export default {
             console.log(this.themeForm)
             this.form.ThemeOption = JSON.stringify(this.themeForm);
             editRpt(this.form).then((response) => {
-              this.$message({ message: "修改成功", type: "success" });
-              this.$store.dispatch("tagsView/delView", this.$route);
-              this.$router.go(-1);
-            }).catch(err=>{});
+                this.$message({ message: "修改成功", type: "success" });
+                this.$store.dispatch("tagsView/delView", this.$route);
+                this.$router.go(-1);
+            }).catch(err => { });
         },
         // 表格预览
         previewSheet() {
@@ -339,12 +337,12 @@ export default {
             }
             LuckyExcel.transformExcelToLucky(
                 file,
-                function(exportJson, luckysheetfile){
+                function (exportJson, luckysheetfile) {
                     that.$nextTick(() => {
                         window.luckysheet.destroy();
                         exportJson.sheets[0].defaultRowHeight = 30,
-                        exportJson.sheets[0].defaultColWidth = 120,
-                        that.initSheet(exportJson.sheets)
+                            exportJson.sheets[0].defaultColWidth = 120,
+                            that.initSheet(exportJson.sheets)
                     })
                 }
             )
@@ -353,23 +351,26 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-::v-deep{
-    .workbookNameInput{
+::v-deep {
+    .workbookNameInput {
         background-color: #f5f6f7;
         border: 1px solid #1e6fff;
     }
 }
-.basic-cont-box{
+
+.basic-cont-box {
     width: 100%;
     position: relative;
     height: 100%;
     box-sizing: border-box;
 }
+
 .report-design-page {
     width: 100%;
     height: 100%;
 }
-.designer-header{
+
+.designer-header {
     min-width: 1250px;
     height: 56px;
     padding: 0 24px;
@@ -379,12 +380,14 @@ export default {
     justify-content: space-between;
     border-bottom: 1px solid #eeeff0;
 }
-.design-name-box{
+
+.design-name-box {
     display: flex;
     flex: 1;
     align-items: center;
 }
-.designer-header .design-name-box .name-input-box{
+
+.designer-header .design-name-box .name-input-box {
     border: 1px solid transparent;
     box-sizing: border-box;
     border-radius: 4px;
@@ -393,32 +396,38 @@ export default {
     display: flex;
     align-items: center;
 }
-.designer-header .design-name-box .name-input-box .info-name{
+
+.designer-header .design-name-box .name-input-box .info-name {
     color: #363b4c;
     font-size: 16px;
     cursor: pointer;
 }
-.designer-header .action-box{
+
+.designer-header .action-box {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
-.report-design-content{
+
+.report-design-content {
     height: calc(100% - 57px);
     background-color: #f5f6f7;
 }
+
 .design-page {
     display: flex;
     width: 100%;
     height: 100%;
 }
-.design-page .design-left{
+
+.design-page .design-left {
     width: calc(100% - 472px);
     height: 100%;
     background-color: #f5f6f7;
 }
-.lucky-sheet-page{
+
+.lucky-sheet-page {
     position: relative;
     left: 0;
     top: 0;
@@ -426,6 +435,7 @@ export default {
     height: 100%;
     overflow: hidden;
 }
+
 .luckysheet-wrap {
     padding: 0;
     position: absolute;
@@ -435,13 +445,15 @@ export default {
     top: 0;
     bottom: 0;
 }
-.design-right{
+
+.design-right {
     width: 472px;
     max-width: 472px;
     height: 100%;
     background-color: #fff;
 }
-.com-setting-page{
+
+.com-setting-page {
     width: 100%;
     height: calc(100% + -0px);
     display: flex;

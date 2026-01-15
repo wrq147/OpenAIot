@@ -144,7 +144,7 @@ namespace MqttChannel
                 return tmpnewdate;
             });
 
-            //解释上报报文
+            //上报报文
             var eventBus = _provider.GetService<ClientBusProxy>();
             if (e.ApplicationMessage.Payload != null)
             {

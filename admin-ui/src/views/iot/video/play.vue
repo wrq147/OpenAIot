@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="视频播放" :visible.sync="open" width="80%" append-to-body :close-on-click-modal="false"
+    <el-dialog title="视频播放" :visible.sync="open" width="80%" top="2vh" append-to-body :close-on-click-modal="false"
         @close="handleClose">
         <div class="video-play-container">
             <!-- 视频播放区域 -->
@@ -9,14 +9,13 @@
 
             <!-- PTZ控制区域 - 仅GB28181设备显示 -->
             <div v-if="videoSource.VideoType === 1" class="ptz-controls">
-                <h4>PTZ云台控制</h4>
+                <div style="line-height: 24px;font-size: 14px;">PTZ云台控制</div>
 
                 <!-- 新增：通道选择下拉框 -->
                 <div class="channel-select" style="margin-bottom: 15px; width: 100%;">
                     <el-select v-model="currentChannelId" placeholder="请选择通道" style="width: 100%;"
                         @change="onChannelChange">
-                        <el-option v-for="channel in channelList" :key="channel.ChannelId"
-                            :label="channel.ChannelName"
+                        <el-option v-for="channel in channelList" :key="channel.ChannelId" :label="channel.ChannelName"
                             :value="channel.ChannelId"></el-option>
                     </el-select>
                 </div>
@@ -25,66 +24,68 @@
                 <div class="ptz-pad">
                     <!-- 第一行：左上、上、右上 -->
                     <div class="ptz-row">
-                        <el-button icon="el-icon-top-left" circle @click="ptzControl(4)">左上</el-button>
-                        <el-button icon="el-icon-top" circle @click="ptzControl(3)">上</el-button>
-                        <el-button icon="el-icon-top-right" circle @click="ptzControl(2)">右上</el-button>
+                        <el-button circle @click="ptzControl(4)">左上</el-button>
+                        <el-button circle @click="ptzControl(3)">上</el-button>
+                        <el-button circle @click="ptzControl(2)">右上</el-button>
                     </div>
                     <!-- 第二行：左、停止、右 -->
                     <div class="ptz-row">
-                        <el-button icon="el-icon-left" circle @click="ptzControl(5)">左</el-button>
-                        <el-button icon="el-icon-refresh-left" circle @click="ptzControl(0)"
-                            type="warning">停止</el-button>
-                        <el-button icon="el-icon-right" circle @click="ptzControl(1)">右</el-button>
+                        <el-button circle @click="ptzControl(5)">左</el-button>
+                        <el-button circle @click="ptzControl(0)" type="warning">停止</el-button>
+                        <el-button circle @click="ptzControl(1)">右</el-button>
                     </div>
                     <!-- 第三行：左下、下、右下 -->
                     <div class="ptz-row">
-                        <el-button icon="el-icon-bottom-left" circle @click="ptzControl(6)">左下</el-button>
-                        <el-button icon="el-icon-bottom" circle @click="ptzControl(7)">下</el-button>
-                        <el-button icon="el-icon-bottom-right" circle @click="ptzControl(8)">右下</el-button>
+                        <el-button circle @click="ptzControl(6)">左下</el-button>
+                        <el-button circle @click="ptzControl(7)">下</el-button>
+                        <el-button circle @click="ptzControl(8)">右下</el-button>
                     </div>
 
                     <!-- 变焦控制 -->
                     <div class="ptz-group">
                         <span class="group-label">变焦</span>
-                        <el-button icon="el-icon-zoom-in" circle @click="ptzControl(9)">放大</el-button>
-                        <el-button icon="el-icon-zoom-out" circle @click="ptzControl(-9)">缩小</el-button>
+                        <el-button circle @click="ptzControl(9)">放大</el-button>
+                        <el-button circle @click="ptzControl(-9)">缩小</el-button>
                     </div>
 
                     <!-- 聚焦控制 -->
                     <div class="ptz-group">
                         <span class="group-label">聚焦</span>
-                        <el-button icon="el-icon-plus" circle @click="ptzControl(11)">近焦</el-button>
-                        <el-button icon="el-icon-minus" circle @click="ptzControl(-11)">远焦</el-button>
+                        <el-button circle @click="ptzControl(11)">近焦</el-button>
+                        <el-button circle @click="ptzControl(-11)">远焦</el-button>
                     </div>
 
                     <!-- 光圈控制 -->
                     <div class="ptz-group">
                         <span class="group-label">光圈</span>
-                        <el-button icon="el-icon-plus" circle @click="ptzControl(10)">调大</el-button>
-                        <el-button icon="el-icon-minus" circle @click="ptzControl(-10)">调小</el-button>
+                        <el-button circle @click="ptzControl(10)">调大</el-button>
+                        <el-button circle @click="ptzControl(-10)">调小</el-button>
                     </div>
                 </div>
 
                 <!-- 速度调节 -->
                 <div class="speed-control">
-                    <el-slider v-model="ptzSpeed" :min="1" :max="8" :step="1" show-input width="200px"
-                        label="控制速度"></el-slider>
+                    <span>速度</span>
+                    <el-slider v-model="ptzSpeed" :min="1" :max="8" :step="1" width="200px" label="控制速度"></el-slider>
                 </div>
 
                 <!-- 预置位控制 -->
-                <div class="preset-controls" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
+                <div class="preset-controls" style="margin-top:20px;border-top:1px solid #eee;padding-top:5px;">
                     <h4>预置位管理</h4>
+                    <!-- 仅保留设置预置位功能 -->
                     <el-input v-model="presetId" type="number" placeholder="输入预置位ID(1-255)"
                         style="width:120px;margin-right:10px;" :min="1" :max="255"></el-input>
                     <el-button type="primary" size="small" @click="setPreset">设置预置位</el-button>
-                    <el-button type="success" size="small" @click="callPreset">调用预置位</el-button>
-                    <el-button type="danger" size="small" @click="delPreset" style="margin-top:10px;">删除预置位</el-button>
 
-                    <!-- 已保存预置位列表 -->
+                    <!-- 已保存预置位列表 - 改造：点击标签调用，关闭按钮删除 -->
                     <div class="preset-list" style="margin-top:15px;">
-                        <el-tag v-for="id in presetList" :key="id" closable @close="delPreset(id)" style="margin:5px;">
+                        <el-tag v-for="id in presetList" :key="id" closable @close="delPreset(id)"
+                            @click="callPreset(id)" style="margin:5px; cursor: pointer;" effect="dark">
                             预置位{{ id }}
                         </el-tag>
+                        <div v-if="presetList.length === 0" style="color:#999; font-size:12px; margin-top:8px;">
+                            暂无预置位，可输入ID后点击"设置预置位"添加
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,7 +118,7 @@ export default {
             this.open = true;
             this.videoSource = { ...row };
             if (this.videoSource.VideoType == 0) {
-                this.getPlayUrl();
+                this.getPlayUrl(this.videoSource.Id, null);
             }
             else if (this.videoSource.VideoType == 1) {
                 this.loadChannelList();
@@ -153,6 +154,8 @@ export default {
                 if (this.channelList.length > 0) {
                     this.currentChannelId = this.channelList[0].ChannelId;
                     await this.loadPresetList();
+                    let plres = await getPlayUrl(this.videoSource.Id, this.currentChannelId);
+                    this.initVideoPlayer(plres.data);
                 }
                 this.loading = false;
             } catch (error) {
@@ -190,18 +193,14 @@ export default {
                 return this.$message.warning('请先选择通道');
             }
             try {
-                this.loading = true;
-                // 实际接口调用示例：传递当前通道ID
-                // const res = await controlPTZ({
-                //   deviceId: this.videoSource.Id,
-                //   channelId: this.currentChannelId,
-                //   action: action,
-                //   speed: this.ptzSpeed
-                // })
-
+                await controlPTZ({
+                    SourceId: this.videoSource.Id,
+                    ChannelId: this.currentChannelId,
+                    Cmd: action,
+                    Speed: this.ptzSpeed
+                });
             } catch (error) {
                 this.$message.error(`云台控制失败`);
-                this.loading = false;
             }
         },
 
@@ -214,83 +213,63 @@ export default {
                 return this.$message.warning('预置位ID必须为1-255的整数');
             }
             try {
-                this.loading = true;
-                // 实际接口调用：传递当前通道ID
-                // const res = await presetPTZ({
-                //   deviceId: this.videoSource.Id,
-                //   channelId: this.currentChannelId,
-                //   presetId: this.presetId,
-                //   action: 'set'
-                // })
-                setTimeout(() => {
-                    if (!this.presetList.includes(this.presetId)) {
-                        this.presetList.push(this.presetId);
-                        this.presetList.sort((a, b) => a - b);
-                    }
-                    this.$message.success(`设置预置位${this.presetId}成功`);
-                    this.loading = false;
-                }, 500);
+                await presetPTZ({
+                    SourceId: this.videoSource.Id,
+                    ChannelId: this.currentChannelId,
+                    Cmd: 12,
+                    PresetId: this.presetId
+                })
+
             } catch (error) {
                 this.$message.error(`设置预置位${this.presetId}失败`);
-                this.loading = false;
             }
+            await this.loadPresetList();
         },
-
         // 调用预置位
-        async callPreset() {
+        async callPreset(id) {
             if (!this.currentChannelId) {
                 return this.$message.warning('请先选择通道');
             }
-            if (!this.presetId || this.presetId < 1 || this.presetId > 255) {
-                return this.$message.warning('预置位ID必须为1-255的整数');
+            const presetId = id;
+            if (!presetId || presetId < 1 || presetId > 255) {
+                return this.$message.warning('预置位ID无效');
             }
             try {
-                this.loading = true;
-                // 实际接口调用：传递当前通道ID
-                // const res = await presetPTZ({
-                //   deviceId: this.videoSource.Id,
-                //   channelId: this.currentChannelId,
-                //   presetId: this.presetId,
-                //   action: 'call'
-                // })
-                setTimeout(() => {
-                    this.$message.success(`调用预置位${this.presetId}成功`);
-                    this.loading = false;
-                }, 500);
+                await presetPTZ({
+                    SourceId: this.videoSource.Id,
+                    ChannelId: this.currentChannelId,
+                    Cmd: 13,
+                    PresetId: presetId
+                });
+
             } catch (error) {
-                this.$message.error(`调用预置位${this.presetId}失败`);
-                this.loading = false;
+                this.$message.error(`调用预置位${presetId}失败`);
             }
         },
 
-        // 删除预置位
+        // 删除预置位 - 保持原有逻辑，优化提示
         async delPreset(id) {
             if (!this.currentChannelId) {
                 return this.$message.warning('请先选择通道');
             }
-            const presetId = id || this.presetId;
+            const presetId = id;
             if (!presetId || presetId < 1 || presetId > 255) {
-                return this.$message.warning('预置位ID必须为1-255的整数');
+                return this.$message.warning('预置位ID无效');
             }
             try {
-                this.loading = true;
-                // 实际接口调用：传递当前通道ID
-                // const res = await presetPTZ({
-                //   deviceId: this.videoSource.Id,
-                //   channelId: this.currentChannelId,
-                //   presetId: presetId,
-                //   action: 'delete'
-                // })
-                setTimeout(() => {
-                    this.presetList = this.presetList.filter(item => item !== presetId);
-                    this.$message.success(`删除预置位${presetId}成功`);
-                    this.loading = false;
-                }, 500);
+                await presetPTZ({
+                    SourceId: this.videoSource.Id,
+                    ChannelId: this.currentChannelId,
+                    Cmd: 14,
+                    PresetId: presetId
+                });
             } catch (error) {
                 this.$message.error(`删除预置位${presetId}失败`);
-                this.loading = false;
             }
+
+            await this.loadPresetList();
         },
+
         handleClose() {
             const videoElement = this.$refs.videoElement;
             if (videoElement) {
@@ -304,6 +283,10 @@ export default {
 </script>
 
 <style scoped>
+::v-deep .el-dialog__body {
+    padding-top: 10px;
+}
+
 .video-play-container {
     display: flex;
     gap: 20px;
@@ -339,7 +322,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 /* 每行按钮容器 */
@@ -350,8 +333,8 @@ export default {
 
 /* 按钮样式优化 */
 .ptz-row .el-button {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -376,11 +359,16 @@ export default {
 .ptz-group .el-button {
     width: 50px;
     height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 12px;
 }
 
 .speed-control {
-    margin-top: 15px;
+    margin-top: 5px;
+    padding: 0 15px;
+    width: 100%;
 }
 
 @media (max-width: 768px) {

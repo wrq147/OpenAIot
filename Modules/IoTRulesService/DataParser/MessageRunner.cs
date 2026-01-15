@@ -48,10 +48,18 @@ namespace IoTRulesService.DataParser
             }
             if (rs is RawUpDataMessage rawUpData)
             {
+                if (!string.IsNullOrEmpty(rawUpData.NodeGuid))
+                {
+                    _provider.GetService<PackParser>().UpdateDeviceGuid(rawUpData.DeviceId, rawUpData.NodeGuid);
+                }
                 await _provider.GetService<DeviceMessageHandler>().ParseMessage(rawUpData);
             }
             else if (rs is BaseUpDeviceMessage upMsg)
             {
+                if (!string.IsNullOrEmpty(upMsg.NodeGuid))
+                {
+                    _provider.GetService<PackParser>().UpdateDeviceGuid(upMsg.DeviceId, upMsg.NodeGuid);
+                }
                 await _provider.GetService<DeviceMessageHandler>().ExeMessage(upMsg);
             }
             else

@@ -68,6 +68,7 @@ import {
 } from "./commonRuning";
 import printJs from 'print-js'
 import { exportExcel } from './export'
+import { loadLuckysheet } from '@/utils/luckysheetLoader.js'
 export default {
     name: 'viewDataReport',
    
@@ -91,6 +92,7 @@ export default {
         }
     },
     async created() {
+        await loadLuckysheet();
         this.loadingQuery= this.$loading({//进入页面设置加载中效果，方便完成页面保存数据的初始化
             lock: true,
             text: 'Loading',

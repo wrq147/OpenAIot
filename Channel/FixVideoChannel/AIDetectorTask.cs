@@ -113,7 +113,7 @@ namespace FixVideoChannel
         }
 
         // AI检测
-        public void Detect(string videoId, int width, int height, IVideoDeviceEventListener listener, ref byte[] data, ref bool isPress)
+        public void Detect(string videoId, int width, int height, float motionRatio, IVideoDeviceEventListener listener, ref byte[] data, ref bool isPress)
         {
             if (listener == null)
             {
@@ -127,7 +127,7 @@ namespace FixVideoChannel
             }
 
             pressData = data;
-            Task t = listener.OnSendAIDetectRequest(videoId, _item, pressData, width / 2, height / 2);
+            Task t = listener.OnSendAIDetectRequest(videoId, _item, motionRatio, pressData, width / 2, height / 2);
         }
         public bool Draw(byte[] rgbFrame, int width, int height)
         {

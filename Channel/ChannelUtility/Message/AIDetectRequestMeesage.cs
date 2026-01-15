@@ -15,6 +15,10 @@ namespace ChannelUtility.Message
         public string NodeId { get; set; }
         public string DetType { get; set; }
         /// <summary>
+        /// 运动区块占比
+        /// </summary>
+        public float MotionRatio { get; set; }
+        /// <summary>
         /// 是否启用绘制
         /// </summary>
         public bool IsDraw { get; set; }

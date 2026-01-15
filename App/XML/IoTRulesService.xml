@@ -742,7 +742,7 @@
             <param name="funprefix"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.PackParser.PushCustom(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},ChannelUtility.Buffers.FastReader,System.String,ChannelUtility.Tsl.TslModel,System.String)">
+        <member name="M:IoTRulesService.DataParser.PackParser.PushCustom(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},ChannelUtility.Buffers.FastReader,System.String,ChannelUtility.Tsl.TslModel,System.String,System.String)">
             <summary>
             发送自定义数据包
             </summary>
@@ -753,6 +753,7 @@
             <param name="script"></param>
             <param name="model"></param>
             <param name="codeprefix"></param>
+            <param name="nodeGuid"></param>
             <returns></returns>
         </member>
         <member name="T:IoTRulesService.DeviceCache">

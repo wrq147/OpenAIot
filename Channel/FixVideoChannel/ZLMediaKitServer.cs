@@ -140,11 +140,12 @@ namespace FixVideoChannel
                     context.Motion.CoolDownMs = item.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
                     // 执行AI检测
-                    if (context.Motion.IsMotionKeyframe(rgb24, w, h))
+                    var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
+                    if (isMotionDetected)
                     {
                         foreach (var task in detectTasks)
                         {
-                            task.Detect(item.Item.Id, w, h, _listener, ref tdata, ref isPress);
+                            task.Detect(item.Item.Id, w, h, motionRatio, _listener, ref tdata, ref isPress);
                         }
                     }
 

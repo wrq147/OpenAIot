@@ -509,6 +509,7 @@ namespace IoTService
             }, DefalutNatsJsonSerializer<string>.Default);
         }
 
+
         /// <summary>
         /// 发送服务端事件
         /// </summary>
@@ -517,8 +518,10 @@ namespace IoTService
         /// <param name="eventId"></param>
         /// <param name="outputs"></param>
         /// <param name="redirectFromProductId"></param>
+        /// <param name="ruleId"></param>
+        /// <param name="fromDtuId"></param>
         /// <returns></returns>
-        public async Task SendEvent(string productId, string deviceId, string eventId, IDictionary<string, object> outputs, string redirectFromProductId = null, HashSet<long> ruleId = null, string fromDtuId = null)
+        public async Task SendEvent(string productId, string deviceId, string eventId, IDictionary<string, object> outputs, string redirectFromProductId = null, HashSet<long> ruleId = null, string fromDtuId = null, string fromNode = null)
         {
             DeviceEventMessage msg = new DeviceEventMessage();
             msg.DeviceId = deviceId;
@@ -529,6 +532,7 @@ namespace IoTService
             msg.RedirectFromProductId = redirectFromProductId;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
+            msg.NodeGuid = fromNode;
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
@@ -545,7 +549,7 @@ namespace IoTService
         /// <param name="ip"></param>
         /// <param name="redirectFromProductId"></param>
         /// <returns></returns>
-        public async Task SendConnect(string productId, string deviceId, string ip = "", string redirectFromProductId = null, HashSet<long> ruleId = null, string fromDtuId = null)
+        public async Task SendConnect(string productId, string deviceId, string ip = "", string redirectFromProductId = null, HashSet<long> ruleId = null, string fromDtuId = null, string fromNode = null)
         {
             DeviceOnlineMessage msg = new DeviceOnlineMessage();
             msg.ProductId = productId;
@@ -554,6 +558,7 @@ namespace IoTService
             msg.RedirectFromProductId = redirectFromProductId;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
+            msg.NodeGuid = fromNode;
             if (string.IsNullOrEmpty(ip))
             {
                 msg.IpAddress = ip;
@@ -596,6 +601,7 @@ namespace IoTService
 
 
 
+
         /// <summary>
         /// 发送服务端属性回复
         /// </summary>
@@ -607,8 +613,9 @@ namespace IoTService
         /// <param name="ruleId"></param>
         /// <param name="fromDtuId"></param>
         /// <param name="indate"></param>
+        /// <param name="fromNode"></param>
         /// <returns></returns>
-        public async Task SendPropertyReply(string productId, string deviceId, IDictionary<string, object> properties, string redirectFromProductId = null, bool isTagSync = false, HashSet<long> ruleId = null, string fromDtuId = null, DateTime? indate = null)
+        public async Task SendPropertyReply(string productId, string deviceId, IDictionary<string, object> properties, string redirectFromProductId = null, bool isTagSync = false, HashSet<long> ruleId = null, string fromDtuId = null, DateTime? indate = null, string fromNode = null)
         {
             ReadPropertyMessageReply msg = new ReadPropertyMessageReply();
             msg.ProductId = productId;
@@ -626,6 +633,7 @@ namespace IoTService
             msg.IsTagSync = isTagSync;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
+            msg.NodeGuid = fromNode;
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {

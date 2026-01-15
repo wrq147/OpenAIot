@@ -156,7 +156,7 @@ namespace GB28181Channel.GB28181
             ptzCmdBytes[5] = 0;
             ptzCmdBytes[6] = 0;
             ptzCmdBytes[7] = 0;
-            PTZCommandType actualType = @params.Speed == 0 ? PTZCommandType.Halt : @params.CommandType;
+            PTZCommandType actualType =  @params.CommandType;
             switch (actualType)
             {
                 case PTZCommandType.Halt:

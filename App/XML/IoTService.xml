@@ -2849,7 +2849,7 @@
             <param name="nodename"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.SendEvent(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Collections.Generic.HashSet{System.Int64},System.String)">
+        <member name="M:IoTService.ServerBusProxy.SendEvent(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Collections.Generic.HashSet{System.Int64},System.String,System.String)">
             <summary>
             发送服务端事件
             </summary>
@@ -2858,9 +2858,11 @@
             <param name="eventId"></param>
             <param name="outputs"></param>
             <param name="redirectFromProductId"></param>
+            <param name="ruleId"></param>
+            <param name="fromDtuId"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.SendConnect(System.String,System.String,System.String,System.String,System.Collections.Generic.HashSet{System.Int64},System.String)">
+        <member name="M:IoTService.ServerBusProxy.SendConnect(System.String,System.String,System.String,System.String,System.Collections.Generic.HashSet{System.Int64},System.String,System.String)">
             <summary>
             发送服务端上线事件
             </summary>
@@ -2880,7 +2882,7 @@
             <param name="ruleId"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.SendPropertyReply(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Boolean,System.Collections.Generic.HashSet{System.Int64},System.String,System.Nullable{System.DateTime})">
+        <member name="M:IoTService.ServerBusProxy.SendPropertyReply(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Boolean,System.Collections.Generic.HashSet{System.Int64},System.String,System.Nullable{System.DateTime},System.String)">
             <summary>
             发送服务端属性回复
             </summary>
@@ -2892,6 +2894,7 @@
             <param name="ruleId"></param>
             <param name="fromDtuId"></param>
             <param name="indate"></param>
+            <param name="fromNode"></param>
             <returns></returns>
         </member>
         <member name="P:IoTService.Third.Api.SimBoss.CardPoolModel.Id">

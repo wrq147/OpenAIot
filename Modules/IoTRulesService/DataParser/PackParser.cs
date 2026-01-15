@@ -29,6 +29,13 @@ namespace IoTRulesService.DataParser
         private ConcurrentDictionary<string, string> _deviceToNodeGuid = new ConcurrentDictionary<string, string>();
         public void UpdateDeviceGuid(string dtuId, string guid)
         {
+            if (_deviceToNodeGuid.TryGetValue(dtuId, out string existingGuid))
+            {
+                if (existingGuid == guid)
+                {
+                    return;
+                }
+            }
             _deviceToNodeGuid.AddOrUpdate(dtuId, guid, (k, v) => guid);
         }
         public string GetNodeGuid(string dtuId)
@@ -418,7 +425,7 @@ namespace IoTRulesService.DataParser
             }
         }
 
-        public async Task DownModbusMatch(string nodeid, List<ModbusMatch> list)
+        public async Task DownModbusMatch(string nodeguid, List<ModbusMatch> list)
         {
             ModbusMatchMessage msg = new ModbusMatchMessage();
             msg.DeviceId = string.Empty;
@@ -429,7 +436,7 @@ namespace IoTRulesService.DataParser
 
             await _busScope.Bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/device." + nodeid + ".guid",
+                Subject = "/node." + nodeguid,
                 Data = msgbody
             }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
@@ -635,6 +642,7 @@ namespace IoTRulesService.DataParser
         }
 
 
+
         /// <summary>
         /// 发送自定义数据包
         /// </summary>
@@ -645,8 +653,9 @@ namespace IoTRulesService.DataParser
         /// <param name="script"></param>
         /// <param name="model"></param>
         /// <param name="codeprefix"></param>
+        /// <param name="nodeGuid"></param>
         /// <returns></returns>
-        private async Task<bool> PushCustom(string productId, string deviceId, IDictionary<string, object> properties, FastReader input, string script, TslModel model, string codeprefix)
+        private async Task<bool> PushCustom(string productId, string deviceId, IDictionary<string, object> properties, FastReader input, string script, TslModel model, string codeprefix, string nodeGuid)
         {
             ReadPropertyMessageReply msg = null;
             if (properties != null && properties.Count > 0)
@@ -658,6 +667,7 @@ namespace IoTRulesService.DataParser
                 msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
                 msg.RedirectFromProductId = string.Empty;
                 msg.IsTagSync = false;
+                msg.NodeGuid = nodeGuid;
             }
 
             if (string.IsNullOrEmpty(script))
@@ -674,7 +684,7 @@ namespace IoTRulesService.DataParser
             }
             try
             {
-                var datacontext = new DataContext(msg, input, productId, deviceId, this, model, codeprefix);
+                var datacontext = new DataContext(msg, input, productId, deviceId, this, model, codeprefix, nodeGuid);
                 var func = await Task.Run(() =>
                 {
                     var jsEngine = this.GetJsEngine(deviceId, script);
@@ -707,6 +717,7 @@ namespace IoTRulesService.DataParser
                         return false;
                     }
                 }
+                newmsg.NodeGuid = nodeGuid;
                 if (newmsg is EmptyMessageReply)
                 {
                     return true;
@@ -1044,7 +1055,7 @@ namespace IoTRulesService.DataParser
                 }
 
                 //自定义解释
-                await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix);
+                await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeGuid);
                 if (lastReader.Position > -1)
                 {
                     //有剩余数据包，则下个循环处理
@@ -1061,17 +1072,17 @@ namespace IoTRulesService.DataParser
                         //保存下次使用
                         SaveFastReader(datamsg.DeviceId, lastReader);
                     }
-                    if (newmmlist != null && newmmlist.Count > 0 && !string.IsNullOrEmpty(datamsg.NodeId))
+                    if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
                     {
-                        await DownModbusMatch(datamsg.NodeId, newmmlist);
+                        await DownModbusMatch(datamsg.NodeGuid, newmmlist);
                     }
                     return;
                 }
             }
 
-            if (newmmlist != null && newmmlist.Count > 0 && !string.IsNullOrEmpty(datamsg.NodeId))
+            if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
             {
-                await DownModbusMatch(datamsg.NodeId, newmmlist);
+                await DownModbusMatch(datamsg.NodeGuid, newmmlist);
             }
         }
         public async Task<RawDataMessage> toRawData(BaseDeviceMessage msg, TslReturn ret)

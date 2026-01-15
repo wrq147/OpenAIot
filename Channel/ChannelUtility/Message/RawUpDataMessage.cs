@@ -9,7 +9,8 @@ namespace ChannelUtility.Message
         /// 边缘设备的下属设备
         /// </summary>
         public string prefix { get; set; }
-        public string NodeId { get; set; }
+        public string NodeGuid { get; set; }
+        public bool IsReturn { get; set; }
         public RawUpDataMessage()
         {
             MsgType = "RawUpData";

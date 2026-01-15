@@ -21,10 +21,10 @@ namespace FixVideoChannel
         public float MotionBlockRatioThreshold { get; set; } = 0.08f;
         // 最小运动块数（过滤微小抖动）
         public int MinMotionBlocks { get; set; } = 20;
-        // 像素块大小（8x8/16x16，越小越灵敏但计算量越大）
-        public int BlockSize { get; set; } = 16;
+        // 像素块大小
+        public int BlockSize { get; set; } = 8;
         // 冷却时间（ms）：避免高频触发
-        public int CoolDownMs { get; set; } = 200;
+        public int CoolDownMs { get; set; } = 300;
 
         // 实例上下文
         private readonly MotionContext _context = new MotionContext();
@@ -53,7 +53,7 @@ namespace FixVideoChannel
         /// <param name="width">帧宽度</param>
         /// <param name="height">帧高度</param>
         /// <returns>是否需要执行AI检测</returns>
-        public bool IsMotionKeyframe(byte[] rgb24Data, int width, int height)
+        public (bool, float) IsMotionKeyframe(byte[] rgb24Data, int width, int height)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace FixVideoChannel
                 long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 if (currentTime - _context.LastTriggerTime < CoolDownMs)
                 {
-                    return false;
+                    return (false, 0);
                 }
 
                 // 2. 将RGB24字节数组转为灰度图
@@ -75,11 +75,11 @@ namespace FixVideoChannel
                 if (_context.LastGrayPixels == null || _context.LastGrayPixels.Length != currentGrayPixels.Length)
                 {
                     UpdateContext(currentGrayPixels, width, height);
-                    return false;
+                    return (false, 0);
                 }
 
                 // 5. 像素块运动检测（核心判断逻辑）
-                bool isMotionDetected = CheckBlockMotion(
+                var (isMotionDetected, motionRatio) = CheckBlockMotion(
                     _context.LastGrayPixels, currentGrayPixels,
                     _context.LastWidth, _context.LastHeight);
 
@@ -92,17 +92,17 @@ namespace FixVideoChannel
                     _context.LastTriggerTime = currentTime;
                 }
 
-                return isMotionDetected;
+                return (isMotionDetected, motionRatio);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"运动检测异常：{ex.Message}");
-                return false;
+                return (false, 0);
             }
         }
 
         #region 核心工具方法（使用实例专属配置）
-   
+
 
         /// <summary>
         /// 提取灰度图像的像素数组（单通道）
@@ -129,7 +129,7 @@ namespace FixVideoChannel
         /// <summary>
         /// 像素块运动检测（统计运动块占比）
         /// </summary>
-        private bool CheckBlockMotion(byte[] lastGray, byte[] currentGray, int width, int height)
+        private (bool, float) CheckBlockMotion(byte[] lastGray, byte[] currentGray, int width, int height)
         {
             int blockCountX = width / BlockSize;
             int blockCountY = height / BlockSize;
@@ -162,7 +162,7 @@ namespace FixVideoChannel
             float motionRatio = (float)motionBlockCount / totalBlocks;
 
             // 运动块占比超阈值 且 数量足够 → 判定为有运动
-            return motionRatio > MotionBlockRatioThreshold && motionBlockCount > MinMotionBlocks;
+            return (motionRatio > MotionBlockRatioThreshold && motionBlockCount > MinMotionBlocks, motionRatio);
         }
 
         /// <summary>

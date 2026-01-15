@@ -132,11 +132,12 @@ namespace GB28181Channel
                     context.Motion.CoolDownMs = device.VideoData.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
                     // 执行AI检测
-                    if (context.Motion.IsMotionKeyframe(rgb24, w, h))
+                    var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
+                    if (isMotionDetected)
                     {
                         foreach (var task in detectTasks)
                         {
-                            task.Detect(device.VideoData.Item.Id, w, h, _listener, ref tdata, ref isPress);
+                            task.Detect(device.VideoData.Item.Id, w, h, motionRatio, _listener, ref tdata, ref isPress);
                         }
                     }
 
@@ -328,7 +329,7 @@ namespace GB28181Channel
                 };
                 mk_common.MkEnvInit(config);
                 mk_common.MkRtpServerStart((ushort)_option.rtp_port);
-
+                mk_common.MkRtmpServerStart((ushort)_option.rtmp_port, 0);
 
                 _mkEvents = new MkEvents()
                 {

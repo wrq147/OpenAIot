@@ -378,7 +378,6 @@
             <param name="deviceId"></param>
             <param name="eventId"></param>
             <param name="outputs"></param>
-            <param name="redirectFromProductId"></param>
             <returns></returns>
         </member>
         <member name="M:FlowService.DeviceBusProxy.DownFunction(FlowService.Model.Out_FlowDevice,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">

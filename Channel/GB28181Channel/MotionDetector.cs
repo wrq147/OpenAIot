@@ -49,7 +49,7 @@ namespace GB28181Channel
         /// <param name="width">帧宽度</param>
         /// <param name="height">帧高度</param>
         /// <returns>是否需要执行AI检测</returns>
-        public bool IsMotionKeyframe(byte[] rgb24Data, int width, int height)
+        public (bool, float) IsMotionKeyframe(byte[] rgb24Data, int width, int height)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace GB28181Channel
                 long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 if (currentTime - _context.LastTriggerTime < CoolDownMs)
                 {
-                    return false;
+                    return (false, 0);
                 }
 
                 // 2. 将RGB24字节数组转为灰度图
@@ -71,11 +71,11 @@ namespace GB28181Channel
                 if (_context.LastGrayPixels == null || _context.LastGrayPixels.Length != currentGrayPixels.Length)
                 {
                     UpdateContext(currentGrayPixels, width, height);
-                    return false;
+                    return (false, 0);
                 }
 
                 // 5. 像素块运动检测（核心判断逻辑）
-                bool isMotionDetected = CheckBlockMotion(
+                var (isMotionDetected, motionRatio) = CheckBlockMotion(
                     _context.LastGrayPixels, currentGrayPixels,
                     _context.LastWidth, _context.LastHeight);
 
@@ -88,12 +88,12 @@ namespace GB28181Channel
                     _context.LastTriggerTime = currentTime;
                 }
 
-                return isMotionDetected;
+                return (isMotionDetected, motionRatio);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"运动检测异常：{ex.Message}");
-                return false;
+                return (false, 0);
             }
         }
 
@@ -125,7 +125,7 @@ namespace GB28181Channel
         /// <summary>
         /// 像素块运动检测（统计运动块占比）
         /// </summary>
-        private bool CheckBlockMotion(byte[] lastGray, byte[] currentGray, int width, int height)
+        private (bool, float) CheckBlockMotion(byte[] lastGray, byte[] currentGray, int width, int height)
         {
             int blockCountX = width / BlockSize;
             int blockCountY = height / BlockSize;
@@ -158,7 +158,7 @@ namespace GB28181Channel
             float motionRatio = (float)motionBlockCount / totalBlocks;
 
             // 运动块占比超阈值 且 数量足够 → 判定为有运动
-            return motionRatio > MotionBlockRatioThreshold && motionBlockCount > MinMotionBlocks;
+            return (motionRatio > MotionBlockRatioThreshold && motionBlockCount > MinMotionBlocks, motionRatio);
         }
 
         /// <summary>

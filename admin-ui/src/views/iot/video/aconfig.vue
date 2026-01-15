@@ -20,7 +20,7 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item label="冷却时间" prop="CoolDownMs" class="form-item">
-              <el-input-number v-model="configForm.CoolDownMs" :min="100" :max="99999" :step="100"
+              <el-input-number v-model="configForm.CoolDownMs" :min="300" :max="99999" :step="100"
                 placeholder="请输入100-99999之间的数值" class="input-number">
               </el-input-number>
               <span style="margin-left:5px;">毫秒</span>
@@ -223,7 +223,7 @@ export default {
       // 已配置项目列表
       configuredProjects: [],
       allProjects: [],
-      configForm: { "MotionRatio": 0.08, "CoolDownMs": 200, "Tasks": [] },
+      configForm: { "MotionRatio": 0.08, "CoolDownMs": 300, "Tasks": [] },
       projectId: null
     }
   },
@@ -489,7 +489,9 @@ export default {
 }
 
 .config-card-body {
-  padding: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
 }
 
 .detection-form {

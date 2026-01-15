@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,6 +43,8 @@ namespace ChannelUtility
         {
             get { return _nodeGuid; }
         }
+        private List<IAsyncDisposable> _subscriptions = new List<IAsyncDisposable>();
+        private readonly object _subscriptionLock = new object();
         public ClientBusProxy(IServiceProvider provider)
         {
             _provider = provider;
@@ -61,15 +64,45 @@ namespace ChannelUtility
                 ConnectTimeout = TimeSpan.FromSeconds(5)
             };
             _bus = new NatsConnection(opts);
-            InitBus();
+            _bus.ConnectionOpened += OnClientConnected;
+            _bus.ConnectionDisconnected += OnClientDisconnected;
+            _ = InitNatsConnectionAsync();
             UpdateUpList();
         }
-        private async void InitBus()
+        private async Task InitNatsConnectionAsync()
         {
-            await _bus.ConnectAsync().ConfigureAwait(false);
-            Task t1 = Task.Run(async () =>
+            try
             {
-                await foreach (var msg in _bus.SubscribeAsync("/node." + _nodeGuid, "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                // 显式连接NATS服务器
+                await _bus.ConnectAsync().ConfigureAwait(false);
+                Console.WriteLine($"[ClientBusProxy] NATS连接成功：{_option.EventConn}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ClientBusProxy] NATS连接失败：{ex.Message}");
+                // 可根据业务需求添加重试逻辑
+            }
+        }
+
+        private async ValueTask OnClientConnected(object? sender, NatsEventArgs args)
+        {
+            lock (_subscriptionLock)
+            {
+                if (_subscriptions.Any())
+                {
+                    foreach (var sub in _subscriptions)
+                    {
+                        sub.DisposeAsync().AsTask().Wait(); // 同步清理旧订阅
+                    }
+                    _subscriptions.Clear();
+                }
+            }
+            var productSub = await _bus.SubscribeCoreAsync("/node." + _nodeGuid, "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            _subscriptions.Add(productSub);
+
+            _ = Task.Run(async () =>
+            {
+                await foreach (var msg in productSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {
                     if (string.IsNullOrEmpty(msg.Data))
                     {
@@ -88,42 +121,69 @@ namespace ChannelUtility
                 }
             });
 
-            Task t2 = Task.Run(async () =>
+            var ruleNodeSub = await _bus.SubscribeCoreAsync("/RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            _subscriptions.Add(ruleNodeSub);
+            _ = Task.Run(async () =>
             {
-                await foreach (var msg in _bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
+                await foreach (var msg in ruleNodeSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {
                     UpdateUpList();
                 }
             });
 
-            Task t3 = Task.Run(async () =>
-            {
-                await foreach (var msg in _bus.SubscribeAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false))
-                {
-                    if (string.IsNullOrEmpty(msg.Data))
-                    {
-                        continue;
-                    }
-                    string tmpkey = msg.Data;
-                    if (tmpkey.StartsWith("Device:"))
-                    {
-                        tmpkey = tmpkey + "$ProductId";
-                        _memoryCache.Remove(tmpkey);
-                    }
-                    else if (tmpkey.StartsWith("Offline:"))
-                    {
-                        string devid = tmpkey.Split(":")[1];
-                        tmpkey = "Device:" + devid + "$ProductId";
-                        _memoryCache.Remove(tmpkey);
-                    }
-                    else
-                    {
-                        _memoryCache.Remove(tmpkey);
-                    }
-                }
-            });
 
+            var iotKeyDelSub = await _bus.SubscribeCoreAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            _subscriptions.Add(iotKeyDelSub);
+            _ = Task.Run(async () =>
+             {
+                 await foreach (var msg in iotKeyDelSub.Msgs.ReadAllAsync().ConfigureAwait(false))
+                 {
+                     if (string.IsNullOrEmpty(msg.Data))
+                     {
+                         continue;
+                     }
+                     string tmpkey = msg.Data;
+                     if (tmpkey.StartsWith("Device:"))
+                     {
+                         tmpkey = tmpkey + "$ProductId";
+                         _memoryCache.Remove(tmpkey);
+                     }
+                     else if (tmpkey.StartsWith("Offline:"))
+                     {
+                         string devid = tmpkey.Split(":")[1];
+                         tmpkey = "Device:" + devid + "$ProductId";
+                         _memoryCache.Remove(tmpkey);
+                     }
+                     else
+                     {
+                         _memoryCache.Remove(tmpkey);
+                     }
+                 }
+             });
         }
+        private async ValueTask OnClientDisconnected(object? sender, NatsEventArgs args)
+        {
+            // 清理现有订阅
+            lock (_subscriptionLock)
+            {
+                if (_subscriptions.Any())
+                {
+                    foreach (var sub in _subscriptions)
+                    {
+                        try
+                        {
+                            sub.DisposeAsync().AsTask().Wait(1000); // 限时清理
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[ClientBusProxy] 清理订阅失败：{ex.Message}");
+                        }
+                    }
+                    _subscriptions.Clear();
+                }
+            }
+        }
+
         public async Task DownRequestMessage(BaseDeviceMessage msg)
         {
             if (OnSubProductMessage != null)
@@ -344,21 +404,15 @@ namespace ChannelUtility
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
         }
-        public async Task PublishRawUp(string deviceId, byte[] data, string prefix, bool enableNodeId = false)
+        public async Task PublishRawUp(string deviceId, byte[] data, string prefix, bool needReturn = false)
         {
             RawUpDataMessage msg = new RawUpDataMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.Data = data;
             msg.prefix = prefix;
-            if (enableNodeId)
-            {
-                msg.NodeId = this._nodeGuid;
-            }
-            else
-            {
-                msg.NodeId = string.Empty;
-            }
+            msg.NodeGuid = this._nodeGuid;
+            msg.IsReturn = needReturn;
 
             await _bus.PublishAsync(new NatsMsg<string>()
             {
@@ -391,23 +445,26 @@ namespace ChannelUtility
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
+
         /// <summary>
         /// 上报AI检测请求
         /// </summary>
-        /// <param name="streamId"></param>
+        /// <param name="deviceId"></param>
         /// <param name="detectType"></param>
+        /// <param name="motionRatio"></param>
         /// <param name="detParams"></param>
         /// <param name="isDraw"></param>
         /// <param name="frameData"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public async Task PublishAIDetectRequest(string deviceId, string detectType, Dictionary<string, object> detParams, bool isDraw, byte[] frameData, int width, int height)
+        public async Task PublishAIDetectRequest(string deviceId, string detectType, float motionRatio, Dictionary<string, object> detParams, bool isDraw, byte[] frameData, int width, int height)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.DetType = detectType;
+            msg.MotionRatio = motionRatio;
             msg.IsDraw = isDraw;
             msg.DetParams = detParams;
             msg.Frame = frameData;

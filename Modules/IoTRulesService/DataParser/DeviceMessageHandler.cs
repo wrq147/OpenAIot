@@ -77,9 +77,6 @@ namespace IoTRulesService.DataParser
                             var serverBus = _provider.GetService<ServerBusProxy>();
 
                             DeviceOnlineMessage rdmsg = (DeviceOnlineMessage)rs;
-                            //更新下发节点
-                            _provider.GetService<PackParser>().UpdateDeviceGuid(rdmsg.DeviceId, rdmsg.NodeGuid);
-
                             var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
                             if (devicelist.Count > 0)
                             {
@@ -332,7 +329,7 @@ namespace IoTRulesService.DataParser
                             {
                                 model = await TslCache.GetTslModel(rs.ProductId, redis, _provider);
                             }
-     
+
                             var deviceCahce = _provider.GetService<DeviceCache>();
                             //获取所有旧属性数据
                             var allDict = await deviceCahce.GetDevice(rdmsg.DeviceId);
@@ -367,7 +364,7 @@ namespace IoTRulesService.DataParser
                                     if (!string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
                                     {
                                         //转发数据时，设备离线则发送上线报文
-                                        await _provider.GetService<ServerBusProxy>().SendConnect(rdmsg.ProductId, rdmsg.DeviceId, "", rdmsg.RedirectFromProductId, rdmsg.RuleIds, rdmsg.RedirecDtuId);
+                                        await _provider.GetService<ServerBusProxy>().SendConnect(rdmsg.ProductId, rdmsg.DeviceId, "", rdmsg.RedirectFromProductId, rdmsg.RuleIds, rdmsg.RedirecDtuId, rdmsg.NodeGuid);
                                     }
                                 }
                                 return;

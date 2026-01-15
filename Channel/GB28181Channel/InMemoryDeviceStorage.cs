@@ -97,8 +97,12 @@ namespace GB28181Channel
             }
             if (_devices.TryRemove(deviceId, out var currentDevice))
             {
-                _keyToDeviceIds.TryRemove(currentDevice.VideoData.Item.PushKey, out string tdvid);
-                _dtuIdToDeviceIds.TryRemove(currentDevice.VideoData.Item.Id, out string tdxxx);
+                if (currentDevice.VideoData != null)
+                {
+                    _keyToDeviceIds.TryRemove(currentDevice.VideoData.Item.PushKey, out string tdvid);
+                    _dtuIdToDeviceIds.TryRemove(currentDevice.VideoData.Item.Id, out string tdxxx);
+                }
+
             }
             return true;
         }

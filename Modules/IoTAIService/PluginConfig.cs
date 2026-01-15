@@ -15,6 +15,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -167,7 +168,13 @@ namespace IoTAIService
                                             //发送人脸数量属性
                                             Dictionary<string, object> newvals = new Dictionary<string, object>();
                                             newvals.Add("FaceCount", tbbx.Count);
-                                            await _provider.GetService<ServerBusProxy>().SendPropertyReply(string.Empty, detectReq.DeviceId, newvals);
+                                            ReadPropertyMessageReply rpmsg = new ReadPropertyMessageReply();
+                                            rpmsg.ProductId = string.Empty;
+                                            rpmsg.DeviceId = detectReq.DeviceId;
+                                            rpmsg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+                                            rpmsg.Properties = newvals;
+                                            rpmsg.IsTagSync = false;
+                                            await _provider.GetService<DeviceMessageHandler>().ExeMessage(rpmsg);
                                             //人脸数量变化事件
 
                                         }

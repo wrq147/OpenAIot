@@ -19,8 +19,8 @@ namespace IoTRulesService.DataParser.Js
         private ReadPropertyMessageReply _reply;
         private string _codeprefix;
         private TslModel _model;
-
-        public DataContext(ReadPropertyMessageReply reply, FastReader reader, string productId, string deviceId, PackParser client, TslModel model, string codeprefix)
+        private string _nodeGuid;
+        public DataContext(ReadPropertyMessageReply reply, FastReader reader, string productId, string deviceId, PackParser client, TslModel model, string codeprefix, string nodeGuid)
         {
             _model = model;
             _reply = reply;
@@ -29,6 +29,7 @@ namespace IoTRulesService.DataParser.Js
             _client = client;
             _readObj = reader;
             _codeprefix = codeprefix;
+            _nodeGuid = nodeGuid;
         }
         /// <summary>
         /// 上报的扩展信息
@@ -97,7 +98,7 @@ namespace IoTRulesService.DataParser.Js
         {
             return _model.properties.Where(x => x.code == code).FirstOrDefault();
         }
-  
+
         /// <summary>
         /// 获取当前设备的所有属性信息
         /// </summary>
@@ -119,6 +120,7 @@ namespace IoTRulesService.DataParser.Js
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.RedirectFromProductId = string.Empty;
             msg.IsTagSync = false;
+            msg.NodeGuid = _nodeGuid;
             return msg;
         }
         /// <summary>
@@ -131,6 +133,7 @@ namespace IoTRulesService.DataParser.Js
             msg.DeviceId = _deviceId;
             msg.ProductId = _productId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+            msg.NodeGuid = _nodeGuid;
             return msg;
         }
         /// <summary>
@@ -143,6 +146,7 @@ namespace IoTRulesService.DataParser.Js
             msg.DeviceId = _deviceId;
             msg.ProductId = _productId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+            msg.NodeGuid = _nodeGuid;
             return msg;
         }
         /// <summary>
@@ -155,6 +159,7 @@ namespace IoTRulesService.DataParser.Js
             msg.DeviceId = _deviceId;
             msg.ProductId = _productId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+            msg.NodeGuid = _nodeGuid;
             return msg;
         }
 

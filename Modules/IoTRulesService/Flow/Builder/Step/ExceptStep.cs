@@ -121,7 +121,7 @@ namespace IoTRulesService.Flow.Builder.Step
                     cache.SetCache(streamKey, oldExceptTimes, DateTime.Now.AddHours(1));
 
 
-                    //储存异常到时序数据库
+                    //储存异常到数据库
                     List<MZ_PropExcept> points = new List<MZ_PropExcept>();
                     foreach (var preitem in prelist)
                     {
@@ -138,7 +138,10 @@ namespace IoTRulesService.Flow.Builder.Step
                             });
                         }
                     }
-                    await context.Provider.GetService<IotExceptBLL>().SaveExcept(points);
+                    if (points.Count > 0)
+                    {
+                        await context.Provider.GetService<IotExceptBLL>().SaveExcept(points);
+                    }
                 }
                 catch
                 {

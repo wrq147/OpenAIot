@@ -20,10 +20,10 @@ namespace GB28181Channel
         {
             _serviceProvider = serviceProvider;
         }
-        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, byte[] pressData, int width, int height)
+        public async Task OnSendAIDetectRequest(string videoId, AIDetectItem item, float motionRatio, byte[] pressData, int width, int height)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishAIDetectRequest(videoId, item.Code, item.paramValues, item.EnableDraw, pressData, width, height);
+            await eventBus.PublishAIDetectRequest(videoId, item.Code, motionRatio, item.paramValues, item.EnableDraw, pressData, width, height);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg, GB28181Server server)
@@ -114,7 +114,7 @@ namespace GB28181Channel
         {
             var storage = _serviceProvider.GetService<IDeviceStorage>();
             var device = storage.GetDevice(e.DeviceId);
-            if (device != null && !string.IsNullOrEmpty(device.VideoData.Item.Id))
+            if (device != null && device.VideoData != null && !string.IsNullOrEmpty(device.VideoData.Item.Id))
             {
                 var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();

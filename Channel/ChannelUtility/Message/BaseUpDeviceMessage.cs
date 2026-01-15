@@ -5,6 +5,10 @@ namespace ChannelUtility.Message
     public class BaseUpDeviceMessage : BaseDeviceMessage
     {
         /// <summary>
+        /// 来源通道
+        /// </summary>
+        public string NodeGuid { get; set; }
+        /// <summary>
         /// 设备向事件总线发送消息的时间戳
         /// </summary>
         public long Timestamp { get; set; }

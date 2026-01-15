@@ -5,12 +5,7 @@ using FluentMigrator.Runner.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using TemplateAction.Core;
 using System.Linq;
-using FluentMigrator.Runner;
-using FluentMigrator.Runner.Conventions;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using FluentMigrator.Runner.VersionTableInfo;
-using NPOI.Util;
-using TemplateAction.NetCore;
+
 namespace Common.FluentMigrator
 {
     public static class FluentMigratorExtensions
