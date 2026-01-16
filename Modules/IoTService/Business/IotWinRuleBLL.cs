@@ -146,7 +146,6 @@ namespace IoTService.Business
                 {
                     continue;
                 }
-
                 var model = TslModel.CreateFrom(pro.ModelTSL);
                 if (model == null)
                 {

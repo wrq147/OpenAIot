@@ -79,15 +79,6 @@ namespace IoTRulesService.Business
                 var tdevlist = await devDAL.SelectDevicesByIdx(evt.ProductId, idx);
                 foreach (var dev in tdevlist)
                 {
-                    int curidx = serverBus.GetIdx(dev.DeviceId);
-                    if (curidx != idx)
-                    {
-                        MZ_IotDevice newdev = new MZ_IotDevice();
-                        newdev.Id = dev.Id;
-                        newdev.DeviceUpIdx = curidx;
-                        await devDAL.Update(newdev);
-                    }
-
                     //初始化参数
                     Dictionary<string, string> newparamType = new Dictionary<string, string>();
                     Dictionary<string, object> newparams = new Dictionary<string, object>();
