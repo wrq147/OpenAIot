@@ -9,7 +9,7 @@ namespace Common.EventBus
     /// </summary>
     public class QuartzExeEvent : ResponseEvent
     {
-        public const string EventKey = "/EV.BUS.QUARTZ";
+        public const string EventKey = "EV.BUS.QUARTZ";
         public string ClassName { get; set; }
         public string MethodName { get; set; }
         public string MethodParams { get; set; }

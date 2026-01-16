@@ -53,7 +53,7 @@ namespace FlowService
                     Task _ = Task.Run(async () =>
                     {
                         var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                        await foreach (var msg in bus.SubscribeAsync("/RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default))
+                        await foreach (var msg in bus.SubscribeAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default))
                         {
                             app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
                         }

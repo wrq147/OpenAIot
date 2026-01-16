@@ -44,6 +44,10 @@ namespace GB28181Channel
             else
             {
                 string deviceId = GetDeviceIdFrom(streamId);
+                if (string.IsNullOrEmpty(deviceId))
+                {
+                    return null;
+                }
                 var channels = GetChannelsByDeviceId(deviceId);
                 if (channels.Count == 0)
                 {

@@ -11,7 +11,7 @@ namespace Common.EventBus
     /// </summary>
     public class BusEvent
     {
-        public const string EventKey = "/EV.BUS.BUSSIN";
+        public const string EventKey = "EV.BUS.BUSSIN";
         private Dictionary<string, object> _tmpobj;
         public static BusEvent Create(string name, object data)
         {

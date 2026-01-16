@@ -774,7 +774,7 @@ namespace IoTRulesService.Flow.Builder
 
             await bus.PublishAsync(new NatsMsg<List<string>>()
             {
-                Subject = "/MqttNotice.Msg",
+                Subject = "MqttNotice.Msg",
                 Data = data
             }, DefalutNatsJsonSerializer<List<string>>.Default);
         }

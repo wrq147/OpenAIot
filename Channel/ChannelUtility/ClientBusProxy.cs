@@ -82,6 +82,8 @@ namespace ChannelUtility
                 Console.WriteLine($"[ClientBusProxy] NATS连接失败：{ex.Message}");
                 // 可根据业务需求添加重试逻辑
             }
+
+            _redis.HashSet("IotChannels", _option.config.Code, System.Text.Json.JsonSerializer.Serialize(_option.config, JsonMessageSerializerConfig.SerializeOptions));
         }
 
         private async ValueTask OnClientConnected(object? sender, NatsEventArgs args)
@@ -97,7 +99,7 @@ namespace ChannelUtility
                     _subscriptions.Clear();
                 }
             }
-            var productSub = await _bus.SubscribeCoreAsync("/node." + _nodeGuid, "IotDown" + _option.config.Code, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            var productSub = await _bus.SubscribeCoreAsync("node." + _nodeGuid, null, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             _subscriptions.Add(productSub);
 
             _ = Task.Run(async () =>
@@ -121,7 +123,7 @@ namespace ChannelUtility
                 }
             });
 
-            var ruleNodeSub = await _bus.SubscribeCoreAsync("/RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            var ruleNodeSub = await _bus.SubscribeCoreAsync("RuleNode.Change", "RuleNode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             _subscriptions.Add(ruleNodeSub);
             _ = Task.Run(async () =>
             {
@@ -132,7 +134,7 @@ namespace ChannelUtility
             });
 
 
-            var iotKeyDelSub = await _bus.SubscribeCoreAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+            var iotKeyDelSub = await _bus.SubscribeCoreAsync("IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             _subscriptions.Add(iotKeyDelSub);
             _ = Task.Run(async () =>
              {
@@ -207,7 +209,7 @@ namespace ChannelUtility
 
             await Bus.PublishAsync(new NatsMsg<List<string>>()
             {
-                Subject = "/MqttNotice.Msg",
+                Subject = "MqttNotice.Msg",
                 Data = data
             }, ChannelNatsJsonSerializer<List<string>>.Default).ConfigureAwait(false);
         }
@@ -350,9 +352,9 @@ namespace ChannelUtility
             _lock.EnterReadLock();
             try
             {
-                if (_upList == null || _upList.Count == 0) return "/device.up";
+                if (_upList == null || _upList.Count == 0) return "device.up";
                 int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
-                return "/device.up." + _upList[pos];
+                return "device.up." + _upList[pos];
             }
             finally
             {
@@ -491,7 +493,6 @@ namespace ChannelUtility
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 });
 

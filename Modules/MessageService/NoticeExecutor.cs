@@ -54,7 +54,7 @@ namespace MessageService
                         //站内新消息提醒
                         if (tmpconfig.active_notice)
                         {
-                            await TAEventDispatcher.Instance.Dispatch("/Mqtt.User.New", recv.uid.ToString());
+                            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", recv.uid.ToString());
                         }
 
                         //离线个推提醒

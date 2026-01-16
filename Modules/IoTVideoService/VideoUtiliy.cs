@@ -12,7 +12,7 @@ namespace IoTVideoService
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await scope.Bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/node." + nodeguid,
+                Subject = "node." + nodeguid,
                 Data = msgbody
             }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
@@ -25,12 +25,11 @@ namespace IoTVideoService
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 }).ConfigureAwait(false);
 
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await scope.Bus.PublishAsync("/node." + nodeguid, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                await scope.Bus.PublishAsync("node." + nodeguid, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
                 await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {

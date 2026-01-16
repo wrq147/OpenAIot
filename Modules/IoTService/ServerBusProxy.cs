@@ -38,7 +38,7 @@ namespace IoTService
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/IotKey.Del",
+                Subject = "IotKey.Del",
                 Data = key
             }, DefalutNatsJsonSerializer<string>.Default);
         }
@@ -47,7 +47,7 @@ namespace IoTService
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/RuleNode.Change",
+                Subject = "RuleNode.Change",
                 Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
@@ -60,7 +60,7 @@ namespace IoTService
             data.Add(tip + ":" + System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.SerializeOptions));
             await bus.PublishAsync(new NatsMsg<List<string>>()
             {
-                Subject = "/MqttNotice.Msg",
+                Subject = "MqttNotice.Msg",
                 Data = data
             }, DefalutNatsJsonSerializer<List<string>>.Default);
         }
@@ -74,7 +74,7 @@ namespace IoTService
 
             await bus.PublishAsync(new NatsMsg<List<string>>()
             {
-                Subject = "/MqttNotice.Msg",
+                Subject = "MqttNotice.Msg",
                 Data = data
             }, DefalutNatsJsonSerializer<List<string>>.Default);
         }
@@ -124,7 +124,6 @@ namespace IoTService
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 });
 
@@ -360,7 +359,7 @@ namespace IoTService
 
             var t = bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/RuleNode.Change",
+                Subject = "RuleNode.Change",
                 Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
@@ -378,7 +377,7 @@ namespace IoTService
 
             await bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/RuleNode.Change",
+                Subject = "RuleNode.Change",
                 Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
@@ -392,7 +391,7 @@ namespace IoTService
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/device.up." + nodename,
+                Subject = "device.up." + nodename,
                 Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
@@ -409,7 +408,7 @@ namespace IoTService
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/RuleNode.Change",
+                Subject = "RuleNode.Change",
                 Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
@@ -441,9 +440,9 @@ namespace IoTService
             _lock.EnterReadLock();
             try
             {
-                if (_upList == null || _upList.Count == 0) return "/device.dwn";
+                if (_upList == null || _upList.Count == 0) return "device.dwn";
                 int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
-                return "/device.dwn." + _upList[pos];
+                return "device.dwn." + _upList[pos];
             }
             finally
             {
@@ -455,9 +454,9 @@ namespace IoTService
             _lock.EnterReadLock();
             try
             {
-                if (_upList == null || _upList.Count == 0) return "/device.up";
+                if (_upList == null || _upList.Count == 0) return "device.up";
                 int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
-                return "/device.up." + _upList[pos];
+                return "device.up." + _upList[pos];
             }
             finally
             {

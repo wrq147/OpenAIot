@@ -112,7 +112,7 @@ namespace MqttService
                     string tmpsubid = string.IsNullOrEmpty(option.Value.node_name) ? "Mqtt" : option.Value.node_name;
                     Task t1 = Task.Run(async () =>
                     {
-                        await foreach (var msg in bus.SubscribeAsync("/MqttNotice.Msg", tmpsubid, DefalutNatsJsonSerializer<List<string>>.Default))
+                        await foreach (var msg in bus.SubscribeAsync("MqttNotice.Msg", tmpsubid, DefalutNatsJsonSerializer<List<string>>.Default))
                         {
                             if (msg.Data == null)
                             {
@@ -131,7 +131,7 @@ namespace MqttService
 
                     Task t2 = Task.Run(async () =>
                     {
-                        await foreach (var msg in bus.SubscribeAsync("/Mqtt.User.New", tmpsubid, DefalutNatsJsonSerializer<string>.Default))
+                        await foreach (var msg in bus.SubscribeAsync("Mqtt.User.New", tmpsubid, DefalutNatsJsonSerializer<string>.Default))
                         {
                             if (msg.Data == null)
                             {
@@ -152,7 +152,7 @@ namespace MqttService
                 }
                 else
                 {
-                    plg.Dispatcher.Register<string>("/Mqtt.User.New", async (evt) =>
+                    plg.Dispatcher.Register<string>("Mqtt.User.New", async (evt) =>
                     {
                         //发送前端mqtt通知
                         if (!option.Value.enable_emqx)

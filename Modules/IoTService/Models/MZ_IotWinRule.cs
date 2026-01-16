@@ -32,7 +32,7 @@ namespace IoTService.Models
         /// </summary>
         public byte? WindowWay { get; set; }
         /// <summary>
-        /// 统计方式：最大值:max，最小值：min，平均值：mean，合计值：sum，期初值：first，期末值：last，计数：count
+        /// 统计方式：最大值:max，最小值：min，平均值：mean，合计值：sum，期初值：first，期末值：last，区间值：range，计数：count
         /// </summary>
         public string MergeWay { get; set; }
         /// <summary>

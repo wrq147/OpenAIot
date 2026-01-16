@@ -6,7 +6,7 @@ namespace Common.EventBus
     /// </summary>
     public class NoticeEvent
     {
-        public const string EventKey = "/EV.BUS.NOTICE";
+        public const string EventKey = "EV.BUS.NOTICE";
         public NoticeEvent() { }
         public NoticeEvent(long sender, TargetUser[] recv, string[] way)
         {

@@ -44,6 +44,7 @@
             <el-option label="合计值" value="sum"></el-option>
             <el-option label="期初值" value="first"></el-option>
             <el-option label="期末值" value="last"></el-option>
+            <el-option label="区间值" value="range"></el-option>
             <el-option label="计数" value="count"></el-option>
           </el-select>
         </el-form-item>
@@ -95,6 +96,7 @@
           <span v-else-if="scope.row.MergeWay == 'sum'">合计值</span>
           <span v-else-if="scope.row.MergeWay == 'first'">期初值</span>
           <span v-else-if="scope.row.MergeWay == 'last'">期末值</span>
+          <span v-else-if="scope.row.MergeWay == 'range'">区间值</span>
           <span v-else-if="scope.row.MergeWay == 'count'">计数</span>
         </template>
       </el-table-column>

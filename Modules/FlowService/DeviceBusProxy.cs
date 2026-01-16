@@ -52,9 +52,9 @@ namespace FlowService
             _lock.EnterReadLock();
             try
             {
-                if (_upList == null || _upList.Count == 0) return "/device.up";
+                if (_upList == null || _upList.Count == 0) return "device.up";
                 int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
-                return "/device.up." + _upList[pos];
+                return "device.up." + _upList[pos];
             }
             finally
             {
@@ -66,9 +66,9 @@ namespace FlowService
             _lock.EnterReadLock();
             try
             {
-                if (_upList == null || _upList.Count == 0) return "/device.dwn";
+                if (_upList == null || _upList.Count == 0) return "device.dwn";
                 int pos = Math.Abs(deviceId.GetHashCode() % _upList.Count);
-                return "/device.dwn." + _upList[pos];
+                return "device.dwn." + _upList[pos];
             }
             finally
             {
@@ -111,7 +111,6 @@ namespace FlowService
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 }).ConfigureAwait(false);
 

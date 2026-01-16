@@ -54,10 +54,10 @@ namespace IoTRulesService
                     var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                     Task t1 = Task.Run(async () =>
                     {
-                        string tkey = "/device.up." + option.Value.node_name;
+                        string tkey = "device.up." + option.Value.node_name;
                         if (string.IsNullOrEmpty(option.Value.node_name))
                         {
-                            tkey = "/device.up";
+                            tkey = "device.up";
                         }
                         await foreach (var msg in bus.SubscribeAsync(tkey, "IotRule", DefalutNatsJsonSerializer<string>.Default))
                         {
@@ -67,10 +67,10 @@ namespace IoTRulesService
 
                     Task t2 = Task.Run(async () =>
                     {
-                        string tkey = "/device.dwn." + option.Value.node_name;
+                        string tkey = "device.dwn." + option.Value.node_name;
                         if (string.IsNullOrEmpty(option.Value.node_name))
                         {
-                            tkey = "/device.dwn";
+                            tkey = "device.dwn";
                         }
                         await foreach (var msg in bus.SubscribeAsync(tkey, "IotDownM", DefalutNatsJsonSerializer<string>.Default))
                         {
@@ -185,7 +185,7 @@ namespace IoTRulesService
                     var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
 
 
-                    await foreach (var msg in bus.SubscribeAsync("/IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), DefalutNatsJsonSerializer<string>.Default))
+                    await foreach (var msg in bus.SubscribeAsync("IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), DefalutNatsJsonSerializer<string>.Default))
                     {
                         if (msg.Data == null)
                         {

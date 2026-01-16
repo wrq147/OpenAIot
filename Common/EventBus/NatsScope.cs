@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
@@ -35,6 +37,16 @@ namespace Common.EventBus
                             };
                             _bus = new NatsConnection(opts);
                             _bus.ConnectAsync().AsTask().Wait();
+                            int tcount = 10;
+                            while (_bus.ConnectionState != NatsConnectionState.Open)
+                            {
+                                ++tcount;
+                                if (tcount > 10)
+                                {
+                                    return null;
+                                }
+                                Thread.Sleep(500);
+                            }
                         }
                     }
                 }
@@ -57,14 +69,11 @@ namespace Common.EventBus
         /// <returns></returns>
         public async Task Dispatch<T>(string key, T evt) where T : class
         {
-            if (key.StartsWith("/"))
+            await Bus.PublishAsync(new NatsMsg<T>()
             {
-                await Bus.PublishAsync(new NatsMsg<T>()
-                {
-                    Subject = key,
-                    Data = evt
-                }, DefalutNatsJsonSerializer<T>.Default);
-            }
+                Subject = key,
+                Data = evt
+            }, DefalutNatsJsonSerializer<T>.Default);
         }
         /// <summary>
         /// 分发事件并等待处理结果
@@ -89,7 +98,6 @@ namespace Common.EventBus
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 });
                 if (replyMsg.Data == null)

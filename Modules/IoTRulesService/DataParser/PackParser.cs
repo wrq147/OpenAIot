@@ -195,7 +195,6 @@ namespace IoTRulesService.DataParser
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 }).ConfigureAwait(false);
 
@@ -205,7 +204,7 @@ namespace IoTRulesService.DataParser
                     throw new TimeoutException($"通道节点 {tnodeguid} 不存在");
                 }
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await bus.PublishAsync("/node." + tnodeguid, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                await bus.PublishAsync("node." + tnodeguid, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
                 await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {
@@ -245,7 +244,7 @@ namespace IoTRulesService.DataParser
             data.Add(cmd);
             await _busScope.Bus.PublishAsync(new NatsMsg<List<string>>()
             {
-                Subject = "/MqttNotice.Msg",
+                Subject = "MqttNotice.Msg",
                 Data = data
             }, DefalutNatsJsonSerializer<List<string>>.Default).ConfigureAwait(false);
         }
@@ -320,7 +319,7 @@ namespace IoTRulesService.DataParser
             data.Add(tip + ":" + System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.SerializeOptions));
             await _busScope.Bus.PublishAsync(new NatsMsg<List<string>>()
             {
-                Subject = "/MqttNotice.Msg",
+                Subject = "MqttNotice.Msg",
                 Data = data
             }, DefalutNatsJsonSerializer<List<string>>.Default).ConfigureAwait(false);
         }
@@ -356,7 +355,6 @@ namespace IoTRulesService.DataParser
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 }).ConfigureAwait(false))
                 {
@@ -400,7 +398,6 @@ namespace IoTRulesService.DataParser
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
-                    StartUpTimeout = requestTimeout,
                     ThrowIfNoResponders = true
                 }).ConfigureAwait(false);
 
@@ -436,7 +433,7 @@ namespace IoTRulesService.DataParser
 
             await _busScope.Bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/node." + nodeguid,
+                Subject = "node." + nodeguid,
                 Data = msgbody
             }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
@@ -479,7 +476,7 @@ namespace IoTRulesService.DataParser
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
                 await _busScope.Bus.PublishAsync(new NatsMsg<string>()
                 {
-                    Subject = "/node." + tnodeguid,
+                    Subject = "node." + tnodeguid,
                     Data = msgbody
                 }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
                 return;
@@ -499,7 +496,7 @@ namespace IoTRulesService.DataParser
 
                 await _busScope.Bus.PublishAsync(new NatsMsg<string>()
                 {
-                    Subject = "/node." + tnodeguid,
+                    Subject = "node." + tnodeguid,
                     Data = msgbody
                 }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             }

@@ -8,6 +8,10 @@ namespace GB28181Channel
 {
     public static class ZLUtility
     {
+        public static string SsrcToStreamId(string ssrc)
+        {
+            return int.Parse(ssrc.Substring(1)).ToString("x");
+        }
         /// <summary>
         /// RGB24转换到目标YUV格式
         /// </summary>

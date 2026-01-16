@@ -81,7 +81,7 @@ namespace IoTAIService
 
             await bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "/node." + nodeid,
+                Subject = "node." + nodeid,
                 Data = msgbody
             }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }

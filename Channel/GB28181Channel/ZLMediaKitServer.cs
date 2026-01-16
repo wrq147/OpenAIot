@@ -198,7 +198,7 @@ namespace GB28181Channel
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
             MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
-            string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT);
+            string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT).ToLower();
             if (_mediaDict.TryGetValue(streamId, out var playbackParams))
             {
                 var storage = _provider.GetService<IDeviceStorage>();
@@ -210,6 +210,10 @@ namespace GB28181Channel
                 }
                 if (regist == 1)
                 {
+                    if (_contextMap.ContainsKey(channelInfo.PushKey))
+                    {
+                        return;
+                    }
                     FrameContext context = new FrameContext();
                     context.VideoKey = channelInfo.PushKey;
                     context.DeviceId = channelInfo.DeviceId;
@@ -297,7 +301,8 @@ namespace GB28181Channel
 
         public void BindSsrc(StreamPlayEventArgs e)
         {
-            _mediaDict.AddOrUpdate(e.Params.Ssrc, _ => e.Params, (x, y) => e.Params);
+            string streamId = ZLUtility.SsrcToStreamId(e.Params.Ssrc);
+            _mediaDict.AddOrUpdate(streamId, _ => e.Params, (x, y) => e.Params);
         }
         public void Start(GB28181Option option, IServiceProvider provider, GB28181DeviceEventListener listener, GB28181Server server)
         {

@@ -12,7 +12,7 @@ namespace Common.EventBus
     /// </summary>
     public class CallEvent : ResponseEvent
     {
-        public const string EventKey = "/EV.BUS.CALL";
+        public const string EventKey = "EV.BUS.CALL";
         private Dictionary<string, object> _tmpobj;
         public static CallEvent Create(string name, object data)
         {

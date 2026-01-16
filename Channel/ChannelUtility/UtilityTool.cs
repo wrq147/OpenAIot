@@ -9,6 +9,7 @@ namespace ChannelUtility
 {
     public static class UtilityTool
     {
+
         public static string MD5(string input)
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();

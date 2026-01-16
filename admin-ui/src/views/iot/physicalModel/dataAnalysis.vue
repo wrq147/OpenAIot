@@ -5,7 +5,7 @@
         <el-tab-pane label="Modbus解释器" v-if="ChannelData.CanModbus"></el-tab-pane>
         <el-tab-pane label="脚本解释器" v-if="ChannelData.CanScript"></el-tab-pane>
       </el-tabs>
-      <div class="tabs-tip">【提示：设备上报数据从左到右经过解释器，平台下发数据从右到左经过解释器】</div>
+      <div class="tabs-tip">【提示：1、设备上报数据从左到右经过解释器，平台下发数据从右到左。2、脚本里的全局变量可以全局使用，但离线会重置。】</div>
     </div>
     <div v-show="curtag == '脚本解释器'" class="js_con" :style="{ 'margin-top': '0px' }">
       <div class="button_con">
