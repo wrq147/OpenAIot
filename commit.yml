@@ -2,46 +2,22 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid 'f8462af9026a6e90be30a3a53e4be9c31173a9c9'
-    oldFile: !uuid '1fa39de06f2900e52cc59af7cb95503bb13dedbf'
-  /Channel/FixVideoChannel:
-    newFile: !uuid '64ae4f5c323fe9733b7976b516b017885de26ce8'
-    oldFile: !uuid '8f17c2cd4d963ad0070caa2af3a5ddff8a8c5ad3'
-  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '19ee6252236b0194a2c955fe80897bf9342b87cf'
-    oldFile: !uuid '4bc05a04e52a8d9145adce6f1437028c0b5bc682'
-  /Channel/GB28181Channel:
-    newFile: !uuid '4eea5b89ee82b3414a7008865457a852f2a875e9'
-    oldFile: !uuid '99687d1abde002b08d695f2ec636718af354251f'
-  /Channel/GB28181Channel/InMemoryDeviceStorage.cs:
-    newFile: !uuid '0a84e2746d3f15ead2232302581d7d3b0d11b9fa'
-    oldFile: !uuid '37cbb30d675254124b76822c732e042e848e8480'
-  /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '0df317f315d5e7f6b0f81670355c5ca4a59167a5'
-    oldFile: !uuid 'cfd37adea0ea30ad3ef7459e042e0500e9577c17'
   /Modules:
-    newFile: !uuid '5c895581a1bdf83d67343d583fc2ac934661ff70'
-    oldFile: !uuid '02330bd23f6a4e6230eaaff341631c7461db7ba0'
+    newFile: !uuid '94bd850e5284f3e7837edceb00d3a5e8696f7145'
+    oldFile: !uuid '5c895581a1bdf83d67343d583fc2ac934661ff70'
   /Modules/IoTService:
-    newFile: !uuid '90b5be8b5cf8e1813637b571ca61e65384e91610'
-    oldFile: !uuid '402d9379db6d0f26f1d41d6e68bcc6f2584042d5'
+    newFile: !uuid '380c4f0b78b8ae883a42bc52c9f0f7c31f9f106c'
+    oldFile: !uuid '90b5be8b5cf8e1813637b571ca61e65384e91610'
   /Modules/IoTService/Business:
-    newFile: !uuid '40a147a175fdfa09f4d2b9908fc55e33f5114445'
-    oldFile: !uuid '6b6c5bc5f5ce04c3e4b8641ebeba77b3cbc127fe'
+    newFile: !uuid 'ea03cf8a85681e708d6f20cb655bab445d0734e3'
+    oldFile: !uuid '40a147a175fdfa09f4d2b9908fc55e33f5114445'
   /Modules/IoTService/Business/IotWinRuleBLL.cs:
-    newFile: !uuid 'b8777f8d7a33b2a02e752f962c661f29b699677d'
-    oldFile: !uuid 'abf9423401da751cc813580533810e533fd1e90e'
-  /Modules/IoTVideoService:
-    newFile: !uuid '064ace087b8b575cb5a2432cfa9707868636ca77'
-    oldFile: !uuid '046d7a39f488e9f41100db45550554e6c525fbf0'
-  /Modules/IoTVideoService/Business:
-    newFile: !uuid '88d51c3cc457478bb9560b2ccc1c629a4f1ba71e'
-    oldFile: !uuid 'b2cf23d263e75f04d7c52f77d107546ca41cc258'
-  /Modules/IoTVideoService/Business/PtzBLL.cs:
-    newFile: !uuid '5ca8fa0d9feade98aebc8e0315b9b1d68b44d548'
-    oldFile: !uuid '414cd233494a5d2c5392209b1f37e2c25959cf51'
-gitCommitId: !uuid '1bc3b7434d37955d222e8212c0e66d5c15906586'
+    newFile: !uuid '02e8ad97b79c3b5f729431361d532e013f7a5c09'
+    oldFile: !uuid 'b8777f8d7a33b2a02e752f962c661f29b699677d'
+  /Modules/IoTService/PluginConfig.cs:
+    newFile: !uuid '467e6881bec77e7a6617ec6888d6ad047a0d187d'
+    oldFile: !uuid 'bef7ad9587ba61c32752746f31b68feca4cd7ff0'
+gitCommitId: !uuid '89c0e81ea4ca48897e599c2491e37a2aeb2580d6'
 renames: {
   }
-revisionId: 122
+revisionId: 123
