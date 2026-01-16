@@ -1,6 +1,5 @@
 ﻿using Common.Json;
 using Common.Share;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using TemplateAction.Core;
@@ -18,7 +17,7 @@ namespace Common.EventBus
         {
             CallEvent evt = new CallEvent();
             evt.Name = name;
-            evt.Params = JsonConvert.SerializeObject(data);
+            evt.Params = System.Text.Json.JsonSerializer.Serialize(data, MyDefaultTextJsonConfig.DefaultOptions);
             return evt;
         }
         private Dictionary<string, object> GetObjDict()

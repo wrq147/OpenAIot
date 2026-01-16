@@ -463,6 +463,19 @@ namespace IoTService
                 _lock.ExitReadLock();
             }
         }
+        public List<string> GetNodeList()
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                List<string> copiedList = this._upList.ToList();
+                return copiedList;
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+        }
         public int GetIdx(string deviceId)
         {
             _lock.EnterReadLock();

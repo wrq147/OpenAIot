@@ -4,6 +4,7 @@ using Common.IdGenerator;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
+using MyAccess.Core;
 using Newtonsoft.Json;
 using Quartz;
 using System;
@@ -94,6 +95,24 @@ namespace IoTService.Business
                 return BusResponse<int>.Error(111, ex.Message);
             }
         }
+        public virtual async Task NoticeCalDevice(QuartzContext context)
+        {
+            var serverBus = _provider.GetService<ServerBusProxy>();
+            var nodeList = serverBus.GetNodeList();
+            foreach (var node in nodeList)
+            {
+                var callRes = await BusUtility.Call("CalDev_" + node, context);
+                if (!callRes.IsSuccess())
+                {
+                    callRes = await BusUtility.Call("CalDev_" + node, context);
+                    if (!callRes.IsSuccess())
+                    {
+                        throw new Exception(callRes.Message);
+                    }
+                }
+            }
+
+        }
         public virtual async Task CalDevice(QuartzContext context)
         {
             var serverBus = _provider.GetService<ServerBusProxy>();
@@ -119,21 +138,18 @@ namespace IoTService.Business
                 var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(pro.StorageConfig);
                 if (storageConfig == null || storageConfig.enable != "1")
                 {
-                    await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                     continue;
                 }
 
                 var deviceList = await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
                 if (deviceList.Count == 0)
                 {
-                    await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                     continue;
                 }
 
                 var model = TslModel.CreateFrom(pro.ModelTSL);
                 if (model == null)
                 {
-                    await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                     continue;
                 }
 
@@ -152,6 +168,7 @@ namespace IoTService.Business
 
 
                     In_HistoryMergeList query = new In_HistoryMergeList();
+                    query.IsGroup = true;
                     query.Code = winrule.MergeCode;
                     query.MergeWay = new List<string>();
                     var preHourse = fireTime.AddHours(-1);
@@ -253,21 +270,18 @@ namespace IoTService.Business
                     var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(pro.StorageConfig);
                     if (storageConfig == null || storageConfig.enable != "1")
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
 
                     var deviceList = await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
                     if (deviceList.Count == 0)
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
 
                     var model = TslModel.CreateFrom(pro.ModelTSL);
                     if (model == null)
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
 
@@ -285,6 +299,7 @@ namespace IoTService.Business
                         }
 
                         In_HistoryMergeList query = new In_HistoryMergeList();
+                        query.IsGroup = true;
                         query.Code = winrule.MergeCode;
                         query.MergeWay = new List<string>();
                         var preDay = fireTime.AddDays(-1);
@@ -386,21 +401,18 @@ namespace IoTService.Business
                     var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(pro.StorageConfig);
                     if (storageConfig == null || storageConfig.enable != "1")
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
 
                     var deviceList = await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
                     if (deviceList.Count == 0)
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
 
                     var model = TslModel.CreateFrom(pro.ModelTSL);
                     if (model == null)
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
 
@@ -418,6 +430,7 @@ namespace IoTService.Business
                         }
 
                         In_HistoryMergeList query = new In_HistoryMergeList();
+                        query.IsGroup = true;
                         query.Code = winrule.MergeCode;
                         query.MergeWay = new List<string>();
                         var preMonth = fireTime.AddMonths(-1);

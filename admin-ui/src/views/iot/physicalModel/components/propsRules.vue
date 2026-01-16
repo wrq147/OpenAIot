@@ -23,7 +23,7 @@
     <!-- 添加规则对话框 -->
     <el-dialog :visible.sync="dialogVisible" title="添加规则" width="680px">
       <el-form :model="ruleForm" label-width="80px" style="margin-left: 100px;">
-        <el-form-item label="关联属性">
+        <el-form-item label="赋值属性">
           <el-select :disabled="ruleForm.Id != ''" placeholder="请选择关联属性" v-model="ruleForm.PropCode"
             style="width: 320px;">
             <el-option v-for="item in propList" :key="item.code" :label="item.name" :value="item.code"></el-option>
@@ -80,7 +80,7 @@
     <el-table :data="itemList"
       :header-cell-style="{ background: 'rgb(249, 250, 252)', color: 'rgb(120, 130, 157)', 'font-weight': 'normal' }"
       stripe>
-      <el-table-column prop="PropName" label="关联属性" align="center"></el-table-column>
+      <el-table-column prop="PropName" label="赋值属性" align="center"></el-table-column>
       <el-table-column label="统计时间" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.WindowWay == 0">每时</span>

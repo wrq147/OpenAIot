@@ -160,20 +160,19 @@ namespace IoTService
 
 
                     #region 添加定时属性规则
-                    var option = app.ServiceProvider.GetService<IOptions<IotOption>>();
-                    string winrulejobname = "IotWinTask_" + option.Value.node_name;
+                    string winrulejobname = "IotWinRuleSyncTask";
                     string winrulegroup = "SYSTEM";
 
                     if (!await jobBLL.ExistJob(winrulejobname, winrulegroup))
                     {
                         MZ_Job devjob = new MZ_Job();
-                        devjob.concurrent = "0";
+                        devjob.concurrent = "1";
                         devjob.createId = 0;
                         devjob.create_time = DateTime.Now;
                         devjob.updateId = 0;
                         devjob.update_time = DateTime.Now;
                         devjob.cron_expression = "0 0 * * * ?";
-                        devjob.invoke_target = typeof(IotWinRuleBLL).FullName + ".CalDevice($context)";
+                        devjob.invoke_target = typeof(IotWinRuleBLL).FullName + ".NoticeCalDevice($context)";
                         devjob.job_group = winrulegroup;
                         devjob.job_name = winrulejobname;
                         devjob.misfire_policy = "1";
@@ -379,6 +378,21 @@ namespace IoTService
                     dev.Name = tName;
                     var res = await app.ServiceProvider.GetService<IotDeviceBLL>().Insert(dev, artificialUser, false);
                     return CallResponse.CreateFrom(res);
+                }
+
+            });
+            var option = app.ServiceProvider.GetService<IOptions<IotOption>>();
+            plg.RegisterCall("CalDev_" + option.Value.node_name, async (bs) =>
+            {
+                var quartzContext = bs.To<QuartzContext>();
+                try
+                {
+                    await app.ServiceProvider.GetService<IotWinRuleBLL>().CalDevice(quartzContext);
+                    return CallResponse.Success(string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    return CallResponse.Error(12, ex.Message);
                 }
 
             });
