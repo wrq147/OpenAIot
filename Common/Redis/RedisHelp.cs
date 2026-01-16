@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using static Pipelines.Sockets.Unofficial.Threading.MutexSlim;
 
 
 namespace Common.Redis
@@ -47,7 +48,93 @@ namespace Common.Redis
         {
             return await DoAsync(async db => await db.ExecuteAsync(command, args));
         }
+        #region 阻塞式分布式读写锁
+        private const string _readLockPrefix = "READ_LOCK_";
+        private const string _writeLockPrefix = "WRITE_LOCK_";
 
+        /// <summary>
+        /// 异步获取分布式读锁（阻塞等待直到获取成功）
+        /// </summary>
+        /// <param name="lockKey">锁标识</param>
+        /// <param name="expiry">锁过期时间</param>
+        public async Task WaitReadLockAsync(string lockKey, TimeSpan expiry)
+        {
+            string readLockKey = $"{_readLockPrefix}{lockKey}";
+            string writeLockKey = $"{_writeLockPrefix}{lockKey}";
+
+            while (true)
+            {
+                if (await KeyExistsAsync(writeLockKey))
+                {
+                    await Task.Delay(100);
+                    continue;
+                }
+
+                long count = await DoAsync(async db => await db.StringIncrementAsync(readLockKey));
+                if (count == 1)
+                {
+                    await KeyExpireAsync(readLockKey, expiry);
+                }
+                return;
+            }
+        }
+
+        /// <summary>
+        /// 异步释放分布式读锁
+        /// </summary>
+        /// <param name="lockKey">锁标识</param>
+        public async Task ReleaseReadLockAsync(string lockKey)
+        {
+            string readLockKey = $"{_readLockPrefix}{lockKey}";
+
+            long count = await DoAsync(async db => await db.StringDecrementAsync(readLockKey));
+            if (count <= 0)
+            {
+                await KeyDeleteAsync(readLockKey);
+            }
+        }
+
+        /// <summary>
+        /// 异步获取分布式写锁（阻塞等待直到获取成功）
+        /// </summary>
+        /// <param name="lockKey">锁标识</param>
+        /// <param name="expiry">锁过期时间</param>
+        public async Task WaitWriteLockAsync(string lockKey, TimeSpan expiry)
+        {
+            string readLockKey = $"{_readLockPrefix}{lockKey}";
+            string writeLockKey = $"{_writeLockPrefix}{lockKey}";
+
+            while (true)
+            {
+                if (await KeyExistsAsync(readLockKey) || await KeyExistsAsync(writeLockKey))
+                {
+                    await Task.Delay(100);
+                    continue;
+                }
+                bool acquired = await DoAsync(async db =>
+                    await db.StringSetAsync(writeLockKey, "1", expiry, When.NotExists));
+                if (acquired)
+                {
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 异步释放分布式写锁
+        /// </summary>
+        /// <param name="lockKey">锁标识</param>
+        public async Task ReleaseWriteLockAsync(string lockKey)
+        {
+            string writeLockKey = $"{_writeLockPrefix}{lockKey}";
+
+            await DoAsync(async db =>
+            {
+                await db.KeyDeleteAsync(writeLockKey);
+                return true;
+            });
+        }
+        #endregion
         #region 加锁
         /// <summary>
         /// 加锁处理
