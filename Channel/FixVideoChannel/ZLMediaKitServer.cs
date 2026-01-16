@@ -285,7 +285,6 @@ namespace FixVideoChannel
 
                     mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, user_data);
                     mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, user_data);
-                    break;
                 }
                 else
                 {
@@ -295,7 +294,6 @@ namespace FixVideoChannel
                     int samplebit = mk_track.MkTrackAudioSampleBit(mkTrack);
                     //创建音频轨道
                     mk_media.MkMediaInitAudio(context.Media, codecid, samplerate, chann, samplebit);
-                    break;
                 }
             }
 

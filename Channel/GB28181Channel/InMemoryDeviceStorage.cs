@@ -32,7 +32,11 @@ namespace GB28181Channel
             int tsidx = streamId.IndexOf('_');
             if (tsidx != -1)
             {
-                string deviceId = streamId.Substring(0, tsidx);
+                string deviceId = GetDeviceIdFrom(streamId.Substring(0, tsidx));
+                if (string.IsNullOrEmpty(deviceId))
+                {
+                    return null;
+                }
                 var channels = GetChannelsByDeviceId(deviceId);
                 if (channels.Count == 0)
                 {

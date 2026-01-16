@@ -128,7 +128,7 @@ namespace IoTVideoService.Business
                 ServerInfo serverInfo = option.Value.GB28181Servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
                 if (videoSource.ChannelId == cId)
                 {
-                    return $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{videoSource.VideoKey}";
+                    return $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{videoSource.VideoKey}_0";
                 }
                 else
                 {

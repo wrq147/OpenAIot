@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ZLMediaKit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GB28181Channel
 {
@@ -256,7 +255,6 @@ namespace GB28181Channel
 
                             mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
                             mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
-                            break;
                         }
                         else
                         {
@@ -266,7 +264,6 @@ namespace GB28181Channel
                             int samplebit = mk_track.MkTrackAudioSampleBit(mkTrack);
                             //创建音频轨道
                             mk_media.MkMediaInitAudio(context.Media, codecid, samplerate, chann, samplebit);
-                            break;
                         }
                     }
                 }
