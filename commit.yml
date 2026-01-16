@@ -2,28 +2,34 @@
 branches: {
   }
 fileChange:
+  /Common:
+    newFile: !uuid '30c442e50ff9bff9bd30a33472c2c8c30864e668'
+    oldFile: !uuid '9c83ede3ca57643be32f0eec35bff0a77c5e7e86'
+  /Common/EventBus:
+    newFile: !uuid 'ecbc9698150706f04b4f7765cb94bd8a284e3f39'
+    oldFile: !uuid '5d734cb7e8736a3539d9ed467226f1e54416ce1c'
+  /Common/EventBus/NatsScope.cs:
+    newFile: !uuid '68fa345064409ece41e691881e0fb6cb500994d7'
+    oldFile: !uuid '3c90184b2e1b9f5ceeddf03361d43d83342953e1'
+  /Common/Redis:
+    newFile: !uuid '587313f245f2640c7be5588dee7fe0e1d5b4c901'
+    oldFile: !uuid 'f743b6fc80e1843955e0e9ad518d409894032c9c'
+  /Common/Redis/RedisHelp.cs:
+    newFile: !uuid '6440389d9fb37e2ba50ea74a44b4275b82136d22'
+    oldFile: !uuid '58029ea91ffb0cd27246b85dc8975438b4e55c13'
   /Modules:
-    newFile: !uuid 'db2aba0b78ed97d1e5ea4fcf651c53209fe76d8f'
-    oldFile: !uuid 'b9f1ec5dfc0f2baadd540a617f784fbc49af26d1'
-  /Modules/IoTRulesService:
-    newFile: !uuid '86e25e95c5642242b4d240bbeffa2295e8e86c63'
-    oldFile: !uuid '94a9bfbd0443bdd74e7d92771213c5b0233dfa79'
-  /Modules/IoTRulesService/Business:
-    newFile: !uuid '467a682e6fa4917160c956600d89f6293a3bd2e2'
-    oldFile: !uuid '4c2483c5330171a90d9064e175e9bc823077f3a7'
-  /Modules/IoTRulesService/Business/RuleBLL.cs:
-    newFile: !uuid '0e85aec2377b3ac0431132a6b08e7af9fc062023'
-    oldFile: !uuid 'cc503b10d62026070fb2f6f86bf871feb7aa3060'
+    newFile: !uuid '19a086424f0aa6651ac862e67bae6425f5cdedd2'
+    oldFile: !uuid 'db2aba0b78ed97d1e5ea4fcf651c53209fe76d8f'
   /Modules/IoTService:
-    newFile: !uuid 'c4e87797b9676c844c0fc3d9567c47411b9d2109'
-    oldFile: !uuid 'ec568d801883bbba2a18e40f333ced0eb0965500'
+    newFile: !uuid '269539430f29e36505695d5203f6db3b3f2d57e0'
+    oldFile: !uuid 'c4e87797b9676c844c0fc3d9567c47411b9d2109'
   /Modules/IoTService/Business:
-    newFile: !uuid '4bba8ae304e163133a97e5901eac319cb524590e'
-    oldFile: !uuid 'e831e617bc6f711a3685dcff6c520970b2d45195'
+    newFile: !uuid '7e2476ac982f9cc64c70e20c5ce58993e14f4768'
+    oldFile: !uuid '4bba8ae304e163133a97e5901eac319cb524590e'
   /Modules/IoTService/Business/IotWinRuleBLL.cs:
-    newFile: !uuid '3e1ab8be82473692ab9fedf88fd01af96e382a27'
-    oldFile: !uuid '3388bdf9deb39eb926736f2cd2dee607b05ea8bb'
-gitCommitId: !uuid '3ff744dc5fcecdb04db465d6df7d1731889182b1'
+    newFile: !uuid '61830da45531c28eb4d0ec24cd6403189d66f528'
+    oldFile: !uuid '3e1ab8be82473692ab9fedf88fd01af96e382a27'
+gitCommitId: !uuid '4debd1fdb3444e6ddb42ebd69c2216a286fddbec'
 renames: {
   }
-revisionId: 125
+revisionId: 126
