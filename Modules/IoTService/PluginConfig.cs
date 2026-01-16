@@ -160,8 +160,8 @@ namespace IoTService
 
 
                     #region 添加定时属性规则
-
-                    string winrulejobname = "IotWinRuleSyncTask";
+                    var option = app.ServiceProvider.GetService<IOptions<IotOption>>();
+                    string winrulejobname = "IotWinTask_" + option.Value.node_name;
                     string winrulegroup = "SYSTEM";
 
                     if (!await jobBLL.ExistJob(winrulejobname, winrulegroup))

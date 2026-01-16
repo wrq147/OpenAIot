@@ -4,7 +4,6 @@ using Common.IdGenerator;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
-using MyAccess.DB.Builder.WhereToSql;
 using Newtonsoft.Json;
 using Quartz;
 using System;
@@ -14,7 +13,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace IoTService.Business
 {
