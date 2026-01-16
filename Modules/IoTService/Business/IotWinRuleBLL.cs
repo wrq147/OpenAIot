@@ -170,13 +170,13 @@ namespace IoTService.Business
                     query.IsGroup = true;
                     query.Code = winrule.MergeCode;
                     query.MergeWay = new List<string>();
-                    var preHourse = fireTime.AddHours(-1);
-                    var prepreHourse = fireTime.AddHours(-2);
                     query.WindowWay = 2;
-                    query.BeginTime = new DateTime(prepreHourse.Year, prepreHourse.Month, prepreHourse.Day, prepreHourse.Hour, 0, 1);
-                    query.EndTime = new DateTime(preHourse.Year, preHourse.Month, preHourse.Day, preHourse.Hour, 59, 59);
                     if (winrule.MergeWay == "range")
                     {
+                        var preHourse = fireTime.AddHours(-1);
+                        var prepreHourse = fireTime.AddHours(-2);
+                        query.BeginTime = new DateTime(prepreHourse.Year, prepreHourse.Month, prepreHourse.Day, prepreHourse.Hour, 0, 0);
+                        query.EndTime = new DateTime(preHourse.Year, preHourse.Month, preHourse.Day, preHourse.Hour, 59, 59);
                         query.MergeWay.Add("last");
                         for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                         {
@@ -225,6 +225,9 @@ namespace IoTService.Business
                     }
                     else
                     {
+                        var preHourse = fireTime.AddHours(-1);
+                        query.BeginTime = new DateTime(preHourse.Year, preHourse.Month, preHourse.Day, preHourse.Hour, 0, 0);
+                        query.EndTime = new DateTime(preHourse.Year, preHourse.Month, preHourse.Day, preHourse.Hour, 59, 59);
                         query.MergeWay.Add(winrule.MergeWay);
                         for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                         {
@@ -301,13 +304,14 @@ namespace IoTService.Business
                         query.IsGroup = true;
                         query.Code = winrule.MergeCode;
                         query.MergeWay = new List<string>();
-                        var preDay = fireTime.AddDays(-1);
-                        var prepreDay = fireTime.AddDays(-2);
                         query.WindowWay = 0;
-                        query.BeginTime = new DateTime(prepreDay.Year, prepreDay.Month, prepreDay.Day, 23, 0, 1);
-                        query.EndTime = new DateTime(preDay.Year, preDay.Month, preDay.Day, 23, 59, 59);
+     
                         if (winrule.MergeWay == "range")
                         {
+                            var preDay = fireTime.AddDays(-1);
+                            var prepreDay = fireTime.AddDays(-2);
+                            query.BeginTime = new DateTime(prepreDay.Year, prepreDay.Month, prepreDay.Day, 23, 0, 0);
+                            query.EndTime = new DateTime(preDay.Year, preDay.Month, preDay.Day, 23, 59, 59);
                             query.MergeWay.Add("last");
                             for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                             {
@@ -355,6 +359,9 @@ namespace IoTService.Business
                         }
                         else
                         {
+                            var preDay = fireTime.AddDays(-1);
+                            query.BeginTime = new DateTime(preDay.Year, preDay.Month, preDay.Day, 0, 0, 0);
+                            query.EndTime = new DateTime(preDay.Year, preDay.Month, preDay.Day, 23, 59, 59);
                             query.MergeWay.Add(winrule.MergeWay);
                             for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                             {
@@ -432,13 +439,14 @@ namespace IoTService.Business
                         query.IsGroup = true;
                         query.Code = winrule.MergeCode;
                         query.MergeWay = new List<string>();
-                        var preMonth = fireTime.AddMonths(-1);
-                        var prepreMonth = new DateTime(preMonth.Year, preMonth.Month, 1).AddDays(-1);
                         query.WindowWay = 1;
-                        query.BeginTime = new DateTime(prepreMonth.Year, prepreMonth.Month, prepreMonth.Day, 23, 0, 1);
-                        query.EndTime = new DateTime(preMonth.Year, preMonth.Month, preMonth.Day, 23, 59, 59);
+    
                         if (winrule.MergeWay == "range")
                         {
+                            var preMonth = fireTime.AddMonths(-1);
+                            var prepreMonth = new DateTime(preMonth.Year, preMonth.Month, 1).AddDays(-1);
+                            query.BeginTime = new DateTime(prepreMonth.Year, prepreMonth.Month, prepreMonth.Day, 23, 0, 1);
+                            query.EndTime = new DateTime(preMonth.Year, preMonth.Month, preMonth.Day, 23, 59, 59);
                             query.MergeWay.Add("last");
                             for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                             {
@@ -486,6 +494,9 @@ namespace IoTService.Business
                         }
                         else
                         {
+                            var preMonth = fireTime.AddMonths(-1);
+                            query.BeginTime = new DateTime(preMonth.Year, preMonth.Month, 1, 0, 0, 0);
+                            query.EndTime = new DateTime(preMonth.Year, preMonth.Month, preMonth.Day, 23, 59, 59);
                             query.MergeWay.Add(winrule.MergeWay);
                             for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                             {

@@ -37,16 +37,6 @@ namespace Common.EventBus
                             };
                             _bus = new NatsConnection(opts);
                             _bus.ConnectAsync().AsTask().Wait();
-                            int tcount = 10;
-                            while (_bus.ConnectionState != NatsConnectionState.Open)
-                            {
-                                ++tcount;
-                                if (tcount > 10)
-                                {
-                                    return null;
-                                }
-                                Thread.Sleep(500);
-                            }
                         }
                     }
                 }
