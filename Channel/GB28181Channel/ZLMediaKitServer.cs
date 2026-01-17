@@ -7,15 +7,17 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ZLMediaKit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GB28181Channel
 {
-    public class ZLMediaKitServer
+    public unsafe class ZLMediaKitServer
     {
         private IServiceProvider _provider;
         private GB28181Option _option;
@@ -26,6 +28,12 @@ namespace GB28181Channel
         private ZLMediaKit.Delegates.Func_int___IntPtr___IntPtr _onMediaNotFoundDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onMediaNoReaderDelegate;
         private ZLMediaKit.Delegates.Action_int___IntPtr _onMediaChangedDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr _onMediaPublishDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr _onMediaPlayDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr _onHttpRequestDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr _onHttpAccessDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr _onRecordMp4Delegate;
+        private ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr _onFlowReportDelegate;
         private GB28181Server _server;
         private ConcurrentDictionary<string, PlaybackParams> _mediaDict;
         private ConcurrentDictionary<string, FrameContext> _contextMap;
@@ -39,6 +47,12 @@ namespace GB28181Channel
             _onMediaNotFoundDelegate = On_mk_media_not_found;
             _onMediaNoReaderDelegate = On_mk_media_no_reader;
             _onMediaChangedDelegate = On_mk_media_changed;
+            _onMediaPublishDelegate = On_mk_media_publish;
+            _onMediaPlayDelegate = On_mk_media_play;
+            _onHttpRequestDelegate = On_mk_http_request;
+            _onHttpAccessDelegate = On_mk_http_access;
+            _onRecordMp4Delegate = On_mk_record_mp4;
+            _onFlowReportDelegate = On_mk_flow_report;
         }
         private int On_mk_media_not_found(IntPtr url,
                                 IntPtr sock)
@@ -51,7 +65,8 @@ namespace GB28181Channel
             {
                 return 1;
             }
-            Task t = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
+
+            _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
             return 0;
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)
@@ -62,7 +77,7 @@ namespace GB28181Channel
             var channelInfo = storage.GetChannelFrom(streamId);
             if (channelInfo != null)
             {
-                Task t = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
             }
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
@@ -193,11 +208,12 @@ namespace GB28181Channel
                 FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
             }
         }
-
+      
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
             MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
             string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT).ToLower();
+
             if (_mediaDict.TryGetValue(streamId, out var playbackParams))
             {
                 var storage = _provider.GetService<IDeviceStorage>();
@@ -213,32 +229,37 @@ namespace GB28181Channel
                     {
                         return;
                     }
+
+
                     FrameContext context = new FrameContext();
                     context.VideoKey = channelInfo.PushKey;
                     context.DeviceId = channelInfo.DeviceId;
                     context.ChannelId = channelInfo.ChannelId;
+
                     IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
                     _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
                     _contextMap.TryAdd(context.VideoKey, context);
-
-
+   
                     //创建实时拉流
                     MkIniT option = mk_util.MkIniCreate();
                     mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_audio", 0);
+                    mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
                     mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
+                    mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
                     mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
                     mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
                     mk_util.MkIniSetOptionInt(option, "auto_close", 0);
-                    context.Media = mk_media.MkMediaCreate2("_defaultVhost_", "live", context.VideoKey, 0, option);
+
+                    context.Media = mk_media.MkMediaCreate2("__defaultVhost__", "live", context.VideoKey, 0, option);
                     mk_util.MkIniRelease(option);
+
                     int trackCount = mk_events_objects.MkMediaSourceGetTrackCount(mediaSourceT);
                     for (int i = 0; i < trackCount; i++)
                     {
                         MkTrackT mkTrack = mk_events_objects.MkMediaSourceGetTrack(mediaSourceT, i);
+                        if (mkTrack == null) { continue; }
                         if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                         {
                             int videow = mk_track.MkTrackVideoWidth(mkTrack);
@@ -246,6 +267,7 @@ namespace GB28181Channel
                             int codecid = mk_track.MkTrackCodecId(mkTrack);
                             int vfps = mk_track.MkTrackVideoFps(mkTrack);
                             int bitrate = mk_track.MkTrackBitRate(mkTrack);
+
                             //创建视频轨道
                             mk_media.MkMediaInitVideo(context.Media, codecid, videow, videoh, vfps, bitrate);
 
@@ -266,6 +288,7 @@ namespace GB28181Channel
                             mk_media.MkMediaInitAudio(context.Media, codecid, samplerate, chann, samplebit);
                         }
                     }
+                    mk_media.MkMediaInitComplete(context.Media);
                 }
                 else
                 {
@@ -292,10 +315,82 @@ namespace GB28181Channel
                             FrameBufferPool.ClearCache(channelInfo.PushKey);
                         }
                     }
+
                 }
             }
         }
+        private void On_mk_media_publish(IntPtr url,
+                              IntPtr invoker,
+                              IntPtr sock)
+        {
+            var url_info = (MkMediaInfoT)url;
+            var rawStreamId = mk_events_objects.MkMediaInfoGetStream(url_info);
+            var streamId = rawStreamId.ToLower();
+            if (_mediaDict.TryGetValue(streamId, out var playbackParams))
+            {
+                MkIniT toption = mk_util.MkIniCreate();
+                mk_util.MkIniSetOptionInt(toption, "enable_mp4", 0);
+                mk_util.MkIniSetOptionInt(toption, "enable_audio", 1);
+                mk_util.MkIniSetOptionInt(toption, "enable_fmp4", 0);
+                mk_util.MkIniSetOptionInt(toption, "enable_ts", 0);
+                mk_util.MkIniSetOptionInt(toption, "enable_hls", 0);
+                mk_util.MkIniSetOptionInt(toption, "enable_rtsp", 1);
+                mk_util.MkIniSetOptionInt(toption, "enable_rtmp", 0);
+                mk_util.MkIniSetOptionInt(toption, "add_mute_audio", 0);
+                mk_util.MkIniSetOptionInt(toption, "auto_close", 1);
+                mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
+                mk_util.MkIniRelease(toption);
 
+
+            }
+        }
+        private void On_mk_media_play(IntPtr url,
+                               IntPtr invoker,
+                               IntPtr sock)
+        {
+            //允许播放
+            var url_info = (MkMediaInfoT)url;
+            var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
+            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+            var channelInfo = storage.GetChannelFrom(streamId);
+            if (channelInfo == null)
+            {
+                return;
+            }
+            mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
+        }
+        private unsafe void On_mk_http_request(IntPtr parserPtr,
+                                      IntPtr invoker, int* consumed,
+                                      IntPtr sock)
+        {
+
+        }
+
+        private void On_mk_http_access(IntPtr parserPtr,
+                                       string path,
+                                       int is_dir,
+                                       IntPtr invoker,
+                                       IntPtr sock)
+        {
+            var parser = (MkParserT)parserPtr;
+            var sender = (MkSockInfoT)sock;
+
+            //有访问权限,每次访问文件都需要鉴权
+            mk_events_objects.MkHttpAccessPathInvokerDo((MkHttpAccessPathInvokerT)invoker, null, null, 0);
+        }
+
+        private void On_mk_record_mp4(IntPtr mp4Ptr)
+        {
+        }
+
+        private void On_mk_flow_report(IntPtr url,
+                                      ulong total_bytes,
+                                      ulong total_seconds,
+                                      int is_player,
+                                      IntPtr sock)
+        {
+
+        }
         public void BindSsrc(StreamPlayEventArgs e)
         {
             string streamId = ZLUtility.SsrcToStreamId(e.Params.Ssrc);
@@ -307,7 +402,6 @@ namespace GB28181Channel
             _option = option;
             _listener = listener;
             _server = server;
-
             _mediaDict = new ConcurrentDictionary<string, PlaybackParams>();
             _contextMap = new ConcurrentDictionary<string, FrameContext>();
             _contextPtrMap = new ConcurrentDictionary<string, IntPtr>();
@@ -332,12 +426,19 @@ namespace GB28181Channel
                 mk_common.MkEnvInit(config);
                 mk_common.MkRtpServerStart((ushort)_option.rtp_port);
                 mk_common.MkRtmpServerStart((ushort)_option.rtmp_port, 0);
+                mk_common.MkHttpServerStart((ushort)_option.http_port, 0);
 
                 _mkEvents = new MkEvents()
                 {
                     OnMkMediaNotFound = _onMediaNotFoundDelegate,
                     OnMkMediaNoReader = _onMediaNoReaderDelegate,
-                    OnMkMediaChanged = _onMediaChangedDelegate
+                    OnMkMediaChanged = _onMediaChangedDelegate,
+                    OnMkMediaPublish = _onMediaPublishDelegate,
+                    OnMkMediaPlay = _onMediaPlayDelegate,
+                    OnMkHttpRequest = _onHttpRequestDelegate,
+                    OnMkHttpAccess = _onHttpAccessDelegate,
+                    OnMkRecordMp4 = _onRecordMp4Delegate,
+                    OnMkFlowReport = _onFlowReportDelegate
                 };
                 MkEvents.MkEventsListen(_mkEvents);
             }

@@ -16,6 +16,7 @@ namespace IoTVideoService
     {
         public string NodeId { get; set; }
         public string Ip { get; set; }
-        public int Port { get; set; }
+        public int RtmpPort { get; set; }
+        public int HttpPort { get; set; }
     }
 }

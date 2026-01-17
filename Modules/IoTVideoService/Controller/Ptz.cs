@@ -33,11 +33,12 @@ namespace IoTVideoService.Controller
         /// </summary>
         /// <param name="sid">设备源Id</param>
         /// <param name="cid">通道Id</param>
+        /// <param name="type">播放协议：hls、rtmp</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<DefaultAjaxResult<string>> GetPlayUrl(string sid, string cid)
+        public async Task<DefaultAjaxResult<string>> GetPlayUrl(string sid, string cid, string type)
         {
-            return this.Success(await _ptzBLL.GetPlayUrl(sid, cid));
+            return this.Success(await _ptzBLL.GetPlayUrl(sid, cid, type));
         }
 
         /// <summary>

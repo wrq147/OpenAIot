@@ -11,12 +11,13 @@
             <param name="sid">设备源Id</param>
             <returns></returns>
         </member>
-        <member name="M:IoTVideoService.Controller.Ptz.GetPlayUrl(System.String,System.String)">
+        <member name="M:IoTVideoService.Controller.Ptz.GetPlayUrl(System.String,System.String,System.String)">
             <summary>
             获取视频播放Url
             </summary>
             <param name="sid">设备源Id</param>
             <param name="cid">通道Id</param>
+            <param name="type">播放协议：hls、rtmp</param>
             <returns></returns>
         </member>
         <member name="M:IoTVideoService.Controller.Ptz.GetChannelList(System.String)">

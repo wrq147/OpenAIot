@@ -18,6 +18,7 @@ namespace GB28181Channel
         /// <summary>
         /// ZLMediaKit的RTMP播放端口
         /// </summary>
-        public int rtmp_port { get; set; } = 1935;
+        public int rtmp_port { get; set; }
+        public int http_port { get; set; }
     }
 }

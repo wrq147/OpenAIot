@@ -86,7 +86,7 @@ namespace IoTVideoService.Business
             }
             return rtlist;
         }
-        public async Task<string> GetPlayUrl(string sId, string cId)
+        public async Task<string> GetPlayUrl(string sId, string cId, string type)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sId && x.VideoType == 1)).FirstOrDefault();
@@ -112,7 +112,16 @@ namespace IoTVideoService.Business
                 {
                     serverInfo = option.Value.VideoServers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
                 }
-                return $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{videoSource.VideoKey}";
+                switch (type)
+                {
+                    case "rtmp":
+                        return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}";
+                    case "hls":
+                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
+                    default:
+                        return string.Empty;
+                }
+
             }
             else if (videoSource.VideoType == 1)
             {
@@ -128,7 +137,16 @@ namespace IoTVideoService.Business
                 ServerInfo serverInfo = option.Value.GB28181Servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
                 if (videoSource.ChannelId == cId)
                 {
-                    return $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{videoSource.VideoKey}_0";
+                    switch (type)
+                    {
+                        case "rtmp":
+                            return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}_0";
+                        case "hls":
+                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}_0/hls.m3u8";
+                        default:
+                            return string.Empty;
+                    }
+                   
                 }
                 else
                 {
@@ -137,7 +155,15 @@ namespace IoTVideoService.Business
                     {
                         return string.Empty;
                     }
-                    return $"rtmp://{serverInfo.Ip}:{serverInfo.Port}/live/{channelSource.VideoKey}";
+                    switch (type)
+                    {
+                        case "rtmp":
+                            return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{channelSource.VideoKey}";
+                        case "hls":
+                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}/hls.m3u8";
+                        default:
+                            return string.Empty;
+                    }
                 }
             }
             else

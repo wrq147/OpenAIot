@@ -268,6 +268,10 @@ namespace FixVideoChannel
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
             for (int i = 0; i < track_count; i++)
             {
+                if (i >= tracks.Length)
+                {
+                    continue;
+                }
                 MkTrackT mkTrack = (MkTrackT)tracks[i];
                 if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                 {
@@ -296,8 +300,7 @@ namespace FixVideoChannel
                     mk_media.MkMediaInitAudio(context.Media, codecid, samplerate, chann, samplebit);
                 }
             }
-
-
+            mk_media.MkMediaInitComplete(context.Media);
         }
         private void OnShutdown(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
         {
@@ -337,15 +340,15 @@ namespace FixVideoChannel
 
             MkIniT option = mk_util.MkIniCreate();
             mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_audio", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
             mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
             mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
             mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
             mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
             mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
             mk_util.MkIniSetOptionInt(option, "auto_close", 0);
-            context.Media = mk_media.MkMediaCreate2("_defaultVhost_", "live", context.VideoKey, 0, option);
+            context.Media = mk_media.MkMediaCreate2("__defaultVhost__", "live", context.VideoKey, 0, option);
             mk_util.MkIniRelease(option);
 
 
@@ -419,6 +422,7 @@ namespace FixVideoChannel
                 mk_common.MkEnvInit(config);
 
                 mk_common.MkRtmpServerStart((ushort)_option.RTMPPort, 0);
+                mk_common.MkHttpServerStart((ushort)_option.http_port, 0);
 
                 _mkEvents = new MkEvents()
                 {

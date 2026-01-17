@@ -16,6 +16,7 @@ namespace FixVideoChannel
         /// <summary>
         /// ZLMediaKit的RTMP播放端口
         /// </summary>
-        public int RTMPPort { get; set; } = 1935;
+        public int RTMPPort { get; set; }
+        public int http_port { get; set; }
     }
 }

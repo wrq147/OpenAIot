@@ -58,11 +58,11 @@ export function getPresetList(sid) {
     })
 }
 
-export function getPlayUrl(sid, cid) {
+export function getPlayUrl(sid, cid, type) {
     return request({
         url: '/IoTVideoService/Ptz/GetPlayUrl',
         method: 'get',
-        params: { "sid": sid, "cid": cid }
+        params: { "sid": sid, "cid": cid, "type": type }
     })
 }
 

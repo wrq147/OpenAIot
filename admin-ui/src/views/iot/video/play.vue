@@ -128,7 +128,7 @@ export default {
         async getPlayUrl(sid, cid) {
             try {
                 this.loading = true;
-                let res = await getPlayUrl(sid, cid);
+                let res = await getPlayUrl(sid, cid, "hls");
                 this.initVideoPlayer(res.data);
                 this.loading = false;
             } catch (error) {
