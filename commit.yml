@@ -3,15 +3,21 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '990fbbb3b65ce9508f1463a81e7a26ef17c0bddf'
-    oldFile: !uuid '06973e4996861dda45d930335b7d467e57cf966b'
+    newFile: !uuid 'e72797bc46848b094d32781db62b8c86ccecc28e'
+    oldFile: !uuid '990fbbb3b65ce9508f1463a81e7a26ef17c0bddf'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '64aef188265260d09be2f4811a98610f2019ef4b'
+    oldFile: !uuid '9d19e273ff00601cadccea599d1e35c93a2054f7'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid 'e4b3148ef6eb3c297427d73d5dd2a61090bf8cff'
+    oldFile: !uuid '787bb70dcd92634cf8318a49284ab4db173abf9f'
   /Channel/GB28181Channel:
-    newFile: !uuid '74b63bbe03ee8f2beba77e829fdda5b4a4c30229'
-    oldFile: !uuid 'a860d23194826b2ef328354b4442dedbd82acae3'
+    newFile: !uuid '5afa2e85eb5cf8f193011ba55f1780ab78fae677'
+    oldFile: !uuid '74b63bbe03ee8f2beba77e829fdda5b4a4c30229'
   /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid 'd1a50e1b5c37dca12f8554065b4a9f067cdbce29'
-    oldFile: !uuid '05a194fe363e543fefabd2d9bb4a55d939a40000'
-gitCommitId: !uuid '71e4a6416bd9fa18d83a9cfb6c63ff491257b86b'
+    newFile: !uuid '97f3b9f527b9a4235ca15f640694dc617f9e0c94'
+    oldFile: !uuid 'd1a50e1b5c37dca12f8554065b4a9f067cdbce29'
+gitCommitId: !uuid 'bb11a6614db799dc724d606646a60c80742d9251'
 renames: {
   }
-revisionId: 129
+revisionId: 130
