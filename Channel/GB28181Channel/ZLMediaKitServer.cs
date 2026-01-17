@@ -338,6 +338,14 @@ namespace GB28181Channel
                 mk_util.MkIniSetOptionInt(toption, "enable_rtmp", 0);
                 mk_util.MkIniSetOptionInt(toption, "add_mute_audio", 0);
                 mk_util.MkIniSetOptionInt(toption, "auto_close", 1);
+                var storage = _provider.GetService<IDeviceStorage>();
+                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
+                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
+                if (channelInfo == null)
+                {
+                    return;
+                }
+                mk_util.MkIniSetOption(toption, "stream_replace", channelInfo.PushKey);
                 mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
                 mk_util.MkIniRelease(toption);
 
