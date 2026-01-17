@@ -1,24 +1,26 @@
 <template>
   <div>
-    <el-dialog title="历史数据" :visible.sync="infoVisible" width="60%" @close="closeDialog" :close-on-click-modal="false">
+    <el-dialog title="历史数据" :visible.sync="infoVisible" top="2vh" width="60%" @close="closeDialog" :close-on-click-modal="false">
       <div slot="title">
         <span style="margin-right:20px">历史数据</span>
-        <el-button type="text" plain @click="handleHistoryEdit" v-if="!isEditHistory" class="text_button">
-          <i class="el-icon-edit-outline"></i>
-          <span style="margin-left: 6px">编辑</span>
-        </el-button>
-        <el-button type="text" plain @click="handleHistoryEdit" v-else class="text_button">
-          <i class="el-icon-circle-close"></i>
-          <span style="margin-left: 6px">取消编辑</span>
-        </el-button>
+        <template v-if="showEdit">
+          <el-button type="text" plain @click="handleHistoryEdit" v-if="!isEditHistory" class="text_button">
+            <i class="el-icon-edit-outline"></i>
+            <span style="margin-left: 6px">编辑</span>
+          </el-button>
+          <el-button type="text" plain @click="handleHistoryEdit" v-else class="text_button">
+            <i class="el-icon-circle-close"></i>
+            <span style="margin-left: 6px">取消编辑</span>
+          </el-button>
+        </template>
       </div>
-      <!-- <div>
+      <div v-if="isEditHistory">
         <el-input-number v-model="editValue" ></el-input-number>
         <el-date-picker style="margin-top:10px" v-model="editIndate" value-format="timestamp" type="datetime" placeholder="选择日期时间"></el-date-picker>
         <el-button type="warning" plain @click="handleSaveProps">
-          <span style="margin-left: 6px">添加属性数据</span>
+          <span style="margin-left: 6px">插入数据</span>
         </el-button>
-      </div> -->
+      </div>
       <el-row class="mb8 button_row" style="display: flex; align-items: center">
         <div class="choice_time" style="margin-bottom:-10px;margin-left: -20px;">
           <el-radio-group v-model="showTime" @input="setShowTime" style="margin-left:20px">
@@ -206,6 +208,7 @@ export default {
       loadPageSize:100,//导出时设置300000
       isActiveDaochu:false,//是否是本地手动操作导出
       isEditHistory:false,
+      showEdit:false,
       enumValColor:{},
       colorList:['rgb(65,105,225)','rgb(135,206,250)','rgb(0,191,255)','rgb(176,224,230)','rgb(95,158,160)','rgb(25,25,112)','rgb(176,196,222)','rgb(30,144,255)',
       'rgb(255,182,193)','rgb(220,20,60)','rgb(255,20,147)','rgb(218,112,214)','rgb(139,0,139)','rgb(86,85,21)','rgb(175,238,238)','rgb(0,206,209)','rgb(47,79,79)','rgb(0,128,128)',
@@ -241,13 +244,14 @@ export default {
       immediate: true,
     },
   },
-  beforeCreate() {
-    // console.log('iiiiiiii');
-    initMap().catch((ex) => {
-      // this.$message.error(ex);
-    });
+  async beforeCreate() {
+    initMap();
   },
-  mounted() {},
+  mounted() {
+    if(this.$store.state.user.orgId==1){
+      this.showEdit=true;
+    }
+  },
   methods: {
     handleSaveProps() {
       //保存标签信息
@@ -1148,6 +1152,10 @@ export default {
 .text_button.el-button.is-plain:hover, .text_button.el-button.is-plain:focus{
   border: none;
 }
+::v-deep .el-dialog__body {
+  padding: 10px 20px;
+}
+
 .state_con{
   display:flex;
   margin-right: -10px;

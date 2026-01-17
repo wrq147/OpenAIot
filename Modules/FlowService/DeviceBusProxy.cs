@@ -24,10 +24,10 @@ namespace FlowService
             _provider = provider;
             _log = logFactory.CreateLogger<DeviceBusProxy>();
         }
-        public void UpdateUpList()
+        public async Task UpdateUpList()
         {
             DeviceRedisHelper redis = _provider.GetService<DeviceRedisHelper>();
-            var dict = redis.HashGetAll<string>("RuleExeNodes");
+            var dict = await redis.HashGetAllAsync<string>("RuleExeNodes");
             var tmplist = new List<string>();
             if (dict != null)
             {

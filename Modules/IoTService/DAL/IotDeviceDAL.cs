@@ -15,6 +15,15 @@ namespace IoTService.DAL
 {
     public class IotDeviceDAL : BaseRepository<MZ_IotDevice>
     {
+        public virtual async Task<List<Out_SimDev>> SelectDevListByIdx(int idx)
+        {
+            return (await new SqlBuilder(help).Append("select Id,DeviceId,DeviceUpIdx from mz_iot_device where DeviceUpIdx=").AppendParam(idx)
+                .DoAsync<DoQuerySql<Out_SimDev>>()).ToList();
+        }
+        public virtual async Task<int> GetMaxUpIdx()
+        {
+            return (await new SqlBuilder(help).Append("SELECT MAX(DeviceUpIdx) FROM mz_iot_device").DoAsync<DoQueryScalar>()).GetValueInt();
+        }
         public virtual async Task<List<MZ_IotDevice>> SelectDevicesByIdx(string productId, int idx)
         {
             return await new SqlBuilder(help).Query<MZ_IotDevice>().Where(x => x.ProductId == productId && x.DeviceUpIdx == idx, "Id,DeviceId").ToListAsync();

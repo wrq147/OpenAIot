@@ -2729,6 +2729,11 @@
             协议名称
             </summary>
         </member>
+        <member name="P:IoTService.Models.Out_SimDev.Id">
+            <summary>
+            编码Id
+            </summary>
+        </member>
         <member name="P:IoTService.Models.Out_TagItem.Name">
             <summary>
             标签名称

@@ -183,26 +183,46 @@ namespace IoTService
 
                     #endregion
 
+
+                    //添加定时更新设备节点索引
+                    string upidxjobname = "DeviceUpIdxTask";
+                    string upidxgroup = "SYSTEM";
+                    if (!await jobBLL.ExistJob(upidxjobname, upidxgroup))
+                    {
+                        MZ_Job warnjob = new MZ_Job();
+                        warnjob.concurrent = "0";
+                        warnjob.createId = 0;
+                        warnjob.create_time = DateTime.Now;
+                        warnjob.updateId = 0;
+                        warnjob.update_time = DateTime.Now;
+                        warnjob.cron_expression = "0 11 2 * * ?";
+                        warnjob.invoke_target = typeof(IotDeviceBLL).FullName + ".UpdateDeviceNodeIdx()";
+                        warnjob.job_group = upidxgroup;
+                        warnjob.job_name = upidxjobname;
+                        warnjob.misfire_policy = "2";
+                        warnjob.status = "0";
+
+                        await jobBLL.InsertJob(warnjob);
+                    }
                 }
 
 
                 var generalOption = app.ServiceProvider.GetService<IOptions<GeneralOption>>();
                 if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
                 {
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+                    var nodesub = await bus.SubscribeCoreAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default);
                     var _ = Task.Run(async () =>
                     {
-                        var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                        await foreach (var msg in bus.SubscribeAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default))
+                        await foreach (var msg in nodesub.Msgs.ReadAllAsync())
                         {
-                            app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
+                            await app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
                         }
                     });
 
                     //设置规则执行节点
-                    app.ServiceProvider.GetService<ServerBusProxy>().RegNode();
+                    await app.ServiceProvider.GetService<ServerBusProxy>().RegNode();
                 }
-
-
             });
 
 

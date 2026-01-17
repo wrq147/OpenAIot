@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using StackExchange.Redis;
 using ChannelUtility.Tsl;
 using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
 
 namespace IoTService
 {

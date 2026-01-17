@@ -4,6 +4,7 @@ using ChannelUtility.Tsl;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
+using Esprima.Ast;
 using IoTRulesService.DAL;
 using IoTRulesService.Flow.Builder;
 using IoTRulesService.Model;
@@ -71,6 +72,8 @@ namespace IoTRulesService.Business
         }
         public virtual async Task ExecuteProductTime(TimeEvent evt)
         {
+            var redis = _provider.GetService<IotRedisHelper>();
+            await redis.WaitReadLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
             try
             {
                 var serverBus = _provider.GetService<ServerBusProxy>();
@@ -82,7 +85,6 @@ namespace IoTRulesService.Business
                     //初始化参数
                     Dictionary<string, string> newparamType = new Dictionary<string, string>();
                     Dictionary<string, object> newparams = new Dictionary<string, object>();
-                    var redis = _provider.GetService<IotRedisHelper>();
 
                     if (!string.IsNullOrEmpty(evt.HttpParams))
                     {
@@ -177,7 +179,10 @@ namespace IoTRulesService.Business
                 _provider.GetService<ILoggerFactory>().CreateLogger<RuleBLL>().LogError(ex.Message + ex.StackTrace);
                 return;
             }
-
+            finally
+            {
+                await redis.ReleaseReadLockAsync("NodeIdx");
+            }
         }
         /// <summary>
         /// http触发与定时器触发

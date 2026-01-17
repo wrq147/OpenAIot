@@ -1444,6 +1444,32 @@
             </summary>
             <returns>Redis 数据库连接实例</returns>
         </member>
+        <member name="M:Common.Redis.RedisHelper.WaitReadLockAsync(System.String,System.TimeSpan)">
+            <summary>
+            异步获取分布式读锁（阻塞等待直到获取成功）
+            </summary>
+            <param name="lockKey">锁标识</param>
+            <param name="expiry">锁过期时间</param>
+        </member>
+        <member name="M:Common.Redis.RedisHelper.ReleaseReadLockAsync(System.String)">
+            <summary>
+            异步释放分布式读锁
+            </summary>
+            <param name="lockKey">锁标识</param>
+        </member>
+        <member name="M:Common.Redis.RedisHelper.WaitWriteLockAsync(System.String,System.TimeSpan)">
+            <summary>
+            异步获取分布式写锁（阻塞等待直到获取成功）
+            </summary>
+            <param name="lockKey">锁标识</param>
+            <param name="expiry">锁过期时间</param>
+        </member>
+        <member name="M:Common.Redis.RedisHelper.ReleaseWriteLockAsync(System.String)">
+            <summary>
+            异步释放分布式写锁
+            </summary>
+            <param name="lockKey">锁标识</param>
+        </member>
         <member name="M:Common.Redis.RedisHelper.LockToDo(System.String,System.Action{StackExchange.Redis.IDatabase})">
             <summary>
             加锁处理

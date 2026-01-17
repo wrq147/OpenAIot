@@ -14,7 +14,6 @@ using JiebaNet.Segmenter;
 using Jint;
 using Microsoft.Extensions.Logging;
 using MonitorService;
-using MonitorService.Business;
 using MonitorService.DAL;
 using MyAccess.Aop;
 using MyAccess.DB.Builder.WhereToSql;
@@ -24,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TemplateAction.Common;
 using TemplateAction.Core;
 
 namespace IoTService.Business
@@ -1630,5 +1628,71 @@ namespace IoTService.Business
             return tlist.Count == 1000;
         }
 
+        public async Task UpdateDeviceNodeIdx()
+        {
+            var nodeList = _provider.GetService<ServerBusProxy>().GetNodeList();
+            if (nodeList.Count > 1)
+            {
+                var curMax = nodeList.Count - 1;
+                var maxIdx = await _deviceDAL.GetMaxUpIdx();
+                if (maxIdx != curMax)
+                {
+                    IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
+                    await redis.WaitWriteLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
+                    try
+                    {
+                        Dictionary<int, List<Out_SimDev>> dict = new Dictionary<int, List<Out_SimDev>>();
+                        for (int i = 0; i <= curMax; i++)
+                        {
+                            dict[i] = new List<Out_SimDev>();
+                        }
+                        for (int j = 0; j <= maxIdx; j++)
+                        {
+                            List<Out_SimDev> iotDevList = await _deviceDAL.SelectDevListByIdx(j);
+                            foreach (var iotDev in iotDevList)
+                            {
+                                int pos = 0;
+                                if (!string.IsNullOrEmpty(iotDev.DeviceId))
+                                {
+                                    pos = Math.Abs(iotDev.DeviceId.GetHashCode() % nodeList.Count);
+                                }
+                                if (pos != iotDev.DeviceUpIdx)
+                                {
+                                    dict[pos].Add(iotDev);
+                                }
+                            }
+                        }
+                        for (int k = 0; k <= curMax; k++)
+                        {
+                            if (dict[k].Count > 0)
+                            {
+                                int pageSize = 2000;
+                                int totalCount = dict[k].Count;
+                                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+                                for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
+                                {
+                                    int startIndex = pageIndex * pageSize;
+                                    int endIndex = Math.Min(startIndex + pageSize, totalCount);
+                                    var currentPageData = dict[k].GetRange(startIndex, endIndex - startIndex);
+                                    MZ_IotDevice newDev = new MZ_IotDevice();
+                                    newDev.DeviceUpIdx = k;
+                                    var ids = currentPageData.Select(x => x.Id).ToList();
+                                    if (ids.Count > 0)
+                                    {
+                                        await _deviceDAL.Update(newDev, x => ids.Contains(x.Id));
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    finally
+                    {
+                        await redis.ReleaseWriteLockAsync("NodeIdx");
+                    }
+                }
+            }
+
+        }
     }
 }

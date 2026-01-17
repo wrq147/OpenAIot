@@ -50,14 +50,16 @@ namespace FlowService
                 var generalOption = app.ServiceProvider.GetService<IOptions<GeneralOption>>();
                 if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
                 {
+                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+                    var tsubBus = await bus.SubscribeCoreAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default);
                     Task _ = Task.Run(async () =>
                     {
-                        var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                        await foreach (var msg in bus.SubscribeAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default))
+                        await foreach (var msg in tsubBus.Msgs.ReadAllAsync())
                         {
-                            app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
+                            await app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
                         }
                     });
+                    await app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
                 }
             });
             //监听创建新的流程

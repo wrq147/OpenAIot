@@ -3,6 +3,7 @@ using ChannelUtility.Config;
 using ChannelUtility.Message;
 using Common.EventBus;
 using Common.Share;
+using IoTService.Business;
 using IoTService.DAL;
 using IoTService.Models;
 using Microsoft.Extensions.Logging;
@@ -28,10 +29,12 @@ namespace IoTService
     {
         private ITAServiceProvider _provider;
         private ILogger<ServerBusProxy> _log;
+        private DateTime _startTime;
         public ServerBusProxy(ITAServiceProvider provider, ILoggerFactory logFactory)
         {
             _provider = provider;
             _log = logFactory.CreateLogger<ServerBusProxy>();
+            _startTime = DateTime.Now;
         }
         public async Task PublishKeyDel(string key)
         {
@@ -347,17 +350,17 @@ namespace IoTService
         /// <summary>
         /// 注册新的规则处理节点
         /// </summary>
-        public void RegNode()
+        public async Task RegNode()
         {
             var option = _provider.GetService<IOptions<IotOption>>();
             IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
             if (!string.IsNullOrEmpty(option.Value.node_name))
             {
-                redis.HashSet("RuleExeNodes", option.Value.node_name, DateTime.Now.AddSeconds(600).ToString("o"));
+                await redis.HashSetAsync("RuleExeNodes", option.Value.node_name, DateTime.Now.AddSeconds(600).ToString("o"));
             }
             var bus = _provider.GetService<NatsScope>().Bus;
 
-            var t = bus.PublishAsync(new NatsMsg<string>()
+            await bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = "RuleNode.Change",
                 Data = string.Empty
@@ -412,10 +415,10 @@ namespace IoTService
                 Data = string.Empty
             }, DefalutNatsJsonSerializer<string>.Default);
         }
-        public void UpdateUpList()
+        public async Task UpdateUpList()
         {
             IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
-            var dict = redis.HashGetAll<string>("RuleExeNodes");
+            var dict = await redis.HashGetAllAsync<string>("RuleExeNodes");
             var tmplist = new List<string>();
             if (dict != null)
             {
@@ -435,6 +438,7 @@ namespace IoTService
                 _lock.ExitWriteLock();
             }
         }
+
         private string GetDownKey(string deviceId)
         {
             _lock.EnterReadLock();
