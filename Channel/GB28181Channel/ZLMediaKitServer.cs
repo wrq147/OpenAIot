@@ -260,32 +260,15 @@ namespace GB28181Channel
                     {
                         MkTrackT mkTrack = mk_events_objects.MkMediaSourceGetTrack(mediaSourceT, i);
                         if (mkTrack == null) { continue; }
+                        mk_media.MkMediaInitTrack(context.Media, mkTrack);
                         if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                         {
-                            int videow = mk_track.MkTrackVideoWidth(mkTrack);
-                            int videoh = mk_track.MkTrackVideoHeight(mkTrack);
-                            int codecid = mk_track.MkTrackCodecId(mkTrack);
-                            int vfps = mk_track.MkTrackVideoFps(mkTrack);
-                            int bitrate = mk_track.MkTrackBitRate(mkTrack);
-
-                            //创建视频轨道
-                            mk_media.MkMediaInitVideo(context.Media, codecid, videow, videoh, vfps, bitrate);
-
                             MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                             context.VideoDecoder = mkDecoder;
                             context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
 
                             mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
                             mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
-                        }
-                        else
-                        {
-                            int codecid = mk_track.MkTrackCodecId(mkTrack);
-                            int samplerate = mk_track.MkTrackAudioSampleRate(mkTrack);
-                            int chann = mk_track.MkTrackAudioChannel(mkTrack);
-                            int samplebit = mk_track.MkTrackAudioSampleBit(mkTrack);
-                            //创建音频轨道
-                            mk_media.MkMediaInitAudio(context.Media, codecid, samplerate, chann, samplebit);
                         }
                     }
                     mk_media.MkMediaInitComplete(context.Media);
@@ -338,14 +321,6 @@ namespace GB28181Channel
                 mk_util.MkIniSetOptionInt(toption, "enable_rtmp", 0);
                 mk_util.MkIniSetOptionInt(toption, "add_mute_audio", 0);
                 mk_util.MkIniSetOptionInt(toption, "auto_close", 1);
-                var storage = _provider.GetService<IDeviceStorage>();
-                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
-                if (channelInfo == null)
-                {
-                    return;
-                }
-                mk_util.MkIniSetOption(toption, "stream_replace", channelInfo.PushKey);
                 mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
                 mk_util.MkIniRelease(toption);
 
