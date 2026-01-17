@@ -90,9 +90,6 @@ namespace FixVideoChannel
             {
                 if (item.DetectList.Count > 0)
                 {
-                    var tmpsss = mk_frame.MkFrameGetDataSize(mkFrame);
-                    var tmpssss = mk_frame.MkFrameGetDts(mkFrame);
-                    var tmpsdfsdfsd = mk_frame.MkFrameGetPts(mkFrame);
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                     if (context.LastFrame != null)
                     {

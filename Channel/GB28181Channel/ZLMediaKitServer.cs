@@ -59,15 +59,32 @@ namespace GB28181Channel
         {
             var url_info = (MkMediaInfoT)url;
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-            var channelInfo = storage.GetChannelFrom(streamId);
-            if (channelInfo == null)
+            var lowerstreamid = streamId.ToLower();
+            if (_mediaDict.TryGetValue(lowerstreamid, out var playbackParams))
             {
-                return 1;
+                InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
+                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
+                if (channelInfo == null)
+                {
+                    return 1;
+                }
+                _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
+                return 0;
             }
+            else
+            {
+                InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+                var channelInfo = storage.GetChannelFrom(streamId);
+                if (channelInfo == null)
+                {
+                    return 1;
+                }
 
-            _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
-            return 0;
+                _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
+                return 0;
+            }
+ 
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)
         {
@@ -95,9 +112,6 @@ namespace GB28181Channel
             {
                 if (device.VideoData.DetectList.Count > 0)
                 {
-                    var tmpsss = mk_frame.MkFrameGetDataSize(mkFrame);
-                    var tmpssss = mk_frame.MkFrameGetDts(mkFrame);
-                    var tmpsdfsdfsd = mk_frame.MkFrameGetPts(mkFrame);
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                     if (context.LastFrame != null)
                     {
@@ -208,7 +222,7 @@ namespace GB28181Channel
                 FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
             }
         }
-      
+
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
             MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
@@ -239,7 +253,7 @@ namespace GB28181Channel
                     IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
                     _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
                     _contextMap.TryAdd(context.VideoKey, context);
-   
+
                     //创建实时拉流
                     MkIniT option = mk_util.MkIniCreate();
                     mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
@@ -275,30 +289,27 @@ namespace GB28181Channel
                 }
                 else
                 {
-                    if (_mediaDict.TryRemove(streamId, out PlaybackParams ch))
+                    _mediaDict.TryRemove(streamId, out PlaybackParams ch);
+                    if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
                     {
-                        if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
-                        {
-                            CallbackHelper.FreeInstancePtr(contextPtr);
-                        }
-                        if (_contextMap.TryRemove(channelInfo.PushKey, out FrameContext context))
-                        {
-                            if (context.Swscale != null)
-                            {
-                                mk_transcode.MkSwscaleRelease(context.Swscale);
-                            }
-                            if (context.VideoDecoder != null)
-                            {
-                                mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
-                            }
-                            if (context.Media != null)
-                            {
-                                mk_media.MkMediaRelease(context.Media);
-                            }
-                            FrameBufferPool.ClearCache(channelInfo.PushKey);
-                        }
+                        CallbackHelper.FreeInstancePtr(contextPtr);
                     }
-
+                    if (_contextMap.TryRemove(channelInfo.PushKey, out FrameContext context))
+                    {
+                        if (context.Swscale != null)
+                        {
+                            mk_transcode.MkSwscaleRelease(context.Swscale);
+                        }
+                        if (context.VideoDecoder != null)
+                        {
+                            mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
+                        }
+                        if (context.Media != null)
+                        {
+                            mk_media.MkMediaRelease(context.Media);
+                        }
+                        FrameBufferPool.ClearCache(channelInfo.PushKey);
+                    }
                 }
             }
         }
@@ -320,7 +331,7 @@ namespace GB28181Channel
                 mk_util.MkIniSetOptionInt(toption, "enable_rtsp", 1);
                 mk_util.MkIniSetOptionInt(toption, "enable_rtmp", 0);
                 mk_util.MkIniSetOptionInt(toption, "add_mute_audio", 0);
-                mk_util.MkIniSetOptionInt(toption, "auto_close", 1);
+                mk_util.MkIniSetOptionInt(toption, "auto_close", 0);
                 mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
                 mk_util.MkIniRelease(toption);
 
