@@ -3,6 +3,7 @@ using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
@@ -13,12 +14,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ZLMediaKit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GB28181Channel
 {
     public unsafe class ZLMediaKitServer
     {
+        private static readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
         private IServiceProvider _provider;
         private GB28181Option _option;
         private GB28181DeviceEventListener _listener;
@@ -59,43 +60,40 @@ namespace GB28181Channel
         {
             var url_info = (MkMediaInfoT)url;
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            var lowerstreamid = streamId.ToLower();
-            if (_mediaDict.TryGetValue(lowerstreamid, out var playbackParams))
+            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+            var channelInfo = storage.GetChannelFrom(streamId);
+            if (channelInfo == null)
             {
-                InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
-                if (channelInfo == null)
-                {
-                    return 1;
-                }
-                _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
-                return 0;
+                return 1;
             }
-            else
-            {
-                InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-                var channelInfo = storage.GetChannelFrom(streamId);
-                if (channelInfo == null)
-                {
-                    return 1;
-                }
-
-                _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
-                return 0;
-            }
- 
+            _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
+            return 0;
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)
         {
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
+            var lowerstreamid = streamId.ToLower();
             InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-            var channelInfo = storage.GetChannelFrom(streamId);
-            if (channelInfo != null)
+            if (_mediaDict.TryGetValue(lowerstreamid, out var playbackParams))
             {
-                _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
+                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
+                if (channelInfo != null)
+                {
+                    _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                }
+
             }
+            else
+            {
+                var channelInfo = storage.GetChannelFrom(streamId);
+                if (channelInfo != null)
+                {
+                    _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                }
+            }
+
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
         {
@@ -227,18 +225,18 @@ namespace GB28181Channel
         {
             MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
             string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT).ToLower();
-
-            if (_mediaDict.TryGetValue(streamId, out var playbackParams))
+            if (regist == 1)
             {
-                var storage = _provider.GetService<IDeviceStorage>();
-                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
-                if (channelInfo == null)
+                if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
                 {
-                    return;
-                }
-                if (regist == 1)
-                {
+                    _mediaDict.AddOrUpdate(streamId, _ => playbackParams, (x, y) => playbackParams);
+                    var storage = _provider.GetService<IDeviceStorage>();
+                    var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
+                    var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
+                    if (channelInfo == null)
+                    {
+                        return;
+                    }
                     if (_contextMap.ContainsKey(channelInfo.PushKey))
                     {
                         return;
@@ -287,9 +285,19 @@ namespace GB28181Channel
                     }
                     mk_media.MkMediaInitComplete(context.Media);
                 }
-                else
+            }
+            else
+            {
+                if (_mediaDict.TryGetValue(streamId, out var playbackParams))
                 {
                     _mediaDict.TryRemove(streamId, out PlaybackParams ch);
+                    var storage = _provider.GetService<IDeviceStorage>();
+                    var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
+                    var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
+                    if (channelInfo == null)
+                    {
+                        return;
+                    }
                     if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
                     {
                         CallbackHelper.FreeInstancePtr(contextPtr);
@@ -311,6 +319,7 @@ namespace GB28181Channel
                         FrameBufferPool.ClearCache(channelInfo.PushKey);
                     }
                 }
+             
             }
         }
         private void On_mk_media_publish(IntPtr url,
@@ -320,7 +329,7 @@ namespace GB28181Channel
             var url_info = (MkMediaInfoT)url;
             var rawStreamId = mk_events_objects.MkMediaInfoGetStream(url_info);
             var streamId = rawStreamId.ToLower();
-            if (_mediaDict.TryGetValue(streamId, out var playbackParams))
+            if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
             {
                 MkIniT toption = mk_util.MkIniCreate();
                 mk_util.MkIniSetOptionInt(toption, "enable_mp4", 0);
@@ -334,8 +343,6 @@ namespace GB28181Channel
                 mk_util.MkIniSetOptionInt(toption, "auto_close", 0);
                 mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
                 mk_util.MkIniRelease(toption);
-
-
             }
         }
         private void On_mk_media_play(IntPtr url,
@@ -388,7 +395,7 @@ namespace GB28181Channel
         public void BindSsrc(StreamPlayEventArgs e)
         {
             string streamId = ZLUtility.SsrcToStreamId(e.Params.Ssrc);
-            _mediaDict.AddOrUpdate(streamId, _ => e.Params, (x, y) => e.Params);
+            _cache.Set(streamId, e.Params, TimeSpan.FromSeconds(60));
         }
         public void Start(GB28181Option option, IServiceProvider provider, GB28181DeviceEventListener listener, GB28181Server server)
         {

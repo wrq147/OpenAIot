@@ -247,7 +247,7 @@ namespace IoTService.Business
                                     props.Add(winrule.PropCode, mitem.Val);
                                     if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                     {
-                                        await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
+                                        await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
                                     }
                                 }
                             }
@@ -380,7 +380,7 @@ namespace IoTService.Business
                                         props.Add(winrule.PropCode, mitem.Val);
                                         if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                         {
-                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
+                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
                                         }
                                     }
                                 }
@@ -485,7 +485,7 @@ namespace IoTService.Business
                                             }
                                             if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
                                             {
-                                                await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
+                                                await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
                                             }
                                         }
 
@@ -514,7 +514,7 @@ namespace IoTService.Business
                                         props.Add(winrule.PropCode, mitem.Val);
                                         if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                         {
-                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
+                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
                                         }
                                     }
                                 }

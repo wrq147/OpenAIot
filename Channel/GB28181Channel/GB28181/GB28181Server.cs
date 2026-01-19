@@ -48,7 +48,10 @@ namespace GB28181Channel.GB28181
         private readonly ConcurrentDictionary<string, RequestContext> _requestContextMap = new ConcurrentDictionary<string, RequestContext>();
 
 
-
+        // 新增：请求上下文超时时间（默认30秒，可配置）
+        private readonly int _requestContextTimeout = 30;
+        // 新增：清理过期请求上下文的定时器
+        private readonly System.Timers.Timer _contextCleanupTimer;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -103,6 +106,11 @@ namespace GB28181Channel.GB28181
             // 初始化心跳检查定时器
             _heartbeatTimer = new System.Timers.Timer(30 * 1000);
             _heartbeatTimer.Elapsed += OnHeartbeatCheck;
+
+
+            // ========== 初始化请求上下文清理定时器 ==========
+            _contextCleanupTimer = new System.Timers.Timer(120 * 1000); // 每120秒检查一次
+            _contextCleanupTimer.Elapsed += OnContextCleanup;
         }
 
         /// <summary>
@@ -113,6 +121,7 @@ namespace GB28181Channel.GB28181
             try
             {
                 _heartbeatTimer.Start();
+                _contextCleanupTimer.Start();
                 Console.WriteLine($"[GB28181 Server] 启动成功");
 
                 // 根据枚举值输出协议信息
@@ -901,7 +910,68 @@ namespace GB28181Channel.GB28181
 
             Console.WriteLine($"[停止推流] {channelId} SessionID: {sessionId} 成功");
         }
+        /// <summary>
+        /// 清理过期的请求上下文，防止内存泄漏
+        /// </summary>
+        private async void OnContextCleanup(object sender, ElapsedEventArgs e)
+        {
+            var now = DateTime.Now;
+            var expiredKeys = new List<string>();
 
+            // 遍历所有上下文，找出超时的条目
+            foreach (var kvp in _requestContextMap)
+            {
+                var context = kvp.Value;
+                var elapsedSeconds = (now - context.RequestTime).TotalSeconds;
+
+                // 超过超时时间则标记为待清理
+                if (elapsedSeconds > _requestContextTimeout)
+                {
+                    expiredKeys.Add(kvp.Key);
+
+                    // 可选：触发超时事件或记录日志
+                    Console.WriteLine($"[上下文清理] 超时移除 CallID={kvp.Key} 类型={context.RequestType} " +
+                                      $"设备={context.DeviceId} 通道={context.ChannelId} " +
+                                      $"超时时间={elapsedSeconds:F1}秒");
+
+                    // 如果是拉流请求超时，更新通道状态并触发事件
+                    if (context.RequestType == nameof(SIPMethodsEnum.INVITE) &&
+                        !string.IsNullOrEmpty(context.DeviceId) &&
+                        !string.IsNullOrEmpty(context.ChannelId))
+                    {
+                        var device = _deviceStorage.GetDevice(context.DeviceId);
+                        if (device != null)
+                        {
+                            var channelList = _deviceStorage.GetChannelsByDeviceId(context.DeviceId);
+                            var channelInfo = channelList?.FirstOrDefault(x => x.ChannelId == context.ChannelId);
+                            if (channelInfo != null)
+                            {
+                                channelInfo.SessionStatus = StreamState.Failed;
+
+                                // 触发拉流失败事件
+                                await OnStreamPlayed(new StreamPlayEventArgs
+                                {
+                                    Params = new PlaybackParams
+                                    {
+                                        ChannelId = context.ChannelId,
+                                        DeviceId = context.DeviceId
+                                    },
+                                    IsSuccess = false,
+                                    SessionId = kvp.Key,
+                                    Message = $"拉流超时（{_requestContextTimeout}秒无响应）"
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 批量移除过期上下文（原子操作）
+            foreach (var key in expiredKeys)
+            {
+                _requestContextMap.TryRemove(key, out _);
+            }
+        }
         /// <summary>
         /// 心跳检查（检测设备离线）
         /// </summary>
@@ -1351,6 +1421,9 @@ namespace GB28181Channel.GB28181
         {
             _heartbeatTimer.Stop();
             _heartbeatTimer.Dispose();
+
+            _contextCleanupTimer.Stop();
+            _contextCleanupTimer.Dispose();
 
             _sipTransport.Shutdown();
             _sipTransport.Dispose();
