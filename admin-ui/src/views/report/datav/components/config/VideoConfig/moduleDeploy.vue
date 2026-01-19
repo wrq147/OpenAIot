@@ -11,9 +11,6 @@
               <el-radio label="">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-if="configData.chartOption.controls !== undefined" label="开启控制">
-            <el-switch v-model="configData.chartOption.controls" />
-          </el-form-item>
           <el-form-item v-if="configData.chartOption.auto !== undefined" label="自动播放">
             <el-switch v-model="configData.chartOption.auto" />
           </el-form-item>

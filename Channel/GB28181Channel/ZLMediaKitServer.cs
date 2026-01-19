@@ -81,16 +81,21 @@ namespace GB28181Channel
                 var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
                 if (channelInfo != null)
                 {
-                    _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                    if (channelInfo.SessionStatus == GB28181.Enum.StreamState.Playing)
+                    {
+                        _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                    }
                 }
-
             }
             else
             {
                 var channelInfo = storage.GetChannelFrom(streamId);
                 if (channelInfo != null)
                 {
-                    _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                    if (channelInfo.SessionStatus == GB28181.Enum.StreamState.Playing)
+                    {
+                        _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
+                    }
                 }
             }
 
@@ -108,7 +113,7 @@ namespace GB28181Channel
             var device = storage.GetDevice(context.DeviceId);
             if (device != null)
             {
-                if (device.VideoData.DetectList.Count > 0)
+                if (device.VideoData != null && device.VideoData.DetectList.Count > 0)
                 {
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                     if (context.LastFrame != null)
@@ -120,7 +125,10 @@ namespace GB28181Channel
                     return;
                 }
             }
-            mk_media.MkMediaInputFrame(context.Media, mkFrame);
+            if (context.Media != null)
+            {
+                mk_media.MkMediaInputFrame(context.Media, mkFrame);
+            }
             context.LastFrame = null;
         }
         private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
@@ -258,7 +266,7 @@ namespace GB28181Channel
                     mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
                     mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
+                    mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
                     mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
@@ -319,7 +327,7 @@ namespace GB28181Channel
                         FrameBufferPool.ClearCache(channelInfo.PushKey);
                     }
                 }
-             
+
             }
         }
         private void On_mk_media_publish(IntPtr url,
@@ -329,7 +337,19 @@ namespace GB28181Channel
             var url_info = (MkMediaInfoT)url;
             var rawStreamId = mk_events_objects.MkMediaInfoGetStream(url_info);
             var streamId = rawStreamId.ToLower();
+            bool enablePublish = false;
             if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
+            {
+                enablePublish = true;
+            }
+            else
+            {
+                if (_mediaDict.ContainsKey(streamId))
+                {
+                    enablePublish = true;
+                }
+            }
+            if (enablePublish)
             {
                 MkIniT toption = mk_util.MkIniCreate();
                 mk_util.MkIniSetOptionInt(toption, "enable_mp4", 0);
@@ -344,6 +364,7 @@ namespace GB28181Channel
                 mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
                 mk_util.MkIniRelease(toption);
             }
+
         }
         private void On_mk_media_play(IntPtr url,
                                IntPtr invoker,

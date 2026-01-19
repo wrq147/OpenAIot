@@ -116,6 +116,8 @@ namespace IoTVideoService.Business
                 {
                     case "rtmp":
                         return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}";
+                    case "flv":
+                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}.live.flv";
                     case "hls":
                         return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
                     default:
@@ -141,6 +143,8 @@ namespace IoTVideoService.Business
                     {
                         case "rtmp":
                             return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}_0";
+                        case "flv":
+                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}_0.live.flv";
                         case "hls":
                             return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}_0/hls.m3u8";
                         default:
@@ -159,8 +163,10 @@ namespace IoTVideoService.Business
                     {
                         case "rtmp":
                             return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{channelSource.VideoKey}";
+                        case "flv":
+                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}.live.flv";
                         case "hls":
-                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}/hls.m3u8";
+                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
                         default:
                             return string.Empty;
                     }

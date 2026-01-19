@@ -6,17 +6,7 @@
 </template>
 
 <script>
-import echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
-import videojs from 'video.js'
-import 'video.js/dist/video-js.css'
-
-import 'videojs-flash'
-import {parseQueryString, fIsUrL} from '../../util/urlUtil'
-
-
-const animationDuration = 6000;
-
 export default {
   components: {
    

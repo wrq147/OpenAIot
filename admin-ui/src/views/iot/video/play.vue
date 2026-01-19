@@ -4,7 +4,7 @@
         <div class="video-play-container">
             <!-- 视频播放区域 -->
             <div class="video-player" ref="videoContainer" v-loading="loading">
-                <video ref="videoElement" controls autoplay muted class="video-content"></video>
+                <div id="devPlayer"></div>
             </div>
 
             <!-- PTZ控制区域 - 仅GB28181设备显示 -->
@@ -99,10 +99,18 @@
 
 <script>
 import { getPresetList, getPlayUrl, getChannelList, controlPTZ } from "@/api/rules/video";
+import Player from 'xgplayer'
+import FlvPlugin from 'xgplayer-flv'
+import "xgplayer/dist/index.min.css"
 
 export default {
+    components: {
+        videoPlayer,
+    },
     data() {
         return {
+            isFlv: false,
+            tmpplayer: null,
             open: false,
             loading: false,
             videoSource: {},
@@ -113,53 +121,65 @@ export default {
             currentChannelId: '' // 当前选中的通道ID
         }
     },
+    mounted() {
+        if (FlvPlugin.isSupported()) {
+            this.isFlv = true;
+            this.tmpplayer = new Player({
+                id: 'devPlayer',
+                isLive: true,
+                plugins: [FlvPlugin]
+            })
+        }
+        else {
+            this.isFlv = false;
+            this.tmpplayer = new Player({
+                id: 'devPlayer',
+                isLive: true
+            })
+        }
+    },
     methods: {
-        showDlg(row) {
+        async showDlg(row) {
+            this.loading = true;
             this.open = true;
             this.videoSource = { ...row };
             if (this.videoSource.VideoType == 0) {
-                this.getPlayUrl(this.videoSource.Id, null);
+                await this.initVideo(this.videoSource.Id, null);
             }
             else if (this.videoSource.VideoType == 1) {
-                this.loadChannelList();
+                await this.loadChannelList();
             }
+            this.loading = false;
         },
 
-        async getPlayUrl(sid, cid) {
+        async initVideo(sid, cid) {
             try {
-                this.loading = true;
-                let res = await getPlayUrl(sid, cid, "hls");
-                this.initVideoPlayer(res.data);
-                this.loading = false;
+                if (this.isFlv) {
+                    let res = await getPlayUrl(sid, cid, "flv");
+                    this.tmpplayer.src = res.data;
+                    this.tmpplayer.play()
+                }
+                else {
+                    let res = await getPlayUrl(sid, cid, "hls");
+                    this.tmpplayer.src = res.data;
+                    this.tmpplayer.play()
+                }
+
             } catch (error) {
                 this.$message.error('获取播放地址失败');
-                this.loading = false;
             }
         },
-
-        initVideoPlayer(src) {
-            const videoElement = this.$refs.videoElement;
-            if (!videoElement) return;
-            // 模拟播放地址
-            videoElement.src = src;
-            videoElement.play().catch(err => console.warn('自动播放失败:', err));
-        },
-
         // 加载设备下的通道列表
         async loadChannelList() {
             try {
-                this.loading = true;
                 const res = await getChannelList(this.videoSource.Id)
                 this.channelList = res.data || [];
                 if (this.channelList.length > 0) {
                     this.currentChannelId = this.channelList[0].ChannelId;
                     await this.loadPresetList();
-                    let plres = await getPlayUrl(this.videoSource.Id, this.currentChannelId);
-                    this.initVideoPlayer(plres.data);
+                    await this.initVideo(this.videoSource.Id, this.currentChannelId);
                 }
-                this.loading = false;
             } catch (error) {
-                this.loading = false;
                 this.$message.error('加载通道列表失败');
                 console.error(error);
             }
@@ -300,12 +320,6 @@ export default {
     align-items: center;
     justify-content: center;
     background: #000;
-}
-
-.video-content {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
 }
 
 .ptz-controls {

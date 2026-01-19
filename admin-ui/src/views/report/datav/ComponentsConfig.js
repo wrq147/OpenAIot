@@ -8058,7 +8058,6 @@ export const mediaComponents = [{
         chartOption: {
             replay: "loop",
             auto: false,
-            controls: true,
             customData: "",
             interactData: [],
             //载入动画
