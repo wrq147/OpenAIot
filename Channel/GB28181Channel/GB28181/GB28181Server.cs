@@ -361,7 +361,7 @@ namespace GB28181Channel.GB28181
             }
             try
             {
-                switch (requestContext.RequestType)
+                switch (requestContext.CommandType)
                 {
                     case "PTZControl":
                         {
@@ -1048,7 +1048,8 @@ namespace GB28181Channel.GB28181
                 // 保存请求上下文（携带预置位查询参数）
                 _requestContextMap.TryAdd(tsnid, new RequestContext
                 {
-                    RequestType = "PresetQuery",
+                    RequestType = nameof(SIPMethodsEnum.MESSAGE),
+                    CommandType = "PresetQuery",
                     DeviceId = deviceId,
                     ChannelId = string.Empty,
                     RequestTime = DateTime.Now,
@@ -1094,7 +1095,8 @@ namespace GB28181Channel.GB28181
                 // 保存请求上下文
                 _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
                 {
-                    RequestType = "PTZControl",
+                    RequestType = nameof(SIPMethodsEnum.MESSAGE),
+                    CommandType = "PTZControl",
                     DeviceId = device.DeviceId,
                     ChannelId = @params.ChannelId,
                     RequestTime = DateTime.Now,

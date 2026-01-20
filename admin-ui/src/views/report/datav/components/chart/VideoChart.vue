@@ -1,6 +1,6 @@
 <template>
   <div :class="animate" :style="{ height: height, width: width }" :id="chartOption.bindingDiv" ref="text">
-    <div id="rtccPlayer"></div>
+    <div ref="rtccPlayer"></div>
   </div>
 </template>
 
@@ -52,7 +52,7 @@ export default {
     if (FlvPlugin.isSupported()) {
       this.isFlv = true;
       this.tmpplayer = new Player({
-        id: 'rtccPlayer',
+        el: this.$refs.rtccPlayer,
         isLive: true,
         plugins: [FlvPlugin]
       })
@@ -60,7 +60,7 @@ export default {
     else {
       this.isFlv = false;
       this.tmpplayer = new Player({
-        id: 'rtccPlayer',
+        el: this.$refs.rtccPlayer,
         isLive: true
       })
     }

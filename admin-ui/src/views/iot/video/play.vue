@@ -4,7 +4,7 @@
         <div class="video-play-container">
             <!-- 视频播放区域 -->
             <div class="video-player" ref="videoContainer" v-loading="loading">
-                <div id="devPlayer"></div>
+                <div ref="devPlayer"></div>
             </div>
 
             <!-- PTZ控制区域 - 仅GB28181设备显示 -->
@@ -104,12 +104,8 @@ import FlvPlugin from 'xgplayer-flv'
 import "xgplayer/dist/index.min.css"
 
 export default {
-    components: {
-        videoPlayer,
-    },
     data() {
         return {
-            isFlv: false,
             tmpplayer: null,
             open: false,
             loading: false,
@@ -119,23 +115,6 @@ export default {
             presetList: [],
             channelList: [], // 设备下的通道列表
             currentChannelId: '' // 当前选中的通道ID
-        }
-    },
-    mounted() {
-        if (FlvPlugin.isSupported()) {
-            this.isFlv = true;
-            this.tmpplayer = new Player({
-                id: 'devPlayer',
-                isLive: true,
-                plugins: [FlvPlugin]
-            })
-        }
-        else {
-            this.isFlv = false;
-            this.tmpplayer = new Player({
-                id: 'devPlayer',
-                isLive: true
-            })
         }
     },
     methods: {
@@ -151,20 +130,41 @@ export default {
             }
             this.loading = false;
         },
-
         async initVideo(sid, cid) {
             try {
-                if (this.isFlv) {
-                    let res = await getPlayUrl(sid, cid, "flv");
-                    this.tmpplayer.src = res.data;
-                    this.tmpplayer.play()
+                if (this.tmpplayer == null) {
+                    if (FlvPlugin.isSupported()) {
+                        let res = await getPlayUrl(sid, cid, "flv");
+                        this.tmpplayer = new Player({
+                            el: this.$refs.devPlayer,
+                            isLive: true,
+                            url: res.data,
+                            autoplay: true,
+                            plugins: [FlvPlugin]
+                        })
+                    }
+                    else {
+                        let res = await getPlayUrl(sid, cid, "hls");
+                        this.tmpplayer = new Player({
+                            el: this.$refs.devPlayer,
+                            url: res.data,
+                            autoplay: true,
+                            isLive: true
+                        })
+                    }
+                    this.tmpplayer.play();
                 }
                 else {
-                    let res = await getPlayUrl(sid, cid, "hls");
-                    this.tmpplayer.src = res.data;
-                    this.tmpplayer.play()
+                    if (FlvPlugin.isSupported()) {
+                        let res = await getPlayUrl(sid, cid, "flv");
+                        this.tmpplayer.src = res.data;
+                    }
+                    else {
+                        let res = await getPlayUrl(sid, cid, "hls");
+                        this.tmpplayer.src = res.data;
+                    }
+                    this.tmpplayer.play();
                 }
-
             } catch (error) {
                 this.$message.error('获取播放地址失败');
             }

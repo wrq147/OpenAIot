@@ -19,6 +19,10 @@ namespace GB28181Channel.GB28181.DTO
         public StreamState SessionStatus { get; set; }
         public string Ssrc { get; set; }
         public int RemoteRtpPort { get; set; }
+        /// <summary>
+        /// 当前通道是否允许播放hsl
+        /// </summary>
+        public bool EnableHLS { get; set; }
         public string ChannelId { get; set; }
         public string ChannelName { get; set; }
         public string Manufacturer { get; set; }

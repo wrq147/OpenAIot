@@ -1,6 +1,6 @@
 <template>
   <div :class="className" :style="{ height: height, width: width }" :id="chartOption.bindingDiv" ref="text">
-    <div id="rtPlayer"></div>
+    <div ref="rtPlayer"></div>
   </div>
 </template>
 
@@ -54,15 +54,17 @@ export default {
     if (FlvPlugin.isSupported()) {
       this.isFlv = true;
       this.tmpplayer = new Player({
-        id: 'rtPlayer',
+        el: this.$refs.rtPlayer,
         isLive: true,
+        autoplay: true,
         plugins: [FlvPlugin]
       })
     }
     else {
       this.isFlv = false;
       this.tmpplayer = new Player({
-        id: 'rtPlayer',
+        el: this.$refs.rtPlayer,
+        autoplay: true,
         isLive: true
       })
     }

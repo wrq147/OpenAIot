@@ -17,6 +17,7 @@ namespace FixVideoChannel
         private ConcurrentDictionary<string, string> _IdToKeys;
         private ConcurrentDictionary<string, FrameContext> _contextMap;
         private ConcurrentDictionary<string, IntPtr> _contextPtrMap;
+        private ConcurrentDictionary<string, bool> _hlsMap;
 
         // Player 相关回调委托
         private ZLMediaKit.OnMkPlayEvent _onPlayDelegate;
@@ -66,6 +67,11 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var url_info = (MkMediaInfoT)url;
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
+            var schema = mk_events_objects.MkMediaInfoGetSchema(url_info);
+            if (schema == "hls")
+            {
+                _hlsMap.TryAdd(streamId, true);
+            }
             eventBus.PublishMediaNotFound(_option.node_id, streamId, 0);
             return 0;
         }
@@ -74,6 +80,7 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
+            _hlsMap.TryRemove(streamId, out bool tv);
             eventBus.PublishMediaNotReader(_option.node_id, streamId, 0);
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
@@ -219,15 +226,25 @@ namespace FixVideoChannel
                           IntPtr invoker,
                           IntPtr sock)
         {
-            //允许推流，并且允许转hls/mp4
-            mk_events_objects.MkPublishAuthInvokerDo((MkPublishAuthInvokerT)invoker, null, 1, 1);
+            ////允许推流，并且允许转hls/mp4
+            //mk_events_objects.MkPublishAuthInvokerDo((MkPublishAuthInvokerT)invoker, null, 1, 1);
         }
         private void On_mk_media_play(IntPtr url,
                                IntPtr invoker,
                                IntPtr sock)
         {
             //允许播放
-            mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
+            var url_info = (MkMediaInfoT)url;
+            var schema = mk_events_objects.MkMediaInfoGetSchema(url_info);
+            if (schema != "rtmp" && schema != "hls")
+            {
+                return;
+            }
+            var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
+            if (_videoKeyItems.ContainsKey(streamId))
+            {
+                mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
+            }
         }
         private unsafe void On_mk_http_request(IntPtr parserPtr,
                                       IntPtr invoker, int* consumed,
@@ -324,7 +341,14 @@ namespace FixVideoChannel
             mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
             mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
             mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-            mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
+            if (_hlsMap.ContainsKey(context.VideoKey))
+            {
+                mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
+            }
+            else
+            {
+                mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
+            }
             mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
             mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
             mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
@@ -382,6 +406,7 @@ namespace FixVideoChannel
             _IdToKeys = new ConcurrentDictionary<string, string>();
             _contextMap = new ConcurrentDictionary<string, FrameContext>();
             _contextPtrMap = new ConcurrentDictionary<string, IntPtr>();
+            _hlsMap = new ConcurrentDictionary<string, bool>();
             unsafe
             {
 

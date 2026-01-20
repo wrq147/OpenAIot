@@ -13,6 +13,7 @@ namespace GB28181Channel.GB28181.DTO
     public class RequestContext
     {
         public string RequestType { get; set; }
+        public string CommandType { get; set; }
         public string DeviceId { get; set; }
         public string ChannelId { get; set; }
         public DateTime RequestTime { get; set; }
