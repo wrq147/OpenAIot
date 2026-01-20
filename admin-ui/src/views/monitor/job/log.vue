@@ -171,7 +171,6 @@
                 type="text"
                 icon="el-icon-view"
                 @click="handleView(scope.row)"
-                v-hasPermi="['monitor:job:query']"
               >详细</el-button>
             </template>
           </el-table-column>

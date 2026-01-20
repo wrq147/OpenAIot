@@ -20,7 +20,7 @@
         <el-form-item label="时段类型">
           <el-select v-model="searchForm.recordTimeType" placeholder="全部" clearable>
             <el-option label="按周" value="week"></el-option>
-            <el-option label="自定义日历" value="custom"></el-option>
+            <el-option label="按时段" value="time"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="计划状态">
@@ -37,59 +37,21 @@
     </el-card>
 
     <!-- 录像计划列表 -->
-    <el-card shadow="never" class="mt-4">
-      <el-table
-        v-loading="loading"
-        :data="recordPlanList"
-        border
-        stripe
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="ID" width="80"></el-table-column>
+    <el-card shadow="never">
+      <el-table v-loading="loading" :data="recordPlanList" border stripe @selection-change="handleSelectionChange">
         <el-table-column prop="streamId" label="流ID" min-width="180"></el-table-column>
         <el-table-column prop="saveCycle" label="保存周期(天)" width="120"></el-table-column>
-        <el-table-column
-          prop="recordTimeType"
-          label="时段类型"
-          width="120"
-          :formatter="formatTimeType"
-        ></el-table-column>
-        <el-table-column
-          prop="recordTimeDesc"
-          label="录像时段"
-          min-width="200"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="status"
-          label="状态"
-          width="100"
-          :formatter="formatStatus"
-        ></el-table-column>
-        <el-table-column
-          prop="createTime"
-          label="创建时间"
-          width="180"
-        ></el-table-column>
+        <el-table-column prop="recordTimeType" label="时段类型" width="120" :formatter="formatTimeType"></el-table-column>
+        <el-table-column prop="recordTimeDesc" label="录像时段" min-width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="状态" width="100" :formatter="formatStatus"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
         <el-table-column label="操作" width="200" fixed="right">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row)"
-            >编辑</el-button>
-            <el-button
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-if="scope.row.status === 0"
-            >删除</el-button>
-            <el-button
-              icon="el-icon-switch-button"
-              @click="handleToggleStatus(scope.row)"
-              :type="scope.row.status === 1 ? 'warning' : 'success'"
-            >
+            <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
+              v-if="scope.row.status === 0">删除</el-button>
+            <el-button icon="el-icon-switch-button" @click="handleToggleStatus(scope.row)"
+              :type="scope.row.status === 1 ? 'warning' : 'success'">
               {{ scope.row.status === 1 ? '禁用' : '启用' }}
             </el-button>
           </template>
@@ -97,17 +59,9 @@
       </el-table>
 
       <!-- 分页控件 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagination.pageNum"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagination.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total"
-        class="mt-4"
-        background
-      >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pagination.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize"
+        :total="pagination.total">
       </el-pagination>
     </el-card>
   </div>
@@ -166,7 +120,7 @@ export default {
      * 格式化时段类型
      */
     formatTimeType(row) {
-      return row.recordTimeType === 'week' ? '按周' : '自定义日历'
+      return row.recordTimeType === 'week' ? '按周' : '按时段'
     },
 
     /**
@@ -307,9 +261,5 @@ export default {
 
 .search-card {
   margin-bottom: 0;
-}
-
-.mt-4 {
-  margin-top: 16px;
 }
 </style>

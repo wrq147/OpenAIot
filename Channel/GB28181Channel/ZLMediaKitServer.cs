@@ -34,6 +34,7 @@ namespace GB28181Channel
         private ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr _onHttpRequestDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr _onHttpAccessDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordMp4Delegate;
+        private ZLMediaKit.Delegates.Action___IntPtr _onRecordHLSDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr _onFlowReportDelegate;
         private GB28181Server _server;
         private ConcurrentDictionary<string, PlaybackParams> _mediaDict;
@@ -53,6 +54,7 @@ namespace GB28181Channel
             _onHttpRequestDelegate = On_mk_http_request;
             _onHttpAccessDelegate = On_mk_http_access;
             _onRecordMp4Delegate = On_mk_record_mp4;
+            _onRecordHLSDelegate = On_mk_record_hls;
             _onFlowReportDelegate = On_mk_flow_report;
         }
         private int On_mk_media_not_found(IntPtr url,
@@ -176,7 +178,7 @@ namespace GB28181Channel
                     {
                         foreach (var task in detectTasks)
                         {
-                            task.Detect(device.VideoData.Item.Id, w, h, motionRatio, _listener, ref tdata, ref isPress);
+                            task.Detect(device.VideoData.Item.Id, context.VideoKey, w, h, motionRatio, _listener, ref tdata, ref isPress);
                         }
                     }
 
@@ -421,7 +423,20 @@ namespace GB28181Channel
         private void On_mk_record_mp4(IntPtr mp4Ptr)
         {
         }
-
+        private void On_mk_record_hls(IntPtr hlsPtr)
+        {
+            if (!string.IsNullOrEmpty(_option.minio_server))
+            {
+                var sender = (MkRecordInfoT)hlsPtr;
+                var app = mk_events_objects.MkRecordInfoGetApp(sender);
+                var stream = mk_events_objects.MkRecordInfoGetStream(sender);
+                var filePath = mk_events_objects.MkRecordInfoGetFilePath(sender);
+                var fileName = mk_events_objects.MkRecordInfoGetFileName(sender);
+                var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
+                var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
+                var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
+            }
+        }
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,
                                       ulong total_seconds,
@@ -462,6 +477,8 @@ namespace GB28181Channel
                     SslPwd = null,
                     ThreadNum = 0
                 };
+
+
                 mk_common.MkEnvInit(config);
                 mk_common.MkRtpServerStart((ushort)_option.rtp_port);
                 mk_common.MkRtmpServerStart((ushort)_option.rtmp_port, 0);
@@ -477,6 +494,7 @@ namespace GB28181Channel
                     OnMkHttpRequest = _onHttpRequestDelegate,
                     OnMkHttpAccess = _onHttpAccessDelegate,
                     OnMkRecordMp4 = _onRecordMp4Delegate,
+                    OnMkRecordTs = _onRecordHLSDelegate,
                     OnMkFlowReport = _onFlowReportDelegate
                 };
                 MkEvents.MkEventsListen(_mkEvents);

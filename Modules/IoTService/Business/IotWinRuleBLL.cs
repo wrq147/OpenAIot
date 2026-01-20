@@ -205,18 +205,17 @@ namespace IoTService.Business
                                     if (firstitem != null && lastitem != null)
                                     {
                                         Dictionary<string, object> props = new Dictionary<string, object>();
-                                        if (firstitem.Val is int)
+                                        if (curprop.option.type == "int")
                                         {
-                                            int rangeval = (int)lastitem.Val - (int)firstitem.Val;
-                                            props.Add(winrule.PropCode, rangeval);
-
-                                        }
-                                        else
-                                        {
-                                            double rangeval = (double)lastitem.Val - (double)firstitem.Val;
+                                            int rangeval = Convert.ToInt32(lastitem.Val) - Convert.ToInt32(firstitem.Val);
                                             props.Add(winrule.PropCode, rangeval);
                                         }
-                                        if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
+                                        else if (curprop.option.type == "float")
+                                        {
+                                            double rangeval = Convert.ToDouble(lastitem.Val) - Convert.ToDouble(firstitem.Val);
+                                            props.Add(winrule.PropCode, rangeval);
+                                        }
+                                        if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
                                         {
                                             await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
                                         }
@@ -338,18 +337,17 @@ namespace IoTService.Business
                                         if (firstitem != null && lastitem != null)
                                         {
                                             Dictionary<string, object> props = new Dictionary<string, object>();
-                                            if (firstitem.Val is int)
+                                            if (curprop.option.type == "int")
                                             {
-                                                int rangeval = (int)lastitem.Val - (int)firstitem.Val;
-                                                props.Add(winrule.PropCode, rangeval);
-
-                                            }
-                                            else
-                                            {
-                                                double rangeval = (double)lastitem.Val - (double)firstitem.Val;
+                                                int rangeval = Convert.ToInt32(lastitem.Val) - Convert.ToInt32(firstitem.Val);
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
-                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
+                                            else if (curprop.option.type == "float")
+                                            {
+                                                double rangeval = Convert.ToDouble(lastitem.Val) - Convert.ToDouble(firstitem.Val);
+                                                props.Add(winrule.PropCode, rangeval);
+                                            }
+                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
                                             {
                                                 await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
                                             }
@@ -472,18 +470,17 @@ namespace IoTService.Business
                                         if (firstitem != null && lastitem != null)
                                         {
                                             Dictionary<string, object> props = new Dictionary<string, object>();
-                                            if (firstitem.Val is int)
+                                            if (curprop.option.type == "int")
                                             {
-                                                int rangeval = (int)lastitem.Val - (int)firstitem.Val;
-                                                props.Add(winrule.PropCode, rangeval);
-
-                                            }
-                                            else
-                                            {
-                                                double rangeval = (double)lastitem.Val - (double)firstitem.Val;
+                                                int rangeval = Convert.ToInt32(lastitem.Val) - Convert.ToInt32(firstitem.Val);
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
-                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
+                                            else if (curprop.option.type == "float")
+                                            {
+                                                double rangeval = Convert.ToDouble(lastitem.Val) - Convert.ToDouble(firstitem.Val);
+                                                props.Add(winrule.PropCode, rangeval);
+                                            }
+                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
                                             {
                                                 await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
                                             }

@@ -30,6 +30,27 @@ namespace IoTVideoService
                 update_time = DateTime.Now,
                 createId = 0,
                 updateId = 0
+            }).Row(new
+            {
+                menu_id = 4503,
+                menu_name = "录像计划",
+                parent_id = 4000,
+                order_num = 15,
+                path = "video/recordlist",
+                component = "iot/video/recordlist",
+                query = string.Empty,
+                is_frame = 0,
+                is_cache = 0,
+                menu_type = "C",
+                visible = "0",
+                status = "0",
+                perms = "/IoTVideoService/Record/ListPage",
+                icon = "haocaiguanli",
+                scope = 0,
+                create_time = DateTime.Now,
+                update_time = DateTime.Now,
+                createId = 0,
+                updateId = 0
             });
 
 
@@ -51,18 +72,24 @@ namespace IoTVideoService
 
             Create.Table("mz_iot_record").WithDescription("录像计划")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
-                .WithColumn("VideoKey").AsString(128).Indexed().WithColumnDescription("ZLMediaKit的视频Key")
+                .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
+                .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
                 .WithColumn("SaveCycle").AsInt32().WithDefaultValue(7).WithColumnDescription("录像保存周期（天），默认7天")
-                .WithColumn("RecordTimeType").AsString(16).WithColumnDescription("时段类型：week（按周）、custom（自定义时段）、holiday（假期）、work（工作日）")
+                .WithColumn("RecordTimeType").AsString(16).WithColumnDescription("时段类型：week（按周）、time（按时段）")
                 .WithColumn("RecordTimeDesc").AsString(512).WithColumnDescription("录像时段描述（如：周一 08:00-18:00）")
                 .WithColumn("WeekConfig").AsString(20000).Nullable().WithColumnDescription("按周配置（JSON格式）：[{\"week\":1,\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]")
-                .WithColumn("CustomStartTime").AsString(8).Nullable().WithColumnDescription("自定义时段开始时间（HH:mm:ss）")
-                .WithColumn("CustomEndTime").AsString(8).Nullable().WithColumnDescription("自定义时段结束时间（HH:mm:ss）")
+                .WithColumn("TimeConfig").AsString(20000).Nullable().WithColumnDescription("按时段配置（JSON格式）：[{\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]")
                 .WithColumn("Status").AsByte().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：0-禁用，1-启用")
                 .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                 .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
                 .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                 .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
+
+            Create.Index()
+.OnTable("mz_iot_record")
+.OnColumn("VideoId").Ascending()
+.OnColumn("VideoKey").Ascending()
+.WithOptions().NonClustered();
 
 
             Create.Table("mz_iot_recordlog").WithDescription("录像计划的执行日志")
@@ -70,9 +97,8 @@ namespace IoTVideoService
         .WithColumn("PlanId").AsInt64().WithColumnDescription("关联录像计划ID")
         .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
         .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
-        .WithColumn("LogType").AsString(16).WithColumnDescription("日志类型：start（计划启动）、stop（计划停止）、key（关键帧）、success（录像成功）、fail（录像失败）、clean（文件清理）")
+        .WithColumn("LogType").AsString(16).WithColumnDescription("日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）")
         .WithColumn("Content").AsString(1024).WithColumnDescription("日志内容（如：录像失败原因、文件清理数量等）")
-        .WithColumn("FilePath").AsString(255).WithColumnDescription("关键帧图片路径")
         .WithColumn("ExecTime").AsDateTime().WithColumnDescription("执行时间");
 
             Create.Index()
@@ -88,6 +114,38 @@ namespace IoTVideoService
 .OnColumn("VideoKey").Ascending()
 .OnColumn("LogType").Ascending()
 .WithOptions().NonClustered();
+
+
+            Create.Table("mz_iot_record_file").WithDescription("录像播放文件信息")
+                .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
+                .WithColumn("FileDate").AsDateTime().WithColumnDescription("记录的日期")
+                .WithColumn("PlanId").AsInt64().WithColumnDescription("关联录像计划ID")
+                .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
+                .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
+                .WithColumn("PullNode").AsString(128).Indexed().WithColumnDescription("节点GUID")
+                .WithColumn("StorageWay").AsByte().WithColumnDescription("0为文件存储，1为minio")
+                .WithColumn("StartTime").AsDateTime().WithColumnDescription("开始时间")
+                .WithColumn("EndTime").AsDateTime().WithColumnDescription("结束时间");
+
+            Create.Index()
+.OnTable("mz_iot_record_file")
+.OnColumn("PlanId").Ascending()
+.OnColumn("VideoKey").Ascending()
+.WithOptions().NonClustered();
+            Create.Index()
+.OnTable("mz_iot_record_file")
+.OnColumn("VideoId").Ascending()
+.OnColumn("VideoKey").Ascending()
+.WithOptions().NonClustered();
+
+
+            Create.Table("mz_iot_record_key").WithDescription("录像播放文件的关键帧")
+                .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
+                .WithColumn("FileId").AsString(128).Indexed().WithColumnDescription("录像文件Id")
+                .WithColumn("KeyDate").AsDateTime().WithColumnDescription("记录的日期")
+                .WithColumn("EvtDes").AsString(500).WithColumnDescription("关键帧事件描述")
+                .WithColumn("FilePath").AsString(255).WithColumnDescription("关键帧图片路径");
+
 
 
             this.Execute.Sql("delete FROM mz_iot_code_group where Id=731");

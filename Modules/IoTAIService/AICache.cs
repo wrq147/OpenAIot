@@ -32,7 +32,7 @@ namespace IoTAIService
         public void SetVideoInt(string videoId, string key,int val)
         {
             var cache = _provider.GetService<CacheHelper>();
-            cache.SetCache<string>($"AIVideo:{videoId}:{key}", val.ToString(), DateTime.Now.AddSeconds(60));
+            cache.SetCache<string>($"AIVideo:{videoId}:{key}", val.ToString(), DateTime.Now.AddSeconds(120));
         }
     }
 }

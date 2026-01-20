@@ -158,7 +158,7 @@ namespace IoTAIService
                                                     color = "#67C23A"
                                                 });
                                             }
-                                            await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, detectReq.DetType, boxlist);
+                                            await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, detectReq.DetType, boxlist);
                                         }
 
                                         //开始生成设备属性和事件
