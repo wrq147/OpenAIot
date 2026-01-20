@@ -2,106 +2,73 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid 'dd5a36a6aaeb1ddb097aeddad67007b1d050c9d7'
-    oldFile: !uuid '6d41928823612720fac1fd3be9b5a0f6be62d412'
-  /App/XML:
-    newFile: !uuid 'f43279f6df2b37e98514b648f27c83a76367bbb5'
-    oldFile: !uuid '5df4db655663246688361cb276fd663f3bf5b5c3'
-  /App/XML/IoTVideoService.xml:
-    newFile: !uuid '6aac43f2a077d59993d416bea786593a09dd6e90'
-    oldFile: !uuid 'f6de4bf697c993158350741c6f3879bac3e5a9d1'
   /Channel:
-    newFile: !uuid 'd9b7631f292d15018c613e071f71c6db66983e55'
-    oldFile: !uuid '3b8c66bf99e0a1343296ade7fb4bc2880e675883'
+    newFile: !uuid '1039e799fbb19ac03434fae2b8475f8f8fb02293'
+    oldFile: !uuid 'd9b7631f292d15018c613e071f71c6db66983e55'
   /Channel/FixVideoChannel:
-    newFile: !uuid '05ced0ed04d7ccfbb00d7ba3a1e95d3d1e580fbe'
-    oldFile: !uuid '5bab9b53fd2a486cf5d6b3c49cc6db22a0b37351'
-  /Channel/FixVideoChannel/config.ini:
-    newFile: !uuid '14530c48cad892b96defc414a66a18abba65c325'
-    oldFile: !uuid '025fce9a96cfd3caa4a4f5f5b783fb2344ac90e2'
+    newFile: !uuid '7c7537dd348958d68e8055fe571a26c8a5826a48'
+    oldFile: !uuid '05ced0ed04d7ccfbb00d7ba3a1e95d3d1e580fbe'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid '7193626bd2b0fd818c66cebe7b5449f5a3dc61d9'
+    oldFile: !uuid '612be3e7fbe8343fa94753f6ff23824e514b3288'
   /Channel/GB28181Channel:
-    newFile: !uuid 'bc4cba198bef25319922fd3954fba30c5e8bb0f2'
-    oldFile: !uuid '7436be71127161ac0705dc74a79070657eede522'
+    newFile: !uuid '347ef4424a1d350a352a83d96af51b0e23acd3d7'
+    oldFile: !uuid 'bc4cba198bef25319922fd3954fba30c5e8bb0f2'
+  /Channel/GB28181Channel/GB28181:
+    newFile: !uuid 'b0ff634a8607d206dd5db62a669271d462064ac0'
+    oldFile: !uuid 'dcd89764f614f44b71b0ab597542d81d280f827f'
+  /Channel/GB28181Channel/GB28181/DTO:
+    newFile: !uuid '98fd2e60f5e99d6945ba325613134eb8121dbcb8'
+    oldFile: !uuid 'b74e28e4c0599dd05aea8630763a57e38fce3cdc'
+  /Channel/GB28181Channel/GB28181/DTO/ChannelInfo.cs:
+    newFile: !uuid 'b746cd27fe114fc71a8e1016717e17c40cd93186'
+    oldFile: !uuid 'd360c2837abd03bf7b420a18efa8f1a44a656ae9'
+  /Channel/GB28181Channel/GB28181/DTO/RequestContext.cs:
+    newFile: !uuid '642022c4f3414745e39f6f88ecf7f4ceab9b7d45'
+    oldFile: !uuid '78b0814df6eb049a5f50a4f9157c229b0e12cafe'
+  /Channel/GB28181Channel/GB28181/GB28181Server.cs:
+    newFile: !uuid 'cc3be0cf52970ce641efa82c0315eb5ca3a42830'
+    oldFile: !uuid '6cb58c763ffd5ca6f2abb9fd19090134591836b7'
   /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '04ddeb290369b93a2f1f2ac7ae784e261c5357dd'
-    oldFile: !uuid '00f85cc25c5cd60636e444a7baf7e9ec8272865d'
-  /Channel/GB28181Channel/config.ini:
-    newFile: !uuid '14530c48cad892b96defc414a66a18abba65c325'
-    oldFile: !uuid '025fce9a96cfd3caa4a4f5f5b783fb2344ac90e2'
-  /Modules:
-    newFile: !uuid '71918fafb387296e3e7b2501de7a31a7497d8a9c'
-    oldFile: !uuid 'c9e1c677b4c08df3722af062fd68e24fc5ad705c'
-  /Modules/IoTVideoService:
-    newFile: !uuid '5ef685ff8145a0d9d9f167ef0159b0c2f56ba939'
-    oldFile: !uuid '95d40b9cf8b8ab836799346e903c407eac8915e5'
-  /Modules/IoTVideoService/Business:
-    newFile: !uuid '90facc6a7e1a4f665336ab962cfdec5dbda66d15'
-    oldFile: !uuid 'd55f785bf3a38d25c2c517f3e2bebe288c04d925'
-  /Modules/IoTVideoService/Business/PtzBLL.cs:
-    newFile: !uuid '517b03609e716f09c06c462b9b40d16601eeadfb'
-    oldFile: !uuid 'd31dd660e5a1dd4ccf4cf71cd12c9166b90a0942'
-  /Modules/IoTVideoService/Controller:
-    newFile: !uuid '0a7e51b0054d86218d673173b145b7076711c06b'
-    oldFile: !uuid '174a7a41ade5d1897b97d88adf9da56b7e6b427f'
-  /Modules/IoTVideoService/Controller/Ptz.cs:
-    newFile: !uuid 'f7948b80305eb320991aff1255b6330648a329d8'
-    oldFile: !uuid '4f8669cafeb7d80847d54db56f31edadfbe4b473'
+    newFile: !uuid 'c2d26d4ead58b6971377ab0679230903ba5f0b50'
+    oldFile: !uuid '04ddeb290369b93a2f1f2ac7ae784e261c5357dd'
   /admin-ui:
-    newFile: !uuid '1805aef8cf92aebb4529226fd677ff76b0bcecbb'
-    oldFile: !uuid 'f7aac881b8381c89cbb3b54744a81dddd1ee296f'
-  /admin-ui/package.json:
-    newFile: !uuid 'c4526a1c2545b5bc8998d3034c7094463f4e7b6a'
-    oldFile: !uuid 'da6efb0a3a3e62faa340e66edb7d073cc99cb6c4'
+    newFile: !uuid 'ff26df96a186c1570335e62d069ab4f5e8fa7187'
+    oldFile: !uuid '1805aef8cf92aebb4529226fd677ff76b0bcecbb'
   /admin-ui/src:
-    newFile: !uuid '45d55edb5dedb5314f99ba7ba992beba9873d3bd'
-    oldFile: !uuid 'a695a70744eb97d3ca43c637b0fd9f085b7d42a1'
+    newFile: !uuid '9f92ed58bd12939b984e786578b1a852a2a1d00e'
+    oldFile: !uuid '45d55edb5dedb5314f99ba7ba992beba9873d3bd'
   /admin-ui/src/views:
-    newFile: !uuid 'bcb65a7c82cd57f46a085ec0c1687d6e278888a1'
-    oldFile: !uuid '45d20e4ee3a616ac87ab22f2fe9f329a9d42074c'
+    newFile: !uuid '15b4aa018c8851d3e28aa411244d7fdad8c33a68'
+    oldFile: !uuid 'bcb65a7c82cd57f46a085ec0c1687d6e278888a1'
   /admin-ui/src/views/iot:
-    newFile: !uuid '9571fb76e64a7c9abcec01f507ffa486a1f9db6e'
-    oldFile: !uuid 'b337cb8adb1d4d2b76315ce04c8a736130304035'
+    newFile: !uuid 'd5ecc5258c0f06147b7be1cbadee8414f1a17839'
+    oldFile: !uuid '9571fb76e64a7c9abcec01f507ffa486a1f9db6e'
   /admin-ui/src/views/iot/video:
-    newFile: !uuid 'a58d584935e96293fad3be33f4721b1243db6ce9'
-    oldFile: !uuid '1f84a4a3dbff169a4b706d3c7a4672f8c74e4718'
+    newFile: !uuid 'a7a89ac4c35d8821ebe6e7c3d5a1abe7fd0a9ff7'
+    oldFile: !uuid 'a58d584935e96293fad3be33f4721b1243db6ce9'
   /admin-ui/src/views/iot/video/play.vue:
-    newFile: !uuid '2af1667a0b213d75f6b132851de31be9aa4a0b9b'
-    oldFile: !uuid 'bda8325f32bf23555dcc972b269451c18c454b8b'
+    newFile: !uuid 'b62d306b2217bdc2e4becb37343733bc2a849489'
+    oldFile: !uuid '2af1667a0b213d75f6b132851de31be9aa4a0b9b'
   /admin-ui/src/views/report:
-    newFile: !uuid '5e1246df0b11b3809b66b32061638cd7d6b1438c'
-    oldFile: !uuid 'b3fc86267fd269c3a14db71e333f54745326ce8b'
+    newFile: !uuid '907e9d8de78ceb71a7256766f68fb713f73caea1'
+    oldFile: !uuid '5e1246df0b11b3809b66b32061638cd7d6b1438c'
   /admin-ui/src/views/report/datav:
-    newFile: !uuid 'b639debef2fea8ac5366066947d11b03a8f82cb2'
-    oldFile: !uuid 'b94c4b189f7d24fa14d13713f10e8ac62e3de23a'
-  /admin-ui/src/views/report/datav/ComponentsConfig.js:
-    newFile: !uuid '590607899c5eb50e693baf85770069bdaa8278b1'
-    oldFile: !uuid 'a13dfc528959f555bb516910a95df49821352954'
+    newFile: !uuid 'f5f7c7f5f6d1b39aeadc8d226119407c13028459'
+    oldFile: !uuid 'b639debef2fea8ac5366066947d11b03a8f82cb2'
   /admin-ui/src/views/report/datav/components:
-    newFile: !uuid '1d8e8a8a69cfcf765938890414b5379ade20a6f6'
-    oldFile: !uuid 'b74c3c9fd532866cc56b0fc25d3f5f65c962727b'
+    newFile: !uuid 'a1ebbec7068c14a5e5c6a9e318d8643895a72936'
+    oldFile: !uuid '1d8e8a8a69cfcf765938890414b5379ade20a6f6'
   /admin-ui/src/views/report/datav/components/chart:
-    newFile: !uuid '09fdec11a4d1ef654c6ba368137d8423a31f63a7'
-    oldFile: !uuid '9a8067b0590e739de19e98336470dea2b14d4b80'
+    newFile: !uuid '113bb92066bd94f72e92c761f821459f4140340d'
+    oldFile: !uuid '09fdec11a4d1ef654c6ba368137d8423a31f63a7'
   /admin-ui/src/views/report/datav/components/chart/RealtimeChart.vue:
-    newFile: !uuid 'c998d6e22868eea197e24947be2c31d5f09e0496'
-    oldFile: !uuid '0866a8f80f58d6164fcd26733436e80788d8c494'
+    newFile: !uuid 'ca1a2bd4061589315104d596fa9764189664d32a'
+    oldFile: !uuid 'c998d6e22868eea197e24947be2c31d5f09e0496'
   /admin-ui/src/views/report/datav/components/chart/VideoChart.vue:
-    newFile: !uuid '801cbcbd21b9132c018b574fdf693dee40c13ec4'
-    oldFile: !uuid '384584eb56667443beb0b4eff94b1a5ccb777e69'
-  /admin-ui/src/views/report/datav/components/config:
-    newFile: !uuid '2895b8e3992304968577360365914d9c5e002501'
-    oldFile: !uuid '5a90e628c9279acdf3aa5180ed52810541b3ca81'
-  /admin-ui/src/views/report/datav/components/config/VideoConfig:
-    newFile: !uuid 'd13865e9d5b469df5b668bd890f4d025284193e1'
-    oldFile: !uuid '41f284cdce7d2b5ff56536dc63b5c3f13b0f10ce'
-  /admin-ui/src/views/report/datav/components/config/VideoConfig/moduleDeploy.vue:
-    newFile: !uuid '1919eeac2f81c0aa83911a50a17afe82163b0f5e'
-    oldFile: !uuid '19a0ad3a659fb1fafb1c9a411d950936921c4b99'
-  /admin-ui/src/views/report/datav/components/config/VideoGallery.vue:
-    newFile: !uuid 'e8d0e37360f806e7b73ec8a3cab767742d750e56'
-    oldFile: !uuid '61a3eda43b2d2c83c07e095d700c2302d26cd705'
-gitCommitId: !uuid '797971ddf9871a360068a5ca26c37eb8a5059eaf'
+    newFile: !uuid '049057bbe818a5e6935e05434a77f6c833aed5c1'
+    oldFile: !uuid '801cbcbd21b9132c018b574fdf693dee40c13ec4'
+gitCommitId: !uuid '56984436876793e5deef0dde715aeb5c4f680040'
 renames: {
   }
-revisionId: 133
+revisionId: 134
