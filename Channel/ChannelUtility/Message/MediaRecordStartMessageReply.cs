@@ -12,5 +12,7 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaRecSOk";
         }
+        public bool IsSuccess { get; set; }
+        public string Reason { get; set; }
     }
 }

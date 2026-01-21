@@ -42,6 +42,10 @@ namespace ChannelUtility
             { "MediaPTZOk",typeof(MediaPTZMessageReply) },
             { "MediaPres",typeof(MediaPresetMessage) },
             { "MediaPresReply",typeof(MediaPresetMessageReply) },
+            { "MediaRecS",typeof(MediaRecordStartMessage) },
+            { "MediaRecSOk",typeof(MediaRecordStartMessageReply) },
+            { "MediaRecE",typeof(MediaRecordStopMessage) },
+            { "MediaRecEOk",typeof(MediaRecordStopMessageReply) },
             { "MediaUser",typeof(MediaUserVerifyMessage) }
 
         };

@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace ChannelUtility.Message
 {
-    public class MediaRecordStopMessage
+    public class MediaRecordStopMessage : BaseDeviceMessage
     {
+        public MediaRecordStopMessage()
+        {
+            MsgType = "MediaRecE";
+        }
+        public string ChannelId { get; set; }
+        public string StreamId { get; set; }
     }
 }

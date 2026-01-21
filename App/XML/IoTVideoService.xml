@@ -160,6 +160,41 @@
             预置位ID
             </summary>
         </member>
+        <member name="T:IoTVideoService.Models.MZ_IotRecord">
+            <summary>
+            录像计划
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.VideoId">
+            <summary>
+            视频源Id
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.VideoKey">
+            <summary>
+            ZLMediaKit的视频Key
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.SaveCycle">
+            <summary>
+            录像保存周期（天），默认7天
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.RecordTimeType">
+            <summary>
+            时段类型：week（按周）、time（按时段）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.RecordTimeDesc">
+            <summary>
+            录像时段描述（如：周一 08:00-18:00）
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.Id">
             <summary>
             视频源Id
@@ -218,6 +253,58 @@
         <member name="P:IoTVideoService.Models.MZ_VideoSource.NodeId">
             <summary>
             服务器节点Id
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.RecordTimeDescGenerator">
+            <summary>
+            录像计划时段描述生成工具类
+            </summary>
+        </member>
+        <member name="M:IoTVideoService.RecordTimeDescGenerator.FormatTime(System.String)">
+            <summary>
+            格式化时间（去掉秒，如 08:00:00 → 08:00）
+            </summary>
+            <param name="timeStr">时间字符串</param>
+            <returns>格式化后的时间</returns>
+        </member>
+        <member name="M:IoTVideoService.RecordTimeDescGenerator.MergeWeekNumbers(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            合并连续的星期数
+            </summary>
+            <param name="weekNums">星期数列表</param>
+            <returns>合并后的星期描述</returns>
+        </member>
+        <member name="M:IoTVideoService.RecordTimeDescGenerator.GenerateWeekDesc(System.String)">
+            <summary>
+            按周配置生成录像时段描述（支持同一天多时段）
+            </summary>
+            <param name="weekConfigJson">按周配置JSON字符串</param>
+            <returns>格式化的时段描述</returns>
+        </member>
+        <member name="M:IoTVideoService.RecordTimeDescGenerator.GenerateTimeDesc(System.String)">
+            <summary>
+            按时段配置生成录像时段描述
+            </summary>
+            <param name="timeConfigJson">按时段配置JSON字符串</param>
+            <returns>格式化的时段描述</returns>
+        </member>
+        <member name="M:IoTVideoService.RecordTimeDescGenerator.GenerateRecordDesc(System.String,System.String,System.String)">
+            <summary>
+            统一生成录像时段描述（兼容按周/按时段，支持同一天多时段）
+            </summary>
+            <param name="recordTimeType">时段类型：week/time</param>
+            <param name="weekConfigJson">按周配置JSON</param>
+            <param name="timeConfigJson">按时段配置JSON</param>
+            <returns>最终的时段描述</returns>
+        </member>
+        <member name="T:IoTVideoService.RecordTimeDescGenerator.WeekConfigItem">
+            <summary>
+            按周配置项模型
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.RecordTimeDescGenerator.TimeConfigItem">
+            <summary>
+            按时段配置项模型
             </summary>
         </member>
     </members>

@@ -53,11 +53,13 @@ CRMService：CRM模块
 DeveloperService：开发者接口模块
 DictService：字典数据模块
 DiscussService：主题评论模块
+EfficiencyService：能效模块
 EmailService：邮箱模块
 FlowService：工作流模块
 IoTAIService：物联AI模块
 IoTRulesService：物联规则引擎模块
 IoTService：物联模块
+IoTVideoService：视频监控模块
 MessageService：站内消息模块
 MESService：MES模块
 MonitorService：系统监控、定时任务模块
@@ -76,6 +78,7 @@ WeiXinService：微信与企业微信
 2、需要启用的模块需要在App入口项目的services.txt注册（添加模块名称）。
 3、可以在App入口项目引用每个模块，这样编译后每个模块会自动生成到项目下面。
 4、每个模块下面需要创建个PluginConfig.cs文件，模块启动时会初始化执行该文件。
+5、需要定时器处理的模块，要在Configure方法上加上plg.RegisterQuartzTask();
 
 
 六、模块间通信说明：

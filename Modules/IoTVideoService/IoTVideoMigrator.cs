@@ -72,6 +72,7 @@ namespace IoTVideoService
 
             Create.Table("mz_iot_record").WithDescription("录像计划")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
+                .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                 .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
                 .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
                 .WithColumn("SaveCycle").AsInt32().WithDefaultValue(7).WithColumnDescription("录像保存周期（天），默认7天")
@@ -79,6 +80,7 @@ namespace IoTVideoService
                 .WithColumn("RecordTimeDesc").AsString(512).WithColumnDescription("录像时段描述（如：周一 08:00-18:00）")
                 .WithColumn("WeekConfig").AsString(20000).Nullable().WithColumnDescription("按周配置（JSON格式）：[{\"week\":1,\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]")
                 .WithColumn("TimeConfig").AsString(20000).Nullable().WithColumnDescription("按时段配置（JSON格式）：[{\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]")
+                .WithColumn("TimerJobId").AsInt64().WithColumnDescription("计划关联的定时器JobId")
                 .WithColumn("Status").AsByte().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：0-禁用，1-启用")
                 .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                 .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
@@ -87,6 +89,7 @@ namespace IoTVideoService
 
             Create.Index()
 .OnTable("mz_iot_record")
+.OnColumn("OrgId").Ascending()
 .OnColumn("VideoId").Ascending()
 .OnColumn("VideoKey").Ascending()
 .WithOptions().NonClustered();

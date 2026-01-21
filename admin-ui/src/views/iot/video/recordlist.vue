@@ -14,17 +14,17 @@
     <!-- 搜索筛选区域 -->
     <el-card class="search-card" shadow="never">
       <el-form :inline="true" :model="searchForm" class="search-form">
-        <el-form-item label="流ID">
-          <el-input v-model="searchForm.streamId" placeholder="请输入流ID关键词" clearable></el-input>
+        <el-form-item label="通讯编码">
+          <el-input v-model="searchForm.VideoId" placeholder="请输入通讯编码" clearable></el-input>
         </el-form-item>
         <el-form-item label="时段类型">
-          <el-select v-model="searchForm.recordTimeType" placeholder="全部" clearable>
+          <el-select v-model="searchForm.RecordTimeType" placeholder="全部" clearable>
             <el-option label="按周" value="week"></el-option>
             <el-option label="按时段" value="time"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="计划状态">
-          <el-select v-model="searchForm.status" placeholder="全部" clearable>
+          <el-select v-model="searchForm.Status" placeholder="全部" clearable>
             <el-option label="启用" value="1"></el-option>
             <el-option label="禁用" value="0"></el-option>
           </el-select>
@@ -39,11 +39,11 @@
     <!-- 录像计划列表 -->
     <el-card shadow="never">
       <el-table v-loading="loading" :data="recordPlanList" border stripe @selection-change="handleSelectionChange">
-        <el-table-column prop="streamId" label="流ID" min-width="180"></el-table-column>
-        <el-table-column prop="saveCycle" label="保存周期(天)" width="120"></el-table-column>
-        <el-table-column prop="recordTimeType" label="时段类型" width="120" :formatter="formatTimeType"></el-table-column>
-        <el-table-column prop="recordTimeDesc" label="录像时段" min-width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="status" label="状态" width="100" :formatter="formatStatus"></el-table-column>
+        <el-table-column prop="VideoId" label="通讯编码" min-width="180"></el-table-column>
+        <el-table-column prop="SaveCycle" label="保存周期(天)" width="120"></el-table-column>
+        <el-table-column prop="RecordTimeType" label="时段类型" width="120" :formatter="formatTimeType"></el-table-column>
+        <el-table-column prop="RecordTimeDesc" label="录像时段" min-width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Status" label="状态" width="100" :formatter="formatStatus"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
         <el-table-column label="操作" width="200" fixed="right">
           <template slot-scope="scope">
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import { recordList } from "@/api/rules/record";
 
 export default {
   data() {
@@ -75,9 +76,9 @@ export default {
       loading: false,
       // 搜索表单
       searchForm: {
-        streamId: '',
-        recordTimeType: '',
-        status: ''
+        VideoId: '',
+        RecordTimeType: '',
+        Status: ''
       },
       // 录像计划列表
       recordPlanList: [],
@@ -100,7 +101,7 @@ export default {
     async fetchRecordPlans() {
       this.loading = true
       try {
-        const res = await getRecordPlanList({
+        const res = await recordList({
           pageNum: this.pagination.pageNum,
           pageSize: this.pagination.pageSize,
           ...this.searchForm

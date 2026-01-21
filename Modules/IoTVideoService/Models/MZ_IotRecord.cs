@@ -19,6 +19,7 @@ namespace IoTVideoService.Models
         /// </summary>
         [ID(false)]
         public string Id { get; set; }
+        public long? OrgId { get; set; }
         /// <summary>
         /// 视频源Id
         /// </summary>
@@ -39,5 +40,21 @@ namespace IoTVideoService.Models
         /// 录像时段描述（如：周一 08:00-18:00）
         /// </summary>
         public string RecordTimeDesc { get; set; }
+        /// <summary>
+        /// 按周配置（JSON格式）：[{\"week\":1,\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]
+        /// </summary>
+        public string WeekConfig { get; set; }
+        /// <summary>
+        /// 按时段配置（JSON格式）：[{\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]
+        /// </summary>
+        public string TimeConfig { get; set; }
+        /// <summary>
+        /// 计划关联的定时器JobId
+        /// </summary>
+        public long? TimerJobId { get; set; }
+        /// <summary>
+        /// 状态：0-禁用，1-启用
+        /// </summary>
+        public int? Status { get; set; }
     }
 }
