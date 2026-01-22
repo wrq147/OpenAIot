@@ -1,4 +1,5 @@
 ﻿using AuthService;
+using Common.Json;
 using FlowService.FlowNode.Builder;
 using FlowService.Model;
 using System;
@@ -42,7 +43,7 @@ namespace FlowService.FlowNode.Conditions
                 string val = context.GetFormValue(this.id);
                 if (val == null)
                 {
-                    string str = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+                    string str = System.Text.Json.JsonSerializer.Serialize(value, MyDefaultTextJsonConfig.DefaultOptions);
                     return "data.FormIn(\"" + this.id + "\",\"" + str.Replace("\"", "\\\"") + "\")";
                 }
                 else

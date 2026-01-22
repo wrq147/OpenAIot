@@ -4,6 +4,7 @@ using AuthService.Model;
 using CardService.DAL;
 using CardService.Model;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using System;
 using System.Threading.Tasks;
@@ -108,7 +109,7 @@ namespace CardService.Business
                 IUserInfo user = Data_ServerTokenInfo.From(_context);
                 if (!string.IsNullOrEmpty(data.Intro))
                 {
-                    var itemlist = Newtonsoft.Json.JsonConvert.DeserializeObject<Tx_Pro_Item[]>(data.Intro);
+                    var itemlist = System.Text.Json.JsonSerializer.Deserialize<Tx_Pro_Item[]>(data.Intro, MyDefaultTextJsonConfig.DefaultOptions);
                     if (itemlist.Length == 0)
                     {
                         data.Intro = string.Empty;

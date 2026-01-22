@@ -1,7 +1,5 @@
 ﻿using AuthService;
 using FlowService.FlowNode.Builder;
-using FlowService.Model;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,12 +61,13 @@ namespace FlowService.FlowNode.Conditions
                 {
                     return "false";
                 }
-                JToken jk = ((JObject)selectedlist.First()).GetValue("id");
+                var dictobj = selectedlist.First() as IDictionary<string, object>;
+                var jk = dictobj["id"];
                 if (jk == null)
                 {
                     return "false";
                 }
-                targetUserLong = jk.Value<long>();
+                targetUserLong = Convert.ToInt64(jk);
             }
 
             var ulist = value.Where(x => x.type == "user").Select(x => x.id).ToList();

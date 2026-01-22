@@ -2,6 +2,7 @@
 using ChannelUtility.Message;
 using ChannelUtility.Tsl;
 using Common;
+using Common.Json;
 using IoTRulesService.Flow.Builder.Step;
 using IoTService;
 using IoTService.Business;
@@ -239,7 +240,7 @@ namespace IoTRulesService.Flow.Builder
             {
                 return new List<object>();
             }
-            
+
             var streamlist = countStep.GetData();
             if (streamlist.Count > 0 && streamlist[0].Data != null)
             {
@@ -342,7 +343,7 @@ namespace IoTRulesService.Flow.Builder
         /// <returns></returns>
         public string HttpPostJson(string url, object postParams)
         {
-            return HttpHelper.Instance.PostJson(url, Newtonsoft.Json.JsonConvert.SerializeObject(postParams), Encoding.UTF8);
+            return HttpHelper.Instance.PostJson(url, System.Text.Json.JsonSerializer.Serialize(postParams, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8);
         }
     }
 }

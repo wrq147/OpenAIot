@@ -1,11 +1,10 @@
-﻿using NPOI.SS.UserModel;
-using System;
+﻿using NPOI.HSSF.Record;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IoTRulesService.Flow.Builder.Step
 {
-    public abstract class RuleflowStep
+    public class RuleflowStep
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -29,6 +28,6 @@ namespace IoTRulesService.Flow.Builder.Step
             Type = this.GetType().FullName;
             IsActive = false;
         }
-        public abstract Task Run(RuleExecutionContext context);
+        public virtual Task Run(RuleExecutionContext context) { return Task.CompletedTask; }
     }
 }

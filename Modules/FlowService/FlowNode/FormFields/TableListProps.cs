@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +71,7 @@ namespace FlowService.FlowNode.FormFields
                     var tlista = model[field.id] as IEnumerable;
                     foreach (var a in tlista)
                     {
-                        var aobj = a as JObject;
+                        var aobj = a as IDictionary<string, object>;
                         double rowval = 1;
                         foreach (string b in this.summaryColumns)
                         {

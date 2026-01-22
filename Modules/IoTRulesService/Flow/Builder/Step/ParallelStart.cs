@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Json;
+using System;
 using System.Threading.Tasks;
 namespace IoTRulesService.Flow.Builder.Step
 {
@@ -9,7 +10,7 @@ namespace IoTRulesService.Flow.Builder.Step
         {
             if (context.IsDebug)
             {
-                await context.Print("并行输入:" + Newtonsoft.Json.JsonConvert.SerializeObject(context.Data));
+                await context.Print("并行输入:" + System.Text.Json.JsonSerializer.Serialize(context.Data, MyDefaultTextJsonConfig.DefaultOptions));
             }
             var res = new RuleResult();
             res.ActiveChildren = true;

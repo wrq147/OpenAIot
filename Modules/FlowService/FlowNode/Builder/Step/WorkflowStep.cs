@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlowService.FlowNode.Builder.Step
 {
-    public abstract class WorkflowStep
+    public class WorkflowStep
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -30,6 +30,6 @@ namespace FlowService.FlowNode.Builder.Step
             PersistenceNode = true;
             Type = this.GetType().FullName;
         }
-        public abstract Task<ExecutionResult> Run(StepExecutionContext context);
+        public virtual Task<ExecutionResult> Run(StepExecutionContext context) { return null; }
     }
 }

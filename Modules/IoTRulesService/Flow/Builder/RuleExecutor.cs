@@ -1,12 +1,11 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Common;
+using Common.Json;
 using IoTRulesService.DAL;
 using IoTRulesService.Flow.Builder.Step;
 using IoTRulesService.Model;
 using MonitorService.Business;
-using MonitorService.DAL;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -66,10 +65,10 @@ namespace IoTRulesService.Flow.Builder
 
                     MZ_RuleEvent evt = new MZ_RuleEvent();
                     evt.Id = context.RuleInstanceId;
-                    evt.InstanceJson = JsonConvert.SerializeObject(_steps);
-                    evt.StackJson = JsonConvert.SerializeObject(context.Data);
+                    evt.InstanceJson = System.Text.Json.JsonSerializer.Serialize(_steps, RuleJsonConfig.StepOptions);
+                    evt.StackJson = System.Text.Json.JsonSerializer.Serialize(context.Data, MyDefaultTextJsonConfig.DefaultOptions);
                     evt.RuleId = context.RuleId;
-                    evt.SourceJson = JsonConvert.SerializeObject(context.Source);
+                    evt.SourceJson = System.Text.Json.JsonSerializer.Serialize(context.Source, JsonMessageSerializerConfig.DefaultOptions);
                     evt.Index = context.Step.Index;
                     await _provider.GetService<RuleEventDAL>().Insert(evt);
                 }

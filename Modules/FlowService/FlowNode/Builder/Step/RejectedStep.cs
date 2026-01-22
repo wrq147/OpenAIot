@@ -1,7 +1,6 @@
 ﻿using Common.DataAc;
 using Common.EventBus;
-using Common.Share;
-using Newtonsoft.Json;
+using Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -38,7 +37,7 @@ namespace FlowService.FlowNode.Builder.Step
                 ae.conditions.Add(new ActionCondition()
                 {
                     TargetField = "@Number",
-                    Value = JsonConvert.SerializeObject(fromNumber),
+                    Value = System.Text.Json.JsonSerializer.Serialize(fromNumber, MyDefaultTextJsonConfig.DefaultOptions),
                 });
 
                 ae.actions = new List<ActionInfo>();

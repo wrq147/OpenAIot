@@ -468,7 +468,7 @@ namespace ChannelUtility
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.DetType = detectType;
-            msg.MotionRatio = motionRatio;
+            msg.MRatio = motionRatio;
             msg.IsDraw = isDraw;
             msg.DetParams = detParams;
             msg.Frame = frameData;

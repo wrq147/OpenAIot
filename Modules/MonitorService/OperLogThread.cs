@@ -1,5 +1,6 @@
 ﻿using AuthService;
 using Common;
+using Common.Json;
 using MonitorService.Business;
 using MonitorService.Model;
 using System;
@@ -105,7 +106,7 @@ namespace MonitorService
                     {
                         if (log.TmpParamObject != null)
                         {
-                            log.oper_param = Newtonsoft.Json.JsonConvert.SerializeObject(log.TmpParamObject).Limit(2000);
+                            log.oper_param = System.Text.Json.JsonSerializer.Serialize(log.TmpParamObject, MyDefaultTextJsonConfig.DefaultOptions).Limit(2000);
                         }
                         _provider.GetService<OperLogBLL>().InsertOperlog(log);
                     }

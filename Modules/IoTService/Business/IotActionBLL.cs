@@ -1,9 +1,8 @@
 ﻿using Common.DataAc;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using MyAccess.Aop;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -45,7 +44,7 @@ namespace IoTService.Business
                         if (con.TargetField == "@Number")
                         {
                             con.TargetField = "WarnNumber";
-                            targetId = JsonConvert.DeserializeObject<string>(con.Value);
+                            targetId = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             con.FinalValue = targetId;
                             con.Compare = "=";
                             conds.Add(con);
@@ -58,7 +57,7 @@ namespace IoTService.Business
                         {
                             case "Status":
                                 {
-                                    var tmpint = JsonConvert.DeserializeObject<int>(acc.Value);
+                                    var tmpint = System.Text.Json.JsonSerializer.Deserialize<int>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (tmpint == 0 || tmpint == 2)
                                     {
                                         conds.Add(new ActionCondition()
@@ -107,7 +106,7 @@ namespace IoTService.Business
                                     actions.Add(new ActionInfo()
                                     {
                                         TargetField = "ClearRemark",
-                                        FinalValue = JsonConvert.DeserializeObject<string>(acc.Value)
+                                        FinalValue = System.Text.Json.JsonSerializer.Deserialize<string>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions)
                                     });
                                 }
                                 break;

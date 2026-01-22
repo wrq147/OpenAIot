@@ -2,6 +2,7 @@
 using ChannelUtility.Config;
 using ChannelUtility.Tsl;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
@@ -38,7 +39,7 @@ namespace IoTService.Business
             outlist.Add(new Out_ChannelInfo("无", string.Empty, defaultImgUrl, "非物联协议选择这个"));
             foreach (var kvp in channels)
             {
-                var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ChannelConfig>(kvp.Value);
+                var config = System.Text.Json.JsonSerializer.Deserialize<ChannelConfig>(kvp.Value, MyDefaultTextJsonConfig.DefaultOptions);
                 outlist.Add(new Out_ChannelInfo(config.Name, config.Code, config.ImageUrl, config.Remark));
             }
             return outlist;
@@ -55,7 +56,7 @@ namespace IoTService.Business
             {
                 return new ChannelConfig();
             }
-            var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ChannelConfig>(channelstr);
+            var config = System.Text.Json.JsonSerializer.Deserialize<ChannelConfig>(channelstr, MyDefaultTextJsonConfig.DefaultOptions);
             return config;
         }
         public virtual async Task<PageObject<Out_ProductName>> ProductNamePage(In_ProductNamePage query, IUserInfo user)
@@ -269,7 +270,7 @@ namespace IoTService.Business
                 tmpmodel.functions = new List<BaseFunc>();
                 tmpmodel.events = new List<BaseEvent>();
                 tmpmodel.tags = new List<BaseTagInfo>();
-                data.ModelTSL = Newtonsoft.Json.JsonConvert.SerializeObject(tmpmodel);
+                data.ModelTSL = System.Text.Json.JsonSerializer.Serialize(tmpmodel, TslModel.TSLOptions);
             }
             data.NoticeWay ??= string.Empty;
             data.PhotoUrl ??= string.Empty;
@@ -302,7 +303,7 @@ namespace IoTService.Business
                         model.modbus.Mode = "RTU";
                         model.modbus.PollTime = 5000;
                         model.modbus.Matches = new List<ModbusMatch>();
-                        data.ModelTSL = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                        data.ModelTSL = System.Text.Json.JsonSerializer.Serialize(model, TslModel.TSLOptions);
                     }
                 }
             }

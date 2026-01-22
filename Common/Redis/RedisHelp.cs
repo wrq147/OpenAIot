@@ -4,9 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Common.Json;
 using StackExchange.Redis;
-using static Pipelines.Sockets.Unofficial.Threading.MutexSlim;
 
 
 namespace Common.Redis
@@ -1451,7 +1450,7 @@ namespace Common.Redis
 
         private string ConvertJson<T>(T value)
         {
-            string result = value is string ? value.ToString() : JsonConvert.SerializeObject(value);
+            string result = value is string ? value.ToString() : System.Text.Json.JsonSerializer.Serialize(value, MyDefaultTextJsonConfig.DefaultOptions);
             return result;
         }
 
@@ -1465,7 +1464,7 @@ namespace Common.Redis
             {
                 return (T)(object)value.ToString();
             }
-            return JsonConvert.DeserializeObject<T>(value);
+            return System.Text.Json.JsonSerializer.Deserialize<T>(value, MyDefaultTextJsonConfig.DefaultOptions);
         }
         private List<string> ConvetStrList(RedisValue[] values)
         {

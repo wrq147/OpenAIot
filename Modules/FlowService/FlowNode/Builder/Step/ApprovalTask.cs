@@ -2,8 +2,6 @@
 using Common.EventBus;
 using FlowService.Business;
 using MonitorService.Model;
-using Newtonsoft.Json.Linq;
-using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,17 +46,18 @@ namespace FlowService.FlowNode.Builder
                 {
                     if (context.FormItems.TryGetValue(formUser, out object outval))
                     {
-                        var selectedlist = outval as IEnumerable<object>;
+                        var selectedlist = outval as IList<object>;
                         if (selectedlist != null)
                         {
                             foreach (var selectUser in selectedlist)
                             {
-                                JToken jk = ((JObject)selectUser).GetValue("id");
+                                var selectObj = selectUser as IDictionary<string, object>;
+                                var jk = selectObj["id"];
                                 if (jk == null)
                                 {
                                     continue;
                                 }
-                                string newuid = jk.Value<string>();
+                                string newuid = jk.ToString();
                                 if (string.IsNullOrEmpty(this.AssignedPrincipal))
                                 {
                                     this.AssignedPrincipal = newuid;

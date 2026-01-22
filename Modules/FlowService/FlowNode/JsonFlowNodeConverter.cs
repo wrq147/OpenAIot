@@ -1,80 +1,75 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FlowService.FlowNode
 {
     /// <summary>
     /// 工作流节点转换
     /// </summary>
-    public class JsonFlowNodeConverter : JsonConverter
+    public class JsonFlowNodeConverter : JsonConverter<FlowBaseNode>
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(FlowBaseNode).IsAssignableFrom(objectType);
-        }
+        // 类型映射字典（替代原switch分支，更易扩展和维护）
+        private static readonly Dictionary<string, Type> _nodeTypeMap = new(StringComparer.Ordinal)
+    {
+        { "ROOT", typeof(RootNode) },
+        { "APPROVAL", typeof(SPNode) },
+        { "USER", typeof(OperatorNode) },
+        { "CONDITIONS", typeof(ConditionGroupNode) },
+        { "CONDITION", typeof(ConditionNode) },
+        { "CC", typeof(CSNode) },
+        { "EMPTY", typeof(EmptyNode) },
+        { "TRIGGER", typeof(TriggerNode) },
+        { "DELAY", typeof(DelayNode) },
+        { "CONCURRENTS", typeof(ConcurrentGroupNode) },
+        { "CONCURRENT", typeof(ConcurrentNode) },
+        { "DATAXE", typeof(DataNode) },
+        { "FUNC", typeof(FuncNode) }
+    };
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <summary>
+        /// 反序列化：根据type字段 + 字典映射创建对应子类实例并填充数据
+        /// </summary>
+        public override FlowBaseNode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var jsonObject = JObject.Load(reader);
-            object target = null;
-            JToken clsType;
-            if (jsonObject.TryGetValue("type", out clsType))
+            using var doc = JsonDocument.ParseValue(ref reader);
+            var root = doc.RootElement;
+            string rawJson = root.GetRawText();
+
+            if (!root.TryGetProperty("type", out var typeElement) || typeElement.ValueKind != JsonValueKind.String)
             {
-                switch (clsType.ToString())
-                {
-                    case "ROOT":
-                        target = new RootNode();
-                        break;
-                    case "APPROVAL":
-                        target = new SPNode();
-                        break;
-                    case "USER":
-                        target = new OperatorNode();
-                        break;
-                    case "CONDITIONS":
-                        target = new ConditionGroupNode();
-                        break;
-                    case "CONDITION":
-                        target = new ConditionNode();
-                        break;
-                    case "CC":
-                        target = new CSNode();
-                        break;
-                    case "EMPTY":
-                        target = new EmptyNode();
-                        break;
-                    case "TRIGGER":
-                        target = new TriggerNode();
-                        break;
-                    case "DELAY":
-                        target = new DelayNode();
-                        break;
-                    case "CONCURRENTS":
-                        target = new ConcurrentGroupNode();
-                        break;
-                    case "CONCURRENT":
-                        target = new ConcurrentNode();
-                        break;
-                    case "DATAXE":
-                        target = new DataNode();
-                        break;
-                    case "FUNC":
-                        target = new FuncNode();
-                        break;
-                }
+                return null;
             }
-            if (target == null)
+            string typeName = typeElement.GetString();
+            if (string.IsNullOrEmpty(typeName))
             {
-                return target;
+                return null;
             }
-            serializer.Populate(jsonObject.CreateReader(), target);
+
+            if (!_nodeTypeMap.TryGetValue(typeName, out Type targetType))
+            {
+                return null;
+            }
+
+            object nodeInstance = JsonSerializer.Deserialize(rawJson, targetType, options);
+            FlowBaseNode target = nodeInstance as FlowBaseNode;
+
             return target;
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <summary>
+        /// 序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
+        /// </summary>
+        public override void Write(Utf8JsonWriter writer, FlowBaseNode value, JsonSerializerOptions options)
         {
-            writer.WriteValue(value);
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
+
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }
     }
 }

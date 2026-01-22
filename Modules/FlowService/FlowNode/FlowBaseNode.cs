@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 namespace FlowService.FlowNode
 {
-    public abstract class FlowBaseNode
+    public class FlowBaseNode
     {
         /// <summary>
         /// 节点id

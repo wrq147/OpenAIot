@@ -8,8 +8,6 @@ using Common.IdGenerator;
 using Common.Share;
 using JiebaNet.Segmenter;
 using MyAccess.Aop;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -741,7 +739,7 @@ namespace AuthService
             {
                 return new List<FieldBase>();
             }
-            return JsonConvert.DeserializeObject<List<FieldBase>>(torgextlist[0].ExtValue, new JsonFieldConverter());
+            return System.Text.Json.JsonSerializer.Deserialize<List<FieldBase>>(torgextlist[0].ExtValue, FieldJsonSerializerConfig.FieldOptions);
         }
         public virtual async Task<BusResponse<List<FieldBase>>> FormFields(long orgId, string field, bool ext, bool isfixed)
         {
@@ -754,7 +752,7 @@ namespace AuthService
                 var tmpstr = redis.HashGet("FixedFields", field);
                 if (!string.IsNullOrEmpty(tmpstr))
                 {
-                    var fixedList = JsonConvert.DeserializeObject<List<FieldBase>>(tmpstr, new JsonFieldConverter());
+                    var fixedList = System.Text.Json.JsonSerializer.Deserialize<List<FieldBase>>(tmpstr, FieldJsonSerializerConfig.FieldOptions);
                     tlist.AddRange(fixedList);
                 }
             }
@@ -764,7 +762,7 @@ namespace AuthService
                 var torgextlist = await orgExtDAL.SelectList(x => x.OrgId == orgId && x.ExtField == field);
                 if (torgextlist.Count > 0)
                 {
-                    var extList = JsonConvert.DeserializeObject<List<FieldBase>>(torgextlist[0].ExtValue, new JsonFieldConverter());
+                    var extList = System.Text.Json.JsonSerializer.Deserialize<List<FieldBase>>(torgextlist[0].ExtValue, FieldJsonSerializerConfig.FieldOptions);
                     tlist.AddRange(extList);
                 }
             }

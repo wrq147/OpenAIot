@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,7 +57,7 @@ namespace AuthService
             sb.Append(ext);
             sb.Append(tk);
             info.Sign = MyAccess.Core.Crypter.SHA1(sb.ToString(), System.Text.Encoding.UTF8);
-            return MyAccess.Core.Crypter.EncodeBase64(Newtonsoft.Json.JsonConvert.SerializeObject(info), System.Text.Encoding.UTF8);
+            return MyAccess.Core.Crypter.EncodeBase64(System.Text.Json.JsonSerializer.Serialize(info, MyDefaultTextJsonConfig.DefaultOptions), System.Text.Encoding.UTF8);
         }
     }
     public enum TokenMode

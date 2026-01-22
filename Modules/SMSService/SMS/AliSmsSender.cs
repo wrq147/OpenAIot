@@ -1,5 +1,4 @@
 ﻿using Common.Json;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -152,13 +151,13 @@ namespace SMSService
 
         public class SendSmsResponse
         {
-            [JsonProperty("RequestId")] public string RequestId { get; set; }
+            public string RequestId { get; set; }
 
-            [JsonProperty("Message")] public string Message { get; set; }
+            public string Message { get; set; }
 
-            [JsonProperty("BizId")] public string BizId { get; set; }
+            public string BizId { get; set; }
 
-            [JsonProperty("Code")] public string Code { get; set; }
+            public string Code { get; set; }
         }
     }
 }

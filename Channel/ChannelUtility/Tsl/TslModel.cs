@@ -134,7 +134,7 @@ namespace ChannelUtility.Tsl
             }
             return list;
         }
-        private static readonly JsonSerializerOptions TSLOptions = new JsonSerializerOptions
+        public static readonly JsonSerializerOptions TSLOptions = new JsonSerializerOptions
         {
             Converters = { new TslJsonConverter(), new TslStringToByteConverter(), new TslNumberToStringConverter(), new JsonObjectConverter() },
             TypeInfoResolver = TslJsonSerializerContext.Default

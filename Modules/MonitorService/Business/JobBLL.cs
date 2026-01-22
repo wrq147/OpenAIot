@@ -1,4 +1,5 @@
 ﻿
+using Common.Json;
 using Common.Share;
 using MonitorService.DAL;
 using MonitorService.Model;
@@ -215,7 +216,7 @@ namespace MonitorService.Business
             var scheduler = await _schedulerFactory.GetScheduler();
             // 参数
             JobDataMap dataMap = new JobDataMap();
-            dataMap.Put(ScheduleUtils.TASK_PROPERTIES, Newtonsoft.Json.JsonConvert.SerializeObject(properties));
+            dataMap.Put(ScheduleUtils.TASK_PROPERTIES, System.Text.Json.JsonSerializer.Serialize(properties, MyDefaultTextJsonConfig.DefaultOptions));
 
             await scheduler.TriggerJob(ScheduleUtils.GetJobKey(properties.job_id.Value, properties.job_group), dataMap);
         }

@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.EventBus;
-using Microsoft.Extensions.Primitives;
+using Common.Json;
 using MonitorService.Model;
 using Quartz;
 using System;
@@ -96,7 +96,7 @@ namespace MonitorService.Util
             }
 
             // 放入参数，运行时的方法可以获取
-            jobDetail.JobDataMap.Put(TASK_PROPERTIES, Newtonsoft.Json.JsonConvert.SerializeObject(job));
+            jobDetail.JobDataMap.Put(TASK_PROPERTIES, System.Text.Json.JsonSerializer.Serialize(job, MyDefaultTextJsonConfig.DefaultOptions));
 
             // 判断是否存在
             if (await scheduler.CheckExists(jobKey))

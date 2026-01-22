@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IoTVideoService
+namespace IoTVideoService.PlanUtil
 {
     /// <summary>
     /// 录像计划时段描述生成工具类
@@ -247,25 +247,5 @@ namespace IoTVideoService
             };
         }
 
-        #region 内部模型类
-        /// <summary>
-        /// 按周配置项模型
-        /// </summary>
-        private class WeekConfigItem
-        {
-            public int Week { get; set; }
-            public string StartTime { get; set; }
-            public string EndTime { get; set; }
-        }
-
-        /// <summary>
-        /// 按时段配置项模型
-        /// </summary>
-        private class TimeConfigItem
-        {
-            public string StartTime { get; set; }
-            public string EndTime { get; set; }
-        }
-        #endregion
     }
 }

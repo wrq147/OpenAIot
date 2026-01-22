@@ -20,6 +20,7 @@ using Microsoft.Extensions.Options;
 using StorageService.Controller;
 using ProducerService.Model;
 using AuthService.Fields;
+using Common.Json;
 
 namespace StorageService.Business
 {
@@ -400,7 +401,7 @@ namespace StorageService.Business
             {
                 return BusResponse<Dictionary<string, object>>.Success(new Dictionary<string, object>());
             }
-            var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EnterFlowItem>>(houseInfo.EnterFlowInitJson);
+            var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<EnterFlowItem>>(houseInfo.EnterFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var fitem in flowitems)
             {
@@ -433,7 +434,7 @@ namespace StorageService.Business
                     useAdmin = await _provider.GetService<UserDAL>().GetAdminById(leaveApply.ApplyUserId.Value);
                 }
             }
-            var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<LeaveFlowItem>>(houseInfo.LeaveFlowInitJson);
+            var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<LeaveFlowItem>>(houseInfo.LeaveFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var fitem in flowitems)
             {
@@ -1074,7 +1075,7 @@ namespace StorageService.Business
                 }
                 else
                 {
-                    flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<LeaveFlowItem>>(fromHouse.LeaveFlowInitJson);
+                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<LeaveFlowItem>>(fromHouse.LeaveFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                 }
                 LeaveFlowCreate flowcreate = new LeaveFlowCreate();
                 flowcreate.templateId = fromHouse.LeaveTemplateId.Value;
@@ -1420,7 +1421,7 @@ namespace StorageService.Business
                     }
                     else
                     {
-                        flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<LeaveFlowItem>>(fromHouse.LeaveFlowInitJson);
+                        flowItems = System.Text.Json.JsonSerializer.Deserialize<List<LeaveFlowItem>>(fromHouse.LeaveFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                     }
                     LeaveFlowCreate flowcreate = new LeaveFlowCreate();
                     flowcreate.templateId = fromHouse.LeaveTemplateId.Value;
@@ -1772,7 +1773,7 @@ namespace StorageService.Business
                 }
                 else
                 {
-                    flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EnterFlowItem>>(toHouse.EnterFlowInitJson);
+                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<EnterFlowItem>>(toHouse.EnterFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                 }
 
                 EnterFlowCreate flowcreate = new EnterFlowCreate();

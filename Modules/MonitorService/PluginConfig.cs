@@ -71,7 +71,7 @@ namespace MonitorService
                          x.UseClustering();
                          x.UseMySql(generalOption.connstr);
                      }
-                     x.UseNewtonsoftJsonSerializer();
+                     x.UseSystemTextJsonSerializer();
                  })
                  .Build();
 

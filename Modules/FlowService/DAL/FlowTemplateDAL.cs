@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Json;
 using Common.Share;
 using FlowService.FlowNode.FormFields;
 using FlowService.Model;
@@ -122,7 +123,7 @@ namespace FlowService.DAL
                                          tsql = tsql.Append(" and v.FieldId=").AppendParam(item.FieldId).Append(" and v.NumberValue=").AppendParam(long.Parse(item.Value));
                                          break;
                                      default:
-                                         tsql = tsql.Append(" and v.FieldId=").AppendParam(item.FieldId).Append(" and v.Value=").AppendParam(Newtonsoft.Json.JsonConvert.SerializeObject(item.Value));
+                                         tsql = tsql.Append(" and v.FieldId=").AppendParam(item.FieldId).Append(" and v.Value=").AppendParam(System.Text.Json.JsonSerializer.Serialize(item.Value, MyDefaultTextJsonConfig.DefaultOptions));
                                          break;
                                  }
                              }

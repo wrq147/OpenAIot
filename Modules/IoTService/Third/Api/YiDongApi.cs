@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
@@ -26,7 +27,7 @@ namespace IoTService.Third.Api
             }
             else
             {
-                _option = Newtonsoft.Json.JsonConvert.DeserializeObject<YiDongOption>(config.YiDongOption);
+                _option = System.Text.Json.JsonSerializer.Deserialize<YiDongOption>(config.YiDongOption, MyDefaultTextJsonConfig.DefaultOptions);
             }
         }
         private string GenerateTransId()
@@ -164,7 +165,7 @@ namespace IoTService.Third.Api
             foreach (var iccid in iccids)
             {
                 var card = await QueryCardInfo(iccid);
-                if(card == null)
+                if (card == null)
                 {
                     continue;
                 }

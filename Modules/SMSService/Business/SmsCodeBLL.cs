@@ -4,11 +4,8 @@ using Common;
 using Common.EventBus;
 using Common.Share;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using SMSService.Model;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 

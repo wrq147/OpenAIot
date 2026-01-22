@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace IoTRulesService.Flow.Builder.Step
@@ -13,7 +14,7 @@ namespace IoTRulesService.Flow.Builder.Step
         {
             if (context.IsDebug)
             {
-                await context.Print("输入数据:" + Newtonsoft.Json.JsonConvert.SerializeObject(context.Data));
+                await context.Print("输入数据:" + System.Text.Json.JsonSerializer.Serialize(context.Data, MyDefaultTextJsonConfig.DefaultOptions));
             }
             try
             {

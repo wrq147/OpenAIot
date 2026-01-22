@@ -1,68 +1,66 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 
 namespace AuthService.Fields
 {
-    public class JsonFieldConverter : JsonConverter
+    public class JsonFieldConverter : JsonConverter<FieldBase>
     {
-        public override bool CanConvert(Type objectType)
+        private static readonly Dictionary<string, Type> _typeMap = new()
         {
-            return typeof(FieldBase).IsAssignableFrom(objectType);
+            { "附件", typeof(AttachField) },
+            { "超链接", typeof(HyperlinkField) },
+            { "复选框", typeof(CheckBoxField) },
+            { "图片", typeof(ImageField) },
+            { "数字", typeof(NumberField) },
+            { "关联对象", typeof(ObjectField) },
+            { "单选框", typeof(RadioField) },
+            { "文本", typeof(TextField) },
+            { "时间", typeof(TimeField) }
+        };
+        /// <summary>
+        /// 反序列化：根据type字段创建对应子类实例并填充数据
+        /// </summary>
+        public override FieldBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            // 首先将JSON加载到文档中
+            using var doc = JsonDocument.ParseValue(ref reader);
+            var root = doc.RootElement;
+
+            // 获取type字段值
+            if (!root.TryGetProperty("type", out var typeElement))
+            {
+                throw new JsonException("缺少Type字段");
+            }
+            var typeName = typeElement.GetString();
+            // 查找对应的类型
+            if (!_typeMap.TryGetValue(typeName, out var type))
+            {
+                throw new JsonException($"未知的类型: {typeName}");
+            }
+
+            // 反序列化为具体类型
+            var json = root.GetRawText();
+            var result = JsonSerializer.Deserialize(json, type, options);
+
+            return result as FieldBase;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <summary>
+        /// 序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
+        /// </summary>
+        public override void Write(Utf8JsonWriter writer, FieldBase value, JsonSerializerOptions options)
         {
-            var jsonObject = JObject.Load(reader);
-            object target = null;
-            JToken clsType;
-            if (jsonObject.TryGetValue("type", out clsType))
+            if (value == null)
             {
-                switch (clsType.ToString())
-                {
-                    case "附件":
-                        target = new AttachField();
-                        break;
-                    case "复选框":
-                        target = new CheckBoxField();
-                        break;
-                    case "超链接":
-                        target = new HyperlinkField();
-                        break;
-                    case "图片":
-                        target = new ImageField();
-                        break;
-                    case "数字":
-                        target = new NumberField();
-                        break;
-                    case "关联对象":
-                        target = new ObjectField();
-                        break;
-                    case "单选框":
-                        target = new RadioField();
-                        break;
-                    case "文本":
-                        target = new TextField();
-                        break;
-                    case "时间":
-                        target = new TimeField();
-                        break;
-
-                }
+                writer.WriteNullValue();
+                return;
             }
-            if (target == null)
-            {
-                return target;
-            }
-            serializer.Populate(jsonObject.CreateReader(), target);
-            return target;
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            writer.WriteValue(value);
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }
     }
+   
 }

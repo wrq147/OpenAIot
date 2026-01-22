@@ -3,18 +3,12 @@ using AuthService.Fields;
 using Common;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
-using FlowService.Controller;
 using FlowService.FlowNode;
 using FlowService.FlowNode.Builder;
-using FlowService.FlowNode.FormFields;
 using MESService.DAL;
 using MESService.Model;
-using MyAccess.Aop;
-using Newtonsoft.Json;
-using NPOI.HSSF.Record;
-using NPOI.SS.Formula.Functions;
-using ProducerService.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -160,7 +154,7 @@ namespace MESService.Business
                 HashSet<string> filterIds;
                 if (!string.IsNullOrEmpty(tmpOper.ReportFields))
                 {
-                    var permsItems = JsonConvert.DeserializeObject<FieldPermsItem[]>(tmpOper.ReportFields);
+                    var permsItems = System.Text.Json.JsonSerializer.Deserialize<FieldPermsItem[]>(tmpOper.ReportFields, MyDefaultTextJsonConfig.DefaultOptions);
                     filterIds = permsItems.Where(x => x.perm != "E").Select(x => x.id).ToHashSet();
                 }
                 else
@@ -316,7 +310,7 @@ namespace MESService.Business
                 HashSet<string> filterIds;
                 if (!string.IsNullOrEmpty(tmpOper.ReportFields))
                 {
-                    var permsItems = JsonConvert.DeserializeObject<FieldPermsItem[]>(tmpOper.ReportFields);
+                    var permsItems = System.Text.Json.JsonSerializer.Deserialize<FieldPermsItem[]>(tmpOper.ReportFields, MyDefaultTextJsonConfig.DefaultOptions);
                     filterIds = permsItems.Where(x => x.perm != "E").Select(x => x.id).ToHashSet();
                 }
                 else
@@ -446,7 +440,7 @@ namespace MESService.Business
                 }
                 else
                 {
-                    flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson);
+                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson,MyDefaultTextJsonConfig.DefaultOptions);
                 }
 
                 ProdReportFlowCreate flowcreate = new ProdReportFlowCreate();
@@ -575,7 +569,7 @@ namespace MESService.Business
             {
                 return BusResponse<Dictionary<string, object>>.Error(112, "工序不存在");
             }
-            var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson);
+            var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var fitem in flowitems)
             {

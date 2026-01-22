@@ -1,11 +1,9 @@
 ﻿using Common.DataAc;
 using Common.EventBus;
-using Common.Share;
-using Newtonsoft.Json;
+using Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TemplateAction.Core;
 
 namespace FlowService.FlowNode.Builder.Step
 {
@@ -41,10 +39,10 @@ namespace FlowService.FlowNode.Builder.Step
                         {
                             throw new Exception($"{this.Name}条件数据不能为null");
                         }
-                        accond.Value = JsonConvert.SerializeObject(tmpval);
+                        accond.Value = System.Text.Json.JsonSerializer.Serialize(tmpval, MyDefaultTextJsonConfig.DefaultOptions);
                         break;
                     case "Const":
-                        accond.Value = JsonConvert.SerializeObject(condit.Value);
+                        accond.Value = System.Text.Json.JsonSerializer.Serialize(condit.Value, MyDefaultTextJsonConfig.DefaultOptions);
                         break;
                 }
                 ae.conditions.Add(accond);
@@ -62,10 +60,10 @@ namespace FlowService.FlowNode.Builder.Step
                         {
                             throw new Exception($"{this.Name}执行数据不能为null");
                         }
-                        actionInfo.Value = JsonConvert.SerializeObject(tmpval);
+                        actionInfo.Value = System.Text.Json.JsonSerializer.Serialize(tmpval, MyDefaultTextJsonConfig.DefaultOptions);
                         break;
                     case "Const":
-                        actionInfo.Value = JsonConvert.SerializeObject(act.Value);
+                        actionInfo.Value = System.Text.Json.JsonSerializer.Serialize(act.Value, MyDefaultTextJsonConfig.DefaultOptions);
                         break;
                 }
                 ae.actions.Add(actionInfo);

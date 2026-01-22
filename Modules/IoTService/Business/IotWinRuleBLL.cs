@@ -1,11 +1,10 @@
 ﻿using ChannelUtility.Tsl;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
-using MyAccess.Core;
-using Newtonsoft.Json;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -139,7 +138,7 @@ namespace IoTService.Business
                     await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                     continue;
                 }
-                var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(pro.StorageConfig);
+                var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
                 if (storageConfig == null || storageConfig.enable != "1")
                 {
                     continue;
@@ -271,7 +270,7 @@ namespace IoTService.Business
                         await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
-                    var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(pro.StorageConfig);
+                    var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
                     if (storageConfig == null || storageConfig.enable != "1")
                     {
                         continue;
@@ -404,7 +403,7 @@ namespace IoTService.Business
                         await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
                     }
-                    var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(pro.StorageConfig);
+                    var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
                     if (storageConfig == null || storageConfig.enable != "1")
                     {
                         continue;

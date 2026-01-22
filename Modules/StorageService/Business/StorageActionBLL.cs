@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using ProducerService.DAL;
+using Common.Json;
 
 namespace StorageService.Business
 {
@@ -365,7 +366,7 @@ namespace StorageService.Business
                         if (con.TargetField == "@Number")
                         {
                             con.TargetField = "StockNumber";
-                            targetId = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(con.Value);
+                            targetId = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             con.FinalValue = targetId;
                             con.Compare = "=";
                             conds.Add(con);
@@ -378,7 +379,7 @@ namespace StorageService.Business
                         {
                             case "Status":
                                 {
-                                    var tmpint = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(acc.Value);
+                                    var tmpint = System.Text.Json.JsonSerializer.Deserialize<int?>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (tmpint == null)
                                     {
                                         continue;
@@ -504,7 +505,7 @@ namespace StorageService.Business
                         if (con.TargetField == "@Number")
                         {
                             con.TargetField = "ApplyNumber";
-                            con.FinalValue = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(con.Value);
+                            con.FinalValue = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             con.Compare = "=";
                             conds.Add(con);
                         }
@@ -516,7 +517,7 @@ namespace StorageService.Business
                         {
                             case "Status":
                                 {
-                                    var tmpint = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(acc.Value);
+                                    var tmpint = System.Text.Json.JsonSerializer.Deserialize<int?>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (tmpint == null)
                                     {
                                         continue;

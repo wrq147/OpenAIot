@@ -4,7 +4,6 @@ using Common;
 using TemplateAction.NetCore;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using Newtonsoft.Json;
 using Common.Share;
 
 namespace AuthService.Controller

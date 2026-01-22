@@ -5,8 +5,8 @@ using FlowService.DAL;
 using FlowService.FlowNode;
 using FlowService.FlowNode.FormFields;
 using FlowService.Model;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using MyAccess.Aop;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +101,7 @@ namespace FlowService.Business
                 template.Status = "0";
                 template.del_flag = "0";
                 //设置允许提交的人员
-                RootNode rootNode = JsonConvert.DeserializeObject<RootNode>(template.FlowJson, new JsonFlowNodeConverter(), new JsonFlowConditionConverter());
+                RootNode rootNode = System.Text.Json.JsonSerializer.Deserialize<RootNode>(template.FlowJson, FlowJsonSerializerConfig.NodeOptions);
                 ObjData[] commitObjs = rootNode.props.assignedUser;
                 if (commitObjs.Length == 0)
                 {
@@ -150,7 +150,7 @@ namespace FlowService.Business
                 if (!string.IsNullOrEmpty(template.FlowJson))
                 {
                     //设置允许提交的人员
-                    RootNode rootNode = JsonConvert.DeserializeObject<RootNode>(template.FlowJson, new JsonFlowNodeConverter(), new JsonFlowConditionConverter());
+                    RootNode rootNode = System.Text.Json.JsonSerializer.Deserialize<RootNode>(template.FlowJson, FlowJsonSerializerConfig.NodeOptions);
                     ObjData[] commitObjs = rootNode.props.assignedUser;
                     if (commitObjs.Length == 0)
                     {

@@ -3,6 +3,7 @@ using ChannelUtility.Message;
 using ChannelUtility.Tsl;
 using Common;
 using Common.EventBus;
+using Common.Json;
 using IoTRulesService.Flow.Builder.Step;
 using IoTService;
 using IoTService.Business;
@@ -12,7 +13,6 @@ using Jint;
 using Jint.Native;
 using MonitorService.Model;
 using NATS.Client.Core;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -716,11 +716,6 @@ namespace IoTRulesService.Flow.Builder
             {
                 return null;
             }
-            if (val is JObject obj)
-            {
-                return obj.ToObject<double>();
-            }
-
             return Convert.ToDouble(val);
         }
         public async Task<long?> ReadSourceLong(string key)
@@ -730,11 +725,6 @@ namespace IoTRulesService.Flow.Builder
             {
                 return null;
             }
-            if (val is JObject obj)
-            {
-                return obj.ToObject<long>();
-            }
-
             return Convert.ToInt64(val);
         }
         public async Task<string> ReadSourceString(string key)
@@ -769,7 +759,7 @@ namespace IoTRulesService.Flow.Builder
             }
             else
             {
-                data.Add("节点'" + this.Step.Name + "'" + ":" + Newtonsoft.Json.JsonConvert.SerializeObject(msg));
+                data.Add("节点'" + this.Step.Name + "'" + ":" + System.Text.Json.JsonSerializer.Serialize(msg, MyDefaultTextJsonConfig.DefaultOptions));
             }
 
             await bus.PublishAsync(new NatsMsg<List<string>>()

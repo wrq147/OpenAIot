@@ -9,7 +9,7 @@ using TemplateAction.Core;
 using System.Collections.Generic;
 using StackExchange.Redis;
 using ChannelUtility.Tsl;
-using Newtonsoft.Json;
+using Common.Json;
 
 namespace IoTService
 {
@@ -52,7 +52,7 @@ namespace IoTService
                                 {
                                     dict.Add(he.Name, intResult);
                                 }
-                                else if(long.TryParse(sval, out long longResult))
+                                else if (long.TryParse(sval, out long longResult))
                                 {
                                     dict.Add(he.Name, longResult);
                                 }
@@ -87,7 +87,7 @@ namespace IoTService
                         }
                         else
                         {
-                            dict.Add(he.Name, JsonConvert.DeserializeObject(he.Value));
+                            dict.Add(he.Name, System.Text.Json.JsonSerializer.Deserialize<object>(he.Value, MyDefaultTextJsonConfig.DefaultOptions));
                         }
                     }
                 }

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using Newtonsoft.Json;
 using FluentMigrator.Infrastructure.Extensions;
 using AuthService.Model;
 using AuthService.DAL;

@@ -1,12 +1,8 @@
 ﻿using Common.Share;
-using Microsoft.Extensions.Options;
 using System;
 using TemplateAction.Core;
 using TemplateAction.Label;
 using System.Threading.Tasks;
-using DeveloperService;
-using System.Text;
-using Newtonsoft.Json;
 using DeveloperService.Model;
 using Common;
 using DeveloperService.DAL;

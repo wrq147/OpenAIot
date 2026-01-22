@@ -3,12 +3,11 @@ using TemplateAction.Core;
 using Common;
 using TemplateAction.Route;
 using ThirdPartyService.Model;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System;
 using AuthService;
 using System.Collections.Generic;
+using Common.Json;
 
 namespace ThirdPartyService.Controller
 {
@@ -41,7 +40,7 @@ namespace ThirdPartyService.Controller
                 {
                     return this.Error<WeatherInfo_V>(16, $"天气接口源{weatherFrom}未配置");
                 }
-                var weather_option = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(weatherOption);
+                var weather_option = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(weatherOption, MyDefaultTextJsonConfig.DefaultOptions);
                 weainfo = new WeatherInfo_V();
                 switch (weatherFrom)
                 {
@@ -49,24 +48,26 @@ namespace ThirdPartyService.Controller
                         {
                             string tmpkey = weather_option["key"];
                             var rt = await HttpHelper.Instance.GetAsync("https://restapi.amap.com/v3/weather/weatherInfo?city=" + code + "&key=" + tmpkey);
-                            var cardrs = JsonConvert.DeserializeObject<dynamic>(rt);
-                            if (cardrs.status != 1)
+                            var cardrs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(rt, MyDefaultTextJsonConfig.DefaultOptions);
+                            int intstatus = (int)cardrs["status"];
+                            if (intstatus != 1)
                             {
-                                return this.Error<string>(12, (string)cardrs.info);
+                                return this.Error<string>(12, (string)cardrs["info"]);
                             }
-                            JArray tmparr = cardrs.lives;
+                            var tmparr = (List<object>)cardrs["lives"];
                             if (tmparr.Count == 0)
                             {
                                 return this.Error<string>(13, "无天气信息");
                             }
-                            weainfo.province = tmparr[0]["province"].ToString();
-                            weainfo.city = tmparr[0]["city"].ToString();
-                            weainfo.weather = tmparr[0]["weather"].ToString();
-                            weainfo.temperature = tmparr[0]["temperature"].ToString();
-                            weainfo.winddirection = tmparr[0]["winddirection"].ToString();
-                            weainfo.windpower = tmparr[0]["windpower"].ToString();
-                            weainfo.humidity = tmparr[0]["humidity"].ToString();
-                            weainfo.reporttime = tmparr[0]["reporttime"].ToString();
+                            var tmpitemd = tmparr[0] as IDictionary<string, object>;
+                            weainfo.province = tmpitemd["province"].ToString();
+                            weainfo.city = tmpitemd["city"].ToString();
+                            weainfo.weather = tmpitemd["weather"].ToString();
+                            weainfo.temperature = tmpitemd["temperature"].ToString();
+                            weainfo.winddirection = tmpitemd["winddirection"].ToString();
+                            weainfo.windpower = tmpitemd["windpower"].ToString();
+                            weainfo.humidity = tmpitemd["humidity"].ToString();
+                            weainfo.reporttime = tmpitemd["reporttime"].ToString();
                         }
                         break;
                 }

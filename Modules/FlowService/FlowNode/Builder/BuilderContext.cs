@@ -1,11 +1,9 @@
-﻿using FlowService.FlowNode.FormFields;
+﻿using Common.Json;
+using FlowService.FlowNode.FormFields;
 using FlowService.Model;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static NPOI.HSSF.UserModel.HeaderFooter;
-
 namespace FlowService.FlowNode.Builder
 {
     public class BuilderContext
@@ -99,17 +97,18 @@ namespace FlowService.FlowNode.Builder
                 object outval;
                 if (this.FormItems.TryGetValue(key, out outval))
                 {
-                    var selectedlist = outval as IEnumerable<object>;
+                    var selectedlist = outval as List<object>;
                     if (selectedlist != null)
                     {
                         foreach (var node in selectedlist)
                         {
-                            JToken jk = ((JObject)node).GetValue("id");
+                            var nodeObj = node as IDictionary<string, object>;
+                            var jk = nodeObj["id"];
                             if (jk == null)
                             {
                                 continue;
                             }
-                            uids.Add(jk.Value<long>());
+                            uids.Add(Convert.ToInt64(jk));
                         }
                     }
 
@@ -127,7 +126,7 @@ namespace FlowService.FlowNode.Builder
         {
             var val = GetFormValue(key);
             if (val == null) return false;
-            string[] strs = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(strlist);
+            string[] strs = System.Text.Json.JsonSerializer.Deserialize<string[]>(strlist, MyDefaultTextJsonConfig.DefaultOptions);
             return strs.Contains(val);
         }
 

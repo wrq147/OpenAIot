@@ -1,5 +1,6 @@
 ﻿
 using Common;
+using Common.Json;
 using IoTRulesService.Flow.Node;
 using IoTService.Business;
 using IoTService.Models;
@@ -44,7 +45,7 @@ namespace IoTRulesService.Flow.Builder.Step
             }
             if (context.IsDebug)
             {
-                await context.Print("开始检测数据：" + Newtonsoft.Json.JsonConvert.SerializeObject(stepdata));
+                await context.Print("开始检测数据：" + System.Text.Json.JsonSerializer.Serialize(stepdata, MyDefaultTextJsonConfig.DefaultOptions));
             }
             var tsl = await context.GetTsl(context.Source.ProductId);
             if (tsl == null)
@@ -95,7 +96,7 @@ namespace IoTRulesService.Flow.Builder.Step
 
                 if (context.IsDebug)
                 {
-                    await context.Print("检测到异常数据：" + Newtonsoft.Json.JsonConvert.SerializeObject(prelist));
+                    await context.Print("检测到异常数据：" + System.Text.Json.JsonSerializer.Serialize(prelist, MyDefaultTextJsonConfig.DefaultOptions));
                 }
                 this.IsActive = true;
 

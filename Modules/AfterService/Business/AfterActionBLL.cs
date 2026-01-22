@@ -1,6 +1,7 @@
 ﻿using AfterService.DAL;
 using Common.DataAc;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using FlowService.FlowNode.Builder;
 using IoTService.DAL;
@@ -46,7 +47,7 @@ namespace AfterService.Business
                         if (con.TargetField == "@Number")
                         {
                             con.TargetField = "PlaneNumber";
-                            con.FinalValue = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(con.Value);
+                            con.FinalValue = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             con.Compare = "=";
                             conds.Add(con);
                         }
@@ -58,7 +59,7 @@ namespace AfterService.Business
                         {
                             case "TaskStatus":
                                 {
-                                    var tmpint = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(acc.Value);
+                                    var tmpint = System.Text.Json.JsonSerializer.Deserialize<int?>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (tmpint == null)
                                     {
                                         continue;

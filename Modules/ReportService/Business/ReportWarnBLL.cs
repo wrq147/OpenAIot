@@ -2,22 +2,19 @@
 using Common;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
 using MonitorService.Util;
 using MyAccess.DB.Builder.WhereToSql;
-using Mysqlx.Notice;
-using Quartz;
 using ReportService.DAL;
 using ReportService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.Label;
@@ -51,7 +48,7 @@ namespace ReportService.Business
             WarnJsonConfig warnJson = null;
             try
             {
-                warnJson = Newtonsoft.Json.JsonConvert.DeserializeObject<WarnJsonConfig>(warnInfo.ConditionJson);
+                warnJson = System.Text.Json.JsonSerializer.Deserialize<WarnJsonConfig>(warnInfo.ConditionJson, MyDefaultTextJsonConfig.DefaultOptions);
             }
             catch { }
             if (warnJson == null)
@@ -72,7 +69,7 @@ namespace ReportService.Business
             ReportThemeOption themeOption = null;
             try
             {
-                themeOption = Newtonsoft.Json.JsonConvert.DeserializeObject<ReportThemeOption>(report.ThemeOption);
+                themeOption = System.Text.Json.JsonSerializer.Deserialize<ReportThemeOption>(report.ThemeOption, MyDefaultTextJsonConfig.DefaultOptions);
             }
             catch { }
 

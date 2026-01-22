@@ -6,6 +6,7 @@ using TemplateAction.Label;
 using System.Threading.Tasks;
 using Common;
 using System.Net.Http;
+using Common.Json;
 
 namespace AuthService
 {
@@ -53,7 +54,7 @@ namespace AuthService
                     httpReq.Headers.TryAddWithoutValidation(AuthConstant.CONFIG_TOKEN_KEY, stt);
 
                     string rt = await HttpHelper.Instance.SendAsync(httpReq);
-                    AuthServerResult tokenrt = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthServerResult>(rt);
+                    AuthServerResult tokenrt = System.Text.Json.JsonSerializer.Deserialize<AuthServerResult>(rt, MyDefaultTextJsonConfig.DefaultOptions);
                     if (tokenrt.code != Constants.SUCCESS_CODE)
                     {
                         return new DefaultAjaxResult<string>(tokenrt.code, tokenrt.message);

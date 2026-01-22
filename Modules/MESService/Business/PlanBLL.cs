@@ -2,6 +2,7 @@
 using Common;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using FlowService.FlowNode.Builder;
 using MESService.DAL;
@@ -186,7 +187,7 @@ namespace MESService.Business
                 }
                 else
                 {
-                    flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProdPlanFlowItem>>(mesConfig.PlanFlowInitJson);
+                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<ProdPlanFlowItem>>(mesConfig.PlanFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                 }
                 ProdPlanFlowCreate flowcreate = new ProdPlanFlowCreate();
                 flowcreate.templateId = mesConfig.PlanTemplateId.Value;
@@ -308,7 +309,7 @@ namespace MESService.Business
                 sumbitDept = await _provider.GetService<DeptDAL>().Select(sumbitUser.dept_id);
             }
 
-            var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProdPlanFlowItem>>(mesConfig.PlanFlowInitJson);
+            var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<ProdPlanFlowItem>>(mesConfig.PlanFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var fitem in flowitems)
             {

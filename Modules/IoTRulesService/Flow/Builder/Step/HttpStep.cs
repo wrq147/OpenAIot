@@ -1,6 +1,5 @@
 ﻿using Common.Json;
 using IoTRulesService.Flow.Node;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -138,7 +137,7 @@ namespace IoTRulesService.Flow.Builder.Step
                     {
                         var tmpobj = System.Text.Json.JsonSerializer.Deserialize<IDictionary<string, object>>(props.rawString, MyDefaultTextJsonConfig.DefaultOptions);
                         await ReplaceDictValue(context, tmpobj);
-                        tmpjson = Newtonsoft.Json.JsonConvert.SerializeObject(tmpobj);
+                        tmpjson = System.Text.Json.JsonSerializer.Serialize(tmpobj, MyDefaultTextJsonConfig.DefaultOptions);
                     }
                     req.Content = new StringContent(tmpjson, Encoding.UTF8, "application/json");
                     if (context.IsDebug)

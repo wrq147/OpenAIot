@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Common.Json;
 
 namespace AfterService.Business
 {
@@ -285,7 +286,7 @@ namespace AfterService.Business
                     task.ExeUserId = 0;
                     task.CheckUserId = 0;
 
-                    var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DevFlowItem>>(planeType.FlowInitJson);
+                    var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<DevFlowItem>>(planeType.FlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                     DevFlowCreate flowcreate = new DevFlowCreate();
                     flowcreate.templateId = planeType.FlowTemplateId.Value;
                     flowcreate.model = new Dictionary<string, object>();

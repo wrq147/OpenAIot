@@ -1,8 +1,5 @@
-﻿using ChannelUtility.Message;
-using ChannelUtility.Tsl;
+﻿using ChannelUtility.Tsl;
 using FlowService.DAL;
-using Newtonsoft.Json.Linq;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +36,8 @@ namespace FlowService.FlowNode.Builder.Step
             List<string> devids = new List<string>();
             foreach (var node in selectedlist)
             {
-                string devId = ((JObject)node).GetValue("id").Value<string>();
+                var nodeobj = node as IDictionary<string, object>;
+                string devId = Convert.ToString(nodeobj["id"]);
                 devids.Add(devId);
             }
             var dinfos = await context.ServiceProvider.GetService<FlowDeviceDAL>().SelectFlowDeviceList(devids);

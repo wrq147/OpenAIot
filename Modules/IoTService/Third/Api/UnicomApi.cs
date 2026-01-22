@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
@@ -25,7 +26,7 @@ namespace IoTService.Third.Api
             }
             else
             {
-                _option = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomOption>(config.UnicomOption);
+                _option = System.Text.Json.JsonSerializer.Deserialize<UnicomOption>(config.UnicomOption, MyDefaultTextJsonConfig.DefaultOptions);
             }
         }
         private static string GetEncodePassword(string text, string encodeKey, string ivKey)
@@ -80,7 +81,7 @@ namespace IoTService.Third.Api
                             formBodys.Add("scope", "server");
 
                             string res = await HttpHelper.Instance.PostWithHeaderAsync($"{_option.appUrl}/auc/oauth/token", formBodys, headers, System.Text.Encoding.UTF8);
-                            UnicomResult<UnicomToken> resObj = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomResult<UnicomToken>>(res);
+                            UnicomResult<UnicomToken> resObj = System.Text.Json.JsonSerializer.Deserialize<UnicomResult<UnicomToken>>(res, MyDefaultTextJsonConfig.DefaultOptions);
                             if (resObj.success == true)
                             {
                                 tk = resObj.data.access_token;
@@ -103,8 +104,8 @@ namespace IoTService.Third.Api
             Dictionary<string, string> reqparams = new Dictionary<string, string>();
             reqparams.Add("iccid", iccid);
             reqparams.Add("appId", _option.app_id);
-            var res = await HttpHelper.Instance.PostJsonAsync($"{_option.appUrl}/cop-platform/api/device/detail", Newtonsoft.Json.JsonConvert.SerializeObject(reqparams), System.Text.Encoding.UTF8);
-            var resObj = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomResult<UnicomCardInfo>>(res);
+            var res = await HttpHelper.Instance.PostJsonAsync($"{_option.appUrl}/cop-platform/api/device/detail", System.Text.Json.JsonSerializer.Serialize(reqparams, MyDefaultTextJsonConfig.DefaultOptions), System.Text.Encoding.UTF8);
+            var resObj = System.Text.Json.JsonSerializer.Deserialize<UnicomResult<UnicomCardInfo>>(res, MyDefaultTextJsonConfig.DefaultOptions);
             if (resObj.success == true)
             {
                 MZ_IotCard card = new MZ_IotCard();
@@ -142,8 +143,8 @@ namespace IoTService.Third.Api
                 Dictionary<string, string> jfparams = new Dictionary<string, string>();
                 jfparams.Add("id", resObj.data.currentRateId);
                 jfparams.Add("appId", _option.app_id);
-                var newres = await HttpHelper.Instance.PostJsonAsync($"{_option.appUrl}/cop-platform/api/rate/details", Newtonsoft.Json.JsonConvert.SerializeObject(jfparams), System.Text.Encoding.UTF8);
-                var newresObj = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomResult<UnicomCharge>>(newres);
+                var newres = await HttpHelper.Instance.PostJsonAsync($"{_option.appUrl}/cop-platform/api/rate/details", System.Text.Json.JsonSerializer.Serialize(jfparams, MyDefaultTextJsonConfig.DefaultOptions), System.Text.Encoding.UTF8);
+                var newresObj = System.Text.Json.JsonSerializer.Deserialize<UnicomResult<UnicomCharge>>(newres, MyDefaultTextJsonConfig.DefaultOptions);
                 if (newresObj.success == true)
                 {
                     card.RatePlanName = newresObj.data.rateName;
@@ -195,15 +196,15 @@ namespace IoTService.Third.Api
             foreach (string iccid in iccids)
             {
                 var tmpption = _provider.GetService<GeneralOption>();
-                string newjson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                string newjson = System.Text.Json.JsonSerializer.Serialize(new
                 {
                     iccid = iccid,
                     callbackUrl = $"{tmpption.url}/IoTService/UnicomCallback/StausChange",
                     status = 3,
                     appId = _option.app_id
-                });
+                }, MyDefaultTextJsonConfig.DefaultOptions);
                 var res = await HttpHelper.Instance.PostJsonAsync($"{_option.appUrl}/cop-platform/api/device/async-device-state", newjson, Encoding.UTF8);
-                var resObj = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomResult<string>>(res);
+                var resObj = System.Text.Json.JsonSerializer.Deserialize<UnicomResult<string>>(res, MyDefaultTextJsonConfig.DefaultOptions);
             }
             return BusResponse<string>.Success();
         }

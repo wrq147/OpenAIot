@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace ChannelUtility.Tsl
 {
+    [JsonSerializable(typeof(List<BaseInputValue>))]
     [JsonSerializable(typeof(List<object>))]
     [JsonSerializable(typeof(IDictionary<string, object>))]
     [JsonSerializable(typeof(Dictionary<string, object>))]

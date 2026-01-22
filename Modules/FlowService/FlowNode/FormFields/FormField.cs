@@ -1,12 +1,11 @@
-﻿using FlowService.Model;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using TemplateAction.Core;
+﻿using Common.Json;
 using Common.Share;
+using FlowService.Model;
 using Microsoft.Extensions.Options;
-using NPOI.SS.Formula.Eval;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TemplateAction.Core;
 
 namespace FlowService.FlowNode.FormFields
 {
@@ -96,12 +95,13 @@ namespace FlowService.FlowNode.FormFields
                         MZ_FormDataItem detail = new MZ_FormDataItem();
                         detail.FlowId = flowId;
                         detail.FieldId = this.id;
-                        detail.Value = Newtonsoft.Json.JsonConvert.SerializeObject(val);
+                        detail.Value = System.Text.Json.JsonSerializer.Serialize(val, MyDefaultTextJsonConfig.DefaultOptions);
                         rt.Add(detail);
                         int i = 1;
                         foreach (var node in selectedlist)
                         {
-                            JToken jk = ((JObject)node).GetValue("id");
+                            var dictobj = node as IDictionary<string, object>;
+                            var jk = dictobj["id"];
                             if (jk == null)
                             {
                                 continue;
@@ -111,11 +111,11 @@ namespace FlowService.FlowNode.FormFields
                             tmpfdi.FieldId = this.id + "@v" + i;
                             if (this.name == "DevicPicker")
                             {
-                                tmpfdi.Value = jk.Value<string>();
+                                tmpfdi.Value = Convert.ToString(jk);
                             }
                             else
                             {
-                                tmpfdi.NumberValue = jk.Value<long>();
+                                tmpfdi.NumberValue = Convert.ToInt64(jk);
                             }
                             rt.Add(tmpfdi);
                             ++i;
@@ -133,7 +133,7 @@ namespace FlowService.FlowNode.FormFields
                         MZ_FormDataItem detail = new MZ_FormDataItem();
                         detail.FlowId = flowId;
                         detail.FieldId = this.id;
-                        detail.LongValue = Newtonsoft.Json.JsonConvert.SerializeObject(val);
+                        detail.LongValue = System.Text.Json.JsonSerializer.Serialize(val, MyDefaultTextJsonConfig.DefaultOptions);
                         rt.Add(detail);
                         int i = 1;
                         string[] idxFields = ((TableListProps)props).IdxColName;
@@ -145,8 +145,9 @@ namespace FlowService.FlowNode.FormFields
                             {
                                 fieldDict.Add(f.id, f);
                             }
-                            foreach (JObject row in selectedlist)
+                            foreach (var row in selectedlist)
                             {
+                                var rowObj = row as IDictionary<string, object>;
                                 foreach (string rowfield in idxFields)
                                 {
 
@@ -155,11 +156,11 @@ namespace FlowService.FlowNode.FormFields
                                     tmpfdi.FieldId = this.id + "@" + rowfield + "@v" + i;
                                     if (fieldDict[rowfield].name == "TextInput")
                                     {
-                                        tmpfdi.Value = Newtonsoft.Json.JsonConvert.SerializeObject(row[rowfield]);
+                                        tmpfdi.Value = System.Text.Json.JsonSerializer.Serialize(rowObj[rowfield], MyDefaultTextJsonConfig.DefaultOptions);
                                     }
                                     else
                                     {
-                                        tmpfdi.NumberValue = Convert.ToDouble(row[rowfield]);
+                                        tmpfdi.NumberValue = Convert.ToDouble(rowObj[rowfield]);
                                     }
                                     rt.Add(tmpfdi);
                                 }
@@ -182,9 +183,10 @@ namespace FlowService.FlowNode.FormFields
                             {
                                 return Array.Empty<MZ_FormDataItem>();
                             }
-                            foreach (JObject jval in selectedlist)
+                            foreach (var jval in selectedlist)
                             {
-                                string tmpval = jval.GetValue("url").Value<string>();
+                                var rowObj = jval as IDictionary<string, object>;
+                                string tmpval = Convert.ToString(rowObj["url"]);
                                 GeneralOption go = globalServiceProvider.GetService<IOptions<GeneralOption>>().Value;
 
                                 if (!string.IsNullOrEmpty(go.minio_url))
@@ -199,10 +201,10 @@ namespace FlowService.FlowNode.FormFields
                                     string tmpurl2 = tmpurl1.Replace("http:", "https:");
                                     tmpval = tmpval.Replace(tmpurl1, string.Empty).Replace(tmpurl2, string.Empty);
                                 }
-                                jval.Property("url").Value = tmpval;
+                                rowObj["url"] = tmpval;
                             }
 
-                            tmpfdi.Value = Newtonsoft.Json.JsonConvert.SerializeObject(selectedlist);
+                            tmpfdi.Value = System.Text.Json.JsonSerializer.Serialize(selectedlist, MyDefaultTextJsonConfig.DefaultOptions);
                         }
                         else
                         {
@@ -215,7 +217,7 @@ namespace FlowService.FlowNode.FormFields
                         MZ_FormDataItem tmpfdi = new MZ_FormDataItem();
                         tmpfdi.FlowId = flowId;
                         tmpfdi.FieldId = this.id;
-                        tmpfdi.Value = Newtonsoft.Json.JsonConvert.SerializeObject(val);
+                        tmpfdi.Value = System.Text.Json.JsonSerializer.Serialize(val, MyDefaultTextJsonConfig.DefaultOptions);
                         return new MZ_FormDataItem[] { tmpfdi };
                     }
             }
@@ -230,7 +232,7 @@ namespace FlowService.FlowNode.FormFields
             switch (this.name)
             {
                 case "TableList":
-                    return Newtonsoft.Json.JsonConvert.DeserializeObject(item.LongValue);
+                    return System.Text.Json.JsonSerializer.Deserialize<object>(item.LongValue, MyDefaultTextJsonConfig.DefaultOptions);
                 case "NumberInput":
                     return item.NumberValue;
                 case "ImageUpload":
@@ -249,10 +251,11 @@ namespace FlowService.FlowNode.FormFields
 
                         ITAServiceProvider globalServiceProvider = ac.Context.Application.ServiceProvider;
                         GeneralOption go = globalServiceProvider.GetService<IOptions<GeneralOption>>().Value;
-                        var jarr = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(val);
-                        foreach (JObject jobj in jarr)
+                        var jarr = System.Text.Json.JsonSerializer.Deserialize<List<object>>(val, MyDefaultTextJsonConfig.DefaultOptions);
+                        foreach (var jobj in jarr)
                         {
-                            string valstr = jobj.GetValue("url").Value<string>();
+                            var jdict = jobj as IDictionary<string, object>;
+                            string valstr = Convert.ToString(jdict["url"]);
                             if (!string.IsNullOrEmpty(valstr))
                             {
                                 if (!string.IsNullOrEmpty(go.minio_bucket) && valstr.StartsWith("/" + go.minio_bucket))
@@ -271,13 +274,13 @@ namespace FlowService.FlowNode.FormFields
                                     valstr = go.default_imgurl;
                                 }
                             }
-                            jobj.Property("url").Value = valstr;
+                            jdict["url"] = valstr;
                         }
                         return jarr;
                     }
                 default:
                     {
-                        return Newtonsoft.Json.JsonConvert.DeserializeObject(item.Value);
+                        return System.Text.Json.JsonSerializer.Deserialize<object>(item.Value, MyDefaultTextJsonConfig.DefaultOptions);
                     }
             }
         }

@@ -19,6 +19,7 @@ using System.Text;
 using Common.IdGenerator;
 using Common.EventBus;
 using System.Diagnostics;
+using Common.Json;
 
 
 namespace IoTService.Business
@@ -150,19 +151,19 @@ namespace IoTService.Business
                     {
                         case "YiDong":
                             {
-                                var yidongOption = Newtonsoft.Json.JsonConvert.DeserializeObject<YiDongOption>(config.YiDongOption);
+                                var yidongOption = System.Text.Json.JsonSerializer.Deserialize<YiDongOption>(config.YiDongOption, MyDefaultTextJsonConfig.DefaultOptions);
                                 card.ExpirationDate = DateTime.Now.AddMonths(yidongOption.expire_month);
                             }
                             break;
                         case "Sohan":
                             {
-                                var sohanOption = Newtonsoft.Json.JsonConvert.DeserializeObject<SohanOption>(config.SohanOption);
+                                var sohanOption = System.Text.Json.JsonSerializer.Deserialize<SohanOption>(config.SohanOption, MyDefaultTextJsonConfig.DefaultOptions);
                                 card.ExpirationDate = DateTime.Now.AddMonths(sohanOption.expire_month);
                             }
                             break;
                         case "Unicom":
                             {
-                                var unicomOption = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomOption>(config.UnicomOption);
+                                var unicomOption = System.Text.Json.JsonSerializer.Deserialize<UnicomOption>(config.UnicomOption, MyDefaultTextJsonConfig.DefaultOptions);
                                 card.ExpirationDate = DateTime.Now.AddMonths(unicomOption.expire_month);
                             }
                             break;
@@ -229,7 +230,7 @@ namespace IoTService.Business
                 if (!string.IsNullOrEmpty(config.YiDongOption))
                 {
                     var api = CreateApi("YiDong", config);
-                    var tmpOption = Newtonsoft.Json.JsonConvert.DeserializeObject<YiDongOption>(config.YiDongOption);
+                    var tmpOption = System.Text.Json.JsonSerializer.Deserialize<YiDongOption>(config.YiDongOption, MyDefaultTextJsonConfig.DefaultOptions);
                     if (tmpOption.enable_expire == true)
                     {
                         List<MZ_IotCard> updateList = group.Where(x => x.CardFrom == "YiDong").ToList();
@@ -243,7 +244,7 @@ namespace IoTService.Business
                 if (!string.IsNullOrEmpty(config.SohanOption))
                 {
                     var api = CreateApi("Sohan", config);
-                    var tmpOption = Newtonsoft.Json.JsonConvert.DeserializeObject<SohanOption>(config.SohanOption);
+                    var tmpOption = System.Text.Json.JsonSerializer.Deserialize<SohanOption>(config.SohanOption, MyDefaultTextJsonConfig.DefaultOptions);
                     if (tmpOption.enable_expire == true)
                     {
                         List<MZ_IotCard> updateList = group.Where(x => x.CardFrom == "Sohan").ToList();
@@ -257,7 +258,7 @@ namespace IoTService.Business
                 if (!string.IsNullOrEmpty(config.UnicomOption))
                 {
                     var api = CreateApi("Unicom", config);
-                    var tmpOption = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomOption>(config.UnicomOption);
+                    var tmpOption = System.Text.Json.JsonSerializer.Deserialize<UnicomOption>(config.UnicomOption, MyDefaultTextJsonConfig.DefaultOptions);
                     if (tmpOption.enable_expire == true)
                     {
                         List<MZ_IotCard> updateList = group.Where(x => x.CardFrom == "Unicom").ToList();
@@ -414,7 +415,7 @@ namespace IoTService.Business
                     {
                         cardfrom = "YiDong";
                         newcard = await CreateApi(cardfrom, config).QueryCardInfo(iccid);
-                        var yidongOption = Newtonsoft.Json.JsonConvert.DeserializeObject<YiDongOption>(config.YiDongOption);
+                        var yidongOption = System.Text.Json.JsonSerializer.Deserialize<YiDongOption>(config.YiDongOption, MyDefaultTextJsonConfig.DefaultOptions);
                         if (newcard != null)
                         {
                             newcard.ExpirationDate = DateTime.Now.AddMonths(yidongOption.expire_month);
@@ -425,7 +426,7 @@ namespace IoTService.Business
                     {
                         cardfrom = "Sohan";
                         newcard = await CreateApi(cardfrom, config).QueryCardInfo(iccid);
-                        var sohanOption = Newtonsoft.Json.JsonConvert.DeserializeObject<SohanOption>(config.SohanOption);
+                        var sohanOption = System.Text.Json.JsonSerializer.Deserialize<SohanOption>(config.SohanOption, MyDefaultTextJsonConfig.DefaultOptions);
                         if (newcard != null)
                         {
                             newcard.ExpirationDate = DateTime.Now.AddMonths(sohanOption.expire_month);
@@ -436,7 +437,7 @@ namespace IoTService.Business
                     {
                         cardfrom = "Unicom";
                         newcard = await CreateApi(cardfrom, config).QueryCardInfo(iccid);
-                        var unicomOption = Newtonsoft.Json.JsonConvert.DeserializeObject<UnicomOption>(config.UnicomOption);
+                        var unicomOption = System.Text.Json.JsonSerializer.Deserialize<UnicomOption>(config.UnicomOption, MyDefaultTextJsonConfig.DefaultOptions);
                         if (newcard != null)
                         {
                             newcard.ExpirationDate = DateTime.Now.AddMonths(unicomOption.expire_month);

@@ -1,4 +1,5 @@
 ﻿using ChannelUtility.Message;
+using Common.Json;
 using IoTRulesService.Flow.Node;
 using IoTService;
 using System;
@@ -59,7 +60,7 @@ namespace IoTRulesService.Flow.Builder.Step
             {
                 if (context.IsDebug)
                 {
-                    await context.Print("触发事件" + props.EventId + ",输入数据:" + Newtonsoft.Json.JsonConvert.SerializeObject(inputs));
+                    await context.Print("触发事件" + props.EventId + ",输入数据:" + System.Text.Json.JsonSerializer.Serialize(inputs, MyDefaultTextJsonConfig.DefaultOptions));
                 }
                 await context.Provider.GetService<ServerBusProxy>().SendEvent(productId, deviceId, props.EventId, inputs, null, context.GetStartRuleId());
                 await context.ExcuteNext(RuleResult.Next());

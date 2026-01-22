@@ -1,10 +1,7 @@
-﻿using AuthService.DAL;
-using Common.DataAc;
+﻿using Common.DataAc;
+using Common.Json;
 using Common.Share;
-using JiebaNet.Segmenter;
 using MyAccess.Aop;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +40,7 @@ namespace AuthService.Business
                     {
                         if (con.TargetField == "Signature")
                         {
-                            string val = JsonConvert.DeserializeObject(con.Value) as string;
+                            string val = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             if (val == null)
                             {
                                 throw new Exception("签名值不能为null");
@@ -61,12 +58,11 @@ namespace AuthService.Business
                         }
                         else if (con.TargetField == "Id")
                         {
-                            var tmpval = JsonConvert.DeserializeObject(con.Value);
-                            if (con.Value.IndexOf("{") >= 0)
+                            var tmpval = System.Text.Json.JsonSerializer.Deserialize<object>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
+                            if (tmpval is List<object> selectedlist)
                             {
-                                var selectedlist = tmpval as IEnumerable<object>;
-                                JToken jk = ((JObject)selectedlist.First()).GetValue("id");
-                                con.FinalValue = jk.Value<long>();
+                                var tmpdd = selectedlist.First() as IDictionary<string, object>;
+                                con.FinalValue = Convert.ToInt64(tmpdd["id"]);
                                 con.Compare = "=";
                                 conds.Add(con);
                             }
@@ -86,7 +82,7 @@ namespace AuthService.Business
                         {
                             case "Signature":
                                 {
-                                    string val = JsonConvert.DeserializeObject(acc.Value) as string;
+                                    string val = System.Text.Json.JsonSerializer.Deserialize<string>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (val == null)
                                     {
                                         throw new Exception("签名值不能为null");

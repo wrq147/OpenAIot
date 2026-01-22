@@ -16,6 +16,7 @@ using System.Linq;
 using MyAccess.Aop;
 using ProducerService.DAL;
 using ProducerService.Model;
+using Common.Json;
 
 namespace StorageService.Business
 {
@@ -48,7 +49,7 @@ namespace StorageService.Business
             {
                 return BusResponse<Dictionary<string, object>>.Success(new Dictionary<string, object>());
             }
-            var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<LeaveApplyFlowItem>>(houseInfo.LeaveApplyFlowInitJson);
+            var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<LeaveApplyFlowItem>>(houseInfo.LeaveApplyFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (var fitem in flowitems)
             {
@@ -324,7 +325,7 @@ namespace StorageService.Business
                 }
                 else
                 {
-                    flowItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<LeaveApplyFlowItem>>(useHouse.LeaveApplyFlowInitJson);
+                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<LeaveApplyFlowItem>>(useHouse.LeaveApplyFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                 }
                 LeaveApplyFlowCreate flowcreate = new LeaveApplyFlowCreate();
                 flowcreate.templateId = useHouse.LeaveApplyTemplateId.Value;

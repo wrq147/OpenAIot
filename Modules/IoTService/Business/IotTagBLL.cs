@@ -1,11 +1,9 @@
 ﻿using AuthService.Business;
 using AuthService.Model;
 using ChannelUtility.Tsl;
+using Common.Json;
 using IoTService.DAL;
 using IoTService.Models;
-using MyAccess.Core;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,25 +131,7 @@ namespace IoTService.Business
         {
             if (tag.code == "position")
             {
-                if (val is JObject jobj)
-                {
-                    MZ_IotDevice newdev = new MZ_IotDevice();
-                    newdev.Id = id;
-                    newdev.Lng = jobj.Value<double>("lng");
-                    newdev.Lat = jobj.Value<double>("lat");
-                    newdev.GeoHash = MyAccess.Core.GeoHash.Encode(newdev.Lat.Value, newdev.Lng.Value);
-                    var areaInfo = await _provider.GetService<CodeBLL>().SelectAreaByLatLng(newdev.Lng.Value, newdev.Lat.Value);
-                    if (areaInfo != null)
-                    {
-                        newdev.AreaCode = areaInfo.Id;
-                    }
-                    else
-                    {
-                        newdev.AreaCode = string.Empty;
-                    }
-                    await _deviceDAL.Update(newdev);
-                }
-                else if (val is IDictionary<string, object> dict)
+                if (val is IDictionary<string, object> dict)
                 {
 
                     MZ_IotDevice newdev = new MZ_IotDevice();
@@ -222,13 +202,7 @@ namespace IoTService.Business
                 if (tag.option.type == "geo")
                 {
                     IDictionary<string, object> geodef;
-                    if (val is JObject jobj)
-                    {
-                        geodef = new Dictionary<string, object>();
-                        geodef.Add("lng", jobj.Value<double>("lng"));
-                        geodef.Add("lat", jobj.Value<double>("lat"));
-                    }
-                    else if (val is IDictionary<string, object> dobj)
+                    if (val is IDictionary<string, object> dobj)
                     {
                         geodef = dobj;
                     }
@@ -266,11 +240,11 @@ namespace IoTService.Business
                         updateItemlng.Id = id;
                         updateItemlng.Name = tag.name;
                         updateItemlng.Code = tag.code;
-                        updateItemlng.Value = JsonConvert.SerializeObject(new
+                        updateItemlng.Value = System.Text.Json.JsonSerializer.Serialize(new
                         {
                             lng = deflng,
                             lat = deflat
-                        });
+                        }, MyDefaultTextJsonConfig.DefaultOptions);
                         await _tagDAL.CreateOrUpdate(updateValue);
                     }
                     else
@@ -339,7 +313,7 @@ namespace IoTService.Business
                     }
                     else
                     {
-                        tmpval = JsonConvert.SerializeObject(val);
+                        tmpval = System.Text.Json.JsonSerializer.Serialize(val, MyDefaultTextJsonConfig.DefaultOptions);
                     }
                     MZ_IotDeviceTag updateItem = new MZ_IotDeviceTag();
                     updateItem.Id = id;

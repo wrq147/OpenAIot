@@ -1,6 +1,5 @@
 ﻿using IoTRulesService.Flow.Builder.Step;
 using IoTRulesService.Flow.Node;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,7 +25,7 @@ namespace IoTRulesService.Flow.Builder
         }
         public async Task<RuleExecutor> Build(string json)
         {
-            RootNode root = JsonConvert.DeserializeObject<RootNode>(json, new JsonNodeConverter(), new JsonConditionConverter());
+            RootNode root = System.Text.Json.JsonSerializer.Deserialize<RootNode>(json, RuleJsonConfig.NodeOptions);
             RuleExecutor exe = _provider.GetService<RuleExecutor>();
             BuildRuleflowNode<StartStep>(root, null);
             //添加终点

@@ -2,11 +2,15 @@
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
+using InfluxDB.Client.Api.Domain;
+using IoTService.DAL;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
+using IoTVideoService.PlanUtil;
 using MonitorService.Business;
 using MonitorService.Model;
 using MyAccess.DB.Builder.WhereToSql;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,69 +95,108 @@ namespace IoTVideoService.Business
             return rsp;
         }
 
-        public virtual async Task<BusResponse<string>> Add(MZ_IotRecord data, IUserInfo user)
+        public virtual async Task<BusResponse<int>> Add(MZ_IotRecord data, IUserInfo user)
         {
+            if (user.OrgId <= 0)
+            {
+                return BusResponse<int>.Error(112, "非企业用户无法添加");
+            }
             var snowflake = _provider.GetService<SnowflakeHelper>();
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
-          
-            //if (data.StartWay == 1)
-            //{
-            //    if (string.IsNullOrEmpty(data.TimerCron))
-            //    {
-            //        return BusResponse<string>.Error(131, "Cron表达式不能为空");
-            //    }
-            //    MZ_Job job = new MZ_Job();
-            //    job.concurrent = "1";
-            //    job.createId = 0;
-            //    job.create_time = DateTime.Now;
-            //    job.updateId = 0;
-            //    job.update_time = DateTime.Now;
-            //    job.cron_expression = data.TimerCron;
-            //    job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$id)";
-            //    job.job_group = "DEFAULT";
-            //    job.job_name = "DevPlaneTimer-" + data.Id;
-            //    job.misfire_policy = "0";
-            //    job.status = "0";
+            data.Status = 1;
+            data.SetCreateBy(user);
 
-            //    var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-            //    if (!rs.IsSuccess())
-            //    {
-            //        return BusResponse<string>.Error(rs.Code, rs.Message);
-            //    }
-
-            //    data.TimerJobId = rs.Data;
-            //}
-            //else if (data.StartWay == 2)
-            //{
-            //    data.TimerCron = string.Empty;
-            //    data.TimerJobId = 0;
-            //    if (data.Events == null)
-            //    {
-            //        return BusResponse<string>.Error(122, "请选择设备事件");
-            //    }
-            //    foreach (var evt in data.Events)
-            //    {
-            //        evt.PlaneId = data.Id;
-            //        evt.OrgId = data.OrgId;
-            //    }
-            //    await _devPlaneDAL.AddPlaneEvent(data.Events);
-            //}
-            //else
-            //{
-            //    data.TimerCron = string.Empty;
-            //    data.TimerJobId = 0;
-            //    data.FlowCreatedUserId = 0;
-            //}
-            //data.SetCreateBy(user);
-
-            //foreach (var item in data.Targets)
-            //{
-            //    item.PlaneId = data.Id;
-            //}
-            //await _devPlaneDAL.AddPlaneDevice(data.Targets);
-            //await _devPlaneDAL.Insert(data);
-            return BusResponse<string>.Success();
+            var tasks = PlanTimeParser.Parse(data);
+            if (tasks.Count > 0)
+            {
+                var schedulerFactory = _provider.GetService<ISchedulerFactory>();
+                var scheduler = await schedulerFactory.GetScheduler();
+                await PlanSchedule.CreateJob(data.Id, tasks);
+            }
+            var recordDAL = _provider.GetService<RecordDAL>();
+            return BusResponse<int>.Success(await recordDAL.Insert(data));
         }
+
+        public virtual async Task<BusResponse<int>> Update(MZ_IotRecord data, IUserInfo user)
+        {
+            if (user.OrgId <= 0)
+            {
+                return BusResponse<int>.Error(112, "非企业用户无法修改");
+            }
+            var recordDAL = _provider.GetService<RecordDAL>();
+            var old = await recordDAL.Select(data.Id);
+            if (old == null)
+            {
+                return BusResponse<int>.Error(113, "录像计划不存在");
+            }
+            if (old.OrgId != user.OrgId)
+            {
+                return BusResponse<int>.Error(114, "无权修改当前录像计划");
+            }
+            data.VideoId = null;
+            data.VideoKey = null;
+            if (data.Status != null)
+            {
+                if (data.Status == 0 && old.Status != 0)
+                {
+                    var schedulerFactory = _provider.GetService<ISchedulerFactory>();
+                    var scheduler = await schedulerFactory.GetScheduler();
+                    await PlanSchedule.DeleteJob(data.Id);
+                }
+                else if (data.Status == 1 && old.Status != 1)
+                {
+                    var schedulerFactory = _provider.GetService<ISchedulerFactory>();
+                    var scheduler = await schedulerFactory.GetScheduler();
+                    await PlanSchedule.DeleteJob(data.Id);
+                    MZ_IotRecord newrec = new MZ_IotRecord();
+                    newrec.RecordTimeType = data.RecordTimeType ?? old.RecordTimeType;
+                    newrec.TimeConfig = data.TimeConfig ?? old.TimeConfig;
+                    newrec.WeekConfig = data.WeekConfig ?? old.WeekConfig;
+                    var tasks = PlanTimeParser.Parse(newrec);
+                    if (tasks.Count > 0)
+                    {
+                        await PlanSchedule.CreateJob(data.Id, tasks);
+                    }
+                }
+            }
+
+            return BusResponse<int>.Success(await recordDAL.Update(data));
+        }
+
+        public virtual async Task<BusResponse<int>> Delete(string id, IUserInfo user)
+        {
+            if (user.OrgId <= 0)
+            {
+                return BusResponse<int>.Error(112, "非企业用户无法删除");
+            }
+            try
+            {
+                var recordDAL = _provider.GetService<RecordDAL>();
+                var info = await recordDAL.Select(id);
+                if (info == null)
+                {
+                    return BusResponse<int>.Error(111, "计划不存在");
+                }
+
+                var schedulerFactory = _provider.GetService<ISchedulerFactory>();
+                var scheduler = await schedulerFactory.GetScheduler();
+                await PlanSchedule.DeleteJob(id);
+
+                var logDAL = _provider.GetService<RecordLogDAL>();
+                await logDAL.Delete(x => x.PlanId == id);
+
+                var fileDAL = _provider.GetService<RecordFileDAL>();
+                await fileDAL.Delete(x => x.PlanId == id);
+
+                var rs = await recordDAL.Delete(x => x.OrgId == user.OrgId && x.Id == id);
+                return BusResponse<int>.Success(rs);
+            }
+            catch (Exception ex)
+            {
+                return BusResponse<int>.Error(111, ex.Message);
+            }
+        }
+
     }
 }

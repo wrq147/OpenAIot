@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Common.Json;
 namespace FlowService.FlowNode.Builder
 {
     public class UserTask : WorkflowStep
@@ -31,15 +32,15 @@ namespace FlowService.FlowNode.Builder
             var oldActionUser = context.ExecutionPointer.FindAttribute(ActionUser);
             if (oldActionUser != null)
             {
-                var userList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ActionUser>>(oldActionUser.AttributeValue);
+                var userList = System.Text.Json.JsonSerializer.Deserialize<List<ActionUser>>(oldActionUser.AttributeValue, MyDefaultTextJsonConfig.DefaultOptions);
                 userList.Add(action.User);
-                context.ExecutionPointer.UpdateAttribute(ActionUser, Newtonsoft.Json.JsonConvert.SerializeObject(userList));
+                context.ExecutionPointer.UpdateAttribute(ActionUser, System.Text.Json.JsonSerializer.Serialize(userList, MyDefaultTextJsonConfig.DefaultOptions));
             }
             else
             {
                 var userList = new List<ActionUser>();
                 userList.Add(action.User);
-                context.ExecutionPointer.UpdateAttribute(ActionUser, Newtonsoft.Json.JsonConvert.SerializeObject(userList));
+                context.ExecutionPointer.UpdateAttribute(ActionUser, System.Text.Json.JsonSerializer.Serialize(userList, MyDefaultTextJsonConfig.DefaultOptions));
             }
             return action;
         }

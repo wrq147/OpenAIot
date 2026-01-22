@@ -1,5 +1,4 @@
 ﻿using IoTRulesService.Flow.Builder;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,9 +43,12 @@ namespace IoTRulesService.Flow.Node.Conditions
             {
                 if (codeIsArrary == true)
                 {
-                    if (value is JArray jvals)
+                    if (value is IList<object> jvals)
                     {
-                        comparevals.AddRange(jvals.Values<string>());
+                        foreach (var jitem in jvals)
+                        {
+                            comparevals.Add(Convert.ToString(jitem));
+                        }
                     }
                     else if (value is IEnumerable<string> jvalstrs)
                     {

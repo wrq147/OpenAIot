@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Common.Share;
 using Common;
 using DeveloperService;
 using FlowService.FlowNode.FormFields;
 using FlowService.Model;
-using Newtonsoft.Json;
 using TemplateAction.Route;
 using FlowService.Business;
 using TemplateAction.Core;
 using TemplateAction.Label;
 using DeveloperService.Model;
 using AuthService;
+using FlowService.FlowNode;
 namespace FlowService.Controller
 {
     public class HttpSync : AbstractDeveloperController
@@ -55,7 +53,7 @@ namespace FlowService.Controller
             try
             {
                 var template = await _flowBLL.GetFlowTemplate(query.TemplateId);
-                FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(template.Data.Form.FormFields, new JsonFieldConvert());
+                FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(template.Data.Form.FormFields, FlowJsonSerializerConfig.FieldOptions);
                 List<FormField> fieldlist = new List<FormField>();
                 foreach (var ff in fields)
                 {

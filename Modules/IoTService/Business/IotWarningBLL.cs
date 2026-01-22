@@ -1,22 +1,17 @@
 ﻿using AuthService;
+using ChannelUtility;
+using ChannelUtility.Message;
+using ChannelUtility.Tsl;
+using Common;
+using Common.EventBus;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using ChannelUtility.Tsl;
-using ChannelUtility.Message;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using AuthService.DAL;
-using Quartz.Impl.AdoJobStore.Common;
-using Common.EventBus;
-using Common;
-using InfluxDB.Client.Api.Domain;
-using System.Reactive.Joins;
-using System.Text.RegularExpressions;
-using Minio.DataModel;
 
 namespace IoTService.Business
 {
@@ -126,7 +121,7 @@ namespace IoTService.Business
                 warning.DeviceId = device.Id;
                 warning.WarnNumber = await GenerateWNNumber();
                 warning.Level = evt.Level;
-                warning.MsgInfo = JsonConvert.SerializeObject(rdmsg);
+                warning.MsgInfo = System.Text.Json.JsonSerializer.Serialize(rdmsg, JsonMessageSerializerConfig.DefaultOptions);
                 warning.Name = evt.name;
                 warning.ClearRemark = string.Empty;
                 warning.Status = 0;
@@ -162,7 +157,7 @@ namespace IoTService.Business
                 if (twarnconfig != null && twarnconfig.WarnFlowId > 0)
                 {
                     var users = await _provider.GetService<UserDAL>().SelectManUsers(warning.OrgId.Value);
-                    var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FlowItem>>(twarnconfig.WarnFlowInitJson);
+                    var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<FlowItem>>(twarnconfig.WarnFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                     FlowCreateData flowcreate = new FlowCreateData();
                     flowcreate.templateId = twarnconfig.WarnFlowId.Value;
                     flowcreate.model = new Dictionary<string, object>();

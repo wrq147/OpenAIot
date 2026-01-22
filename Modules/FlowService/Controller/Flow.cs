@@ -1,12 +1,11 @@
 ﻿using AuthService.Controller;
 using Common;
 using Common.DataAc;
-using Common.EventBus;
 using Common.Share;
 using FlowService.Business;
+using FlowService.FlowNode;
 using FlowService.FlowNode.FormFields;
 using FlowService.Model;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -128,7 +127,7 @@ namespace FlowService.Controller
                     return this.Error<string>(16, "需要参数TemplateId");
                 }
                 var template = await _flowBLL.GetFlowTemplate(query.TemplateId);
-                FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(template.Data.Form.FormFields, new JsonFieldConvert());
+                FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(template.Data.Form.FormFields, FlowJsonSerializerConfig.FieldOptions);
                 List<FormField> fieldlist = new List<FormField>();
                 foreach (var ff in fields)
                 {

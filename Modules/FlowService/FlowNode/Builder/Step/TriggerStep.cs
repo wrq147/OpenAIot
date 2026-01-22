@@ -1,17 +1,13 @@
 ﻿using AuthService;
 using Common.EventBus;
-using Common.Share;
+using Common.Json;
 using FlowService.Business;
 using FlowService.DAL;
 using FlowService.Model;
 using Jint;
 using Jint.Native;
-using MonitorService;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,7 +59,7 @@ namespace FlowService.FlowNode.Builder.Step
                 }
                 if (props.http.contentType == "JSON")
                 {
-                    req.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(reqparams), Encoding.UTF8, "application/json");
+                    req.Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(reqparams, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8, "application/json");
                 }
                 else if (props.http.contentType == "FORM")
                 {
@@ -86,7 +82,7 @@ namespace FlowService.FlowNode.Builder.Step
                             var res = Encoding.UTF8.GetString(responseBytes);
                             var okres = await Task.Run(() =>
                             {
-                                return engine.Invoke("handlerOk", JsValue.FromObject(engine, Newtonsoft.Json.JsonConvert.DeserializeObject(res)));
+                                return engine.Invoke("handlerOk", res);
                             });
 
                             if (!okres.AsBoolean())
@@ -152,7 +148,7 @@ namespace FlowService.FlowNode.Builder.Step
                 HashSet<long> tmptriset = null;
                 if (tmptrilog != null && !string.IsNullOrEmpty(tmptrilog.TemplateIdSet))
                 {
-                    tmptriset = Newtonsoft.Json.JsonConvert.DeserializeObject<HashSet<long>>(tmptrilog.TemplateIdSet);
+                    tmptriset = System.Text.Json.JsonSerializer.Deserialize<HashSet<long>>(tmptrilog.TemplateIdSet, MyDefaultTextJsonConfig.DefaultOptions);
                     if (tmptriset.Contains(this.props.flow.templateId))
                     {
                         throw new Exception("无法重复创建相同模板的子流程02");
@@ -209,7 +205,7 @@ namespace FlowService.FlowNode.Builder.Step
                     tmptriset = new HashSet<long>();
                 }
                 tmptriset.Add(context.Workflow.TemplateId.Value);
-                tmpt.TemplateIdSet = Newtonsoft.Json.JsonConvert.SerializeObject(tmptriset);
+                tmpt.TemplateIdSet = System.Text.Json.JsonSerializer.Serialize(tmptriset, MyDefaultTextJsonConfig.DefaultOptions);
                 await trilogDAL.Insert(tmpt);
                 if (context.FormItems.TryGetValue("@from", out object fromnumber))
                 {

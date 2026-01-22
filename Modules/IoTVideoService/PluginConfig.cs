@@ -5,9 +5,11 @@ using IoTRulesService.DataParser;
 using IoTService.Business;
 using IoTVideoService.Business;
 using IoTVideoService.DAL;
+using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Configuration;
 using MonitorService.Business;
 using MonitorService.Model;
+using MonitorService.Util;
 using System;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -23,6 +25,7 @@ namespace IoTVideoService
             services.AddBLL<VideoSourceBLL>();
             services.AddBLL<PtzBLL>();
             services.AddDAL<VideoSourceDAL>();
+            services.AddSingleton<PlanConcurrentJob>();
             services.Configure<VideoOption>(config.GetSection("IoTVideoService"));
         }
         private ITAServiceProvider _provider;
@@ -55,6 +58,9 @@ namespace IoTVideoService
                         await jobBLL.InsertJob(devjob);
                     }
                 }
+
+                //初始化录像计划定时器
+                await PlanSchedule.InitScheduler(app.ServiceProvider);
             });
 
             plg.RegisterQuartzTask();

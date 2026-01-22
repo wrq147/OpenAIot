@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Json;
 using Common.Share;
 using MessageService.DAL;
 using MessageService.Model;
@@ -34,18 +35,18 @@ namespace MessageService.Business
             var tmpconfig = await _provider.GetService<MessageConfig>().GetJsonConfig();
             long timestamp = MyAccess.Core.TypeConvert.Time2Unix(DateTime.Now);
             string encodesign = MyAccess.Core.Crypter.SHA256(tmpconfig.push_appkey + timestamp + tmpconfig.push_mastersecret, Encoding.UTF8);
-            string newjson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            string newjson = System.Text.Json.JsonSerializer.Serialize(new
             {
                 sign = encodesign,
                 timestamp = timestamp,
                 appkey = tmpconfig.push_appkey
-            });
+            }, MyDefaultTextJsonConfig.DefaultOptions);
             int trycount = 0;
             bool isSuccess = false;
             while (!isSuccess && trycount < 4)
             {
                 var rsp = await HttpHelper.Instance.PostJsonAsync($"https://restapi.getui.com/v2/{tmpconfig.push_appid}/auth", newjson, Encoding.UTF8);
-                var bar = Newtonsoft.Json.JsonConvert.DeserializeObject<PushAuthResponse>(rsp);
+                var bar = System.Text.Json.JsonSerializer.Deserialize<PushAuthResponse>(rsp, MyDefaultTextJsonConfig.DefaultOptions);
                 if (bar != null && bar.code == 0)
                 {
                     isSuccess = true;
@@ -71,7 +72,7 @@ namespace MessageService.Business
             }
 
             var tmpconfig = await _provider.GetService<MessageConfig>().GetJsonConfig();
-            string newjson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            string newjson = System.Text.Json.JsonSerializer.Serialize(new
             {
                 request_id = MyAccess.Core.StringTool.GetGUID(),
                 audience = new
@@ -88,12 +89,12 @@ namespace MessageService.Business
                         payload = payload
                     }
                 }
-            });
+            }, MyDefaultTextJsonConfig.DefaultOptions);
             var authToken = await _provider.GetService<GeneralRedisHelper>().StringGetAsync(PUSH_AUTH_TOKEN);
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("token", authToken);
             var rsp = await HttpHelper.Instance.PostJsonWithHeaderAsync($"https://restapi.getui.com/v2/{tmpconfig.push_appid}/push/single/cid", newjson, headers, Encoding.UTF8);
-            var spres = Newtonsoft.Json.JsonConvert.DeserializeObject<SinglePushResponse>(rsp);
+            var spres = System.Text.Json.JsonSerializer.Deserialize<SinglePushResponse>(rsp, MyDefaultTextJsonConfig.DefaultOptions);
             if (spres != null && spres.code == 0)
             {
                 return BusResponse<string>.Success();

@@ -3,7 +3,6 @@ using Common.EventBus;
 using FlowService.Business;
 using FlowService.DAL;
 using MonitorService.Model;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,12 +50,13 @@ namespace FlowService.FlowNode.Builder.Step
                         {
                             foreach (var selectUser in selectedlist)
                             {
-                                JToken jk = ((JObject)selectUser).GetValue("id");
+                                var nodeobj = selectUser as IDictionary<string, object>;
+                                var jk = nodeobj["id"];
                                 if (jk == null)
                                 {
                                     continue;
                                 }
-                                string newdevid = jk.Value<string>();
+                                string newdevid = Convert.ToString(jk);
                                 var flowDeviceDAL = context.ServiceProvider.GetService<FlowDeviceDAL>();
                                 var devinfo = await flowDeviceDAL.QueryDeviceInfo(newdevid);
                                 if (devinfo != null && devinfo.OwnerOrgId > 0)
@@ -92,12 +92,13 @@ namespace FlowService.FlowNode.Builder.Step
                             {
                                 foreach (var selectUser in selectedlist)
                                 {
-                                    JToken jk = ((JObject)selectUser).GetValue("id");
+                                    var nodeobj = selectUser as IDictionary<string, object>;
+                                    var jk = nodeobj["id"];
                                     if (jk == null)
                                     {
                                         continue;
                                     }
-                                    string newuid = jk.Value<string>();
+                                    string newuid = Convert.ToString(jk);
                                     if (string.IsNullOrEmpty(this.AssignedPrincipal))
                                     {
                                         this.AssignedPrincipal = newuid;

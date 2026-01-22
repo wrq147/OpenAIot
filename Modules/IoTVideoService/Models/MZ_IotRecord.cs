@@ -49,10 +49,6 @@ namespace IoTVideoService.Models
         /// </summary>
         public string TimeConfig { get; set; }
         /// <summary>
-        /// 计划关联的定时器JobId
-        /// </summary>
-        public long? TimerJobId { get; set; }
-        /// <summary>
         /// 状态：0-禁用，1-启用
         /// </summary>
         public int? Status { get; set; }

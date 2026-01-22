@@ -1,5 +1,6 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Tsl;
+using Common.Json;
 using Common.Share;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
@@ -7,7 +8,6 @@ using InfluxDB.Client.Writes;
 using IoTService.DAL;
 using IoTService.Models;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -103,7 +103,7 @@ namespace IoTService.Business
             {
                 throw new Exception("请配置协议的存储方式");
             }
-            var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
+            var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(product.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
             if (string.IsNullOrEmpty(storageConfig.url))
             {
                 throw new Exception("请配置协议的存储方式");
@@ -221,7 +221,7 @@ namespace IoTService.Business
                             {
                                 continue;
                             }
-                            var point = PointData.Measurement("device").Tag("DeviceId", dtuId).Tag("DxId", dId).Field("geo#" + kvp.Key, JsonConvert.SerializeObject(kvp.Value.val)).Timestamp(utcnow, WritePrecision.Ns);
+                            var point = PointData.Measurement("device").Tag("DeviceId", dtuId).Tag("DxId", dId).Field("geo#" + kvp.Key, System.Text.Json.JsonSerializer.Serialize(kvp.Value.val, MyDefaultTextJsonConfig.DefaultOptions)).Timestamp(utcnow, WritePrecision.Ns);
                             pointlist.Add(point);
                         }
                         break;
@@ -260,7 +260,7 @@ namespace IoTService.Business
             {
                 return BusResponse<string>.Error(102, "请配置协议的存储方式");
             }
-            var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
+            var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(product.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
             if (string.IsNullOrEmpty(storageConfig.url))
             {
                 return BusResponse<string>.Error(103, "请配置协议的存储方式");
@@ -334,7 +334,7 @@ namespace IoTService.Business
             }
             if (storageConfig == null)
             {
-                storageConfig = JsonConvert.DeserializeObject<InfluxOption>(prod.StorageConfig);
+                storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(prod.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
                 if (storageConfig == null || storageConfig.enable != "1")
                 {
                     return BusResponse<List<Out_MergeItem>>.Error(114, "未设置存储配置url");
@@ -532,7 +532,7 @@ namespace IoTService.Business
                         }
                         catch (Exception ex)
                         {
-                            _log.LogError("influxdb错误" + Newtonsoft.Json.JsonConvert.SerializeObject(fluxTable[i].Records[j]));
+                            _log.LogError("influxdb错误" + System.Text.Json.JsonSerializer.Serialize(fluxTable[i].Records[j], MyDefaultTextJsonConfig.DefaultOptions));
                         }
 
                     }
@@ -658,7 +658,7 @@ namespace IoTService.Business
                 throw new Exception("请配置协议的存储方式");
             }
 
-            var storageConfig = JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
+            var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(product.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
             if (string.IsNullOrEmpty(storageConfig.url))
             {
                 throw new Exception("请配置协议的存储方式");
@@ -869,7 +869,7 @@ namespace IoTService.Business
                                 {
                                     Name = pp.name,
                                     Code = pp.code,
-                                    Value = JsonConvert.DeserializeObject(values["_value"].ToString()),
+                                    Value = System.Text.Json.JsonSerializer.Deserialize<object>(values["_value"].ToString(), MyDefaultTextJsonConfig.DefaultOptions),
                                     Unit = string.Empty,
                                     UpdatedOn = time,
                                     OptionType = pp.option.type,

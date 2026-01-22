@@ -18,7 +18,7 @@ namespace ChannelUtility.Message
         /// <summary>
         /// 运动区块占比
         /// </summary>
-        public float MotionRatio { get; set; }
+        public float MRatio { get; set; }
         /// <summary>
         /// 是否启用绘制
         /// </summary>

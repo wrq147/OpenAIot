@@ -1,5 +1,6 @@
 ﻿using AuthService.Model;
 using Common;
+using Common.Json;
 using Common.Share;
 using MyAccess.Core;
 using System;
@@ -108,7 +109,7 @@ namespace AuthService
                         scope.UserList = null;
                         break;
                     case "2":
-                        scope.DeptList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<long>>(r.CustomScope);
+                        scope.DeptList = System.Text.Json.JsonSerializer.Deserialize<List<long>>(r.CustomScope, MyDefaultTextJsonConfig.DefaultOptions);
                         break;
                     case "3":
                         scope.DeptList = new List<long>();
@@ -336,8 +337,8 @@ namespace AuthService
                 routerPath = routerPath.Replace("http://", "", true, System.Globalization.CultureInfo.CurrentCulture);
                 routerPath = routerPath.Replace("https://", "", true, System.Globalization.CultureInfo.CurrentCulture);
             }
-            else if(0 == menu.parent_id && "M".Equals(menu.menu_type) && !menu.path.IsHttp())
-            {      
+            else if (0 == menu.parent_id && "M".Equals(menu.menu_type) && !menu.path.IsHttp())
+            {
                 // 非外链并且是一级目录（类型为目录）
                 routerPath = "/" + menu.path;
             }

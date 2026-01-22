@@ -1,8 +1,8 @@
 ﻿using AuthService;
-using AuthService.Controller;
 using AuthService.Model;
 using Common;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using Microsoft.Extensions.Logging;
 using MonitorService.Business;
@@ -16,7 +16,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
 using TemplateAction.Core;
 using WeiXinService.DAL;
 using WeiXinService.Model;
@@ -253,7 +252,7 @@ namespace WeiXinService.Business
                 }
                 else
                 {
-                    deptDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, long>>(data.DeptDict);
+                    deptDict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<long, long>>(data.DeptDict, MyDefaultTextJsonConfig.DefaultOptions);
                 }
                 Dictionary<string, long> userDict;
                 if (string.IsNullOrEmpty(data.MemDict))
@@ -262,7 +261,7 @@ namespace WeiXinService.Business
                 }
                 else
                 {
-                    userDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, long>>(data.MemDict);
+                    userDict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, long>>(data.MemDict, MyDefaultTextJsonConfig.DefaultOptions);
                 }
                 var apiHelper = _serviceProvider.GetService<WxApiHelper>();
                 var accountInfo = await apiHelper.AccountInfo(data.AppId);
@@ -432,7 +431,7 @@ namespace WeiXinService.Business
 
                     MZ_CorpSync newSync = new MZ_CorpSync();
                     newSync.AppId = task.AppId;
-                    newSync.DeptDict = Newtonsoft.Json.JsonConvert.SerializeObject(deptDict);
+                    newSync.DeptDict = System.Text.Json.JsonSerializer.Serialize(deptDict, MyDefaultTextJsonConfig.DefaultOptions);
                     newSync.UpdatedOn = DateTime.Now;
                     await _corpSyncDAL.Update(newSync);
                     // 完成
@@ -530,7 +529,7 @@ namespace WeiXinService.Business
 
                     MZ_CorpSync newSync = new MZ_CorpSync();
                     newSync.AppId = task.AppId;
-                    newSync.DeptDict = Newtonsoft.Json.JsonConvert.SerializeObject(deptDict);
+                    newSync.DeptDict = System.Text.Json.JsonSerializer.Serialize(deptDict, MyDefaultTextJsonConfig.DefaultOptions);
                     newSync.UpdatedOn = DateTime.Now;
                     await _corpSyncDAL.Update(newSync);
 
@@ -931,7 +930,7 @@ namespace WeiXinService.Business
 
                     MZ_CorpSync newSync = new MZ_CorpSync();
                     newSync.AppId = task.AppId;
-                    newSync.MemDict = Newtonsoft.Json.JsonConvert.SerializeObject(userDict);
+                    newSync.MemDict = System.Text.Json.JsonSerializer.Serialize(userDict, MyDefaultTextJsonConfig.DefaultOptions);
                     newSync.UpdatedOn = DateTime.Now;
                     await _corpSyncDAL.Update(newSync);
 
@@ -987,7 +986,7 @@ namespace WeiXinService.Business
 
                     MZ_CorpSync newSync = new MZ_CorpSync();
                     newSync.AppId = task.AppId;
-                    newSync.MemDict = Newtonsoft.Json.JsonConvert.SerializeObject(userDict);
+                    newSync.MemDict = System.Text.Json.JsonSerializer.Serialize(userDict, MyDefaultTextJsonConfig.DefaultOptions);
                     newSync.UpdatedOn = DateTime.Now;
                     await _corpSyncDAL.Update(newSync);
 

@@ -4,7 +4,6 @@ using FlowService.DAL;
 using FlowService.FlowNode;
 using FlowService.FlowNode.FormFields;
 using FlowService.Model;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,16 +13,10 @@ using FlowService.FlowNode.Builder;
 using Common.EventBus;
 using MonitorService.Model;
 using MonitorService.Business;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Http.Features;
 using Common;
 using FlowService.FlowNode.Builder.Step;
-using AuthService.DAL;
-using Esprima.Ast;
-using Quartz.Util;
 using Microsoft.Extensions.Logging;
-using System.Collections.Specialized;
+using Common.Json;
 
 namespace FlowService.Business
 {
@@ -142,7 +135,7 @@ namespace FlowService.Business
                 ApprovalTask approval = nodeForm.Step as ApprovalTask;
                 if (approval != null)
                 {
-                    FlowTemplateNotice notice = Newtonsoft.Json.JsonConvert.DeserializeObject<FlowTemplateNotice>(nodeForm.Flow.notify);
+                    FlowTemplateNotice notice = System.Text.Json.JsonSerializer.Deserialize<FlowTemplateNotice>(nodeForm.Flow.notify, MyDefaultTextJsonConfig.DefaultOptions);
                     if (notice == null)
                     {
                         return;
@@ -198,7 +191,7 @@ namespace FlowService.Business
                 OperatorTask operatorTask = nodeForm.Step as OperatorTask;
                 if (operatorTask != null)
                 {
-                    FlowTemplateNotice notice = Newtonsoft.Json.JsonConvert.DeserializeObject<FlowTemplateNotice>(nodeForm.Flow.notify);
+                    FlowTemplateNotice notice = System.Text.Json.JsonSerializer.Deserialize<FlowTemplateNotice>(nodeForm.Flow.notify, MyDefaultTextJsonConfig.DefaultOptions);
                     if (notice == null)
                     {
                         return;
@@ -414,7 +407,7 @@ namespace FlowService.Business
                 return BusResponse<object>.Error(29, "当前流程无法直接发起");
             }
 
-            RootNode rootNode = JsonConvert.DeserializeObject<RootNode>(template.FlowJson, new JsonFlowNodeConverter(), new JsonFlowConditionConverter());
+            RootNode rootNode = System.Text.Json.JsonSerializer.Deserialize<RootNode>(template.FlowJson, FlowJsonSerializerConfig.NodeOptions);
             if (rootNode == null)
             {
                 return BusResponse<object>.Error(21, "模板流程错误");
@@ -469,7 +462,7 @@ namespace FlowService.Business
             {
                 return BusResponse<object>.Error(22, "表单不存在");
             }
-            FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(form.FormFields, new JsonFieldConvert());
+            FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(form.FormFields, FlowJsonSerializerConfig.FieldOptions);
 
 
             if (state == 2)
@@ -507,17 +500,18 @@ namespace FlowService.Business
                 object val;
                 if (model.TryGetValue(u.id, out val))
                 {
-                    var selectedlist = val as IEnumerable<object>;
+                    var selectedlist = val as IList<object>;
                     if (selectedlist != null)
                     {
                         foreach (var node in selectedlist)
                         {
-                            JToken jk = ((JObject)node).GetValue("id");
+                            var nodeobj = node as IDictionary<string, object>;
+                            var jk = nodeobj["id"];
                             if (jk == null)
                             {
                                 continue;
                             }
-                            uids.Add(jk.Value<long>());
+                            uids.Add(Convert.ToInt64(jk));
                         }
                     }
 

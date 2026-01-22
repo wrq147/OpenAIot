@@ -1,4 +1,5 @@
 ﻿using AuthService;
+using Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace MessageService
         public async Task<MessageJson> GetJsonConfig()
         {
             var json = await _serviceProvider.GetService<ConfigBLL>().SelectConfigByKey("system.message");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<MessageJson>(json);
+            return System.Text.Json.JsonSerializer.Deserialize<MessageJson>(json, MyDefaultTextJsonConfig.DefaultOptions);
         }
     }
     public class MessageJson

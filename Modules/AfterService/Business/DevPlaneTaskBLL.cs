@@ -16,7 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using FlowService.FlowNode.FormFields;
-using Newtonsoft.Json;
+using Common.Json;
+using FlowService.FlowNode;
 
 namespace AfterService.Business
 {
@@ -99,7 +100,7 @@ namespace AfterService.Business
                 List<Out_FlowForm> out_FlowForms = await formDAL.SelectFormByFlowId(tflowIds);
                 foreach (var tmpflowForm in out_FlowForms)
                 {
-                    FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(tmpflowForm.FormFields, new JsonFieldConvert());
+                    FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(tmpflowForm.FormFields, FlowJsonSerializerConfig.FieldOptions);
                     var fieldDict = FormField.ToFieldDict(fields);
                     var tmpdatas = dataItems.Where(x => x.FlowId == tmpflowForm.FlowId);
                     Dictionary<string, string> dictrs = new Dictionary<string, string>();
@@ -217,7 +218,7 @@ namespace AfterService.Business
                 return BusResponse<Dictionary<string, object>>.Error(113, "计划的设备不存在");
             }
 
-            var flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DevFlowItem>>(planeType.FlowInitJson);
+            var flowitems = System.Text.Json.JsonSerializer.Deserialize<List<DevFlowItem>>(planeType.FlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
             Dictionary<string, object> dict = new Dictionary<string, object>();
             var user = _provider.GetUser();
             MZ_AdminInfo submitUser = await _provider.GetService<UserDAL>().GetAdminById(user.UserId);
@@ -324,7 +325,7 @@ namespace AfterService.Business
                 }
                 else
                 {
-                    flowitems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DevFlowItem>>(planeType.FlowInitJson);
+                    flowitems = System.Text.Json.JsonSerializer.Deserialize<List<DevFlowItem>>(planeType.FlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                 }
                 flowcreate.model = addform.model;
                 flowcreate.assign = addform.assign;
@@ -355,7 +356,7 @@ namespace AfterService.Business
                 var rsp = await BusUtility.Call("NewFlowTask", flowcreate);
                 if (rsp.IsSuccess())
                 {
-                   
+
                     data.FlowId = rsp.GetResult<long>();
                 }
                 else
@@ -465,7 +466,7 @@ namespace AfterService.Business
                         //超期通知
                         if (!string.IsNullOrEmpty(planeType.ExpireNotices))
                         {
-                            var expireNotices = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ExpireNoticeItem>>(planeType.ExpireNotices);
+                            var expireNotices = System.Text.Json.JsonSerializer.Deserialize<List<ExpireNoticeItem>>(planeType.ExpireNotices, MyDefaultTextJsonConfig.DefaultOptions);
                             int curidx = task.NoticeCount.Value;
                             if (expireNotices.Count > curidx)
                             {

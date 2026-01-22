@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlowService.FlowNode.FormFields
 {
-    public abstract class BaseProps
+    public class BaseProps
     {
         /// <summary>
         /// 判断是否必需

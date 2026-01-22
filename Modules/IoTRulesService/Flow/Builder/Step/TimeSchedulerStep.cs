@@ -1,4 +1,5 @@
-﻿using IoTRulesService.Flow.Node;
+﻿using Common.Json;
+using IoTRulesService.Flow.Node;
 using IoTService;
 using IoTService.Models;
 using Jint;
@@ -285,7 +286,7 @@ namespace IoTRulesService.Flow.Builder.Step
                                 {
                                     try
                                     {
-                                        var expdict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(actionItem.express);
+                                        var expdict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(actionItem.express, MyDefaultTextJsonConfig.DefaultOptions);
                                         foreach (var kvp in expdict)
                                         {
                                             if (inputs.ContainsKey(kvp.Key))

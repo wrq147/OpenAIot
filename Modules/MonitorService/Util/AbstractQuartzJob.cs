@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Json;
 using Microsoft.Extensions.Logging;
 using MonitorService.Business;
 using MonitorService.DAL;
@@ -29,7 +30,7 @@ namespace MonitorService.Util
         public async Task Execute(IJobExecutionContext context)
         {
             string objstr = context.JobDetail.JobDataMap.GetString(ScheduleUtils.TASK_PROPERTIES);
-            MZ_Job job = Newtonsoft.Json.JsonConvert.DeserializeObject<MZ_Job>(objstr);
+            MZ_Job job = System.Text.Json.JsonSerializer.Deserialize<MZ_Job>(objstr, MyDefaultTextJsonConfig.DefaultOptions);
             try
             {
                 Before(context, job);

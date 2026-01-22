@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AuthService.Model;
 using Common;
+using Common.Json;
 using Common.Share;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
 
@@ -111,7 +110,7 @@ namespace AuthService
                     httpReq.Headers.TryAddWithoutValidation(AuthConstant.CONFIG_TOKEN_KEY, _remoteToken);
 
                     string rt = await HttpHelper.Instance.SendAsync(httpReq);
-                    var scopers = Newtonsoft.Json.JsonConvert.DeserializeObject<DefaultAjaxResult<List<DataScope>>>(rt);
+                    var scopers = System.Text.Json.JsonSerializer.Deserialize<DefaultAjaxResult<List<DataScope>>>(rt, MyDefaultTextJsonConfig.DefaultOptions);
                     if (scopers.code == 0)
                     {
                         scopeList = scopers.data;

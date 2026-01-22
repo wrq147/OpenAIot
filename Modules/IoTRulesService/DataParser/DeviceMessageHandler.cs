@@ -98,7 +98,7 @@ namespace IoTRulesService.DataParser
                                 //存储历史数据
                                 if (!string.IsNullOrEmpty(product.StorageConfig))
                                 {
-                                    InfluxOption storageConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<InfluxOption>(product.StorageConfig);
+                                    InfluxOption storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(product.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (storageConfig != null && storageConfig.enable == "1")
                                     {
                                         await _provider.GetService<IotInfluxBLL>().SaveOnline(rs.ProductId, rs.DeviceId, devicelist[0].Id, storageConfig, nowTime);
@@ -150,11 +150,11 @@ namespace IoTRulesService.DataParser
                                                 var tmptagii = model.Model.tags.Where(x => x.code == tagitem.Key).FirstOrDefault();
                                                 if (tmptagii != null && !dic.ContainsKey(tmptagii.mapcode))
                                                 {
-                                                    dic.Add(tmptagii.mapcode, Newtonsoft.Json.JsonConvert.SerializeObject(new DevicePropertyValue()
+                                                    dic.Add(tmptagii.mapcode, System.Text.Json.JsonSerializer.Serialize(new DevicePropertyValue()
                                                     {
                                                         val = tagitem.Value,
                                                         date = nowTime
-                                                    }));
+                                                    }, MyDefaultTextJsonConfig.DefaultOptions));
                                                 }
                                             }
                                         }
@@ -881,7 +881,7 @@ namespace IoTRulesService.DataParser
                                     //添加通知
                                     if (product != null && !string.IsNullOrEmpty(product.NoticeWay))
                                     {
-                                        var noticeList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WarningNoticeItem>>(product.NoticeWay);
+                                        var noticeList = System.Text.Json.JsonSerializer.Deserialize<List<WarningNoticeItem>>(product.NoticeWay, MyDefaultTextJsonConfig.DefaultOptions);
                                         await ExcuteNotice(_provider, evtinfo, device, noticeList, warnlist, extInfo);
                                     }
                                 }
@@ -1079,7 +1079,7 @@ namespace IoTRulesService.DataParser
 
                 if (!string.IsNullOrEmpty(rule.HttpParams))
                 {
-                    var paramlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BaseInputValue>>(rule.HttpParams);
+                    var paramlist = System.Text.Json.JsonSerializer.Deserialize<List<BaseInputValue>>(rule.HttpParams, TslModel.TSLOptions);
                     if (paramlist.Count > 0)
                     {
                         foreach (var item in paramlist)

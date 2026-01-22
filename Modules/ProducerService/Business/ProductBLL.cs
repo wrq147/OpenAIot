@@ -5,7 +5,6 @@ using System;
 using Common;
 using Common.IdGenerator;
 using Common.Share;
-using Newtonsoft.Json;
 using ProducerService.DAL;
 using ProducerService.Model;
 using System.Collections.Generic;

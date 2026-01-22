@@ -2099,6 +2099,16 @@
             图片
             </summary>
         </member>
+        <member name="M:AuthService.Fields.JsonFieldConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据type字段创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:AuthService.Fields.JsonFieldConverter.Write(System.Text.Json.Utf8JsonWriter,AuthService.Fields.FieldBase,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
+            </summary>
+        </member>
         <member name="T:AuthService.Fields.NumberField">
             <summary>
             数字

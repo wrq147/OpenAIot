@@ -12,6 +12,7 @@ using MailKit.Security;
 using TemplateAction.Core;
 using AuthService;
 using Microsoft.AspNetCore.Mvc.Razor.Infrastructure;
+using Common.Json;
 
 namespace EmailService
 {
@@ -31,7 +32,7 @@ namespace EmailService
         public async Task<EmailConfig> GetEmailConfig()
         {
             var tmpstr = await _serviceProvider.GetService<ConfigBLL>().SelectConfigByKey("system.email");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<EmailConfig>(tmpstr);
+            return System.Text.Json.JsonSerializer.Deserialize<EmailConfig>(tmpstr, MyDefaultTextJsonConfig.DefaultOptions);
         }
         public async Task<bool> SendPlainEmail(string to, string subject, string message, params string[] attachments)
         {

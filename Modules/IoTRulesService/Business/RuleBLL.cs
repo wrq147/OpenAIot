@@ -143,7 +143,7 @@ namespace IoTRulesService.Business
                             }
                         }
 
-                        var paramlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BaseInputValue>>(evt.HttpParams);
+                        var paramlist = System.Text.Json.JsonSerializer.Deserialize<List<BaseInputValue>>(evt.HttpParams, TslModel.TSLOptions);
                         foreach (var item in paramlist)
                         {
                             newparamType.Add(item.code, item.type);
@@ -257,7 +257,7 @@ namespace IoTRulesService.Business
 
                 if (!string.IsNullOrEmpty(template.HttpParams))
                 {
-                    var paramlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BaseInputValue>>(template.HttpParams);
+                    var paramlist = System.Text.Json.JsonSerializer.Deserialize<List<BaseInputValue>>(template.HttpParams, TslModel.TSLOptions);
                     if (template.TriggerWay == 2)
                     {
                         var tparamDict = paramlist.ToDictionary((x) => x.code);
@@ -377,7 +377,7 @@ namespace IoTRulesService.Business
             {
                 if (!string.IsNullOrEmpty(item.HttpParams))
                 {
-                    var paramlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BaseInputValue>>(item.HttpParams);
+                    var paramlist = System.Text.Json.JsonSerializer.Deserialize<List<BaseInputValue>>(item.HttpParams, TslModel.TSLOptions);
                     if (paramlist.Where(x => !x.readOnly).Any())
                     {
                         item.EnableParam = true;
@@ -538,7 +538,7 @@ namespace IoTRulesService.Business
 
             if (!string.IsNullOrEmpty(data.HttpParams))
             {
-                var paramlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BaseInputValue>>(data.HttpParams);
+                var paramlist = System.Text.Json.JsonSerializer.Deserialize<List<BaseInputValue>>(data.HttpParams, TslModel.TSLOptions);
                 foreach (var paramitem in paramlist)
                 {
                     if (paramitem.defval != null)
@@ -558,7 +558,7 @@ namespace IoTRulesService.Business
                     }
 
                 }
-                data.HttpParams = Newtonsoft.Json.JsonConvert.SerializeObject(paramlist);
+                data.HttpParams = System.Text.Json.JsonSerializer.Serialize(paramlist, TslModel.TSLOptions);
             }
 
             data.TriggerWay = null;

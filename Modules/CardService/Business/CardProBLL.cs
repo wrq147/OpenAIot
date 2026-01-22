@@ -2,6 +2,7 @@
 using CardService.DAL;
 using CardService.Model;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using System;
 using System.Collections.Generic;
@@ -90,7 +91,7 @@ namespace CardService.Business
             }
             if (!string.IsNullOrEmpty(data.Detail))
             {
-                var itemlist = Newtonsoft.Json.JsonConvert.DeserializeObject<Tx_Pro_Item[]>(data.Detail);
+                var itemlist = System.Text.Json.JsonSerializer.Deserialize<Tx_Pro_Item[]>(data.Detail, MyDefaultTextJsonConfig.DefaultOptions);
                 if (itemlist.Length == 0)
                 {
                     return BusResponse<int>.Error(114, "产品详情不能为空");
@@ -129,7 +130,7 @@ namespace CardService.Business
 
             if (!string.IsNullOrEmpty(data.Detail))
             {
-                var itemlist = Newtonsoft.Json.JsonConvert.DeserializeObject<Tx_Pro_Item[]>(data.Detail);
+                var itemlist = System.Text.Json.JsonSerializer.Deserialize<Tx_Pro_Item[]>(data.Detail, MyDefaultTextJsonConfig.DefaultOptions);
                 if (itemlist.Length == 0)
                 {
                     return BusResponse<int>.Error(114, "产品详情不能为空");

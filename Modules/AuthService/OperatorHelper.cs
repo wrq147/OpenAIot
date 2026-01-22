@@ -2,13 +2,13 @@
 using Common.Share;
 using Common.UserAgent;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
+using Common.Json;
 
 namespace AuthService
 {
@@ -67,7 +67,7 @@ namespace AuthService
             try
             {
                 string decode = MyAccess.Core.Crypter.DecodeBase64(tk, Encoding.UTF8);
-                ct = JsonConvert.DeserializeObject<Data_ClientToken>(decode);
+                ct = System.Text.Json.JsonSerializer.Deserialize<Data_ClientToken>(decode, MyDefaultTextJsonConfig.DefaultOptions);
             }
             catch { }
             return ct;
@@ -169,7 +169,7 @@ namespace AuthService
             await _provider.GetService<GeneralRedisHelper>().StringSetAsync(tkey, savetk, expireTime - DateTime.Now);
             return savetk;
         }
-    
-      
+
+
     }
 }

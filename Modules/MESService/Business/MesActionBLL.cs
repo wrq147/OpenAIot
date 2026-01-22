@@ -1,5 +1,6 @@
 ﻿using Common.DataAc;
 using Common.EventBus;
+using Common.Json;
 using Common.Share;
 using MESService.DAL;
 using MESService.Model;
@@ -44,7 +45,7 @@ namespace MESService.Business
                         if (con.TargetField == "@Number")
                         {
                             con.TargetField = "Number";
-                            con.FinalValue = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(con.Value);
+                            con.FinalValue = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             con.Compare = "=";
                             filterNumber = (string)con.FinalValue;
                             conds.Add(con);
@@ -57,7 +58,7 @@ namespace MESService.Business
                         {
                             case "Status":
                                 {
-                                    var tmpint = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(acc.Value);
+                                    var tmpint = System.Text.Json.JsonSerializer.Deserialize<int?>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (tmpint == null)
                                     {
                                         continue;
@@ -129,7 +130,7 @@ namespace MESService.Business
                         if (con.TargetField == "@Number")
                         {
                             con.TargetField = "Number";
-                            con.FinalValue = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(con.Value);
+                            con.FinalValue = System.Text.Json.JsonSerializer.Deserialize<string>(con.Value, MyDefaultTextJsonConfig.DefaultOptions);
                             con.Compare = "=";
                             filterNumber = (string)con.FinalValue;
                             conds.Add(con);
@@ -142,7 +143,7 @@ namespace MESService.Business
                         {
                             case "Status":
                                 {
-                                    var tmpint = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(acc.Value);
+                                    var tmpint = System.Text.Json.JsonSerializer.Deserialize<int?>(acc.Value, MyDefaultTextJsonConfig.DefaultOptions);
                                     if (tmpint == null)
                                     {
                                         continue;
@@ -186,7 +187,7 @@ namespace MESService.Business
                             await orderBLL.GenerateWorkOrder(planItem);
                         }
                     }
- 
+
                 }
                 return BusResponse<int>.Success(rs);
             }

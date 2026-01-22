@@ -7,6 +7,7 @@ using ChannelUtility.Tsl;
 using Common;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
@@ -17,7 +18,6 @@ using MonitorService;
 using MonitorService.DAL;
 using MyAccess.Aop;
 using MyAccess.DB.Builder.WhereToSql;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -695,7 +695,7 @@ namespace IoTService.Business
             #region 记录日志
             if (res.Data != null)
             {
-                _provider.GetService<OperLogThread>().PushLog($"执行{device.Name}的功能{func.name}", Newtonsoft.Json.JsonConvert.SerializeObject(res.Data));
+                _provider.GetService<OperLogThread>().PushLog($"执行{device.Name}的功能{func.name}", System.Text.Json.JsonSerializer.Serialize(res.Data, MyDefaultTextJsonConfig.DefaultOptions));
             }
             else
             {
@@ -949,7 +949,7 @@ namespace IoTService.Business
                     {
                         continue;
                     }
-                    inputs.Add(kvp.Key, JsonConvert.DeserializeObject<DevicePropertyValue>(kvp.Value));
+                    inputs.Add(kvp.Key, System.Text.Json.JsonSerializer.Deserialize<DevicePropertyValue>(kvp.Value, MyDefaultTextJsonConfig.DefaultOptions));
                 }
 
                 //初始化设备所属信息
@@ -1132,7 +1132,7 @@ namespace IoTService.Business
                     var channelstr = await redis.HashGetAsync<string>("IotChannels", product.NetworkWay);
                     if (channelstr != null)
                     {
-                        var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ChannelConfig>(channelstr);
+                        var config = System.Text.Json.JsonSerializer.Deserialize<ChannelConfig>(channelstr, MyDefaultTextJsonConfig.DefaultOptions);
                         if (config.CanBind)
                         {
                             await updateDAL.InsertDeviceUpdate(data.Id, product.Version.Value, 10, product.OrgId.Value);
@@ -1488,7 +1488,7 @@ namespace IoTService.Business
                             tagVals.Add(tag.code, tag.value.ToString());
                             break;
                         default:
-                            tagVals.Add(tag.code, JsonConvert.DeserializeObject(tag.value.ToString()));
+                            tagVals.Add(tag.code, System.Text.Json.JsonSerializer.Deserialize<object>(tag.value.ToString(), MyDefaultTextJsonConfig.DefaultOptions));
                             break;
                     }
                 }
@@ -1515,7 +1515,7 @@ namespace IoTService.Business
                             tagVals.Add(tag.code, tmptagval.Value);
                             break;
                         default:
-                            tagVals.Add(tag.code, JsonConvert.DeserializeObject(tmptagval.Value));
+                            tagVals.Add(tag.code, System.Text.Json.JsonSerializer.Deserialize<object>(tmptagval.Value, MyDefaultTextJsonConfig.DefaultOptions));
                             break;
                     }
                 }

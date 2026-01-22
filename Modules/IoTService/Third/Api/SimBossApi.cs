@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TemplateAction.Core;
-using Newtonsoft.Json;
 using Common.Share;
 using IoTService.DAL;
+using Common.Json;
 
 namespace IoTService.Third.Api
 {
@@ -30,7 +30,7 @@ namespace IoTService.Third.Api
             }
             else
             {
-                _option = Newtonsoft.Json.JsonConvert.DeserializeObject<SimBossOption>(config.SimBossOption);
+                _option = System.Text.Json.JsonSerializer.Deserialize<SimBossOption>(config.SimBossOption, MyDefaultTextJsonConfig.DefaultOptions);
             }
         }
 
@@ -150,7 +150,7 @@ namespace IoTService.Third.Api
                 String url = UriConstants.API_URL + request.GetUri();
                 SortedDictionary<String, String> paramDic = GetRequestParam(request);
                 result = await Post(url, paramDic);
-                response = JsonConvert.DeserializeObject<SimbossResponse<T>>(result);
+                response = System.Text.Json.JsonSerializer.Deserialize<SimbossResponse<T>>(result, MyDefaultTextJsonConfig.DefaultOptions);
             }
             catch (System.Exception e)
             {

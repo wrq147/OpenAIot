@@ -2,6 +2,7 @@
 using Common;
 using Common.EventBus;
 using Common.IdGenerator;
+using Common.Json;
 using Common.Share;
 using FlowService.DAL;
 using FlowService.FlowNode.Builder.Step;
@@ -9,8 +10,6 @@ using FlowService.FlowNode.FormFields;
 using FlowService.Model;
 using MonitorService.Business;
 using MyAccess.Aop;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,14 +176,14 @@ namespace FlowService.FlowNode.Builder
             flow.update_time = DateTime.Now;
             flow.ExecutionNodes = new List<MZ_Flow_Node>();
             flow.Description = formdata.Template.remark;
-            flow.PersistenceData = Newtonsoft.Json.JsonConvert.SerializeObject(_steps);
+            flow.PersistenceData = System.Text.Json.JsonSerializer.Serialize(_steps, FlowJsonSerializerConfig.StepOptions);
             flow.FormFields = formdata.FormFields;
             flow.TemplateId = formdata.Template.Id;
             flow.notify = formdata.Template.notify;
-            flow.notifyModel = Newtonsoft.Json.JsonConvert.DeserializeObject<FlowTemplateNotice>(flow.notify);
+            flow.notifyModel = System.Text.Json.JsonSerializer.Deserialize<FlowTemplateNotice>(flow.notify, MyDefaultTextJsonConfig.DefaultOptions);
             if (formdata.Assign != null)
             {
-                flow.Assign = Newtonsoft.Json.JsonConvert.SerializeObject(formdata.Assign);
+                flow.Assign = System.Text.Json.JsonSerializer.Serialize(formdata.Assign, MyDefaultTextJsonConfig.DefaultOptions);
             }
             else
             {
@@ -396,9 +395,9 @@ namespace FlowService.FlowNode.Builder
             {
                 return BusResponse<UserActionForm>.Error(311, "流程不存在");
             }
-            var steplist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WorkflowStep>>(flow.PersistenceData, new StepJsonConverter());
+            var steplist = System.Text.Json.JsonSerializer.Deserialize<List<WorkflowStep>>(flow.PersistenceData, FlowJsonSerializerConfig.StepOptions);
             var step = steplist.Where(x => x.Id == node.StepId).FirstOrDefault();
-            FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(flow.FormFields, new JsonFieldConvert());
+            FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(flow.FormFields, FlowJsonSerializerConfig.FieldOptions);
 
             UserActionForm info = new UserActionForm();
             info.Flow = flow;
@@ -411,7 +410,7 @@ namespace FlowService.FlowNode.Builder
             info.NodeStatus = node.Status;
             if (!string.IsNullOrEmpty(flow.Assign))
             {
-                info.Assign = JsonConvert.DeserializeObject<Dictionary<string, List<Out_UserItem>>>(flow.Assign);
+                info.Assign = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, List<Out_UserItem>>>(flow.Assign, MyDefaultTextJsonConfig.DefaultOptions);
             }
             else
             {
@@ -470,7 +469,7 @@ namespace FlowService.FlowNode.Builder
                             var exeuserattr = n.ExtensionAttributes.Where(x => x.AttributeKey == UserTask.ActionUser).FirstOrDefault();
                             if (exeuserattr != null)
                             {
-                                outnode.ActionUsers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Out_ActionUser>>(exeuserattr.AttributeValue);
+                                outnode.ActionUsers = System.Text.Json.JsonSerializer.Deserialize<List<Out_ActionUser>>(exeuserattr.AttributeValue, MyDefaultTextJsonConfig.DefaultOptions);
                             }
                             else
                             {
@@ -618,8 +617,8 @@ namespace FlowService.FlowNode.Builder
                     {
                         throw new Exception("流程状态错误，无法执行");
                     }
-                    flow.notifyModel = Newtonsoft.Json.JsonConvert.DeserializeObject<FlowTemplateNotice>(flow.notify);
-                    FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(flow.FormFields, new JsonFieldConvert());
+                    flow.notifyModel = System.Text.Json.JsonSerializer.Deserialize<FlowTemplateNotice>(flow.notify, MyDefaultTextJsonConfig.DefaultOptions);
+                    FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(flow.FormFields, FlowJsonSerializerConfig.FieldOptions);
 
                     var nodelist = await _nodeDAL.SelectByFlowId(flow.Id.Value);
                     await _nodeDAL.InitNodeExtension(nodelist);
@@ -659,7 +658,7 @@ namespace FlowService.FlowNode.Builder
 
 
                     //初始化节点数据
-                    var steplist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WorkflowStep>>(flow.PersistenceData, new StepJsonConverter());
+                    var steplist = System.Text.Json.JsonSerializer.Deserialize<List<WorkflowStep>>(flow.PersistenceData, FlowJsonSerializerConfig.StepOptions);
                     this.Init(steplist);
 
                     int stepIdx = -1;
@@ -752,12 +751,13 @@ namespace FlowService.FlowNode.Builder
                             {
                                 foreach (var node in selectedlist)
                                 {
-                                    JToken jk = ((JObject)node).GetValue("id");
+                                    var nodeobj = node as IDictionary<string, object>;
+                                    var jk = nodeobj["id"];
                                     if (jk == null)
                                     {
                                         continue;
                                     }
-                                    uids.Add(jk.Value<long>());
+                                    uids.Add(Convert.ToInt64(jk));
                                 }
                             }
 

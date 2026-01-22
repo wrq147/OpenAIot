@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
@@ -25,7 +26,7 @@ namespace IoTService.Third.Api
             }
             else
             {
-                _option = Newtonsoft.Json.JsonConvert.DeserializeObject<SohanOption>(config.SohanOption);
+                _option = System.Text.Json.JsonSerializer.Deserialize<SohanOption>(config.SohanOption, MyDefaultTextJsonConfig.DefaultOptions);
             }
         }
         private int GetCarrier(string iccid)
@@ -55,7 +56,7 @@ namespace IoTService.Third.Api
                 {
                     if (value is IList)
                     {
-                        list.Add(entry.Key + "=" + Newtonsoft.Json.JsonConvert.SerializeObject(value) + "&");
+                        list.Add(entry.Key + "=" + System.Text.Json.JsonSerializer.Serialize(value, MyDefaultTextJsonConfig.DefaultOptions) + "&");
                     }
                     else
                     {
@@ -87,7 +88,7 @@ namespace IoTService.Third.Api
             string tmpsign = GetSign(map, _option.app_secret);
             map.Add("sign", tmpsign);
 
-            var res = await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", Newtonsoft.Json.JsonConvert.SerializeObject(map), Encoding.UTF8);
+            var res = await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", System.Text.Json.JsonSerializer.Serialize(map, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8);
             dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
             if (resObj.errorCode != null && resObj.errorCode == "SUCCESS")
             {
@@ -167,7 +168,7 @@ namespace IoTService.Third.Api
             string tmpsign = GetSign(map, _option.app_secret);
             map.Add("sign", tmpsign);
 
-            var res = await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", Newtonsoft.Json.JsonConvert.SerializeObject(map), Encoding.UTF8);
+            var res = await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", System.Text.Json.JsonSerializer.Serialize(map, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8);
             dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
             if (resObj.errorCode != null && resObj.errorCode == "SUCCESS")
             {
@@ -262,7 +263,7 @@ namespace IoTService.Third.Api
                 map.Add("iccid", iccid);
                 string tmpsign = GetSign(map, _option.app_secret);
                 map.Add("sign", tmpsign);
-                await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", Newtonsoft.Json.JsonConvert.SerializeObject(map), Encoding.UTF8);
+                await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", System.Text.Json.JsonSerializer.Serialize(map, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8);
             }
             return BusResponse<string>.Success();
         }
