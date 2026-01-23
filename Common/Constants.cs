@@ -42,6 +42,7 @@ namespace Common
         /// </summary>
         public static JsonSerializerOptions ApiJsonSetting = new JsonSerializerOptions
         {
+            PropertyNameCaseInsensitive = true,
             TypeInfoResolver = new SerializationControlContractResolver(),
             Converters = { new DateTimeConverter(), new MyStringToNumberConverter(), new MyNumberToStringConverter(), new MyObjectConverter() },
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
