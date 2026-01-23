@@ -2,19 +2,70 @@
 branches: {
   }
 fileChange:
-  /Third:
-    newFile: !uuid '03fd8287edb1e2803bd31df2f9cc7ec49a9f2c5f'
-    oldFile: !uuid 'f67a308ae6317e5bb60ca54d50fd2682ecfa17b3'
-  /Third/jieba.NET:
-    newFile: !uuid 'fd24566cda6171463ee65d7a704988f865a5f872'
-    oldFile: !uuid '417258c0cac44780cde2a1a99fc600d05a0e56fb'
-  /Third/jieba.NET/Segmenter:
-    newFile: !uuid '7e8b4e11bf8059d6c6acb4cff430f7a02cd11b67'
-    oldFile: !uuid '4ea20362c7f25d1648011bc212724ef325ba0e74'
-  /Third/jieba.NET/Segmenter/App.config:
-    newFile: null
-    oldFile: !uuid '0d9f71ef847058ee1a50fdcf7a83a91f298800a7'
-gitCommitId: !uuid 'cee92e552e5761cdd5067efe0242a05406416c59'
+  /Channel:
+    newFile: !uuid '3d79b996024f93cc9ac7a7aaf5972deebc753ea6'
+    oldFile: !uuid '7fa3668803b5d17f64232b07fd8559d9729f63a3'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'a1d072db037d7972307e18ff47c53c208668c189'
+    oldFile: !uuid '61f6fbcc6bd633564b2575e1216f12106725c364'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid 'f8683a142ffb6fd2aaca2b3f0c47c234c3d897e3'
+    oldFile: !uuid '38b16f9bc9823bb6a3dadc3e313325bb2586b7b0'
+  /Channel/ChannelUtility/Message:
+    newFile: !uuid 'bea0f194fcd54d4067a5f6d4ccfc4d7e4956eab2'
+    oldFile: !uuid '16a8ea47ef4f9331d2b0e2e60cd62605112ca48a'
+  /Channel/ChannelUtility/Message/AIDetectRequestMeesage.cs:
+    newFile: !uuid '159995c18d13db40195e3a3fc86472d90f5497a0'
+    oldFile: !uuid '741c7485bd1a45bcf27c1fb921e0771b8e734c68'
+  /Channel/ChannelUtility/Message/AIDetectResponseMessage.cs:
+    newFile: !uuid '10e5df4c01b768405c874b334f97cab7fd90477a'
+    oldFile: !uuid '4df7d0945f9a036869e6f5d6511f3e0f7a022432'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '3eb7dde32eebbad7b027aa381cd1e5e6df317eed'
+    oldFile: !uuid 'a6c4f665728130b8006af2f08aacdaacea18e6cc'
+  /Channel/FixVideoChannel/AIDetectorTask.cs:
+    newFile: !uuid 'd274dc90c84c1c2d7391fb149cd544c36e410bbf'
+    oldFile: !uuid 'cf12e451b8c4d992a2b96d86ed6603413a853237'
+  /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
+    newFile: !uuid '29c680df8cf9f00bb58354a070a5e44b6a3ec481'
+    oldFile: !uuid '1e29fb360c25e34b020b73d84dea07cbd2214088'
+  /Channel/FixVideoChannel/IVideoDeviceEventListener.cs:
+    newFile: !uuid '2977c2970ba101182260f45a12b322ea8882123e'
+    oldFile: !uuid '3694da67c6b03f9602c4c36173bc839c1af2a204'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid '679939c0366525004fe9ed22fc36cf79b2711723'
+    oldFile: !uuid '9f94b3074431cedf7712c50abc4645b0d172da32'
+  /Channel/GB28181Channel:
+    newFile: !uuid '9c85138b5b5ceb3e10fbe94304fef700ab9e03d7'
+    oldFile: !uuid '69d687f546f28172f703ce59b9674300dd958f86'
+  /Channel/GB28181Channel/AIDetectorTask.cs:
+    newFile: !uuid 'ebe4656b61d59580e0e72d9c389f9cfa190ebb81'
+    oldFile: !uuid '49f4015bc160759e383232aa21500b2ab106b7e9'
+  /Channel/GB28181Channel/GB28181DeviceEventListener.cs:
+    newFile: !uuid 'f69f8a53ab7727cc01d8cd56ffebf70c52bd4a0a'
+    oldFile: !uuid '0c9c0b5588c17f09a350f4a8945c78c7a5432ba9'
+  /Channel/GB28181Channel/InMemoryDeviceStorage.cs:
+    newFile: !uuid '0aefdaf98d80bffcab20a110866d874a9ca7e2a0'
+    oldFile: !uuid '0a84e2746d3f15ead2232302581d7d3b0d11b9fa'
+  /Channel/GB28181Channel/VideoData.cs:
+    newFile: !uuid 'b9481093d630cbc288d73cbfc17f8b7a4e3f9148'
+    oldFile: !uuid 'fc044bc78e47d6fa7af32b64d56b6ec33690b40c'
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid '68495e21ebdb689059e96ba3b86c24eabe628f6f'
+    oldFile: !uuid '2005a7d0dba5bebe1cea10194dadd457315e09cf'
+  /Modules:
+    newFile: !uuid 'accfbb2aaf85cf82a7f0ed8b1f8bd95312ccec7c'
+    oldFile: !uuid 'b55b3df3ca6c921c6c010d0f2bc3e88d94900478'
+  /Modules/IoTAIService:
+    newFile: !uuid 'b6e27485160715355f81905183810bef1bf43ddc'
+    oldFile: !uuid '84a41602053bd03bd9a2e0c2b807c99f99aafd5b'
+  /Modules/IoTAIService/AICache.cs:
+    newFile: !uuid '526c65320ea6eea0d9aefdfc065aba4492c9643d'
+    oldFile: !uuid 'dbbde1ac79fe88d88e908b126de944279bf5fa3e'
+  /Modules/IoTAIService/PluginConfig.cs:
+    newFile: !uuid '3ac11f87e1de9df77293114f107c0110e2249ae5'
+    oldFile: !uuid '6d175b6b6de16a978f8eb3aae8d1db35676fb90c'
+gitCommitId: !uuid '54dad7976e463b69f86ed29c36f14f0fdcaa55cb'
 renames: {
   }
-revisionId: 141
+revisionId: 142
