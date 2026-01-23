@@ -12,8 +12,8 @@ namespace ChannelUtility.Message
         {
             MsgType = "AIDetectResp";
         }
-        public string DetType { get; set; }
         public List<BoxItem> BoxList { get; set; }
+        public bool NeedConf { get; set; }
     }
     public class BoxItem
     {

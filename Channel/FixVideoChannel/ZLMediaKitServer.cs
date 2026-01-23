@@ -97,7 +97,7 @@ namespace FixVideoChannel
 
             if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
             {
-                if (item.DetectList.Count > 0)
+                if (item.Configs != null && item.Configs.Count > 0)
                 {
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                     if (context.LastFrame != null)
@@ -139,31 +139,23 @@ namespace FixVideoChannel
                         context.Motion = new MotionDetector();
                     }
                     bool hasDraw = false;
-                    var detectTasks = item.DetectList;
-                    byte[] tdata = rgb24;
-                    bool isPress = false;
 
                     context.Motion.CoolDownMs = item.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
                     // 执行AI检测
                     var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                    if (isMotionDetected)
+                    if (isMotionDetected || item.NeedUp)
                     {
-                        foreach (var task in detectTasks)
-                        {
-                            task.Detect(item.Item.Id, item.Item.PushKey, w, h, motionRatio, _listener, ref tdata, ref isPress);
-                        }
+                        AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
                     }
 
 
 
                     // 执行绘制
-                    foreach (var t in detectTasks)
+                    if (item.BoxList != null && item.BoxList.Count > 0)
                     {
-                        if (t.Draw(rgb24, w, h))
-                        {
-                            hasDraw = true;
-                        }
+                        AIDetectorTask.Draw(rgb24, w, h, item.BoxList);
+                        hasDraw = true;
                     }
 
                     if (hasDraw)
@@ -394,15 +386,19 @@ namespace FixVideoChannel
                 mk_player.MkPlayerRelease(tmpt);
             }
         }
-        public void UpdateAIDraw(string videoId, string detType, List<BoxItem> boxList)
+        public void UpdateAIDraw(string videoId, List<BoxItem> boxList, bool needUpdate)
         {
             if (_IdToKeys.TryGetValue(videoId, out string tmpkey))
             {
                 if (_videoKeyItems.TryGetValue(tmpkey, out VideoData tmpval))
                 {
-                    foreach (var item in tmpval.DetectList)
+                    if (needUpdate)
                     {
-                        item.UpdateBoxList(detType, boxList);
+                        tmpval.NeedUp = true;
+                    }
+                    else
+                    {
+                        tmpval.BoxList = boxList;
                     }
                 }
             }
@@ -471,7 +467,9 @@ namespace FixVideoChannel
         public VideoCaptureItem Item { get; set; }
         public float MotionRatio { get; set; }
         public int CoolDownMs { get; set; }
-        public List<AIDetectorTask> DetectList { get; set; }
+        public List<BoxItem> BoxList { get; set; }
+        public List<AIConfigData> Configs { get; set; }
+        public bool NeedUp { get; set; }
     }
     public class FrameContext
     {

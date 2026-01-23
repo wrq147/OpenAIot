@@ -120,7 +120,7 @@ namespace GB28181Channel
             var device = storage.GetDevice(context.DeviceId);
             if (device != null)
             {
-                if (device.VideoData != null && device.VideoData.DetectList.Count > 0)
+                if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
                 {
                     mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                     if (context.LastFrame != null)
@@ -166,30 +166,22 @@ namespace GB28181Channel
                         context.Motion = new MotionDetector();
                     }
                     bool hasDraw = false;
-                    var detectTasks = device.VideoData.DetectList;
-                    byte[] tdata = rgb24;
-                    bool isPress = false;
 
                     context.Motion.CoolDownMs = device.VideoData.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
                     // 执行AI检测
                     var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                    if (isMotionDetected)
+                    if (isMotionDetected || device.VideoData.NeedUp)
                     {
-                        foreach (var task in detectTasks)
-                        {
-                            task.Detect(device.VideoData.Item.Id, context.VideoKey, w, h, motionRatio, _listener, ref tdata, ref isPress);
-                        }
+                        AIDetectorTask.Detect(device.VideoData, w, h, motionRatio, _listener, rgb24);
                     }
 
 
                     // 执行绘制
-                    foreach (var t in detectTasks)
+                    if (device.VideoData.BoxList != null && device.VideoData.BoxList.Count > 0)
                     {
-                        if (t.Draw(rgb24, w, h))
-                        {
-                            hasDraw = true;
-                        }
+                        AIDetectorTask.Draw(rgb24, w, h, device.VideoData.BoxList);
+                        hasDraw = true;
                     }
 
                     if (hasDraw)

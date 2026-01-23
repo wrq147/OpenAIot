@@ -26,26 +26,33 @@ namespace FixVideoChannel
             await eventBus.Connected(item.Id);
         }
 
-        public async Task OnSendAIDetectRequest(string videoId, string videoKey, AIDetectItem item, float motionRatio, byte[] pressData, int width, int height)
+        public async Task OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishAIDetectRequest(videoId, videoKey, item.Code, motionRatio, item.paramValues, item.EnableDraw, pressData, width, height);
+            await eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg)
         {
             if (msg is AIDetectResponseMessage aiResponse)
             {
-                ZLMediaKitServer.Instance.UpdateAIDraw(aiResponse.DeviceId, aiResponse.DetType, aiResponse.BoxList);
+                ZLMediaKitServer.Instance.UpdateAIDraw(aiResponse.DeviceId, aiResponse.BoxList, aiResponse.NeedConf);
             }
             else if (msg is MediaItemMessage upItemResponse)
             {
                 VideoData videoData = new VideoData();
+                videoData.NeedUp = true;
                 videoData.Item = upItemResponse.Item;
-                videoData.DetectList = new List<AIDetectorTask>();
+                videoData.Configs = new List<AIConfigData>();
+                videoData.NeedUp = true;
                 foreach (var it in upItemResponse.Config.Tasks)
                 {
-                    videoData.DetectList.Add(new AIDetectorTask(it));
+                    videoData.Configs.Add(new AIConfigData()
+                    {
+                        DetType = it.Code,
+                        IsDraw = it.EnableDraw,
+                        DetParams = it.paramValues
+                    });
                 }
                 videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
                 videoData.MotionRatio = upItemResponse.Config.MotionRatio;

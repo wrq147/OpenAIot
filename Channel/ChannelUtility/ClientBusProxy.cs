@@ -449,33 +449,30 @@ namespace ChannelUtility
 
 
 
+
         /// <summary>
         /// 上报AI检测请求
         /// </summary>
         /// <param name="deviceId"></param>
         /// <param name="videoKey"></param>
-        /// <param name="detectType"></param>
         /// <param name="motionRatio"></param>
-        /// <param name="detParams"></param>
-        /// <param name="isDraw"></param>
         /// <param name="frameData"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
+        /// <param name="configs"></param>
         /// <returns></returns>
-        public async Task PublishAIDetectRequest(string deviceId, string videoKey, string detectType, float motionRatio, Dictionary<string, object> detParams, bool isDraw, byte[] frameData, int width, int height)
+        public async Task PublishAIDetectRequest(string deviceId, string videoKey, float motionRatio, byte[] frameData, int width, int height, List<AIConfigData> configs)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
-            msg.DetType = detectType;
             msg.MRatio = motionRatio;
-            msg.IsDraw = isDraw;
-            msg.DetParams = detParams;
             msg.Frame = frameData;
             msg.Width = width;
             msg.Height = height;
             msg.NodeGuid = this._nodeGuid;
             msg.VideoKey = videoKey;
+            msg.Configs = configs;
 
             await _bus.PublishAsync(new NatsMsg<string>()
             {

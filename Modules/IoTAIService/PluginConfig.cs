@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -71,11 +72,12 @@ namespace IoTAIService
             app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener -= MessageHandler;
             base.Unload(app, plg);
         }
-        private async Task DownAIDetectResponse(string nodeid, string videoId, string detType, List<BoxItem> boxlist)
+        private async Task DownAIDetectResponse(string nodeid, string videoId, List<BoxItem> boxlist, bool needConf = false)
         {
             AIDetectResponseMessage msg = new AIDetectResponseMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
+            msg.NeedConf = needConf;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
 
@@ -123,68 +125,99 @@ namespace IoTAIService
 
         private async Task MessageHandler(BaseDeviceMessage msg)
         {
-            switch (msg.MsgType)
+            if (msg.MsgType != "AIDetectReq")
             {
-                case "AIDetectReq":
+                return;
+            }
+            var aiCache = _provider.GetService<AICache>();
+            AIDetectRequestMeesage detectReq = (AIDetectRequestMeesage)msg;
+            List<AIConfigData> videoConfigs;
+            if (detectReq.Configs != null)
+            {
+                videoConfigs = detectReq.Configs;
+                aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
+            }
+            else
+            {
+                videoConfigs = aiCache.GetVideoAIConfig(detectReq.DeviceId);
+            }
+            if (videoConfigs == null)
+            {
+                await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, null, true);
+                return;
+            }
+            using (var image = FastZlibDecompressToRgb24Image(detectReq.Frame, detectReq.Width, detectReq.Height))
+            {
+                int facenum = 0;
+                //处理画框
+                List<BoxItem> boxlist = new List<BoxItem>();
+                foreach (var config in videoConfigs)
+                {
+                    switch (config.DetType)
                     {
-                        AIDetectRequestMeesage detectReq = (AIDetectRequestMeesage)msg;
-
-                        using (var image = FastZlibDecompressToRgb24Image(detectReq.Frame, detectReq.Width, detectReq.Height))
-                        {
-                            switch (detectReq.DetType)
+                        case "Face":
                             {
-                                case "Face":
+                                var tparam = new DataDetectParam(config.DetParams);
+                                float tThreshold = tparam.GetFloat("threshold", 0.8f);
+                                float tIOU = tparam.GetFloat("iou_threshold", 0.2f);
+                                bool tEnableHouse = tparam.GetBool("enable_house");
+
+                                var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(image, tThreshold, tIOU);
+                                facenum = tbbx.Count;
+                                if (config.IsDraw)
+                                {
+                                    for (int i = 0; i < tbbx.Count; i++)
                                     {
-                                        var tparam = new DataDetectParam(detectReq.DetParams);
-                                        float tThreshold = tparam.GetFloat("threshold", 0.8f);
-                                        float tIOU = tparam.GetFloat("iou_threshold", 0.2f);
-                                        bool tEnableHouse = tparam.GetBool("enable_house");
-                                        var aiCache = _provider.GetService<AICache>();
-                                        var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(image, tThreshold, tIOU);
-                                        if (detectReq.IsDraw)
+                                        var titem = tbbx[i];
+                                        boxlist.Add(new BoxItem()
                                         {
-                                            List<BoxItem> boxlist = new List<BoxItem>();
-                                            for (int i = 0; i < tbbx.Count; i++)
-                                            {
-                                                var titem = tbbx[i];
-                                                boxlist.Add(new BoxItem()
-                                                {
-                                                    x1 = titem.X1,
-                                                    x2 = titem.X2,
-                                                    y1 = titem.Y1,
-                                                    y2 = titem.Y2,
-                                                    score = titem.Score,
-                                                    label = "人脸",
-                                                    color = "#67C23A"
-                                                });
-                                            }
-                                            await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, detectReq.DetType, boxlist);
-                                        }
-
-                                        //开始生成设备属性和事件
-                                        int lastFaceNum = aiCache.GetVideoInt(detectReq.DeviceId, "face_num");
-                                        if (lastFaceNum != tbbx.Count)
-                                        {
-                                            //发送人脸数量属性
-                                            Dictionary<string, object> newvals = new Dictionary<string, object>();
-                                            newvals.Add("FaceCount", tbbx.Count);
-                                            ReadPropertyMessageReply rpmsg = new ReadPropertyMessageReply();
-                                            rpmsg.ProductId = string.Empty;
-                                            rpmsg.DeviceId = detectReq.DeviceId;
-                                            rpmsg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-                                            rpmsg.Properties = newvals;
-                                            rpmsg.IsTagSync = false;
-                                            await _provider.GetService<DeviceMessageHandler>().ExeMessage(rpmsg);
-                                            //人脸数量变化事件
-
-                                        }
-                                        aiCache.SetVideoInt(detectReq.DeviceId, "face_num", tbbx.Count);
+                                            x1 = titem.X1,
+                                            x2 = titem.X2,
+                                            y1 = titem.Y1,
+                                            y2 = titem.Y2,
+                                            score = titem.Score,
+                                            label = "人脸",
+                                            color = "#67C23A"
+                                        });
                                     }
-                                    break;
+                                }
                             }
-                        }
+                            break;
                     }
-                    break;
+                }
+                //回复画框
+                await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, boxlist);
+
+
+                //处理事件
+                foreach (var config in videoConfigs)
+                {
+                    switch (config.DetType)
+                    {
+                        case "Face":
+                            {
+                                //开始生成设备属性和事件
+                                int lastFaceNum = aiCache.GetVideoInt(detectReq.DeviceId, "face_num");
+                                if (lastFaceNum != facenum)
+                                {
+                                    //发送人脸数量属性
+                                    Dictionary<string, object> newvals = new Dictionary<string, object>();
+                                    newvals.Add("FaceCount", facenum);
+                                    ReadPropertyMessageReply rpmsg = new ReadPropertyMessageReply();
+                                    rpmsg.ProductId = string.Empty;
+                                    rpmsg.DeviceId = detectReq.DeviceId;
+                                    rpmsg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+                                    rpmsg.Properties = newvals;
+                                    rpmsg.IsTagSync = false;
+                                    await _provider.GetService<DeviceMessageHandler>().ExeMessage(rpmsg);
+                                    //人脸数量变化事件
+
+                                }
+                                aiCache.SetVideoInt(detectReq.DeviceId, "face_num", facenum);
+                            }
+                            break;
+                    }
+                }
             }
         }
     }

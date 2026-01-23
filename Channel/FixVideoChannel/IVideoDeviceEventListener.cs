@@ -7,7 +7,7 @@ namespace FixVideoChannel
     {
         Task OnEventOffline(VideoCaptureItem item);
         Task OnEventOnline(VideoCaptureItem item);
-        Task OnSendAIDetectRequest(string videoId, string videoKey, AIDetectItem item, float motionRatio, byte[] pressData, int width, int height);
+        Task OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs);
         Task OnDeviceDownMessage(BaseDeviceMessage msg);
     }
 }

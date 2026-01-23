@@ -2,7 +2,6 @@
 using ChannelUtility.Message;
 using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
-using GB28181Channel.GB28181.Enum;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -70,6 +69,14 @@ namespace GB28181Channel
             {
                 return null;
             }
+        }
+        public string GetDeviceIdByDtuId(string dtuId)
+        {
+            if (_dtuIdToDeviceIds.TryGetValue(dtuId, out var deviceId))
+            {
+                return deviceId;
+            }
+            return null;
         }
         public async Task<string> GetDevicePassword(string deviceId)
         {

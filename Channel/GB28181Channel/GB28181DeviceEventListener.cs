@@ -20,24 +20,56 @@ namespace GB28181Channel
         {
             _serviceProvider = serviceProvider;
         }
-        public async Task OnSendAIDetectRequest(string videoId, string videoKey, AIDetectItem item, float motionRatio, byte[] pressData, int width, int height)
+        public async Task OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishAIDetectRequest(videoId, videoKey, item.Code, motionRatio, item.paramValues, item.EnableDraw, pressData, width, height);
+            await eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg, GB28181Server server)
         {
-            if (msg is MediaItemMessage upItemResponse)
+            if (msg is AIDetectResponseMessage aiResponse)
+            {
+                var storage = _serviceProvider.GetService<IDeviceStorage>() as InMemoryDeviceStorage;
+                var deviceId = storage.GetDeviceIdByDtuId(aiResponse.DeviceId);
+                if (deviceId == null)
+                {
+                    return;
+                }
+                var device = storage.GetDevice(deviceId);
+                if (device == null)
+                {
+                    return;
+                }
+                if (device.VideoData == null)
+                {
+                    return;
+                }
+                if (aiResponse.NeedConf == true)
+                {
+                    device.VideoData.NeedUp = true;
+                }
+                else
+                {
+                    device.VideoData.BoxList = aiResponse.BoxList;
+                }
+            }
+            else if (msg is MediaItemMessage upItemResponse)
             {
                 var storage = _serviceProvider.GetService<IDeviceStorage>();
 
                 VideoData videoData = new VideoData();
                 videoData.Item = upItemResponse.Item;
-                videoData.DetectList = new List<AIDetectorTask>();
+                videoData.Configs = new List<AIConfigData>();
+                videoData.NeedUp = true;
                 foreach (var it in upItemResponse.Config.Tasks)
                 {
-                    videoData.DetectList.Add(new AIDetectorTask(it));
+                    videoData.Configs.Add(new AIConfigData()
+                    {
+                        DetType = it.Code,
+                        IsDraw = it.EnableDraw,
+                        DetParams = it.paramValues
+                    });
                 }
                 videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
                 videoData.MotionRatio = upItemResponse.Config.MotionRatio;

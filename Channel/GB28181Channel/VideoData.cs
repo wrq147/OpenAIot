@@ -12,6 +12,8 @@ namespace GB28181Channel
         public VideoCaptureItem Item { get; set; }
         public float MotionRatio { get; set; }
         public int CoolDownMs { get; set; }
-        public List<AIDetectorTask> DetectList { get; set; }
+        public List<BoxItem> BoxList { get; set; }
+        public List<AIConfigData> Configs { get; set; }
+        public bool NeedUp { get; set; }
     }
 }

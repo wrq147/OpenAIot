@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GB28181Channel
 {
-    public class AIDetectorTask
+    public static class AIDetectorTask
     {
         #region 全局字体配置（静态字段）
         // 全局默认字体（静态只读，仅初始化一次）
@@ -51,23 +51,10 @@ namespace GB28181Channel
             }
         }
         #endregion
-        private AIDetectItem _item;
-        private volatile List<BoxItem> _boxs;
-        public AIDetectorTask(AIDetectItem item)
-        {
-            _item = item;
-        }
-        public void UpdateBoxList(string detType, List<BoxItem> items)
-        {
-            if (_item.Code == detType)
-            {
-                _boxs = items;
-            }
-        }
         /// <summary>
         /// Zlib快速压缩降采样后的BGR数据
         /// </summary>
-        private byte[] FastZlibCompress(byte[] rawData, int width, int height, int scale = 2)
+        private static byte[] FastZlibCompress(byte[] rawData, int width, int height, int scale = 2)
         {
             if (rawData == null || rawData.Length == 0)
                 return null;
@@ -87,7 +74,7 @@ namespace GB28181Channel
         }
 
         // 复用之前的超极速降采样方法
-        private byte[] UltraFastDownsample(byte[] rawData, int width, int height, int scale)
+        private static byte[] UltraFastDownsample(byte[] rawData, int width, int height, int scale)
         {
             if (rawData == null || rawData.Length == 0 || scale <= 1)
                 return rawData;
@@ -114,32 +101,28 @@ namespace GB28181Channel
         }
 
         // AI检测
-        public void Detect(string videoId, string videoKey, int width, int height, float motionRatio, GB28181DeviceEventListener listener, ref byte[] data, ref bool isPress)
+        public static void Detect(VideoData videoData, int width, int height, float motionRatio, GB28181DeviceEventListener listener, byte[] data)
         {
             if (listener == null)
             {
                 return;
             }
-            byte[] pressData = null;
-            if (!isPress)
-            {
-                data = FastZlibCompress(data, width, height, 2);
-                isPress = true;
-            }
-
+            byte[] pressData = FastZlibCompress(data, width, height, 2);
             pressData = data;
-            Task t = listener.OnSendAIDetectRequest(videoId, videoKey, _item, motionRatio, pressData, width / 2, height / 2);
-        }
-        public bool Draw(byte[] rgbFrame, int width, int height)
-        {
-            if (!_item.EnableDraw)
+            List<AIConfigData> configs = null;
+            if (videoData.NeedUp)
             {
-                return false;
+                configs = videoData.Configs;
+                videoData.NeedUp = false;
             }
-            var tmpboxArr = _boxs;
+            Task t = listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width / 2, height / 2, configs);
+        }
+        public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
+        {
+            var tmpboxArr = boxs;
             if (tmpboxArr.Count == 0)
             {
-                return false;
+                return;
             }
             using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
 
@@ -173,12 +156,11 @@ namespace GB28181Channel
 
             // 将绘制后的图像数据写回rgbFrame
             image.CopyPixelDataTo(rgbFrame);
-            return true;
         }
         /// <summary>
         /// 绘制矩形边框
         /// </summary>
-        private void DrawRectangle(Image<Rgb24> image, int x1, int y1, int x2, int y2, Rgb24 color, int lineWidth)
+        private static void DrawRectangle(Image<Rgb24> image, int x1, int y1, int x2, int y2, Rgb24 color, int lineWidth)
         {
             int width = image.Width;
             int height = image.Height;
@@ -223,7 +205,7 @@ namespace GB28181Channel
         /// <summary>
         /// 绘制标签（背景框+文字）
         /// </summary>
-        private void DrawLabel(Image<Rgb24> image, int x, int y, string text, Rgb24 color)
+        private static void DrawLabel(Image<Rgb24> image, int x, int y, string text, Rgb24 color)
         {
             if (string.IsNullOrEmpty(text)) return;
 

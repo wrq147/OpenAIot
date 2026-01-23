@@ -1,10 +1,7 @@
-﻿using ChannelUtility;
+﻿using ChannelUtility.Message;
 using Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace IoTAIService
@@ -29,10 +26,20 @@ namespace IoTAIService
                 return Convert.ToInt32(videoNum);
             }
         }
-        public void SetVideoInt(string videoId, string key,int val)
+        public void SetVideoInt(string videoId, string key, int val)
         {
             var cache = _provider.GetService<CacheHelper>();
             cache.SetCache<string>($"AIVideo:{videoId}:{key}", val.ToString(), DateTime.Now.AddSeconds(120));
+        }
+        public List<AIConfigData> GetVideoAIConfig(string videoId)
+        {
+            var cache = _provider.GetService<CacheHelper>();
+            return cache.GetCache<List<AIConfigData>>($"AIConfig:{videoId}");
+        }
+        public void SetVideoAIConfig(string videoId, List<AIConfigData> configs)
+        {
+            var cache = _provider.GetService<CacheHelper>();
+            cache.SetCache<List<AIConfigData>>($"AIConfig:{videoId}", configs, DateTime.Now.AddMinutes(10));
         }
     }
 }
