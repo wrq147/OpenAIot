@@ -12,7 +12,6 @@
     <PackageReference Include="FluentMigrator.Runner.Core" Version="7.1.0" />
     <PackageReference Include="FluentMigrator.Runner.MySql" Version="7.1.0" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="7.1.0" />
-    <PackageReference Include="jieba.NET" Version="0.42.2" />
     <PackageReference Include="Lazy.Captcha.Core" Version="1.1.7" />
     <PackageReference Include="log4net" Version="2.0.14" />
     <PackageReference Include="MailKit" Version="3.6.0" />
@@ -32,6 +31,7 @@
     <ProjectReference Include="..\MyAccess\MyAccess.csproj" />
     <ProjectReference Include="..\TemplateAction.NetCore\TemplateAction.NetCore.csproj" />
     <ProjectReference Include="..\TemplateAction\TemplateAction.csproj" />
+    <ProjectReference Include="..\Third\jieba.NET\Segmenter\Segmenter.csproj" />
   </ItemGroup>
 
 </Project>
