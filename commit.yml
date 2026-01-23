@@ -2,13 +2,139 @@
 branches: {
   }
 fileChange:
+  /App:
+    newFile: !uuid '059d02de343151b68ccb285c1e5f86d8cf9de067'
+    oldFile: !uuid 'b955dab2c2837536a08923aae337d9c48b766cdf'
+  /App/Program.cs:
+    newFile: !uuid '5abdf3595ddcc30f1586a2dc39f1c9f0fd08aaf5'
+    oldFile: !uuid '1dfff31b3edd4eabf45eed25a9e74985965ce2b4'
   /Common:
-    newFile: !uuid 'aabe670951b145ca8a9f6f08157eb63f8d7b3975'
-    oldFile: !uuid 'f553e0a301f216cb01b5e0a47f333983a4aa4a58'
-  /Common/Constants.cs:
-    newFile: !uuid '5cf330f018f405a7b97418c7520a4a8159eb462c'
-    oldFile: !uuid '563e8ce5a17a9eb2331ce87a9c10ef4c2a53f566'
-gitCommitId: !uuid '88a5b688dbbe07d7a0b5e95eff425f95aeef23a3'
+    newFile: !uuid '54eaca37c8c06b0adc56327cec2a19f4be725665'
+    oldFile: !uuid 'aabe670951b145ca8a9f6f08157eb63f8d7b3975'
+  /Common/Common.csproj:
+    newFile: !uuid '658f472e946b1931caedd4c1d67ee9f8f7729d74'
+    oldFile: !uuid '01998e483b67a5f6e2a2b40bbd0f56da8377ec6e'
+  /DigitalCard.sln:
+    newFile: !uuid '4f3797d9d064a4335085a9544b65bf897fe6f0ab'
+    oldFile: !uuid 'e572fb5a56a7937fd91bc8026da95ad5fd411272'
+  /Modules:
+    newFile: !uuid 'b55b3df3ca6c921c6c010d0f2bc3e88d94900478'
+    oldFile: !uuid '2e0d0900486a08ff2f1bf52056001d37c24c2734'
+  /Modules/IoTService:
+    newFile: !uuid 'eacbb284e1310e65ee9181c4ca647bdff1b16528'
+    oldFile: !uuid '3bac893f06d7b9450e691e01656a5e0ed5ca5d48'
+  /Modules/IoTService/IoTService.csproj:
+    newFile: !uuid '5648411e91e4f908ea5615b988abd5bc70ea0925'
+    oldFile: !uuid 'e941d6fb6c93b74d9edb4ea57055eb508ec99300'
+  /Third:
+    newFile: !uuid 'f67a308ae6317e5bb60ca54d50fd2682ecfa17b3'
+    oldFile: !uuid '2bf12d9e029c9b29c7c4bb04ad76d75bb2b2919c'
+  /Third/jieba.NET:
+    newFile: !uuid '417258c0cac44780cde2a1a99fc600d05a0e56fb'
+    oldFile: null
+  /Third/jieba.NET/Analyser:
+    newFile: !uuid '919775302ed83da6bd24c70efc31cf904176524e'
+    oldFile: null
+  /Third/jieba.NET/Analyser/Analyser.csproj:
+    newFile: !uuid 'd30b6eb4f21524411d5a0aab8485c8b92ee55915'
+    oldFile: null
+  /Third/jieba.NET/Analyser/App.config:
+    newFile: !uuid '569741db61f7a6da44169e623df33f09095b44cf'
+    oldFile: null
+  /Third/jieba.NET/Analyser/IdfLoader.cs:
+    newFile: !uuid '0aefd44c6e86099f412347dfaa3a33c7076488ae'
+    oldFile: null
+  /Third/jieba.NET/Analyser/KeywordExtractor.cs:
+    newFile: !uuid '10678158978d521048d89b902f342dffae9dd483'
+    oldFile: null
+  /Third/jieba.NET/Analyser/TextRankExtractor.cs:
+    newFile: !uuid '4d96e576a10b85b1a003a0f7e7118a72ee623a4f'
+    oldFile: null
+  /Third/jieba.NET/Analyser/TfidfExtractor.cs:
+    newFile: !uuid '65ab08b3124d1ce696b1236c013d86616c31bf83'
+    oldFile: null
+  /Third/jieba.NET/Analyser/UndirectWeightedGraph.cs:
+    newFile: !uuid 'b1afd0c0495811d68ea35aa5254eda170947b75c'
+    oldFile: null
+  /Third/jieba.NET/Segmenter:
+    newFile: !uuid '4ea20362c7f25d1648011bc212724ef325ba0e74'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/App.config:
+    newFile: !uuid '0d9f71ef847058ee1a50fdcf7a83a91f298800a7'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Common:
+    newFile: !uuid 'af3b68f0aa38763e4ad95cfbd6b4389f66e8a881'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Common/Counter.cs:
+    newFile: !uuid '692613b0c30309ad1c1ae047b5a5b0ba65a5cf62'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Common/Extensions.cs:
+    newFile: !uuid 'b6d6ca8c7d1ea635026a60b8a6e13200036a5703'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Common/KeywordTrie.cs:
+    newFile: !uuid 'd692589f0c17017c737ed33cc33c6a79863095e7'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Common/Trie.cs:
+    newFile: !uuid '3e8c2a5af1eef1a844891f3390774ec38bf151f2'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/ConfigManager.cs:
+    newFile: !uuid 'b2709620d7923a5cb90a588d0a0460b651f586e1'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Constants.cs:
+    newFile: !uuid '431516189404ee55b6f43343cc796273edbf9af8'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/DefaultDictionary.cs:
+    newFile: !uuid '45bac668849fe6e79ba8ca430fc9b9796b31dc4c'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/FinalSeg:
+    newFile: !uuid '9636466fdbdbed80ca2cc6ccb867fdd2ad9796e5'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/FinalSeg/IFinalSeg.cs:
+    newFile: !uuid 'ed88037fc6c8c54ad26b4f8218ccd51d08a105dd'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/FinalSeg/Viterbi.cs:
+    newFile: !uuid 'a16c89d5dd8d264703ede8b338907cfeb802d090'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/JiebaSegmenter.cs:
+    newFile: !uuid 'f8a101e6bb3afb56d6c5e9eba257403a82c54929'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/KeywordProcessor.cs:
+    newFile: !uuid '2a9d48d171c326c2b2797691d12ffe9756e4f754'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Node.cs:
+    newFile: !uuid '7803d33b1da6cf7f0bde3891e0f6615508e1433e'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Pair.cs:
+    newFile: !uuid '59d1d940ec47d2a578344c3a2aa81fae2fd8baa6'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/PosSeg:
+    newFile: !uuid '306bbd84112cf2f07312055b81a04a619df77b87'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/PosSeg/Pair.cs:
+    newFile: !uuid '6eda19bb60bc4408e39e43f0ff017161a13e9337'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/PosSeg/PosSegmenter.cs:
+    newFile: !uuid 'a56c5a8680c234938afbf28db657491311fe3513'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/PosSeg/Viterbi.cs:
+    newFile: !uuid '531d6c094fa4b4843efd4ed5d555284c10431b07'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Segmenter.csproj:
+    newFile: !uuid 'c3eb24b524a958ce365c358cf00019d940484593'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Spelling:
+    newFile: !uuid '79707114a4f780efeaee7ea83291758026a7ad5c'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Spelling/SpellChecker.cs:
+    newFile: !uuid '657783b6df387dafcd90999dfea9a24b2e25c4ae'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/Token.cs:
+    newFile: !uuid '10830277e2bf532b9e9d1a5b477e2b7616dbc12c'
+    oldFile: null
+  /Third/jieba.NET/Segmenter/WordDictionary.cs:
+    newFile: !uuid '0bd3979347a80ff8ac3edfab0a1c62e5054d4246'
+    oldFile: null
+gitCommitId: !uuid '2e7df3c13c2784b4a6a1cfd132e87e1df239e819'
 renames: {
   }
-revisionId: 139
+revisionId: 140
