@@ -1,8 +1,8 @@
 ﻿using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace CardService.Model
 {
@@ -40,7 +40,7 @@ namespace CardService.Model
         /// <summary>
         /// 名片头像
         /// </summary>
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string Avatar { get; set; }
         /// <summary>
         /// 名片风格
@@ -67,7 +67,7 @@ namespace CardService.Model
         /// 所属部门Id
         /// </summary>
         [DataIgnore]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public long? DeptId { get; set; }
         /// <summary>
         /// 所属部门

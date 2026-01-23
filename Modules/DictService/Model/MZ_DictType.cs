@@ -1,6 +1,6 @@
 ﻿using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace DictService.Model
 {
@@ -11,17 +11,17 @@ namespace DictService.Model
         /// 字典主键
         /// </summary>
         [ID(true)]
-        [JsonProperty(PropertyName = "dictId")]
+        [JsonPropertyName("dictId")]
         public virtual long? dict_id { get; set; }
         /// <summary>
         /// 字典名称
         /// </summary>
-        [JsonProperty(PropertyName = "dictName")]
+        [JsonPropertyName("dictName")]
         public virtual string dict_name { get; set; }
         /// <summary>
         /// 字典类型
         /// </summary>
-        [JsonProperty(PropertyName = "dictType")]
+        [JsonPropertyName("dictType")]
         public virtual string dict_type { get; set; }
         /// <summary>
         /// 状态（0正常 1停用）

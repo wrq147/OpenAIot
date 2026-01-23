@@ -1,7 +1,7 @@
 ﻿
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -25,17 +25,17 @@ namespace AuthService
         /// <summary>
         /// 重定向地址，当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string redirect { get; set; }
         /// <summary>
         /// 组件地址
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string component { get; set; }
         /// <summary>
         /// 路由参数：如 {"id": 1, "name": "ry"}
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string query { get; set; }
         /// <summary>
         /// 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
@@ -44,9 +44,9 @@ namespace AuthService
         /// <summary>
         /// 其他元素
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Out_MetaInfo meta { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<Out_RouterInfo> children { get; set; }
     }
 }

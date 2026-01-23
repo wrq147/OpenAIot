@@ -1,7 +1,7 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace FlowService.FlowNode
 {
@@ -13,7 +13,7 @@ namespace FlowService.FlowNode
         /// </summary>
         public string type { get; set; }
         public string name { get; set; }
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string avatar { get; set; }
     }
     public class DeviceData

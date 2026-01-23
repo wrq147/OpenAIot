@@ -1,6 +1,5 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace ProducerService.Model
         /// <summary>
         /// 所属组织ID
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 工艺路线名称

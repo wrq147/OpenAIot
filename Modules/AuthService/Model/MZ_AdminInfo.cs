@@ -2,8 +2,8 @@
 using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -44,7 +44,7 @@ namespace AuthService
         /// <summary>
         /// 部门名称
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [DataIgnore]
         public virtual string dept_name { get; set; }
 
@@ -59,7 +59,7 @@ namespace AuthService
         /// <summary>
         /// 后台密码
         /// </summary>
-        [JsonConverter(typeof(OnlyDeserialize))]
+        [OnlyDeserialize]
         public virtual string Password { get; set; }
         /// <summary>
         /// 密码盐
@@ -81,7 +81,7 @@ namespace AuthService
         /// <summary>
         /// 头像地址
         /// </summary>
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public virtual string Avatar { get; set; }
         /// <summary>
         /// 用户性别（0男 1女 2未知）

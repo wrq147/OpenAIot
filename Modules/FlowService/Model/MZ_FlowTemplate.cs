@@ -1,14 +1,11 @@
 ﻿using AuthService;
 using Common.Share;
-using FlowService.DAL;
 using FlowService.FlowNode.Builder;
 using FlowService.FlowNode.FormFields;
-using Microsoft.Extensions.FileSystemGlobbing;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace FlowService.Model
@@ -39,7 +36,7 @@ namespace FlowService.Model
         /// <summary>
         /// 分组名
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [DataIgnore]
         public string GroupName { get; set; }
         /// <summary>
@@ -130,12 +127,13 @@ namespace FlowService.Model
                             {
                                 foreach (var selectItem in selectedlist)
                                 {
-                                    JToken jk = ((JObject)selectItem).GetValue("name");
+                                    var seldict = selectItem as IDictionary<string, object>;
+                                    var jk = seldict["name"];
                                     if (jk == null)
                                     {
                                         continue;
                                     }
-                                    string devName = jk.Value<string>();
+                                    string devName = jk.ToString();
                                     tnames.Add(devName);
                                 }
                             }

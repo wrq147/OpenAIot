@@ -6,43 +6,43 @@ using System.Text.Json.Serialization;
 
 namespace Common.Json
 {
-    public class MyNumberToStringConverter : JsonConverter<byte>
+    public class MyNumberToStringConverter : JsonConverter<string>
     {
-        public override byte Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // 处理字符串类型的值
-            if (reader.TokenType == JsonTokenType.String)
+            // 处理数值类型的值
+            if (reader.TokenType == JsonTokenType.Number)
             {
-                string value = reader.GetString();
-                if (string.IsNullOrWhiteSpace(value))
+                if (reader.TryGetInt32(out int intValue))
                 {
-                    // 处理空字符串，返回默认值
-                    return default;
+                    return intValue.ToString();
                 }
-
-                try
+                else if (reader.TryGetDouble(out double doubleValue))
                 {
-                    // 尝试将字符串转换为目标数值类型
-                    return byte.Parse(value);
+                    return doubleValue.ToString();
                 }
-                catch (Exception ex)
+                else if (reader.TryGetInt64(out long longValue))
                 {
-                    throw new JsonException($"无法将字符串 '{value}' 转换为 {typeof(byte)} 类型", ex);
+                    return longValue.ToString();
+                }
+                else
+                {
+                    return reader.GetDecimal().ToString();
                 }
             }
-            // 直接处理数值类型
-            else if (reader.TokenType == JsonTokenType.Number)
+            else if (reader.TokenType == JsonTokenType.String)
             {
-                return reader.GetByte();
+                return reader.GetString();
             }
-
-            // 如果无法转换，抛出异常
-            throw new JsonException($"无法将JSON值转换为 {typeof(byte)} 类型");
+            else
+            {
+                throw new JsonException($"不支持的键类型：{reader.TokenType}");
+            }
         }
 
-        public override void Write(Utf8JsonWriter writer, byte value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
         {
-            writer.WriteNumberValue(value);
+            writer.WriteStringValue(value);
         }
     }
 }

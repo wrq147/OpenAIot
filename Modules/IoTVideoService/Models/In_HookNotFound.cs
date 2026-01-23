@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IoTVideoService.Models
@@ -28,7 +28,7 @@ namespace IoTVideoService.Models
         /// <summary>
         /// 播放 url 参数
         /// </summary>
-        [JsonProperty(PropertyName = "params")]
+        [JsonPropertyName("params")]
         public string @params { get; set; }
         /// <summary>
         /// 播放器端口号

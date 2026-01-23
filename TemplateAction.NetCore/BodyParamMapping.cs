@@ -99,7 +99,7 @@ namespace TemplateAction.NetCore
                             }
                             if (isObject)
                             {
-                                var sourceObj = ac.Context.Items[tkey] as Dictionary<string, JsonElement>;
+                                var sourceObj = ac.Context.Items[tkey] as IDictionary<string, JsonElement>;
                                 if (sourceObj == null)
                                 {
                                     if (parseContent == null)
@@ -151,10 +151,10 @@ namespace TemplateAction.NetCore
                             StreamReader sr = new StreamReader(req.InputStream, Encoding.GetEncoding(encodingstr));
                             if (typeof(string).Equals(t) || t.IsValueType || ac.Context.Items.Contains(tkey) || ac.ActionNode.Method.GetParameters().Length > 1)
                             {
-                                var sourceObj = ac.Context.Items[tkey] as Dictionary<string, XmlElement>;
+                                var sourceObj = ac.Context.Items[tkey] as IDictionary<string, XmlElement>;
                                 if (sourceObj == null)
                                 {
-                                    sourceObj = (Dictionary<string, XmlElement>)DefaultXml(await sr.ReadToEndAsync(), typeof(Dictionary<string, XmlElement>));
+                                    sourceObj = (IDictionary<string, XmlElement>)DefaultXml(await sr.ReadToEndAsync(), typeof(Dictionary<string, XmlElement>));
                                     ac.Context.Items[tkey] = sourceObj;
                                 }
                                 if (sourceObj != null)

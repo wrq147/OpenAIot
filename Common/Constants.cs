@@ -1,9 +1,10 @@
 ﻿
-using Common.Newtonsoft;
+using Common.Json;
 using Common.Share;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
 
@@ -36,29 +37,27 @@ namespace Common
         /// </summary>
         public const int PARAM_ERR = 9001;
 
-        public static IDictionary<Type, string> TpMappings = new Dictionary<Type, string>()
-        {
-             {typeof(DateTime?), "DateTime"},
-             {typeof(DateTime), "DateTime"},
-             {typeof(string), "string"},
-        };
         /// <summary>
         /// 接口串行化与反串行化设置
         /// </summary>
-        public static JsonSerializerSettings ApiJsonSetting = new JsonSerializerSettings()
+        public static JsonSerializerOptions ApiJsonSetting = new JsonSerializerOptions
         {
-            //日期类型默认格式化处理
-            DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
-            DateFormatString = "yyyy-MM-dd HH:mm:ss",
-            //null转空字符串、日期类型的时区转换
-            ContractResolver = new CustomResolver()
+            TypeInfoResolver = new SerializationControlContractResolver(),
+            Converters = { new DateTimeConverter(), new MyStringToNumberConverter(), new MyNumberToStringConverter(), new MyObjectConverter() },
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
+
         /// <summary>
         /// 解释参数的json引擎
         /// </summary>
         public static DecodeJson ParamDecodeJson = (json, t) =>
         {
-            return JsonConvert.DeserializeObject(json, t, Constants.ApiJsonSetting);
+            return System.Text.Json.JsonSerializer.Deserialize(json, t, Constants.ApiJsonSetting);
+        };
+        public static IDictionary<Type, string> TpMappings = new Dictionary<Type, string>()
+        {
+             {typeof(DateTime?), "DateTime"},
+             {typeof(DateTime), "DateTime"},
         };
         /// <summary>
         /// 默认参数映射

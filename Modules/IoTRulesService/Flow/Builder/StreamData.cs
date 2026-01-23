@@ -1,11 +1,8 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Text.Json.Serialization;
 namespace IoTRulesService.Flow.Builder
 {
     /// <summary>
@@ -27,7 +24,6 @@ namespace IoTRulesService.Flow.Builder
         }
         public IDictionary<string, object> Data { get; set; }
         public long Time { get; set; }
-        [JsonConverter(typeof(DateConverter), "yyyy-MM-dd HH:mm:ss")]
         public DateTime TimeStr
         {
             get { return MyAccess.Core.TypeConvert.Unix2Time(Time); }

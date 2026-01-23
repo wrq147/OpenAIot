@@ -1,11 +1,11 @@
 ﻿using AuthService;
 using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IoTAIService.Models
@@ -37,7 +37,7 @@ namespace IoTAIService.Models
         /// <summary>
         /// 人脸建模头像
         /// </summary>
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string FaceImg { get; set; }
         /// <summary>
         /// 建模Id

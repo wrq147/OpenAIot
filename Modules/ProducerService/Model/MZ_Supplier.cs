@@ -1,11 +1,10 @@
 ﻿using AuthService.Fields;
-using AuthService.Model;
 using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 
 namespace ProducerService.Model
@@ -24,7 +23,7 @@ namespace ProducerService.Model
         /// <summary>
         /// 所属组织ID
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 供应商编号
@@ -77,13 +76,13 @@ namespace ProducerService.Model
         /// <summary>
         /// 状态：0为停用，1为正常
         /// </summary>
-        [JsonConverter(typeof(OnlyDeserialize))]
+        [OnlyDeserialize]
         public string Status { get; set; }
         /// <summary>
         /// 状态名称
         /// </summary>
         [DataIgnore]
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public string StatusName { get; set; }
         /// <summary>
         /// 扩展值
@@ -95,7 +94,7 @@ namespace ProducerService.Model
         /// 扩展的关联对象
         /// </summary>
         [DataIgnore]
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public Dictionary<string, object> ExtObjects { get; set; }
         public string GetFormId()
         {

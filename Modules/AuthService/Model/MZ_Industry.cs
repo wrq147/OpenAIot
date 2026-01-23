@@ -1,7 +1,7 @@
 ﻿using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AuthService.Model
 {

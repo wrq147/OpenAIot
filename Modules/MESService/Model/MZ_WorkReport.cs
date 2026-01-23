@@ -2,7 +2,6 @@
 using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +22,7 @@ namespace MESService.Model
         /// <summary>
         /// 所属组织ID
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 关联的工单Id

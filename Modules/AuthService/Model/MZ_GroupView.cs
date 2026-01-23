@@ -1,10 +1,10 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AuthService.Model
@@ -20,7 +20,7 @@ namespace AuthService.Model
         /// <summary>
         /// 所属组织ID
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 分组名称

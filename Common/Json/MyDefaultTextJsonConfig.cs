@@ -8,7 +8,7 @@ namespace Common.Json
     {
         public static readonly JsonSerializerOptions DefaultOptions = new JsonSerializerOptions
         {
-            Converters = { new MyStringToNumberConverter(), new MyNumberToStringConverter(), new MyObjectConverter() },
+            Converters = { new MyStringToNumberConverter(),new MyNumberToStringConverter(), new MyObjectConverter() },
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
     }

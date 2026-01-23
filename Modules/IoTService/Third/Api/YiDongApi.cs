@@ -6,6 +6,7 @@ using IoTService.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
@@ -56,7 +57,7 @@ namespace IoTService.Third.Api
                             reqparams.Add("transid", GenerateTransId());
                             string server_Ip = "https://api.iot.10086.cn/v5/ec";
                             string res = await HttpHelper.Instance.GetAsync(server_Ip, reqparams);
-                            dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+                            dynamic resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
                             if (resObj.status != null && resObj.status == "0")
                             {
                                 tk = resObj.result[0].token;
@@ -82,7 +83,7 @@ namespace IoTService.Third.Api
             reqparams.Add("token", token);
             reqparams.Add("iccid", iccid);
             var res = await HttpHelper.Instance.GetAsync("https://api.iot.10086.cn/v5/ec/query/sim-basic-info", reqparams);
-            dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+            dynamic resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
             if (resObj.status != null && resObj.status == "0")
             {
                 MZ_IotCard card = new MZ_IotCard();
@@ -99,7 +100,7 @@ namespace IoTService.Third.Api
                 reqparams.Add("token", token);
                 reqparams.Add("iccid", iccid);
                 res = await HttpHelper.Instance.GetAsync("https://api.iot.10086.cn/v5/ec/query/sim-status", reqparams);
-                resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+                resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
                 if (resObj.status != null && resObj.status == "0")
                 {
                     string tmpstatus = resObj.result[0].cardStatus;
@@ -140,7 +141,7 @@ namespace IoTService.Third.Api
                     reqparams.Add("token", token);
                     reqparams.Add("iccid", iccid);
                     res = await HttpHelper.Instance.GetAsync("https://api.iot.10086.cn/v5/ec/query/sim-status", reqparams);
-                    resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+                    resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
                     if (resObj.status != null && resObj.status == "0")
                     {
                         var accmlist = resObj.result[0].accmMarginList;
@@ -199,7 +200,7 @@ namespace IoTService.Third.Api
             reqparams.Add("operType", "11");
             reqparams.Add("reason", "物联卡过期自动停机");
             var res = await HttpHelper.Instance.GetAsync("https://api.iot.10086.cn/v5/ec/change/sim-status/batch", reqparams);
-            dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+            dynamic resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
             if (resObj.status != null && resObj.status == "0")
             {
                 return BusResponse<string>.Success();

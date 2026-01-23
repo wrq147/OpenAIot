@@ -4,9 +4,14 @@
         <name>Common</name>
     </assembly>
     <members>
-        <member name="T:Common.Attr.Byte2String">
+        <member name="T:Common.Attr.AvatarUrl">
             <summary>
-            byte转string
+            头像URL转换器
+            </summary>
+        </member>
+        <member name="M:Common.Attr.AvatarUrl.Write(System.Text.Json.Utf8JsonWriter,System.String,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：空值时使用默认头像地址
             </summary>
         </member>
         <member name="T:Common.Attr.FileUrl">
@@ -14,142 +19,47 @@
             转成完整文件url
             </summary>
         </member>
-        <member name="M:Common.Attr.FileUrl.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+        <member name="M:Common.Attr.FileUrl.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
-            替换前缀
+            反序列化：移除URL前缀
             </summary>
-            <param name="reader"></param>
-            <param name="objectType"></param>
-            <param name="existingValue"></param>
-            <param name="serializer"></param>
-            <returns></returns>
         </member>
-        <member name="M:Common.Attr.FileUrl.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+        <member name="M:Common.Attr.FileUrl.Write(System.Text.Json.Utf8JsonWriter,System.String,System.Text.Json.JsonSerializerOptions)">
             <summary>
-            添加前缀
+            序列化：添加URL前缀
             </summary>
-            <param name="writer"></param>
-            <param name="value"></param>
-            <param name="serializer"></param>
         </member>
         <member name="T:Common.Attr.ImageUrl">
             <summary>
             转成完整图片url
             </summary>
         </member>
-        <member name="M:Common.Attr.ImageUrl.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+        <member name="M:Common.Attr.ImageUrl.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
-            替换前缀
-            </summary>
-            <param name="reader"></param>
-            <param name="objectType"></param>
-            <param name="existingValue"></param>
-            <param name="serializer"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Common.Attr.ImageUrl.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <summary>
-            添加前缀
-            </summary>
-            <param name="writer"></param>
-            <param name="value"></param>
-            <param name="serializer"></param>
-        </member>
-        <member name="T:Common.Attr.NumberConverter">
-            <inheritdoc />
-            <summary>
-            ⼤数据json序列化重写
+            反序列化：移除URL前缀，Base64图片自动上传并返回URL
             </summary>
         </member>
-        <member name="F:Common.Attr.NumberConverter._ship">
+        <member name="M:Common.Attr.ImageUrl.Write(System.Text.Json.Utf8JsonWriter,System.String,System.Text.Json.JsonSerializerOptions)">
             <summary>
-            转换成字符串的类型
+            序列化：添加URL前缀，空值时使用默认图片地址
             </summary>
         </member>
-        <member name="M:Common.Attr.NumberConverter.#ctor">
+        <member name="M:Common.Attr.ImageUrl.GetFullUrl(System.String,Common.Share.GeneralOption)">
             <summary>
-            ⼤数据json序列化重写实例化
+            通用方法：拼接完整URL前缀
             </summary>
         </member>
-        <member name="M:Common.Attr.NumberConverter.#ctor(Common.Attr.NumberConverterShip)">
+        <member name="M:Common.Attr.ImageUrl.GetDefaultUrl(System.String,Common.Share.GeneralOption)">
             <summary>
-            ⼤数据json序列化重写实例化
-            </summary>
-            <param name="ship">转换成字符串的类型</param>
-        </member>
-        <member name="M:Common.Attr.NumberConverter.CanConvert(System.Type)">
-            <inheritdoc />
-            <summary>
-            确定此实例是否可以转换指定的对象类型。
-            </summary>
-            <param name="objectType">对象的类型。</param>
-            <returns>如果此实例可以转换指定的对象类型，则为：<c>true</c>，否则为：<c>false</c></returns>
-        </member>
-        <member name="M:Common.Attr.NumberConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <inheritdoc />
-            <inheritdoc />
-            <summary>
-            读取对象的JSON表⽰。
-            </summary>
-            <param name="reader">从<see cref="T:Newtonsoft.Json.JsonReader" />中读取。</param>
-            <param name="objectType">对象的类型。</param>
-            <param name="existingValue">正在读取的对象的现有值。</param>
-            <param name="serializer">调⽤的序列化器实例。</param>
-            <returns>对象值。</returns>
-        </member>
-        <member name="M:Common.Attr.NumberConverter.AsType(System.String,System.Type)">
-            <summary>
-            字符串格式数据转其他类型数据
-            </summary>
-            <param name="input">输⼊的字符串</param>
-            <param name="destinationType">⽬标格式</param>
-            <returns>转换结果</returns>
-        </member>
-        <member name="M:Common.Attr.NumberConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <inheritdoc />
-            <summary>
-            写⼊对象的JSON表⽰形式。
-            </summary>
-            <param name="writer">要写⼊的<see cref="T:Newtonsoft.Json.JsonWriter" />。</param>
-            <param name="value">要写⼊对象值</param>
-            <param name="serializer">调⽤的序列化器实例。</param>
-        </member>
-        <member name="T:Common.Attr.NumberConverterShip">
-            <summary>
-            转换成字符串的类型
+            通用方法：获取带前缀的默认URL
             </summary>
         </member>
-        <member name="F:Common.Attr.NumberConverterShip.Int64">
-            <summary>
-            长整数
-            </summary>
-        </member>
-        <member name="F:Common.Attr.NumberConverterShip.UInt64">
-            <summary>
-            ⽆符号长整数
-            </summary>
-        </member>
-        <member name="F:Common.Attr.NumberConverterShip.Single">
-            <summary>
-            浮点数
-            </summary>
-        </member>
-        <member name="F:Common.Attr.NumberConverterShip.Double">
-            <summary>
-            双精度浮点数
-            </summary>
-        </member>
-        <member name="F:Common.Attr.NumberConverterShip.Decimal">
-            <summary>
-            ⼤数字
-            </summary>
-        </member>
-        <member name="T:Common.Attr.OnlyDeserialize">
+        <member name="T:Common.Attr.OnlyDeserializeAttribute">
             <summary>
             只反串行化(只能添加修改，不会输出给用户）
             </summary>
         </member>
-        <member name="T:Common.Attr.OnlySeriaize">
+        <member name="T:Common.Attr.OnlySeriaizeAttribute">
             <summary>
             只串行化,表示无法通过API修改
             </summary>
@@ -1321,36 +1231,6 @@
             <summary>
             坐标信息
             </summary>
-        </member>
-        <member name="M:Common.Newtonsoft.CustomResolver.CreateProperties(System.Type,Newtonsoft.Json.MemberSerialization)">
-            <summary>
-            创建属性
-            </summary>
-            <param name="type">类型</param>
-            <param name="memberSerialization">序列化成员</param>
-            <returns></returns>
-        </member>
-        <member name="M:Common.Newtonsoft.CustomValueProvider.#ctor(System.Reflection.PropertyInfo)">
-            <summary>
-            构造函数
-            </summary>
-            <param name="memberInfo"></param>
-        </member>
-        <member name="M:Common.Newtonsoft.CustomValueProvider.GetValue(System.Object)">
-            <inheritdoc />
-            <summary>
-            获取Value
-            </summary>
-            <param name="target"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Common.Newtonsoft.CustomValueProvider.SetValue(System.Object,System.Object)">
-            <inheritdoc />
-            <summary>
-            设置Value
-            </summary>
-            <param name="target"></param>
-            <param name="value"></param>
         </member>
         <member name="T:Common.Redis.RedisConnectionManager">
             <summary>

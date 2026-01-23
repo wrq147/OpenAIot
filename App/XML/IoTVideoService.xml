@@ -160,6 +160,16 @@
             预置位ID
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.In_RecordPage.RecordTimeType">
+            <summary>
+            时段类型：week（按周）、time（按时段）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_RecordPage.Status">
+            <summary>
+            状态：0-禁用，1-启用
+            </summary>
+        </member>
         <member name="T:IoTVideoService.Models.MZ_IotRecord">
             <summary>
             录像计划
@@ -193,6 +203,111 @@
         <member name="P:IoTVideoService.Models.MZ_IotRecord.RecordTimeDesc">
             <summary>
             录像时段描述（如：周一 08:00-18:00）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.WeekConfig">
+            <summary>
+            按周配置（JSON格式）：[{\"week\":1,\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.TimeConfig">
+            <summary>
+            按时段配置（JSON格式）：[{\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.Status">
+            <summary>
+            状态：0-禁用，1-启用
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.Models.MZ_IotRecordFile">
+            <summary>
+            录像播放文件信息
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.FileDate">
+            <summary>
+            记录的日期
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.PlanId">
+            <summary>
+            关联录像计划ID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.VideoId">
+            <summary>
+            视频源Id
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.VideoKey">
+            <summary>
+            ZLMediaKit的视频Key
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.PullNode">
+            <summary>
+            节点GUID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StorageWay">
+            <summary>
+            0为文件存储，1为minio
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StartTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.EndTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.Models.MZ_IotRecordLog">
+            <summary>
+            录像计划的执行日志
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.PlanId">
+            <summary>
+            关联录像计划ID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.VideoId">
+            <summary>
+            视频源Id
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.VideoKey">
+            <summary>
+            ZLMediaKit的视频Key
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.LogType">
+            <summary>
+            日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.Content">
+            <summary>
+            日志内容（如：录像失败原因、文件清理数量等）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.ExecTime">
+            <summary>
+            执行时间
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.Id">
@@ -255,40 +370,91 @@
             服务器节点Id
             </summary>
         </member>
-        <member name="T:IoTVideoService.RecordTimeDescGenerator">
+        <member name="M:IoTVideoService.PlanUtil.PlanSchedule.CreateJob(System.String,System.Collections.Generic.List{IoTVideoService.PlanUtil.RecordTriggerTask})">
+            <summary>
+            创建定时计划任务
+            </summary>
+            <param name="scheduler"></param>
+            <param name="planId"></param>
+            <param name="tasks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.Parse(IoTVideoService.Models.MZ_IotRecord)">
+            <summary>
+            解析录像计划为启停触发任务列表（含Cron表达式）
+            </summary>
+            <param name="plan">录像计划实体（需包含核心字段）</param>
+            <returns>触发任务列表</returns>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.ParseWeekConfig(System.String)">
+            <summary>
+            解析按周配置（WeekConfig）为启停触发任务
+            </summary>
+            <param name="weekConfigJson">按周配置JSON字符串</param>
+            <returns>触发任务列表</returns>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.ParseTimeConfig(System.String)">
+            <summary>
+            解析按时段配置（TimeConfig）为启停触发任务
+            </summary>
+            <param name="timeConfigJson">按时段配置JSON字符串</param>
+            <returns>触发任务列表</returns>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GenerateCronExpression(IoTVideoService.PlanUtil.RecordTriggerTask)">
+            <summary>
+            生成触发任务对应的Cron表达式（标准6位：秒 分 时 日 月 周）
+            </summary>
+            <param name="task">触发任务</param>
+            <returns>Cron表达式</returns>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GetFirstTriggerTime(IoTVideoService.PlanUtil.RecordTriggerTask)">
+            <summary>
+            计算触发任务的首次触发时间（当前时间之后的第一个有效时间）
+            </summary>
+            <param name="task">触发任务</param>
+            <returns>首次触发时间</returns>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.FormatTime(System.String)">
+            <summary>
+            格式化时间（HH:mm:ss → HH:mm）
+            </summary>
+            <param name="timeStr">时间字符串</param>
+            <returns>格式化后的时间</returns>
+        </member>
+        <member name="T:IoTVideoService.PlanUtil.RecordTimeDescGenerator">
             <summary>
             录像计划时段描述生成工具类
             </summary>
         </member>
-        <member name="M:IoTVideoService.RecordTimeDescGenerator.FormatTime(System.String)">
+        <member name="M:IoTVideoService.PlanUtil.RecordTimeDescGenerator.FormatTime(System.String)">
             <summary>
             格式化时间（去掉秒，如 08:00:00 → 08:00）
             </summary>
             <param name="timeStr">时间字符串</param>
             <returns>格式化后的时间</returns>
         </member>
-        <member name="M:IoTVideoService.RecordTimeDescGenerator.MergeWeekNumbers(System.Collections.Generic.List{System.Int32})">
+        <member name="M:IoTVideoService.PlanUtil.RecordTimeDescGenerator.MergeWeekNumbers(System.Collections.Generic.List{System.Int32})">
             <summary>
             合并连续的星期数
             </summary>
             <param name="weekNums">星期数列表</param>
             <returns>合并后的星期描述</returns>
         </member>
-        <member name="M:IoTVideoService.RecordTimeDescGenerator.GenerateWeekDesc(System.String)">
+        <member name="M:IoTVideoService.PlanUtil.RecordTimeDescGenerator.GenerateWeekDesc(System.String)">
             <summary>
             按周配置生成录像时段描述（支持同一天多时段）
             </summary>
             <param name="weekConfigJson">按周配置JSON字符串</param>
             <returns>格式化的时段描述</returns>
         </member>
-        <member name="M:IoTVideoService.RecordTimeDescGenerator.GenerateTimeDesc(System.String)">
+        <member name="M:IoTVideoService.PlanUtil.RecordTimeDescGenerator.GenerateTimeDesc(System.String)">
             <summary>
             按时段配置生成录像时段描述
             </summary>
             <param name="timeConfigJson">按时段配置JSON字符串</param>
             <returns>格式化的时段描述</returns>
         </member>
-        <member name="M:IoTVideoService.RecordTimeDescGenerator.GenerateRecordDesc(System.String,System.String,System.String)">
+        <member name="M:IoTVideoService.PlanUtil.RecordTimeDescGenerator.GenerateRecordDesc(System.String,System.String,System.String)">
             <summary>
             统一生成录像时段描述（兼容按周/按时段，支持同一天多时段）
             </summary>
@@ -297,14 +463,70 @@
             <param name="timeConfigJson">按时段配置JSON</param>
             <returns>最终的时段描述</returns>
         </member>
-        <member name="T:IoTVideoService.RecordTimeDescGenerator.WeekConfigItem">
+        <member name="T:IoTVideoService.PlanUtil.OperType">
             <summary>
-            按周配置项模型
+            触发操作类型
             </summary>
         </member>
-        <member name="T:IoTVideoService.RecordTimeDescGenerator.TimeConfigItem">
+        <member name="F:IoTVideoService.PlanUtil.OperType.Start">
+            <summary>
+            启动录像
+            </summary>
+        </member>
+        <member name="F:IoTVideoService.PlanUtil.OperType.Stop">
+            <summary>
+            停止录像
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.PlanUtil.RecordTriggerTask">
+            <summary>
+            录像计划触发任务（时间轮/任务中心的最小执行单元）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.TriggerTime">
+            <summary>
+            触发时间（首次触发时间，循环任务会基于此计算后续时间）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.OperType">
+            <summary>
+            操作类型（启动/停止）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.IsRecurring">
+            <summary>
+            是否循环触发（按周/每天循环）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.RecurType">
+            <summary>
+            循环周期（仅循环任务有效）：Week=每周，Day=每天
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.WeekDay">
+            <summary>
+            关联的星期数（仅按周循环有效，1=周一，7=周日）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.TimeOfDay">
+            <summary>
+            触发时间的时分（HH:mm，用于循环任务计算下次触发时间）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.CronExpression">
+            <summary>
+            对应的Cron表达式（适配XXL-Job/Quartz/Hangfire）
+            格式：秒 分 时 日 月 周（星期1=周一，7=周日）
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.PlanUtil.TimeConfigItem">
             <summary>
             按时段配置项模型
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.PlanUtil.WeekConfigItem">
+            <summary>
+            按周配置项模型
             </summary>
         </member>
     </members>

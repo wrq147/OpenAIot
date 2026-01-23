@@ -1,8 +1,8 @@
 ﻿using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace IoTService.Models
 {

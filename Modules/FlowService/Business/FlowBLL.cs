@@ -183,7 +183,7 @@ namespace FlowService.Business
 
             }
             var tform = await _form.SelectFormByTemplateId(query.TemplateId);
-            FormField[] fields = JsonConvert.DeserializeObject<FormField[]>(tform.FormFields, new JsonFieldConvert());
+            FormField[] fields = System.Text.Json.JsonSerializer.Deserialize<FormField[]>(tform.FormFields, FlowJsonSerializerConfig.FieldOptions);
             var fieldDict = FormField.ToFieldDict(fields);
             var tlist = await _template.GetFlowRecord(query, fieldDict);
             List<long> flowIds = tlist.List.Select(x => x.Id.Value).ToList();

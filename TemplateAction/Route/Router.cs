@@ -272,7 +272,7 @@ namespace TemplateAction.Route
             {
                 _matcher = new RouteTemplateMatcher(ParsedTemplate, Defaults);
             }
-            Dictionary<string, object> dict = context.Items[ROUTE_DATA_KEY] as Dictionary<string, object>;
+            IDictionary<string, object> dict = context.Items[ROUTE_DATA_KEY] as IDictionary<string, object>;
             if (dict == null)
             {
                 dict = new Dictionary<string, object>();

@@ -1,6 +1,6 @@
 ﻿using Common;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -21,7 +21,7 @@ namespace AuthService
         /// <summary>
         /// 内链地址（http(s)://开头）
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string link { get; set; }
         public Out_MetaInfo(string title, string icon)
         {

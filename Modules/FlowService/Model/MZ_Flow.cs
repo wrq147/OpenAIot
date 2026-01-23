@@ -1,9 +1,9 @@
 ﻿using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace FlowService.Model
 {
@@ -30,7 +30,7 @@ namespace FlowService.Model
         /// <summary>
         /// 分组名
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [DataIgnore]
         public string GroupName { get; set; }
         /// <summary>

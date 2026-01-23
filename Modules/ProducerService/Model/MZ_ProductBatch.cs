@@ -1,7 +1,7 @@
 ﻿using Common.Attr;
 using Minio;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ProducerService.Model
 {

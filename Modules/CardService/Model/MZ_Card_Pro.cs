@@ -1,9 +1,9 @@
 ﻿using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CardService.Model
 {
@@ -21,7 +21,7 @@ namespace CardService.Model
         /// <summary>
         /// 所属组织Id
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 所属部门Id

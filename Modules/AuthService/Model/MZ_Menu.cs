@@ -1,10 +1,10 @@
 ﻿using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -15,13 +15,13 @@ namespace AuthService
         /// 菜单ID
         /// </summary>
         [ID(false)]
-        [JsonProperty(PropertyName = "menuId")]
+        [JsonPropertyName("menuId")]
         public virtual long? menu_id { get; set; }
 
         /// <summary>
         /// 菜单名称
         /// </summary>
-        [JsonProperty(PropertyName = "menuName")]
+        [JsonPropertyName("menuName")]
         [Required(ErrorMessage = "菜单名称不能为空")]
         [StringLength(maximumLength: 50, ErrorMessage = "菜单名称长度不能超过50个字符")]
         public virtual string menu_name { get; set; }
@@ -40,13 +40,13 @@ namespace AuthService
         /// <summary>
         /// 父菜单ID
         /// </summary>
-        [JsonProperty(PropertyName = "parentId")]
+        [JsonPropertyName("parentId")]
         public virtual long? parent_id { get; set; }
 
         /// <summary>
         /// 显示顺序
         /// </summary>
-        [JsonProperty(PropertyName = "orderNum")]
+        [JsonPropertyName("orderNum")]
         public virtual int? order_num { get; set; }
 
         /// <summary>
@@ -69,22 +69,20 @@ namespace AuthService
         /// <summary>
         /// 是否为外链（0否 1是）
         /// </summary>
-        [JsonProperty(PropertyName = "isFrame")]
-        [JsonConverter(typeof(Byte2String))]
+        [JsonPropertyName("isFrame")]
         public virtual byte? is_frame { get; set; }
 
         /// <summary>
         /// 是否缓存（0缓存 1不缓存）
         /// </summary>
-        [JsonProperty(PropertyName = "isCache")]
-        [JsonConverter(typeof(Byte2String))]
+        [JsonPropertyName("isCache")]
         public virtual byte? is_cache { get; set; }
 
         /// <summary>
         /// 类型（M目录 C菜单 F按钮）
         /// </summary>
         [Required(ErrorMessage = "菜单类型不能为空")]
-        [JsonProperty(PropertyName = "menuType")]
+        [JsonPropertyName("menuType")]
         public virtual string menu_type { get; set; }
 
         /// <summary>

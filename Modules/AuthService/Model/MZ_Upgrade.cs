@@ -1,11 +1,10 @@
 ﻿using Common.Attr;
-using Microsoft.Extensions.DependencyInjection;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AuthService.Model

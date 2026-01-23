@@ -1,7 +1,7 @@
 ﻿using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace DictService.Model
 {
@@ -12,37 +12,37 @@ namespace DictService.Model
         /// 字典编码
         /// </summary>
         [ID(true)]
-        [JsonProperty(PropertyName = "dictCode")]
+        [JsonPropertyName("dictCode")]
         public virtual long? dict_code { get; set; }
         /// <summary>
         /// 字典排序
         /// </summary>
-        [JsonProperty(PropertyName = "dictSort")]
+        [JsonPropertyName("dictSort")]
         public virtual int? dict_sort { get; set; }
         /// <summary>
         /// 字典标签
         /// </summary>
-        [JsonProperty(PropertyName = "label")]
+        [JsonPropertyName("label")]
         public virtual string dict_label { get; set; }
         /// <summary>
         /// 字典键值
         /// </summary>
-        [JsonProperty(PropertyName = "value")]
+        [JsonPropertyName("value")]
         public virtual string dict_value { get; set; }
         /// <summary>
         /// 字典类型
         /// </summary>
-        [JsonProperty(PropertyName = "dictType")]
+        [JsonPropertyName("dictType")]
         public virtual string dict_type { get; set; }
         /// <summary>
         /// 样式属性（其他样式扩展）
         /// </summary>
-        [JsonProperty(PropertyName = "cssClass")]
+        [JsonPropertyName("cssClass")]
         public virtual string css_class { get; set; }
         /// <summary>
         /// 表格字典样式
         /// </summary>
-        [JsonProperty(PropertyName = "listClass")]
+        [JsonPropertyName("listClass")]
         public virtual string list_class { get; set; }
         /// <summary>
         /// 是否默认（Y是 N否）

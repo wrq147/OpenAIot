@@ -1,6 +1,5 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -56,7 +55,7 @@ namespace AfterService.Model
         /// 子分类
         /// </summary>
         [DataIgnore]
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public List<MZ_RoomCategory> Children { get; set; }
 
 

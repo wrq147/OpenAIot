@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using Newtonsoft.Json;
 namespace Common.Share
 {
     public class DefaultAjaxResult<T> : AjaxResult
@@ -35,7 +34,7 @@ namespace Common.Share
         }
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, Constants.ApiJsonSetting);
+            return System.Text.Json.JsonSerializer.Serialize(this, Constants.ApiJsonSetting);
         }
     }
 }

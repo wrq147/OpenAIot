@@ -1,27 +1,27 @@
 ﻿using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
     [TableName("mz_role")]
     public class MZ_Role: BaseEntity
     {
-        [JsonProperty(PropertyName = "roleId")]
+        [JsonPropertyName("roleId")]
         [ID(true)]
         public virtual long? RoleID { get; set; }
         /// <summary>
         /// 角色名称
         /// </summary>
-        [JsonProperty(PropertyName = "roleName")]
+        [JsonPropertyName("roleName")]
         public virtual string RoleName { get; set; }
 
-        [JsonProperty(PropertyName = "roleSort")]
+        [JsonPropertyName("roleSort")]
         public virtual int? RoleSort { get; set; }
-        [JsonProperty(PropertyName = "remark")]
+        [JsonPropertyName("remark")]
         public virtual string RoleDesc { get; set; }
-        [JsonProperty(PropertyName = "status")]
+        [JsonPropertyName("status")]
         public virtual string Status { get; set; }
         /// <summary>
         /// 是否为系统角色，不可删除，不可修改

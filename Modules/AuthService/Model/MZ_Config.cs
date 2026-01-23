@@ -1,6 +1,6 @@
 ﻿using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -11,27 +11,27 @@ namespace AuthService
         /// 参数主键
         /// </summary>
         [ID(true)]
-        [JsonProperty(PropertyName = "configId")]
+        [JsonPropertyName("configId")]
         public int? config_id { get; set; }
         /// <summary>
         /// 参数名称
         /// </summary>
-        [JsonProperty(PropertyName = "configName")]
+        [JsonPropertyName("configName")]
         public string config_name { get; set; }
         /// <summary>
         /// 参数键名
         /// </summary>
-        [JsonProperty(PropertyName = "configKey")]
+        [JsonPropertyName("configKey")]
         public string config_key { get; set; }
         /// <summary>
         /// 参数键值
         /// </summary>
-        [JsonProperty(PropertyName = "configValue")]
+        [JsonPropertyName("configValue")]
         public string config_value { get; set; }
         /// <summary>
         /// 系统内置（Y是 N否）
         /// </summary>
-        [JsonProperty(PropertyName = "configType")]
+        [JsonPropertyName("configType")]
         public string config_type { get; set; }
         /// <summary>
         /// 备注

@@ -1,8 +1,8 @@
 ﻿using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -13,13 +13,13 @@ namespace AuthService
         /// <summary>
         /// 部门ID
         /// </summary>
-        [JsonProperty(PropertyName = "deptId")]
+        [JsonPropertyName("deptId")]
         [ID(false)]
         public long? dept_id { get; set; }
         /// <summary>
         /// 父部门ID
         /// </summary>
-        [JsonProperty(PropertyName = "parentId")]
+        [JsonPropertyName("parentId")]
         public long? parent_id { get; set; }
         /// <summary>
         /// 祖级列表
@@ -28,12 +28,12 @@ namespace AuthService
         /// <summary>
         /// 部门名称
         /// </summary>
-        [JsonProperty(PropertyName = "deptName")]
+        [JsonPropertyName("deptName")]
         public string dept_name { get; set; }
         /// <summary>
         /// 显示顺序
         /// </summary>
-        [JsonProperty(PropertyName = "orderNum")]
+        [JsonPropertyName("orderNum")]
         public int? order_num { get; set; }
         /// <summary>
         /// 联系电话

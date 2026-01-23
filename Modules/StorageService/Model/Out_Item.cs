@@ -1,5 +1,5 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace IoTService.Models
 {

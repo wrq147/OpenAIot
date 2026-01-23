@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using TemplateAction.Core;
 
 namespace MqttService.Model
 {
-    public class EmqxResult: AjaxResult
+    public class EmqxResult : AjaxResult
     {
         /// <summary>
         /// 认证结果通过 body 中的 result 标示，可选 allow、deny、ignore。
@@ -20,7 +20,7 @@ namespace MqttService.Model
         public bool is_superuser { get; set; }
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            return System.Text.Json.JsonSerializer.Serialize(this, MyDefaultTextJsonConfig.DefaultOptions);
         }
     }
 }

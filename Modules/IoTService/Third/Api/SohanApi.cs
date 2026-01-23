@@ -6,6 +6,7 @@ using IoTService.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,7 +90,7 @@ namespace IoTService.Third.Api
             map.Add("sign", tmpsign);
 
             var res = await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", System.Text.Json.JsonSerializer.Serialize(map, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8);
-            dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+            dynamic resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
             if (resObj.errorCode != null && resObj.errorCode == "SUCCESS")
             {
                 MZ_IotCard card = new MZ_IotCard();
@@ -169,7 +170,7 @@ namespace IoTService.Third.Api
             map.Add("sign", tmpsign);
 
             var res = await HttpHelper.Instance.PostJsonAsync("https://apim2m.iot-sohan.cn/index/m2m/api/v1", System.Text.Json.JsonSerializer.Serialize(map, MyDefaultTextJsonConfig.DefaultOptions), Encoding.UTF8);
-            dynamic resObj = Newtonsoft.Json.JsonConvert.DeserializeObject(res);
+            dynamic resObj = System.Text.Json.JsonSerializer.Deserialize<object>(res, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
             if (resObj.errorCode != null && resObj.errorCode == "SUCCESS")
             {
                 foreach (var tobj in resObj.data.iccds)

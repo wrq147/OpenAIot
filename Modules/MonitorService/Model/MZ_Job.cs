@@ -1,7 +1,6 @@
 ﻿using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 
 namespace MonitorService.Model
@@ -31,7 +30,7 @@ namespace MonitorService.Model
         /// </summary>
         public string cron_expression { get; set; }
         [DataIgnore]
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public DateTime? nextValidTime { get; set; }
         /// <summary>
         /// 计划策略

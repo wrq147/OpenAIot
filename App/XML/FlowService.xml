@@ -492,6 +492,16 @@
             节点json转换
             </summary>
         </member>
+        <member name="M:FlowService.FlowNode.Builder.StepJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据Type字段创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.Builder.StepJsonConverter.Write(System.Text.Json.Utf8JsonWriter,FlowService.FlowNode.Builder.Step.WorkflowStep,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON
+            </summary>
+        </member>
         <member name="P:FlowService.FlowNode.Builder.ApprovalTask.mode">
             <summary>
             多人审批时审批方式
@@ -1040,11 +1050,6 @@
             默认值
             </summary>
         </member>
-        <member name="T:FlowService.FlowNode.FormFields.JsonFieldConvert">
-            <summary>
-            表单字段转换
-            </summary>
-        </member>
         <member name="P:FlowService.FlowNode.FormFields.NumberInputProps.min">
             <summary>
             最小值
@@ -1160,9 +1165,29 @@
             条件转换
             </summary>
         </member>
+        <member name="M:FlowService.FlowNode.JsonFlowConditionConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据valueType字段 + 字典映射创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.JsonFlowConditionConverter.Write(System.Text.Json.Utf8JsonWriter,FlowService.FlowNode.Conditions.BaseCondition,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
+            </summary>
+        </member>
         <member name="T:FlowService.FlowNode.JsonFlowNodeConverter">
             <summary>
             工作流节点转换
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.JsonFlowNodeConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据type字段 + 字典映射创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:FlowService.FlowNode.JsonFlowNodeConverter.Write(System.Text.Json.Utf8JsonWriter,FlowService.FlowNode.FlowBaseNode,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
             </summary>
         </member>
         <member name="P:FlowService.FlowNode.ObjData.type">

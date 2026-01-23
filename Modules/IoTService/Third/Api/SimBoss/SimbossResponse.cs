@@ -1,6 +1,5 @@
-﻿using System;
-using Newtonsoft.Json;
-
+﻿using Common.Json;
+using System;
 
 namespace IoTService.Third.Api.SimBoss
 {
@@ -33,7 +32,7 @@ namespace IoTService.Third.Api.SimBoss
 
         public override String ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            return System.Text.Json.JsonSerializer.Serialize(this, MyDefaultTextJsonConfig.DefaultOptions);
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Common.Share
 {
@@ -26,7 +26,7 @@ namespace Common.Share
         /// <summary>
         /// 子节点
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<TreeSelect<T>> children { get; set; }
     }
    

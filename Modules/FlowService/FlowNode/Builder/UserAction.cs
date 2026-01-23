@@ -1,8 +1,8 @@
 ﻿using Common.Attr;
 using Common.Share;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 
 namespace FlowService.FlowNode.Builder
@@ -37,7 +37,7 @@ namespace FlowService.FlowNode.Builder
     public class Out_ActionUser : ActionUser
     {
         public string RealName { get; set; }
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string Avatar { get; set; }
     }
 }

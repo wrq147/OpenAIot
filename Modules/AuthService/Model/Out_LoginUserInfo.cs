@@ -1,7 +1,7 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -22,7 +22,7 @@ namespace AuthService
         /// <summary>
         /// 头像
         /// </summary>
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string avatar { get; set; }
         /// <summary>
         /// 用户性别（0男 1女 2未知）

@@ -1,7 +1,6 @@
 ﻿using AuthService.Fields;
 using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +23,7 @@ namespace MESService.Model
         /// <summary>
         /// 所属组织ID
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 工艺路线Id
@@ -50,7 +49,7 @@ namespace MESService.Model
         /// 扩展的关联对象
         /// </summary>
         [DataIgnore]
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public Dictionary<string, object> ExtObjects { get; set; }
         [DataIgnore]
         public Dictionary<string, object> ExtVals { get; set; }

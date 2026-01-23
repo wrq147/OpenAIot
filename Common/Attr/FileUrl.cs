@@ -1,10 +1,11 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
@@ -13,75 +14,85 @@ namespace Common.Attr
     /// <summary>
     /// 转成完整文件url
     /// </summary>
-    public class FileUrl : JsonConverter
+    public class FileUrl : JsonConverter<string>
     {
-        public FileUrl()
-        {
-        }
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(string);
-        }
         /// <summary>
-        /// 替换前缀
+        /// 反序列化：移除URL前缀
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="objectType"></param>
-        /// <param name="existingValue"></param>
-        /// <param name="serializer"></param>
-        /// <returns></returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            // 读取原始字符串值
+            string val = reader.GetString();
+            if (string.IsNullOrEmpty(val))
+            {
+                return val;
+            }
+
+            // 获取当前上下文和配置
             TAAction ac = TAAction.Current;
-            if (ac == null || reader.Value == null) return reader.Value;
-            string val = reader.Value.ToString();
+            if (ac == null)
+            {
+                return val;
+            }
+
             ITAServiceProvider globalServiceProvider = ac.Context.Application.ServiceProvider;
             GeneralOption go = globalServiceProvider.GetService<IOptions<GeneralOption>>().Value;
+
+            // 移除minio_url前缀
             if (!string.IsNullOrEmpty(go.minio_url))
             {
                 val = val.Replace(go.minio_url, "");
             }
+
+            // 移除url前缀（兼容http/https）
             if (!string.IsNullOrEmpty(go.url))
             {
                 val = val.ToLower();
-                string tmpurl1 = go.url.ToLower();
-                tmpurl1 = tmpurl1.Replace("https:", "http:");
+                string tmpurl1 = go.url.ToLower().Replace("https:", "http:");
                 string tmpurl2 = tmpurl1.Replace("http:", "https:");
                 val = val.Replace(tmpurl1, string.Empty).Replace(tmpurl2, string.Empty);
             }
+
             return val;
         }
+
         /// <summary>
-        /// 添加前缀
+        /// 序列化：添加URL前缀
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="serializer"></param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                writer.WriteStringValue(value);
+                return;
+            }
+
+            // 获取当前上下文和配置
             TAAction ac = TAAction.Current;
             if (ac == null)
             {
-                writer.WriteValue(value);
+                writer.WriteStringValue(value);
                 return;
             }
-            string val = value.ToString();
+
             ITAServiceProvider globalServiceProvider = ac.Context.Application.ServiceProvider;
             GeneralOption go = globalServiceProvider.GetService<IOptions<GeneralOption>>().Value;
-            if (!string.IsNullOrEmpty(val))
-            {
-                if (!string.IsNullOrEmpty(go.minio_bucket) && val.StartsWith("/" + go.minio_bucket))
-                {
-                    val = go.minio_url + val;
-                }
-                else if (val.StartsWith("/"))
-                {
-                    val = go.url + val;
-                }
-            }
-            writer.WriteValue(val);
 
+            string val = value;
+            // 根据路径规则添加前缀
+            if (!string.IsNullOrEmpty(go.minio_bucket) && val.StartsWith("/" + go.minio_bucket))
+            {
+                val = go.minio_url + val;
+            }
+            else if (val.StartsWith("/"))
+            {
+                val = go.url + val;
+            }
+
+            // 写入处理后的字符串
+            writer.WriteStringValue(val);
         }
+
 
     }
 }

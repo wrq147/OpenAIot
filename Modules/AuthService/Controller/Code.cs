@@ -1,11 +1,12 @@
 ﻿using AuthService.Business;
 using AuthService.Model;
 using Common;
+using Common.Json;
 using Common.KuaiDi;
 using Common.Share;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -73,7 +74,7 @@ namespace AuthService.Controller
                 if (string.IsNullOrEmpty(maptype))
                 {
                     var rss = await HttpHelper.Instance.GetAsync($"https://apis.map.qq.com/ws/geocoder/v1/?location={location}&key={mapKey}");
-                    var lors = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(rss);
+                    dynamic lors = System.Text.Json.JsonSerializer.Deserialize<object>(rss, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
                     if (lors.status == 0)
                     {
                         string adcode = lors.result.ad_info.adcode;
@@ -131,29 +132,13 @@ namespace AuthService.Controller
                 else if (maptype == "gd")
                 {
                     var rss = await HttpHelper.Instance.GetAsync($"https://restapi.amap.com/v3/geocode/regeo?location={newinfo.Lng},{newinfo.Lat}&key={mapKey}");
-                    var lors = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(rss);
+                    dynamic lors = System.Text.Json.JsonSerializer.Deserialize<object>(rss, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
                     if (lors.status == "1")
                     {
-                        newinfo.AddressCode = string.Empty;
-                        if (lors.regeocode.addressComponent.adcode is JValue)
-                        {
-                            newinfo.AddressCode = lors.regeocode.addressComponent.adcode;
-                        }
-                        string province = string.Empty;
-                        if (lors.regeocode.addressComponent.province is JValue)
-                        {
-                            province = lors.regeocode.addressComponent.province;
-                        }
-                        string city = string.Empty;
-                        if (lors.regeocode.addressComponent.city is JValue)
-                        {
-                            city = lors.regeocode.addressComponent.city;
-                        }
-                        string district = string.Empty;
-                        if (lors.regeocode.addressComponent.district is JValue)
-                        {
-                            district = lors.regeocode.addressComponent.district;
-                        }
+                        newinfo.AddressCode = lors.regeocode.addressComponent.adcode;
+                        string province = lors.regeocode.addressComponent.province;
+                        string city = lors.regeocode.addressComponent.city;
+                        string district = lors.regeocode.addressComponent.district;
 
                         if (!string.IsNullOrEmpty(province))
                         {

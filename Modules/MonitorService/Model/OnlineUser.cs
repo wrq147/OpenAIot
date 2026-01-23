@@ -1,6 +1,6 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 namespace MonitorService.Model
 {
     public class OnlineUser
@@ -13,7 +13,7 @@ namespace MonitorService.Model
         /// <summary>
         /// 头像
         /// </summary>
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string Avatar { get; set; }
         /// <summary>
         /// ip地址

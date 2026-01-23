@@ -1,6 +1,6 @@
 ﻿
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace AuthService
 {
@@ -21,7 +21,7 @@ namespace AuthService
         /// <summary>
         /// 额外信息
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Out_LoginUserInfo ext_info { get; set; }
 
     }

@@ -1,11 +1,11 @@
 ﻿using Common.Attr;
 using IoTService.Models;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AfterService.Model
@@ -82,7 +82,7 @@ namespace AfterService.Model
         /// <summary>
         /// 设备创建时间
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public DateTime? CreateOn { get; set; }
         /// <summary>
         /// 最后在线时间
@@ -91,7 +91,7 @@ namespace AfterService.Model
         /// <summary>
         /// 协议版本
         /// </summary>
-        [JsonConverter(typeof(OnlyDeserialize))]
+        [OnlyDeserialize]
         public int? ProductVer { get; set; }
         /// <summary>
         /// 备注说明

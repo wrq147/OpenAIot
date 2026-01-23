@@ -1,11 +1,11 @@
 ﻿using FlowService.FlowNode.Builder.Step;
 using FlowService.FlowNode.FormFields;
 using FlowService.Model;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace FlowService.FlowNode

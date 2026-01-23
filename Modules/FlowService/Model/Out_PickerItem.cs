@@ -1,7 +1,7 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace FlowService.Model
 {
@@ -17,7 +17,7 @@ namespace FlowService.Model
         /// <summary>
         /// 图片
         /// </summary>
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string avatar { get; set; }
         public bool selected { get; set; }
         public string remark { get; set; }

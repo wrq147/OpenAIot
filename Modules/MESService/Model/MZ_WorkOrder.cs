@@ -1,6 +1,5 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using ProducerService.Model;
 using System;
 
@@ -20,7 +19,7 @@ namespace MESService.Model
         /// <summary>
         /// 所属组织ID
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public long? OrgId { get; set; }
         /// <summary>
         /// 生产计划Id

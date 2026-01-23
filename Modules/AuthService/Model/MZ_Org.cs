@@ -1,8 +1,8 @@
 ﻿using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 namespace AuthService
 {
     [TableName("mz_org")]
@@ -69,7 +69,7 @@ namespace AuthService
         /// <summary>
         /// 删除标志（0代表存在 2代表删除）
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public string del_flag { get; set; }
         /// <summary>
         /// 创建人信息

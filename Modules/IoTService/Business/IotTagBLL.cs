@@ -50,7 +50,7 @@ namespace IoTService.Business
                 newout.MapCode = tag.mapcode;
                 newout.Value = val;
                 newout.DisplayValue = string.Empty;
-                var tmpdict = val as Dictionary<string, object>;
+                var tmpdict = val as IDictionary<string, object>;
                 if (tmpdict != null)
                 {
                     newout.DisplayValue = $"经度:{tmpdict["lng"].ToString()},纬度:{tmpdict["lat"]}";

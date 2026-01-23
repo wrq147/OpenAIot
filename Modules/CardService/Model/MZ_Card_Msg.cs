@@ -1,6 +1,6 @@
 ﻿using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace CardService.Model
 {
@@ -54,12 +54,12 @@ namespace CardService.Model
         /// <summary>
         /// 结束时间
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public DateTime? EndOn { get; set; }
         /// <summary>
         /// 读取时间
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public DateTime? ReadedOn { get; set; }
     }
 }

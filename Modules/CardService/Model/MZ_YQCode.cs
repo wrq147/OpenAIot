@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Text.Json.Serialization;
 namespace CardService.Model
 {
     /// <summary>
@@ -10,22 +10,22 @@ namespace CardService.Model
         /// <summary>
         /// 邀请加入的企业
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public long? OrgId { get; set; }
         /// <summary>
         /// 邀请的企业名称
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string OrgName { get; set; }
         /// <summary>
         /// 邀请的部门
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public long? DeptId { get; set; }
         /// <summary>
         /// 邀请的部门名称
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string DeptName { get; set; }
         /// <summary>
         /// 是否限制只能一人加入

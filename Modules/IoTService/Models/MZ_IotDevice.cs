@@ -1,8 +1,8 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace IoTService.Models
 {
@@ -88,7 +88,7 @@ namespace IoTService.Models
         /// <summary>
         /// 设备创建时间
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public DateTime? CreateOn { get; set; }
         /// <summary>
         /// 最后在线时间

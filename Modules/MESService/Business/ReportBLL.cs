@@ -268,7 +268,7 @@ namespace MESService.Business
             {
                 var userDAL = _provider.GetService<UserDAL>();
                 var deptDAL = _provider.GetService<DeptDAL>();
-                ObjData[] commitObjs = Newtonsoft.Json.JsonConvert.DeserializeObject<ObjData[]>(tmpOper.AssignedUser);
+                ObjData[] commitObjs = System.Text.Json.JsonSerializer.Deserialize<ObjData[]>(tmpOper.AssignedUser, MyDefaultTextJsonConfig.DefaultOptions);
                 MZ_AdminInfo userInfo = await userDAL.GetAdminByOrgId(user.UserId, user.OrgId);
                 if (userInfo == null)
                 {
@@ -440,7 +440,7 @@ namespace MESService.Business
                 }
                 else
                 {
-                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson,MyDefaultTextJsonConfig.DefaultOptions);
+                    flowItems = System.Text.Json.JsonSerializer.Deserialize<List<ProdReportFlowItem>>(mesConfig.ReportFlowInitJson, MyDefaultTextJsonConfig.DefaultOptions);
                 }
 
                 ProdReportFlowCreate flowcreate = new ProdReportFlowCreate();

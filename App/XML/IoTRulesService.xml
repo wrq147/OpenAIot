@@ -1054,6 +1054,16 @@
             节点json转换
             </summary>
         </member>
+        <member name="M:IoTRulesService.Flow.Builder.StepJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据Type字段创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Builder.StepJsonConverter.Write(System.Text.Json.Utf8JsonWriter,IoTRulesService.Flow.Builder.Step.RuleflowStep,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON
+            </summary>
+        </member>
         <member name="T:IoTRulesService.Flow.Builder.Step.ClearDeltaStep">
             <summary>
             数据清除
@@ -1432,6 +1442,26 @@
         <member name="T:IoTRulesService.Flow.Node.JsonConditionConverter">
             <summary>
             条件转换
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Node.JsonConditionConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据valueType字段 + 字典映射创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Node.JsonConditionConverter.Write(System.Text.Json.Utf8JsonWriter,IoTRulesService.Flow.Node.Conditions.BaseCondition,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Node.JsonNodeConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            反序列化：根据type字段 + 字典映射创建对应子类实例并填充数据
+            </summary>
+        </member>
+        <member name="M:IoTRulesService.Flow.Node.JsonNodeConverter.Write(System.Text.Json.Utf8JsonWriter,IoTRulesService.Flow.Node.RuleBaseNode,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            序列化：按实例的实际子类类型输出完整JSON（修复原WriteValue的缺陷）
             </summary>
         </member>
         <member name="P:IoTRulesService.Flow.Node.PIDProps.refdevid">

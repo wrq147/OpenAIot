@@ -8,6 +8,8 @@ using System;
 using AuthService;
 using System.Collections.Generic;
 using Common.Json;
+using System.Dynamic;
+using System.Linq;
 
 namespace ThirdPartyService.Controller
 {
@@ -48,26 +50,25 @@ namespace ThirdPartyService.Controller
                         {
                             string tmpkey = weather_option["key"];
                             var rt = await HttpHelper.Instance.GetAsync("https://restapi.amap.com/v3/weather/weatherInfo?city=" + code + "&key=" + tmpkey);
-                            var cardrs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(rt, MyDefaultTextJsonConfig.DefaultOptions);
-                            int intstatus = (int)cardrs["status"];
-                            if (intstatus != 1)
+                            dynamic cardrs = System.Text.Json.JsonSerializer.Deserialize<object>(rt, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
+                            if (cardrs.status != 1)
                             {
-                                return this.Error<string>(12, (string)cardrs["info"]);
+                                return this.Error<string>(12, (string)cardrs.info);
                             }
-                            var tmparr = (List<object>)cardrs["lives"];
+                            IList<object> tmparr = cardrs.lives;
                             if (tmparr.Count == 0)
                             {
                                 return this.Error<string>(13, "无天气信息");
                             }
-                            var tmpitemd = tmparr[0] as IDictionary<string, object>;
-                            weainfo.province = tmpitemd["province"].ToString();
-                            weainfo.city = tmpitemd["city"].ToString();
-                            weainfo.weather = tmpitemd["weather"].ToString();
-                            weainfo.temperature = tmpitemd["temperature"].ToString();
-                            weainfo.winddirection = tmpitemd["winddirection"].ToString();
-                            weainfo.windpower = tmpitemd["windpower"].ToString();
-                            weainfo.humidity = tmpitemd["humidity"].ToString();
-                            weainfo.reporttime = tmpitemd["reporttime"].ToString();
+                            var titem = tmparr.FirstOrDefault() as IDictionary<string, object>;
+                            weainfo.province = titem["province"].ToString();
+                            weainfo.city = titem["city"].ToString();
+                            weainfo.weather = titem["weather"].ToString();
+                            weainfo.temperature = titem["temperature"].ToString();
+                            weainfo.winddirection = titem["winddirection"].ToString();
+                            weainfo.windpower = titem["windpower"].ToString();
+                            weainfo.humidity = titem["humidity"].ToString();
+                            weainfo.reporttime = titem["reporttime"].ToString();
                         }
                         break;
                 }

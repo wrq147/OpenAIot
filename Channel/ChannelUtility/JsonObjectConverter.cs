@@ -8,12 +8,6 @@ namespace ChannelUtility
 {
     public class JsonObjectConverter : JsonConverter<object>
     {
-        // 用于处理嵌套对象的选项，避免递归调用当前转换器
-        private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        };
         private static readonly JsonSerializerOptions _objectOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
@@ -76,13 +70,18 @@ namespace ChannelUtility
 
                 default:
                     // 处理其他类型
-                    return JsonSerializer.Deserialize(ref reader, typeToConvert, _nestedOptions);
+                    throw new JsonException($"不支持的JSON类型：{reader.TokenType}");
             }
         }
 
         public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
-            JsonSerializer.Serialize(writer, value, _nestedOptions);
+            if (value is null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }
     }
 }

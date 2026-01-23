@@ -1,7 +1,7 @@
 ﻿using Common.Attr;
 using MyAccess.DB.Attr;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace CardService.Model
 {
@@ -14,7 +14,7 @@ namespace CardService.Model
         /// 名片头像
         /// </summary>
         [DataIgnore]
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string Avatar { get; set; }
         /// <summary>
         /// 真实姓名

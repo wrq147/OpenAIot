@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace StorageService.Model
 {
@@ -53,7 +52,7 @@ namespace StorageService.Model
         /// <summary>
         /// 盘点仓库数据
         /// </summary>
-        [JsonConverter(typeof(OnlySeriaize))]
+        [OnlySeriaize]
         public MZ_StoreHouse House { get; set; }
         /// <summary>
         /// 盘点人员

@@ -1,9 +1,9 @@
 ﻿using Common.Attr;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace FlowService.Model
@@ -30,7 +30,7 @@ namespace FlowService.Model
     {
         public string Id { get; set; }
         public string RealName { get; set; }
-        [JsonConverter(typeof(ImageUrl), true)]
+        [JsonConverter(typeof(AvatarUrl))]
         public string Avatar { get; set; }
     }
 }
