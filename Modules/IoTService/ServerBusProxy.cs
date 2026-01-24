@@ -285,12 +285,12 @@ namespace IoTService
         /// <param name="targetVersion"></param>
         /// <param name="channelConfig"></param>
         /// <returns></returns>
-        public async Task<BusResponse<string>> DownSyncDevice(MZ_IotDevice device, int targetVersion, ChannelConfig channelConfig)
+        public async Task<BusResponse<string>> DownSyncDevice(MZ_IotDevice device, int targetVersion)
         {
             bool issuccess = true;
             string reason = string.Empty;
 
-            if (channelConfig.CanBind && device.ProductVer < targetVersion)
+            if (device.ProductVer < targetVersion)
             {
                 //判断设备ProductVer，小于协议版本时，发送设备绑定
                 DeviceBindMessage msg = new DeviceBindMessage();

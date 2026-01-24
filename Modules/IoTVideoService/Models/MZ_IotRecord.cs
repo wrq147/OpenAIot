@@ -21,13 +21,17 @@ namespace IoTVideoService.Models
         public string Id { get; set; }
         public long? OrgId { get; set; }
         /// <summary>
+        /// 计划名称
+        /// </summary>
+        public string PlanName { get; set; }
+        /// <summary>
         /// 视频源Id
         /// </summary>
         public string VideoId { get; set; }
         /// <summary>
-        /// ZLMediaKit的视频Key
+        /// 视频源位置
         /// </summary>
-        public string VideoKey { get; set; }
+        public string Position { get; set; }
         /// <summary>
         /// 录像保存周期（天），默认7天
         /// </summary>

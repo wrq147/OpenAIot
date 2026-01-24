@@ -1034,7 +1034,6 @@ namespace IoTService.Business
         {
             var updateDAL = _provider.GetService<IotUpdateDAL>();
             var tlist = await updateDAL.SelectUpdateList(200);
-            ChannelConfig config = new ChannelConfig() { CanBind = true };
             foreach (var item in tlist)
             {
                 var device = await _deviceDAL.Select(item.Id);
@@ -1042,7 +1041,7 @@ namespace IoTService.Business
                 {
                     try
                     {
-                        var rs = await _provider.GetService<ServerBusProxy>().DownSyncDevice(device, item.Version.Value, config);
+                        var rs = await _provider.GetService<ServerBusProxy>().DownSyncDevice(device, item.Version.Value);
                         if (!rs.IsSuccess())
                         {
                             //更新失败的降级

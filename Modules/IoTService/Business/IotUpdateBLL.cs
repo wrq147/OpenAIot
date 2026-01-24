@@ -40,8 +40,7 @@ namespace IoTService.Business
                 await _updateDAL.Delete(x => x.Id == updateItem.Id);
                 return BusResponse<string>.Error(111, "设备不存在");
             }
-            ChannelConfig config = new ChannelConfig() { CanBind = true };
-            var rs = await _provider.GetService<ServerBusProxy>().DownSyncDevice(device, updateItem.Version.Value, config);
+            var rs = await _provider.GetService<ServerBusProxy>().DownSyncDevice(device, updateItem.Version.Value);
             if (rs.IsSuccess())
             {
                 await _updateDAL.Delete(x => x.Id == updateItem.Id);

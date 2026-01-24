@@ -12,9 +12,11 @@
 	  <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.23.2" />
 	  <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.23.2" />
 	  <PackageReference Include="Milvus.Client" Version="2.3.0-preview.1" />
+	  <PackageReference Include="pythonnet" Version="3.0.5" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="AIModel\" />
+	  <Folder Include="AIScript\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />

@@ -84,7 +84,7 @@ namespace IoTService
                         devjob.create_time = DateTime.Now;
                         devjob.updateId = 0;
                         devjob.update_time = DateTime.Now;
-                        devjob.cron_expression = "0 0/10 * * * ?";
+                        devjob.cron_expression = "0 0/30 * * * ?";
                         devjob.invoke_target = typeof(IotDeviceBLL).FullName + ".SyncDevice()";
                         devjob.job_group = devgroup;
                         devjob.job_name = devjobname;

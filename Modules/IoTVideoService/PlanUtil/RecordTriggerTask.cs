@@ -36,10 +36,6 @@ namespace IoTVideoService.PlanUtil
         /// </summary>
         public OperType OperType { get; set; }
 
-        /// <summary>
-        /// 是否循环触发（按周/每天循环）
-        /// </summary>
-        public bool IsRecurring { get; set; }
 
         /// <summary>
         /// 循环周期（仅循环任务有效）：Week=每周，Day=每天

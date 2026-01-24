@@ -208,8 +208,7 @@ namespace IoTRulesService.DataParser
                                     var channelConfig = await _provider.GetService<IotProductBLL>().GetChannel(product.NetworkWay);
                                     if (channelConfig.CanBind && (devicelist[0].ProductVer < product.Version))
                                     {
-                                        var updateDAL = _provider.GetService<IotUpdateDAL>();
-                                        await updateDAL.InsertDeviceUpdate(devicelist[0].Id, product.Version.Value, 10, product.OrgId.Value);
+                                        await _provider.GetService<ServerBusProxy>().DownSyncDevice(devicelist[0], product.Version.Value);
                                     }
                                 }
                                 else

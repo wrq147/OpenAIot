@@ -1,4 +1,5 @@
-﻿using ChannelUtility.Message;
+﻿using AuthService;
+using ChannelUtility.Message;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
@@ -95,7 +96,31 @@ namespace IoTVideoService.Business
             return rsp;
         }
 
-        public virtual async Task<BusResponse<int>> Add(MZ_IotRecord data, IUserInfo user)
+        public virtual async Task<PageObject<MZ_IotRecordLog>> SelectLogPage(In_RecordLogPage query)
+        {
+            Expression<Func<MZ_IotRecordLog, bool>> expression = x => x.PlanId == query.PlanId;
+            var rsp = await _provider.GetService<RecordLogDAL>().SelectPage(expression, query, string.Empty);
+            return rsp;
+        }
+        public virtual async Task<BusResponse<MZ_IotRecord>> Info(string id)
+        {
+            var recordDAL = _provider.GetService<RecordDAL>();
+            var info = await recordDAL.Select(id);
+            if (info == null)
+            {
+                return BusResponse<MZ_IotRecord>.Error(111, "录像计划不存在");
+            }
+            if (info.createId > 0)
+            {
+                var creator = await _provider.GetService<UserDAL>().Select(info.createId);
+                if (creator != null)
+                {
+                    info.createName = creator.RealName;
+                }
+            }
+            return BusResponse<MZ_IotRecord>.Success(info);
+        }
+        public virtual async Task<BusResponse<int>> Insert(MZ_IotRecord data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
@@ -110,6 +135,7 @@ namespace IoTVideoService.Business
             var tasks = PlanTimeParser.Parse(data);
             if (tasks.Count > 0)
             {
+                data.RecordTimeDesc = RecordTimeDescGenerator.GenerateRecordDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
                 var schedulerFactory = _provider.GetService<ISchedulerFactory>();
                 var scheduler = await schedulerFactory.GetScheduler();
                 await PlanSchedule.CreateJob(data.Id, tasks);
@@ -135,7 +161,11 @@ namespace IoTVideoService.Business
                 return BusResponse<int>.Error(114, "无权修改当前录像计划");
             }
             data.VideoId = null;
-            data.VideoKey = null;
+            data.Position = null;
+            if (!string.IsNullOrEmpty(data.RecordTimeType) && !string.IsNullOrEmpty(data.WeekConfig) && !string.IsNullOrEmpty(data.TimeConfig))
+            {
+                data.RecordTimeDesc = RecordTimeDescGenerator.GenerateRecordDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
+            }
             if (data.Status != null)
             {
                 if (data.Status == 0 && old.Status != 0)

@@ -58,7 +58,7 @@
         </member>
         <member name="P:IoTAIService.AIProjectParam.type">
             <summary>
-            参数类型：boolean、enum、float、string
+            参数类型：boolean、enum、float、string、
             </summary>
         </member>
         <member name="P:IoTAIService.AIProjectParam.help">
@@ -362,6 +362,29 @@
         <member name="P:IoTAIService.Models.Out_FaceMem.RealName">
             <summary>
             真实姓名
+            </summary>
+        </member>
+        <member name="M:IoTAIService.PythonRuntimeHelper.AutoSetPythonDllPath(System.String)">
+            <summary>
+            从指定Python目录自动搜索并设置Python.Runtime的PythonDLL路径（跨平台）
+            </summary>
+            <param name="pythonRootDir">Python安装根目录（如 /usr/bin 或 C:\Python313）</param>
+            <returns>找到的Python库文件路径</returns>
+            <exception cref="T:System.IO.FileNotFoundException">未找到有效Python库文件时抛出</exception>
+        </member>
+        <member name="M:IoTAIService.PythonRuntimeHelper.GetPythonLibrarySearchRules">
+            <summary>
+            根据操作系统获取Python库文件的搜索规则
+            </summary>
+        </member>
+        <member name="M:IoTAIService.PythonRuntimeHelper.GetPythonVersionFromFileName(System.String)">
+            <summary>
+            从文件名提取Python版本号（用于排序）
+            </summary>
+        </member>
+        <member name="M:IoTAIService.PythonRuntimeHelper.IsInvalidSymbolicLink(System.String)">
+            <summary>
+            判断是否为无效的符号链接（空链接/指向不存在的文件）
             </summary>
         </member>
     </members>

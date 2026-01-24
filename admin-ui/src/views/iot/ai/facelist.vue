@@ -2,43 +2,38 @@
     <div class="app-container">
         <!-- 建模库列表视图 -->
         <div v-if="currentView === 'libraryList'">
-            <!-- 页面标题和操作栏 -->
-            <div class="page-header">
-                <div class="title-and-desc">
-                    <h2 class="page-title">人脸建模库管理</h2>
-                    <p class="page-desc">管理所有的人脸建模库及其包含的人脸数据</p>
-                </div>
-                <div class="page-actions">
+
+            <!-- 搜索和筛选区域 -->
+            <div class="filter-container">
+                <div style="display: flex;flex-direction: row;justify-content: space-between;">
+                    <el-row :gutter="20">
+                        <el-col :span="10">
+                            <el-input placeholder="请输入建模库名称" v-model="librarySearchQuery" prefix-icon="el-icon-search"
+                                clearable class="search-input"></el-input>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-select placeholder="请选择状态" v-model="libraryStatusFilter" clearable
+                                class="search-select">
+                                <el-option label="启用" value="1"></el-option>
+                                <el-option label="禁用" value="0"></el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-button type="primary" @click="searchLibraries" class="search-btn">
+                                <i class="el-icon-search"></i> 搜索
+                            </el-button>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-button type="default" @click="resetLibraryFilters" class="reset-btn">
+                                <i class="el-icon-refresh"></i> 重置
+                            </el-button>
+                        </el-col>
+                    </el-row>
                     <el-button type="primary" icon="el-icon-plus" @click="showAddLibraryDialog = true">
                         新建建模库
                     </el-button>
                 </div>
-            </div>
 
-            <!-- 搜索和筛选区域 -->
-            <div class="filter-container">
-                <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-input placeholder="请输入建模库名称" v-model="librarySearchQuery" prefix-icon="el-icon-search"
-                            clearable class="search-input"></el-input>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-select placeholder="请选择状态" v-model="libraryStatusFilter" clearable class="search-select">
-                            <el-option label="启用" value="1"></el-option>
-                            <el-option label="禁用" value="0"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="4">
-                        <el-button type="primary" @click="searchLibraries" class="search-btn">
-                            <i class="el-icon-search"></i> 搜索
-                        </el-button>
-                    </el-col>
-                    <el-col :span="4">
-                        <el-button type="default" @click="resetLibraryFilters" class="reset-btn">
-                            <i class="el-icon-refresh"></i> 重置
-                        </el-button>
-                    </el-col>
-                </el-row>
             </div>
 
             <!-- 建模库列表 -->

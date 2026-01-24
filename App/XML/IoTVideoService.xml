@@ -34,6 +34,41 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTVideoService.Controller.Record.ListPage(IoTVideoService.Models.In_RecordPage)">
+            <summary>
+            查询录像计划列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Record.LogListPage(IoTVideoService.Models.In_RecordLogPage)">
+            <summary>
+            查询录像日志列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Record.Add(IoTVideoService.Models.MZ_IotRecord)">
+            <summary>
+            添加录像计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Record.Edit(IoTVideoService.Models.MZ_IotRecord)">
+            <summary>
+            编辑录像计划
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Record.Info(System.String)">
+            <summary>
+            录像计划详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTVideoService.Controller.Source.ListPage(IoTVideoService.Models.In_VideoSourcePage)">
             <summary>
             视频源列表
@@ -180,14 +215,19 @@
             编号
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.PlanName">
+            <summary>
+            计划名称
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecord.VideoId">
             <summary>
             视频源Id
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_IotRecord.VideoKey">
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.Position">
             <summary>
-            ZLMediaKit的视频Key
+            视频源位置
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecord.SaveCycle">
@@ -491,11 +531,6 @@
         <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.OperType">
             <summary>
             操作类型（启动/停止）
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.IsRecurring">
-            <summary>
-            是否循环触发（按周/每天循环）
             </summary>
         </member>
         <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.RecurType">

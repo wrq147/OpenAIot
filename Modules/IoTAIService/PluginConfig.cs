@@ -19,6 +19,7 @@ using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Policy;
+using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
@@ -46,6 +47,7 @@ namespace IoTAIService
             services.AddSingleton<FaceKeyPointsRunner>();
             services.AddSingleton<AICache>();
             services.AddSingleton<AIProjectManager>();
+            services.AddSingleton<PythonExe>();
         }
         private ITAServiceProvider _provider;
         protected override async void Configure(ITAApplication app, PluginObject plg)
@@ -146,7 +148,8 @@ namespace IoTAIService
                 await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, null, true);
                 return;
             }
-            using (var image = FastZlibDecompressToRgb24Image(detectReq.Frame, detectReq.Width, detectReq.Height))
+            byte[] frameData = Encoding.UTF8.GetBytes(detectReq.Frame);
+            using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
             {
                 int facenum = 0;
                 //处理画框

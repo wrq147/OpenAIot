@@ -15,7 +15,7 @@ namespace ChannelUtility.Message
         /// 运动区块占比
         /// </summary>
         public float MRatio { get; set; }
-        public byte[] Frame { get; set; }
+        public string Frame { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public List<AIConfigData> Configs { get; set; }

@@ -7,6 +7,8 @@ using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -467,7 +469,7 @@ namespace ChannelUtility
             msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.MRatio = motionRatio;
-            msg.Frame = frameData;
+            msg.Frame = Encoding.UTF8.GetString(frameData);
             msg.Width = width;
             msg.Height = height;
             msg.NodeGuid = this._nodeGuid;

@@ -1,4 +1,5 @@
 ﻿using Common.Share;
+using IoTService;
 using Microsoft.Extensions.Options;
 using MonitorService.Util;
 using Quartz;
@@ -12,8 +13,9 @@ namespace IoTVideoService.PlanUtil
         public static async Task InitScheduler(ITAServiceProvider provider)
         {
             GeneralOption generalOption = provider.GetService<IOptions<GeneralOption>>().Value;
-            string instanceName = "VideoSche";
-            string instanceId = "VideoSche_one";
+            IotOption iotOption = provider.GetService<IOptions<IotOption>>().Value;
+            string instanceName = "ViSche" + iotOption.node_name;
+            string instanceId = "Vi_one_" + iotOption.node_name;
             var factory = SchedulerBuilder.Create()
              .WithId(instanceId)
              .WithName(instanceName)

@@ -1,51 +1,47 @@
 <template>
   <div class="zlmediakit-record-plan-list">
-    <!-- 页面标题与操作区：移除查看执行日志按钮 -->
-    <div class="page-header">
-      <div>
-        <h2>ZLMediaKit 录像计划管理</h2>
-        <p class="text-gray">管理录像计划的启用、编辑与删除</p>
-      </div>
-      <div>
-        <el-button type="primary" icon="el-icon-plus" @click="handleGoAdd">新增录像计划</el-button>
-      </div>
-    </div>
 
     <!-- 搜索筛选区域 -->
-    <el-card class="search-card" shadow="never">
-      <el-form :inline="true" :model="searchForm" class="search-form">
-        <el-form-item label="通讯编码">
-          <el-input v-model="searchForm.VideoId" placeholder="请输入通讯编码" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="时段类型">
-          <el-select v-model="searchForm.RecordTimeType" placeholder="全部" clearable>
-            <el-option label="按周" value="week"></el-option>
-            <el-option label="按时段" value="time"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="计划状态">
-          <el-select v-model="searchForm.Status" placeholder="全部" clearable>
-            <el-option label="启用" value="1"></el-option>
-            <el-option label="禁用" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="fetchRecordPlans">查询</el-button>
-          <el-button icon="el-icon-refresh" @click="resetSearchForm">重置</el-button>
-        </el-form-item>
-      </el-form>
+    <el-card class="search-card" shadow="never" style="margin-bottom: 20px;">
+      <div style="display: flex;flex-direction: row;justify-content: space-between;">
+        <el-form :inline="true" :model="searchForm" class="search-form">
+          <el-form-item label="通讯编码">
+            <el-input v-model="searchForm.VideoId" placeholder="请输入通讯编码" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="时段类型">
+            <el-select v-model="searchForm.RecordTimeType" placeholder="全部" clearable>
+              <el-option label="按周" value="week"></el-option>
+              <el-option label="按时段" value="time"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="计划状态">
+            <el-select v-model="searchForm.Status" placeholder="全部" clearable>
+              <el-option label="启用" value="1"></el-option>
+              <el-option label="禁用" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="fetchRecordPlans">查询</el-button>
+            <el-button icon="el-icon-refresh" @click="resetSearchForm">重置</el-button>
+          </el-form-item>
+        </el-form>
+        <div>
+          <el-button type="primary" icon="el-icon-plus" @click="handleGoAdd">新增录像计划</el-button>
+        </div>
+
+      </div>
     </el-card>
 
     <!-- 录像计划列表 -->
     <el-card shadow="never">
       <el-table v-loading="loading" :data="recordPlanList" border stripe @selection-change="handleSelectionChange">
-        <el-table-column prop="VideoId" label="通讯编码" min-width="180"></el-table-column>
-        <el-table-column prop="SaveCycle" label="保存周期(天)" width="120"></el-table-column>
-        <el-table-column prop="RecordTimeType" label="时段类型" width="120" :formatter="formatTimeType"></el-table-column>
+        <el-table-column prop="VideoId" label="通讯编码" align="center" min-width="180"></el-table-column>
+        <el-table-column prop="SaveCycle" label="保存周期(天)" align="center" width="120"></el-table-column>
+        <el-table-column prop="RecordTimeType" label="时段类型" align="center" width="120" :formatter="formatTimeType"></el-table-column>
         <el-table-column prop="RecordTimeDesc" label="录像时段" min-width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Status" label="状态" width="100" :formatter="formatStatus"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column prop="Status" label="状态" width="100" align="center" :formatter="formatStatus"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center" width="180"></el-table-column>
+        <el-table-column label="操作" align="center" width="200">
           <template slot-scope="scope">
             <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
@@ -59,18 +55,21 @@
       </el-table>
 
       <!-- 分页控件 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="pagination.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize"
-        :total="pagination.total">
-      </el-pagination>
+      <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.pageNum"
+        :limit.sync="pagination.pageSize" @pagination="getList" />
     </el-card>
+
+    <record ref="recDlg" />
   </div>
 </template>
 
 <script>
 import { recordList } from "@/api/rules/record";
-
+import record from './record.vue'
 export default {
+  components: {
+    record
+  },
   data() {
     return {
       loading: false,
@@ -106,10 +105,8 @@ export default {
           pageSize: this.pagination.pageSize,
           ...this.searchForm
         })
-        if (res.code === 200) {
-          this.recordPlanList = res.data.list
-          this.pagination.total = res.data.total
-        }
+        this.recordPlanList = res.data.List
+        this.pagination.total = res.data.Total
       } catch (error) {
         this.$message.error('获取录像计划列表失败：' + error.message)
       } finally {
@@ -141,19 +138,11 @@ export default {
       this.fetchRecordPlans()
     },
 
-    /**
-     * 分页大小改变
-     */
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-      this.fetchRecordPlans()
-    },
 
     /**
      * 当前页改变
      */
-    handleCurrentChange(val) {
-      this.pagination.pageNum = val
+    getList() {
       this.fetchRecordPlans()
     },
 
@@ -165,20 +154,16 @@ export default {
     },
 
     /**
-     * 跳转至新增录像计划（统一详情页-新增模式）
+     * 跳转至新增录像计划
      */
     handleGoAdd() {
-      this.$router.push('/zlmediakit/record-plan/detail')
+      this.$refs.recDlg.openDlg();
     },
 
     /**
-     * 编辑录像计划（跳转至统一详情页-编辑模式）
+     * 编辑录像计划
      */
     handleEdit(row) {
-      this.$router.push({
-        path: '/zlmediakit/record-plan/detail',
-        query: { id: row.id }
-      })
     },
 
     /**
@@ -236,31 +221,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .zlmediakit-record-plan-list {
   padding: 20px;
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.page-header h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.text-gray {
-  color: #999;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
 .search-card {
-  margin-bottom: 0;
+  .el-form-item {
+    margin-bottom: 0px;
+  }
 }
 </style>

@@ -9,7 +9,7 @@ namespace IoTVideoService.PlanUtil
 {
     public static class PlanTimeParser
     {
-      
+
         /// <summary>
         /// 解析录像计划为启停触发任务列表（含Cron表达式）
         /// </summary>
@@ -35,7 +35,7 @@ namespace IoTVideoService.PlanUtil
                     throw new NotSupportedException($"不支持的时段类型：{plan.RecordTimeType}");
             }
 
-            // 对每个触发任务补充循环属性、首次触发时间、Cron表达式
+            
             foreach (var task in triggerTasks)
             {
                 // 计算首次触发时间（当前时间之后的第一个触发点）
@@ -80,7 +80,6 @@ namespace IoTVideoService.PlanUtil
                     triggerTasks.Add(new RecordTriggerTask
                     {
                         OperType = OperType.Start,
-                        IsRecurring = true,
                         RecurType = "Week",
                         WeekDay = config.Week,
                         TimeOfDay = startTime
@@ -90,7 +89,6 @@ namespace IoTVideoService.PlanUtil
                     triggerTasks.Add(new RecordTriggerTask
                     {
                         OperType = OperType.Stop,
-                        IsRecurring = true,
                         RecurType = "Week",
                         WeekDay = config.Week,
                         TimeOfDay = endTime
@@ -138,7 +136,6 @@ namespace IoTVideoService.PlanUtil
                     triggerTasks.Add(new RecordTriggerTask
                     {
                         OperType = OperType.Start,
-                        IsRecurring = true,
                         RecurType = "Day",
                         TimeOfDay = startTime
                     });
@@ -147,7 +144,6 @@ namespace IoTVideoService.PlanUtil
                     triggerTasks.Add(new RecordTriggerTask
                     {
                         OperType = OperType.Stop,
-                        IsRecurring = true,
                         RecurType = "Day",
                         TimeOfDay = endTime
                     });
@@ -168,7 +164,7 @@ namespace IoTVideoService.PlanUtil
         /// <returns>Cron表达式</returns>
         private static string GenerateCronExpression(RecordTriggerTask task)
         {
-            if (task == null || !task.IsRecurring || string.IsNullOrEmpty(task.TimeOfDay))
+            if (task == null || string.IsNullOrEmpty(task.TimeOfDay))
                 return string.Empty;
 
             // 解析时分（HH:mm）
@@ -207,9 +203,6 @@ namespace IoTVideoService.PlanUtil
         /// <returns>首次触发时间</returns>
         private static DateTime GetFirstTriggerTime(RecordTriggerTask task)
         {
-            if (!task.IsRecurring)
-                throw new NotSupportedException("仅支持循环任务的首次触发时间计算");
-
             var now = DateTime.Now;
             DateTime firstTriggerTime;
 

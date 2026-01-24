@@ -24,7 +24,13 @@ namespace IoTVideoService
         {
             services.AddBLL<VideoSourceBLL>();
             services.AddBLL<PtzBLL>();
+            services.AddBLL<RecordBLL>();
+
+            services.AddDAL<RecordDAL>();
+            services.AddDAL<RecordFileDAL>();
+            services.AddDAL<RecordLogDAL>();
             services.AddDAL<VideoSourceDAL>();
+
             services.AddSingleton<PlanConcurrentJob>();
             services.Configure<VideoOption>(config.GetSection("IoTVideoService"));
         }
