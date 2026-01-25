@@ -45,10 +45,6 @@ namespace MonitorService
                 MonitorOption monitorOption = provider.GetService<IOptions<MonitorOption>>().Value;
 
                 string instanceName = "MonitorScheduler";
-                if (!string.IsNullOrEmpty(monitorOption.instance_name))
-                {
-                    instanceName = monitorOption.instance_name;
-                }
                 string instanceId = "instance_one";
                 if (!string.IsNullOrEmpty(monitorOption.instance_id))
                 {

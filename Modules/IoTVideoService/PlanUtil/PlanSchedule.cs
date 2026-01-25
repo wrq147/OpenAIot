@@ -14,7 +14,7 @@ namespace IoTVideoService.PlanUtil
         {
             GeneralOption generalOption = provider.GetService<IOptions<GeneralOption>>().Value;
             IotOption iotOption = provider.GetService<IOptions<IotOption>>().Value;
-            string instanceName = "ViSche" + iotOption.node_name;
+            string instanceName = "ViScheduler";
             string instanceId = "Vi_one_" + iotOption.node_name;
             var factory = SchedulerBuilder.Create()
              .WithId(instanceId)
