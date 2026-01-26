@@ -60,8 +60,8 @@ namespace IoTVideoService.PlanUtil
             var jobKey = new JobKey("VIDJOB" + planId);
             IJobDetail jobDetail = JobBuilder.Create(typeof(PlanConcurrentJob)).WithIdentity(jobKey).Build();
             jobDetail.JobDataMap.Put("PlanId", planId);
-            await _scheduler.AddJob(jobDetail, true);
             int i = 0;
+            List<ITrigger> triggers = new List<ITrigger>();
             foreach (var task in tasks)
             {
                 ITrigger trigger;
@@ -69,9 +69,10 @@ namespace IoTVideoService.PlanUtil
                 CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(task.CronExpression).WithMisfireHandlingInstructionIgnoreMisfires();
                 var triggetBuilder = TriggerBuilder.Create().WithIdentity("VIDTRI" + planId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
                 trigger = triggetBuilder.Build();
-                await _scheduler.ScheduleJob(trigger);
+                triggers.Add(trigger);
                 ++i;
             }
+            await _scheduler.ScheduleJob(jobDetail, triggers, true);
         }
 
     }

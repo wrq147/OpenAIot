@@ -100,6 +100,7 @@ namespace IoTVideoService
         .WithColumn("PlanId").AsString(128).WithColumnDescription("关联录像计划ID")
         .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
         .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
+        .WithColumn("Position").AsString(50).WithColumnDescription("视频源位置")
         .WithColumn("LogType").AsString(16).WithColumnDescription("日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）")
         .WithColumn("Content").AsString(1024).WithColumnDescription("日志内容（如：录像失败原因、文件清理数量等）")
         .WithColumn("ExecTime").AsDateTime().WithColumnDescription("执行时间");

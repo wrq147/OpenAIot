@@ -13,11 +13,6 @@ namespace IoTVideoService.PlanUtil
     public class RecordTriggerTask
     {
         /// <summary>
-        /// 触发时间（按周：最近的该星期对应小时；单日：当天对应小时）
-        /// </summary>
-        public DateTime TriggerTime { get; set; }
-
-        /// <summary>
         /// 操作类型（Start/End/Both）
         /// </summary>
         public RecordTimeOp OperType { get; set; }

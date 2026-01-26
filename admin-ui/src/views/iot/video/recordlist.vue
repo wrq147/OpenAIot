@@ -35,21 +35,27 @@
     <!-- 录像计划列表 -->
     <el-card shadow="never">
       <el-table v-loading="loading" :data="recordPlanList" border stripe @selection-change="handleSelectionChange">
-        <el-table-column prop="VideoId" label="通讯编码" align="center" min-width="180"></el-table-column>
+        <el-table-column prop="VideoId" label="通讯编码" align="center" min-width="150"></el-table-column>
         <el-table-column prop="SaveCycle" label="保存周期(天)" align="center" width="120"></el-table-column>
-        <el-table-column prop="RecordTimeType" label="时段类型" align="center" width="120" :formatter="formatTimeType"></el-table-column>
-        <el-table-column prop="RecordTimeDesc" label="录像时段" min-width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Status" label="状态" width="100" align="center" :formatter="formatStatus"></el-table-column>
+        <el-table-column prop="RecordTimeType" label="时段类型" align="center" width="120"
+          :formatter="formatTimeType"></el-table-column>
+        <el-table-column prop="RecordTimeDesc" label="录像时段" min-width="250" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Status" label="状态" width="100" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.Status == 1" style="color: green;">启用</span>
+            <span v-else-if="scope.row.Status == 0" style="color: red;">禁用</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间" align="center" width="180"></el-table-column>
         <el-table-column label="操作" align="center" width="200">
           <template slot-scope="scope">
-            <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-              v-if="scope.row.status === 0">删除</el-button>
-            <el-button icon="el-icon-switch-button" @click="handleToggleStatus(scope.row)"
-              :type="scope.row.status === 1 ? 'warning' : 'success'">
-              {{ scope.row.status === 1 ? '禁用' : '启用' }}
-            </el-button>
+            <el-link icon="el-icon-edit" type="primary" @click="handleEdit(scope.row)">编辑</el-link>
+            <el-link v-if="scope.row.status === 0" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)"
+              style="margin-left:10px;">删除</el-link>
+            <el-link v-if="scope.row.Status === 1" type="warning" icon="el-icon-video-pause"
+              @click="handleToggleStatus(scope.row.Id, 0)" style="margin-left:10px;">禁用</el-link>
+            <el-link v-if="scope.row.Status === 0" type="primary" icon="el-icon-video-play"
+              @click="handleToggleStatus(scope.row.Id, 1)" style="margin-left:10px;">启用</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -59,12 +65,12 @@
         :limit.sync="pagination.pageSize" @pagination="getList" />
     </el-card>
 
-    <record ref="recDlg" />
+    <record ref="recDlg" @success="DlgChange" />
   </div>
 </template>
 
 <script>
-import { recordList } from "@/api/rules/record";
+import { recordList, editRecord, removeRecord } from "@/api/rules/record";
 import record from './record.vue'
 export default {
   components: {
@@ -122,15 +128,6 @@ export default {
     },
 
     /**
-     * 格式化状态显示
-     */
-    formatStatus(row) {
-      return row.status === 1
-        ? '<span style="color: green;">启用</span>'
-        : '<span style="color: red;">禁用</span>'
-    },
-
-    /**
      * 重置搜索表单
      */
     resetSearchForm() {
@@ -146,6 +143,9 @@ export default {
       this.fetchRecordPlans()
     },
 
+    DlgChange() {
+      this.fetchRecordPlans()
+    },
     /**
      * 选择行改变
      */
@@ -164,6 +164,7 @@ export default {
      * 编辑录像计划
      */
     handleEdit(row) {
+      this.$refs.recDlg.openDlg(row);
     },
 
     /**
@@ -176,13 +177,8 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        const res = await deleteRecordPlan(row.id)
-        if (res.code === 200) {
-          this.$message.success('删除成功！')
-          this.fetchRecordPlans()
-        } else {
-          this.$message.error('删除失败：' + res.msg)
-        }
+        this.$message.success('删除成功！')
+        this.fetchRecordPlans()
       } catch (error) {
         if (error !== 'cancel') {
           this.$message.error('删除操作失败：' + error.message)
@@ -193,24 +189,20 @@ export default {
     /**
      * 切换录像计划状态
      */
-    async handleToggleStatus(row) {
-      const statusText = row.status === 1 ? '禁用' : '启用'
+    async handleToggleStatus(id, status) {
+      const statusText = status === 0 ? '禁用' : '启用'
       try {
         await this.$confirm(`确定要${statusText}该录像计划吗？`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
-        const res = await toggleRecordPlanStatus({
-          id: row.id,
-          status: row.status === 1 ? 0 : 1
+        const res = await editRecord({
+          Id: id,
+          Status: status
         })
-        if (res.code === 200) {
-          this.$message.success(`${statusText}成功！`)
-          this.fetchRecordPlans()
-        } else {
-          this.$message.error(`${statusText}失败：` + res.msg)
-        }
+        this.$message.success(`${statusText}成功！`)
+        this.fetchRecordPlans()
       } catch (error) {
         if (error !== 'cancel') {
           this.$message.error(`${statusText}操作失败：` + error.message)

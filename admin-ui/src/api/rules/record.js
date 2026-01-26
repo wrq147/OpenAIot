@@ -39,3 +39,11 @@ export function editRecord(data) {
         data: data
     })
 }
+
+export function removeRecord(id) {
+    return request({
+        url: '/IoTVideoService/Record/Remove',
+        method: 'get',
+        params: {id}
+    })
+}

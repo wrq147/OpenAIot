@@ -100,13 +100,10 @@ namespace IoTVideoService.PlanUtil
                 // 3. 如果找到配对，生成Both任务并跳过这两个项
                 if (start0Item != null && end24Item != null)
                 {
-                    // 构造Both类型任务（使用0点作为触发时间）
-                    DateTime triggerTime = GetNearestWeekTime(week, 0);
                     string cron = GenerateWeekSingleCron(week, 0);
 
                     tasks.Add(new RecordTriggerTask
                     {
-                        TriggerTime = triggerTime,
                         OperType = RecordTimeOp.Both,
                         WeekDay = week,
                         CronExpression = cron
@@ -146,14 +143,10 @@ namespace IoTVideoService.PlanUtil
 
                 // 特殊处理24点：转换为0点（因为Cron的小时范围是0-23）
                 int cronHour = range.Time == 24 ? 0 : range.Time;
-
-                // 构造触发任务对象
-                DateTime triggerTime = GetNearestWeekTime(range.week, cronHour);
                 string cron = GenerateWeekSingleCron(range.week, cronHour);
 
                 tasks.Add(new RecordTriggerTask
                 {
-                    TriggerTime = triggerTime,
                     OperType = opType,
                     WeekDay = range.week,
                     CronExpression = cron
@@ -169,45 +162,11 @@ namespace IoTVideoService.PlanUtil
             // 处理24点转换为0点（Cron小时范围0-23）
             int cronHour = hour == 24 ? 0 : hour;
 
-            // Cron格式：秒 分 时 日 月 周 年
-            return $"0 0 {cronHour} * * {week} ?";
+            // Cron格式：秒 分 时 日 月 周
+            return $"0 0 {cronHour} * * {week}";
         }
 
-        /// <summary>
-        /// 获取最近的指定星期+小时的触发时间
-        /// </summary>
-        private static DateTime GetNearestWeekTime(int targetWeek, int targetHour)
-        {
-            // 处理24点转换为0点
-            int actualHour = targetHour == 24 ? 0 : targetHour;
-
-            // 目标星期映射：1=周一，2=周二...7=周日（.NET中DayOfWeek：0=周日，1=周一...6=周六）
-            DayOfWeek targetDayOfWeek = targetWeek switch
-            {
-                1 => DayOfWeek.Monday,
-                2 => DayOfWeek.Tuesday,
-                3 => DayOfWeek.Wednesday,
-                4 => DayOfWeek.Thursday,
-                5 => DayOfWeek.Friday,
-                6 => DayOfWeek.Saturday,
-                7 => DayOfWeek.Sunday,
-                _ => DayOfWeek.Monday
-            };
-
-            DateTime now = DateTime.Now;
-            DateTime triggerTime = new DateTime(now.Year, now.Month, now.Day, actualHour, 0, 0);
-
-            // 计算距离目标星期的天数差
-            int daysToAdd = ((int)targetDayOfWeek - (int)now.DayOfWeek + 7) % 7;
-            if (daysToAdd == 0 && triggerTime < now)
-            {
-                // 今天就是目标星期，但时间已过，取下周
-                daysToAdd = 7;
-            }
-
-            triggerTime = triggerTime.AddDays(daysToAdd);
-            return triggerTime;
-        }
+   
         #endregion
 
         #region 单日生成触发任务列表
@@ -228,13 +187,9 @@ namespace IoTVideoService.PlanUtil
             // 2. 如果找到配对，生成Both任务
             if (start0Item != null && end24Item != null)
             {
-                // 构造Both类型任务（使用0点作为触发时间）
-                DateTime triggerTime = GetNearestDayTime(0);
                 string cron = GenerateDaySingleCron(0);
-
                 tasks.Add(new RecordTriggerTask
                 {
-                    TriggerTime = triggerTime,
                     OperType = RecordTimeOp.Both,
                     WeekDay = null,
                     CronExpression = cron
@@ -274,13 +229,10 @@ namespace IoTVideoService.PlanUtil
                 // 特殊处理24点：转换为0点（因为Cron的小时范围是0-23）
                 int cronHour = range.Time == 24 ? 0 : range.Time;
 
-                // 构造触发任务对象
-                DateTime triggerTime = GetNearestDayTime(cronHour);
                 string cron = GenerateDaySingleCron(cronHour);
 
                 tasks.Add(new RecordTriggerTask
                 {
-                    TriggerTime = triggerTime,
                     OperType = opType,
                     WeekDay = null,
                     CronExpression = cron
@@ -296,28 +248,8 @@ namespace IoTVideoService.PlanUtil
             // 处理24点转换为0点（Cron小时范围0-23）
             int cronHour = hour == 24 ? 0 : hour;
 
-            // Cron格式：秒 分 时 日 月 周 年（单日模式周字段用?）
-            return $"0 0 {cronHour} * * ? ?";
-        }
-
-        /// <summary>
-        /// 获取最近的当天/次日指定小时的触发时间
-        /// </summary>
-        private static DateTime GetNearestDayTime(int targetHour)
-        {
-            // 处理24点转换为0点
-            int actualHour = targetHour == 24 ? 0 : targetHour;
-
-            DateTime now = DateTime.Now;
-            DateTime triggerTime = new DateTime(now.Year, now.Month, now.Day, actualHour, 0, 0);
-
-            // 如果当前时间已过目标小时，取次日
-            if (triggerTime < now)
-            {
-                triggerTime = triggerTime.AddDays(1);
-            }
-
-            return triggerTime;
+            // Cron格式：秒 分 时 日 月 周
+            return $"0 0 {cronHour} * * ?";
         }
         #endregion
     }

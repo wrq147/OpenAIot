@@ -7,14 +7,14 @@
       <el-descriptions style="margin-bottom: 15px;" :column="3" border>
         <el-descriptions-item>
           <template slot="label">计划ID</template>
-          {{ recordPlanForm.id || '暂无' }}
+          {{ recordPlanForm.Id || '暂无' }}
         </el-descriptions-item>
         <el-descriptions-item>
-          <template slot="label"><i class="el-icon-mobile-phone"></i> 创建人</template>
-          {{ recordPlanForm.creator || '暂无' }}
+          <template slot="label">创建人</template>
+          {{ recordPlanForm.createName || '暂无' }}
         </el-descriptions-item>
         <el-descriptions-item>
-          <template slot="label"><i class="el-icon-location-outline"></i> 创建时间</template>
+          <template slot="label">创建时间</template>
           {{ recordPlanForm.createTime || '暂无' }}
         </el-descriptions-item>
       </el-descriptions>
@@ -23,44 +23,32 @@
         <el-tab-pane label="基础配置" name="config">
           <el-form ref="recordPlanForm" :model="recordPlanForm" :rules="recordPlanRules" label-width="100px"
             class="form-container">
-            <el-form-item label="计划名称" prop="planName">
-              <el-input v-model="recordPlanForm.planName" placeholder="请输入计划名称" style="width:350px;"></el-input>
+            <el-form-item label="计划名称" prop="PlanName">
+              <el-input v-model="recordPlanForm.PlanName" placeholder="请输入计划名称" style="width:350px;"></el-input>
             </el-form-item>
             <!-- 视频源选择器 -->
-            <el-form-item label="视频源" prop="streamId">
-              <el-select 
-                v-model="recordPlanForm.streamId" 
-                filterable 
-                remote 
-                reserve-keyword 
-                placeholder="请输入关键词搜索视频源"
-                :remote-method="remoteMethod" 
-                :loading="vdloading"
-                clearable
-              >
-                <el-option 
-                  v-for="item in videoSourceOptions" 
-                  :key="item.value" 
-                  :label="item.label" 
-                  :value="item.value"
-                ></el-option>
+            <el-form-item label="视频源" prop="VideoId">
+              <el-select :disabled="isEdit" v-model="recordPlanForm.VideoId" filterable remote reserve-keyword
+                placeholder="请输入关键词搜索视频源" :remote-method="remoteMethod" :loading="vdloading" clearable>
+                <el-option v-for="item in videoSourceOptions" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="保存周期" prop="saveCycle">
-              <el-input-number v-model="recordPlanForm.saveCycle" :min="1" :max="365" placeholder="录像文件保存天数"
+            <el-form-item label="保存周期" prop="SaveCycle">
+              <el-input-number v-model="recordPlanForm.SaveCycle" :min="1" :max="365" placeholder="录像文件保存天数"
                 controls-position="right"></el-input-number>
               <span class="ml-2 text-gray">超出周期的录像文件将自动删除</span>
             </el-form-item>
 
             <!-- 录像时段配置 -->
             <el-form-item label="录像时段" prop="recordTimeConfig">
-              <el-radio-group v-model="recordPlanForm.recordTimeType" @change="handleTimeTypeChange">
-                <el-radio label="week">按周配置</el-radio>
+              <el-radio-group v-model="recordPlanForm.RecordTimeType" @change="handleTimeTypeChange">
                 <el-radio label="time">按时段</el-radio>
+                <el-radio label="week">按周配置</el-radio>
               </el-radio-group>
 
               <!-- 按周配置（可视化网格） -->
-              <div v-if="recordPlanForm.recordTimeType === 'week'" class="week-time-config mt-3">
+              <div v-if="recordPlanForm.RecordTimeType === 'week'" class="week-time-config mt-3">
                 <!-- 小时表头 -->
                 <div class="time-header">
                   <span class="empty-cell"></span>
@@ -70,25 +58,15 @@
                 <!-- 每日时段行 -->
                 <div class="day-row" v-for="(day, dayIdx) in weekList" :key="dayIdx">
                   <span class="day-label">{{ day.label }}</span>
-                  <div 
-                    class="time-block" 
-                    v-for="hour in 24" 
-                    :key="hour"
-                    :class="{ 
-                      active: isTimeBlockActive(dayIdx, hour - 1),
-                      preview: isPreviewBlock(dayIdx, hour - 1)
-                    }" 
-                    @click="toggleTimeBlock(dayIdx, hour - 1)"
+                  <div class="time-block" v-for="hour in 24" :key="hour" :class="{
+                    active: isTimeBlockActive(dayIdx, hour - 1),
+                    preview: isPreviewBlock(dayIdx, hour - 1)
+                  }" @click="toggleTimeBlock(dayIdx, hour - 1)"
                     @mouseenter="handleTimeBlockMouseEnter(dayIdx, hour - 1, $event)"
-                    @mouseleave="handleTimeBlockMouseLeave"
-                    @mouseover="handleTimeBlockMouseOver(dayIdx, hour - 1)"
-                  ></div>
+                    @mouseleave="handleTimeBlockMouseLeave" @mouseover="handleTimeBlockMouseOver(dayIdx, hour - 1)">
+                  </div>
                   <!-- 每日清除图标 -->
-                  <span 
-                    class="clear-day-icon" 
-                    @click="clearDayTime(dayIdx)"
-                    title="清空当天时段配置"
-                  >
+                  <span class="clear-day-icon" @click="clearDayTime(dayIdx)" title="清空当天时段配置">
                     <i class="el-icon-delete"></i>
                   </span>
                 </div>
@@ -106,7 +84,7 @@
               </div>
 
               <!-- 按时段配置（单日24小时可视化网格，和按周交互一致） -->
-              <div v-if="recordPlanForm.recordTimeType === 'time'" class="day-time-config mt-3">
+              <div v-if="recordPlanForm.RecordTimeType === 'time'" class="day-time-config mt-3">
                 <!-- 小时表头 -->
                 <div class="time-header">
                   <span class="empty-cell"></span>
@@ -116,25 +94,13 @@
                 <!-- 单日时段行（无星期，仅24小时） -->
                 <div class="day-row single-day-row">
                   <span class="day-label">全天</span>
-                  <div 
-                    class="time-block" 
-                    v-for="hour in 24" 
-                    :key="hour"
-                    :class="{ 
-                      active: isDayTimeBlockActive(hour - 1),
-                      preview: isDayPreviewBlock(hour - 1)
-                    }" 
-                    @click="toggleDayTimeBlock(hour - 1)"
-                    @mouseenter="handleDayTimeBlockMouseEnter(hour - 1, $event)"
-                    @mouseleave="handleTimeBlockMouseLeave"
-                    @mouseover="handleDayTimeBlockMouseOver(hour - 1)"
-                  ></div>
+                  <div class="time-block" v-for="hour in 24" :key="hour" :class="{
+                    active: isDayTimeBlockActive(hour - 1),
+                    preview: isDayPreviewBlock(hour - 1)
+                  }" @click="toggleDayTimeBlock(hour - 1)" @mouseenter="handleDayTimeBlockMouseEnter(hour - 1, $event)"
+                    @mouseleave="handleTimeBlockMouseLeave" @mouseover="handleDayTimeBlockMouseOver(hour - 1)"></div>
                   <!-- 单日清除图标 -->
-                  <span 
-                    class="clear-day-icon" 
-                    @click="clearSingleDayTime()"
-                    title="清空所有时段配置"
-                  >
+                  <span class="clear-day-icon" @click="clearSingleDayTime()" title="清空所有时段配置">
                     <i class="el-icon-delete"></i>
                   </span>
                 </div>
@@ -177,17 +143,15 @@
             </el-form>
           </div>
           <el-table v-loading="logLoading" :data="planLogList" border stripe size="small">
-            <el-table-column prop="id" label="日志ID" width="80"></el-table-column>
-            <el-table-column prop="logType" label="日志类型" width="100" :formatter="formatLogType"></el-table-column>
-            <el-table-column prop="content" label="日志内容" min-width="300" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="execTime" label="执行时间" width="180"></el-table-column>
-            <el-table-column prop="ip" label="操作IP" width="120"></el-table-column>
-            <el-table-column prop="remark" label="备注" min-width="150" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="id" label="日志ID" align="center" width="150"></el-table-column>
+            <el-table-column prop="LogType" label="日志类型" align="center" width="120"
+              :formatter="formatLogType"></el-table-column>
+            <el-table-column prop="Content" label="日志内容" min-width="300" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ExecTime" label="执行时间" align="center" width="180"></el-table-column>
           </el-table>
-          <el-pagination @size-change="handleLogSizeChange" @current-change="handleLogCurrentChange"
-            :current-page="logPagination.pageNum" :page-sizes="[10, 20, 50]" :page-size="logPagination.pageSize"
-            layout="total, sizes, prev, pager, next, jumper" :total="logPagination.total" class="mt-4" background>
-          </el-pagination>
+          <pagination v-show="logPagination.total > 0" :total="logPagination.total" :page.sync="logPagination.pageNum"
+            :limit.sync="logPagination.pageSize" @pagination="handleLogCurrentChange" />
+
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -225,25 +189,26 @@ export default {
       ],
       // 表单数据
       recordPlanForm: {
-        id: '',
-        planName: '',
-        streamId: '',
-        saveCycle: 1,
-        recordTimeType: 'week', // week:按周 | time:按时段（单日）
+        Id: '',
+        PlanName: '',
+        VideoId: '',
+        SaveCycle: 7,
+        RecordTimeType: 'time', // week:按周 | time:按时段（单日）
+        WeekConfig: "",
+        TimeConfig: "",
         // 新格式：按周时间配置 [{"week":1,"Time":8,"Op":"Start"},...]
-        weekTimeRanges: [], 
+        weekTimeRanges: [],
         // 新格式：按时段配置 [{"Time":8,"Op":"Start"},{"Time":18,"Op":"End"},...]
-        dayTimeRanges: [], 
-        status: 1,
-        remark: '',
-        creator: '',
+        dayTimeRanges: [],
+        Status: 1,
+        createName: '',
         createTime: ''
       },
       // 表单校验规则
       recordPlanRules: {
-        planName: [{ required: true, message: '请输入计划名称', trigger: 'blur' }],
-        streamId: [{ required: true, message: '请选择视频源', trigger: 'change' }],
-        saveCycle: [{ required: true, message: '请输入保存周期', trigger: 'blur' }]
+        PlanName: [{ required: true, message: '请输入计划名称', trigger: 'blur' }],
+        VideoId: [{ required: true, message: '请选择视频源', trigger: 'change' }],
+        SaveCycle: [{ required: true, message: '请输入保存周期', trigger: 'blur' }]
       },
       // 时间网格悬浮提示
       tooltipVisible: false,
@@ -274,7 +239,7 @@ export default {
         this.initForm()
       } else {
         this.isEdit = true
-        this.planId = data.id
+        this.planId = data.Id
         this.initForm()
       }
     },
@@ -288,16 +253,36 @@ export default {
       this.recordPlanForm.weekTimeRanges = []
       this.recordPlanForm.dayTimeRanges = []
       this.isEdit = !!this.planId
-      this.recordPlanForm.id = this.planId || ''
+      this.recordPlanForm.Id = this.planId
 
       // 编辑模式加载详情
+      await this.remoteMethod('');
       if (this.isEdit) {
-        await this.fetchPlanDetail(this.planId)
+        try {
+          const res = await recordInfo(this.recordPlanForm.Id)
+          const data = res.data
+          // 兼容后端返回的新格式数据
+          if (data.RecordTimeType === 'time') {
+            data.dayTimeRanges = this.$isNotEmpty(data.TimeConfig) ? JSON.parse(data.TimeConfig) : []
+            data.weekTimeRanges = [];
+          } else {
+            data.dayTimeRanges = [];
+            data.weekTimeRanges = this.$isNotEmpty(data.WeekConfig) ? JSON.parse(data.WeekConfig) : []
+          }
+          this.recordPlanForm = data
+          if (!this.videoSourceOptions.some(el => el.value === data.VideoId)) {
+            this.videoSourceOptions.push({ value: data.VideoId, label: data.Position });
+          }
+          this.fetchPlanLog()
+        } catch (error) {
+          this.$message.error('获取计划详情失败：' + (error.message || '网络异常'))
+          this.handleCancel()
+        }
       } else {
         this.recordPlanForm = {
-          id: '', planName: '', streamId: '', saveCycle: 1, recordTimeType: 'week',
+          Id: '', PlanName: '', VideoId: '', SaveCycle: 7, RecordTimeType: 'time',
           weekTimeRanges: [], dayTimeRanges: [],
-          status: 1, remark: '', creator: '', createTime: ''
+          Status: 1, createName: '', createTime: ''
         }
         this.activeTab = 'config'
       }
@@ -315,42 +300,12 @@ export default {
       // 悬浮提示
       this.tooltipVisible = false
     },
-    // 获取录像计划详情
-    async fetchPlanDetail(id) {
-      try {
-        const res = await recordInfo(id)
-        if (res.code === 200) {
-          const data = { ...res.data }
-          // 兼容后端返回的新格式数据
-          if (data.recordTimeType === 'time') {
-            data.dayTimeRanges = Array.isArray(data.dayTimeRanges) 
-              ? data.dayTimeRanges 
-              : (data.dayTimeRanges ? JSON.parse(data.dayTimeRanges) : [])
-          } else {
-            data.weekTimeRanges = Array.isArray(data.weekTimeRanges) 
-              ? data.weekTimeRanges 
-              : (data.weekTimeRanges ? JSON.parse(data.weekTimeRanges) : [])
-          }
-          this.recordPlanForm = data
-          this.fetchPlanLog()
-        } else {
-          this.$message.error('获取计划详情失败：' + (res.msg || '接口返回异常'))
-          this.handleCancel()
-        }
-      } catch (error) {
-        this.$message.error('获取计划详情失败：' + (error.message || '网络异常'))
-        this.handleCancel()
-      }
-    },
     // 视频源远程搜索
     async remoteMethod(query) {
-      if (!query) { this.videoSourceOptions = []; return }
       this.vdloading = true
       try {
-        const res = await videoSourceList({ keyword: query })
-        this.videoSourceOptions = res.code === 200 
-          ? res.data.map(item => ({ value: item.streamId || item.value, label: item.name || item.label || item.streamName }))
-          : []
+        const res = await videoSourceList({ Key: query })
+        this.videoSourceOptions = res.data.List.map(item => ({ value: item.Id, label: item.Position }))
       } catch (error) {
         this.$message.error('获取视频源列表失败：' + error.message)
         this.videoSourceOptions = []
@@ -374,11 +329,9 @@ export default {
     // 检查小时是否处于激活状态（按周）
     isTimeBlockActive(dayIdx, hour) {
       const week = this.weekList[dayIdx].value
-      
-      // 原有逻辑（移除Both类型和全天简化节点判断）
       const activeHours = {}
       let currentActive = false
-      
+
       // 遍历所有时间点，标记激活区间
       for (let h = 0; h < 24; h++) {
         const op = this.getWeekTimeOp(week, h)
@@ -389,13 +342,13 @@ export default {
         }
         activeHours[h] = currentActive
       }
-      
+
       // 24点的End操作会影响23点的激活状态
       const end24 = this.getWeekTimeOp(week, 24) === 'End'
       if (hour === 23 && end24) {
         return true
       }
-      
+
       // 默认未激活，除非被标记为激活
       return activeHours[hour] === true
     },
@@ -404,7 +357,7 @@ export default {
       if (!this.isSelecting) return false
       const { dayIdx: sDay, hour: sHour } = this.selectStart
       const { dayIdx: pDay, hour: pHour } = this.selectPreview
-      
+
       if (dayIdx === sDay && dayIdx === pDay) {
         // 移除跨天逻辑，只保留正向范围判断
         const minHour = Math.min(sHour, pHour)
@@ -415,10 +368,9 @@ export default {
     },
     // 检查小时是否处于激活状态（单日）
     isDayTimeBlockActive(hour) {
-      // 原有逻辑（移除Both类型和全天简化节点判断）
       const activeHours = {}
       let currentActive = false
-      
+
       // 遍历所有时间点，标记激活区间
       for (let h = 0; h < 24; h++) {
         const op = this.getDayTimeOp(h)
@@ -429,13 +381,13 @@ export default {
         }
         activeHours[h] = currentActive
       }
-      
+
       // 24点的End操作会影响23点的激活状态
       const end24 = this.getDayTimeOp(24) === 'End'
       if (hour === 23 && end24) {
         return true
       }
-      
+
       // 默认未激活，除非被标记为激活
       return activeHours[hour] === true
     },
@@ -444,7 +396,7 @@ export default {
       if (!this.isDaySelecting) return false
       const startHour = this.daySelectStart.hour
       const previewHour = this.daySelectPreview.hour
-      
+
       // 移除跨天逻辑，只保留正向范围判断
       const minHour = Math.min(startHour, previewHour)
       const maxHour = Math.max(startHour, previewHour)
@@ -459,16 +411,16 @@ export default {
     isWeekAllDay(week) {
       // 检测现有节点是否覆盖全天
       const weekNodes = this.recordPlanForm.weekTimeRanges.filter(item => item.week === week)
-      if (weekNodes.length === 2 && 
-          weekNodes.some(n => n.Time === 0 && n.Op === 'Start') && 
-          weekNodes.some(n => n.Time === 24 && n.Op === 'End')) {
+      if (weekNodes.length === 2 &&
+        weekNodes.some(n => n.Time === 0 && n.Op === 'Start') &&
+        weekNodes.some(n => n.Time === 24 && n.Op === 'End')) {
         return true
       }
-      
+
       // 检测通过多个区间拼接成全天的情况
       const activeHours = new Set()
       let currentActive = false
-      
+
       for (let h = 0; h < 24; h++) {
         const op = this.getWeekTimeOp(week, h)
         if (op === 'Start') {
@@ -476,32 +428,32 @@ export default {
         } else if (op === 'End') {
           currentActive = false
         }
-        
+
         if (currentActive) {
           activeHours.add(h)
         }
       }
-      
+
       // 检查是否覆盖0-23所有小时
       return activeHours.size === 24
     },
-    
+
     /**
      * 检测单日配置是否为全天（0-23点）
      * @returns {Boolean} 是否全天
      */
     isDayAllDay() {
       // 检测现有节点是否覆盖全天
-      if (this.recordPlanForm.dayTimeRanges.length === 2 && 
-          this.recordPlanForm.dayTimeRanges.some(n => n.Time === 0 && n.Op === 'Start') && 
-          this.recordPlanForm.dayTimeRanges.some(n => n.Time === 24 && n.Op === 'End')) {
+      if (this.recordPlanForm.dayTimeRanges.length === 2 &&
+        this.recordPlanForm.dayTimeRanges.some(n => n.Time === 0 && n.Op === 'Start') &&
+        this.recordPlanForm.dayTimeRanges.some(n => n.Time === 24 && n.Op === 'End')) {
         return true
       }
-      
+
       // 检测通过多个区间拼接成全天的情况
       const activeHours = new Set()
       let currentActive = false
-      
+
       for (let h = 0; h < 24; h++) {
         const op = this.getDayTimeOp(h)
         if (op === 'Start') {
@@ -509,16 +461,16 @@ export default {
         } else if (op === 'End') {
           currentActive = false
         }
-        
+
         if (currentActive) {
           activeHours.add(h)
         }
       }
-      
+
       // 检查是否覆盖0-23所有小时
       return activeHours.size === 24
     },
-    
+
     // ========== 新增：时间节点清理优化工具函数 ==========
     /**
      * 清理按周时间节点（去重、合并、排序、全时段标准化、连续同类型节点去重）
@@ -527,26 +479,26 @@ export default {
     cleanWeekTimeNodes(week) {
       // 1. 筛选当前星期的节点
       let weekNodes = this.recordPlanForm.weekTimeRanges.filter(item => item.week === week)
-      
+
       // 2. 去重：每个时间点只保留最后一个操作
       const uniqueMap = {}
       weekNodes.forEach(node => {
         uniqueMap[node.Time] = node.Op
       })
-      
+
       // 3. 重新构建节点数组并按时间排序
       weekNodes = Object.keys(uniqueMap)
         .map(time => ({ week, Time: Number(time), Op: uniqueMap[time] }))
         .sort((a, b) => a.Time - b.Time)
-      
+
       // 处理连续同类型的Start/End节点
       if (weekNodes.length > 1) {
         const cleanedNodes = [weekNodes[0]] // 保留第一个节点
-        
+
         for (let i = 1; i < weekNodes.length; i++) {
           const lastNode = cleanedNodes[cleanedNodes.length - 1]
           const currentNode = weekNodes[i]
-          
+
           // 跳过连续的同类型Start/End节点
           if (lastNode.Op === currentNode.Op) {
             // 如果是连续的Start，保留先出现的；连续的End，保留后出现的
@@ -557,13 +509,13 @@ export default {
             // Start节点直接跳过当前节点
             continue
           }
-          
+
           cleanedNodes.push(currentNode)
         }
-        
+
         weekNodes = cleanedNodes
       }
-      
+
       // 全时段检测并标准化为 0 Start + 24 End
       if (this.isWeekAllDay(week)) {
         // 替换为标准的全天节点
@@ -572,14 +524,14 @@ export default {
           { week, Time: 24, Op: 'End' }
         ]
       }
-      
+
       // 4. 替换原数组中的该星期节点
       this.recordPlanForm.weekTimeRanges = [
         ...this.recordPlanForm.weekTimeRanges.filter(item => item.week !== week),
         ...weekNodes
       ]
     },
-    
+
     /**
      * 清理单日时间节点（去重、合并、排序、全时段标准化、连续同类型节点去重）
      */
@@ -589,20 +541,20 @@ export default {
       this.recordPlanForm.dayTimeRanges.forEach(node => {
         uniqueMap[node.Time] = node.Op
       })
-      
+
       // 2. 重新构建节点数组并按时间排序
       let dayNodes = Object.keys(uniqueMap)
         .map(time => ({ Time: Number(time), Op: uniqueMap[time] }))
         .sort((a, b) => a.Time - b.Time)
-      
+
       // 处理连续同类型的Start/End节点
       if (dayNodes.length > 1) {
         const cleanedNodes = [dayNodes[0]] // 保留第一个节点
-        
+
         for (let i = 1; i < dayNodes.length; i++) {
           const lastNode = cleanedNodes[cleanedNodes.length - 1]
           const currentNode = dayNodes[i]
-          
+
           // 跳过连续的同类型Start/End节点
           if (lastNode.Op === currentNode.Op) {
             // 如果是连续的Start，保留先出现的；连续的End，保留后出现的
@@ -613,13 +565,13 @@ export default {
             // Start节点直接跳过当前节点
             continue
           }
-          
+
           cleanedNodes.push(currentNode)
         }
-        
+
         dayNodes = cleanedNodes
       }
-      
+
       // 全时段检测并标准化为 0 Start + 24 End
       if (this.isDayAllDay()) {
         // 替换为标准的全天节点
@@ -628,10 +580,10 @@ export default {
           { Time: 24, Op: 'End' }
         ]
       }
-      
+
       this.recordPlanForm.dayTimeRanges = dayNodes
     },
-    
+
     /**
      * 计算时间范围的结束点（移除跨天逻辑，只返回endHour+1）
      * @param {Number} startHour 开始小时
@@ -654,16 +606,16 @@ export default {
       // 移除跨天逻辑，只清理正向范围
       const minHour = Math.min(startHour, endHour)
       const maxHour = Math.max(startHour, endHour)
-      
+
       // 过滤掉与当前范围重叠的所有节点
       this.recordPlanForm.weekTimeRanges = this.recordPlanForm.weekTimeRanges.filter(item => {
         if (item.week !== week) return true;
-        
+
         const time = item.Time;
         return !(time >= minHour && time <= maxHour + 1);
       });
     },
-    
+
     /**
      * 清理单日时间范围内与指定范围重叠的节点
      * @param {Number} startHour 开始小时
@@ -673,7 +625,7 @@ export default {
       // 移除跨天逻辑，只清理正向范围
       const minHour = Math.min(startHour, endHour)
       const maxHour = Math.max(startHour, endHour);
-      
+
       // 过滤掉与当前范围重叠的所有节点
       this.recordPlanForm.dayTimeRanges = this.recordPlanForm.dayTimeRanges.filter(item => {
         const time = item.Time;
@@ -686,12 +638,12 @@ export default {
       if (!event?.clientX) { this.tooltipVisible = false; return }
       const week = this.weekList[dayIdx].value
       const op = this.getWeekTimeOp(week, hour)
-      
+
       if (op) {
         let opText = ''
         if (op === 'Start') opText = '开始录像'
         else if (op === 'End') opText = '结束录像'
-        
+
         // 特殊处理24点的提示文本
         if (hour === 24) {
           this.tooltipText = `${this.weekList[dayIdx].label} 24:00:00 ${opText}`
@@ -710,7 +662,7 @@ export default {
     },
     toggleTimeBlock(dayIdx, hour) {
       const week = this.weekList[dayIdx].value
-      
+
       if (!this.isSelecting) {
         // 开始范围选择
         this.isSelecting = true
@@ -721,14 +673,14 @@ export default {
         this.isSelecting = false
         const startHour = this.selectStart.hour
         const endHour = hour
-        
+
         // 统一修正为正向范围（小→大）
         const minHour = Math.min(startHour, endHour)
         const maxHour = Math.max(startHour, endHour)
-        
+
         // 第一步：清理重叠的旧时间节点
         this.clearOverlappingWeekTime(week, minHour, maxHour)
-        
+
         // 第二步：添加新的操作点
         if (minHour === maxHour) {
           // 单个小时，添加Start和End（End在当前小时+1）
@@ -745,21 +697,21 @@ export default {
         } else {
           // 计算结束点（正向范围）
           const endTime = this.calculateEndTime(minHour, maxHour)
-          
+
           // 时间范围，添加开始和结束点
           this.recordPlanForm.weekTimeRanges.push({
             week,
             Time: minHour,
             Op: 'Start'
           })
-          
+
           this.recordPlanForm.weekTimeRanges.push({
             week,
             Time: endTime,
             Op: 'End'
           })
         }
-        
+
         // 清理优化当前星期的时间节点（包含全时段标准化和连续节点去重）
         this.cleanWeekTimeNodes(week)
         this.selectPreview = { dayIdx: -1, hour: -1 }
@@ -780,12 +732,12 @@ export default {
     handleDayTimeBlockMouseEnter(hour, event) {
       if (!event?.clientX) { this.tooltipVisible = false; return }
       const op = this.getDayTimeOp(hour)
-      
+
       if (op) {
         let opText = ''
         if (op === 'Start') opText = '开始录像'
         else if (op === 'End') opText = '结束录像'
-        
+
         // 特殊处理24点的提示文本
         if (hour === 24) {
           this.tooltipText = `每日 24:00:00 ${opText}`
@@ -812,14 +764,14 @@ export default {
         this.isDaySelecting = false
         const startHour = this.daySelectStart.hour
         const endHour = hour
-        
+
         // 统一修正为正向范围（小→大）
         const minHour = Math.min(startHour, endHour)
         const maxHour = Math.max(startHour, endHour)
-        
+
         // 第一步：清理重叠的旧时间节点
         this.clearOverlappingDayTime(minHour, maxHour)
-        
+
         // 第二步：添加新的操作点
         if (minHour === maxHour) {
           // 单个小时，添加Start和End（End在当前小时+1）
@@ -834,22 +786,22 @@ export default {
         } else {
           // 计算结束点（正向范围）
           const endTime = this.calculateEndTime(minHour, maxHour)
-          
+
           // 时间范围，添加开始和结束点
           this.recordPlanForm.dayTimeRanges.push({
             Time: minHour,
             Op: 'Start'
           })
-          
+
           this.recordPlanForm.dayTimeRanges.push({
             Time: endTime,
             Op: 'End'
           })
         }
-        
+
         // 清理优化单日时间节点（包含全时段标准化和连续节点去重）
         this.cleanDayTimeNodes()
-        
+
         this.daySelectPreview = { hour: -1 }
         this.$forceUpdate()
       }
@@ -909,7 +861,7 @@ export default {
       this.resetAllSelectState()
       this.recordPlanForm.dayTimeRanges = []
     },
-   
+
     // 提交表单
     async handleSubmit() {
       try {
@@ -919,25 +871,24 @@ export default {
         const hasSelectTime = this.recordPlanForm.recordTimeType === 'week'
           ? this.recordPlanForm.weekTimeRanges.length > 0
           : this.recordPlanForm.dayTimeRanges.length > 0
-        if (!hasSelectTime) throw new Error('请选择录像时段')
+        if (!hasSelectTime) {
+          this.$message.error('请选择录像时段');
+          return
+        }
 
         this.submitLoading = true
         // 准备提交数据（转JSON字符串，适配后端）
         const submitData = {
           ...this.recordPlanForm,
-          weekTimeRanges: JSON.stringify(this.recordPlanForm.weekTimeRanges),
-          dayTimeRanges: JSON.stringify(this.recordPlanForm.dayTimeRanges)
+          WeekConfig: JSON.stringify(this.recordPlanForm.weekTimeRanges),
+          TimeConfig: JSON.stringify(this.recordPlanForm.dayTimeRanges)
         }
 
         // 调用接口
         const res = this.isEdit ? await editRecord(submitData) : await addRecord(submitData)
-        if (res.code === 200) {
-          this.$message.success(this.isEdit ? '更新成功！' : '新增成功！')
-          this.$emit('success', this.recordPlanForm)
-          this.handleCancel()
-        } else {
-          this.$message.error((this.isEdit ? '更新' : '新增') + '失败：' + (res.msg || '操作失败'))
-        }
+        this.$message.success(this.isEdit ? '更新成功！' : '新增成功！')
+        this.$emit('success', this.recordPlanForm)
+        this.handleCancel()
       } catch (error) {
         this.$message.error('提交失败：' + (error.message || '表单验证失败'))
       } finally {
@@ -962,7 +913,7 @@ export default {
       this.logLoading = true
       try {
         const params = {
-          planId: this.recordPlanForm.id,
+          planId: this.recordPlanForm.Id,
           pageNum: this.logPagination.pageNum,
           pageSize: this.logPagination.pageSize,
           logType: this.logSearchForm.logType,
@@ -988,35 +939,90 @@ export default {
       this.logPagination.pageNum = 1
       this.fetchPlanLog()
     },
-    handleLogSizeChange(val) { this.logPagination.pageSize = val; this.fetchPlanLog() },
-    handleLogCurrentChange(val) { this.logPagination.pageNum = val; this.fetchPlanLog() }
+    handleLogCurrentChange() { this.fetchPlanLog() }
   }
 }
 </script>
 
 <style scoped>
-.dialog-card { border: none; box-shadow: none; }
-.mt-2 { margin-top: 12px; }
-.mt-3 { margin-top: 16px; }
-.mb-3 { margin-bottom: 16px; }
-.ml-2 { margin-left: 8px; }
-.text-gray { color: #999; font-size: 12px; }
-.w-100 { width: 100%; }
-.form-container { padding: 10px 0; }
+.dialog-card {
+  border: none;
+  box-shadow: none;
+}
+
+.mt-2 {
+  margin-top: 12px;
+}
+
+.mt-3 {
+  margin-top: 16px;
+}
+
+.mb-3 {
+  margin-bottom: 16px;
+}
+
+.ml-2 {
+  margin-left: 8px;
+}
+
+.text-gray {
+  color: #999;
+  font-size: 12px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.form-container {
+  padding: 10px 0;
+}
 
 /* 按周/单日网格通用样式 */
-.week-time-config, .day-time-config {
+.week-time-config,
+.day-time-config {
   position: relative;
   padding: 10px;
   border: 1px solid #ebeef5;
   border-radius: 4px;
 }
-.time-header { display: flex; align-items: center; margin-bottom: 8px; }
-.empty-cell { width: 60px; }
-.time-cell { width: 40px; text-align: center; font-size: 12px; color: #666; }
-.clear-icon-cell { width: 40px; } /* 清除图标列宽度 */
-.day-row { display: flex; align-items: center; margin-bottom: 4px; }
-.day-label { width: 60px; font-size: 12px; color: #666; text-align: center; }
+
+.time-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.empty-cell {
+  width: 60px;
+}
+
+.time-cell {
+  width: 40px;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+
+.clear-icon-cell {
+  width: 40px;
+}
+
+/* 清除图标列宽度 */
+.day-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.day-label {
+  width: 60px;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
 .time-block {
   width: 40px;
   height: 24px;
@@ -1026,9 +1032,22 @@ export default {
   transition: all 0.2s;
   background-color: #f9f9f9;
 }
-.time-block.active { background-color: #b7eb8f; border-color: #95de64; }
-.time-block.preview { background-color: #91d5ff; border-color: #409eff; opacity: 0.7; }
-.time-block:hover { border-color: #409eff; }
+
+.time-block.active {
+  background-color: #b7eb8f;
+  border-color: #95de64;
+}
+
+.time-block.preview {
+  background-color: #91d5ff;
+  border-color: #409eff;
+  opacity: 0.7;
+}
+
+.time-block:hover {
+  border-color: #409eff;
+}
+
 .time-tooltip {
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
@@ -1039,7 +1058,11 @@ export default {
   pointer-events: none;
   z-index: 9999;
 }
-.week-actions { display: flex; gap: 16px; }
+
+.week-actions {
+  display: flex;
+  gap: 16px;
+}
 
 /* 清除图标样式 */
 .clear-day-icon {
@@ -1050,17 +1073,32 @@ export default {
   font-size: 14px;
   transition: color 0.2s;
 }
+
 .clear-day-icon:hover {
   color: #f56c6c;
 }
 
 /* 单日网格专属样式（微调） */
-.single-day-row { align-items: center; }
+.single-day-row {
+  align-items: center;
+}
 
 /* 日志样式 */
-.log-search-bar { padding-bottom: 8px; border-bottom: 1px solid #ebeef5; }
-.mt-4 { margin-top: 16px; }
-::v-deep .el-tabs__content { padding: 10px 0; }
-::v-deep .el-dialog__body { padding: 0px; }
-.dialog-footer { text-align: right; }
+.log-search-bar {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ebeef5;
+}
+
+
+::v-deep .el-tabs__content {
+  padding: 10px 0;
+}
+
+::v-deep .el-dialog__body {
+  padding: 0px;
+}
+
+.dialog-footer {
+  text-align: right;
+}
 </style>

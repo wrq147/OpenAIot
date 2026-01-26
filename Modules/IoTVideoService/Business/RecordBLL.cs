@@ -126,10 +126,17 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<int>.Error(112, "非企业用户无法添加");
             }
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            var videoInfo = await videoSourceDAL.Select(data.VideoId);
+            if (videoInfo == null)
+            {
+                return BusResponse<int>.Error(113, "视频源不存在");
+            }
             var snowflake = _provider.GetService<SnowflakeHelper>();
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
             data.Status = 1;
+            data.Position = videoInfo.Position;
             data.SetCreateBy(user);
 
             var tasks = PlanTimeParser.GenerateTriggerTasks(data);
@@ -160,8 +167,14 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<int>.Error(114, "无权修改当前录像计划");
             }
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            var videoInfo = await videoSourceDAL.Select(old.VideoId);
+            if (videoInfo == null)
+            {
+                return BusResponse<int>.Error(115, "无效的录像计划，视频源不存在");
+            }
             data.VideoId = null;
-            data.Position = null;
+            data.Position = videoInfo.Position;
             if (!string.IsNullOrEmpty(data.RecordTimeType) && !string.IsNullOrEmpty(data.WeekConfig) && !string.IsNullOrEmpty(data.TimeConfig))
             {
                 data.RecordTimeDesc = RecordTimeDescGenerator.GenerateTimeDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
@@ -190,6 +203,7 @@ namespace IoTVideoService.Business
                     }
                 }
             }
+            data.SetUpdateBy(user);
 
             return BusResponse<int>.Success(await recordDAL.Update(data));
         }

@@ -68,5 +68,16 @@ namespace IoTVideoService.Controller
         {
             return (await _recordBLL.Info(id)).ToAjaxResult();
         }
+
+        /// <summary>
+        /// 删除录像计划
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<int>> Remove(string id)
+        {
+            return (await _recordBLL.Delete(id, GetUser())).ToAjaxResult();
+        }
     }
 }

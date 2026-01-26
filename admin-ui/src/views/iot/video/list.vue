@@ -32,7 +32,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column label="安装位置" prop="Position" width="260" :show-overflow-tooltip="true" />
-                            <el-table-column label="VideoType" align="center" width="100">
+                            <el-table-column label="VideoType" align="center" width="120">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.VideoType == 0">固定地址</span>
                                     <span v-else-if="scope.row.VideoType == 1">GB28181设备</span>

@@ -335,6 +335,11 @@
             ZLMediaKit的视频Key
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.Position">
+            <summary>
+            发生位置
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordLog.LogType">
             <summary>
             日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）
@@ -428,7 +433,12 @@
         </member>
         <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GenerateWeekTriggerTasks(System.Collections.Generic.List{IoTVideoService.PlanUtil.WeekConfigItem})">
             <summary>
-            生成按周的RecordTriggerTask列表（每个Start/End/Both对应一个任务）
+            生成按周的RecordTriggerTask列表（处理0-24范围，合并0(Start)+24(End)为Both）
+            </summary>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.ProcessRemainingWeekItems(System.Collections.Generic.List{IoTVideoService.PlanUtil.WeekConfigItem},System.Collections.Generic.List{IoTVideoService.PlanUtil.RecordTriggerTask})">
+            <summary>
+            处理剩余的非配对周配置项
             </summary>
         </member>
         <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GenerateWeekSingleCron(System.Int32,System.Int32)">
@@ -436,24 +446,19 @@
             生成单个按周操作点的Cron表达式
             </summary>
         </member>
-        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GetNearestWeekTime(System.Int32,System.Int32)">
-            <summary>
-            获取最近的指定星期+小时的触发时间
-            </summary>
-        </member>
         <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GenerateDayTriggerTasks(System.Collections.Generic.List{IoTVideoService.PlanUtil.TimeConfigItem})">
             <summary>
-            生成单日的RecordTriggerTask列表（每个Start/End/Both对应一个任务）
+            生成单日的RecordTriggerTask列表（处理0-24范围，合并0(Start)+24(End)为Both）
+            </summary>
+        </member>
+        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.ProcessRemainingDayItems(System.Collections.Generic.List{IoTVideoService.PlanUtil.TimeConfigItem},System.Collections.Generic.List{IoTVideoService.PlanUtil.RecordTriggerTask})">
+            <summary>
+            处理剩余的非配对单日配置项
             </summary>
         </member>
         <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GenerateDaySingleCron(System.Int32)">
             <summary>
             生成单个单日操作点的Cron表达式
-            </summary>
-        </member>
-        <member name="M:IoTVideoService.PlanUtil.PlanTimeParser.GetNearestDayTime(System.Int32)">
-            <summary>
-            获取最近的当天/次日指定小时的触发时间
             </summary>
         </member>
         <member name="T:IoTVideoService.PlanUtil.RecordTimeDescGenerator">
@@ -508,11 +513,6 @@
         <member name="T:IoTVideoService.PlanUtil.RecordTriggerTask">
             <summary>
             录像计划触发任务（时间轮/任务中心的最小执行单元）
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.TriggerTime">
-            <summary>
-            触发时间（按周：最近的该星期对应小时；单日：当天对应小时）
             </summary>
         </member>
         <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.OperType">

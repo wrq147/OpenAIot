@@ -17,13 +17,13 @@ namespace IoTVideoService.PlanUtil
         /// </summary>
         private static readonly Dictionary<int, string> _weekNameMap = new Dictionary<int, string>
         {
-            { 7, "周日" },  // 关键修改：0→7
             { 1, "周一" },
             { 2, "周二" },
             { 3, "周三" },
             { 4, "周四" },
             { 5, "周五" },
-            { 6, "周六" }
+            { 6, "周六" },
+            { 7, "周日" }
         };
 
         /// <summary>
