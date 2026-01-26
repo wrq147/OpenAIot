@@ -11,8 +11,8 @@ namespace IoTVideoService.PlanUtil
     /// </summary>
     public class WeekConfigItem
     {
-        public int Week { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
+        public int week { get; set; }    // 星期值：0-周日，1-周一...6-周六
+        public int Time { get; set; }   // 小时数（0-24）
+        public string Op { get; set; }  // 操作类型：Start/End/Both
     }
 }

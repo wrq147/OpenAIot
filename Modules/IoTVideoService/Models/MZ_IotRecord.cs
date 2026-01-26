@@ -45,11 +45,11 @@ namespace IoTVideoService.Models
         /// </summary>
         public string RecordTimeDesc { get; set; }
         /// <summary>
-        /// 按周配置（JSON格式）：[{\"week\":1,\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]
+        /// 按周配置（JSON格式）：[{"week":1,"Time":8,"Op":"Start"},...]
         /// </summary>
         public string WeekConfig { get; set; }
         /// <summary>
-        /// 按时段配置（JSON格式）：[{\"startTime\":\"08:00:00\",\"endTime\":\"18:00:00\"},...]
+        /// 按时段配置（JSON格式）：[{"Time":8,"Op":"Start"},{"Time":18,"Op":"End"},...]
         /// </summary>
         public string TimeConfig { get; set; }
         /// <summary>

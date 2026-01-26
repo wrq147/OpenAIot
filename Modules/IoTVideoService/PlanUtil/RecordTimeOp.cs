@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace IoTVideoService.PlanUtil
 {
     /// <summary>
-    /// 按时段配置项模型
+    /// 录像时间操作类型枚举
     /// </summary>
-    public class TimeConfigItem
+    public enum RecordTimeOp
     {
-        public int Time { get; set; }   // 小时数（0-24）
-        public string Op { get; set; }  // 操作类型：Start/End/Both
+        Start,  // 开始录像
+        End,    // 结束录像
+        Both    // 同时结束、开始
     }
 }

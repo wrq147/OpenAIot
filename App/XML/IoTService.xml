@@ -2810,7 +2810,7 @@
             <param name="inputs"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.DownSyncDevice(IoTService.Models.MZ_IotDevice,System.Int32,ChannelUtility.Config.ChannelConfig)">
+        <member name="M:IoTService.ServerBusProxy.DownSyncDevice(IoTService.Models.MZ_IotDevice,System.Int32)">
             <summary>
             更新设备信息（发送设备绑定消息）
             </summary>

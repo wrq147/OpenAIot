@@ -1,4 +1,5 @@
-﻿using IoTVideoService.Models;
+﻿using Common.Json;
+using IoTVideoService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,259 +10,315 @@ namespace IoTVideoService.PlanUtil
 {
     public static class PlanTimeParser
     {
-
         /// <summary>
-        /// 解析录像计划为启停触发任务列表（含Cron表达式）
+        /// 将录像配置转换为RecordTriggerTask对象列表
         /// </summary>
-        /// <param name="plan">录像计划实体（需包含核心字段）</param>
-        /// <returns>触发任务列表</returns>
-        public static List<RecordTriggerTask> Parse(MZ_IotRecord plan)
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static List<RecordTriggerTask> GenerateTriggerTasks(MZ_IotRecord data)
         {
-            if (plan == null)
-                throw new ArgumentNullException(nameof(plan));
-
-            var triggerTasks = new List<RecordTriggerTask>();
-
-            // 根据时段类型解析不同配置
-            switch (plan.RecordTimeType?.ToLower())
+            var result = new List<RecordTriggerTask>();
+            if (string.IsNullOrEmpty(data.WeekConfig) && string.IsNullOrEmpty(data.TimeConfig))
             {
-                case "week":
-                    triggerTasks.AddRange(ParseWeekConfig(plan.WeekConfig));
-                    break;
-                case "time":
-                    triggerTasks.AddRange(ParseTimeConfig(plan.TimeConfig));
-                    break;
-                default:
-                    throw new NotSupportedException($"不支持的时段类型：{plan.RecordTimeType}");
+                return result;
             }
 
-            
-            foreach (var task in triggerTasks)
+            List<WeekConfigItem> weekTimeRanges = new List<WeekConfigItem>();
+            List<TimeConfigItem> dayTimeRanges = new List<TimeConfigItem>();
+
+            // 安全反序列化
+            try
             {
-                // 计算首次触发时间（当前时间之后的第一个触发点）
-                task.TriggerTime = GetFirstTriggerTime(task);
-                // 生成对应的Cron表达式
-                task.CronExpression = GenerateCronExpression(task);
+                if (!string.IsNullOrEmpty(data.WeekConfig))
+                {
+                    weekTimeRanges = System.Text.Json.JsonSerializer.Deserialize<List<WeekConfigItem>>(
+                        data.WeekConfig, MyDefaultTextJsonConfig.DefaultOptions) ?? new List<WeekConfigItem>();
+                }
+
+                if (!string.IsNullOrEmpty(data.TimeConfig))
+                {
+                    dayTimeRanges = System.Text.Json.JsonSerializer.Deserialize<List<TimeConfigItem>>(
+                        data.TimeConfig, MyDefaultTextJsonConfig.DefaultOptions) ?? new List<TimeConfigItem>();
+                }
+            }
+            catch (Exception)
+            {
+                // 反序列化失败返回空列表
+                return result;
             }
 
-            return triggerTasks;
-        }
-
-        /// <summary>
-        /// 解析按周配置（WeekConfig）为启停触发任务
-        /// </summary>
-        /// <param name="weekConfigJson">按周配置JSON字符串</param>
-        /// <returns>触发任务列表</returns>
-        private static List<RecordTriggerTask> ParseWeekConfig(string weekConfigJson)
-        {
-            if (string.IsNullOrEmpty(weekConfigJson) || weekConfigJson.Equals("null", StringComparison.OrdinalIgnoreCase) || weekConfigJson == "[]")
-                return new List<RecordTriggerTask>();
+            // 参数校验
+            if (string.IsNullOrEmpty(data.RecordTimeType))
+                return result;
 
             try
             {
-                // 解析JSON为按周配置项列表
-                var weekConfigs = System.Text.Json.JsonSerializer.Deserialize<List<WeekConfigItem>>(weekConfigJson);
-                if (weekConfigs == null || weekConfigs.Count == 0)
-                    return new List<RecordTriggerTask>();
-
-                var triggerTasks = new List<RecordTriggerTask>();
-
-                foreach (var config in weekConfigs)
+                if (data.RecordTimeType.Equals("week", StringComparison.OrdinalIgnoreCase))
                 {
-                    // 过滤无效配置
-                    if (config.Week < 1 || config.Week > 7 || string.IsNullOrEmpty(config.StartTime) || string.IsNullOrEmpty(config.EndTime))
-                        continue;
-
-                    // 格式化时间（HH:mm，去掉秒）
-                    var startTime = FormatTime(config.StartTime);
-                    var endTime = FormatTime(config.EndTime);
-
-                    // 生成启动任务（每周循环）
-                    triggerTasks.Add(new RecordTriggerTask
-                    {
-                        OperType = OperType.Start,
-                        RecurType = "Week",
-                        WeekDay = config.Week,
-                        TimeOfDay = startTime
-                    });
-
-                    // 生成停止任务（每周循环）
-                    triggerTasks.Add(new RecordTriggerTask
-                    {
-                        OperType = OperType.Stop,
-                        RecurType = "Week",
-                        WeekDay = config.Week,
-                        TimeOfDay = endTime
-                    });
+                    result = GenerateWeekTriggerTasks(weekTimeRanges);
                 }
-
-                return triggerTasks;
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("解析按周配置JSON失败", ex);
-            }
-        }
-
-        /// <summary>
-        /// 解析按时段配置（TimeConfig）为启停触发任务
-        /// </summary>
-        /// <param name="timeConfigJson">按时段配置JSON字符串</param>
-        /// <returns>触发任务列表</returns>
-        private static List<RecordTriggerTask> ParseTimeConfig(string timeConfigJson)
-        {
-            if (string.IsNullOrEmpty(timeConfigJson) || timeConfigJson.Equals("null", StringComparison.OrdinalIgnoreCase) || timeConfigJson == "[]")
-                return new List<RecordTriggerTask>();
-
-            try
-            {
-                // 解析JSON为按时段配置项列表
-                var timeConfigs = System.Text.Json.JsonSerializer.Deserialize<List<TimeConfigItem>>(timeConfigJson);
-                if (timeConfigs == null || timeConfigs.Count == 0)
-                    return new List<RecordTriggerTask>();
-
-                var triggerTasks = new List<RecordTriggerTask>();
-
-                foreach (var config in timeConfigs)
+                else if (data.RecordTimeType.Equals("time", StringComparison.OrdinalIgnoreCase))
                 {
-                    // 过滤无效配置
-                    if (string.IsNullOrEmpty(config.StartTime) || string.IsNullOrEmpty(config.EndTime))
-                        continue;
-
-                    // 格式化时间（HH:mm，去掉秒）
-                    var startTime = FormatTime(config.StartTime);
-                    var endTime = FormatTime(config.EndTime);
-
-                    // 生成启动任务（每天循环）
-                    triggerTasks.Add(new RecordTriggerTask
-                    {
-                        OperType = OperType.Start,
-                        RecurType = "Day",
-                        TimeOfDay = startTime
-                    });
-
-                    // 生成停止任务（每天循环）
-                    triggerTasks.Add(new RecordTriggerTask
-                    {
-                        OperType = OperType.Stop,
-                        RecurType = "Day",
-                        TimeOfDay = endTime
-                    });
+                    result = GenerateDayTriggerTasks(dayTimeRanges);
                 }
-
-                return triggerTasks;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new InvalidOperationException("解析按时段配置JSON失败", ex);
+                // 异常时返回空列表，避免无效数据
+            }
+
+            return result;
+        }
+
+        #region 按周生成触发任务列表
+        /// <summary>
+        /// 生成按周的RecordTriggerTask列表（处理0-24范围，合并0(Start)+24(End)为Both）
+        /// </summary>
+        private static List<RecordTriggerTask> GenerateWeekTriggerTasks(List<WeekConfigItem> weekTimeRanges)
+        {
+            var tasks = new List<RecordTriggerTask>();
+
+            if (weekTimeRanges == null || weekTimeRanges.Count == 0)
+                return tasks;
+
+            // 1. 先按星期分组，便于处理每组内的0-24配对
+            var weekGroups = weekTimeRanges.GroupBy(x => x.week).ToList();
+
+            foreach (var group in weekGroups)
+            {
+                int week = group.Key;
+                var items = group.ToList();
+
+                // 过滤无效星期
+                if (week < 1 || week > 7)
+                    continue;
+
+                // 2. 查找当前星期的0(Start)和24(End)配对
+                var start0Item = items.FirstOrDefault(x => x.Time == 0 && x.Op.Equals("Start", StringComparison.OrdinalIgnoreCase));
+                var end24Item = items.FirstOrDefault(x => x.Time == 24 && x.Op.Equals("End", StringComparison.OrdinalIgnoreCase));
+
+                // 3. 如果找到配对，生成Both任务并跳过这两个项
+                if (start0Item != null && end24Item != null)
+                {
+                    // 构造Both类型任务（使用0点作为触发时间）
+                    DateTime triggerTime = GetNearestWeekTime(week, 0);
+                    string cron = GenerateWeekSingleCron(week, 0);
+
+                    tasks.Add(new RecordTriggerTask
+                    {
+                        TriggerTime = triggerTime,
+                        OperType = RecordTimeOp.Both,
+                        WeekDay = week,
+                        CronExpression = cron
+                    });
+
+                    // 移除已处理的配对项，只处理剩余项
+                    var remainingItems = items.Where(x => !(x.Time == 0 && x.Op.Equals("Start", StringComparison.OrdinalIgnoreCase))
+                                                      && !(x.Time == 24 && x.Op.Equals("End", StringComparison.OrdinalIgnoreCase))).ToList();
+
+                    // 处理剩余项
+                    ProcessRemainingWeekItems(remainingItems, tasks);
+                }
+                else
+                {
+                    // 没有配对，直接处理所有项
+                    ProcessRemainingWeekItems(items, tasks);
+                }
+            }
+
+            return tasks;
+        }
+
+        /// <summary>
+        /// 处理剩余的非配对周配置项
+        /// </summary>
+        private static void ProcessRemainingWeekItems(List<WeekConfigItem> items, List<RecordTriggerTask> tasks)
+        {
+            foreach (var range in items)
+            {
+                // 过滤无效值（现在允许0-24）
+                if (range.week < 1 || range.week > 7 || range.Time < 0 || range.Time > 24)
+                    continue;
+
+                // 解析操作类型
+                if (!Enum.TryParse(range.Op, true, out RecordTimeOp opType))
+                    continue;
+
+                // 特殊处理24点：转换为0点（因为Cron的小时范围是0-23）
+                int cronHour = range.Time == 24 ? 0 : range.Time;
+
+                // 构造触发任务对象
+                DateTime triggerTime = GetNearestWeekTime(range.week, cronHour);
+                string cron = GenerateWeekSingleCron(range.week, cronHour);
+
+                tasks.Add(new RecordTriggerTask
+                {
+                    TriggerTime = triggerTime,
+                    OperType = opType,
+                    WeekDay = range.week,
+                    CronExpression = cron
+                });
             }
         }
 
         /// <summary>
-        /// 生成触发任务对应的Cron表达式（标准6位：秒 分 时 日 月 周）
+        /// 生成单个按周操作点的Cron表达式
         /// </summary>
-        /// <param name="task">触发任务</param>
-        /// <returns>Cron表达式</returns>
-        private static string GenerateCronExpression(RecordTriggerTask task)
+        private static string GenerateWeekSingleCron(int week, int hour)
         {
-            if (task == null || string.IsNullOrEmpty(task.TimeOfDay))
-                return string.Empty;
+            // 处理24点转换为0点（Cron小时范围0-23）
+            int cronHour = hour == 24 ? 0 : hour;
 
-            // 解析时分（HH:mm）
-            if (!TimeSpan.TryParseExact(task.TimeOfDay, "hh\\:mm", null, out var timeOfDay))
-                throw new FormatException($"时间格式错误：{task.TimeOfDay}，请使用HH:mm格式");
+            // Cron格式：秒 分 时 日 月 周 年
+            return $"0 0 {cronHour} * * {week} ?";
+        }
 
-            // Cron字段：秒 分 时 日 月 周
-            int second = 0; // 固定为0秒触发
-            int minute = timeOfDay.Minutes;
-            int hour = timeOfDay.Hours;
+        /// <summary>
+        /// 获取最近的指定星期+小时的触发时间
+        /// </summary>
+        private static DateTime GetNearestWeekTime(int targetWeek, int targetHour)
+        {
+            // 处理24点转换为0点
+            int actualHour = targetHour == 24 ? 0 : targetHour;
 
-            switch (task.RecurType)
+            // 目标星期映射：1=周一，2=周二...7=周日（.NET中DayOfWeek：0=周日，1=周一...6=周六）
+            DayOfWeek targetDayOfWeek = targetWeek switch
             {
-                case "Week":
-                    // 按周循环：周字段指定星期（1=周一，7=周日），日/月为*（任意）
-                    if (!task.WeekDay.HasValue || task.WeekDay < 1 || task.WeekDay > 7)
-                        throw new InvalidOperationException("按周循环任务必须指定有效星期数");
+                1 => DayOfWeek.Monday,
+                2 => DayOfWeek.Tuesday,
+                3 => DayOfWeek.Wednesday,
+                4 => DayOfWeek.Thursday,
+                5 => DayOfWeek.Friday,
+                6 => DayOfWeek.Saturday,
+                7 => DayOfWeek.Sunday,
+                _ => DayOfWeek.Monday
+            };
 
-                    // 适配不同框架的星期值：Quartz/XXL-Job中1=周一，7=周日
-                    int weekValue = task.WeekDay.Value;
-                    return $"{second} {minute} {hour} * * {weekValue}";
+            DateTime now = DateTime.Now;
+            DateTime triggerTime = new DateTime(now.Year, now.Month, now.Day, actualHour, 0, 0);
 
-                case "Day":
-                    // 每天循环：周字段为?（不指定），日/月为*（任意）
-                    return $"{second} {minute} {hour} * * ?";
+            // 计算距离目标星期的天数差
+            int daysToAdd = ((int)targetDayOfWeek - (int)now.DayOfWeek + 7) % 7;
+            if (daysToAdd == 0 && triggerTime < now)
+            {
+                // 今天就是目标星期，但时间已过，取下周
+                daysToAdd = 7;
+            }
 
-                default:
-                    throw new NotSupportedException($"不支持的循环类型：{task.RecurType}");
+            triggerTime = triggerTime.AddDays(daysToAdd);
+            return triggerTime;
+        }
+        #endregion
+
+        #region 单日生成触发任务列表
+        /// <summary>
+        /// 生成单日的RecordTriggerTask列表（处理0-24范围，合并0(Start)+24(End)为Both）
+        /// </summary>
+        private static List<RecordTriggerTask> GenerateDayTriggerTasks(List<TimeConfigItem> dayTimeRanges)
+        {
+            var tasks = new List<RecordTriggerTask>();
+
+            if (dayTimeRanges == null || dayTimeRanges.Count == 0)
+                return tasks;
+
+            // 1. 查找0(Start)和24(End)配对
+            var start0Item = dayTimeRanges.FirstOrDefault(x => x.Time == 0 && x.Op.Equals("Start", StringComparison.OrdinalIgnoreCase));
+            var end24Item = dayTimeRanges.FirstOrDefault(x => x.Time == 24 && x.Op.Equals("End", StringComparison.OrdinalIgnoreCase));
+
+            // 2. 如果找到配对，生成Both任务
+            if (start0Item != null && end24Item != null)
+            {
+                // 构造Both类型任务（使用0点作为触发时间）
+                DateTime triggerTime = GetNearestDayTime(0);
+                string cron = GenerateDaySingleCron(0);
+
+                tasks.Add(new RecordTriggerTask
+                {
+                    TriggerTime = triggerTime,
+                    OperType = RecordTimeOp.Both,
+                    WeekDay = null,
+                    CronExpression = cron
+                });
+
+                // 移除已处理的配对项，只处理剩余项
+                var remainingItems = dayTimeRanges.Where(x => !(x.Time == 0 && x.Op.Equals("Start", StringComparison.OrdinalIgnoreCase))
+                                                          && !(x.Time == 24 && x.Op.Equals("End", StringComparison.OrdinalIgnoreCase))).ToList();
+
+                // 处理剩余项
+                ProcessRemainingDayItems(remainingItems, tasks);
+            }
+            else
+            {
+                // 没有配对，直接处理所有项
+                ProcessRemainingDayItems(dayTimeRanges, tasks);
+            }
+
+            return tasks;
+        }
+
+        /// <summary>
+        /// 处理剩余的非配对单日配置项
+        /// </summary>
+        private static void ProcessRemainingDayItems(List<TimeConfigItem> items, List<RecordTriggerTask> tasks)
+        {
+            foreach (var range in items)
+            {
+                // 过滤无效小时（现在允许0-24）
+                if (range.Time < 0 || range.Time > 24)
+                    continue;
+
+                // 解析操作类型
+                if (!Enum.TryParse(range.Op, true, out RecordTimeOp opType))
+                    continue;
+
+                // 特殊处理24点：转换为0点（因为Cron的小时范围是0-23）
+                int cronHour = range.Time == 24 ? 0 : range.Time;
+
+                // 构造触发任务对象
+                DateTime triggerTime = GetNearestDayTime(cronHour);
+                string cron = GenerateDaySingleCron(cronHour);
+
+                tasks.Add(new RecordTriggerTask
+                {
+                    TriggerTime = triggerTime,
+                    OperType = opType,
+                    WeekDay = null,
+                    CronExpression = cron
+                });
             }
         }
 
         /// <summary>
-        /// 计算触发任务的首次触发时间（当前时间之后的第一个有效时间）
+        /// 生成单个单日操作点的Cron表达式
         /// </summary>
-        /// <param name="task">触发任务</param>
-        /// <returns>首次触发时间</returns>
-        private static DateTime GetFirstTriggerTime(RecordTriggerTask task)
+        private static string GenerateDaySingleCron(int hour)
         {
-            var now = DateTime.Now;
-            DateTime firstTriggerTime;
+            // 处理24点转换为0点（Cron小时范围0-23）
+            int cronHour = hour == 24 ? 0 : hour;
 
-            // 解析时分
-            if (!TimeSpan.TryParseExact(task.TimeOfDay, "hh\\:mm", null, out var timeOfDay))
-                throw new FormatException($"时间格式错误：{task.TimeOfDay}，请使用HH:mm格式");
-
-            // 按循环类型计算首次触发时间
-            switch (task.RecurType)
-            {
-                case "Week":
-                    // 按周循环：找到本周/下周的对应星期
-                    if (!task.WeekDay.HasValue || task.WeekDay < 1 || task.WeekDay > 7)
-                        throw new InvalidOperationException("按周循环任务必须指定有效星期数");
-
-                    // 转换为.NET的DayOfWeek（1=周一→Monday，7=周日→Sunday）
-                    var targetDayOfWeek = (DayOfWeek)((task.WeekDay.Value - 1) % 7);
-                    var daysToAdd = ((int)targetDayOfWeek - (int)now.DayOfWeek + 7) % 7;
-
-                    // 计算基准日期
-                    var baseDate = daysToAdd == 0 ? now.Date : now.Date.AddDays(daysToAdd);
-                    firstTriggerTime = baseDate.Add(timeOfDay);
-
-                    // 如果今天就是目标星期，但时间已过，则取下周
-                    if (daysToAdd == 0 && firstTriggerTime < now)
-                        firstTriggerTime = firstTriggerTime.AddDays(7);
-                    break;
-
-                case "Day":
-                    // 每天循环：今天/明天的指定时间
-                    firstTriggerTime = now.Date.Add(timeOfDay);
-                    if (firstTriggerTime < now)
-                        firstTriggerTime = firstTriggerTime.AddDays(1);
-                    break;
-
-                default:
-                    throw new NotSupportedException($"不支持的循环类型：{task.RecurType}");
-            }
-
-            return firstTriggerTime;
+            // Cron格式：秒 分 时 日 月 周 年（单日模式周字段用?）
+            return $"0 0 {cronHour} * * ? ?";
         }
 
         /// <summary>
-        /// 格式化时间（HH:mm:ss → HH:mm）
+        /// 获取最近的当天/次日指定小时的触发时间
         /// </summary>
-        /// <param name="timeStr">时间字符串</param>
-        /// <returns>格式化后的时间</returns>
-        private static string FormatTime(string timeStr)
+        private static DateTime GetNearestDayTime(int targetHour)
         {
-            if (string.IsNullOrEmpty(timeStr))
-                return string.Empty;
+            // 处理24点转换为0点
+            int actualHour = targetHour == 24 ? 0 : targetHour;
 
-            if (timeStr.Contains(":"))
+            DateTime now = DateTime.Now;
+            DateTime triggerTime = new DateTime(now.Year, now.Month, now.Day, actualHour, 0, 0);
+
+            // 如果当前时间已过目标小时，取次日
+            if (triggerTime < now)
             {
-                var parts = timeStr.Split(':');
-                return parts.Length >= 2 ? $"{parts[0].PadLeft(2, '0')}:{parts[1].PadLeft(2, '0')}" : timeStr;
+                triggerTime = triggerTime.AddDays(1);
             }
 
-            return timeStr;
+            return triggerTime;
         }
+        #endregion
     }
 }

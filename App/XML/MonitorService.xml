@@ -938,11 +938,6 @@
             是否记录操作日志
             </summary>
         </member>
-        <member name="P:MonitorService.MonitorOption.instance_name">
-            <summary>
-            调度器名称
-            </summary>
-        </member>
         <member name="P:MonitorService.MonitorOption.instance_id">
             <summary>
             调度器Id

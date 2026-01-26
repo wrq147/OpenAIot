@@ -12,240 +12,209 @@ namespace IoTVideoService.PlanUtil
     /// </summary>
     public static class RecordTimeDescGenerator
     {
-        // 星期数转中文映射（数据库week：1=周一，7=周日）
-        private static readonly Dictionary<int, string> _weekMap = new Dictionary<int, string>
-    {
-        { 1, "周一" },
-        { 2, "周二" },
-        { 3, "周三" },
-        { 4, "周四" },
-        { 5, "周五" },
-        { 6, "周六" },
-        { 7, "周日" }
-    };
+        /// <summary>
+        /// 星期名称映射表
+        /// </summary>
+        private static readonly Dictionary<int, string> _weekNameMap = new Dictionary<int, string>
+        {
+            { 7, "周日" },  // 关键修改：0→7
+            { 1, "周一" },
+            { 2, "周二" },
+            { 3, "周三" },
+            { 4, "周四" },
+            { 5, "周五" },
+            { 6, "周六" }
+        };
 
         /// <summary>
-        /// 格式化时间（去掉秒，如 08:00:00 → 08:00）
+        /// 生成录像时段描述文本
         /// </summary>
-        /// <param name="timeStr">时间字符串</param>
-        /// <returns>格式化后的时间</returns>
-        private static string FormatTime(string timeStr)
+        /// <param name="recordTimeType">时间类型：week-按周，time-单日</param>
+        /// <param name="weekConfig">按周时间配置</param>
+        /// <param name="timeConfig">单日时间配置</param>
+        /// <returns>格式化的时段描述文本</returns>
+        public static string GenerateTimeDesc(string recordTimeType, string weekConfig, string timeConfig)
         {
-            if (string.IsNullOrEmpty(timeStr) || !timeStr.Contains(":"))
-                return timeStr;
-
-            var timeParts = timeStr.Split(':');
-            return timeParts.Length >= 2 ? $"{timeParts[0]}:{timeParts[1]}" : timeStr;
-        }
-
-        /// <summary>
-        /// 合并连续的星期数
-        /// </summary>
-        /// <param name="weekNums">星期数列表</param>
-        /// <returns>合并后的星期描述</returns>
-        private static string MergeWeekNumbers(List<int> weekNums)
-        {
-            if (weekNums == null || weekNums.Count == 0)
+            if (string.IsNullOrEmpty(weekConfig) && string.IsNullOrEmpty(timeConfig))
+            {
                 return string.Empty;
-
-            // 去重并排序
-            var sortedUniqueWeeks = weekNums.Distinct().OrderBy(w => w).ToList();
-
-            if (sortedUniqueWeeks.Count == 1)
-                return _weekMap.TryGetValue(sortedUniqueWeeks[0], out var weekName) ? weekName : string.Empty;
-
-            var result = new List<string>();
-            int start = sortedUniqueWeeks[0];
-            int prev = sortedUniqueWeeks[0];
-
-            for (int i = 1; i < sortedUniqueWeeks.Count; i++)
-            {
-                int curr = sortedUniqueWeeks[i];
-                // 非连续则拼接上一段
-                if (curr - prev > 1)
-                {
-                    if (start == prev)
-                    {
-                        result.Add(_weekMap.TryGetValue(start, out var name) ? name : string.Empty);
-                    }
-                    else
-                    {
-                        var startName = _weekMap.TryGetValue(start, out var sName) ? sName : string.Empty;
-                        var prevName = _weekMap.TryGetValue(prev, out var pName) ? pName : string.Empty;
-                        result.Add($"{startName}至{prevName}");
-                    }
-                    start = curr;
-                }
-                prev = curr;
             }
+            List<WeekConfigItem> weekTimeRanges = System.Text.Json.JsonSerializer.Deserialize<List<WeekConfigItem>>(weekConfig, MyDefaultTextJsonConfig.DefaultOptions);
+            List<TimeConfigItem> dayTimeRanges = System.Text.Json.JsonSerializer.Deserialize<List<TimeConfigItem>>(timeConfig, MyDefaultTextJsonConfig.DefaultOptions);
+            // 参数校验
+            if (string.IsNullOrEmpty(recordTimeType))
+                return "未选择时段";
 
-            // 处理最后一段
-            if (start == prev)
+            // 按周配置生成描述
+            if (recordTimeType.Equals("week", StringComparison.OrdinalIgnoreCase))
             {
-                result.Add(_weekMap.TryGetValue(start, out var name) ? name : string.Empty);
+                return GenerateWeekTimeDesc(weekTimeRanges ?? new List<WeekConfigItem>());
             }
+            // 单日配置生成描述
+            else if (recordTimeType.Equals("time", StringComparison.OrdinalIgnoreCase))
+            {
+                return GenerateDayTimeDesc(dayTimeRanges ?? new List<TimeConfigItem>());
+            }
+            // 未知类型
             else
             {
-                var startName = _weekMap.TryGetValue(start, out var sName) ? sName : string.Empty;
-                var prevName = _weekMap.TryGetValue(prev, out var pName) ? pName : string.Empty;
-                result.Add($"{startName}至{prevName}");
-            }
-
-            return string.Join("、", result.Where(r => !string.IsNullOrEmpty(r)));
-        }
-
-        /// <summary>
-        /// 按周配置生成录像时段描述（支持同一天多时段）
-        /// </summary>
-        /// <param name="weekConfigJson">按周配置JSON字符串</param>
-        /// <returns>格式化的时段描述</returns>
-        public static string GenerateWeekDesc(string weekConfigJson)
-        {
-            // 空值处理
-            if (string.IsNullOrEmpty(weekConfigJson) || weekConfigJson.Equals("null", StringComparison.OrdinalIgnoreCase) || weekConfigJson == "[]")
-                return string.Empty;
-
-            try
-            {
-                // 解析JSON为对象列表
-                var weekConfigs = System.Text.Json.JsonSerializer.Deserialize<List<WeekConfigItem>>(weekConfigJson, MyDefaultTextJsonConfig.DefaultOptions);
-                if (weekConfigs == null || weekConfigs.Count == 0)
-                    return string.Empty;
-
-                // 步骤1：过滤无效配置并格式化时间
-                var validConfigs = weekConfigs
-                    .Where(item => _weekMap.ContainsKey(item.Week) && !string.IsNullOrEmpty(item.StartTime) && !string.IsNullOrEmpty(item.EndTime))
-                    .Select(item => new WeekConfigItem
-                    {
-                        Week = item.Week,
-                        StartTime = FormatTime(item.StartTime),
-                        EndTime = FormatTime(item.EndTime)
-                    })
-                    .ToList();
-
-                if (validConfigs.Count == 0)
-                    return string.Empty;
-
-                // 步骤2：按【时间段】分组，收集每个时间段对应的星期列表
-                // 键：startTime_endTime，值：该时间段对应的所有星期数
-                var timeToWeeksDict = new Dictionary<string, List<int>>();
-                foreach (var config in validConfigs)
-                {
-                    var timeKey = $"{config.StartTime}_{config.EndTime}";
-                    if (!timeToWeeksDict.ContainsKey(timeKey))
-                    {
-                        timeToWeeksDict[timeKey] = new List<int>();
-                    }
-                    timeToWeeksDict[timeKey].Add(config.Week);
-                }
-
-                // 步骤3：生成每个时间段的描述（支持同一时间段多星期、不同时间段独立展示）
-                var timeDescList = new List<string>();
-                foreach (var kvp in timeToWeeksDict)
-                {
-                    var timeParts = kvp.Key.Split('_');
-                    var timeDesc = $"{timeParts[0]}-{timeParts[1]}";
-                    var weekDesc = MergeWeekNumbers(kvp.Value);
-
-                    if (!string.IsNullOrEmpty(weekDesc))
-                    {
-                        timeDescList.Add($"{weekDesc} {timeDesc}");
-                    }
-                }
-
-                // 步骤4：对最终描述按时间排序（可选，提升可读性）
-                timeDescList.Sort((a, b) =>
-                {
-                    // 提取时间段的开始时间进行排序
-                    var aTime = a.Split(' ')[1].Split('-')[0];
-                    var bTime = b.Split(' ')[1].Split('-')[0];
-                    return string.Compare(aTime, bTime, StringComparison.Ordinal);
-                });
-
-                return string.Join("、", timeDescList);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"解析按周配置失败：{ex.Message}");
-                return string.Empty;
+                return "未选择时段";
             }
         }
 
         /// <summary>
-        /// 按时段配置生成录像时段描述
+        /// 生成按周的时段描述
         /// </summary>
-        /// <param name="timeConfigJson">按时段配置JSON字符串</param>
-        /// <returns>格式化的时段描述</returns>
-        public static string GenerateTimeDesc(string timeConfigJson)
+        private static string GenerateWeekTimeDesc(List<WeekConfigItem> weekTimeRanges)
         {
-            // 空值处理
-            if (string.IsNullOrEmpty(timeConfigJson) || timeConfigJson.Equals("null", StringComparison.OrdinalIgnoreCase) || timeConfigJson == "[]")
-                return string.Empty;
+            if (weekTimeRanges == null || weekTimeRanges.Count == 0)
+                return "未选择时段";
 
-            try
+            // 按星期分组
+            var weekGroups = weekTimeRanges
+                .GroupBy(x => x.week)
+                .ToDictionary(g => g.Key, g => g.OrderBy(x => x.Time).ToList());
+
+            var descBuilder = new StringBuilder();
+
+            // 遍历每个星期生成描述（按1-7的顺序输出，保证显示顺序合理）
+            var orderedWeeks = new List<int> { 1, 2, 3, 4, 5, 6, 7 }; // 关键补充：保证输出顺序是周一到周日
+            foreach (var week in orderedWeeks)
             {
-                // 解析JSON为对象列表
-                var timeConfigs = System.Text.Json.JsonSerializer.Deserialize<List<TimeConfigItem>>(timeConfigJson, MyDefaultTextJsonConfig.DefaultOptions);
-                if (timeConfigs == null || timeConfigs.Count == 0)
-                    return string.Empty;
+                if (!weekGroups.ContainsKey(week))
+                    continue;
 
-                // 去重并格式化时间段
-                var timeSet = new HashSet<string>();
-                var timeDescList = new List<string>();
+                var timePoints = weekGroups[week];
 
-                foreach (var item in timeConfigs)
+                // 获取星期名称
+                if (!_weekNameMap.TryGetValue(week, out string weekName))
+                    weekName = $"星期{week}";
+
+                // 生成该星期的时间描述
+                string weekTimeDesc = GenerateSingleWeekTimeDesc(timePoints);
+
+                if (!string.IsNullOrEmpty(weekTimeDesc))
                 {
-                    if (string.IsNullOrEmpty(item.StartTime) || string.IsNullOrEmpty(item.EndTime))
-                        continue;
+                    if (descBuilder.Length > 0)
+                        descBuilder.Append("；"); // 多星期分隔符
 
-                    var formatStart = FormatTime(item.StartTime);
-                    var formatEnd = FormatTime(item.EndTime);
-                    var timeKey = $"{formatStart}_{formatEnd}";
-
-                    // 避免重复的时间段
-                    if (!timeSet.Contains(timeKey))
-                    {
-                        timeSet.Add(timeKey);
-                        timeDescList.Add($"{formatStart}-{formatEnd}");
-                    }
+                    descBuilder.Append($"{weekName} {weekTimeDesc}");
                 }
-
-                // 按开始时间排序
-                timeDescList.Sort((a, b) =>
-                {
-                    var timeA = a.Split('-')[0];
-                    var timeB = b.Split('-')[0];
-                    return string.Compare(timeA, timeB, StringComparison.Ordinal);
-                });
-
-                return string.Join("、", timeDescList);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"解析按时段配置失败：{ex.Message}");
-                return string.Empty;
-            }
+
+            return descBuilder.Length > 0 ? descBuilder.ToString() : "未选择时段";
         }
 
         /// <summary>
-        /// 统一生成录像时段描述（兼容按周/按时段，支持同一天多时段）
+        /// 生成单个星期的时间描述
         /// </summary>
-        /// <param name="recordTimeType">时段类型：week/time</param>
-        /// <param name="weekConfigJson">按周配置JSON</param>
-        /// <param name="timeConfigJson">按时段配置JSON</param>
-        /// <returns>最终的时段描述</returns>
-        public static string GenerateRecordDesc(string recordTimeType, string weekConfigJson, string timeConfigJson)
+        private static string GenerateSingleWeekTimeDesc(List<WeekConfigItem> timePoints)
         {
-            if (string.IsNullOrEmpty(recordTimeType))
-                return "未配置时段";
+            var timeDescList = new List<string>();
+            int startHour = -1;
 
-            return recordTimeType.ToLower() switch
+            // 遍历时间点解析时段
+            foreach (var point in timePoints)
             {
-                "week" => string.IsNullOrEmpty(GenerateWeekDesc(weekConfigJson)) ? "未配置按周时段" : GenerateWeekDesc(weekConfigJson),
-                "time" => string.IsNullOrEmpty(GenerateTimeDesc(timeConfigJson)) ? "未配置按时段时段" : GenerateTimeDesc(timeConfigJson),
-                _ => "未配置时段"
-            };
+                RecordTimeOp op;
+                if (!Enum.TryParse(point.Op, true, out op))
+                    continue;
+
+                switch (op)
+                {
+                    case RecordTimeOp.Start:
+                        // 记录开始时间
+                        startHour = point.Time;
+                        break;
+
+                    case RecordTimeOp.End:
+                        // 结束时间配对生成时段
+                        if (startHour >= 0)
+                        {
+                            timeDescList.Add($"{FormatHour(startHour)}:{FormatMinute(0)}-{FormatHour(point.Time)}:{FormatMinute(0)}");
+                            startHour = -1; // 重置开始时间
+                        }
+                        break;
+
+                    case RecordTimeOp.Both:
+                        // 同时开始结束，仅占1小时
+                        timeDescList.Add($"{FormatHour(point.Time)}:{FormatMinute(0)}-{FormatHour(point.Time + 1)}:{FormatMinute(0)}");
+                        break;
+                }
+            }
+
+            // 拼接该星期的所有时段
+            return string.Join("、", timeDescList);
         }
 
+        /// <summary>
+        /// 生成单日的时段描述
+        /// </summary>
+        private static string GenerateDayTimeDesc(List<TimeConfigItem> dayTimeRanges)
+        {
+            if (dayTimeRanges == null || dayTimeRanges.Count == 0)
+                return "未选择时段";
+
+            var timePoints = dayTimeRanges.OrderBy(x => x.Time).ToList();
+            var timeDescList = new List<string>();
+            int startHour = -1;
+
+            // 遍历时间点解析时段
+            foreach (var point in timePoints)
+            {
+                RecordTimeOp op;
+                if (!Enum.TryParse(point.Op, true, out op))
+                    continue;
+
+                switch (op)
+                {
+                    case RecordTimeOp.Start:
+                        // 记录开始时间
+                        startHour = point.Time;
+                        break;
+
+                    case RecordTimeOp.End:
+                        // 结束时间配对生成时段
+                        if (startHour >= 0)
+                        {
+                            timeDescList.Add($"{FormatHour(startHour)}:{FormatMinute(0)}-{FormatHour(point.Time)}:{FormatMinute(0)}");
+                            startHour = -1; // 重置开始时间
+                        }
+                        break;
+
+                    case RecordTimeOp.Both:
+                        // 同时开始结束，仅占1小时
+                        timeDescList.Add($"{FormatHour(point.Time)}:{FormatMinute(0)}-{FormatHour(point.Time + 1)}:{FormatMinute(0)}");
+                        break;
+                }
+            }
+
+            // 无有效时段
+            if (timeDescList.Count == 0)
+                return "未选择时段";
+
+            // 拼接单日时段描述
+            return $"每日 {string.Join("、", timeDescList)}";
+        }
+
+        /// <summary>
+        /// 格式化小时（补零）
+        /// </summary>
+        private static string FormatHour(int hour)
+        {
+            // 处理24小时的特殊情况
+            if (hour >= 24)
+                return "24";
+
+            return hour.ToString("D2"); // 补零到2位
+        }
+
+        /// <summary>
+        /// 格式化分钟（补零）
+        /// </summary>
+        private static string FormatMinute(int minute)
+        {
+            return minute.ToString("D2"); // 补零到2位
+        }
     }
 }

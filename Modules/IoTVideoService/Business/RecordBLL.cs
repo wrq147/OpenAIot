@@ -132,10 +132,10 @@ namespace IoTVideoService.Business
             data.Status = 1;
             data.SetCreateBy(user);
 
-            var tasks = PlanTimeParser.Parse(data);
+            var tasks = PlanTimeParser.GenerateTriggerTasks(data);
             if (tasks.Count > 0)
             {
-                data.RecordTimeDesc = RecordTimeDescGenerator.GenerateRecordDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
+                data.RecordTimeDesc = RecordTimeDescGenerator.GenerateTimeDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
                 var schedulerFactory = _provider.GetService<ISchedulerFactory>();
                 var scheduler = await schedulerFactory.GetScheduler();
                 await PlanSchedule.CreateJob(data.Id, tasks);
@@ -164,7 +164,7 @@ namespace IoTVideoService.Business
             data.Position = null;
             if (!string.IsNullOrEmpty(data.RecordTimeType) && !string.IsNullOrEmpty(data.WeekConfig) && !string.IsNullOrEmpty(data.TimeConfig))
             {
-                data.RecordTimeDesc = RecordTimeDescGenerator.GenerateRecordDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
+                data.RecordTimeDesc = RecordTimeDescGenerator.GenerateTimeDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
             }
             if (data.Status != null)
             {
@@ -183,7 +183,7 @@ namespace IoTVideoService.Business
                     newrec.RecordTimeType = data.RecordTimeType ?? old.RecordTimeType;
                     newrec.TimeConfig = data.TimeConfig ?? old.TimeConfig;
                     newrec.WeekConfig = data.WeekConfig ?? old.WeekConfig;
-                    var tasks = PlanTimeParser.Parse(newrec);
+                    var tasks = PlanTimeParser.GenerateTriggerTasks(newrec);
                     if (tasks.Count > 0)
                     {
                         await PlanSchedule.CreateJob(data.Id, tasks);
