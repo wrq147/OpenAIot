@@ -82,7 +82,7 @@ namespace FixVideoChannel
         {
             //节点保活
             var eventBus = _provider.GetService<ClientBusProxy>();
-            await eventBus.RedisHelper.HashSetAsync("FixVideoNode", eventBus.NodeGuid, DateTime.Now.AddSeconds(30).ToString("o"));
+            await eventBus.RedisHelper.HashSetAsync("FixVideoNode", eventBus.NodeGuid, _option.node_id + "," + DateTime.Now.AddSeconds(30).ToString("o"));
         }
     }
 

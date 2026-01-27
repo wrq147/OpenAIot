@@ -29,7 +29,7 @@ namespace IoTVideoService.Business
             msg.ProductId = string.Empty;
             msg.MessageId = Guid.NewGuid().ToString("N");
             msg.UserName = videoSource.UserName;
-            msg.ChannelId = videoSource.ChannelId;
+            msg.VideoKey = videoSource.VideoKey;
             if (data.Cmd < 0)
             {
                 msg.CommandType = (PTZCommandType)Math.Abs(data.Cmd);
@@ -65,25 +65,17 @@ namespace IoTVideoService.Business
             {
                 return new List<Out_VideoChannel>();
             }
-            List<Out_VideoChannel> rtlist = new List<Out_VideoChannel>();
-            if (!string.IsNullOrEmpty(videoSource.ChannelId))
-            {
-                rtlist.Add(new Out_VideoChannel()
-                {
-                    ChannelId = videoSource.ChannelId,
-                    ChannelName = videoSource.Position
-                });
-                return rtlist;
-            }
             var channelSourceList = await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoType == 2);
+            List<Out_VideoChannel> rtlist = new List<Out_VideoChannel>();
             foreach (var channel in channelSourceList)
             {
                 rtlist.Add(new Out_VideoChannel()
                 {
-                    ChannelId = channel.ChannelId,
+                    VideoKey = channel.VideoKey,
                     ChannelName = channel.Position
                 });
             }
+
             return rtlist;
         }
         public async Task<string> GetPlayUrl(string sId, string cId, string type)
@@ -137,39 +129,21 @@ namespace IoTVideoService.Business
                     return string.Empty;
                 }
                 ServerInfo serverInfo = option.Value.GB28181Servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
-                if (videoSource.ChannelId == cId)
+                var channelSource = (await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoKey == cId && x.VideoType == 2)).FirstOrDefault();
+                if (channelSource == null)
                 {
-                    switch (type)
-                    {
-                        case "rtmp":
-                            return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}_0";
-                        case "flv":
-                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}_0.live.flv";
-                        case "hls":
-                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}_0/hls.m3u8";
-                        default:
-                            return string.Empty;
-                    }
-                   
+                    return string.Empty;
                 }
-                else
+                switch (type)
                 {
-                    var channelSource = (await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.ChannelId == cId && x.VideoType == 2)).FirstOrDefault();
-                    if (channelSource == null)
-                    {
+                    case "rtmp":
+                        return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{channelSource.VideoKey}";
+                    case "flv":
+                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}.live.flv";
+                    case "hls":
+                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
+                    default:
                         return string.Empty;
-                    }
-                    switch (type)
-                    {
-                        case "rtmp":
-                            return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{channelSource.VideoKey}";
-                        case "flv":
-                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}.live.flv";
-                        case "hls":
-                            return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
-                        default:
-                            return string.Empty;
-                    }
                 }
             }
             else

@@ -755,7 +755,6 @@ namespace GB28181Channel.GB28181
                     var channel = new ChannelInfo
                     {
                         Index = i,
-                        PushKey = device.VideoData.Item.PushKey + "_" + i,
                         DeviceId = deviceId,
                         ChannelId = deviceNode.Element("DeviceID")?.Value ?? string.Empty,
                         ChannelName = deviceNode.Element("Name")?.Value ?? string.Empty,
@@ -764,7 +763,7 @@ namespace GB28181Channel.GB28181
                         Status = deviceNode.Element("Status")?.Value ?? "ON",
                         SessionStatus = StreamState.None
                     };
-
+                    channel.PushKey = device.VideoData.Item.PushKey + "_" + channel.ChannelId;
                     channels.Add(channel);
 
                     ++i;

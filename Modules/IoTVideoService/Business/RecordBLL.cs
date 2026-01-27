@@ -3,13 +3,10 @@ using ChannelUtility.Message;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
-using InfluxDB.Client.Api.Domain;
-using IoTService.DAL;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
-using MonitorService.Business;
-using MonitorService.Model;
+using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
 using Quartz;
 using System;
@@ -29,51 +26,191 @@ namespace IoTVideoService.Business
         {
             _provider = provider;
         }
-        public async Task<BusResponse<string>> PublishStartRecordMessage(string nodeGuid, string streamId, string sourceId, string channelId)
+        public async Task PublishCleanRecordMessage(string guid, string videoId, byte storageWay, DateTime date, string fileId)
         {
-            MediaRecordStartMessage msg = new MediaRecordStartMessage();
-            msg.DeviceId = sourceId;
+            MediaRecordCleanMessage msg = new MediaRecordCleanMessage();
+            msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
-            msg.ChannelId = channelId;
-            msg.StreamId = streamId;
-            msg.MessageId = Guid.NewGuid().ToString("N");
-
-            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStartMessageReply>(nodeGuid, msg);
-            if (replyMsg == null)
-            {
-                return BusResponse<string>.Error(112, "开始录制命令无回复");
-            }
-            if (replyMsg.IsSuccess)
-            {
-                return BusResponse<string>.Success();
-            }
-            else
-            {
-                return BusResponse<string>.Error(113, replyMsg.Reason);
-            }
+            msg.Storage = storageWay;
+            msg.Date = date.ToString("yyyy-MM-dd");
+            msg.FileId = fileId;
+            await _provider.GetService<NatsScope>().Public(guid, msg);
         }
-        public async Task<BusResponse<string>> PublishStopRecordMessage(string nodeGuid, string streamId, string sourceId, string channelId)
+        public async Task<BusResponse<string>> PublishStartRecordMessage(string planId, byte storageWay, DateTime time, MZ_VideoSource source)
         {
-            MediaRecordStopMessage msg = new MediaRecordStopMessage();
-            msg.DeviceId = sourceId;
-            msg.ProductId = string.Empty;
-            msg.ChannelId = channelId;
-            msg.StreamId = streamId;
-            msg.MessageId = Guid.NewGuid().ToString("N");
-
-            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(nodeGuid, msg);
-            if (replyMsg == null)
+            string nodeGuid = null;
+            string nodeId = null;
+            if (!string.IsNullOrEmpty(source.PullNode))
             {
-                return BusResponse<string>.Error(112, "停止录制命令无回复");
-            }
-            if (replyMsg.IsSuccess)
-            {
-                return BusResponse<string>.Success();
+                nodeGuid = source.PullNode;
+                nodeId = source.NodeId;
             }
             else
             {
-                return BusResponse<string>.Error(113, replyMsg.Reason);
+                if (source.VideoType == 0)
+                {
+                    var option = _provider.GetService<IOptions<VideoOption>>();
+                    if (option.Value.VideoServers == null || option.Value.VideoServers.Count == 0)
+                    {
+                        return BusResponse<string>.Error(211, "VideoOption配置错误");
+                    }
+                    int pos = Math.Abs(source.Id.GetHashCode() % option.Value.VideoServers.Count);
+                    ServerInfo serverInfo = option.Value.VideoServers[pos];
+                    nodeId = serverInfo.NodeId;
+                    nodeGuid = await _provider.GetService<VideoSourceBLL>().GetFixNodeGuid(nodeId);
+                }
+                else if (source.VideoType == 1)
+                {
+                    return BusResponse<string>.Error(212, "视频源未注册");
+                }
+                else
+                {
+                    return BusResponse<string>.Error(220, "录像的视频源类型错误");
+                }
             }
+            List<MZ_VideoSource> sourceList = new List<MZ_VideoSource>();
+            if (source.VideoType == 1)
+            {
+                var channelList = await _provider.GetService<VideoSourceDAL>().SelectList(x => x.VideoType == 2 && x.UserName == source.UserName);
+                sourceList.AddRange(channelList);
+            }
+            else
+            {
+                sourceList.Add(source);
+            }
+
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            foreach (var recSource in sourceList)
+            {
+                MZ_IotRecordFile recFile = new MZ_IotRecordFile();
+                recFile.Id = snowflake.NextId().ToString();
+                recFile.FileDate = time;
+                recFile.PlanId = planId;
+                recFile.VideoKey = recSource.VideoKey;
+                recFile.VideoId = source.Id;
+                recFile.NodeId = nodeId;
+                recFile.StorageWay = storageWay;
+                recFile.Status = 1;
+                recFile.StartTime = recFile.FileDate;
+
+                MediaRecordStartMessage msg = new MediaRecordStartMessage();
+                msg.DeviceId = source.Id;
+                msg.ProductId = string.Empty;
+                msg.StreamId = recSource.VideoKey;
+                msg.Storage = storageWay;
+                msg.MessageId = Guid.NewGuid().ToString("N");
+                msg.FileId = recFile.Id;
+                msg.Date = recFile.FileDate.Value.ToString("yyyy-MM-dd");
+
+                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStartMessageReply>(nodeGuid, msg);
+                if (replyMsg == null || !replyMsg.IsSuccess)
+                {
+                    MZ_IotRecordLog log = new MZ_IotRecordLog();
+                    log.Id = snowflake.NextId().ToString();
+                    log.PlanId = planId;
+                    log.Position = recSource.Position;
+                    log.VideoId = source.Id;
+                    log.LogType = "fail";
+                    log.Content = replyMsg == null ? "录制命令无回复" : replyMsg.Reason;
+                    log.ExecTime = DateTime.Now;
+                    await _provider.GetService<RecordLogDAL>().Insert(log);
+                }
+                else
+                {
+                    await _provider.GetService<RecordFileDAL>().Insert(recFile);
+                    MZ_IotRecordLog log = new MZ_IotRecordLog();
+                    log.Id = snowflake.NextId().ToString();
+                    log.PlanId = planId;
+                    log.Position = recSource.Position;
+                    log.VideoId = source.Id;
+                    log.LogType = "start";
+                    log.Content = string.Empty;
+                    log.ExecTime = DateTime.Now;
+                    await _provider.GetService<RecordLogDAL>().Insert(log);
+                }
+            }
+
+            return BusResponse<string>.Success();
+        }
+        public async Task<BusResponse<string>> PublishStopRecordMessage(string planId, DateTime time)
+        {
+            var recFileDAL = _provider.GetService<RecordFileDAL>();
+            var recFileList = await recFileDAL.SelectList(x => x.PlanId == planId && x.Status == 1, "FileDate desc");
+            if (recFileList.Count == 0)
+            {
+                return BusResponse<string>.Error(111, "不存在录制中的文件");
+            }
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            string nodeGuid = null;
+            foreach (var recFile in recFileList)
+            {
+                var source = (await _provider.GetService<VideoSourceDAL>().SelectList(x => x.VideoKey == recFile.VideoKey)).FirstOrDefault();
+                if (source == null)
+                {
+                    await recFileDAL.Delete(recFile.Id);
+                    continue;
+                }
+                if (nodeGuid == null)
+                {
+                    if (source.VideoType == 0)
+                    {
+                        nodeGuid = await _provider.GetService<VideoSourceBLL>().GetFixNodeGuid(recFile.NodeId);
+                    }
+                    else if (source.VideoType == 1)
+                    {
+                        nodeGuid = source.PullNode;
+                        if (string.IsNullOrEmpty(nodeGuid))
+                        {
+                            return BusResponse<string>.Error(212, "视频源未注册");
+                        }
+                    }
+                    else
+                    {
+                        return BusResponse<string>.Error(220, "录像的视频源类型错误");
+                    }
+                }
+
+
+                MediaRecordStopMessage msg = new MediaRecordStopMessage();
+                msg.DeviceId = recFile.VideoId;
+                msg.ProductId = string.Empty;
+                msg.StreamId = recFile.VideoKey;
+                msg.MessageId = Guid.NewGuid().ToString("N");
+
+                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(nodeGuid, msg);
+                if (replyMsg == null || !replyMsg.IsSuccess)
+                {
+                    await recFileDAL.Delete(recFile.Id);
+
+                    MZ_IotRecordLog log = new MZ_IotRecordLog();
+                    log.Id = snowflake.NextId().ToString();
+                    log.PlanId = planId;
+                    log.Position = source.Position;
+                    log.VideoId = recFile.VideoId;
+                    log.LogType = "fail";
+                    log.Content = replyMsg == null ? "录制命令无回复" : replyMsg.Reason;
+                    log.ExecTime = DateTime.Now;
+                    await _provider.GetService<RecordLogDAL>().Insert(log);
+                }
+                else
+                {
+                    MZ_IotRecordFile newRecFile = new MZ_IotRecordFile();
+                    newRecFile.Id = recFile.Id;
+                    newRecFile.EndTime = time;
+                    await _provider.GetService<RecordFileDAL>().Update(newRecFile);
+
+                    MZ_IotRecordLog log = new MZ_IotRecordLog();
+                    log.Id = snowflake.NextId().ToString();
+                    log.PlanId = planId;
+                    log.Position = source.Position;
+                    log.VideoId = recFile.VideoId;
+                    log.LogType = "stop";
+                    log.Content = string.Empty;
+                    log.ExecTime = DateTime.Now;
+                    await _provider.GetService<RecordLogDAL>().Insert(log);
+                }
+            }
+            return BusResponse<string>.Success();
         }
 
 
@@ -132,6 +269,11 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<int>.Error(113, "视频源不存在");
             }
+            var recordDAL = _provider.GetService<RecordDAL>();
+            if (await recordDAL.Some(x => x.VideoId == data.VideoId))
+            {
+                return BusResponse<int>.Error(114, "视频源已存在录像计划");
+            }
             var snowflake = _provider.GetService<SnowflakeHelper>();
             data.Id = snowflake.NextId().ToString();
             data.OrgId = user.OrgId;
@@ -146,8 +288,14 @@ namespace IoTVideoService.Business
                 var schedulerFactory = _provider.GetService<ISchedulerFactory>();
                 var scheduler = await schedulerFactory.GetScheduler();
                 await PlanSchedule.CreateJob(data.Id, tasks);
+
+                if (PlanTimeParser.GetTodayNextTriggerTask(tasks) != null)
+                {
+                    //直接开始录像
+                    await this.PublishStartRecordMessage(data.Id, data.StorageWay.Value, DateTime.Now, videoInfo);
+                }
             }
-            var recordDAL = _provider.GetService<RecordDAL>();
+
             return BusResponse<int>.Success(await recordDAL.Insert(data));
         }
 
@@ -200,6 +348,12 @@ namespace IoTVideoService.Business
                     if (tasks.Count > 0)
                     {
                         await PlanSchedule.CreateJob(data.Id, tasks);
+                        if (PlanTimeParser.GetTodayNextTriggerTask(tasks) != null)
+                        {
+                            //直接开始录像
+                            byte? storageWay = data.StorageWay ?? old.StorageWay;
+                            await this.PublishStartRecordMessage(data.Id, storageWay.Value, DateTime.Now, videoInfo);
+                        }
                     }
                 }
             }

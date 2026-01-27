@@ -39,7 +39,12 @@
                 controls-position="right"></el-input-number>
               <span class="ml-2 text-gray">超出周期的录像文件将自动删除</span>
             </el-form-item>
-
+            <el-form-item label="存储方式" prop="StorageWay">
+              <el-select v-model="recordPlanForm.StorageWay" placeholder="请选择">
+                <el-option label="文件存储" :value="0"></el-option>
+                <el-option label="云存储" :value="1" :disabled="true"></el-option>
+              </el-select>
+            </el-form-item>
             <!-- 录像时段配置 -->
             <el-form-item label="录像时段" prop="recordTimeConfig">
               <el-radio-group v-model="recordPlanForm.RecordTimeType" @change="handleTimeTypeChange">
@@ -125,9 +130,8 @@
             <el-form :inline="true" :model="logSearchForm" class="log-search-form">
               <el-form-item label="日志类型">
                 <el-select v-model="logSearchForm.logType" placeholder="全部" clearable style="width:160px;">
-                  <el-option label="计划启动" value="start"></el-option>
-                  <el-option label="计划停止" value="stop"></el-option>
-                  <el-option label="录像成功" value="success"></el-option>
+                  <el-option label="录像启动" value="start"></el-option>
+                  <el-option label="录像停止" value="stop"></el-option>
                   <el-option label="录像失败" value="fail"></el-option>
                   <el-option label="文件清理" value="clean"></el-option>
                 </el-select>
@@ -193,6 +197,7 @@ export default {
         PlanName: '',
         VideoId: '',
         SaveCycle: 7,
+        StorageWay: 0,
         RecordTimeType: 'time', // week:按周 | time:按时段（单日）
         WeekConfig: "",
         TimeConfig: "",
@@ -280,7 +285,7 @@ export default {
         }
       } else {
         this.recordPlanForm = {
-          Id: '', PlanName: '', VideoId: '', SaveCycle: 7, RecordTimeType: 'time',
+          Id: '', PlanName: '', VideoId: '', SaveCycle: 7, StorageWay: 0, RecordTimeType: 'time',
           weekTimeRanges: [], dayTimeRanges: [],
           Status: 1, createName: '', createTime: ''
         }

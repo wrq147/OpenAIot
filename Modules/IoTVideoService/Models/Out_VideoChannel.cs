@@ -8,7 +8,7 @@ namespace IoTVideoService.Models
 {
     public class Out_VideoChannel
     {
-        public string ChannelId { get; set; }
+        public string VideoKey { get; set; }
         public string ChannelName { get; set; }
     }
 }

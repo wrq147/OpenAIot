@@ -577,6 +577,19 @@ namespace ChannelUtility
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
+        public async Task PublishRecordStartReply(string msgId,string dtuId, bool isSuccess, string reason)
+        {
+            MediaRecordStartMessageReply msg = new MediaRecordStartMessageReply();
+            msg.DeviceId = dtuId;
+            msg.ProductId = string.Empty;
+            msg.IsSuccess = isSuccess;
+            msg.Reason = reason;
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+        }
         /// <summary>
         /// 发送指定消息
         /// </summary>

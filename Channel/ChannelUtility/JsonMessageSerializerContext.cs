@@ -14,6 +14,7 @@ namespace ChannelUtility
     [JsonSerializable(typeof(Dictionary<string, object>))]
     [JsonSerializable(typeof(Dictionary<string, string>))]
     [JsonSerializable(typeof(IDictionary<string, string>))]
+    [JsonSerializable(typeof(MediaRecordCleanMessage))]
     [JsonSerializable(typeof(MediaPTZMessageReply))]
     [JsonSerializable(typeof(MediaPTZMessage))]
     [JsonSerializable(typeof(MediaPresetMessageReply))]

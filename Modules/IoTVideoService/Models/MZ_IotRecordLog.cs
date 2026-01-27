@@ -27,15 +27,11 @@ namespace IoTVideoService.Models
         /// </summary>
         public string VideoId { get; set; }
         /// <summary>
-        /// ZLMediaKit的视频Key
-        /// </summary>
-        public string VideoKey { get; set; }
-        /// <summary>
         /// 发生位置
         /// </summary>
         public string Position { get; set; }
         /// <summary>
-        /// 日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）
+        /// 日志类型：start（录像启动）、stop（录像停止）、fail（录像失败）、clean（文件清理）
         /// </summary>
         public string LogType { get; set; }
         /// <summary>

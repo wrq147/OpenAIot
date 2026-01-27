@@ -62,6 +62,12 @@ namespace FixVideoChannel
             {
                 ZLMediaKitServer.Instance.RemovePullProxy(delItemResponse.DeviceId);
             }
+            else if (msg is MediaRecordStartMessage startRec)
+            {
+                var rs = ZLMediaKitServer.Instance.RecorderStart(startRec.StreamId, startRec.Date, startRec.FileId, out string treason);
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                await eventBus.PublishRecordStartReply(startRec.MessageId, startRec.DeviceId, rs, treason);
+            }
         }
 
     }

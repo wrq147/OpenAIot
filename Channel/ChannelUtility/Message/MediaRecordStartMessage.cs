@@ -12,7 +12,9 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaRecS";
         }
-        public string ChannelId { get; set; }
+        public byte Storage { get; set; }
+        public string Date { get; set; }
+        public string FileId { get; set; }
         public string StreamId { get; set; }
     }
 }

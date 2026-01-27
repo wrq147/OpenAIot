@@ -42,8 +42,8 @@ namespace IoTVideoService
             {
                 if (Constants.General.quick_init != true)
                 {
-                    //添加定时清除失活节点
-                    string cacjobname = "ClearInactiveNodes";
+                    //添加定时清除视频数据
+                    string cacjobname = "ClearVideoService";
                     string cacgroup = "SYSTEM";
                     var jobBLL = app.ServiceProvider.GetService<JobBLL>();
                     if (!await jobBLL.ExistJob(cacjobname, cacgroup))
@@ -55,7 +55,7 @@ namespace IoTVideoService
                         devjob.updateId = 0;
                         devjob.update_time = DateTime.Now;
                         devjob.cron_expression = "0 10 1 * * ?";
-                        devjob.invoke_target = typeof(VideoSourceBLL).FullName + ".UpdateFixNode()";
+                        devjob.invoke_target = typeof(VideoSourceBLL).FullName + ".TimerClean()";
                         devjob.job_group = cacgroup;
                         devjob.job_name = cacjobname;
                         devjob.misfire_policy = "2";
@@ -63,6 +63,8 @@ namespace IoTVideoService
 
                         await jobBLL.InsertJob(devjob);
                     }
+
+
                 }
 
                 //初始化录像计划定时器

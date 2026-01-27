@@ -35,13 +35,17 @@ namespace IoTVideoService.Models
         /// </summary>
         public string VideoKey { get; set; }
         /// <summary>
-        /// 节点GUID
+        /// 节点Id
         /// </summary>
-        public string PullNode { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// 0为文件存储，1为minio
         /// </summary>
         public byte? StorageWay { get; set; }
+        /// <summary>
+        /// 状态：0-结束录像，1-录像中
+        /// </summary>
+        public byte? Status { get; set; }
         /// <summary>
         /// 开始时间
         /// </summary>

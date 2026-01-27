@@ -9,7 +9,7 @@ namespace ChannelUtility.Message
     public class MediaPTZMessage : BaseDeviceMessage
     {
         public string UserName { get; set; }
-        public string ChannelId { get; set; }
+        public string VideoKey { get; set; }
         public PTZCommandType CommandType { get; set; }
         /// <summary>
         /// 速度

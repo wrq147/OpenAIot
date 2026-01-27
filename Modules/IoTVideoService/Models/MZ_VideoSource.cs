@@ -36,10 +36,6 @@ namespace IoTVideoService.Models
         /// </summary>
         public string PullAddr { get; set; }
         /// <summary>
-        /// 通道Id
-        /// </summary>
-        public string ChannelId { get; set; }
-        /// <summary>
         /// 注册用户名
         /// </summary>
         public string UserName { get; set; }

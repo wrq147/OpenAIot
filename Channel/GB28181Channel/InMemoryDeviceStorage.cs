@@ -41,8 +41,7 @@ namespace GB28181Channel
                 {
                     return null;
                 }
-                int idx = int.Parse(streamId.Substring(tsidx + 1));
-                return channels.Where(x => x.Index == idx).FirstOrDefault();
+                return channels.Where(x => x.PushKey == streamId).FirstOrDefault();
             }
             else
             {
@@ -56,7 +55,7 @@ namespace GB28181Channel
                 {
                     return null;
                 }
-                return channels.Where(x => x.Index == 0).FirstOrDefault();
+                return channels.FirstOrDefault();
             }
         }
         public string GetDeviceIdFrom(string pushKey)

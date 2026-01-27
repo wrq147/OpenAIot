@@ -95,10 +95,22 @@ namespace GB28181Channel
             }
             else if (msg is MediaPTZMessage ptzMessage)
             {
+                var storage = _serviceProvider.GetService<IDeviceStorage>();
+                var channelList = storage.GetChannelsByDeviceId(ptzMessage.UserName);
+                if (channelList.Count == 0)
+                {
+                    return;
+                }
+                var channinfo = channelList.Where(x => x.PushKey == ptzMessage.VideoKey).FirstOrDefault();
+                if (channinfo == null)
+                {
+                    return;
+                }
+
                 await server.SendPTZControl(new GB28181.DTO.PTZControlParams()
                 {
                     DeviceId = ptzMessage.UserName,
-                    ChannelId = ptzMessage.ChannelId,
+                    ChannelId = channinfo.ChannelId,
                     MessageId = ptzMessage.MessageId,
                     CommandType = ptzMessage.CommandType,
                     Speed = ptzMessage.Speed,

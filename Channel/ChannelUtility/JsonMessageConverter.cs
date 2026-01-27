@@ -46,7 +46,8 @@ namespace ChannelUtility
             { "MediaRecSOk",typeof(MediaRecordStartMessageReply) },
             { "MediaRecE",typeof(MediaRecordStopMessage) },
             { "MediaRecEOk",typeof(MediaRecordStopMessageReply) },
-            { "MediaUser",typeof(MediaUserVerifyMessage) }
+            { "MediaUser",typeof(MediaUserVerifyMessage) },
+            { "MediaClean",typeof(MediaRecordCleanMessage) }
 
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions

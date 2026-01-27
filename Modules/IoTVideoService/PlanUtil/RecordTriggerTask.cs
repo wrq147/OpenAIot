@@ -16,7 +16,10 @@ namespace IoTVideoService.PlanUtil
         /// 操作类型（Start/End/Both）
         /// </summary>
         public RecordTimeOp OperType { get; set; }
-
+        /// <summary>
+        /// 触发时间点
+        /// </summary>
+        public int Time { get; set; }
         /// <summary>
         /// 星期几（按周配置：1=周一，7=周日；单日配置：null）
         /// </summary>

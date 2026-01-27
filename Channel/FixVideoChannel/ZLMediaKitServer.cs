@@ -363,6 +363,34 @@ namespace FixVideoChannel
 
             mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
         }
+        public bool RecorderStart(string streamId, string date, string fileId, out string reason)
+        {
+            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
+            if (rs == 1)
+            {
+                reason = "录像已开启";
+                return false;
+            }
+            else
+            {
+                string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + date + Path.DirectorySeparatorChar + fileId;
+                rs = mk_recorder.MkRecorderStart(0, "__defaultVhost__", "live", streamId, tpath, 0);
+                if (rs == 1)
+                {
+                    reason = string.Empty;
+                    return true;
+                }
+                else
+                {
+                    reason = "启用录像失败";
+                    return false;
+                }
+            }
+        }
+        public void RecorderStop()
+        {
+
+        }
         public void RemovePullProxy(string id)
         {
             if (_players.TryRemove(id, out MkPlayerT tmpt))

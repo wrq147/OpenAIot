@@ -1,4 +1,5 @@
-﻿using Common.Share;
+﻿using Common.Json;
+using Common.Share;
 using IoTService;
 using Microsoft.Extensions.Options;
 using MonitorService.Util;
@@ -68,6 +69,7 @@ namespace IoTVideoService.PlanUtil
                 // 表达式调度构建器
                 CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(task.CronExpression).WithMisfireHandlingInstructionIgnoreMisfires();
                 var triggetBuilder = TriggerBuilder.Create().WithIdentity("VIDTRI" + planId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
+                triggetBuilder.UsingJobData("TData", task.OperType.ToString());
                 trigger = triggetBuilder.Build();
                 triggers.Add(trigger);
                 ++i;

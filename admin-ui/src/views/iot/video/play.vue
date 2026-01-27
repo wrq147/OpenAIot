@@ -15,8 +15,8 @@
                 <div class="channel-select" style="margin-bottom: 15px; width: 100%;">
                     <el-select v-model="currentChannelId" placeholder="请选择通道" style="width: 100%;"
                         @change="onChannelChange">
-                        <el-option v-for="channel in channelList" :key="channel.ChannelId" :label="channel.ChannelName"
-                            :value="channel.ChannelId"></el-option>
+                        <el-option v-for="channel in channelList" :key="channel.VideoKey" :label="channel.ChannelName"
+                            :value="channel.VideoKey"></el-option>
                     </el-select>
                 </div>
 
@@ -175,7 +175,7 @@ export default {
                 const res = await getChannelList(this.videoSource.Id)
                 this.channelList = res.data || [];
                 if (this.channelList.length > 0) {
-                    this.currentChannelId = this.channelList[0].ChannelId;
+                    this.currentChannelId = this.channelList[0].VideoKey;
                     await this.loadPresetList();
                     await this.initVideo(this.videoSource.Id, this.currentChannelId);
                 }
@@ -215,7 +215,7 @@ export default {
             try {
                 await controlPTZ({
                     SourceId: this.videoSource.Id,
-                    ChannelId: this.currentChannelId,
+                    VideoKey: this.currentChannelId,
                     Cmd: action,
                     Speed: this.ptzSpeed
                 });
@@ -235,7 +235,7 @@ export default {
             try {
                 await presetPTZ({
                     SourceId: this.videoSource.Id,
-                    ChannelId: this.currentChannelId,
+                    VideoKey: this.currentChannelId,
                     Cmd: 12,
                     PresetId: this.presetId
                 })
@@ -257,7 +257,7 @@ export default {
             try {
                 await presetPTZ({
                     SourceId: this.videoSource.Id,
-                    ChannelId: this.currentChannelId,
+                    VideoKey: this.currentChannelId,
                     Cmd: 13,
                     PresetId: presetId
                 });
@@ -279,7 +279,7 @@ export default {
             try {
                 await presetPTZ({
                     SourceId: this.videoSource.Id,
-                    ChannelId: this.currentChannelId,
+                    VideoKey: this.currentChannelId,
                     Cmd: 14,
                     PresetId: presetId
                 });

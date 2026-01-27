@@ -62,7 +62,6 @@ namespace IoTVideoService
 .WithColumn("VideoType").AsByte().WithColumnDescription("摄像头类型:0为固定地址,1为GB28181设备，2为GB28181通道")
 .WithColumn("VideoKey").AsString(128).Unique().WithColumnDescription("ZLMediaKit的视频Key")
 .WithColumn("PullAddr").AsString(255).WithColumnDescription("拉流地址")
-.WithColumn("ChannelId").AsString(50).WithColumnDescription("通道Id")
 .WithColumn("UserName").AsString(50).Indexed().WithColumnDescription("用户名")
 .WithColumn("UserPwd").AsString(50).WithColumnDescription("密码")
 .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")
@@ -74,8 +73,9 @@ namespace IoTVideoService
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
                 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
                 .WithColumn("PlanName").AsString(50).WithColumnDescription("计划名称")
-                .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
+                .WithColumn("VideoId").AsString(128).Unique().WithColumnDescription("视频源Id")
                 .WithColumn("Position").AsString(50).WithColumnDescription("视频源位置")
+                .WithColumn("StorageWay").AsByte().WithColumnDescription("0为文件存储，1为云存储")
                 .WithColumn("SaveCycle").AsInt32().WithDefaultValue(7).WithColumnDescription("录像保存周期（天），默认7天")
                 .WithColumn("RecordTimeType").AsString(16).WithColumnDescription("时段类型：week（按周）、time（按时段）")
                 .WithColumn("RecordTimeDesc").AsString(512).WithColumnDescription("录像时段描述（如：周一 08:00-18:00）")
@@ -87,35 +87,25 @@ namespace IoTVideoService
                 .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                 .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
-            Create.Index()
-.OnTable("mz_iot_record")
-.OnColumn("OrgId").Ascending()
-.OnColumn("VideoId").Ascending()
-.OnColumn("VideoKey").Ascending()
-.WithOptions().NonClustered();
-
 
             Create.Table("mz_iot_recordlog").WithDescription("录像计划的执行日志")
         .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
         .WithColumn("PlanId").AsString(128).WithColumnDescription("关联录像计划ID")
         .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
-        .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
         .WithColumn("Position").AsString(50).WithColumnDescription("视频源位置")
-        .WithColumn("LogType").AsString(16).WithColumnDescription("日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）")
+        .WithColumn("LogType").AsString(16).WithColumnDescription("日志类型：start（录像启动）、stop（录像停止）、fail（录像失败）、clean（文件清理）")
         .WithColumn("Content").AsString(1024).WithColumnDescription("日志内容（如：录像失败原因、文件清理数量等）")
         .WithColumn("ExecTime").AsDateTime().WithColumnDescription("执行时间");
 
             Create.Index()
     .OnTable("mz_iot_recordlog")
     .OnColumn("PlanId").Ascending()
-    .OnColumn("VideoKey").Ascending()
     .OnColumn("LogType").Ascending()
     .WithOptions().NonClustered();
 
             Create.Index()
 .OnTable("mz_iot_recordlog")
 .OnColumn("VideoId").Ascending()
-.OnColumn("VideoKey").Ascending()
 .OnColumn("LogType").Ascending()
 .WithOptions().NonClustered();
 
@@ -126,16 +116,24 @@ namespace IoTVideoService
                 .WithColumn("PlanId").AsString(128).WithColumnDescription("关联录像计划ID")
                 .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
                 .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
-                .WithColumn("PullNode").AsString(128).Indexed().WithColumnDescription("节点GUID")
-                .WithColumn("StorageWay").AsByte().WithColumnDescription("0为文件存储，1为minio")
-                .WithColumn("StartTime").AsDateTime().WithColumnDescription("开始时间")
-                .WithColumn("EndTime").AsDateTime().WithColumnDescription("结束时间");
+                .WithColumn("NodeId").AsString(128).Indexed().WithColumnDescription("节点Id")
+                .WithColumn("StorageWay").AsByte().WithColumnDescription("0为文件存储，1为云存储")
+                .WithColumn("Status").AsByte().WithColumnDescription("状态：0-结束录像，1-录像中")
+                .WithColumn("StartTime").AsDateTime().Nullable().WithColumnDescription("开始时间")
+                .WithColumn("EndTime").AsDateTime().Nullable().WithColumnDescription("结束时间");
 
             Create.Index()
 .OnTable("mz_iot_record_file")
 .OnColumn("PlanId").Ascending()
 .OnColumn("VideoKey").Ascending()
 .WithOptions().NonClustered();
+
+            Create.Index()
+.OnTable("mz_iot_record_file")
+.OnColumn("PlanId").Ascending()
+.OnColumn("Status").Ascending()
+.WithOptions().NonClustered();
+
             Create.Index()
 .OnTable("mz_iot_record_file")
 .OnColumn("VideoId").Ascending()

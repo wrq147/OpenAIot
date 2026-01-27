@@ -417,17 +417,14 @@ namespace GB28181Channel
         }
         private void On_mk_record_hls(IntPtr hlsPtr)
         {
-            if (!string.IsNullOrEmpty(_option.minio_server))
-            {
-                var sender = (MkRecordInfoT)hlsPtr;
-                var app = mk_events_objects.MkRecordInfoGetApp(sender);
-                var stream = mk_events_objects.MkRecordInfoGetStream(sender);
-                var filePath = mk_events_objects.MkRecordInfoGetFilePath(sender);
-                var fileName = mk_events_objects.MkRecordInfoGetFileName(sender);
-                var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
-                var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
-                var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
-            }
+            var sender = (MkRecordInfoT)hlsPtr;
+            var app = mk_events_objects.MkRecordInfoGetApp(sender);
+            var stream = mk_events_objects.MkRecordInfoGetStream(sender);
+            var filePath = mk_events_objects.MkRecordInfoGetFilePath(sender);
+            var fileName = mk_events_objects.MkRecordInfoGetFileName(sender);
+            var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
+            var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
+            var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
         }
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,

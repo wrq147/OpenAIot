@@ -33,6 +33,10 @@ namespace IoTVideoService.Models
         /// </summary>
         public string Position { get; set; }
         /// <summary>
+        /// 0为文件存储，1为云存储
+        /// </summary>
+        public byte? StorageWay { get; set; }
+        /// <summary>
         /// 录像保存周期（天），默认7天
         /// </summary>
         public int? SaveCycle { get; set; }

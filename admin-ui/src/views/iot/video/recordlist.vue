@@ -37,6 +37,12 @@
       <el-table v-loading="loading" :data="recordPlanList" border stripe @selection-change="handleSelectionChange">
         <el-table-column prop="VideoId" label="通讯编码" align="center" min-width="150"></el-table-column>
         <el-table-column prop="SaveCycle" label="保存周期(天)" align="center" width="120"></el-table-column>
+        <el-table-column prop="StorageWay" label="存储方式" width="100" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.StorageWay == 1">云存储</span>
+            <span v-else-if="scope.row.StorageWay == 0">文件存储</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="RecordTimeType" label="时段类型" align="center" width="120"
           :formatter="formatTimeType"></el-table-column>
         <el-table-column prop="RecordTimeDesc" label="录像时段" min-width="250" show-overflow-tooltip></el-table-column>
@@ -177,6 +183,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
+        await removeRecord(row.Id);
         this.$message.success('删除成功！')
         this.fetchRecordPlans()
       } catch (error) {

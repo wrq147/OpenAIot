@@ -14,6 +14,7 @@ using NATS.Client.Core;
 using System;
 using System.Data;
 using System.Linq.Expressions;
+using System.Text;
 using TemplateAction.Core;
 
 namespace IoTVideoService.Business
@@ -43,9 +44,7 @@ namespace IoTVideoService.Business
                 return BusResponse<int>.Error(112, "非企业用户无法添加视频源");
             }
             var snowflake = _provider.GetService<SnowflakeHelper>();
-            data.Id = "VI_" + snowflake.NextId();
             data.OrgId = user.OrgId;
-            data.VideoKey = MyAccess.Core.StringTool.GetGUID();
             data.PullNode = string.Empty;
             data.NodeId = string.Empty;
             data.AITasks ??= string.Empty;
@@ -54,17 +53,20 @@ namespace IoTVideoService.Business
 
             if (data.VideoType == 0)
             {
+                data.Id = "VI_" + snowflake.NextId();
+                data.VideoKey = MyAccess.Core.StringTool.GetGUID();
                 data.UserName = string.Empty;
                 data.UserPwd = string.Empty;
-                data.ChannelId = string.Empty;
             }
             else if (data.VideoType == 1)
             {
+                string tmpid = snowflake.NextId().ToString();
+                data.Id = "VI_" + tmpid;
+                data.VideoKey = tmpid;
                 if (string.IsNullOrEmpty(data.UserName) || string.IsNullOrEmpty(data.UserPwd))
                 {
                     return BusResponse<int>.Error(113, "GB28181设备用户名和密码不能为空");
                 }
-                data.ChannelId = string.Empty;
                 data.PullAddr = string.Empty;
             }
             else if (data.VideoType == 2)
@@ -86,7 +88,7 @@ namespace IoTVideoService.Business
             {
                 return BusResponse<MZ_VideoSource>.Error(111, "视频源不存在");
             }
-          
+
             return BusResponse<MZ_VideoSource>.Success(info);
         }
         public virtual async Task<BusResponse<int>> Update(MZ_VideoSource data, IUserInfo user)
@@ -229,7 +231,6 @@ namespace IoTVideoService.Business
                 MZ_VideoSource videoSource = new MZ_VideoSource();
                 videoSource.NodeId = string.Empty;
                 videoSource.PullNode = string.Empty;
-                videoSource.ChannelId = string.Empty;
                 await videoSourceDAL.Update(videoSource, x => x.VideoType == 1 && x.UserName == msg.StreamId);
                 await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == msg.StreamId);
             }
@@ -238,66 +239,73 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
-            if (channels.Count == 1)
+            for (int i = 0; i < channels.Count; i++)
             {
+                var channel = channels[i];
                 var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
                 if (parentSource == null)
                 {
                     return;
                 }
-                MZ_VideoSource newsource = new MZ_VideoSource();
-                newsource.Id = parentSource.Id;
-                newsource.ChannelId = channels[0].ChannelId;
-                await videoSourceDAL.Update(newsource);
+                MZ_VideoSource videoSource = new MZ_VideoSource();
+                videoSource.Id = parentSource.Id + "_" + channel.Index;
+                videoSource.OrgId = parentSource.OrgId;
+                videoSource.VideoType = 2;
+                videoSource.VideoKey = parentSource.VideoKey + "_" + channel.ChannelId;
+                videoSource.Position = channel.Name;
+                videoSource.PullAddr = string.Empty;
+                videoSource.UserName = userName;
+                videoSource.UserPwd = string.Empty;
+                videoSource.AITasks = string.Empty;
+                videoSource.PullNode = nodeGuid;
+                videoSource.NodeId = nodeId;
+                await videoSourceDAL.Insert(videoSource);
             }
-            else
+        }
+        public async Task<string> GetFixNodeGuid(string nodeId)
+        {
+            var redisHelper = _provider.GetService<IotRedisHelper>();
+            var dict = await redisHelper.HashGetAllAsync<string>("FixVideoNode");
+            foreach (var kvp in dict)
             {
-                for (int i = 0; i < channels.Count; i++)
+                string[] tarr = kvp.Value.Split(',');
+                if (tarr.Length > 1)
                 {
-                    var channel = channels[i];
-                    var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
-                    if (parentSource == null)
+                    DateTime dt = DateTime.Parse(tarr[1]);
+                    if (tarr[0] == nodeId && dt >= DateTime.Now)
                     {
-                        return;
+                        return kvp.Key;
                     }
-                    MZ_VideoSource videoSource = new MZ_VideoSource();
-                    videoSource.Id = parentSource.Id + "_" + channel.Index;
-                    videoSource.OrgId = parentSource.OrgId;
-                    videoSource.VideoType = 2;
-                    videoSource.VideoKey = parentSource.VideoKey + "_" + channel.Index;
-                    videoSource.Position = channel.Name;
-                    videoSource.PullAddr = string.Empty;
-                    videoSource.ChannelId = channel.ChannelId;
-                    videoSource.UserName = userName;
-                    videoSource.UserPwd = string.Empty;
-                    videoSource.AITasks = string.Empty;
-                    videoSource.PullNode = nodeGuid;
-                    videoSource.NodeId = nodeId;
-                    await videoSourceDAL.Insert(videoSource);
                 }
-
             }
-
+            return null;
         }
         public async Task UpdateFixNode()
         {
             //获取所有固定地址采集节点
             var redisHelper = _provider.GetService<IotRedisHelper>();
             var dict = await redisHelper.HashGetAllAsync<string>("FixVideoNode");
-            var serverBus = _provider.GetService<ServerBusProxy>();
             List<string> offlineNames = new List<string>();
             List<string> onlineNames = new List<string>();
             foreach (var kvp in dict)
             {
-                if (DateTime.TryParse(kvp.Value, out DateTime dt))
+                string[] tarr = kvp.Value.Split(',');
+                if (tarr.Length > 1)
                 {
-                    if (dt < DateTime.Now)
+                    if (DateTime.TryParse(tarr[1], out DateTime dt))
                     {
-                        offlineNames.Add(kvp.Key);
+                        if (dt < DateTime.Now)
+                        {
+                            offlineNames.Add(kvp.Key);
+                        }
+                        else
+                        {
+                            onlineNames.Add(kvp.Key);
+                        }
                     }
                     else
                     {
-                        onlineNames.Add(kvp.Key);
+                        offlineNames.Add(kvp.Key);
                     }
                 }
                 else
@@ -353,7 +361,6 @@ namespace IoTVideoService.Business
                     tsource.PullNode = nodeguid;
                     tsource.NodeId = msg.DeviceId;
                     tsource.Id = tlist[0].Id;
-                    tsource.ChannelId = string.Empty;
                     await videoSourceDAL.Update(tsource);
                     await DownUpVideoItemMessage(nodeguid, tlist[0]);
                 }
@@ -366,6 +373,60 @@ namespace IoTVideoService.Business
 
         }
 
+        public virtual async Task TimerClean()
+        {
+            await this.UpdateFixNode();
+            var minDate = DateTime.Now.Date;
+            var recordLogDAL = _provider.GetService<RecordLogDAL>();
+            var recordDAL = _provider.GetService<RecordDAL>();
+            var recordFileDAL = _provider.GetService<RecordFileDAL>();
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            var recordBLL = _provider.GetService<RecordBLL>();
+            var records = await recordDAL.GetUnCleanRecords(minDate, 2000);
+            while (records.Count > 0)
+            {
+                string startId = snowflake.NextId().ToString();
+                int i = 0;
+                foreach (var rec in records)
+                {
+                    MZ_IotRecordLog log = new MZ_IotRecordLog();
+                    log.Id = startId + "_" + i;
+                    log.PlanId = rec.Id;
+                    log.Position = rec.Position;
+                    log.VideoId = rec.VideoId;
+                    log.LogType = "clean";
+                    log.Content = string.Empty;
+                    log.ExecTime = DateTime.Now;
+                    await recordLogDAL.Insert(log);
 
+                    DateTime overTime = DateTime.Now.Date.AddDays(-rec.SaveCycle.Value);
+                    var recFiles = await recordFileDAL.SelectList(x => x.PlanId == rec.Id && x.FileDate < overTime);
+                    foreach (var recF in recFiles)
+                    {
+                        //string nodeGuid = null;
+                        //if (source.VideoType == 0)
+                        //{
+                        //    nodeGuid = await _provider.GetService<VideoSourceBLL>().GetFixNodeGuid(recFile.NodeId);
+                        //}
+                        //else if (source.VideoType == 1)
+                        //{
+                        //    nodeGuid = source.PullNode;
+                        //    if (string.IsNullOrEmpty(nodeGuid))
+                        //    {
+                        //        return BusResponse<string>.Error(212, "视频源未注册");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    return BusResponse<string>.Error(220, "录像的视频源类型错误");
+                        //}
+                        //recordBLL.PublishCleanRecordMessage();
+                    }
+      
+                    ++i;
+                }
+                records = await recordDAL.GetUnCleanRecords(minDate, 1000);
+            }
+        }
     }
 }

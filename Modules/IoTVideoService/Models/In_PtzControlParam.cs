@@ -9,7 +9,7 @@ namespace IoTVideoService.Models
     public class In_PtzControlParam
     {
         public string SourceId { get; set; }
-        public string ChannelId { get; set; }
+        public string VideoKey { get; set; }
         /// <summary>
         /// ptz控制命令
         /// </summary>

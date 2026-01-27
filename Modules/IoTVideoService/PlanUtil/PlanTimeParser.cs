@@ -10,6 +10,79 @@ namespace IoTVideoService.PlanUtil
 {
     public static class PlanTimeParser
     {
+        public static RecordTriggerTask GetTodayNextTriggerTask(List<RecordTriggerTask> tasks)
+        {
+            if (tasks == null || tasks.Count == 0)
+                return null;
+
+            try
+            {
+                DateTime currentTime = DateTime.Now;
+                // 标准化基准时间（只保留年月日小时，忽略分秒）
+                var normalizedNow = new DateTime(
+                    currentTime.Year, currentTime.Month, currentTime.Day,
+                    currentTime.Hour, 0, 0);
+
+                RecordTriggerTask nearestTodayTask = null;
+                DateTime? nearestTodayTime = null;
+
+                foreach (var task in tasks)
+                {
+                    // 计算该任务在「当天」的触发时间（仅当天有效）
+                    var todayFireTime = GetTaskTodayFireTime(task, normalizedNow);
+                    if (!todayFireTime.HasValue)
+                        continue;
+                    // 只保留晚于当前时间的触发时间
+                    if (todayFireTime.Value > normalizedNow)
+                    {
+                        // 找到当天最小的触发时间
+                        if (!nearestTodayTime.HasValue || todayFireTime.Value < nearestTodayTime.Value)
+                        {
+                            nearestTodayTime = todayFireTime;
+                            nearestTodayTask = task;
+                        }
+                    }
+                }
+                if (nearestTodayTask != null && nearestTodayTask.OperType == RecordTimeOp.Start)
+                {
+                    return null;
+                }
+                return nearestTodayTask;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        private static DateTime? GetTaskTodayFireTime(RecordTriggerTask task, DateTime currentTime)
+        {
+            // 基础触发小时（已确保0-23）
+            int triggerHour = task.Time;
+            if (triggerHour < 0 || triggerHour > 23)
+                return null;
+
+            // 当天的日期（年-月-日）
+            DateTime todayDate = currentTime.Date;
+
+            if (task.WeekDay.HasValue)
+            {
+                // 按周任务：仅当任务的星期匹配当天星期时，才返回当天触发时间
+                int targetWeekDay = task.WeekDay.Value; // 1=周一，7=周日
+                int currentWeekDay = currentTime.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)currentTime.DayOfWeek + 1;
+
+                // 星期不匹配 → 当天无触发时间
+                if (targetWeekDay != currentWeekDay)
+                    return null;
+
+                // 星期匹配 → 返回当天该小时的触发时间
+                return todayDate.AddHours(triggerHour);
+            }
+            else
+            {
+                // 按日任务：当天必然有触发时间（返回当天该小时）
+                return todayDate.AddHours(triggerHour);
+            }
+        }
         /// <summary>
         /// 将录像配置转换为RecordTriggerTask对象列表
         /// </summary>
@@ -105,6 +178,7 @@ namespace IoTVideoService.PlanUtil
                     tasks.Add(new RecordTriggerTask
                     {
                         OperType = RecordTimeOp.Both,
+                        Time = 0,
                         WeekDay = week,
                         CronExpression = cron
                     });
@@ -148,6 +222,7 @@ namespace IoTVideoService.PlanUtil
                 tasks.Add(new RecordTriggerTask
                 {
                     OperType = opType,
+                    Time = cronHour,
                     WeekDay = range.week,
                     CronExpression = cron
                 });
@@ -166,7 +241,7 @@ namespace IoTVideoService.PlanUtil
             return $"0 0 {cronHour} * * {week}";
         }
 
-   
+
         #endregion
 
         #region 单日生成触发任务列表
@@ -191,6 +266,7 @@ namespace IoTVideoService.PlanUtil
                 tasks.Add(new RecordTriggerTask
                 {
                     OperType = RecordTimeOp.Both,
+                    Time = 0,
                     WeekDay = null,
                     CronExpression = cron
                 });
@@ -234,6 +310,7 @@ namespace IoTVideoService.PlanUtil
                 tasks.Add(new RecordTriggerTask
                 {
                     OperType = opType,
+                    Time = cronHour,
                     WeekDay = null,
                     CronExpression = cron
                 });
