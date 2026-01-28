@@ -61,8 +61,7 @@ export default {
           VideoKey: '',
           PullAddr: '',
           UserName: '',
-          UserPwd: '',
-          ChannelId: ''
+          UserPwd: ''
         };
       } else {
         this.title = "编辑视频源";
@@ -74,8 +73,7 @@ export default {
             VideoKey: res.data.VideoKey,
             PullAddr: res.data.PullAddr,
             UserName: res.data.UserName,
-            UserPwd: res.data.UserPwd,
-            ChannelId: res.data.ChannelId,
+            UserPwd: res.data.UserPwd
           };
         })
       }

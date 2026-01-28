@@ -9,7 +9,6 @@ using IoTService.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +28,10 @@ namespace IoTService
     {
         private ITAServiceProvider _provider;
         private ILogger<ServerBusProxy> _log;
-        private DateTime _startTime;
         public ServerBusProxy(ITAServiceProvider provider, ILoggerFactory logFactory)
         {
             _provider = provider;
             _log = logFactory.CreateLogger<ServerBusProxy>();
-            _startTime = DateTime.Now;
         }
         public async Task PublishKeyDel(string key)
         {

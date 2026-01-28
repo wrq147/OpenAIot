@@ -56,7 +56,11 @@ namespace FlowService
                     {
                         await foreach (var msg in tsubBus.Msgs.ReadAllAsync())
                         {
-                            await app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
+                            try
+                            {
+                                await app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();
+                            }
+                            catch { }
                         }
                     });
                     await app.ServiceProvider.GetService<DeviceBusProxy>().UpdateUpList();

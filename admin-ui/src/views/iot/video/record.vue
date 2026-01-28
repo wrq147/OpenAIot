@@ -150,6 +150,7 @@
             <el-table-column prop="id" label="日志ID" align="center" width="150"></el-table-column>
             <el-table-column prop="LogType" label="日志类型" align="center" width="120"
               :formatter="formatLogType"></el-table-column>
+            <el-table-column prop="Position" label="发生位置" align="center" width="150"></el-table-column>
             <el-table-column prop="Content" label="日志内容" min-width="300" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExecTime" label="执行时间" align="center" width="180"></el-table-column>
           </el-table>

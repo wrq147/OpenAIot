@@ -60,17 +60,26 @@ namespace Common.EventBus
                         var bus = plg.Collection.GetService<NatsScope>().Bus;
                         await foreach (var msg in bus.SubscribeAsync(BusEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<BusEvent>.Default))
                         {
-                            if (msg.Data == null)
+                            try
                             {
-                                continue;
-                            }
-                            foreach (var item in newItems)
-                            {
-                                if (item.name == msg.Data.Name && item.func != null)
+                                if (msg.Data == null)
                                 {
-                                    await item.func.Invoke(msg.Data);
+                                    continue;
+                                }
+                                foreach (var item in newItems)
+                                {
+                                    if (item.name == msg.Data.Name && item.func != null)
+                                    {
+                                        await item.func.Invoke(msg.Data);
+
+                                    }
                                 }
                             }
+                            catch (Exception ex)
+                            {
+                                Console.Write(ex.Message);
+                            }
+
                         }
                     });
 
@@ -138,7 +147,14 @@ namespace Common.EventBus
                             {
                                 if (item.name == msg.Data.Name && item.func != null)
                                 {
-                                    rs = await item.func.Invoke(msg.Data);
+                                    try
+                                    {
+                                        rs = await item.func.Invoke(msg.Data);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        rs = CallResponse.Error(888, ex.Message);
+                                    }
                                     break;
                                 }
                             }
@@ -150,9 +166,10 @@ namespace Common.EventBus
                                     Data = rs
                                 }, DefalutNatsJsonSerializer<CallResponse>.Default);
                             }
+
                         }
                     });
-                 
+
                 }
             }
 
@@ -177,11 +194,19 @@ namespace Common.EventBus
                     var bus = plg.Collection.GetService<NatsScope>().Bus;
                     await foreach (var msg in bus.SubscribeAsync(NoticeEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<NoticeEvent>.Default))
                     {
-                        if (msg.Data == null)
+                        try
                         {
-                            continue;
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
+                            await ac.Invoke(msg.Data);
                         }
-                        await ac.Invoke(msg.Data);
+                        catch (Exception ex)
+                        {
+                            Console.Write(ex.Message);
+                        }
+
                     }
                 });
             }
@@ -201,11 +226,19 @@ namespace Common.EventBus
                     var bus = plg.Collection.GetService<NatsScope>().Bus;
                     await foreach (var msg in bus.SubscribeAsync(TimeEvent.EventKey, "Bussin" + plg.Name, DefalutNatsJsonSerializer<TimeEvent>.Default))
                     {
-                        if (msg.Data == null)
+                        try
                         {
-                            continue;
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
+                            await ac.Invoke(msg.Data);
                         }
-                        await ac.Invoke(msg.Data);
+                        catch (Exception ex)
+                        {
+                            Console.Write(ex.Message);
+                        }
+
                     }
                 });
 
@@ -290,12 +323,12 @@ namespace Common.EventBus
                     var bus = plg.Collection.GetService<NatsScope>().Bus;
                     await foreach (var msg in bus.SubscribeAsync($"{QuartzExeEvent.EventKey}.{plg.Name}", "Quartz_" + plg.Name, DefalutNatsJsonSerializer<QuartzExeEvent>.Default))
                     {
-                        if (msg.Data == null)
-                        {
-                            continue;
-                        }
                         try
                         {
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
                             List<object> methodParams = msg.Data.GetMethodParams();
                             object obj = plg.Collection.GetService(msg.Data.ClassName);
                             if (obj == null)
@@ -339,7 +372,7 @@ namespace Common.EventBus
                         }
                     }
                 });
-                
+
 
 
 

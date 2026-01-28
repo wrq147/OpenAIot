@@ -2,9 +2,11 @@
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using ZLMediaKit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FixVideoChannel
 {
@@ -363,7 +365,7 @@ namespace FixVideoChannel
 
             mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
         }
-        public bool RecorderStart(string streamId, string date, string fileId, out string reason)
+        public bool RecorderStart(byte storage, string streamId, string date, string fileId, out string reason)
         {
             var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
             if (rs == 1)
@@ -373,8 +375,39 @@ namespace FixVideoChannel
             }
             else
             {
-                string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + date + Path.DirectorySeparatorChar + fileId;
-                rs = mk_recorder.MkRecorderStart(0, "__defaultVhost__", "live", streamId, tpath, 0);
+                if (storage == 0)
+                {
+                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + date + Path.DirectorySeparatorChar + fileId;
+                    rs = mk_recorder.MkRecorderStart(0, "__defaultVhost__", "live", streamId, tpath, 0);
+                    if (rs == 1)
+                    {
+                        reason = string.Empty;
+                        return true;
+                    }
+                    else
+                    {
+                        reason = "启用录像失败";
+                        return false;
+                    }
+                }
+                else
+                {
+                    reason = "存储方式不支持";
+                    return false;
+                }
+            }
+        }
+        public bool RecorderStop(string streamId, out string reason)
+        {
+            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
+            if (rs == 0)
+            {
+                reason = "录像已关闭";
+                return false;
+            }
+            else
+            {
+                rs = mk_recorder.MkRecorderStop(0, "__defaultVhost__", "live", streamId);
                 if (rs == 1)
                 {
                     reason = string.Empty;
@@ -382,14 +415,10 @@ namespace FixVideoChannel
                 }
                 else
                 {
-                    reason = "启用录像失败";
+                    reason = "关闭录像失败";
                     return false;
                 }
             }
-        }
-        public void RecorderStop()
-        {
-
         }
         public void RemovePullProxy(string id)
         {

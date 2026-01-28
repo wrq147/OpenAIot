@@ -47,7 +47,8 @@
                                         <div>推流地址：{{ scope.row.PullAddr }}</div>
                                     </div>
                                     <div v-else-if="scope.row.VideoType == 1">
-                                        <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
+                                        <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }},{{
+                                            scope.row.NodeId!=""?"【已注册】":"【未注册】" }}</div>
                                     </div>
                                 </template>
                             </el-table-column>

@@ -8,6 +8,7 @@ using IoTRulesService.DataParser;
 using IoTRulesService.Flow;
 using IoTService;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
@@ -118,28 +119,35 @@ namespace IoTRulesService
 
                     await foreach (var msg in bus.SubscribeAsync(RuleChangeEvent.EventKey, subid, DefalutNatsJsonSerializer<RuleChangeEvent>.Default))
                     {
-                        if (msg.Data == null)
+                        try
                         {
-                            continue;
-                        }
-                        var tmpCache = app.ServiceProvider.GetService<RuleCache>();
-                        if (msg.Data.ChangeType == 1)
-                        {
-                            if (msg.Data.IsDebug)
+                            if (msg.Data == null)
                             {
-                                tmpCache.StartDebug(msg.Data.RuleId.ToString());
+                                continue;
+                            }
+                            var tmpCache = app.ServiceProvider.GetService<RuleCache>();
+                            if (msg.Data.ChangeType == 1)
+                            {
+                                if (msg.Data.IsDebug)
+                                {
+                                    tmpCache.StartDebug(msg.Data.RuleId.ToString());
+                                }
+                                else
+                                {
+                                    tmpCache.StopDebug(msg.Data.RuleId.ToString());
+                                }
                             }
                             else
                             {
-                                tmpCache.StopDebug(msg.Data.RuleId.ToString());
+                                foreach (var ruleItem in msg.Data.Triggers)
+                                {
+                                    tmpCache.Clear(ruleItem.TopicDevice, ruleItem.TopicMsg);
+                                }
                             }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            foreach (var ruleItem in msg.Data.Triggers)
-                            {
-                                tmpCache.Clear(ruleItem.TopicDevice, ruleItem.TopicMsg);
-                            }
+                            Console.WriteLine(ex.Message);
                         }
                     }
                 });
@@ -187,21 +195,28 @@ namespace IoTRulesService
 
                     await foreach (var msg in bus.SubscribeAsync("IotKey.Del", "IotKeyDel" + Guid.NewGuid().ToString("N"), DefalutNatsJsonSerializer<string>.Default))
                     {
-                        if (msg.Data == null)
+                        try
                         {
-                            continue;
+                            if (msg.Data == null)
+                            {
+                                continue;
+                            }
+                            string tmpkey = msg.Data;
+                            if (tmpkey.StartsWith("ProductSys:"))
+                            {
+                                cache.RemoveCache(tmpkey);
+                            }
+                            else if (tmpkey.StartsWith("Device:") || tmpkey.StartsWith("Offline:"))
+                            {
+                                string devid = tmpkey.Split(":")[1];
+                                app.ServiceProvider.GetService<DeviceCache>().ClearDevice(devid);
+                            }
+                            app.ServiceProvider.GetService<PackParser>().DelDevice(msg.Data);
                         }
-                        string tmpkey = msg.Data;
-                        if (tmpkey.StartsWith("ProductSys:"))
+                        catch(Exception ex)
                         {
-                            cache.RemoveCache(tmpkey);
+                            Console.WriteLine(ex.Message);
                         }
-                        else if (tmpkey.StartsWith("Device:") || tmpkey.StartsWith("Offline:"))
-                        {
-                            string devid = tmpkey.Split(":")[1];
-                            app.ServiceProvider.GetService<DeviceCache>().ClearDevice(devid);
-                        }
-                        app.ServiceProvider.GetService<PackParser>().DelDevice(msg.Data);
                     }
                 });
 

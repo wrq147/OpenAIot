@@ -216,7 +216,11 @@ namespace IoTService
                     {
                         await foreach (var msg in nodesub.Msgs.ReadAllAsync())
                         {
-                            await app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
+                            try
+                            {
+                                await app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
+                            }
+                            catch { }
                         }
                     });
 

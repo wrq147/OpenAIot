@@ -108,20 +108,28 @@ namespace ChannelUtility
             {
                 await foreach (var msg in productSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {
-                    if (string.IsNullOrEmpty(msg.Data))
+                    try
                     {
-                        continue;
+                        if (string.IsNullOrEmpty(msg.Data))
+                        {
+                            continue;
+                        }
+                        var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
+                        if (!string.IsNullOrEmpty(msg.ReplyTo))
+                        {
+                            rs.MessageId = msg.ReplyTo;
+                        }
+
+                        if (OnSubProductMessage != null)
+                        {
+                            await OnSubProductMessage(rs).ConfigureAwait(false);
+                        }
                     }
-                    var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
-                    if (!string.IsNullOrEmpty(msg.ReplyTo))
+                    catch (Exception ex)
                     {
-                        rs.MessageId = msg.ReplyTo;
+                        Console.Write(ex.Message);
                     }
 
-                    if (OnSubProductMessage != null)
-                    {
-                        await OnSubProductMessage(rs).ConfigureAwait(false);
-                    }
                 }
             });
 
@@ -131,7 +139,14 @@ namespace ChannelUtility
             {
                 await foreach (var msg in ruleNodeSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {
-                    UpdateUpList();
+                    try
+                    {
+                        UpdateUpList();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.Message);
+                    }
                 }
             });
 
@@ -142,26 +157,34 @@ namespace ChannelUtility
              {
                  await foreach (var msg in iotKeyDelSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                  {
-                     if (string.IsNullOrEmpty(msg.Data))
+                     try
                      {
-                         continue;
+                         if (string.IsNullOrEmpty(msg.Data))
+                         {
+                             continue;
+                         }
+                         string tmpkey = msg.Data;
+                         if (tmpkey.StartsWith("Device:"))
+                         {
+                             tmpkey = tmpkey + "$ProductId";
+                             _memoryCache.Remove(tmpkey);
+                         }
+                         else if (tmpkey.StartsWith("Offline:"))
+                         {
+                             string devid = tmpkey.Split(":")[1];
+                             tmpkey = "Device:" + devid + "$ProductId";
+                             _memoryCache.Remove(tmpkey);
+                         }
+                         else
+                         {
+                             _memoryCache.Remove(tmpkey);
+                         }
                      }
-                     string tmpkey = msg.Data;
-                     if (tmpkey.StartsWith("Device:"))
+                     catch (Exception ex)
                      {
-                         tmpkey = tmpkey + "$ProductId";
-                         _memoryCache.Remove(tmpkey);
+                         Console.Write(ex.Message);
                      }
-                     else if (tmpkey.StartsWith("Offline:"))
-                     {
-                         string devid = tmpkey.Split(":")[1];
-                         tmpkey = "Device:" + devid + "$ProductId";
-                         _memoryCache.Remove(tmpkey);
-                     }
-                     else
-                     {
-                         _memoryCache.Remove(tmpkey);
-                     }
+
                  }
              });
         }
@@ -578,6 +601,20 @@ namespace ChannelUtility
         public async Task PublishRecordStartReply(string msgId, string dtuId, bool isSuccess, string reason)
         {
             MediaRecordStartMessageReply msg = new MediaRecordStartMessageReply();
+            msg.DeviceId = dtuId;
+            msg.ProductId = string.Empty;
+            msg.IsSuccess = isSuccess;
+            msg.Reason = reason;
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+        }
+
+        public async Task PublishRecordStopReply(string msgId, string dtuId, bool isSuccess, string reason)
+        {
+            MediaRecordStopMessageReply msg = new MediaRecordStopMessageReply();
             msg.DeviceId = dtuId;
             msg.ProductId = string.Empty;
             msg.IsSuccess = isSuccess;

@@ -114,17 +114,23 @@ namespace MqttService
                     {
                         await foreach (var msg in bus.SubscribeAsync("MqttNotice.Msg", tmpsubid, DefalutNatsJsonSerializer<List<string>>.Default))
                         {
-                            if (msg.Data == null)
+                            try
                             {
-                                continue;
+                                if (msg.Data == null)
+                                {
+                                    continue;
+                                }
+                                if (!option.Value.enable_emqx)
+                                {
+                                    await app.ServiceProvider.GetService<MqttController>().NoticeData(msg.Data[0], msg.Data[1]);
+                                }
+                                else
+                                {
+                                    await app.ServiceProvider.GetService<EmqxController>().NoticeData(msg.Data[0], msg.Data[1]);
+                                }
                             }
-                            if (!option.Value.enable_emqx)
-                            {
-                                await app.ServiceProvider.GetService<MqttController>().NoticeData(msg.Data[0], msg.Data[1]);
-                            }
-                            else
-                            {
-                                await app.ServiceProvider.GetService<EmqxController>().NoticeData(msg.Data[0], msg.Data[1]);
+                            catch (Exception ex) {
+                                Console.WriteLine(ex.Message);
                             }
                         }
                     });

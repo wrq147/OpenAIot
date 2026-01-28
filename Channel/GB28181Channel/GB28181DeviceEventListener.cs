@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -133,6 +134,29 @@ namespace GB28181Channel
                 else
                 {
                     await server.GetPresetList(presetMessage.UserName, presetMessage.MessageId);
+                }
+            }
+            else if (msg is MediaRecordStartMessage startRec)
+            {
+                var rs = ZLMediaKitServer.Instance.RecorderStart(startRec.Storage, startRec.StreamId, startRec.Date, startRec.FileId, out string treason);
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                await eventBus.PublishRecordStartReply(startRec.MessageId, startRec.DeviceId, rs, treason);
+            }
+            else if (msg is MediaRecordStopMessage stopRec)
+            {
+                var rs = ZLMediaKitServer.Instance.RecorderStop(stopRec.StreamId, out string treason);
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                await eventBus.PublishRecordStopReply(stopRec.MessageId, stopRec.DeviceId, rs, treason);
+            }
+            else if (msg is MediaRecordCleanMessage cleanRec)
+            {
+                if (cleanRec.Storage == 0)
+                {
+                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + cleanRec.Date + Path.DirectorySeparatorChar + cleanRec.FileId;
+                    if (Directory.Exists(tpath))
+                    {
+                        Directory.Delete(tpath, true);
+                    }
                 }
             }
         }

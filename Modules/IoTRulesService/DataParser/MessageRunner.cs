@@ -1,9 +1,8 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
-using Common.EventBus;
 using IoTService;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +15,14 @@ namespace IoTRulesService.DataParser
 {
     public class MessageRunner
     {
+        private ILogger<MessageRunner> _log;
         private ITAServiceProvider _provider;
         public delegate Task BaseMessageHandler(BaseDeviceMessage msg);
         public event BaseMessageHandler OtherMessageListener;
-        public MessageRunner(ITAServiceProvider provider)
+        public MessageRunner(ILoggerFactory factory, ITAServiceProvider provider)
         {
             _provider = provider;
+            _log = factory.CreateLogger<MessageRunner>();
         }
 
         /// <summary>
@@ -33,41 +34,48 @@ namespace IoTRulesService.DataParser
 
         public async Task ParseExe(string msg, string replyTo)
         {
-            if (string.IsNullOrEmpty(msg))
+            try
             {
-                var tmpoption = _provider.GetService<IOptions<IotOption>>();
-                var redis = _provider.GetService<IotRedisHelper>();
-                await redis.HashSetAsync("RuleExeNodes", tmpoption.Value.node_name, DateTime.Now.AddSeconds(130).ToString("o"));
-                return;
-            }
+                if (string.IsNullOrEmpty(msg))
+                {
+                    var tmpoption = _provider.GetService<IOptions<IotOption>>();
+                    var redis = _provider.GetService<IotRedisHelper>();
+                    await redis.HashSetAsync("RuleExeNodes", tmpoption.Value.node_name, DateTime.Now.AddSeconds(130).ToString("o"));
+                    return;
+                }
 
-            var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
-            if (string.IsNullOrEmpty(rs.MessageId))
-            {
-                rs.MessageId = replyTo;
-            }
-            if (rs is RawUpDataMessage rawUpData)
-            {
-                if (!string.IsNullOrEmpty(rawUpData.NodeId))
+                var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+                if (string.IsNullOrEmpty(rs.MessageId))
                 {
-                    _provider.GetService<PackParser>().UpdateDeviceGuid(rawUpData.DeviceId, rawUpData.NodeId);
+                    rs.MessageId = replyTo;
                 }
-                await _provider.GetService<DeviceMessageHandler>().ParseMessage(rawUpData);
-            }
-            else if (rs is BaseUpDeviceMessage upMsg)
-            {
-                if (!string.IsNullOrEmpty(upMsg.NodeId))
+                if (rs is RawUpDataMessage rawUpData)
                 {
-                    _provider.GetService<PackParser>().UpdateDeviceGuid(upMsg.DeviceId, upMsg.NodeId);
+                    if (!string.IsNullOrEmpty(rawUpData.NodeId))
+                    {
+                        _provider.GetService<PackParser>().UpdateDeviceGuid(rawUpData.DeviceId, rawUpData.NodeId);
+                    }
+                    await _provider.GetService<DeviceMessageHandler>().ParseMessage(rawUpData);
                 }
-                await _provider.GetService<DeviceMessageHandler>().ExeMessage(upMsg);
-            }
-            else
-            {
-                if (OtherMessageListener != null)
+                else if (rs is BaseUpDeviceMessage upMsg)
                 {
-                    await OtherMessageListener(rs);
+                    if (!string.IsNullOrEmpty(upMsg.NodeId))
+                    {
+                        _provider.GetService<PackParser>().UpdateDeviceGuid(upMsg.DeviceId, upMsg.NodeId);
+                    }
+                    await _provider.GetService<DeviceMessageHandler>().ExeMessage(upMsg);
                 }
+                else
+                {
+                    if (OtherMessageListener != null)
+                    {
+                        await OtherMessageListener(rs);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                _log.LogError(ex.Message);
             }
         }
         public async Task ParseDown(BaseDeviceMessage msg)
@@ -76,8 +84,15 @@ namespace IoTRulesService.DataParser
         }
         public async Task ParseDown(string msg)
         {
-            var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await this.ParseDown(rs);
+            try
+            {
+                var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
+                await this.ParseDown(rs);
+            }
+            catch(Exception ex)
+            {
+                _log.LogError(ex.Message);
+            }
         }
     }
 }
