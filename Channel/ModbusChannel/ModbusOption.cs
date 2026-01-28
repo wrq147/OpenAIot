@@ -3,6 +3,7 @@ namespace ModbusChannel
 {
     public class ModbusOption
     {
+        public string node_id { get; set; }
         public string event_conn { get; set; }
         public string event_user { get; set; }
         public string event_pass { get; set; }

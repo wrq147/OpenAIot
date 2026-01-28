@@ -145,7 +145,7 @@ namespace GB28181Channel
         {
             var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            eventBus.PublishMediaNotFound(option.sip_service_id, e.Device.DeviceId, 1);
+            eventBus.PublishMediaNotFound(e.Device.DeviceId, 1);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace GB28181Channel
                 var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Disconnect(device.VideoData.Item.Id);
-                eventBus.PublishMediaNotReader(option.sip_service_id, device.DeviceId, 1);
+                eventBus.PublishMediaNotReader(device.DeviceId, 1);
             }
         }
         public async Task OnPresetListReceived(object? sender, PresetListReceivedEventArgs e)

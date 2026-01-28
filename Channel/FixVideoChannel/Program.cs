@@ -38,6 +38,7 @@ namespace FixVideoChannel
                 services.AddEventBus(x =>
                 {
                     var option = configSec.Get<FixVideoOption>();
+                    x.NodeId = option.node_id;
                     x.EventConn = option.event_conn;
                     x.EventUser = option.event_user;
                     x.EventPass = option.event_pass;

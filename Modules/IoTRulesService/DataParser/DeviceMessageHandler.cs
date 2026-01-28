@@ -363,7 +363,7 @@ namespace IoTRulesService.DataParser
                                     if (!string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
                                     {
                                         //转发数据时，设备离线则发送上线报文
-                                        await _provider.GetService<ServerBusProxy>().SendConnect(rdmsg.ProductId, rdmsg.DeviceId, "", rdmsg.RedirectFromProductId, rdmsg.RuleIds, rdmsg.RedirecDtuId, rdmsg.NodeGuid);
+                                        await _provider.GetService<ServerBusProxy>().SendConnect(rdmsg.ProductId, rdmsg.DeviceId, "", rdmsg.RedirectFromProductId, rdmsg.RuleIds, rdmsg.RedirecDtuId, rdmsg.NodeId);
                                     }
                                 }
                                 return;

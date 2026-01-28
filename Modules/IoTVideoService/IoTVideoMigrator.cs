@@ -65,7 +65,6 @@ namespace IoTVideoService
 .WithColumn("UserName").AsString(50).Indexed().WithColumnDescription("用户名")
 .WithColumn("UserPwd").AsString(50).WithColumnDescription("密码")
 .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")
-.WithColumn("PullNode").AsString(128).Indexed().WithColumnDescription("节点GUID")
 .WithColumn("NodeId").AsString(50).Indexed().WithColumnDescription("服务器节点Id");
 
 

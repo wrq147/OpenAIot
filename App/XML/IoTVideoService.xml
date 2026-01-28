@@ -69,6 +69,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTVideoService.Controller.Record.Remove(System.String)">
+            <summary>
+            删除录像计划
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTVideoService.Controller.Source.ListPage(IoTVideoService.Models.In_VideoSourcePage)">
             <summary>
             视频源列表
@@ -230,6 +237,11 @@
             视频源位置
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecord.StorageWay">
+            <summary>
+            0为文件存储，1为云存储
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecord.SaveCycle">
             <summary>
             录像保存周期（天），默认7天
@@ -290,14 +302,19 @@
             ZLMediaKit的视频Key
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.PullNode">
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.NodeId">
             <summary>
-            节点GUID
+            节点Id
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StorageWay">
             <summary>
             0为文件存储，1为minio
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.Status">
+            <summary>
+            状态：0-结束录像，1-录像中
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StartTime">
@@ -330,11 +347,6 @@
             视频源Id
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_IotRecordLog.VideoKey">
-            <summary>
-            ZLMediaKit的视频Key
-            </summary>
-        </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordLog.Position">
             <summary>
             发生位置
@@ -342,7 +354,7 @@
         </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordLog.LogType">
             <summary>
-            日志类型：start（计划启动）、stop（计划停止）、success（录像成功）、fail（录像失败）、clean（文件清理）
+            日志类型：start（录像启动）、stop（录像停止）、fail（录像失败）、clean（文件清理）
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordLog.Content">
@@ -385,11 +397,6 @@
             拉流地址
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.ChannelId">
-            <summary>
-            通道Id
-            </summary>
-        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.UserName">
             <summary>
             注册用户名
@@ -403,11 +410,6 @@
         <member name="P:IoTVideoService.Models.MZ_VideoSource.AITasks">
             <summary>
             AI检测任务
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.PullNode">
-            <summary>
-            当前拉流的节点名称，无为空
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.NodeId">
@@ -518,6 +520,11 @@
         <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.OperType">
             <summary>
             操作类型（Start/End/Both）
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.Time">
+            <summary>
+            触发时间点
             </summary>
         </member>
         <member name="P:IoTVideoService.PlanUtil.RecordTriggerTask.WeekDay">

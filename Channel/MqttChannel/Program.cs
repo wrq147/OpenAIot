@@ -37,6 +37,7 @@ namespace MqttChannel
                 services.AddEventBus(x =>
                 {
                     var option = configSec.Get<MqttOption>();
+                    x.NodeId = option.node_id;
                     x.EventConn = option.event_conn;
                     x.EventUser = option.event_user;
                     x.EventPass = option.event_pass;

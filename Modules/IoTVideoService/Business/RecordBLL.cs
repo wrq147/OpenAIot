@@ -26,7 +26,7 @@ namespace IoTVideoService.Business
         {
             _provider = provider;
         }
-        public async Task PublishCleanRecordMessage(string guid, string videoId, byte storageWay, DateTime date, string fileId)
+        public async Task PublishCleanRecordMessage(string nodeId, string videoId, byte storageWay, DateTime date, string fileId)
         {
             MediaRecordCleanMessage msg = new MediaRecordCleanMessage();
             msg.DeviceId = videoId;
@@ -34,15 +34,13 @@ namespace IoTVideoService.Business
             msg.Storage = storageWay;
             msg.Date = date.ToString("yyyy-MM-dd");
             msg.FileId = fileId;
-            await _provider.GetService<NatsScope>().Public(guid, msg);
+            await _provider.GetService<NatsScope>().Public(nodeId, msg);
         }
         public async Task<BusResponse<string>> PublishStartRecordMessage(string planId, byte storageWay, DateTime time, MZ_VideoSource source)
         {
-            string nodeGuid = null;
             string nodeId = null;
-            if (!string.IsNullOrEmpty(source.PullNode))
+            if (!string.IsNullOrEmpty(source.NodeId))
             {
-                nodeGuid = source.PullNode;
                 nodeId = source.NodeId;
             }
             else
@@ -57,7 +55,6 @@ namespace IoTVideoService.Business
                     int pos = Math.Abs(source.Id.GetHashCode() % option.Value.VideoServers.Count);
                     ServerInfo serverInfo = option.Value.VideoServers[pos];
                     nodeId = serverInfo.NodeId;
-                    nodeGuid = await _provider.GetService<VideoSourceBLL>().GetFixNodeGuid(nodeId);
                 }
                 else if (source.VideoType == 1)
                 {
@@ -102,7 +99,7 @@ namespace IoTVideoService.Business
                 msg.FileId = recFile.Id;
                 msg.Date = recFile.FileDate.Value.ToString("yyyy-MM-dd");
 
-                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStartMessageReply>(nodeGuid, msg);
+                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStartMessageReply>(nodeId, msg);
                 if (replyMsg == null || !replyMsg.IsSuccess)
                 {
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
@@ -141,7 +138,6 @@ namespace IoTVideoService.Business
                 return BusResponse<string>.Error(111, "不存在录制中的文件");
             }
             var snowflake = _provider.GetService<SnowflakeHelper>();
-            string nodeGuid = null;
             foreach (var recFile in recFileList)
             {
                 var source = (await _provider.GetService<VideoSourceDAL>().SelectList(x => x.VideoKey == recFile.VideoKey)).FirstOrDefault();
@@ -149,25 +145,6 @@ namespace IoTVideoService.Business
                 {
                     await recFileDAL.Delete(recFile.Id);
                     continue;
-                }
-                if (nodeGuid == null)
-                {
-                    if (source.VideoType == 0)
-                    {
-                        nodeGuid = await _provider.GetService<VideoSourceBLL>().GetFixNodeGuid(recFile.NodeId);
-                    }
-                    else if (source.VideoType == 1)
-                    {
-                        nodeGuid = source.PullNode;
-                        if (string.IsNullOrEmpty(nodeGuid))
-                        {
-                            return BusResponse<string>.Error(212, "视频源未注册");
-                        }
-                    }
-                    else
-                    {
-                        return BusResponse<string>.Error(220, "录像的视频源类型错误");
-                    }
                 }
 
 
@@ -177,7 +154,7 @@ namespace IoTVideoService.Business
                 msg.StreamId = recFile.VideoKey;
                 msg.MessageId = Guid.NewGuid().ToString("N");
 
-                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(nodeGuid, msg);
+                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(recFile.NodeId, msg);
                 if (replyMsg == null || !replyMsg.IsSuccess)
                 {
                     await recFileDAL.Delete(recFile.Id);

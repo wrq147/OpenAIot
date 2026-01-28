@@ -145,7 +145,7 @@ namespace IoTAIService
             }
             if (videoConfigs == null)
             {
-                await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, null, true);
+                await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
                 return;
             }
             byte[] frameData = Encoding.UTF8.GetBytes(detectReq.Frame);
@@ -189,7 +189,7 @@ namespace IoTAIService
                     }
                 }
                 //回复画框
-                await DownAIDetectResponse(detectReq.NodeGuid, detectReq.DeviceId, boxlist);
+                await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
 
 
                 //处理事件

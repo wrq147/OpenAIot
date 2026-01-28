@@ -7,16 +7,16 @@ namespace IoTVideoService
 {
     public static class VideoUtiliy
     {
-        public static async Task Public(this NatsScope scope, string nodeguid, BaseDeviceMessage msg)
+        public static async Task Public(this NatsScope scope, string nodeId, BaseDeviceMessage msg)
         {
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
             await scope.Bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = "node." + nodeguid,
+                Subject = "node." + nodeId,
                 Data = msgbody
             }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
-        public static async Task<T> PublicWait<T>(this NatsScope scope, string nodeguid, BaseDeviceMessage msg) where T : class
+        public static async Task<T> PublicWait<T>(this NatsScope scope, string nodeId, BaseDeviceMessage msg) where T : class
         {
             try
             {
@@ -29,7 +29,7 @@ namespace IoTVideoService
                 }).ConfigureAwait(false);
 
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await scope.Bus.PublishAsync("node." + nodeguid, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                await scope.Bus.PublishAsync("node." + nodeId, msgbody, null, msg.MessageId, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
                 await foreach (var responseMsg in resSub.Msgs.ReadAllAsync().ConfigureAwait(false))
                 {

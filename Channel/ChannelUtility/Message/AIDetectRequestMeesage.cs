@@ -10,7 +10,7 @@ namespace ChannelUtility.Message
             MsgType = "AIDetectReq";
         }
         public string VideoKey { get; set; }
-        public string NodeGuid { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// 运动区块占比
         /// </summary>

@@ -664,7 +664,7 @@ namespace IoTRulesService.DataParser
                 msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
                 msg.RedirectFromProductId = string.Empty;
                 msg.IsTagSync = false;
-                msg.NodeGuid = nodeGuid;
+                msg.NodeId = nodeGuid;
             }
 
             if (string.IsNullOrEmpty(script))
@@ -714,7 +714,7 @@ namespace IoTRulesService.DataParser
                         return false;
                     }
                 }
-                newmsg.NodeGuid = nodeGuid;
+                newmsg.NodeId = nodeGuid;
                 if (newmsg is EmptyMessageReply)
                 {
                     return true;
@@ -1052,7 +1052,7 @@ namespace IoTRulesService.DataParser
                 }
 
                 //自定义解释
-                await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeGuid);
+                await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeId);
                 if (lastReader.Position > -1)
                 {
                     //有剩余数据包，则下个循环处理
@@ -1071,7 +1071,7 @@ namespace IoTRulesService.DataParser
                     }
                     if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
                     {
-                        await DownModbusMatch(datamsg.NodeGuid, newmmlist);
+                        await DownModbusMatch(datamsg.NodeId, newmmlist);
                     }
                     return;
                 }
@@ -1079,7 +1079,7 @@ namespace IoTRulesService.DataParser
 
             if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
             {
-                await DownModbusMatch(datamsg.NodeGuid, newmmlist);
+                await DownModbusMatch(datamsg.NodeId, newmmlist);
             }
         }
         public async Task<RawDataMessage> toRawData(BaseDeviceMessage msg, TslReturn ret)

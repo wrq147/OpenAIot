@@ -74,7 +74,7 @@ namespace FixVideoChannel
             {
                 _hlsMap.TryAdd(streamId, true);
             }
-            eventBus.PublishMediaNotFound(_option.node_id, streamId, 0);
+            eventBus.PublishMediaNotFound(streamId, 0);
             return 0;
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)
@@ -83,7 +83,7 @@ namespace FixVideoChannel
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
             _hlsMap.TryRemove(streamId, out bool tv);
-            eventBus.PublishMediaNotReader(_option.node_id, streamId, 0);
+            eventBus.PublishMediaNotReader(streamId, 0);
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
         {

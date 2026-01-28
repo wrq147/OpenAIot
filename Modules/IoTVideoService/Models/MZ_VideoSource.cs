@@ -48,10 +48,6 @@ namespace IoTVideoService.Models
         /// </summary>
         public string AITasks { get; set; }
         /// <summary>
-        /// 当前拉流的节点名称，无为空
-        /// </summary>
-        public string PullNode { get; set; }
-        /// <summary>
         /// 服务器节点Id
         /// </summary>
         public string NodeId { get; set; }

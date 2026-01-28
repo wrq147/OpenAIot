@@ -43,7 +43,7 @@ namespace IoTVideoService
                 if (Constants.General.quick_init != true)
                 {
                     //添加定时清除视频数据
-                    string cacjobname = "ClearVideoService";
+                    string cacjobname = "VideoCleanService";
                     string cacgroup = "SYSTEM";
                     var jobBLL = app.ServiceProvider.GetService<JobBLL>();
                     if (!await jobBLL.ExistJob(cacjobname, cacgroup))
@@ -94,7 +94,7 @@ namespace IoTVideoService
                 case "MediaCH":
                     {
                         MediaChannelMessage mcmsg = (MediaChannelMessage)msg;
-                        await _provider.GetService<VideoSourceBLL>().InitChannels(mcmsg.UserName, mcmsg.DeviceId, mcmsg.NodeGuid, mcmsg.Channels);
+                        await _provider.GetService<VideoSourceBLL>().InitChannels(mcmsg.UserName, mcmsg.DeviceId, mcmsg.Channels);
                     }
                     break;
                 case "MediaUser":

@@ -120,7 +120,7 @@ namespace IoTRulesService.DataParser.Js
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             msg.RedirectFromProductId = string.Empty;
             msg.IsTagSync = false;
-            msg.NodeGuid = _nodeGuid;
+            msg.NodeId = _nodeGuid;
             return msg;
         }
         /// <summary>
@@ -133,7 +133,7 @@ namespace IoTRulesService.DataParser.Js
             msg.DeviceId = _deviceId;
             msg.ProductId = _productId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            msg.NodeGuid = _nodeGuid;
+            msg.NodeId = _nodeGuid;
             return msg;
         }
         /// <summary>
@@ -146,7 +146,7 @@ namespace IoTRulesService.DataParser.Js
             msg.DeviceId = _deviceId;
             msg.ProductId = _productId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            msg.NodeGuid = _nodeGuid;
+            msg.NodeId = _nodeGuid;
             return msg;
         }
         /// <summary>
@@ -159,7 +159,7 @@ namespace IoTRulesService.DataParser.Js
             msg.DeviceId = _deviceId;
             msg.ProductId = _productId;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            msg.NodeGuid = _nodeGuid;
+            msg.NodeId = _nodeGuid;
             return msg;
         }
 

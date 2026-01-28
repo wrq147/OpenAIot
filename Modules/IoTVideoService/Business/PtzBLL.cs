@@ -19,9 +19,9 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == data.SourceId && x.VideoType == 1)).FirstOrDefault();
-            if (videoSource == null || string.IsNullOrEmpty(videoSource.PullNode))
+            if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
             {
-                return BusResponse<string>.Error(111, "视频源不存在");
+                return BusResponse<string>.Error(111, "视频源未注册");
             }
 
             MediaPTZMessage msg = new MediaPTZMessage();
@@ -43,7 +43,7 @@ namespace IoTVideoService.Business
 
             msg.PresetId = data.PresetId;
 
-            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaPTZMessageReply>(videoSource.PullNode, msg);
+            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaPTZMessageReply>(videoSource.NodeId, msg);
             if (replyMsg == null)
             {
                 return BusResponse<string>.Error(112, "控制命令无回复");
@@ -61,7 +61,7 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sid && x.VideoType == 1)).FirstOrDefault();
-            if (videoSource == null || string.IsNullOrEmpty(videoSource.PullNode))
+            if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
             {
                 return new List<Out_VideoChannel>();
             }
@@ -82,7 +82,7 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sId && x.VideoType == 1)).FirstOrDefault();
-            if (videoSource == null || string.IsNullOrEmpty(videoSource.PullNode))
+            if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
             {
                 return string.Empty;
             }
@@ -155,7 +155,7 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sourceId && x.VideoType == 1)).FirstOrDefault();
-            if (videoSource == null || string.IsNullOrEmpty(videoSource.PullNode))
+            if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
             {
                 return new List<PresetInfo>();
             }
@@ -166,7 +166,7 @@ namespace IoTVideoService.Business
             msg.MessageId = Guid.NewGuid().ToString("N");
             msg.UserName = videoSource.UserName;
 
-            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaPresetMessageReply>(videoSource.PullNode, msg);
+            var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaPresetMessageReply>(videoSource.NodeId, msg);
             if (replyMsg == null)
             {
                 return new List<PresetInfo>();

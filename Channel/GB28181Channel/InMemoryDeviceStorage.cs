@@ -79,9 +79,8 @@ namespace GB28181Channel
         }
         public async Task<string> GetDevicePassword(string deviceId)
         {
-            var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            return await eventBus.WaitPublishMediaUserVerify(option.sip_service_id, deviceId);
+            return await eventBus.WaitPublishMediaUserVerify(deviceId);
         }
         public bool SaveDevice(DeviceInfo device)
         {
@@ -154,7 +153,6 @@ namespace GB28181Channel
                 updateValueFactory: (_, existingChannels) => channels);
 
 
-            var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
             List<ChannelData> dataList = new List<ChannelData>();
             foreach (var channel in channels)
@@ -168,7 +166,7 @@ namespace GB28181Channel
             }
             var channelIds = channels.Select(x => x.ChannelId).ToList();
             var channelNames = channels.Select(x => x.ChannelName).ToList();
-            eventBus.PublishMediaChannels(option.sip_service_id, deviceId, dataList);
+            eventBus.PublishMediaChannels(deviceId, dataList);
             return true;
         }
 

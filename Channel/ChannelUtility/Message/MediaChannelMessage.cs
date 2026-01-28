@@ -14,7 +14,6 @@ namespace ChannelUtility.Message
         }
         public List<ChannelData> Channels { get; set; }
         public string UserName { get; set; }
-        public string NodeGuid { get; set; }
     }
     public class ChannelData
     {

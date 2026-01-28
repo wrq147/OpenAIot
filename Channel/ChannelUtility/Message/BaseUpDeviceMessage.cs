@@ -7,7 +7,7 @@ namespace ChannelUtility.Message
         /// <summary>
         /// 来源通道
         /// </summary>
-        public string NodeGuid { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// 设备向事件总线发送消息的时间戳
         /// </summary>

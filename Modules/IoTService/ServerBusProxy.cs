@@ -548,7 +548,7 @@ namespace IoTService
             msg.RedirectFromProductId = redirectFromProductId;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
-            msg.NodeGuid = fromNode;
+            msg.NodeId = fromNode;
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
@@ -574,7 +574,7 @@ namespace IoTService
             msg.RedirectFromProductId = redirectFromProductId;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
-            msg.NodeGuid = fromNode;
+            msg.NodeId = fromNode;
             if (string.IsNullOrEmpty(ip))
             {
                 msg.IpAddress = ip;
@@ -649,7 +649,7 @@ namespace IoTService
             msg.IsTagSync = isTagSync;
             msg.RuleIds = ruleId;
             msg.RedirecDtuId = fromDtuId;
-            msg.NodeGuid = fromNode;
+            msg.NodeId = fromNode;
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {

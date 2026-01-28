@@ -39,7 +39,7 @@ namespace IoTRulesService.Flow.Builder.Step
                                 await context.Print("错误02,无法转发给触发源自己");
                                 return;
                             }
-                            await serverBus.SendConnect(props.ProductId, newDeviceId, oldmsg.IpAddress, context.Source.ProductId, context.GetStartRuleId(), context.Source.DeviceId, fromNode: oldmsg.NodeGuid);
+                            await serverBus.SendConnect(props.ProductId, newDeviceId, oldmsg.IpAddress, context.Source.ProductId, context.GetStartRuleId(), context.Source.DeviceId, fromNode: oldmsg.NodeId);
                             if (context.IsDebug)
                             {
                                 await context.Print($"向设备{newDeviceId}转发一条在线消息");
@@ -86,7 +86,7 @@ namespace IoTRulesService.Flow.Builder.Step
                                 }
                                 if (newProperties.Count > 0)
                                 {
-                                    await serverBus.SendPropertyReply(props.ProductId, newDeviceId, newProperties, context.Source.ProductId, false, context.GetStartRuleId(), context.Source.DeviceId, null, fromNode: oldmsg.NodeGuid);
+                                    await serverBus.SendPropertyReply(props.ProductId, newDeviceId, newProperties, context.Source.ProductId, false, context.GetStartRuleId(), context.Source.DeviceId, null, fromNode: oldmsg.NodeId);
                                     if (context.IsDebug)
                                     {
                                         await context.Print($"向设备{newDeviceId}转发一条属性消息：" + System.Text.Json.JsonSerializer.Serialize(newProperties, JsonMessageSerializerConfig.SerializeOptions));
@@ -118,7 +118,7 @@ namespace IoTRulesService.Flow.Builder.Step
                                 }
                                 if (newEventId != null)
                                 {
-                                    await serverBus.SendEvent(props.ProductId, newDeviceId, newEventId, oldmsg.Outputs, context.Source.ProductId, context.GetStartRuleId(), context.Source.DeviceId, fromNode: oldmsg.NodeGuid);
+                                    await serverBus.SendEvent(props.ProductId, newDeviceId, newEventId, oldmsg.Outputs, context.Source.ProductId, context.GetStartRuleId(), context.Source.DeviceId, fromNode: oldmsg.NodeId);
                                     if (context.IsDebug)
                                     {
                                         await context.Print($"向设备{newDeviceId}转发一条事件{newEventId}");
