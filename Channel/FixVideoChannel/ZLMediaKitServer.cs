@@ -377,8 +377,7 @@ namespace FixVideoChannel
             {
                 if (storage == 0)
                 {
-                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + date + Path.DirectorySeparatorChar + fileId;
-                    rs = mk_recorder.MkRecorderStart(0, "__defaultVhost__", "live", streamId, tpath, 0);
+                    rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", streamId, null, 0);
                     if (rs == 1)
                     {
                         reason = string.Empty;

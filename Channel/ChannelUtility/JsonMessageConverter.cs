@@ -11,7 +11,9 @@ namespace ChannelUtility
     {
         // 类型映射表，避免使用反射，支持AOT
         private static readonly Dictionary<string, Type> _typeMap = new()
-        {
+        {        
+            { "NodeOn", typeof(NodeOnlineMessage) },
+            { "NodeOnReply", typeof(NodeOnlineMessageReply) },
             { "Event", typeof(DeviceEventMessage) },
             { "Offline", typeof(DeviceOfflineMessage) },
             { "Online", typeof(DeviceOnlineMessage) },
@@ -47,7 +49,8 @@ namespace ChannelUtility
             { "MediaRecE",typeof(MediaRecordStopMessage) },
             { "MediaRecEOk",typeof(MediaRecordStopMessageReply) },
             { "MediaUser",typeof(MediaUserVerifyMessage) },
-            { "MediaClean",typeof(MediaRecordCleanMessage) }
+            { "MediaClean",typeof(MediaRecordCleanMessage) },
+            { "MediaFile",typeof(MediaRecordFileMessage) }
 
         };
         private static readonly JsonSerializerOptions _nestedOptions = new JsonSerializerOptions

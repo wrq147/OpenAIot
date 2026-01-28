@@ -56,7 +56,7 @@
         <el-table-column label="操作" align="center" width="200">
           <template slot-scope="scope">
             <el-link icon="el-icon-edit" type="primary" @click="handleEdit(scope.row)">编辑</el-link>
-            <el-link v-if="scope.row.status === 0" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)"
+            <el-link v-if="scope.row.Status === 0" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)"
               style="margin-left:10px;">删除</el-link>
             <el-link v-if="scope.row.Status === 1" type="warning" icon="el-icon-video-pause"
               @click="handleToggleStatus(scope.row.Id, 0)" style="margin-left:10px;">禁用</el-link>

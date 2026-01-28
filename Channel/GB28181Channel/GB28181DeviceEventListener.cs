@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using GB28181Channel.GB28181;
+using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,11 @@ namespace GB28181Channel
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
             await eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
+        }
+        public async Task OnSendRecordFile(string videoId, string videoKey, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage)
+        {
+            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+            await eventBus.PublishRecordFile(videoId, videoKey, fileName, fileSize, startTime, timeLen, storage);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg, GB28181Server server)
@@ -138,15 +144,19 @@ namespace GB28181Channel
             }
             else if (msg is MediaRecordStartMessage startRec)
             {
-                var rs = ZLMediaKitServer.Instance.RecorderStart(startRec.Storage, startRec.StreamId, startRec.Date, startRec.FileId, out string treason);
-                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.PublishRecordStartReply(startRec.MessageId, startRec.DeviceId, rs, treason);
+                ZLMediaKitServer.Instance.RecorderStart(startRec, 0, (rs, err) =>
+                {
+                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                    _ = eventBus.PublishRecordStartReply(startRec.MessageId, startRec.DeviceId, rs, err);
+                });
             }
             else if (msg is MediaRecordStopMessage stopRec)
             {
-                var rs = ZLMediaKitServer.Instance.RecorderStop(stopRec.StreamId, out string treason);
-                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.PublishRecordStopReply(stopRec.MessageId, stopRec.DeviceId, rs, treason);
+                ZLMediaKitServer.Instance.RecorderStop(stopRec, (rs, err) =>
+                {
+                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                    _ = eventBus.PublishRecordStopReply(msg.MessageId, msg.DeviceId, rs, err);
+                });
             }
             else if (msg is MediaRecordCleanMessage cleanRec)
             {

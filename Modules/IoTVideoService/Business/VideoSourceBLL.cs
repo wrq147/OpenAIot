@@ -4,6 +4,7 @@ using Common.EventBus;
 using Common.IdGenerator;
 using Common.Json;
 using Common.Share;
+using InfluxDB.Client.Api.Domain;
 using IoTService;
 using IoTService.DAL;
 using IoTVideoService.DAL;
@@ -261,14 +262,15 @@ namespace IoTVideoService.Business
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
+            var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
+            if (parentSource == null)
+            {
+                return;
+            }
+            List<MZ_VideoSource> channelSources = new List<MZ_VideoSource>();
             for (int i = 0; i < channels.Count; i++)
             {
                 var channel = channels[i];
-                var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
-                if (parentSource == null)
-                {
-                    return;
-                }
                 MZ_VideoSource videoSource = new MZ_VideoSource();
                 videoSource.Id = parentSource.Id + "_" + channel.Index;
                 videoSource.OrgId = parentSource.OrgId;
@@ -280,7 +282,27 @@ namespace IoTVideoService.Business
                 videoSource.UserPwd = string.Empty;
                 videoSource.AITasks = string.Empty;
                 videoSource.NodeId = nodeId;
-                await videoSourceDAL.Insert(videoSource);
+                channelSources.Add(videoSource);
+            }
+
+            if (channelSources.Count > 0)
+            {
+                await videoSourceDAL.Insert(channelSources);
+            }
+
+            //判断通道是否在录制中，如果是则重新启用录制
+            var recInfo = (await _provider.GetService<RecordDAL>().SelectList(x => x.VideoId == parentSource.Id)).FirstOrDefault();
+            if (recInfo != null)
+            {
+                var tasks = PlanTimeParser.GenerateTriggerTasks(recInfo);
+                if (tasks.Count > 0)
+                {
+                    if (PlanTimeParser.GetTodayNextTriggerTask(tasks) != null)
+                    {
+                        //直接开始录像
+                        await _provider.GetService<RecordBLL>().PublishStartRecordMessage(recInfo.Id, recInfo.StorageWay.Value, DateTime.Now, parentSource);
+                    }
+                }
             }
         }
 
@@ -355,7 +377,7 @@ namespace IoTVideoService.Business
                     var recFiles = await recordFileDAL.SelectList(x => x.PlanId == rec.Id && x.FileDate < overTime);
                     foreach (var recF in recFiles)
                     {
-                        await recordBLL.PublishCleanRecordMessage(recF.NodeId, recF.VideoId, recF.StorageWay.Value, recF.FileDate.Value, recF.Id);
+                        await recordBLL.PublishCleanRecordMessage(recF.NodeId, recF.VideoId, recF.StorageWay.Value, recF.FileDate.Value, recF.FileName);
                     }
 
                     ++i;

@@ -528,6 +528,7 @@ namespace ChannelUtility
                 return null;
             }
         }
+
         public async void PublishMediaNotFound(string streamId, int videoType)
         {
             MediaNotFoundMessage msg = new MediaNotFoundMessage();
@@ -622,6 +623,24 @@ namespace ChannelUtility
             await _bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = msgId,
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+        }
+
+        public async Task PublishRecordFile(string dtuId, string streamId, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage)
+        {
+            MediaRecordFileMessage msg = new MediaRecordFileMessage();
+            msg.DeviceId = dtuId;
+            msg.StreamId = streamId;
+            msg.FileName = fileName;
+            msg.FileSize = fileSize;
+            msg.StartTime = startTime;
+            msg.TimeLen = timeLen;
+            msg.NodeId = this._nodeId;
+            msg.Storage = storage;
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(msg.DeviceId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }

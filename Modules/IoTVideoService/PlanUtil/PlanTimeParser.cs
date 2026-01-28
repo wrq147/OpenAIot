@@ -56,6 +56,10 @@ namespace IoTVideoService.PlanUtil
         }
         private static DateTime? GetTaskTodayFireTime(RecordTriggerTask task, DateTime currentTime)
         {
+            if (task.Time == 0 && (task.OperType == RecordTimeOp.End || task.OperType == RecordTimeOp.Both))
+            {
+                return currentTime.Date.AddDays(1);
+            }
             // 基础触发小时（已确保0-23）
             int triggerHour = task.Time;
             if (triggerHour < 0 || triggerHour > 23)

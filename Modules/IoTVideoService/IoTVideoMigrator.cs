@@ -112,12 +112,13 @@ namespace IoTVideoService
             Create.Table("mz_iot_record_file").WithDescription("录像播放文件信息")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
                 .WithColumn("FileDate").AsDateTime().WithColumnDescription("记录的日期")
+                .WithColumn("FileName").AsString(128).WithColumnDescription("文件名")
+                .WithColumn("FileSize").AsFloat().WithColumnDescription("文件大小，单位MB")
                 .WithColumn("PlanId").AsString(128).WithColumnDescription("关联录像计划ID")
                 .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
                 .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
                 .WithColumn("NodeId").AsString(128).Indexed().WithColumnDescription("节点Id")
                 .WithColumn("StorageWay").AsByte().WithColumnDescription("0为文件存储，1为云存储")
-                .WithColumn("Status").AsByte().WithColumnDescription("状态：0-结束录像，1-录像中")
                 .WithColumn("StartTime").AsDateTime().Nullable().WithColumnDescription("开始时间")
                 .WithColumn("EndTime").AsDateTime().Nullable().WithColumnDescription("结束时间");
 

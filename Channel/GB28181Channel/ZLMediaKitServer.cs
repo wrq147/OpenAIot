@@ -1,10 +1,12 @@
 ﻿using ChannelUtility;
+using ChannelUtility.Message;
 using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Org.BouncyCastle.Utilities.IO;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZLMediaKit;
 
@@ -300,6 +303,21 @@ namespace GB28181Channel
                     }
                     mk_media.MkMediaInitComplete(context.Media);
                 }
+                else
+                {
+                    if (_recordContexts.TryRemove(streamId, out RecordContext tmprec))
+                    {
+                        var rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", tmprec.Msg.StreamId, null, 0);
+                        if (rs == 1)
+                        {
+                            tmprec.Callback.Invoke(true, string.Empty);
+                        }
+                        else
+                        {
+                            tmprec.Callback.Invoke(false, "录像失败");
+                        }
+                    }
+                }
             }
             else
             {
@@ -415,10 +433,7 @@ namespace GB28181Channel
 
         private void On_mk_record_mp4(IntPtr mp4Ptr)
         {
-        }
-        private void On_mk_record_hls(IntPtr hlsPtr)
-        {
-            var sender = (MkRecordInfoT)hlsPtr;
+            var sender = (MkRecordInfoT)mp4Ptr;
             var app = mk_events_objects.MkRecordInfoGetApp(sender);
             var stream = mk_events_objects.MkRecordInfoGetStream(sender);
             var filePath = mk_events_objects.MkRecordInfoGetFilePath(sender);
@@ -426,6 +441,26 @@ namespace GB28181Channel
             var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
             var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
             var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
+            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+            var channelInfo = storage.GetChannelFrom(stream);
+            if (channelInfo == null)
+            {
+                return;
+            }
+            var device = storage.GetDevice(channelInfo.DeviceId);
+            if (device == null)
+            {
+                return;
+            }
+            if (device.VideoData == null || device.VideoData.Item == null)
+            {
+                return;
+            }
+            _ = _listener.OnSendRecordFile(device.VideoData.Item.Id, stream, fileName, fileSize, startTime, timeLen, channelInfo.StorageWay);
+        }
+        private void On_mk_record_hls(IntPtr hlsPtr)
+        {
+
         }
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,
@@ -440,60 +475,82 @@ namespace GB28181Channel
             string streamId = ZLUtility.SsrcToStreamId(e.Params.Ssrc);
             _cache.Set(streamId, e.Params, TimeSpan.FromSeconds(60));
         }
-        public bool RecorderStart(byte storage, string streamId, string date, string fileId, out string reason)
+        private ConcurrentDictionary<string, RecordContext> _recordContexts = new ConcurrentDictionary<string, RecordContext>();
+        public void RecorderStart(MediaRecordStartMessage msg, int retrycount, Action<bool, string> cb)
         {
-            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
+            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+            var channelInfo = storage.GetChannelFrom(msg.StreamId);
+            if (channelInfo == null)
+            {
+                cb.Invoke(false, "视频源未注册");
+                return;
+            }
+            channelInfo.StorageWay = msg.Storage;
+            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", msg.StreamId);
             if (rs == 1)
             {
-                reason = "录像已开启";
-                return false;
+                cb.Invoke(false, "录像已开启");
+                return;
             }
             else
             {
-                if (storage == 0)
+                var mediaSource = mk_events_objects.MkMediaSourceFind2("rtmp", "__defaultVhost__", "live", msg.StreamId, 0);
+                if (mediaSource == null)
                 {
-                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + date + Path.DirectorySeparatorChar + fileId;
-                    rs = mk_recorder.MkRecorderStart(0, "__defaultVhost__", "live", streamId, tpath, 0);
+                    RecordContext recordContext = new RecordContext();
+                    recordContext.Msg = msg;
+                    recordContext.Callback = cb;
+                    _recordContexts.AddOrUpdate(msg.StreamId, recordContext, (s, r) => recordContext);
+
+                    _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
+                    return;
+                }
+                if (msg.Storage == 0)
+                {
+                    rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", msg.StreamId, null, 0);
                     if (rs == 1)
                     {
-                        reason = string.Empty;
-                        return true;
+                        cb.Invoke(true, string.Empty);
                     }
                     else
                     {
-                        reason = "启用录像失败";
-                        return false;
+                        if (retrycount > 0)
+                        {
+                            cb.Invoke(false, "未知原因");
+                            return;
+                        }
+                        Thread.Sleep(100);
+                        RecorderStart(msg, retrycount + 1, cb);
                     }
                 }
                 else
                 {
-                    reason = "存储方式不支持";
-                    return false;
+                    cb.Invoke(false, "存储方式不支持");
                 }
             }
         }
-        public bool RecorderStop(string streamId, out string reason)
+        public void RecorderStop(MediaRecordStopMessage msg, Action<bool, string> cb)
         {
-            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
+            bool isSuccess = false;
+            string reason = string.Empty;
+            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", msg.StreamId);
             if (rs == 0)
             {
                 reason = "录像已关闭";
-                return false;
             }
             else
             {
-                rs = mk_recorder.MkRecorderStop(0, "__defaultVhost__", "live", streamId);
+                rs = mk_recorder.MkRecorderStop(0, "__defaultVhost__", "live", msg.StreamId);
                 if (rs == 1)
                 {
-                    reason = string.Empty;
-                    return true;
+                    isSuccess = true;
                 }
                 else
                 {
                     reason = "关闭录像失败";
-                    return false;
                 }
             }
+            cb.Invoke(isSuccess, reason);
         }
         public void Start(GB28181Option option, IServiceProvider provider, GB28181DeviceEventListener listener, GB28181Server server)
         {
@@ -552,7 +609,11 @@ namespace GB28181Channel
             mk_common.MkStopAllServer();
         }
     }
-
+    public class RecordContext
+    {
+        public MediaRecordStartMessage Msg { get; set; }
+        public Action<bool, string> Callback { get; set; }
+    }
     public class FrameContext
     {
         public string VideoKey { get; set; }

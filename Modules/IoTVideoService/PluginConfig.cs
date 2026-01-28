@@ -112,6 +112,12 @@ namespace IoTVideoService
                         }
                     }
                     break;
+                case "MediaFile":
+                    {
+                        MediaRecordFileMessage rfile = (MediaRecordFileMessage)msg;
+                        await _provider.GetService<RecordBLL>().InsertRecordFile(rfile);
+                    }
+                    break;
             }
         }
     }

@@ -26,14 +26,39 @@ namespace IoTVideoService.Business
         {
             _provider = provider;
         }
-        public async Task PublishCleanRecordMessage(string nodeId, string videoId, byte storageWay, DateTime date, string fileId)
+        public async Task InsertRecordFile(MediaRecordFileMessage msg)
+        {
+            var recordDAL = _provider.GetService<RecordDAL>();
+            var rec = (await recordDAL.SelectList(x => x.VideoId == msg.DeviceId)).FirstOrDefault();
+            if (rec == null)
+            {
+                return;
+            }
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            MZ_IotRecordFile recFile = new MZ_IotRecordFile();
+            recFile.Id = snowflake.NextId().ToString();
+            recFile.StartTime = MyAccess.Core.TypeConvert.Unix2Time((long)msg.StartTime);
+            recFile.FileDate = recFile.StartTime.Value.Date;
+            recFile.PlanId = rec.Id;
+            recFile.VideoKey = msg.StreamId;
+            recFile.VideoId = rec.VideoId;
+            recFile.NodeId = msg.NodeId;
+            recFile.StorageWay = msg.Storage;
+            recFile.FileName = msg.FileName;
+            recFile.FileSize = (float?)(msg.FileSize / (1024.0 * 1024.0));
+            long endlong = (long)msg.StartTime + (long)(msg.TimeLen * 1000);
+            recFile.EndTime = MyAccess.Core.TypeConvert.Unix2Time(endlong);
+
+            await _provider.GetService<RecordFileDAL>().Insert(recFile);
+        }
+        public async Task PublishCleanRecordMessage(string nodeId, string videoId, byte storageWay, DateTime date, string fileName)
         {
             MediaRecordCleanMessage msg = new MediaRecordCleanMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
             msg.Storage = storageWay;
             msg.Date = date.ToString("yyyy-MM-dd");
-            msg.FileId = fileId;
+            msg.FileName = fileName;
             await _provider.GetService<NatsScope>().Public(nodeId, msg);
         }
         public async Task<BusResponse<string>> PublishStartRecordMessage(string planId, byte storageWay, DateTime time, MZ_VideoSource source)
@@ -79,16 +104,6 @@ namespace IoTVideoService.Business
             var snowflake = _provider.GetService<SnowflakeHelper>();
             foreach (var recSource in sourceList)
             {
-                MZ_IotRecordFile recFile = new MZ_IotRecordFile();
-                recFile.Id = snowflake.NextId().ToString();
-                recFile.FileDate = time;
-                recFile.PlanId = planId;
-                recFile.VideoKey = recSource.VideoKey;
-                recFile.VideoId = source.Id;
-                recFile.NodeId = nodeId;
-                recFile.StorageWay = storageWay;
-                recFile.Status = 1;
-                recFile.StartTime = recFile.FileDate;
 
                 MediaRecordStartMessage msg = new MediaRecordStartMessage();
                 msg.DeviceId = source.Id;
@@ -96,8 +111,6 @@ namespace IoTVideoService.Business
                 msg.StreamId = recSource.VideoKey;
                 msg.Storage = storageWay;
                 msg.MessageId = Guid.NewGuid().ToString("N");
-                msg.FileId = recFile.Id;
-                msg.Date = recFile.FileDate.Value.ToString("yyyy-MM-dd");
 
                 var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStartMessageReply>(nodeId, msg);
                 if (replyMsg == null || !replyMsg.IsSuccess)
@@ -114,7 +127,6 @@ namespace IoTVideoService.Business
                 }
                 else
                 {
-                    await _provider.GetService<RecordFileDAL>().Insert(recFile);
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
@@ -129,41 +141,58 @@ namespace IoTVideoService.Business
 
             return BusResponse<string>.Success();
         }
-        public async Task<BusResponse<string>> PublishStopRecordMessage(string planId, DateTime time)
+        public async Task<BusResponse<string>> PublishStopRecordMessage(string planId)
         {
             var recFileDAL = _provider.GetService<RecordFileDAL>();
-            var recFileList = await recFileDAL.SelectList(x => x.PlanId == planId && x.Status == 1, "FileDate desc");
-            if (recFileList.Count == 0)
+            var recDAL = _provider.GetService<RecordDAL>();
+            var sourceDAL = _provider.GetService<VideoSourceDAL>();
+            var recInfo = await recDAL.Select(planId);
+            if (recInfo == null)
             {
-                return BusResponse<string>.Error(111, "不存在录制中的文件");
+                return BusResponse<string>.Error(111, "录制计划不存在");
             }
-            var snowflake = _provider.GetService<SnowflakeHelper>();
-            foreach (var recFile in recFileList)
+
+            var source = await sourceDAL.Select(recInfo.VideoId);
+            if (source == null)
             {
-                var source = (await _provider.GetService<VideoSourceDAL>().SelectList(x => x.VideoKey == recFile.VideoKey)).FirstOrDefault();
-                if (source == null)
-                {
-                    await recFileDAL.Delete(recFile.Id);
-                    continue;
-                }
+                await recDAL.Delete(x => x.VideoId == recInfo.VideoId);
+                return BusResponse<string>.Error(112, "视频源不存在");
+            }
 
+            if (string.IsNullOrEmpty(source.NodeId))
+            {
+                return BusResponse<string>.Error(113, "视频源未注册");
+            }
+            string nodeId = source.NodeId;
 
+            List<MZ_VideoSource> sourceList = new List<MZ_VideoSource>();
+            if (source.VideoType == 1)
+            {
+                var channelList = await sourceDAL.SelectList(x => x.VideoType == 2 && x.UserName == source.UserName);
+                sourceList.AddRange(channelList);
+            }
+            else
+            {
+                sourceList.Add(source);
+            }
+
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            foreach (var recSource in sourceList)
+            {
                 MediaRecordStopMessage msg = new MediaRecordStopMessage();
-                msg.DeviceId = recFile.VideoId;
+                msg.DeviceId = source.Id;
                 msg.ProductId = string.Empty;
-                msg.StreamId = recFile.VideoKey;
+                msg.StreamId = recSource.VideoKey;
                 msg.MessageId = Guid.NewGuid().ToString("N");
 
-                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(recFile.NodeId, msg);
+                var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(nodeId, msg);
                 if (replyMsg == null || !replyMsg.IsSuccess)
                 {
-                    await recFileDAL.Delete(recFile.Id);
-
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
-                    log.Position = source.Position;
-                    log.VideoId = recFile.VideoId;
+                    log.Position = recSource.Position;
+                    log.VideoId = source.Id;
                     log.LogType = "fail";
                     log.Content = replyMsg == null ? "录制命令无回复" : replyMsg.Reason;
                     log.ExecTime = DateTime.Now;
@@ -171,16 +200,11 @@ namespace IoTVideoService.Business
                 }
                 else
                 {
-                    MZ_IotRecordFile newRecFile = new MZ_IotRecordFile();
-                    newRecFile.Id = recFile.Id;
-                    newRecFile.EndTime = time;
-                    await _provider.GetService<RecordFileDAL>().Update(newRecFile);
-
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
-                    log.Position = source.Position;
-                    log.VideoId = recFile.VideoId;
+                    log.Position = recSource.Position;
+                    log.VideoId = source.Id;
                     log.LogType = "stop";
                     log.Content = string.Empty;
                     log.ExecTime = DateTime.Now;
@@ -304,36 +328,34 @@ namespace IoTVideoService.Business
             {
                 data.RecordTimeDesc = RecordTimeDescGenerator.GenerateTimeDesc(data.RecordTimeType, data.WeekConfig, data.TimeConfig);
             }
-            if (data.Status != null)
+            if (data.Status != null && data.Status == 0 && old.Status != 0)
             {
-                if (data.Status == 0 && old.Status != 0)
+                var schedulerFactory = _provider.GetService<ISchedulerFactory>();
+                var scheduler = await schedulerFactory.GetScheduler();
+                await PlanSchedule.DeleteJob(data.Id);
+            }
+            else if ((data.Status != null && data.Status == 1 && old.Status != 1) || (data.TimeConfig != old.TimeConfig || data.WeekConfig != old.WeekConfig))
+            {
+                var schedulerFactory = _provider.GetService<ISchedulerFactory>();
+                var scheduler = await schedulerFactory.GetScheduler();
+                await PlanSchedule.DeleteJob(data.Id);
+                MZ_IotRecord newrec = new MZ_IotRecord();
+                newrec.RecordTimeType = data.RecordTimeType ?? old.RecordTimeType;
+                newrec.TimeConfig = data.TimeConfig ?? old.TimeConfig;
+                newrec.WeekConfig = data.WeekConfig ?? old.WeekConfig;
+                var tasks = PlanTimeParser.GenerateTriggerTasks(newrec);
+                if (tasks.Count > 0)
                 {
-                    var schedulerFactory = _provider.GetService<ISchedulerFactory>();
-                    var scheduler = await schedulerFactory.GetScheduler();
-                    await PlanSchedule.DeleteJob(data.Id);
-                }
-                else if (data.Status == 1 && old.Status != 1)
-                {
-                    var schedulerFactory = _provider.GetService<ISchedulerFactory>();
-                    var scheduler = await schedulerFactory.GetScheduler();
-                    await PlanSchedule.DeleteJob(data.Id);
-                    MZ_IotRecord newrec = new MZ_IotRecord();
-                    newrec.RecordTimeType = data.RecordTimeType ?? old.RecordTimeType;
-                    newrec.TimeConfig = data.TimeConfig ?? old.TimeConfig;
-                    newrec.WeekConfig = data.WeekConfig ?? old.WeekConfig;
-                    var tasks = PlanTimeParser.GenerateTriggerTasks(newrec);
-                    if (tasks.Count > 0)
+                    await PlanSchedule.CreateJob(data.Id, tasks);
+                    if (PlanTimeParser.GetTodayNextTriggerTask(tasks) != null)
                     {
-                        await PlanSchedule.CreateJob(data.Id, tasks);
-                        if (PlanTimeParser.GetTodayNextTriggerTask(tasks) != null)
-                        {
-                            //直接开始录像
-                            byte? storageWay = data.StorageWay ?? old.StorageWay;
-                            await this.PublishStartRecordMessage(data.Id, storageWay.Value, DateTime.Now, videoInfo);
-                        }
+                        //直接开始录像
+                        byte? storageWay = data.StorageWay ?? old.StorageWay;
+                        await this.PublishStartRecordMessage(data.Id, storageWay.Value, DateTime.Now, videoInfo);
                     }
                 }
             }
+
             data.SetUpdateBy(user);
 
             return BusResponse<int>.Success(await recordDAL.Update(data));

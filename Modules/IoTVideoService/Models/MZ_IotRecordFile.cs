@@ -1,4 +1,5 @@
 ﻿using MyAccess.DB.Attr;
+using NPOI.HPSF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,14 @@ namespace IoTVideoService.Models
         /// </summary>
         public DateTime? FileDate { get; set; }
         /// <summary>
+        /// 文件名
+        /// </summary>
+        public string FileName { get; set; }
+        /// <summary>
+        /// 文件大小，单位MB
+        /// </summary>
+        public float? FileSize { get; set; }
+        /// <summary>
         /// 关联录像计划ID
         /// </summary>
         public string PlanId { get; set; }
@@ -42,10 +51,6 @@ namespace IoTVideoService.Models
         /// 0为文件存储，1为minio
         /// </summary>
         public byte? StorageWay { get; set; }
-        /// <summary>
-        /// 状态：0-结束录像，1-录像中
-        /// </summary>
-        public byte? Status { get; set; }
         /// <summary>
         /// 开始时间
         /// </summary>

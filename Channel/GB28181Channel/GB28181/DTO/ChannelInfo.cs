@@ -12,6 +12,7 @@ namespace GB28181Channel.GB28181.DTO
     /// </summary>
     public class ChannelInfo
     {
+        public byte StorageWay { get; set; }
         public int Index { get; set; }
         public string PushKey { get; set; }
         public string DeviceId { get; set; }
