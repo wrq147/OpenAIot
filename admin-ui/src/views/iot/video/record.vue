@@ -147,10 +147,9 @@
             </el-form>
           </div>
           <el-table v-loading="logLoading" :data="planLogList" border stripe size="small">
-            <el-table-column prop="id" label="日志ID" align="center" width="150"></el-table-column>
             <el-table-column prop="LogType" label="日志类型" align="center" width="120"
               :formatter="formatLogType"></el-table-column>
-            <el-table-column prop="Position" label="发生位置" align="center" width="150"></el-table-column>
+            <el-table-column prop="Position" label="发生位置" align="center" width="250"></el-table-column>
             <el-table-column prop="Content" label="日志内容" min-width="300" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExecTime" label="执行时间" align="center" width="180"></el-table-column>
           </el-table>
@@ -912,28 +911,23 @@ export default {
     handleDialogClose() { this.handleCancel() },
     // ========== 日志相关方法 ==========
     formatLogType(row) {
-      const logTypeMap = { start: '计划启动', stop: '计划停止', success: '录像成功', fail: '录像失败', clean: '文件清理' }
-      return logTypeMap[row.logType] || '未知'
+      const logTypeMap = { start: '录像启动', stop: '录像停止', success: '录像成功', fail: '录像失败', clean: '文件清理' }
+      return logTypeMap[row.LogType] || '未知'
     },
     async fetchPlanLog() {
       this.logLoading = true
       try {
         const params = {
-          planId: this.recordPlanForm.Id,
+          PlanId: this.recordPlanForm.Id,
+          LogType: this.logSearchForm.logType,
           pageNum: this.logPagination.pageNum,
           pageSize: this.logPagination.pageSize,
-          logType: this.logSearchForm.logType,
           startTime: this.logSearchForm.timeRange[0] || '',
           endTime: this.logSearchForm.timeRange[1] || ''
         }
         const res = await recordLogList(params)
-        if (res.code === 200) {
-          this.planLogList = res.data.list || []
-          this.logPagination.total = res.data.total || 0
-        } else {
-          this.planLogList = []
-          this.logPagination.total = 0
-        }
+        this.planLogList = res.data.List
+        this.logPagination.total = res.data.Total
       } catch (error) {
         this.$message.error('获取执行日志失败：' + error.message)
         this.planLogList = []

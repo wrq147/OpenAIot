@@ -10,5 +10,6 @@ namespace IoTVideoService.Models
     public class In_RecordLogPage : BaseQueryParam
     {
         public string PlanId { get; set; }
+        public string LogType { get; set; }
     }
 }

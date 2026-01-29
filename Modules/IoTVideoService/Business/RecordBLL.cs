@@ -45,21 +45,19 @@ namespace IoTVideoService.Business
             recFile.NodeId = msg.NodeId;
             recFile.StorageWay = msg.Storage;
             recFile.FileName = msg.FileName;
+            recFile.SaveType = msg.SaveType;
             recFile.FileSize = (float?)(msg.FileSize / (1024.0 * 1024.0));
             long endlong = (long)msg.StartTime + (long)(msg.TimeLen * 1000);
             recFile.EndTime = MyAccess.Core.TypeConvert.Unix2Time(endlong);
-
             await _provider.GetService<RecordFileDAL>().Insert(recFile);
         }
-        public async Task PublishCleanRecordMessage(string nodeId, string videoId, string streamId, byte storageWay, DateTime date, string fileName)
+        public async Task PublishCleanRecordMessage(string nodeId, string videoId, List<string> streamIds, List<string> dates)
         {
             MediaRecordCleanMessage msg = new MediaRecordCleanMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
-            msg.Storage = storageWay;
-            msg.Date = date.ToString("yyyy-MM-dd");
-            msg.FileName = fileName;
-            msg.StreamId = streamId;
+            msg.StreamIds = streamIds;
+            msg.Dates = dates;
             await _provider.GetService<NatsScope>().Public(nodeId, msg);
         }
         public async Task<BusResponse<string>> PublishStartRecordMessage(string planId, byte storageWay, DateTime time, MZ_VideoSource source)
@@ -111,6 +109,7 @@ namespace IoTVideoService.Business
                 msg.ProductId = string.Empty;
                 msg.StreamId = recSource.VideoKey;
                 msg.Storage = storageWay;
+                msg.SaveType = 1;
                 msg.MessageId = Guid.NewGuid().ToString("N");
 
                 var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStartMessageReply>(nodeId, msg);
@@ -119,7 +118,7 @@ namespace IoTVideoService.Business
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
-                    log.Position = recSource.Position;
+                    log.Position = source.Position + "-" + recSource.Position;
                     log.VideoId = source.Id;
                     log.LogType = "fail";
                     log.Content = replyMsg == null ? "录制命令无回复" : replyMsg.Reason;
@@ -131,7 +130,7 @@ namespace IoTVideoService.Business
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
-                    log.Position = recSource.Position;
+                    log.Position = source.Position + "-" + recSource.Position;
                     log.VideoId = source.Id;
                     log.LogType = "start";
                     log.Content = string.Empty;
@@ -172,6 +171,7 @@ namespace IoTVideoService.Business
                 msg.DeviceId = source.Id;
                 msg.ProductId = string.Empty;
                 msg.StreamId = recSource.VideoKey;
+                msg.SaveType = 1;
                 msg.MessageId = Guid.NewGuid().ToString("N");
 
                 var replyMsg = await _provider.GetService<NatsScope>().PublicWait<MediaRecordStopMessageReply>(nodeId, msg);
@@ -180,7 +180,7 @@ namespace IoTVideoService.Business
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
-                    log.Position = recSource.Position;
+                    log.Position = source.Position + "-" + recSource.Position;
                     log.VideoId = source.Id;
                     log.LogType = "fail";
                     log.Content = replyMsg == null ? "录制命令无回复" : replyMsg.Reason;
@@ -192,7 +192,7 @@ namespace IoTVideoService.Business
                     MZ_IotRecordLog log = new MZ_IotRecordLog();
                     log.Id = snowflake.NextId().ToString();
                     log.PlanId = planId;
-                    log.Position = recSource.Position;
+                    log.Position = source.Position + "-" + recSource.Position;
                     log.VideoId = source.Id;
                     log.LogType = "stop";
                     log.Content = string.Empty;
@@ -226,7 +226,11 @@ namespace IoTVideoService.Business
         public virtual async Task<PageObject<MZ_IotRecordLog>> SelectLogPage(In_RecordLogPage query)
         {
             Expression<Func<MZ_IotRecordLog, bool>> expression = x => x.PlanId == query.PlanId;
-            var rsp = await _provider.GetService<RecordLogDAL>().SelectPage(expression, query, string.Empty);
+            if (!string.IsNullOrEmpty(query.LogType))
+            {
+                expression = expression.And(x => x.LogType == query.LogType);
+            }
+            var rsp = await _provider.GetService<RecordLogDAL>().SelectPage(expression, query, "ExecTime desc");
             return rsp;
         }
         public virtual async Task<BusResponse<MZ_IotRecord>> Info(string id)

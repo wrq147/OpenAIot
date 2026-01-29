@@ -4,6 +4,7 @@ using Common.EventBus;
 using Common.IdGenerator;
 using Common.Json;
 using Common.Share;
+using CommunityToolkit.HighPerformance;
 using InfluxDB.Client.Api.Domain;
 using IoTService;
 using IoTService.DAL;
@@ -398,11 +399,13 @@ namespace IoTVideoService.Business
 
                     DateTime overTime = DateTime.Now.Date.AddDays(-rec.SaveCycle.Value);
                     var recFiles = await recordFileDAL.SelectList(x => x.PlanId == rec.Id && x.FileDate < overTime);
-                    foreach (var recF in recFiles)
+                    var nodeIds = recFiles.Select(x => x.NodeId).Distinct().ToList();
+                    var streamIds = recFiles.Select(x => x.VideoKey).Distinct().ToList();
+                    var dates = recFiles.Select(x => x.FileDate.Value.ToString("yyyy-MM-dd")).ToList();
+                    foreach (var nodeId in nodeIds)
                     {
-                        await recordBLL.PublishCleanRecordMessage(recF.NodeId, recF.VideoId, recF.VideoKey, recF.StorageWay.Value, recF.FileDate.Value, recF.FileName);
+                        await recordBLL.PublishCleanRecordMessage(nodeId, rec.VideoId, streamIds, dates);
                     }
-
                     ++i;
                 }
                 records = await recordDAL.GetUnCleanRecords(minDate, 1000);

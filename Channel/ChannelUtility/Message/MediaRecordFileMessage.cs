@@ -19,5 +19,9 @@ namespace ChannelUtility.Message
         public ulong StartTime { get; set; }
         public float TimeLen { get; set; }
         public byte Storage { get; set; }
+        /// <summary>
+        /// 0为mp4、1为hls
+        /// </summary>
+        public byte SaveType { get; set; }
     }
 }

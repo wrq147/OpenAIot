@@ -48,6 +48,10 @@ namespace IoTVideoService.Models
         /// </summary>
         public string NodeId { get; set; }
         /// <summary>
+        /// 0为mp4、1为hls
+        /// </summary>
+        public byte? SaveType { get; set; }
+        /// <summary>
         /// 0为文件存储，1为minio
         /// </summary>
         public byte? StorageWay { get; set; }

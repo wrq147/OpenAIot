@@ -12,6 +12,7 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaRecE";
         }
+        public byte SaveType { get; set; }
         public string StreamId { get; set; }
     }
 }

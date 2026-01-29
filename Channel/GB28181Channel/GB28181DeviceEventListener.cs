@@ -27,10 +27,10 @@ namespace GB28181Channel
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
             await eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
         }
-        public async Task OnSendRecordFile(string videoId, string videoKey, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage)
+        public async Task OnSendRecordFile(string videoId, string videoKey, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage, byte saveType)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishRecordFile(videoId, videoKey, fileName, fileSize, startTime, timeLen, storage);
+            await eventBus.PublishRecordFile(videoId, videoKey, fileName, fileSize, startTime, timeLen, storage, saveType);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg, GB28181Server server)
@@ -160,14 +160,26 @@ namespace GB28181Channel
             }
             else if (msg is MediaRecordCleanMessage cleanRec)
             {
-                if (cleanRec.Storage == 0)
+                //删除文件
+                foreach (var tstreamId in cleanRec.StreamIds)
                 {
-                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "record" + Path.DirectorySeparatorChar + "live" + cleanRec.StreamId + Path.DirectorySeparatorChar + cleanRec.Date + Path.DirectorySeparatorChar + cleanRec.FileName;
-                    if (Directory.Exists(tpath))
+                    foreach (var tdate in cleanRec.Dates)
                     {
-                        Directory.Delete(tpath, true);
+                        string tMp4Path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "record" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
+                        if (Directory.Exists(tMp4Path))
+                        {
+                            Directory.Delete(tMp4Path, true);
+                        }
+
+                        string tHlsPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
+                        if (Directory.Exists(tHlsPath))
+                        {
+                            Directory.Delete(tHlsPath, true);
+                        }
                     }
                 }
+
+                //删除mino中的文件
             }
         }
 

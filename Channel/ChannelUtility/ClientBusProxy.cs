@@ -681,7 +681,7 @@ namespace ChannelUtility
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
-        public async Task PublishRecordFile(string dtuId, string streamId, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage)
+        public async Task PublishRecordFile(string dtuId, string streamId, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage, byte saveType)
         {
             MediaRecordFileMessage msg = new MediaRecordFileMessage();
             msg.DeviceId = dtuId;
@@ -692,6 +692,7 @@ namespace ChannelUtility
             msg.TimeLen = timeLen;
             msg.NodeId = this._nodeId;
             msg.Storage = storage;
+            msg.SaveType = saveType;
             await _bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = GetUpKey(msg.DeviceId),

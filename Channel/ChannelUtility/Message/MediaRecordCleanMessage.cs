@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 namespace ChannelUtility.Message
 {
     public class MediaRecordCleanMessage : BaseDeviceMessage
@@ -7,9 +9,7 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaClean";
         }
-        public byte Storage { get; set; }
-        public string StreamId { get; set; }
-        public string Date { get; set; }
-        public string FileName { get; set; }
+        public List<string> StreamIds { get; set; }
+        public List<string> Dates { get; set; }
     }
 }

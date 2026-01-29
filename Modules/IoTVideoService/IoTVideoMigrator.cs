@@ -115,11 +115,12 @@ namespace IoTVideoService
                 .WithColumn("FileName").AsString(128).WithColumnDescription("文件名")
                 .WithColumn("FileSize").AsFloat().WithColumnDescription("文件大小，单位MB")
                 .WithColumn("PlanId").AsString(128).WithColumnDescription("关联录像计划ID")
-                .WithColumn("VideoId").AsString(128).WithColumnDescription("视频源Id")
-                .WithColumn("VideoKey").AsString(128).WithColumnDescription("ZLMediaKit的视频Key")
+                .WithColumn("VideoId").AsString(128).Indexed().WithColumnDescription("视频源Id")
+                .WithColumn("VideoKey").AsString(128).Indexed().WithColumnDescription("ZLMediaKit的视频Key")
                 .WithColumn("NodeId").AsString(128).Indexed().WithColumnDescription("节点Id")
+                .WithColumn("SaveType").AsByte().WithColumnDescription("0为mp4、1为hls")
                 .WithColumn("StorageWay").AsByte().WithColumnDescription("0为文件存储，1为云存储")
-                .WithColumn("StartTime").AsDateTime().Nullable().WithColumnDescription("开始时间")
+                .WithColumn("StartTime").AsDateTime().WithColumnDescription("开始时间")
                 .WithColumn("EndTime").AsDateTime().Nullable().WithColumnDescription("结束时间");
 
             Create.Index()
@@ -134,11 +135,6 @@ namespace IoTVideoService
 .OnColumn("Status").Ascending()
 .WithOptions().NonClustered();
 
-            Create.Index()
-.OnTable("mz_iot_record_file")
-.OnColumn("VideoId").Ascending()
-.OnColumn("VideoKey").Ascending()
-.WithOptions().NonClustered();
 
 
             Create.Table("mz_iot_record_key").WithDescription("录像播放文件的关键帧")

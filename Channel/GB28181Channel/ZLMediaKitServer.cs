@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -295,7 +296,7 @@ namespace GB28181Channel
                 {
                     if (_recordContexts.TryRemove(streamId, out RecordContext tmprec))
                     {
-                        var rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", tmprec.Msg.StreamId, null, 0);
+                        var rs = mk_recorder.MkRecorderStart(tmprec.Msg.SaveType, "__defaultVhost__", "live", tmprec.Msg.StreamId, null, 0);
                         if (rs == 1)
                         {
                             tmprec.Callback.Invoke(true, string.Empty);
@@ -444,11 +445,58 @@ namespace GB28181Channel
             {
                 return;
             }
-            _ = _listener.OnSendRecordFile(device.VideoData.Item.Id, stream, fileName, fileSize, startTime, timeLen, channelInfo.StorageWay);
+            _ = _listener.OnSendRecordFile(device.VideoData.Item.Id, stream, fileName, fileSize, startTime, timeLen, channelInfo.StorageWay, 0);
         }
         private void On_mk_record_hls(IntPtr hlsPtr)
         {
+            var sender = (MkRecordInfoT)hlsPtr;
+            var app = mk_events_objects.MkRecordInfoGetApp(sender);
+            var stream = mk_events_objects.MkRecordInfoGetStream(sender);
+            var filePath = mk_events_objects.MkRecordInfoGetFilePath(sender);
+            var fileName = mk_events_objects.MkRecordInfoGetFileName(sender);
+            var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
+            var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
+            var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
+            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
+            var channelInfo = storage.GetChannelFrom(stream);
+            if (channelInfo == null)
+            {
+                return;
+            }
+            var device = storage.GetDevice(channelInfo.DeviceId);
+            if (device == null)
+            {
+                return;
+            }
+            if (device.VideoData == null || device.VideoData.Item == null)
+            {
+                return;
+            }
 
+            var storageWay = channelInfo.StorageWay;
+            var videoId = device.VideoData.Item.Id;
+            var archiveTimer = new System.Timers.Timer(1000);
+            archiveTimer.AutoReset = false;
+            archiveTimer.Elapsed += (senderTimer, e) =>
+            {
+                try
+                {
+                    string sliceDir = Path.GetDirectoryName(filePath);
+                    string vodM3u8Path = Path.Combine(sliceDir, "vod.m3u8");
+                    bool isVodArchived = File.Exists(vodM3u8Path);
+                    if (isVodArchived)
+                    {
+                        _ = _listener.OnSendRecordFile(videoId, stream, fileName, fileSize, startTime, timeLen, storageWay, 1);
+                    }
+                }
+                finally
+                {
+                    // 立即停止并销毁定时器，防止内存泄漏
+                    archiveTimer.Stop();
+                    archiveTimer.Dispose();
+                }
+            };
+            archiveTimer.Start();
         }
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,
@@ -474,69 +522,52 @@ namespace GB28181Channel
                 return;
             }
             channelInfo.StorageWay = msg.Storage;
-            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", msg.StreamId);
-            if (rs == 1)
+            var mediaSource = mk_events_objects.MkMediaSourceFind2("rtmp", "__defaultVhost__", "live", msg.StreamId, 0);
+            if (mediaSource == null)
             {
-                cb.Invoke(false, "录像已开启");
+                RecordContext recordContext = new RecordContext();
+                recordContext.Msg = msg;
+                recordContext.Callback = cb;
+                _recordContexts.AddOrUpdate(msg.StreamId, recordContext, (s, r) => recordContext);
+
+                _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
                 return;
             }
-            else
+            if (msg.Storage == 0)
             {
-                var mediaSource = mk_events_objects.MkMediaSourceFind2("rtmp", "__defaultVhost__", "live", msg.StreamId, 0);
-                if (mediaSource == null)
+                var rs = mk_recorder.MkRecorderStart(msg.SaveType, "__defaultVhost__", "live", msg.StreamId, null, 0);
+                if (rs == 1)
                 {
-                    RecordContext recordContext = new RecordContext();
-                    recordContext.Msg = msg;
-                    recordContext.Callback = cb;
-                    _recordContexts.AddOrUpdate(msg.StreamId, recordContext, (s, r) => recordContext);
-
-                    _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
-                    return;
-                }
-                if (msg.Storage == 0)
-                {
-                    rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", msg.StreamId, null, 0);
-                    if (rs == 1)
-                    {
-                        cb.Invoke(true, string.Empty);
-                    }
-                    else
-                    {
-                        if (retrycount > 0)
-                        {
-                            cb.Invoke(false, "未知原因");
-                            return;
-                        }
-                        Thread.Sleep(100);
-                        RecorderStart(msg, retrycount + 1, cb);
-                    }
+                    cb.Invoke(true, string.Empty);
                 }
                 else
                 {
-                    cb.Invoke(false, "存储方式不支持");
+                    if (retrycount > 0)
+                    {
+                        cb.Invoke(false, "未知原因");
+                        return;
+                    }
+                    Thread.Sleep(100);
+                    RecorderStart(msg, retrycount + 1, cb);
                 }
+            }
+            else
+            {
+                cb.Invoke(false, "存储方式不支持");
             }
         }
         public void RecorderStop(MediaRecordStopMessage msg, Action<bool, string> cb)
         {
             bool isSuccess = false;
             string reason = string.Empty;
-            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", msg.StreamId);
-            if (rs == 0)
+            var rs = mk_recorder.MkRecorderStop(msg.SaveType, "__defaultVhost__", "live", msg.StreamId);
+            if (rs == 1)
             {
-                reason = "录像已关闭";
+                isSuccess = true;
             }
             else
             {
-                rs = mk_recorder.MkRecorderStop(0, "__defaultVhost__", "live", msg.StreamId);
-                if (rs == 1)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    reason = "关闭录像失败";
-                }
+                reason = "关闭录像失败";
             }
             cb.Invoke(isSuccess, reason);
         }

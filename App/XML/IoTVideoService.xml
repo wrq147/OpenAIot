@@ -317,6 +317,11 @@
             节点Id
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.SaveType">
+            <summary>
+            0为mp4、1为hls
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StorageWay">
             <summary>
             0为文件存储，1为minio
