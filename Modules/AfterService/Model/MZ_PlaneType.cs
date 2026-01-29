@@ -44,10 +44,6 @@ namespace AfterService.Model
         /// </summary>
         public int? PlaneDays { get; set; }
         /// <summary>
-        /// 定时器关联的Job
-        /// </summary>
-        public long? TimerJobId { get; set; }
-        /// <summary>
         /// 是否排除假期
         /// </summary>
         public bool? ExcludeHoliday { get; set; } = false;

@@ -118,6 +118,12 @@ namespace IoTVideoService
                         await _provider.GetService<RecordBLL>().InsertRecordFile(rfile);
                     }
                     break;
+                case "NodeOn":
+                    {
+                        NodeOnlineMessage nodeMsg = (NodeOnlineMessage)msg;
+                        await _provider.GetService<VideoSourceBLL>().InitFixNode(nodeMsg.DeviceId);
+                    }
+                    break;
             }
         }
     }

@@ -12,6 +12,7 @@ using MonitorService.Model;
 using AfterService.Model;
 using System;
 using System.Collections.Generic;
+using AfterService.PlanUtil;
 
 namespace AfterService
 {
@@ -112,10 +113,9 @@ namespace AfterService
             var redis = app.ServiceProvider.GetService<GeneralRedisHelper>();
             redis.HashSet("BusChange-Event", "AfterService", new List<DA_Table> { tb3 });
 
-
-            if (Constants.General.quick_init != true)
+            TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
-                TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
+                if (Constants.General.quick_init != true)
                 {
                     var jobBLL = app.ServiceProvider.GetService<JobBLL>();
                     //定时处理到期设备计划任务
@@ -138,9 +138,12 @@ namespace AfterService
 
                         await jobBLL.InsertJob(job);
                     }
+                }
+         
 
-                });
-            }
+                await PlanSchedule.InitScheduler(app.ServiceProvider);
+            });
+
 
 
             //监听数据变动

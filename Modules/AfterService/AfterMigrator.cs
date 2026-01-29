@@ -691,7 +691,6 @@ namespace AfterService
     .WithColumn("StartWay").AsInt32().WithColumnDescription("0为手动发起、1为定时发起、2为设备事件发起")
     .WithColumn("TimerCron").AsString(50).WithColumnDescription("Cron表达式")
     .WithColumn("PlaneDays").AsInt32().WithColumnDescription("计划执行天数，为0不限制")
-    .WithColumn("TimerJobId").AsInt64().WithColumnDescription("定时器关联的Job")
     .WithColumn("ExcludeHoliday").AsBoolean().WithColumnDescription("是否排除假期")
     .WithColumn("IsFilterLeader").AsBoolean().Indexed().WithColumnDescription("是否限制权限发起")
     .WithColumn("Remark").AsString(500).WithColumnDescription("备注")

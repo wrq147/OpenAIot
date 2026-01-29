@@ -11,6 +11,7 @@ using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Writers;
 using MyAccess.DB.Builder.WhereToSql;
 using NATS.Client.Core;
 using Quartz;
@@ -258,6 +259,28 @@ namespace IoTVideoService.Business
                 await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == msg.StreamId);
             }
         }
+        public virtual async Task InitFixNode(string nodeId)
+        {
+            var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
+            var sourceList = await videoSourceDAL.SelectList(x => x.NodeId == nodeId && x.VideoType == 0);
+            foreach (var source in sourceList)
+            {
+                //判断通道是否在录制中，如果是则重新启用录制
+                var recInfo = (await _provider.GetService<RecordDAL>().SelectList(x => x.VideoId == source.Id)).FirstOrDefault();
+                if (recInfo != null)
+                {
+                    var tasks = PlanTimeParser.GenerateTriggerTasks(recInfo);
+                    if (tasks.Count > 0)
+                    {
+                        if (PlanTimeParser.GetTodayNextTriggerTask(tasks) != null)
+                        {
+                            //直接开始录像
+                            await _provider.GetService<RecordBLL>().PublishStartRecordMessage(recInfo.Id, recInfo.StorageWay.Value, DateTime.Now, source);
+                        }
+                    }
+                }
+            }
+        }
         public virtual async Task InitChannels(string userName, string nodeId, List<ChannelData> channels)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
@@ -377,7 +400,7 @@ namespace IoTVideoService.Business
                     var recFiles = await recordFileDAL.SelectList(x => x.PlanId == rec.Id && x.FileDate < overTime);
                     foreach (var recF in recFiles)
                     {
-                        await recordBLL.PublishCleanRecordMessage(recF.NodeId, recF.VideoId, recF.StorageWay.Value, recF.FileDate.Value, recF.FileName);
+                        await recordBLL.PublishCleanRecordMessage(recF.NodeId, recF.VideoId, recF.VideoKey, recF.StorageWay.Value, recF.FileDate.Value, recF.FileName);
                     }
 
                     ++i;

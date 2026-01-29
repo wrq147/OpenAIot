@@ -1,8 +1,10 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
+using Common.EventBus;
 using IoTService;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NATS.Client.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,13 +69,22 @@ namespace IoTRulesService.DataParser
                 }
                 else
                 {
+                    if (rs.MsgType == "NodeOn")
+                    {
+                        var bus = _provider.GetService<NatsScope>().Bus;
+                        await bus.PublishAsync(new NatsMsg<string>()
+                        {
+                            Subject = rs.MessageId,
+                            Data = "ok"
+                        }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                    }
                     if (OtherMessageListener != null)
                     {
                         await OtherMessageListener(rs);
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.LogError(ex.Message);
             }
@@ -89,7 +100,7 @@ namespace IoTRulesService.DataParser
                 var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg, JsonMessageSerializerConfig.DefaultOptions);
                 await this.ParseDown(rs);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.LogError(ex.Message);
             }

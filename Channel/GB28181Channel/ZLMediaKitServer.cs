@@ -6,7 +6,6 @@ using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Org.BouncyCastle.Utilities.IO;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -73,10 +72,6 @@ namespace GB28181Channel
                 return 1;
             }
             var schema = mk_events_objects.MkMediaInfoGetSchema(url_info);
-            if (schema == "hls")
-            {
-                channelInfo.EnableHLS = true;
-            }
             _ = _server.StartActiveStream(channelInfo.DeviceId, channelInfo.ChannelId, _option.rtp_port);
             return 0;
         }
@@ -269,14 +264,7 @@ namespace GB28181Channel
                     mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
                     mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-                    if (channelInfo.EnableHLS == true)
-                    {
-                        mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
-                    }
-                    else
-                    {
-                        mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
-                    }
+                    mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
                     mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
                     mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);

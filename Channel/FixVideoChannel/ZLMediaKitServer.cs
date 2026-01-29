@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -19,7 +20,6 @@ namespace FixVideoChannel
         private ConcurrentDictionary<string, string> _IdToKeys;
         private ConcurrentDictionary<string, FrameContext> _contextMap;
         private ConcurrentDictionary<string, IntPtr> _contextPtrMap;
-        private ConcurrentDictionary<string, bool> _hlsMap;
 
         // Player 相关回调委托
         private ZLMediaKit.OnMkPlayEvent _onPlayDelegate;
@@ -72,10 +72,6 @@ namespace FixVideoChannel
             var url_info = (MkMediaInfoT)url;
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
             var schema = mk_events_objects.MkMediaInfoGetSchema(url_info);
-            if (schema == "hls")
-            {
-                _hlsMap.TryAdd(streamId, true);
-            }
             eventBus.PublishMediaNotFound(streamId, 0);
             return 0;
         }
@@ -84,7 +80,6 @@ namespace FixVideoChannel
             var eventBus = _provider.GetService<ClientBusProxy>();
             var sender = (MkMediaSourceT)senderPtr;
             var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
-            _hlsMap.TryRemove(streamId, out bool tv);
             eventBus.PublishMediaNotReader(streamId, 0);
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
@@ -211,6 +206,18 @@ namespace FixVideoChannel
                 if (regist == 1)
                 {
                     _listener.OnEventOnline(item.Item);
+                    if (_recordContexts.TryGetValue(streamId, out RecordContext tmprec))
+                    {
+                        var rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", tmprec.Msg.StreamId, null, 0);
+                        if (rs == 1)
+                        {
+                            tmprec.Callback.Invoke(true, string.Empty);
+                        }
+                        else
+                        {
+                            tmprec.Callback.Invoke(false, "录像失败");
+                        }
+                    }
                 }
                 else
                 {
@@ -263,10 +270,7 @@ namespace FixVideoChannel
 
         private void On_mk_record_mp4(IntPtr mp4Ptr)
         {
-        }
-        private void On_mk_record_hls(IntPtr hlsPtr)
-        {
-            var sender = (MkRecordInfoT)hlsPtr;
+            var sender = (MkRecordInfoT)mp4Ptr;
             var app = mk_events_objects.MkRecordInfoGetApp(sender);
             var stream = mk_events_objects.MkRecordInfoGetStream(sender);
             var filePath = mk_events_objects.MkRecordInfoGetFilePath(sender);
@@ -274,6 +278,16 @@ namespace FixVideoChannel
             var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
             var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
             var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
+
+            if (_recordContexts.TryGetValue(stream, out RecordContext tmprec))
+            {
+                _ = _listener.OnSendRecordFile(tmprec.Msg.DeviceId, stream, fileName, fileSize, startTime, timeLen, tmprec.StorageWay);
+            }
+
+        }
+        private void On_mk_record_hls(IntPtr hlsPtr)
+        {
+
         }
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,
@@ -347,14 +361,7 @@ namespace FixVideoChannel
             mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
             mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
             mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-            if (_hlsMap.ContainsKey(context.VideoKey))
-            {
-                mk_util.MkIniSetOptionInt(option, "enable_hls", 1);
-            }
-            else
-            {
-                mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
-            }
+            mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
             mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
             mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
             mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
@@ -365,59 +372,75 @@ namespace FixVideoChannel
 
             mk_player.MkPlayerPlay(mkPlayer, data.Item.PullAddr);
         }
-        public bool RecorderStart(byte storage, string streamId, string date, string fileId, out string reason)
+        private ConcurrentDictionary<string, RecordContext> _recordContexts = new ConcurrentDictionary<string, RecordContext>();
+        public void RecorderStart(MediaRecordStartMessage msg, int retrycount, Action<bool, string> cb)
         {
-            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
+            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", msg.StreamId);
             if (rs == 1)
             {
-                reason = "录像已开启";
-                return false;
+                cb.Invoke(false, "录像已开启");
+                return;
             }
             else
             {
-                if (storage == 0)
+                var mediaSource = mk_events_objects.MkMediaSourceFind2("rtmp", "__defaultVhost__", "live", msg.StreamId, 0);
+                if (mediaSource == null)
                 {
-                    rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", streamId, null, 0);
+                    RecordContext recordContext = new RecordContext();
+                    recordContext.StorageWay = msg.Storage;
+                    recordContext.Msg = msg;
+                    recordContext.Callback = cb;
+                    _recordContexts.AddOrUpdate(msg.StreamId, recordContext, (s, r) => recordContext);
+
+                    _provider.GetService<ClientBusProxy>().PublishMediaNotFound(msg.StreamId, 0);
+                    return;
+                }
+                if (msg.Storage == 0)
+                {
+                    rs = mk_recorder.MkRecorderStart(1, "__defaultVhost__", "live", msg.StreamId, null, 0);
                     if (rs == 1)
                     {
-                        reason = string.Empty;
-                        return true;
+                        cb.Invoke(true, string.Empty);
                     }
                     else
                     {
-                        reason = "启用录像失败";
-                        return false;
+                        if (retrycount > 0)
+                        {
+                            cb.Invoke(false, "未知原因");
+                            return;
+                        }
+                        Thread.Sleep(100);
+                        RecorderStart(msg, retrycount + 1, cb);
                     }
                 }
                 else
                 {
-                    reason = "存储方式不支持";
-                    return false;
+                    cb.Invoke(false, "存储方式不支持");
                 }
             }
         }
-        public bool RecorderStop(string streamId, out string reason)
+        public void RecorderStop(MediaRecordStopMessage msg, Action<bool, string> cb)
         {
-            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", streamId);
+            bool isSuccess = false;
+            string reason = string.Empty;
+            var rs = mk_recorder.MkRecorderIsRecording(0, "__defaultVhost__", "live", msg.StreamId);
             if (rs == 0)
             {
                 reason = "录像已关闭";
-                return false;
             }
             else
             {
-                rs = mk_recorder.MkRecorderStop(0, "__defaultVhost__", "live", streamId);
+                rs = mk_recorder.MkRecorderStop(0, "__defaultVhost__", "live", msg.StreamId);
                 if (rs == 1)
                 {
-                    reason = string.Empty;
-                    return true;
+                    isSuccess = true;
                 }
                 else
                 {
                     reason = "关闭录像失败";
-                    return false;
                 }
             }
+            cb.Invoke(isSuccess, reason);
         }
         public void RemovePullProxy(string id)
         {
@@ -470,7 +493,6 @@ namespace FixVideoChannel
             _IdToKeys = new ConcurrentDictionary<string, string>();
             _contextMap = new ConcurrentDictionary<string, FrameContext>();
             _contextPtrMap = new ConcurrentDictionary<string, IntPtr>();
-            _hlsMap = new ConcurrentDictionary<string, bool>();
             unsafe
             {
 
@@ -517,6 +539,12 @@ namespace FixVideoChannel
             mk_common.MkStopAllServer();
             FrameBufferPool.ClearAllCache();
         }
+    }
+    public class RecordContext
+    {
+        public byte StorageWay { get; set; }
+        public MediaRecordStartMessage Msg { get; set; }
+        public Action<bool, string> Callback { get; set; }
     }
     public class VideoData
     {

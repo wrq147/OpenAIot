@@ -149,36 +149,19 @@ export default {
         async initVideo(sid, cid) {
             try {
                 if (this.tmpplayer == null) {
-                    if (FlvPlugin.isSupported()) {
-                        let res = await getPlayUrl(sid, cid, "flv");
-                        this.tmpplayer = new Player({
-                            el: this.$refs.devPlayer,
-                            isLive: true,
-                            url: res.data,
-                            autoplay: true,
-                            plugins: [FlvPlugin]
-                        })
-                    }
-                    else {
-                        let res = await getPlayUrl(sid, cid, "hls");
-                        this.tmpplayer = new Player({
-                            el: this.$refs.devPlayer,
-                            url: res.data,
-                            autoplay: true,
-                            isLive: true
-                        })
-                    }
+                    let res = await getPlayUrl(sid, cid, "flv");
+                    this.tmpplayer = new Player({
+                        el: this.$refs.devPlayer,
+                        isLive: true,
+                        url: res.data,
+                        autoplay: true,
+                        plugins: [FlvPlugin]
+                    })
                     this.tmpplayer.play();
                 }
                 else {
-                    if (FlvPlugin.isSupported()) {
-                        let res = await getPlayUrl(sid, cid, "flv");
-                        this.tmpplayer.src = res.data;
-                    }
-                    else {
-                        let res = await getPlayUrl(sid, cid, "hls");
-                        this.tmpplayer.src = res.data;
-                    }
+                    let res = await getPlayUrl(sid, cid, "flv");
+                    this.tmpplayer.src = res.data;
                     this.tmpplayer.play();
                 }
             } catch (error) {

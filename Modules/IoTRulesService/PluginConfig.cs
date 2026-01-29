@@ -6,6 +6,7 @@ using IoTRulesService.Business;
 using IoTRulesService.DAL;
 using IoTRulesService.DataParser;
 using IoTRulesService.Flow;
+using IoTRulesService.TimerUtil;
 using IoTService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -220,6 +221,8 @@ namespace IoTRulesService
                     }
                 });
 
+
+                await TimerSchedule.InitScheduler(app.ServiceProvider);
             });
 
 

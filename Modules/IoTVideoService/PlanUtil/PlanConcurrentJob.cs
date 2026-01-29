@@ -55,24 +55,7 @@ namespace IoTVideoService.PlanUtil
                     break;
                 case RecordTimeOp.End:
                     {
-                        var rs = await _provider.GetService<RecordBLL>().PublishStopRecordMessage(planId, fireTime);
-                        if (!rs.IsSuccess())
-                        {
-                            _log.LogError(rs.Message);
-                            return;
-                        }
-                    }
-                    break;
-                case RecordTimeOp.Both:
-                    {
                         var recordBLL = _provider.GetService<RecordBLL>();
-                        var rs = await recordBLL.PublishStopRecordMessage(planId, fireTime);
-                        if (!rs.IsSuccess())
-                        {
-                            _log.LogError(rs.Message);
-                            return;
-                        }
-
                         var record = await _provider.GetService<RecordDAL>().Select(planId);
                         if (record == null)
                         {
@@ -85,6 +68,36 @@ namespace IoTVideoService.PlanUtil
                             await PlanSchedule.DeleteJob(planId);
                             return;
                         }
+                        var rs = await recordBLL.PublishStopRecordMessage(planId, record, source);
+                        if (!rs.IsSuccess())
+                        {
+                            _log.LogError(rs.Message);
+                            return;
+                        }
+                    }
+                    break;
+                case RecordTimeOp.Both:
+                    {
+                        var recordBLL = _provider.GetService<RecordBLL>();
+                        var record = await _provider.GetService<RecordDAL>().Select(planId);
+                        if (record == null)
+                        {
+                            await PlanSchedule.DeleteJob(planId);
+                            return;
+                        }
+                        var source = await _provider.GetService<VideoSourceDAL>().Select(record.VideoId);
+                        if (source == null)
+                        {
+                            await PlanSchedule.DeleteJob(planId);
+                            return;
+                        }
+                        var rs = await recordBLL.PublishStopRecordMessage(planId, record, source);
+                        if (!rs.IsSuccess())
+                        {
+                            _log.LogError(rs.Message);
+                            return;
+                        }
+
                         rs = await recordBLL.PublishStartRecordMessage(planId, record.StorageWay.Value, fireTime, source);
                         if (!rs.IsSuccess())
                         {

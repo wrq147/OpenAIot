@@ -108,7 +108,7 @@ namespace IoTRulesService.Controller
         public async Task<AjaxResult> Execute(In_Execute data)
         {
             var ruleBLL = this.ServiceProvider.GetService<RuleBLL>();
-            return (await ruleBLL.Execute(data.Id, 1, null, 0, data.Inputs)).ToAjaxResult();
+            return (await ruleBLL.Execute(data.Id, 1, null, data.Inputs)).ToAjaxResult();
         }
 
         /// <summary>

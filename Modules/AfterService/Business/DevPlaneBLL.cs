@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Common.Json;
+using AfterService.PlanUtil;
 
 namespace AfterService.Business
 {
@@ -239,10 +240,10 @@ namespace AfterService.Business
                 var dev = await _provider.GetService<IotDeviceDAL>().Select(data.DevId);
                 List<MZ_IotDevice> tlist = new List<MZ_IotDevice>();
                 tlist.Add(dev);
-                await _createTask(planeType, tlist, data);
+                await _createTask(planeType, tlist, data, DateTime.Now);
             }
         }
-        private async Task _createTask(MZ_PlaneType planeType, List<MZ_IotDevice> devlist, DeviceEventData data)
+        private async Task _createTask(MZ_PlaneType planeType, List<MZ_IotDevice> devlist, DeviceEventData data, DateTime triggerTime)
         {
             var userDAL = _provider.GetService<UserDAL>();
             DevPlaneTaskDAL taskDAL = _provider.GetService<DevPlaneTaskDAL>();
@@ -280,7 +281,7 @@ namespace AfterService.Business
                     task.NoticeCount = 0;
                     task.DeptId = submitUser.dept_id;
                     task.UserId = submitUserId;
-                    task.StartOn = task.CreatedOn = DateTime.Now;
+                    task.StartOn = task.CreatedOn = triggerTime;
                     task.EndOn = planeType.PlaneDays == 0 ? task.StartOn.Value.Date.AddDays(1).AddTicks(-1) : task.StartOn.Value.Date.AddDays(planeType.PlaneDays.Value);
                     task.DispatchUserId = 0;
                     task.ExeUserId = 0;
@@ -353,20 +354,17 @@ namespace AfterService.Business
                 await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
             }
         }
-        public virtual async Task Execute(string id, long jobId)
+        public virtual async Task Execute(string id, DateTime triggerTime)
         {
             var planeType = await _devPlaneDAL.Select(id);
             if (planeType == null)
             {
-                if (jobId > 0)
-                {
-                    await _provider.GetService<JobBLL>().DeleteJob(jobId);
-                }
+                await PlanSchedule.DeleteJob(id);
                 return;
             }
             if (planeType.ExcludeHoliday == true)
             {
-                var curdate = DateTime.Now;
+                var curdate = triggerTime;
                 string daystr = curdate.ToString("yyyyMMdd");
                 var holidays = await _provider.GetService<HolidayOrgDAL>().SelectList(x => x.OrgId == planeType.OrgId.Value && x.DayStr == daystr);
                 if (holidays.Count > 0)
@@ -409,7 +407,7 @@ namespace AfterService.Business
             }
             //去除重复设备
             devlist = devlist.Distinct((a, b) => a.Id == b.Id).ToList();
-            await _createTask(planeType, devlist, null);
+            await _createTask(planeType, devlist, null, triggerTime);
 
         }
         public virtual async Task<BusResponse<string>> Add(MZ_PlaneType data)
@@ -433,31 +431,12 @@ namespace AfterService.Business
                 {
                     return BusResponse<string>.Error(131, "Cron表达式不能为空");
                 }
-                MZ_Job job = new MZ_Job();
-                job.concurrent = "1";
-                job.createId = 0;
-                job.create_time = DateTime.Now;
-                job.updateId = 0;
-                job.update_time = DateTime.Now;
-                job.cron_expression = data.TimerCron;
-                job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$id)";
-                job.job_group = "DEFAULT";
-                job.job_name = "DevPlaneTimer-" + data.Id;
-                job.misfire_policy = "0";
-                job.status = "0";
 
-                var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                if (!rs.IsSuccess())
-                {
-                    return BusResponse<string>.Error(rs.Code, rs.Message);
-                }
-
-                data.TimerJobId = rs.Data;
+                await PlanSchedule.CreateJob(data.Id, new List<string>() { data.TimerCron });
             }
             else if (data.StartWay == 2)
             {
                 data.TimerCron = string.Empty;
-                data.TimerJobId = 0;
                 if (data.Events == null)
                 {
                     return BusResponse<string>.Error(122, "请选择设备事件");
@@ -472,7 +451,6 @@ namespace AfterService.Business
             else
             {
                 data.TimerCron = string.Empty;
-                data.TimerJobId = 0;
                 data.FlowCreatedUserId = 0;
             }
             data.SetCreateBy(user);
@@ -506,30 +484,8 @@ namespace AfterService.Business
 
             if (old.StartWay == 1 && !string.IsNullOrEmpty(data.TimerCron) && old.TimerCron != data.TimerCron)
             {
-                if (old.TimerJobId > 0)
-                {
-                    await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-                }
-                MZ_Job job = new MZ_Job();
-                job.concurrent = "1";
-                job.createId = 0;
-                job.create_time = DateTime.Now;
-                job.updateId = 0;
-                job.update_time = DateTime.Now;
-                job.cron_expression = data.TimerCron;
-                job.invoke_target = typeof(DevPlaneBLL).FullName + ".Execute('" + data.Id + "',$id)";
-                job.job_group = "DEFAULT";
-                job.job_name = "DevPlaneTimer-" + data.Id;
-                job.misfire_policy = "0";
-                job.status = "0";
-
-                var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                if (!rs.IsSuccess())
-                {
-                    return BusResponse<string>.Error(rs.Code, rs.Message);
-                }
-
-                data.TimerJobId = rs.Data;
+                await PlanSchedule.DeleteJob(data.Id);
+                await PlanSchedule.CreateJob(data.Id, new List<string>() { data.TimerCron });
             }
             if (data.Targets != null && data.Targets.Count > 0)
             {
@@ -560,10 +516,7 @@ namespace AfterService.Business
             await _devPlaneDAL.Delete(id);
             await _devPlaneDAL.RemovePlaneDevice(id);
             await _devPlaneDAL.RemovePlaneEvent(id);
-            if (old.TimerJobId > 0)
-            {
-                await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-            }
+            await PlanSchedule.DeleteJob(old.Id);
             return BusResponse<string>.Success();
         }
         public virtual async Task<PageObject<MZ_IotDevice>> DevListPage(In_PlaneDevList query)

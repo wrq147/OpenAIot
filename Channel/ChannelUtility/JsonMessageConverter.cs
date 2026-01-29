@@ -13,7 +13,6 @@ namespace ChannelUtility
         private static readonly Dictionary<string, Type> _typeMap = new()
         {        
             { "NodeOn", typeof(NodeOnlineMessage) },
-            { "NodeOnReply", typeof(NodeOnlineMessageReply) },
             { "Event", typeof(DeviceEventMessage) },
             { "Offline", typeof(DeviceOfflineMessage) },
             { "Online", typeof(DeviceOnlineMessage) },

@@ -8,6 +8,7 @@ using Esprima.Ast;
 using IoTRulesService.DAL;
 using IoTRulesService.Flow.Builder;
 using IoTRulesService.Model;
+using IoTRulesService.TimerUtil;
 using IoTService;
 using IoTService.DAL;
 using IoTService.Models;
@@ -190,20 +191,16 @@ namespace IoTRulesService.Business
         /// <param name="id"></param>
         /// <param name="triggerWay"></param>
         /// <param name="context"></param>
-        /// <param name="jobId"></param>
         /// <param name="inputs"></param>
         /// <returns></returns>
-        public virtual async Task<BusResponse<List<StreamData>>> Execute(long id, int triggerWay, QuartzContext context, long jobId, Dictionary<string, object> inputs = null)
+        public virtual async Task<BusResponse<List<StreamData>>> Execute(long id, int triggerWay, QuartzContext context, Dictionary<string, object> inputs = null)
         {
             try
             {
                 var template = await _ruleTemplate.Select(id);
                 if (template == null)
                 {
-                    if (jobId > 0)
-                    {
-                        await _provider.GetService<JobBLL>().DeleteJob(jobId);
-                    }
+                    await TimerSchedule.DeleteJob(id);
                     return BusResponse<List<StreamData>>.Error(110, "规则不存在");
                 }
                 if (template.TriggerWay != triggerWay)
@@ -214,20 +211,11 @@ namespace IoTRulesService.Business
                 {
                     if (context != null && context.PreviousFireTimeUtc != null)
                     {
-                        await _provider.GetService<JobBLL>().DeleteJob(jobId);
+                        await TimerSchedule.DeleteJob(id);
                     }
                     return BusResponse<List<StreamData>>.Error(115, "规则暂停中");
                 }
 
-                if (template.TriggerWay == 2 && template.TimerJobId != jobId)
-                {
-                    if (context.PreviousFireTimeUtc != null)
-                    {
-                        //删除无效定时器
-                        await _provider.GetService<JobBLL>().DeleteJob(jobId);
-                    }
-                    return BusResponse<List<StreamData>>.Error(116, "非关联定时器");
-                }
                 var tmpItems = await _ruleTrigger.SelectList(x => x.RuleId == template.Id);
                 if (tmpItems.Count > 0)
                 {
@@ -419,31 +407,14 @@ namespace IoTRulesService.Business
             data.Sort ??= 0;
             data.OrgId = user.OrgId;
             data.SetCreateBy(user);
+            data.TimerJobId = 0;
             if (data.TriggerWay == 2)
             {
-                MZ_Job job = new MZ_Job();
-                job.concurrent = "1";
-                job.createId = 0;
-                job.create_time = DateTime.Now;
-                job.updateId = 0;
-                job.update_time = DateTime.Now;
-                job.cron_expression = data.TimerCron;
-                job.invoke_target = typeof(RuleBLL).FullName + ".Execute(L" + data.Id + ",2,$context,$id,$null)";
-                job.job_group = "DEFAULT";
-                job.job_name = "RuleTimer-" + data.Id;
-                job.misfire_policy = "0";
-                job.status = "0";
-                var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                if (!rs.IsSuccess())
-                {
-                    return rs;
-                }
-                data.TimerJobId = rs.Data;
+                await TimerSchedule.CreateJob(data.Id.Value, new List<string>() { data.TimerCron });
             }
             else
             {
                 data.TimerCron = string.Empty;
-                data.TimerJobId = 0;
             }
 
             await _ruleTemplate.Insert(data);
@@ -479,58 +450,44 @@ namespace IoTRulesService.Business
             data.OrgId = null;
             data.CreatedFrom = null;
             data.SetUpdateBy(user);
+            data.TimerJobId = 0;
             if (old.TriggerWay == 2)
             {
                 if (old.Status == "1" && data.Status == "0")
                 {
-                    MZ_Job job = new MZ_Job();
-                    job.concurrent = "1";
-                    job.createId = 0;
-                    job.create_time = DateTime.Now;
-                    job.updateId = 0;
-                    job.update_time = DateTime.Now;
-                    job.cron_expression = data.TimerCron == null ? old.TimerCron : data.TimerCron;
-                    job.invoke_target = typeof(RuleBLL).FullName + ".Execute(L" + data.Id + ",2,$context,$id,$null)";
-                    job.job_group = "DEFAULT";
-                    job.job_name = "RuleTimer-" + old.Id;
-                    job.misfire_policy = "0";
-                    job.status = "0";
-                    var xrs = await _provider.GetService<JobBLL>().InsertJob(job);
-                    if (!xrs.IsSuccess())
-                    {
-                        return BusResponse<int>.Error(33, xrs.Message);
-                    }
-                    data.TimerJobId = xrs.Data;
+                    string cronExp = data.TimerCron == null ? old.TimerCron : data.TimerCron;
+                    await TimerSchedule.CreateJob(old.Id.Value, new List<string>() { cronExp });
+                    //MZ_Job job = new MZ_Job();
+                    //job.concurrent = "1";
+                    //job.createId = 0;
+                    //job.create_time = DateTime.Now;
+                    //job.updateId = 0;
+                    //job.update_time = DateTime.Now;
+                    //job.cron_expression = data.TimerCron == null ? old.TimerCron : data.TimerCron;
+                    //job.invoke_target = typeof(RuleBLL).FullName + ".Execute(L" + data.Id + ",2,$context,$id,$null)";
+                    //job.job_group = "DEFAULT";
+                    //job.job_name = "RuleTimer-" + old.Id;
+                    //job.misfire_policy = "0";
+                    //job.status = "0";
+                    //var xrs = await _provider.GetService<JobBLL>().InsertJob(job);
+                    //if (!xrs.IsSuccess())
+                    //{
+                    //    return BusResponse<int>.Error(33, xrs.Message);
+                    //}
+                    //data.TimerJobId = xrs.Data;
                 }
                 else if (old.Status == "0" && data.Status == "1")
                 {
-                    await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-                    data.TimerJobId = 0;
+                    await TimerSchedule.DeleteJob(old.Id.Value);
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(data.TimerCron) && data.TimerCron != old.TimerCron)
                     {
                         //重启定时任务
-                        await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-                        MZ_Job job = new MZ_Job();
-                        job.concurrent = "1";
-                        job.createId = 0;
-                        job.create_time = DateTime.Now;
-                        job.updateId = 0;
-                        job.update_time = DateTime.Now;
-                        job.cron_expression = data.TimerCron == null ? old.TimerCron : data.TimerCron;
-                        job.invoke_target = typeof(RuleBLL).FullName + ".Execute(L" + data.Id + ",2,$context,$id,$null)";
-                        job.job_group = "DEFAULT";
-                        job.job_name = "RuleTimer-" + old.Id;
-                        job.misfire_policy = "0";
-                        job.status = "0";
-                        var xrs = await _provider.GetService<JobBLL>().InsertJob(job);
-                        if (!xrs.IsSuccess())
-                        {
-                            return BusResponse<int>.Error(33, xrs.Message);
-                        }
-                        data.TimerJobId = xrs.Data;
+                        await TimerSchedule.DeleteJob(old.Id.Value);
+                        string cronExp = data.TimerCron == null ? old.TimerCron : data.TimerCron;
+                        await TimerSchedule.CreateJob(old.Id.Value, new List<string>() { cronExp });
                     }
 
                 }

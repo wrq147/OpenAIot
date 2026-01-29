@@ -229,13 +229,6 @@ export default {
           plugins: []
         };
 
-        // 根据播放地址格式选择插件
-        if (res.data?.endsWith('.flv') && FlvPlugin.isSupported()) {
-          playerConfig.plugins.push(FlvPlugin);
-        } else if (res.data?.endsWith('.m3u8')) {
-          playerConfig.plugins.push(HlsPlugin);
-        }
-
         this.historyPlayer = new Player(playerConfig);
         
         // 触发播放器初始化事件

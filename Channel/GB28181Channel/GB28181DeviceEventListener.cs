@@ -162,7 +162,7 @@ namespace GB28181Channel
             {
                 if (cleanRec.Storage == 0)
                 {
-                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + cleanRec.Date + Path.DirectorySeparatorChar + cleanRec.FileId;
+                    string tpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "record" + Path.DirectorySeparatorChar + "live" + cleanRec.StreamId + Path.DirectorySeparatorChar + cleanRec.Date + Path.DirectorySeparatorChar + cleanRec.FileName;
                     if (Directory.Exists(tpath))
                     {
                         Directory.Delete(tpath, true);

@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 
 namespace ChannelUtility
@@ -187,6 +188,59 @@ namespace ChannelUtility
 
                  }
              });
+
+
+
+            //发送节点上线
+            _OnlineTimer = new System.Timers.Timer(1000);
+            _OnlineTimer.Elapsed += async delegate (object? sender, System.Timers.ElapsedEventArgs e)
+            {
+                _OnlineTimer.Enabled = false;
+                try
+                {
+                    await this.SendNodeOnline();
+                }
+                catch { }
+            };
+            _OnlineTimer.Enabled = true;
+        }
+        private System.Timers.Timer _OnlineTimer;
+        private async Task SendNodeOnline()
+        {
+            try
+            {
+                NodeOnlineMessage msg = new NodeOnlineMessage();
+                msg.DeviceId = this._nodeId;
+                msg.ProductId = string.Empty;
+                msg.ChannelCode = _option.config.Code;
+                var requestTimeout = TimeSpan.FromSeconds(8);
+                var replyMsg = await Bus.RequestAsync<string, string>(GetUpKey(this._nodeId), System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions), null, ChannelNatsJsonSerializer<string>.Default, ChannelNatsJsonSerializer<string>.Default, null, new NatsSubOpts()
+                {
+                    MaxMsgs = 1,
+                    Timeout = requestTimeout,
+                    ThrowIfNoResponders = true
+                });
+
+                if (replyMsg.Data == "ok")
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("发送节点上线消息失败：" + ex.Message);
+            }
+            _OnlineTimer = new System.Timers.Timer(5000);
+            _OnlineTimer.Elapsed += async delegate (object? sender, System.Timers.ElapsedEventArgs e)
+            {
+                _OnlineTimer.Enabled = false;
+                try
+                {
+                    await this.SendNodeOnline();
+                }
+                catch { }
+            };
+            _OnlineTimer.Enabled = true;
         }
         private async ValueTask OnClientDisconnected(object? sender, NatsEventArgs args)
         {

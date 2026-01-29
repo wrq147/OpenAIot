@@ -51,7 +51,7 @@ namespace IoTVideoService.Business
 
             await _provider.GetService<RecordFileDAL>().Insert(recFile);
         }
-        public async Task PublishCleanRecordMessage(string nodeId, string videoId, byte storageWay, DateTime date, string fileName)
+        public async Task PublishCleanRecordMessage(string nodeId, string videoId, string streamId, byte storageWay, DateTime date, string fileName)
         {
             MediaRecordCleanMessage msg = new MediaRecordCleanMessage();
             msg.DeviceId = videoId;
@@ -59,6 +59,7 @@ namespace IoTVideoService.Business
             msg.Storage = storageWay;
             msg.Date = date.ToString("yyyy-MM-dd");
             msg.FileName = fileName;
+            msg.StreamId = streamId;
             await _provider.GetService<NatsScope>().Public(nodeId, msg);
         }
         public async Task<BusResponse<string>> PublishStartRecordMessage(string planId, byte storageWay, DateTime time, MZ_VideoSource source)
@@ -141,23 +142,11 @@ namespace IoTVideoService.Business
 
             return BusResponse<string>.Success();
         }
-        public async Task<BusResponse<string>> PublishStopRecordMessage(string planId)
+        public async Task<BusResponse<string>> PublishStopRecordMessage(string planId, MZ_IotRecord record, MZ_VideoSource source)
         {
             var recFileDAL = _provider.GetService<RecordFileDAL>();
             var recDAL = _provider.GetService<RecordDAL>();
             var sourceDAL = _provider.GetService<VideoSourceDAL>();
-            var recInfo = await recDAL.Select(planId);
-            if (recInfo == null)
-            {
-                return BusResponse<string>.Error(111, "录制计划不存在");
-            }
-
-            var source = await sourceDAL.Select(recInfo.VideoId);
-            if (source == null)
-            {
-                await recDAL.Delete(x => x.VideoId == recInfo.VideoId);
-                return BusResponse<string>.Error(112, "视频源不存在");
-            }
 
             if (string.IsNullOrEmpty(source.NodeId))
             {
