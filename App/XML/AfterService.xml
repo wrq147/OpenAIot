@@ -891,11 +891,6 @@
             计划执行天数，为0不限制
             </summary>
         </member>
-        <member name="P:AfterService.Model.MZ_PlaneType.TimerJobId">
-            <summary>
-            定时器关联的Job
-            </summary>
-        </member>
         <member name="P:AfterService.Model.MZ_PlaneType.ExcludeHoliday">
             <summary>
             是否排除假期
@@ -1610,6 +1605,14 @@
             <summary>
             流程状态
             </summary>
+        </member>
+        <member name="M:AfterService.PlanUtil.PlanSchedule.CreateJob(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            创建定时计划任务
+            </summary>
+            <param name="planId"></param>
+            <param name="cronExps"></param>
+            <returns></returns>
         </member>
         <member name="T:AfterService.PluginConfig">
             <summary>

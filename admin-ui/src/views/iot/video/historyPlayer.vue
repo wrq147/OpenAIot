@@ -94,6 +94,7 @@
 
 <script>
 import Player from 'xgplayer'
+import Mp4Plugin from "xgplayer-mp4"
 import "xgplayer/dist/index.min.css"
 import { 
   getRecordFileList,
@@ -226,7 +227,7 @@ export default {
           isLive: false,  // 非直播
           autoplay: true,
           url: res.data,
-          plugins: []
+          plugins: [Mp4Plugin]
         };
 
         this.historyPlayer = new Player(playerConfig);

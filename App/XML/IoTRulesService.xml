@@ -10,14 +10,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.Business.RuleBLL.Execute(System.Int64,System.Int32,Common.EventBus.QuartzContext,System.Int64,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="M:IoTRulesService.Business.RuleBLL.Execute(System.Int64,System.Int32,Common.EventBus.QuartzContext,System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
             http触发与定时器触发
             </summary>
             <param name="id"></param>
             <param name="triggerWay"></param>
             <param name="context"></param>
-            <param name="jobId"></param>
             <param name="inputs"></param>
             <returns></returns>
         </member>
@@ -1977,6 +1976,14 @@
             <summary>
             规则引擎执行者
             </summary>
+        </member>
+        <member name="M:IoTRulesService.TimerUtil.TimerSchedule.CreateJob(System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            创建定时计划任务
+            </summary>
+            <param name="ruleId"></param>
+            <param name="cronExps"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

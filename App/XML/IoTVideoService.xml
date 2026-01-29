@@ -287,6 +287,16 @@
             记录的日期
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.FileName">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.FileSize">
+            <summary>
+            文件大小，单位MB
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.PlanId">
             <summary>
             关联录像计划ID
@@ -310,11 +320,6 @@
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StorageWay">
             <summary>
             0为文件存储，1为minio
-            </summary>
-        </member>
-        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.Status">
-            <summary>
-            状态：0-结束录像，1-录像中
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.StartTime">
