@@ -6,6 +6,7 @@ using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Org.BouncyCastle.Utilities.IO;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -78,34 +79,6 @@ namespace GB28181Channel
         }
         private void On_mk_media_no_reader(IntPtr senderPtr)
         {
-            var sender = (MkMediaSourceT)senderPtr;
-            var streamId = mk_events_objects.MkMediaSourceGetStream(sender);
-            var lowerstreamid = streamId.ToLower();
-            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-            if (_mediaDict.TryGetValue(lowerstreamid, out var playbackParams))
-            {
-                var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
-                if (channelInfo != null)
-                {
-                    if (channelInfo.SessionStatus == GB28181.Enum.StreamState.Playing)
-                    {
-                        _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
-                    }
-                }
-            }
-            else
-            {
-                var channelInfo = storage.GetChannelFrom(streamId);
-                if (channelInfo != null)
-                {
-                    if (channelInfo.SessionStatus == GB28181.Enum.StreamState.Playing)
-                    {
-                        _ = _server.StopActiveStream(channelInfo.DeviceId, channelInfo.ChannelId);
-                    }
-                }
-            }
-
         }
         private void OnParseFrame(IntPtr user_data, IntPtr frame)
         {
@@ -249,13 +222,12 @@ namespace GB28181Channel
                         return;
                     }
 
-
                     FrameContext context = new FrameContext();
+                    context.SourceMedia = mediaSourceT;
+                    IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
                     context.VideoKey = channelInfo.PushKey;
                     context.DeviceId = channelInfo.DeviceId;
                     context.ChannelId = channelInfo.ChannelId;
-
-                    IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
                     _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
                     _contextMap.TryAdd(context.VideoKey, context);
 
@@ -342,6 +314,16 @@ namespace GB28181Channel
                     }
                 }
 
+            }
+        }
+        public void CloseMediaSource(string streamId)
+        {
+            if (_contextMap.TryGetValue(streamId, out FrameContext context))
+            {
+                if (context.SourceMedia != null)
+                {
+                    mk_events_objects.MkMediaSourceClose(context.SourceMedia, 1);
+                }
             }
         }
         private void On_mk_media_publish(IntPtr url,
@@ -635,6 +617,7 @@ namespace GB28181Channel
     }
     public class FrameContext
     {
+        public MkMediaSourceT SourceMedia { get; set; }
         public string VideoKey { get; set; }
         public string DeviceId { get; set; }
         public string ChannelId { get; set; }

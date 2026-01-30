@@ -546,6 +546,14 @@ namespace GB28181Channel.GB28181
                 {
                     return;
                 }
+                var oldDevice = _deviceStorage.GetDevice(deviceId);
+                if (oldDevice != null)
+                {
+                    var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "The device has been registered");
+                    await _sipTransport.SendResponseAsync(unauthorizedResp);
+                    Console.WriteLine($"[注册失败]：{deviceId}已被注册");
+                    return;
+                }
                 // 密码验证通过，完成注册流程
                 var deviceInfo = new DeviceInfo
                 {
@@ -763,6 +771,11 @@ namespace GB28181Channel.GB28181
                         Status = deviceNode.Element("Status")?.Value ?? "ON",
                         SessionStatus = StreamState.None
                     };
+                    if (device.VideoData == null)
+                    {
+                        Console.WriteLine("视频注册失败device.VideoData=null");
+                        return;
+                    }
                     channel.PushKey = device.VideoData.Item.PushKey + "_" + channel.ChannelId;
                     channels.Add(channel);
 

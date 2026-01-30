@@ -8,6 +8,7 @@ using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
+using NodaTime;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace IoTVideoService.Business
             var snowflake = _provider.GetService<SnowflakeHelper>();
             MZ_IotRecordFile recFile = new MZ_IotRecordFile();
             recFile.Id = snowflake.NextId().ToString();
-            recFile.StartTime = MyAccess.Core.TypeConvert.Unix2Time((long)msg.StartTime);
+            recFile.StartTime = DateTimeOffset.FromUnixTimeSeconds((long)msg.StartTime).LocalDateTime;
             recFile.FileDate = recFile.StartTime.Value.Date;
             recFile.PlanId = rec.Id;
             recFile.VideoKey = msg.StreamId;
@@ -47,8 +48,8 @@ namespace IoTVideoService.Business
             recFile.FileName = msg.FileName;
             recFile.SaveType = msg.SaveType;
             recFile.FileSize = (float?)(msg.FileSize / (1024.0 * 1024.0));
-            long endlong = (long)msg.StartTime + (long)(msg.TimeLen * 1000);
-            recFile.EndTime = MyAccess.Core.TypeConvert.Unix2Time(endlong);
+            long endlong = (long)msg.StartTime + (long)msg.TimeLen;
+            recFile.EndTime = DateTimeOffset.FromUnixTimeSeconds(endlong).LocalDateTime;
             await _provider.GetService<RecordFileDAL>().Insert(recFile);
         }
         public async Task PublishCleanRecordMessage(string nodeId, string videoId, List<string> streamIds, List<string> dates)

@@ -206,6 +206,13 @@ namespace GB28181Channel
             var device = storage.GetDevice(e.DeviceId);
             if (device != null && device.VideoData != null && !string.IsNullOrEmpty(device.VideoData.Item.Id))
             {
+                //停止视频
+                var channelList = storage.GetChannelsByDeviceId(e.DeviceId);
+                foreach (var channel in channelList)
+                {
+                    ZLMediaKitServer.Instance.CloseMediaSource(channel.PushKey);
+                }
+
                 var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Disconnect(device.VideoData.Item.Id);
