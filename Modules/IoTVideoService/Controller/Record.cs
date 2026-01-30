@@ -45,7 +45,19 @@ namespace IoTVideoService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<PageObject<MZ_IotRecordFile>>> FileListPage(In_RecordFilePage query)
         {
+            return this.Success(await _recordBLL.SelecFilePage(query));
+        }
 
+
+        /// <summary>
+        /// 获取录像关键帧
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<List<MZ_IotRecordKey>>> KeyList(In_RecordKeyList query)
+        {
+            return this.Success(await _recordBLL.SelectKeyList(query));
         }
 
         /// <summary>

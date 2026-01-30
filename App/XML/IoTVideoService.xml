@@ -48,6 +48,20 @@
             <param name="query"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTVideoService.Controller.Record.FileListPage(IoTVideoService.Models.In_RecordFilePage)">
+            <summary>
+            查询录像文件列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Record.KeyList(IoTVideoService.Models.In_RecordKeyList)">
+            <summary>
+            获取录像关键帧
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTVideoService.Controller.Record.Add(IoTVideoService.Models.MZ_IotRecord)">
             <summary>
             添加录像计划
@@ -202,6 +216,21 @@
             预置位ID
             </summary>
         </member>
+        <member name="P:IoTVideoService.Models.In_RecordFilePage.FileDate">
+            <summary>
+            过滤日期
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_RecordKeyList.beginTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.In_RecordKeyList.endTime">
+            <summary>
+            结束时间
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.In_RecordPage.RecordTimeType">
             <summary>
             时段类型：week（按周）、time（按时段）
@@ -335,6 +364,41 @@
         <member name="P:IoTVideoService.Models.MZ_IotRecordFile.EndTime">
             <summary>
             结束时间
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordFile.PlayUrl">
+            <summary>
+            播放地址
+            </summary>
+        </member>
+        <member name="T:IoTVideoService.Models.MZ_IotRecordKey">
+            <summary>
+            录像播放文件的关键帧
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordKey.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordKey.VideoKey">
+            <summary>
+            ZLMediaKit的视频Key
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordKey.KeyDate">
+            <summary>
+            记录的日期
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordKey.EvtDes">
+            <summary>
+            关键帧事件描述
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotRecordKey.FilePath">
+            <summary>
+            关键帧图片路径
             </summary>
         </member>
         <member name="T:IoTVideoService.Models.MZ_IotRecordLog">

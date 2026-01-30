@@ -204,7 +204,10 @@ namespace IoTVideoService.Business
             return BusResponse<string>.Success();
         }
 
-
+        public virtual async Task<List<MZ_IotRecordKey>> SelectKeyList(In_RecordKeyList query)
+        {
+            return await _provider.GetService<RecordKeyDAL>().SelectList(x => x.VideoKey == query.Key && x.KeyDate >= query.beginTime && x.KeyDate < query.endTime);
+        }
         public virtual async Task<PageObject<MZ_IotRecord>> SelectPage(In_RecordPage query, IUserInfo user)
         {
             Expression<Func<MZ_IotRecord, bool>> expression = x => x.OrgId == user.OrgId;
@@ -233,6 +236,66 @@ namespace IoTVideoService.Business
             }
             var rsp = await _provider.GetService<RecordLogDAL>().SelectPage(expression, query, "ExecTime desc");
             return rsp;
+        }
+        public virtual async Task<PageObject<MZ_IotRecordFile>> SelecFilePage(In_RecordFilePage query)
+        {
+            Expression<Func<MZ_IotRecordFile, bool>> expression;
+            if (!string.IsNullOrEmpty(query.PlanId))
+            {
+                expression = x => x.PlanId == query.PlanId;
+            }
+            else if (!string.IsNullOrEmpty(query.VideoId))
+            {
+                expression = x => x.VideoId == query.VideoId;
+            }
+            else
+            {
+                return PageObject<MZ_IotRecordFile>.Empty();
+            }
+            if (!string.IsNullOrEmpty(query.VideoKey))
+            {
+                expression = expression.And(x => x.VideoKey == query.VideoKey);
+            }
+            if (query.beginTime != null)
+            {
+                expression = expression.And(x => x.FileDate >= query.beginTime);
+            }
+            if (query.endTime != null)
+            {
+                expression = expression.And(x => x.FileDate <= query.endTime);
+            }
+            var rsp = await _provider.GetService<RecordFileDAL>().SelectPage(expression, query, "StartTime desc");
+            foreach (var item in rsp.List)
+            {
+                item.PlayUrl = GeneratePlayUrl(item);
+            }
+            return rsp;
+        }
+        private string GeneratePlayUrl(MZ_IotRecordFile file)
+        {
+            if (file.StorageWay == 0)
+            {
+                var option = _provider.GetService<IOptions<VideoOption>>();
+                if (option.Value.VideoServers.Count == 0 && option.Value.GB28181Servers.Count == 0)
+                {
+                    return string.Empty;
+                }
+
+                var curNode = option.Value.VideoServers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
+                if (curNode == null)
+                {
+                    curNode = option.Value.GB28181Servers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
+                }
+                if (curNode == null)
+                {
+                    return string.Empty;
+                }
+                return $"http://{curNode.Ip}:{curNode.HttpPort}/record/live/{file.VideoKey}/{file.FileDate.Value.ToString("yyyy-MM-dd")}/{file.FileName}";
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
         public virtual async Task<BusResponse<MZ_IotRecord>> Info(string id)
         {

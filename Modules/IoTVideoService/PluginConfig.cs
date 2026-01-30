@@ -30,6 +30,7 @@ namespace IoTVideoService
             services.AddDAL<RecordFileDAL>();
             services.AddDAL<RecordLogDAL>();
             services.AddDAL<VideoSourceDAL>();
+            services.AddDAL<RecordKeyDAL>();
 
             services.AddSingleton<PlanConcurrentJob>();
             services.Configure<VideoOption>(config.GetSection("IoTVideoService"));

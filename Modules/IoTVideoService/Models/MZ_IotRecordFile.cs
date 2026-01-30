@@ -63,5 +63,10 @@ namespace IoTVideoService.Models
         /// 结束时间
         /// </summary>
         public DateTime? EndTime { get; set; }
+        /// <summary>
+        /// 播放地址
+        /// </summary>
+        [DataIgnore]
+        public string PlayUrl { get; set; }
     }
 }

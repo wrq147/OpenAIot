@@ -382,9 +382,10 @@ namespace GB28181Channel
             }
             mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
         }
-        private unsafe void On_mk_http_request(IntPtr parserPtr,
-                                      IntPtr invoker, int* consumed,
-                                      IntPtr sock)
+
+        private void On_mk_http_request(IntPtr parserPtr,
+                      IntPtr invoker, int* consumed,
+                      IntPtr sock)
         {
 
         }

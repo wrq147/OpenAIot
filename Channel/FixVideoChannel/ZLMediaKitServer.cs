@@ -7,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using ZLMediaKit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FixVideoChannel
 {
@@ -249,9 +248,9 @@ namespace FixVideoChannel
                 mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
             }
         }
-        private unsafe void On_mk_http_request(IntPtr parserPtr,
-                                      IntPtr invoker, int* consumed,
-                                      IntPtr sock)
+        private void On_mk_http_request(IntPtr parserPtr,
+                              IntPtr invoker, int* consumed,
+                              IntPtr sock)
         {
 
         }

@@ -3,7 +3,7 @@
         @close="handleClose">
         <div class="video-play-container">
             <!-- 页签切换 -->
-            <el-tabs v-model="activeTab" type="card">
+            <el-tabs v-model="activeTab" type="card" @tab-click="changeTab">
                 <!-- 实时播放页签 -->
                 <el-tab-pane label="实时播放" name="realTime">
                     <div class="real-time-content">
@@ -101,7 +101,7 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="历史录像" name="history">
-
+                    <historyPlayer ref="hisPlayer" />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -117,8 +117,11 @@ import { getPresetList, getPlayUrl, getChannelList, controlPTZ } from "@/api/rul
 import Player from 'xgplayer'
 import FlvPlugin from 'xgplayer-flv'
 import "xgplayer/dist/index.min.css"
-
+import historyPlayer from './historyPlayer.vue';
 export default {
+    components: {
+        historyPlayer
+    },
     data() {
         return {
             activeTab: "realTime",
@@ -134,7 +137,13 @@ export default {
         }
     },
     methods: {
+        changeTab(item) {
+            if (item.name == "history") {
+                this.$refs.hisPlayer.InitVideo(this.videoSource.Id, this.videoSource.VideoType);
+            }
+        },
         async showDlg(row) {
+            this.activeTab = "realTime";
             this.loading = true;
             this.open = true;
             this.videoSource = { ...row };

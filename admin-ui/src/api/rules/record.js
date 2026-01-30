@@ -16,6 +16,22 @@ export function recordLogList(query){
     })
 }
 
+export function recordFileList(query){
+    return request({
+        url: '/IoTVideoService/Record/FileListPage',
+        method: 'get',
+        params: query
+    })
+}
+
+export function recordKeyList(query){
+    return request({
+        url: '/IoTVideoService/Record/KeyList',
+        method: 'get',
+        params: query
+    })
+}
+
 export function recordInfo(id) {
     return request({
         url: '/IoTVideoService/Record/Info',

@@ -111,8 +111,7 @@
         "vxe-utils": "^2.0.1",
         "xe-utils": "^3.5.7",
         "xgplayer": "^3.0.23",
-        "xgplayer-flv": "^3.0.23",
-        "xgplayer-mp4": "^3.0.23"
+        "xgplayer-flv": "^3.0.23"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "4.4.6",

@@ -139,7 +139,7 @@ namespace IoTVideoService
 
             Create.Table("mz_iot_record_key").WithDescription("录像播放文件的关键帧")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
-                .WithColumn("FileId").AsString(128).Indexed().WithColumnDescription("录像文件Id")
+                .WithColumn("VideoKey").AsString(128).Indexed().WithColumnDescription("ZLMediaKit的视频Key")
                 .WithColumn("KeyDate").AsDateTime().WithColumnDescription("记录的日期")
                 .WithColumn("EvtDes").AsString(500).WithColumnDescription("关键帧事件描述")
                 .WithColumn("FilePath").AsString(255).WithColumnDescription("关键帧图片路径");

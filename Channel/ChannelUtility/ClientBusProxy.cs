@@ -192,19 +192,8 @@ namespace ChannelUtility
 
 
             //发送节点上线
-            _OnlineTimer = new System.Timers.Timer(1000);
-            _OnlineTimer.Elapsed += async delegate (object? sender, System.Timers.ElapsedEventArgs e)
-            {
-                _OnlineTimer.Enabled = false;
-                try
-                {
-                    await this.SendNodeOnline();
-                }
-                catch { }
-            };
-            _OnlineTimer.Enabled = true;
+            await this.SendNodeOnline();
         }
-        private System.Timers.Timer _OnlineTimer;
         private async Task SendNodeOnline()
         {
             try
@@ -223,6 +212,7 @@ namespace ChannelUtility
 
                 if (replyMsg.Data == "ok")
                 {
+                    Console.WriteLine("Node Online!");
                     return;
                 }
             }
@@ -230,17 +220,21 @@ namespace ChannelUtility
             {
                 Console.WriteLine("发送节点上线消息失败：" + ex.Message);
             }
-            _OnlineTimer = new System.Timers.Timer(5000);
-            _OnlineTimer.Elapsed += async delegate (object? sender, System.Timers.ElapsedEventArgs e)
+            var onlineTimer = new System.Timers.Timer(5000);
+            onlineTimer.AutoReset = false;
+            onlineTimer.Elapsed += async delegate (object? sender, System.Timers.ElapsedEventArgs e)
             {
-                _OnlineTimer.Enabled = false;
                 try
                 {
                     await this.SendNodeOnline();
                 }
-                catch { }
+                finally
+                {
+                    onlineTimer.Stop();
+                    onlineTimer.Dispose();
+                }
             };
-            _OnlineTimer.Enabled = true;
+            onlineTimer.Start();
         }
         private async ValueTask OnClientDisconnected(object? sender, NatsEventArgs args)
         {

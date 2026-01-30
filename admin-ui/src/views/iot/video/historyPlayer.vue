@@ -1,24 +1,15 @@
 <template>
   <div class="history-content" v-loading="loading">
-    <!-- 左侧：播放器 + 关键帧 -->
     <div class="history-left">
-      <!-- 录像播放器 -->
       <div class="history-player" ref="historyPlayerContainer">
         <div ref="historyPlayer"></div>
       </div>
-
-      <!-- 关键帧列表 -->
       <div class="keyframe-list" v-if="keyframeList.length > 0">
         <div class="list-title">关键帧列表</div>
         <div class="keyframe-items">
-          <div 
-            class="keyframe-item" 
-            v-for="(frame, index) in keyframeList" 
-            :key="index"
-            @click="jumpToKeyframe(frame)"
-          >
+          <div class="keyframe-item" v-for="(frame, index) in keyframeList" :key="index" @click="jumpToKeyframe(frame)">
             <img :src="frame.url" alt="关键帧" class="keyframe-img">
-            <div class="keyframe-time">{{ formatTime(frame.time) }}</div>
+            <div class="keyframe-time">{{ parseTime(frame.KeyDate, "{h}:{i}:{s}") }}</div>
           </div>
         </div>
       </div>
@@ -27,102 +18,68 @@
       </div>
     </div>
 
-    <!-- 右侧：录像文件列表 -->
     <div class="history-right">
       <div class="list-title">录像文件列表</div>
-      <el-table 
-        :data="recordFileList" 
-        border 
-        stripe 
-        @row-click="selectRecordFile"
-        :highlight-current-row="true"
-        style="width: 100%;"
-      >
-        <el-table-column 
-          prop="FileDate" 
-          label="录像日期" 
-          width="180"
-          :formatter="formatTableDate"
-        ></el-table-column>
-        <el-table-column 
-          prop="StartTime" 
-          label="开始时间" 
-          width="180"
-          :formatter="formatTableDateTime"
-        ></el-table-column>
-        <el-table-column 
-          prop="EndTime" 
-          label="结束时间" 
-          width="180"
-          :formatter="formatTableDateTime"
-        ></el-table-column>
-        <el-table-column 
-          prop="StorageWay" 
-          label="存储方式" 
-          width="100"
-        >
+      <div class="filter-bar">
+        <div style="margin-bottom: 10px;">
+          <span style="font-size: 12px; color: #666;">选择通道：</span>
+          <el-select v-model="selectedVideoKey" placeholder="请选择通道" style="width: 280px;" @change="loadRecordFileList">
+            <el-option v-for="channel in channelList" :key="channel.VideoKey" :label="channel.ChannelName"
+              :value="channel.VideoKey"></el-option>
+          </el-select>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <span style="font-size: 12px; color: #666;">筛选日期：</span>
+          <el-date-picker v-model="dateRange" type="daterange" range-separator="至" start-placeholder="开始日期"
+            @change="loadRecordFileList" end-placeholder="结束日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+            style="width: 280px;"></el-date-picker>
+        </div>
+      </div>
+
+      <el-table :data="recordFileList" border @row-click="selectRecordFile" stripe :highlight-current-row="true"
+        style="width: 100%;">
+        <el-table-column label="录像日期" align="center" width="100">
           <template slot-scope="scope">
-            {{ scope.row.StorageWay === 0 ? '文件存储' : '云存储' }}
+            {{ parseTime(scope.row.FileDate, "{y}-{m}-{d}") }}
           </template>
         </el-table-column>
-        <el-table-column 
-          prop="Status" 
-          label="状态" 
-          width="100"
-        >
+        <el-table-column label="开始时间" align="center" width="100">
           <template slot-scope="scope">
-            {{ scope.row.Status === 0 ? '已结束' : '录像中' }}
+            {{ parseTime(scope.row.StartTime, "{h}:{i}:{s}") }}
+          </template>
+        </el-table-column>
+        <el-table-column label="结束时间" align="center" width="100">
+          <template slot-scope="scope">
+            {{ parseTime(scope.row.EndTime, "{h}:{i}:{s}") }}
+          </template>
+        </el-table-column>
+        <el-table-column label="存储方式" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.StorageWay === 0 ? '文件存储' : '云存储' }}
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 分页 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totalCount"
-        style="margin-top: 15px; text-align: right;"
-      >
-      </el-pagination>
+      <el-pagination v-show="totalCount > 0" :total="totalCount" :current-page.sync="currentPage"
+        :page-size.sync="pageSize" background small layout="prev, pager, next" @current-change="loadRecordFileList"
+        @size-change="loadRecordFileList" />
     </div>
   </div>
 </template>
 
 <script>
 import Player from 'xgplayer'
-import Mp4Plugin from "xgplayer-mp4"
 import "xgplayer/dist/index.min.css"
-import { 
-  getRecordFileList,
-  getRecordPlayUrl,
-  getKeyframeList
-} from "@/api/rules/video";
-
+import { getChannelList } from "@/api/rules/video";
+import {
+  recordFileList, recordKeyList
+} from "@/api/rules/record";
 export default {
-  name: 'VideoHistoryPlayer',
-  props: {
-    // 视频源ID（必传）
-    videoId: {
-      type: String,
-      required: true
-    },
-    // 通道Key（可选）
-    videoKey: {
-      type: String,
-      default: ''
-    },
-    // 初始加载数据（可选）
-    initLoad: {
-      type: Boolean,
-      default: true
-    }
-  },
   data() {
     return {
+      VideoId: "",
+      VideoType: 0,
       historyPlayer: null,      // 历史录像播放器实例
       loading: false,           // 加载状态
       recordFileList: [],       // 录像文件列表
@@ -132,50 +89,53 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalCount: 0,
+      dateRange: null,
+      // 2. 新增：通道相关数据
+      channelList: [],          // 通道列表（从接口获取）
+      selectedVideoKey: ''      // 当前选中的通道videoKey
     }
-  },
-  watch: {
-    // 监听videoId变化，重新加载数据
-    videoId: {
-      immediate: true,
-      handler() {
-        if (this.initLoad) {
-          this.loadRecordFileList();
-        }
-      }
-    },
-    // 监听videoKey变化
-    videoKey() {
-      this.currentPage = 1;
-      this.loadRecordFileList();
-    }
-  },
-  beforeDestroy() {
-    // 组件销毁时销毁播放器
-    this.destroyPlayer();
   },
   methods: {
-    // 销毁播放器实例
-    destroyPlayer() {
-      if (this.historyPlayer) {
-        this.historyPlayer.destroy();
-        this.historyPlayer = null;
+    async InitVideo(id, t) {
+      this.VideoId = id;
+      this.VideoType = t;
+      if (this.VideoType == 1) {
+        await this.loadChannelList();
+      }
+      this.currentPage = 1;
+      await this.loadRecordFileList();
+    },
+    async loadChannelList() {
+      try {
+        const res = await getChannelList(this.VideoId);
+        this.channelList = res.data || [];
+
+        // 可选：默认选中第一个通道（若需要）
+        if (this.channelList.length > 0 && !this.selectedVideoKey) {
+          this.selectedVideoKey = this.channelList[0].VideoKey;
+        }
+      } catch (error) {
+        this.$message.error('加载通道列表失败');
+        console.error(error);
+        this.channelList = [];
       }
     },
 
-    // 加载录像文件列表
+    // 加载录像文件列表（修改：使用选中的selectedVideoKey）
     async loadRecordFileList() {
       this.loading = true;
       try {
-        const res = await getRecordFileList({
-          VideoId: this.videoId,
-          VideoKey: this.videoKey,
-          page: this.currentPage,
-          size: this.pageSize
+        const res = await recordFileList({
+          VideoId: this.VideoId,
+          VideoKey: this.VideoType == 1 ? this.selectedVideoKey : undefined,
+          pageNum: this.currentPage,
+          pageSize: this.pageSize,
+          beginTime: this.dateRange ? this.dateRange[0] : undefined,
+          endTime: this.dateRange ? this.dateRange[1] : undefined
         });
-        
-        this.recordFileList = res.data?.records || [];
-        this.totalCount = res.data?.total || 0;
+
+        this.recordFileList = res.data.List || [];
+        this.totalCount = res.data.Total || 0;
       } catch (error) {
         this.$message.error('加载录像文件列表失败');
         console.error(error);
@@ -184,22 +144,17 @@ export default {
       }
     },
 
-    // 选择录像文件
     async selectRecordFile(row) {
       if (!row) return;
-      
+
       this.currentRecordFile = row;
       this.loading = true;
-      
+
       try {
         // 1. 获取录像播放地址并初始化播放器
         await this.initHistoryPlayer(row);
-        
         // 2. 加载该录像文件的关键帧列表
         await this.loadKeyframeList(row);
-        
-        // 触发选中事件，供父组件监听
-        this.$emit('file-selected', row);
       } catch (error) {
         this.$message.error('加载录像文件失败');
         console.error(error);
@@ -208,111 +163,58 @@ export default {
       }
     },
 
-    // 初始化历史录像播放器
+    // 初始化历史录像播放器（无修改，复用原有逻辑）
     async initHistoryPlayer(recordFile) {
       try {
-        // 先销毁旧播放器
-        this.destroyPlayer();
+        if (this.historyPlayer == null) {
+          // 创建新的播放器实例
+          this.historyPlayer = new Player({
+            el: this.$refs.historyPlayer,
+            isLive: false,
+            autoplay: true,
+            url: recordFile.PlayUrl
+          });
+          this.historyPlayer.play();
+        }
+        else {
+          this.historyPlayer.src = recordFile.PlayUrl;
+          this.historyPlayer.play();
+        }
 
-        // 获取录像播放地址
-        const res = await getRecordPlayUrl({
-          FileId: recordFile.Id,
-          VideoId: recordFile.VideoId,
-          VideoKey: recordFile.VideoKey
-        });
-
-        // 创建新的播放器实例
-        const playerConfig = {
-          el: this.$refs.historyPlayer,
-          isLive: false,  // 非直播
-          autoplay: true,
-          url: res.data,
-          plugins: [Mp4Plugin]
-        };
-
-        this.historyPlayer = new Player(playerConfig);
-        
-        // 触发播放器初始化事件
-        this.$emit('player-init', this.historyPlayer);
       } catch (error) {
         throw new Error('初始化录像播放器失败');
       }
     },
 
-    // 加载关键帧列表
+    // 加载关键帧列表（无修改，复用原有逻辑）
     async loadKeyframeList(recordFile) {
       try {
-        const res = await getKeyframeList({
-          FileId: recordFile.Id,
-          VideoId: recordFile.VideoId
+        const res = await recordKeyList({
+          Key: recordFile.VideoKey,
+          beginTime: recordFile.StartTime,
+          endTime: recordFile.EndTime
         });
-        
-        // 关键帧数据格式：[{ url: 'xxx.jpg', time: 1735689600000 }, ...]
+
         this.keyframeList = res.data || [];
-        
-        // 触发关键帧加载完成事件
-        this.$emit('keyframes-loaded', this.keyframeList);
+
       } catch (error) {
         this.$message.error('加载关键帧列表失败');
-        console.error(error);
         this.keyframeList = [];
       }
     },
 
     // 跳转到关键帧时间点
     jumpToKeyframe(frame) {
-      if (!this.historyPlayer || !frame || !frame.time) return;
-      
+      if (!this.historyPlayer || !frame || !frame.KeyDate) return;
+
       // 将关键帧时间戳转换为视频播放的秒数
       const videoStartTime = new Date(this.currentRecordFile.StartTime).getTime();
-      const jumpTime = (frame.time - videoStartTime) / 1000;
-      
-      // 设置视频播放位置
-      this.historyPlayer.currentTime = jumpTime;
-      this.historyPlayer.play();
-      
-      // 触发关键帧跳转事件
-      this.$emit('keyframe-jump', frame, jumpTime);
-      this.$message.success(`已跳转到 ${this.formatTime(frame.time)}`);
+      const keyTime = new Date(frame.KeyDate).getTime();
+      const jumpTime = (keyTime - videoStartTime) / 1000;
+      this.historyPlayer.seek(jumpTime);
+      this.$message.success(`已跳转到 ${frame.KeyDate}`);
     },
 
-    // 分页大小改变
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.loadRecordFileList();
-    },
-
-    // 当前页改变
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.loadRecordFileList();
-    },
-
-    // 格式化日期（仅日期）
-    formatTableDate(row) {
-      return row.FileDate ? this.$moment(row.FileDate).format('YYYY-MM-DD') : '-';
-    },
-
-    // 格式化日期时间
-    formatTableDateTime(row, column) {
-      return row[column.prop] ? this.$moment(row[column.prop]).format('YYYY-MM-DD HH:mm:ss') : '-';
-    },
-
-    // 格式化时间（用于关键帧）
-    formatTime(timestamp) {
-      return this.$moment(timestamp).format('HH:mm:ss');
-    },
-
-    // 外部调用：手动刷新列表
-    refreshList() {
-      this.currentPage = 1;
-      this.loadRecordFileList();
-    },
-
-    // 外部调用：销毁播放器
-    destroy() {
-      this.destroyPlayer();
-    }
   }
 }
 </script>
@@ -348,6 +250,12 @@ export default {
   font-size: 14px;
   font-weight: 600;
   color: #333;
+  margin-bottom: 10px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 10px;
 }
 
@@ -392,6 +300,7 @@ export default {
   text-align: center;
   color: #999;
   font-size: 14px;
+  font-weight: 400;
   padding: 20px;
 }
 
@@ -401,5 +310,4 @@ export default {
   flex-direction: column;
   gap: 10px;
 }
-
 </style>

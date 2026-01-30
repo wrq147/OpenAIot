@@ -5258,10 +5258,10 @@ namespace ZLMediaKit
             internal static extern void MkHttpBodyRelease(IntPtr ctx);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_http_response_invoker_do", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern void MkHttpResponseInvokerDo(IntPtr ctx, int response_code, sbyte** response_header, IntPtr response_body);
+            internal static extern void MkHttpResponseInvokerDo(IntPtr ctx, int response_code, [MarshalAs(UnmanagedType.LPArray)] string[] response_header, IntPtr response_body);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_http_response_invoker_do_string", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern void MkHttpResponseInvokerDoString(IntPtr ctx, int response_code, sbyte** response_header, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string response_content);
+            internal static extern void MkHttpResponseInvokerDoString(IntPtr ctx, int response_code, [MarshalAs(UnmanagedType.LPArray)] string[] response_header, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string response_content);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_http_response_invoker_do_file", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void MkHttpResponseInvokerDoFile(IntPtr ctx, IntPtr request_parser, [MarshalAs(UnmanagedType.LPArray)] string[] response_header, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string response_file_path);
@@ -5816,7 +5816,7 @@ namespace ZLMediaKit
         /// <param name="response_header">The returned http header, for example {&quot;Content-Type&quot;,&quot;text/html&quot;,NULL} must end with NULL</param>
         /// <param name="response_body">Body object</param>
         /// <remarks>[AUTO-TRANSLATED:e006685a]</remarks>
-        public static void MkHttpResponseInvokerDo(global::ZLMediaKit.MkHttpResponseInvokerT ctx, int response_code, sbyte** response_header, global::ZLMediaKit.MkHttpBodyT response_body)
+        public static void MkHttpResponseInvokerDo(global::ZLMediaKit.MkHttpResponseInvokerT ctx, int response_code, string[] response_header, global::ZLMediaKit.MkHttpBodyT response_body)
         {
             var __arg0 = ctx is null ? IntPtr.Zero : ctx.__Instance;
             var __arg3 = response_body is null ? IntPtr.Zero : response_body.__Instance;
@@ -5834,7 +5834,7 @@ namespace ZLMediaKit
         /// <param name="response_header">The returned http header, for example {&quot;Content-Type&quot;,&quot;text/html&quot;,NULL} must end with NULL</param>
         /// <param name="response_content">The returned content part, for example a web page content</param>
         /// <remarks>[AUTO-TRANSLATED:0c3cf577]</remarks>
-        public static void MkHttpResponseInvokerDoString(global::ZLMediaKit.MkHttpResponseInvokerT ctx, int response_code, sbyte** response_header, string response_content)
+        public static void MkHttpResponseInvokerDoString(global::ZLMediaKit.MkHttpResponseInvokerT ctx, int response_code, string[] response_header, string response_content)
         {
             var __arg0 = ctx is null ? IntPtr.Zero : ctx.__Instance;
             __Internal.MkHttpResponseInvokerDoString(__arg0, response_code, response_header, response_content);
