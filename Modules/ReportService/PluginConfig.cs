@@ -4,6 +4,7 @@ using Common.EventBus;
 using Microsoft.Extensions.Configuration;
 using ReportService.Business;
 using ReportService.DAL;
+using ReportService.TimerUtil;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
 
@@ -39,6 +40,10 @@ namespace ReportService
         }
         protected override void Configure(ITAApplication app, PluginObject plg)
         {
+            TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
+            {
+                await TimerSchedule.InitScheduler(app.ServiceProvider);
+            });
             plg.RegisterQuartzTask();
         }
     }

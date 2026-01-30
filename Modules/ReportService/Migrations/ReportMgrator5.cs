@@ -20,7 +20,6 @@ namespace ReportService.Migrations
 .WithColumn("Name").AsString(50).WithColumnDescription("预警名称")
 .WithColumn("ConditionJson").AsString(10000).WithColumnDescription("条件json")
 .WithColumn("TimerCron").AsString(100).WithColumnDescription("Cron表达式")
-.WithColumn("TimerJobId").AsInt64().WithColumnDescription("定时器关联的Job")
 .WithColumn("SilenceTime").AsInt32().WithColumnDescription("沉默周期，单位秒（默认表示86400S，最小60秒）")
 .WithColumn("NoticeUserType").AsInt32().WithDefaultValue(0).WithColumnDescription("通知对象类型：0为人员，1为角色")
 .WithColumn("NoticeUsers").AsString(500).WithColumnDescription("通知人员")

@@ -25,6 +25,7 @@ namespace IoTVideoService.Controller
         {
             return this.Success(await _recordBLL.SelectPage(query, GetUser()));
         }
+
         /// <summary>
         /// 查询录像日志列表
         /// </summary>
@@ -34,6 +35,17 @@ namespace IoTVideoService.Controller
         public async Task<DefaultAjaxResult<PageObject<MZ_IotRecordLog>>> LogListPage(In_RecordLogPage query)
         {
             return this.Success(await _recordBLL.SelectLogPage(query));
+        }
+
+        /// <summary>
+        /// 查询录像文件列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<PageObject<MZ_IotRecordFile>>> FileListPage(In_RecordFilePage query)
+        {
+
         }
 
         /// <summary>

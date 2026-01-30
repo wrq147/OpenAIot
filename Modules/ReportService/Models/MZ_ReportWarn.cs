@@ -40,10 +40,6 @@ namespace ReportService.Models
         [DataIgnore]
         public string CronName { get; set; }
         /// <summary>
-        /// 定时器关联的Job
-        /// </summary>
-        public long? TimerJobId { get; set; }
-        /// <summary>
         /// 沉默周期，单位秒（默认表示86400S，最小60秒）
         /// </summary>
         public int? SilenceTime { get; set; }
