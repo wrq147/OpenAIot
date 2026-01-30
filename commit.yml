@@ -2,43 +2,58 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '534f9744c2c05369e9c6781004dadef202f973af'
-    oldFile: !uuid '355e0d048189e07831084ed63e15c2eb81aed106'
-  /Channel/GB28181Channel:
-    newFile: !uuid '1fd202970b99acba761bd4741b7c99977f5f53d4'
-    oldFile: !uuid '68915b58a92d8a4fc8108a20f7249869b615ccc4'
-  /Channel/GB28181Channel/GB28181:
-    newFile: !uuid '43daccdfe40460e66d7f25468c70dbfaa2b1dbb3'
-    oldFile: !uuid '7f2817689c6347df191a40c73bdf1aeea69be4f9'
-  /Channel/GB28181Channel/GB28181/DTO:
-    newFile: !uuid '6a6b37d24e37099d69faa662395799f5a96a98de'
-    oldFile: !uuid 'cfc549087589d0ff868eaf65a430e67b77d7e3b9'
-  /Channel/GB28181Channel/GB28181/DTO/DeviceInfo.cs:
-    newFile: !uuid '13c5ca4af781bed59b68637fa76d2de232a20644'
-    oldFile: !uuid '48092e388fd26820e67a73aa7edc2bc35cada608'
-  /Channel/GB28181Channel/GB28181/GB28181Server.cs:
-    newFile: !uuid 'f0182d9db7993ea00612452f91e3415fa90c3350'
-    oldFile: !uuid '414f7e3c14b3d8f3bc105ac77c4aab8b78376a35'
-  /Channel/GB28181Channel/GB28181DeviceEventListener.cs:
-    newFile: !uuid '1b63572ee7e375dc6a31f77d0f774bf1970f1df3'
-    oldFile: !uuid '6cb613b1d4efdc57477af01fc78d04cb9644c169'
-  /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid 'f5f0691fbd54a8c688dc1dac7ff575829a367460'
-    oldFile: !uuid '34eaf7b0851b548f193abc2f3d867e815ded16b3'
   /Modules:
-    newFile: !uuid '9300fd044928dfcbb3c675abd6b67bbbcaf93dfe'
-    oldFile: !uuid '97545831714e208dfed928a41759ade8466d65df'
+    newFile: !uuid 'a4f622c03b5123b99e07cedb28dfff93b7a1e84e'
+    oldFile: !uuid '9300fd044928dfcbb3c675abd6b67bbbcaf93dfe'
   /Modules/IoTVideoService:
-    newFile: !uuid 'c35be2c03bcd28566884ad1fbde9cbabcf818c2c'
-    oldFile: !uuid '2790423f41b8554bef0022f1bd8b5e62fd8c35f7'
-  /Modules/IoTVideoService/Business:
-    newFile: !uuid '7e10b4a49beca9a2e3aa3665a3f3457db6db6238'
-    oldFile: !uuid '1431a12e0dd91db1ad83490744a0e1a2b8317c00'
-  /Modules/IoTVideoService/Business/RecordBLL.cs:
-    newFile: !uuid 'af36fd5cca6ec25f79e54e8959c8738f094c8272'
-    oldFile: !uuid '0de27f14f8a593a33cbe41ef99612968972c3e22'
-gitCommitId: !uuid '8c3da0937de7eccc9447d5c00259c3fae9c79e4d'
+    newFile: !uuid 'ef8e2ab8b8bdf801b058de98afc4039b516ec56b'
+    oldFile: !uuid 'c35be2c03bcd28566884ad1fbde9cbabcf818c2c'
+  /Modules/IoTVideoService/Controller:
+    newFile: !uuid 'fff918895070c484b53286d6150a7611e8f6bea7'
+    oldFile: !uuid 'f8cf7dd291fb6fac6c3ad063147cf57c05603da5'
+  /Modules/IoTVideoService/Controller/Record.cs:
+    newFile: !uuid '1d9308ade6f6149b93ddcb25c6123349ecc75470'
+    oldFile: !uuid '2fee3b2d6c4b934ce6e6e1ec002e3850e4000705'
+  /Modules/IoTVideoService/Models:
+    newFile: !uuid '5a107169631cd60fe1a4b5034478fbf431b3679b'
+    oldFile: !uuid '90546885a031ac1aff0a6574d81140fbe1a57927'
+  /Modules/IoTVideoService/Models/In_RecordFilePage.cs:
+    newFile: !uuid '355535799e3ed09735f7469a7af4344a182d4823'
+    oldFile: null
+  /Modules/ReportService:
+    newFile: !uuid '16ec34b5c3caa3c366ae9ef07c631ac0dcefed00'
+    oldFile: !uuid '9913ccadbc3f5432fb51a5cbe041fd04931c1c26'
+  /Modules/ReportService/Business:
+    newFile: !uuid '74edd82b7918cde3b6fefde4abfddfe5e3a05581'
+    oldFile: !uuid 'c8b92e5e333ce66c11f3e02517f4128b92990b12'
+  /Modules/ReportService/Business/ReportWarnBLL.cs:
+    newFile: !uuid 'da065b4ac54608ac231f26565e76dc4f1481ec88'
+    oldFile: !uuid 'a295290732356dd8a33a9cfba6e179e16dcbcb05'
+  /Modules/ReportService/Migrations:
+    newFile: !uuid 'b936bc1affb6fa8e06b7201cca61319c9ea4f602'
+    oldFile: !uuid 'a889c0b3774d22fa1f417b0220e9a8b117154b0b'
+  /Modules/ReportService/Migrations/ReportMgrator5.cs:
+    newFile: !uuid 'e0efb3214b1af22abd53ee5a7699b41dba5b3ac0'
+    oldFile: !uuid 'c6ad7abb1c411ebac7e6a7af4bde63c815fcb23c'
+  /Modules/ReportService/Models:
+    newFile: !uuid 'b4920626d8434a0425d50a33a50c0ea5043e751f'
+    oldFile: !uuid 'fc50448828958b744e4ec0acf0ee3489458a1b03'
+  /Modules/ReportService/Models/MZ_ReportWarn.cs:
+    newFile: !uuid '4a077e69160ae154a88297863b58f415cf954ff5'
+    oldFile: !uuid '7f0c374b5d38c61072bb320df8107f6b6df31c7e'
+  /Modules/ReportService/PluginConfig.cs:
+    newFile: !uuid '625c650f70f82048a86647e1a38f50036a34e3e3'
+    oldFile: !uuid '35620a1d3d324147ba7db65e55881ef4c54b5735'
+  /Modules/ReportService/TimerUtil:
+    newFile: !uuid '4fa7b24188865c009c44caa04cb96972f9a34c71'
+    oldFile: null
+  /Modules/ReportService/TimerUtil/TimerConcurrentJob.cs:
+    newFile: !uuid '77b3f38a81d0f88a01263ef48fdbc8979baf528d'
+    oldFile: null
+  /Modules/ReportService/TimerUtil/TimerSchedule.cs:
+    newFile: !uuid 'a467206d8d1288a11979e40e91a3477670b86139'
+    oldFile: null
+gitCommitId: !uuid '04ca2019fbc25559699bf6b5c8c9e68ca864548a'
 renames: {
   }
-revisionId: 154
+revisionId: 155
