@@ -292,7 +292,7 @@ namespace FixVideoChannel
                     _provider.GetService<MinioHelper>().UploadFile(filePath, upfilePosition);
                 }
             }
-          
+
         }
         private void On_mk_record_hls(IntPtr hlsPtr)
         {
@@ -331,7 +331,7 @@ namespace FixVideoChannel
                     }
                 };
                 archiveTimer.Start();
-    
+
             }
         }
         private void On_mk_flow_report(IntPtr url,

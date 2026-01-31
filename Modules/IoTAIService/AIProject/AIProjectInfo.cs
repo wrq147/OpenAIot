@@ -36,7 +36,7 @@ namespace IoTAIService
         /// </summary>
         public string code { get; set; }
         /// <summary>
-        /// 参数类型：boolean、enum、float、string、
+        /// 参数类型：boolean、enum、float、string、clip
         /// </summary>
         public string type { get; set; }
         /// <summary>
@@ -46,7 +46,7 @@ namespace IoTAIService
 
         public float min { get; set; }
         public float max { get; set; }
-        public object defval { get; set; }
+
         /// <summary>
         /// 枚举元素
         /// </summary>

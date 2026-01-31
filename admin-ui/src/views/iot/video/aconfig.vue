@@ -283,7 +283,7 @@ export default {
           x["Remark"] = prj.Remark;
           x["ParamList"] = prj.ParamList || [];
           // 初始化参数值
-          x["paramValues"] = x.paramValues || this.initParamValues(prj.ParamList || []);
+          x["paramValues"] = x.paramValues || {};
           configarr.push(x);
         }
       }
@@ -292,17 +292,6 @@ export default {
       // 重置状态
       this.selectedProjects = []
       this.optionalSearchText = ''
-    },
-
-    /**
-     * 初始化参数默认值
-     */
-    initParamValues(paramList = []) {
-      const paramValues = {};
-      paramList.forEach(param => {
-        paramValues[param.code] = param.defval;
-      });
-      return paramValues;
     },
 
     /**
@@ -334,7 +323,7 @@ export default {
           let newitem = JSON.parse(JSON.stringify(this.selectedProjects[i]));
           newitem["enableDraw"] = false;
           // 初始化参数值
-          newitem["paramValues"] = this.initParamValues(newitem.ParamList || []);
+          newitem["paramValues"] = {};
           this.configuredProjects.push(newitem)
         }
 
