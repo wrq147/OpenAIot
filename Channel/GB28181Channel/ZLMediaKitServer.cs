@@ -6,7 +6,6 @@ using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Org.BouncyCastle.Utilities.IO;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -38,6 +37,7 @@ namespace GB28181Channel
         private ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr _onMediaPlayDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr _onHttpRequestDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr _onHttpAccessDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr_sbytePtr___IntPtr _onHttpBeforeRequestDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordMp4Delegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordHLSDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr _onFlowReportDelegate;
@@ -58,6 +58,7 @@ namespace GB28181Channel
             _onMediaPlayDelegate = On_mk_media_play;
             _onHttpRequestDelegate = On_mk_http_request;
             _onHttpAccessDelegate = On_mk_http_access;
+            _onHttpBeforeRequestDelegate = On_mk_http_before_access;
             _onRecordMp4Delegate = On_mk_record_mp4;
             _onRecordHLSDelegate = On_mk_record_hls;
             _onFlowReportDelegate = On_mk_flow_report;
@@ -402,7 +403,10 @@ namespace GB28181Channel
             //有访问权限,每次访问文件都需要鉴权
             mk_events_objects.MkHttpAccessPathInvokerDo((MkHttpAccessPathInvokerT)invoker, null, null, 0);
         }
+        private void On_mk_http_before_access(IntPtr parser, string path, IntPtr sender)
+        {
 
+        }
         private void On_mk_record_mp4(IntPtr mp4Ptr)
         {
             var sender = (MkRecordInfoT)mp4Ptr;
@@ -429,6 +433,12 @@ namespace GB28181Channel
                 return;
             }
             _ = _listener.OnSendRecordFile(device.VideoData.Item.Id, stream, fileName, fileSize, startTime, timeLen, channelInfo.StorageWay, 0);
+
+            if (channelInfo.StorageWay == 1)
+            {
+                string upfilePosition = $"{stream}/{startTime.ToString("yyyy-MM-dd")}/{fileName}";
+                _provider.GetService<MinioHelper>().UploadFile(filePath, upfilePosition);
+            }
         }
         private void On_mk_record_hls(IntPtr hlsPtr)
         {
@@ -597,6 +607,7 @@ namespace GB28181Channel
                     OnMkMediaPlay = _onMediaPlayDelegate,
                     OnMkHttpRequest = _onHttpRequestDelegate,
                     OnMkHttpAccess = _onHttpAccessDelegate,
+                    OnMkHttpBeforeAccess = _onHttpBeforeRequestDelegate,
                     OnMkRecordMp4 = _onRecordMp4Delegate,
                     OnMkRecordTs = _onRecordHLSDelegate,
                     OnMkFlowReport = _onFlowReportDelegate

@@ -9,7 +9,12 @@ namespace ChannelUtility.Message
         {
             MsgType = "MediaClean";
         }
-        public List<string> StreamIds { get; set; }
-        public List<string> Dates { get; set; }
+        public List<FileRecord> Records { get; set; }
+    }
+    public class FileRecord
+    {
+        public string StreamId { get; set; }
+        public string Date { get; set; }
+        public string FileName { get; set; }
     }
 }

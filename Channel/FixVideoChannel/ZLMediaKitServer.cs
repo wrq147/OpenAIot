@@ -34,6 +34,7 @@ namespace FixVideoChannel
         private ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr _onMediaPlayDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr _onHttpRequestDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr _onHttpAccessDelegate;
+        private ZLMediaKit.Delegates.Action___IntPtr_sbytePtr___IntPtr _onHttpBeforeRequestDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordMp4Delegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordHLSDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr _onFlowReportDelegate;
@@ -59,6 +60,7 @@ namespace FixVideoChannel
             _onMediaPlayDelegate = On_mk_media_play;
             _onHttpRequestDelegate = On_mk_http_request;
             _onHttpAccessDelegate = On_mk_http_access;
+            _onHttpBeforeRequestDelegate = On_mk_http_before_access;
             _onRecordMp4Delegate = On_mk_record_mp4;
             _onRecordHLSDelegate = On_mk_record_hls;
             _onFlowReportDelegate = On_mk_flow_report;
@@ -266,7 +268,10 @@ namespace FixVideoChannel
             //有访问权限,每次访问文件都需要鉴权
             mk_events_objects.MkHttpAccessPathInvokerDo((MkHttpAccessPathInvokerT)invoker, null, null, 0);
         }
+        private void On_mk_http_before_access(IntPtr parser, string path, IntPtr sender)
+        {
 
+        }
         private void On_mk_record_mp4(IntPtr mp4Ptr)
         {
             var sender = (MkRecordInfoT)mp4Ptr;
@@ -281,7 +286,13 @@ namespace FixVideoChannel
             if (_recordContexts.TryGetValue(stream, out RecordContext tmprec))
             {
                 _ = _listener.OnSendRecordFile(tmprec.Msg.DeviceId, stream, fileName, fileSize, startTime, timeLen, tmprec.StorageWay, 0);
+                if (tmprec.StorageWay == 1)
+                {
+                    string upfilePosition = $"{stream}/{startTime.ToString("yyyy-MM-dd")}/{fileName}";
+                    _provider.GetService<MinioHelper>().UploadFile(filePath, upfilePosition);
+                }
             }
+          
         }
         private void On_mk_record_hls(IntPtr hlsPtr)
         {
@@ -542,6 +553,7 @@ namespace FixVideoChannel
                     OnMkMediaPlay = _onMediaPlayDelegate,
                     OnMkHttpRequest = _onHttpRequestDelegate,
                     OnMkHttpAccess = _onHttpAccessDelegate,
+                    OnMkHttpBeforeAccess = _onHttpBeforeRequestDelegate,
                     OnMkRecordMp4 = _onRecordMp4Delegate,
                     OnMkRecordTs = _onRecordHLSDelegate,
                     OnMkFlowReport = _onFlowReportDelegate

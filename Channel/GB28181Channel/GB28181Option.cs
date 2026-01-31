@@ -20,5 +20,10 @@ namespace GB28181Channel
         /// </summary>
         public int rtmp_port { get; set; }
         public int http_port { get; set; }
+        public string minio_server { get; set; }
+        public string minio_access { get; set; }
+        public string minio_secret { get; set; }
+        public string minio_bucket { get; set; }
+        public string minio_url { get; set; }
     }
 }

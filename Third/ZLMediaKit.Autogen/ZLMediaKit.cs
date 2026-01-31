@@ -10575,7 +10575,7 @@ namespace ZLMediaKit
         public unsafe delegate void Action___IntPtr_string8_int___IntPtr___IntPtr(IntPtr parser, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string path, int is_dir, IntPtr invoker, IntPtr sender);
 
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate void Action___IntPtr_sbytePtr___IntPtr(IntPtr parser, sbyte* path, IntPtr sender);
+        public unsafe delegate void Action___IntPtr_sbytePtr___IntPtr(IntPtr parser, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string path, IntPtr sender);
 
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void Action___IntPtr_string8_string8_int___IntPtr___IntPtr(IntPtr url_info, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string realm, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CppSharp.Runtime.UTF8Marshaller))] string user_name, int must_no_encrypt, IntPtr invoker, IntPtr sender);

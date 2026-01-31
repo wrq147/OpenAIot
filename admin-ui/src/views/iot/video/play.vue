@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="视频播放" :visible.sync="open" width="80%" top="2vh" append-to-body :close-on-click-modal="false"
+    <el-dialog title="视频播放" :visible.sync="open" width="980px" top="2vh" append-to-body :close-on-click-modal="false"
         @close="handleClose">
         <div class="video-play-container">
             <!-- 页签切换 -->
@@ -10,6 +10,27 @@
                         <!-- 视频播放区域 -->
                         <div class="video-player" ref="videoContainer" v-loading="loading">
                             <div ref="devPlayer"></div>
+                                                        <!-- 预置位控制 -->
+                            <div class="preset-controls"
+                                style="margin-top:20px;border-top:1px solid #eee;padding-top:5px;">
+                                <h4>预置位管理</h4>
+                                <!-- 仅保留设置预置位功能 -->
+                                <el-input v-model="presetId" type="number" placeholder="输入预置位ID(1-255)"
+                                    style="width:120px;margin-right:10px;" :min="1" :max="255"></el-input>
+                                <el-button type="primary" size="small" @click="setPreset">设置预置位</el-button>
+
+                                <!-- 已保存预置位列表 - 改造：点击标签调用，关闭按钮删除 -->
+                                <div class="preset-list" style="margin-top:15px;">
+                                    <el-tag v-for="id in presetList" :key="id" closable @close="delPreset(id)"
+                                        @click="callPreset(id)" style="margin:5px; cursor: pointer;" effect="dark">
+                                        预置位{{ id }}
+                                    </el-tag>
+                                    <div v-if="presetList.length === 0"
+                                        style="color:#999; font-size:12px; margin-top:8px;">
+                                        暂无预置位，可输入ID后点击"设置预置位"添加
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- PTZ控制区域 - 仅GB28181设备显示 -->
@@ -75,27 +96,7 @@
                                     label="控制速度"></el-slider>
                             </div>
 
-                            <!-- 预置位控制 -->
-                            <div class="preset-controls"
-                                style="margin-top:20px;border-top:1px solid #eee;padding-top:5px;">
-                                <h4>预置位管理</h4>
-                                <!-- 仅保留设置预置位功能 -->
-                                <el-input v-model="presetId" type="number" placeholder="输入预置位ID(1-255)"
-                                    style="width:120px;margin-right:10px;" :min="1" :max="255"></el-input>
-                                <el-button type="primary" size="small" @click="setPreset">设置预置位</el-button>
 
-                                <!-- 已保存预置位列表 - 改造：点击标签调用，关闭按钮删除 -->
-                                <div class="preset-list" style="margin-top:15px;">
-                                    <el-tag v-for="id in presetList" :key="id" closable @close="delPreset(id)"
-                                        @click="callPreset(id)" style="margin:5px; cursor: pointer;" effect="dark">
-                                        预置位{{ id }}
-                                    </el-tag>
-                                    <div v-if="presetList.length === 0"
-                                        style="color:#999; font-size:12px; margin-top:8px;">
-                                        暂无预置位，可输入ID后点击"设置预置位"添加
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                     </div>
@@ -328,11 +329,9 @@ export default {
 
 .video-player {
     flex: 1;
-    min-height: 400px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    background: #000;
 }
 
 .ptz-controls {

@@ -15,7 +15,7 @@
     <PackageReference Include="Lazy.Captcha.Core" Version="1.1.7" />
     <PackageReference Include="log4net" Version="2.0.14" />
     <PackageReference Include="MailKit" Version="3.6.0" />
-    <PackageReference Include="Minio" Version="5.0.2" />
+    <PackageReference Include="Minio" Version="7.0.0" />
     <PackageReference Include="NATS.Client.Core" Version="2.7.1" />
     <PackageReference Include="NPOI" Version="2.7.5" />
 	<PackageReference Include="SixLabors.Fonts" Version="2.1.3" />

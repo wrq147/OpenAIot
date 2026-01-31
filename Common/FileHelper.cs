@@ -253,8 +253,6 @@ namespace Common
             {
                 using (Stream st = file.OpenReadStream())
                 {
-                    byte[] bytes = new byte[st.Length];
-                    await st.ReadAsync(bytes, 0, bytes.Length);
                     string ext = Path.GetExtension(file.FileName);
                     if (string.IsNullOrEmpty(ext))
                     {
@@ -262,7 +260,7 @@ namespace Common
                     }
                     var client = _provider.GetService<MinioHelper>();
                     string fileName = DateTime.Now.ToString("yyyyMMdd") + "/" + MyAccess.Core.StringTool.GetGUID() + ext;
-                    return await client.UploadFile(bytes, fileName, withDomain);
+                    return await client.UploadFile(st, fileName, withDomain);
                 }
             }
 

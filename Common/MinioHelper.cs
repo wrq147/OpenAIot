@@ -1,6 +1,7 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
 using Minio;
+using Minio.DataModel.Args;
 using Minio.Exceptions;
 using System;
 using System.IO;
@@ -19,7 +20,33 @@ namespace Common
                     .WithCredentials(conf.Value.minio_access, conf.Value.minio_secret)
             .Build();
         }
-
+        public async Task<string> UploadFile(Stream stream, string fileName, bool withDomin = false)
+        {
+            //上传文件
+            try
+            {
+                stream.Position = 0;
+                var putObjectArgs = new PutObjectArgs()
+                    .WithBucket(_conf.Value.minio_bucket)
+                    .WithObject(fileName)
+                    .WithObjectSize(stream.Length)
+                    .WithStreamData(stream);
+                await _minioClient.PutObjectAsync(putObjectArgs);
+                if (withDomin)
+                {
+                    return _conf.Value.minio_url + "/" + _conf.Value.minio_bucket + "/" + fileName;
+                }
+                else
+                {
+                    return "/" + _conf.Value.minio_bucket + "/" + fileName;
+                }
+            }
+            catch (MinioException e)
+            {
+                Console.WriteLine("File Upload Error: {0}", e.Message);
+                return string.Empty;
+            }
+        }
         public async Task<string> UploadFile(byte[] bytes, string fileName, bool withDomin = false)
         {
             //上传文件

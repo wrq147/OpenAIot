@@ -86,9 +86,11 @@ namespace FixVideoChannel
             else if (msg is MediaRecordCleanMessage cleanRec)
             {
                 //删除文件
-                foreach (var tstreamId in cleanRec.StreamIds)
+                var streamIds = cleanRec.Records.Select(x => x.StreamId).Distinct().ToList();
+                var dates = cleanRec.Records.Select(x => x.Date).ToList();
+                foreach (var tstreamId in streamIds)
                 {
-                    foreach (var tdate in cleanRec.Dates)
+                    foreach (var tdate in dates)
                     {
                         string tMp4Path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "record" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
                         if (Directory.Exists(tMp4Path))
@@ -102,6 +104,13 @@ namespace FixVideoChannel
                             Directory.Delete(tHlsPath, true);
                         }
                     }
+                }
+
+                //删除mino中的文件
+                foreach (var rec in cleanRec.Records)
+                {
+                    string upfilePosition = $"{rec.StreamId}/{rec.Date}/{rec.FileName}";
+                    await _serviceProvider.GetService<MinioHelper>().RemoveFile(upfilePosition);
                 }
             }
         }

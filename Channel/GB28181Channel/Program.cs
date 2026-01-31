@@ -35,6 +35,7 @@ namespace GB28181Channel
                 var configSec = configuration.GetSection("GB28181Option");
                 services.Configure<GB28181Option>(configSec);
                 services.AddSingleton<IDeviceStorage, InMemoryDeviceStorage>();
+                services.AddSingleton<MinioHelper>();
                 services.AddEventBus(x =>
                 {
                     var option = configSec.Get<GB28181Option>();

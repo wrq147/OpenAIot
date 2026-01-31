@@ -399,12 +399,10 @@ namespace IoTVideoService.Business
 
                     DateTime overTime = DateTime.Now.Date.AddDays(-rec.SaveCycle.Value);
                     var recFiles = await recordFileDAL.SelectList(x => x.PlanId == rec.Id && x.FileDate < overTime);
-                    var nodeIds = recFiles.Select(x => x.NodeId).Distinct().ToList();
-                    var streamIds = recFiles.Select(x => x.VideoKey).Distinct().ToList();
-                    var dates = recFiles.Select(x => x.FileDate.Value.ToString("yyyy-MM-dd")).ToList();
-                    foreach (var nodeId in nodeIds)
+                    var recGroups = recFiles.GroupBy(x => x.NodeId);
+                    foreach (var recItem in recGroups)
                     {
-                        await recordBLL.PublishCleanRecordMessage(nodeId, rec.VideoId, streamIds, dates);
+                        await recordBLL.PublishCleanRecordMessage(recItem.Key, rec.VideoId, recItem.ToList());
                     }
                     ++i;
                 }

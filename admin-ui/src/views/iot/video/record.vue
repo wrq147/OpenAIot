@@ -18,7 +18,7 @@
           {{ recordPlanForm.createTime || '暂无' }}
         </el-descriptions-item>
       </el-descriptions>
-      <el-tabs v-model="activeTab" type="card">
+      <el-tabs v-model="activeTab" type="card" @tab-click="changeTab">
         <!-- 基础配置标签页（新增/编辑共用） -->
         <el-tab-pane label="基础配置" name="config">
           <el-form ref="recordPlanForm" :model="recordPlanForm" :rules="recordPlanRules" label-width="100px"
@@ -157,6 +157,9 @@
             :limit.sync="logPagination.pageSize" @pagination="handleLogCurrentChange" />
 
         </el-tab-pane>
+        <el-tab-pane label="历史录像" name="history" v-if="isEdit">
+          <historyPlayer ref="hisPlayer" />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
     <!-- 对话框底部按钮 -->
@@ -169,9 +172,12 @@
 
 <script>
 import { recordLogList, recordInfo, addRecord, editRecord } from "@/api/rules/record";
-import { videoSourceList } from "@/api/rules/video";
-
+import { videoSourceList, getVideoDetail } from "@/api/rules/video";
+import historyPlayer from './historyPlayer.vue';
 export default {
+  components: {
+    historyPlayer
+  },
   name: 'RecordPlanDialog',
   data() {
     return {
@@ -236,8 +242,15 @@ export default {
     }
   },
   methods: {
+    async changeTab(item) {
+      if (item.name == "history") {
+        let res = await getVideoDetail({id:this.recordPlanForm.VideoId});
+        this.$refs.hisPlayer.InitVideo(res.data.Id, res.data.VideoType);
+      }
+    },
     // 打开对话框
     openDlg(data) {
+      this.activeTab = "config"
       this.visible = true
       if (!data) {
         this.isEdit = false

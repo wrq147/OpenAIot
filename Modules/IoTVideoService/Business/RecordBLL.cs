@@ -9,9 +9,11 @@ using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
 using NodaTime;
+using NPOI.HPSF;
 using Quartz;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -52,13 +54,22 @@ namespace IoTVideoService.Business
             recFile.EndTime = DateTimeOffset.FromUnixTimeSeconds(endlong).LocalDateTime;
             await _provider.GetService<RecordFileDAL>().Insert(recFile);
         }
-        public async Task PublishCleanRecordMessage(string nodeId, string videoId, List<string> streamIds, List<string> dates)
+        public async Task PublishCleanRecordMessage(string nodeId, string videoId, List<MZ_IotRecordFile> records)
         {
             MediaRecordCleanMessage msg = new MediaRecordCleanMessage();
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
-            msg.StreamIds = streamIds;
-            msg.Dates = dates;
+            List<FileRecord> rrss = new List<FileRecord>();
+            foreach (var record in records)
+            {
+                rrss.Add(new FileRecord()
+                {
+                    StreamId = record.VideoKey,
+                    Date = record.FileDate.Value.ToString("yyyy-MM-dd"),
+                    FileName = record.FileName
+                });
+            }
+            msg.Records = rrss;
             await _provider.GetService<NatsScope>().Public(nodeId, msg);
         }
         public async Task<BusResponse<string>> PublishStartRecordMessage(string planId, byte storageWay, DateTime time, MZ_VideoSource source)
@@ -291,6 +302,12 @@ namespace IoTVideoService.Business
                     return string.Empty;
                 }
                 return $"http://{curNode.Ip}:{curNode.HttpPort}/record/live/{file.VideoKey}/{file.FileDate.Value.ToString("yyyy-MM-dd")}/{file.FileName}";
+            }
+            else if (file.StorageWay == 1)
+            {
+                var option = _provider.GetService<IOptions<VideoOption>>();
+                string upfilePosition = $"{file.VideoKey}/{file.FileDate.Value.ToString("yyyy-MM-dd")}/{file.FileName}";
+                return $"{option.Value.minio_url}/{option.Value.minio_bucket}/{upfilePosition}";
             }
             else
             {

@@ -8,6 +8,8 @@ namespace IoTVideoService
 {
     public class VideoOption
     {
+        public string minio_url { get; set; }
+        public string minio_bucket { get; set; }
         public List<ServerInfo> VideoServers { get; set; }
         public List<ServerInfo> GB28181Servers { get; set; }
     }

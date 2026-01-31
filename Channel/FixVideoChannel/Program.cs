@@ -33,8 +33,7 @@ namespace FixVideoChannel
             {
                 var configSec = configuration.GetSection("FixVideoOption");
                 services.Configure<FixVideoOption>(configSec);
-
-
+                services.AddSingleton<MinioHelper>();
                 services.AddEventBus(x =>
                 {
                     var option = configSec.Get<FixVideoOption>();
