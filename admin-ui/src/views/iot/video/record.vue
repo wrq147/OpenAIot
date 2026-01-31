@@ -1,6 +1,6 @@
 <template>
   <!-- 模板部分保持不变 -->
-  <el-dialog :title="isEdit ? '编辑录像计划' : '新增录像计划'" top="2vh" :visible.sync="visible" width="980px"
+  <el-dialog :title="isEdit ? '编辑录像计划' : '新增录像计划'" top="2vh" :visible.sync="visible" width="1024px"
     :close-on-click-modal="false" @close="handleDialogClose">
     <!-- 核心内容卡片 -->
     <el-card shadow="never" class="dialog-card">

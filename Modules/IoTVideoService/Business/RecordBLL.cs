@@ -64,6 +64,7 @@ namespace IoTVideoService.Business
             {
                 rrss.Add(new FileRecord()
                 {
+                    Storage = record.StorageWay.Value,
                     StreamId = record.VideoKey,
                     Date = record.FileDate.Value.ToString("yyyy-MM-dd"),
                     FileName = record.FileName

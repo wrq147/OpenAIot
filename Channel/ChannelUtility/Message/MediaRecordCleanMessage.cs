@@ -13,6 +13,7 @@ namespace ChannelUtility.Message
     }
     public class FileRecord
     {
+        public byte Storage { get; set; }
         public string StreamId { get; set; }
         public string Date { get; set; }
         public string FileName { get; set; }

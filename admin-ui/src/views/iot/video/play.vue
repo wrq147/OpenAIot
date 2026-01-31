@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="视频播放" :visible.sync="open" width="980px" top="2vh" append-to-body :close-on-click-modal="false"
+    <el-dialog title="视频播放" :visible.sync="open" width="1024px" top="2vh" append-to-body :close-on-click-modal="false"
         @close="handleClose">
         <div class="video-play-container">
             <!-- 页签切换 -->
@@ -10,7 +10,7 @@
                         <!-- 视频播放区域 -->
                         <div class="video-player" ref="videoContainer" v-loading="loading">
                             <div ref="devPlayer"></div>
-                                                        <!-- 预置位控制 -->
+                            <!-- 预置位控制 -->
                             <div class="preset-controls"
                                 style="margin-top:20px;border-top:1px solid #eee;padding-top:5px;">
                                 <h4>预置位管理</h4>

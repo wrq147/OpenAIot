@@ -161,8 +161,9 @@ namespace GB28181Channel
             else if (msg is MediaRecordCleanMessage cleanRec)
             {
                 //删除文件
-                var streamIds = cleanRec.Records.Select(x => x.StreamId).Distinct().ToList();
-                var dates = cleanRec.Records.Select(x => x.Date).ToList();
+                var fileRecs = cleanRec.Records.Where(x => x.Storage == 0);
+                var streamIds = fileRecs.Select(x => x.StreamId).Distinct().ToList();
+                var dates = fileRecs.Select(x => x.Date).ToList();
                 foreach (var tstreamId in streamIds)
                 {
                     foreach (var tdate in dates)
@@ -182,7 +183,8 @@ namespace GB28181Channel
                 }
 
                 //删除mino中的文件
-                foreach (var rec in cleanRec.Records)
+                var minoRecs = cleanRec.Records.Where(x => x.Storage == 1);
+                foreach (var rec in minoRecs)
                 {
                     string upfilePosition = $"{rec.StreamId}/{rec.Date}/{rec.FileName}";
                     await _serviceProvider.GetService<MinioHelper>().RemoveFile(upfilePosition);

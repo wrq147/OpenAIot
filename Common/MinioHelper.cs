@@ -1,7 +1,6 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
 using Minio;
-using Minio.DataModel.Args;
 using Minio.Exceptions;
 using System;
 using System.IO;
