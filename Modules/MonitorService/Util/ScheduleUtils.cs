@@ -1,6 +1,7 @@
 ﻿using Common;
 using Common.EventBus;
 using Common.Json;
+using MonitorService.Controller;
 using MonitorService.Model;
 using Quartz;
 using System;
@@ -113,7 +114,34 @@ namespace MonitorService.Util
                 await scheduler.PauseJob(jobKey);
             }
         }
-
+        public static async Task RetryLog(ITAServiceProvider provider, MZ_JobLog log, bool disConcurrent)
+        {
+            if (log.invoke_target.IsHttp())
+            {
+                await HttpHelper.Instance.GetAsync(log.invoke_target);
+            }
+            else
+            {
+                string className = ScheduleUtils.GetClassName(log.invoke_target);
+                string methodName = ScheduleUtils.GetMethodName(log.invoke_target);
+                string methodParams = log.invoke_target.SubstringBetween("(", ")");
+                QuartzContext quartzContext = new QuartzContext();
+                quartzContext.PreviousFireTimeUtc = log.create_time;
+                quartzContext.ScheduledFireTimeUtc = log.create_time;
+                if (disConcurrent)
+                {
+                    var tres = await BusUtility.TriggerWait(className, methodName, methodParams, quartzContext);
+                    if (!tres.IsSuccess())
+                    {
+                        throw new Exception(tres.Message);
+                    }
+                }
+                else
+                {
+                    await BusUtility.Trigger(className, methodName, methodParams, quartzContext);
+                }
+            }
+        }
         /// <summary>
         /// 执行指定类的方法
         /// </summary>
@@ -142,7 +170,7 @@ namespace MonitorService.Util
 
                     if (disConcurrent)
                     {
-                        var tres = await BusUtility.TriggerWait(className, methodName, methodParams, quartzContext, job.job_id.Value);
+                        var tres = await BusUtility.TriggerWait(className, methodName, methodParams, quartzContext);
                         if (!tres.IsSuccess())
                         {
                             throw new Exception(tres.Message);
@@ -150,7 +178,7 @@ namespace MonitorService.Util
                     }
                     else
                     {
-                        await BusUtility.Trigger(className, methodName, methodParams, quartzContext, job.job_id.Value);
+                        await BusUtility.Trigger(className, methodName, methodParams, quartzContext);
                     }
                 }
             }

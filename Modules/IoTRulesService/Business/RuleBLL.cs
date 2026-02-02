@@ -457,24 +457,6 @@ namespace IoTRulesService.Business
                 {
                     string cronExp = data.TimerCron == null ? old.TimerCron : data.TimerCron;
                     await TimerSchedule.CreateJob(old.Id.Value, new List<string>() { cronExp });
-                    //MZ_Job job = new MZ_Job();
-                    //job.concurrent = "1";
-                    //job.createId = 0;
-                    //job.create_time = DateTime.Now;
-                    //job.updateId = 0;
-                    //job.update_time = DateTime.Now;
-                    //job.cron_expression = data.TimerCron == null ? old.TimerCron : data.TimerCron;
-                    //job.invoke_target = typeof(RuleBLL).FullName + ".Execute(L" + data.Id + ",2,$context,$id,$null)";
-                    //job.job_group = "DEFAULT";
-                    //job.job_name = "RuleTimer-" + old.Id;
-                    //job.misfire_policy = "0";
-                    //job.status = "0";
-                    //var xrs = await _provider.GetService<JobBLL>().InsertJob(job);
-                    //if (!xrs.IsSuccess())
-                    //{
-                    //    return BusResponse<int>.Error(33, xrs.Message);
-                    //}
-                    //data.TimerJobId = xrs.Data;
                 }
                 else if (old.Status == "0" && data.Status == "1")
                 {
@@ -552,25 +534,9 @@ namespace IoTRulesService.Business
             data.Id = id;
             if (old.TriggerWay == 2)
             {
-                await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-                MZ_Job job = new MZ_Job();
-                job.concurrent = "1";
-                job.createId = 0;
-                job.create_time = DateTime.Now;
-                job.updateId = 0;
-                job.update_time = DateTime.Now;
-                job.cron_expression = data.TimerCron == null ? old.TimerCron : data.TimerCron;
-                job.invoke_target = typeof(RuleBLL).FullName + ".Execute(L" + data.Id + ",2,$context,$id,$null)";
-                job.job_group = "DEFAULT";
-                job.job_name = "RuleTimer-" + old.Id;
-                job.misfire_policy = "0";
-                job.status = "0";
-                var xrs = await _provider.GetService<JobBLL>().InsertJob(job);
-                if (!xrs.IsSuccess())
-                {
-                    return BusResponse<int>.Error(33, xrs.Message);
-                }
-                data.TimerJobId = xrs.Data;
+                await TimerSchedule.DeleteJob(old.Id.Value);
+                string cronExp = data.TimerCron == null ? old.TimerCron : data.TimerCron;
+                await TimerSchedule.CreateJob(old.Id.Value, new List<string>() { cronExp });
             }
             data.SetUpdateBy(user);
             await _ruleTemplate.Update(data);

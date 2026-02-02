@@ -13,14 +13,14 @@ using TemplateAction.Core;
 namespace ReportService.TimerUtil
 {
     [DisallowConcurrentExecution]
-    public class TimerConcurrentJob : IJob
+    public class TimerWarnConcurrentJob : IJob
     {
-        private ILogger<QuartzDisallowConcurrentJob> _log;
+        private ILogger<TimerWarnConcurrentJob> _log;
         private ITAServiceProvider _provider;
-        public TimerConcurrentJob(ITAServiceProvider provider, ILoggerFactory factory)
+        public TimerWarnConcurrentJob(ITAServiceProvider provider, ILoggerFactory factory)
         {
             _provider = provider;
-            _log = factory.CreateLogger<QuartzDisallowConcurrentJob>();
+            _log = factory.CreateLogger<TimerWarnConcurrentJob>();
         }
         public async Task Execute(IJobExecutionContext context)
         {

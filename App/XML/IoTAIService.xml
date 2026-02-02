@@ -58,7 +58,7 @@
         </member>
         <member name="P:IoTAIService.AIProjectParam.type">
             <summary>
-            参数类型：boolean、enum、float、string、
+            参数类型：boolean、enum、float、string、clip
             </summary>
         </member>
         <member name="P:IoTAIService.AIProjectParam.help">
@@ -69,6 +69,11 @@
         <member name="P:IoTAIService.AIProjectParam.elements">
             <summary>
             枚举元素
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AIProject.Items.DetectionProject">
+            <summary>
+            通用检测项目
             </summary>
         </member>
         <member name="T:IoTAIService.Controller.Face">

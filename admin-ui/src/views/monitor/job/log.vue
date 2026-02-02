@@ -2,65 +2,28 @@
   <div style="padding:20px 20px 0 20px" id="big_con">
     <div>
       <div class="from_con" id="from_con" v-show="showSearch">
-        <el-form
-          :model="queryParams"
-          ref="queryForm"
-          :inline="true"
-          class="biaodan"
-        >
+        <el-form :model="queryParams" ref="queryForm" :inline="true" class="biaodan">
           <el-form-item label="任务名称" prop="jobName">
-            <el-input
-              v-model="queryParams.jobName"
-              class="set_radius"
-              placeholder="请输入任务名称"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
+            <el-input v-model="queryParams.jobName" class="set_radius" placeholder="请输入任务名称" clearable
+              style="width: 240px" @keyup.enter.native="handleQuery" />
           </el-form-item>
           <el-form-item label="任务组名" prop="jobGroup">
-            <el-select
-              v-model="queryParams.jobGroup"
-              class="set_radius"
-              placeholder="请任务组名"
-              clearable
-              style="width: 240px"
-            >
-              <el-option
-                v-for="dict in dict.type.sys_job_group"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
+            <el-select v-model="queryParams.jobGroup" class="set_radius" placeholder="请任务组名" clearable
+              style="width: 240px">
+              <el-option v-for="dict in dict.type.sys_job_group" :key="dict.value" :label="dict.label"
+                :value="dict.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="执行状态" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              class="set_radius"
-              placeholder="请选择执行状态"
-              clearable
-              style="width: 240px"
-            >
-              <el-option
-                v-for="dict in dict.type.sys_common_status"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
+            <el-select v-model="queryParams.status" class="set_radius" placeholder="请选择执行状态" clearable
+              style="width: 240px">
+              <el-option v-for="dict in dict.type.sys_common_status" :key="dict.value" :label="dict.label"
+                :value="dict.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="执行时间">
-            <el-date-picker
-              v-model="dateRange"
-              class="set_radius"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
+            <el-date-picker v-model="dateRange" class="set_radius" style="width: 240px" value-format="yyyy-MM-dd"
+              type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
           <el-form-item class="submit_button_con">
             <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
@@ -68,41 +31,26 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="elbiaoge_elform" :style="{'min-height':tableConHeight+'px'}">
+      <div class="elbiaoge_elform" :style="{ 'min-height': tableConHeight + 'px' }">
         <el-row :gutter="10" class="mb8 button_row">
           <div>
             <el-col :span="1.5">
-              <el-button
-                type="danger"
-                plain
-                :disabled="multiple"
-                @click="handleDelete"
-                v-hasPermi="['/MonitorService/Job/Remove']"
-              >
-              <i class="zhongtaiiconfont zhongtai-icon-shanchu"></i>
+              <el-button type="danger" plain :disabled="multiple" @click="handleDelete"
+                v-hasPermi="['/MonitorService/Job/Remove']">
+                <i class="zhongtaiiconfont zhongtai-icon-shanchu"></i>
                 <span style="margin-left:6px">删除</span>
               </el-button>
             </el-col>
             <el-col :span="1.5">
-              <el-button
-                type="danger"
-                plain
-                @click="handleClean"
-                v-hasPermi="['/MonitorService/Job/Remove']"
-              >
-              <i class="zhongtaiiconfont zhongtai-icon-qingkong"></i>
+              <el-button type="danger" plain @click="handleClean" v-hasPermi="['/MonitorService/Job/Remove']">
+                <i class="zhongtaiiconfont zhongtai-icon-qingkong"></i>
                 <span style="margin-left:6px">清空</span>
               </el-button>
             </el-col>
             <el-col :span="1.5">
-              <el-button
-                type="warning"
-                plain
-                :loading="exportLoading"
-                @click="handleExport"
-                v-hasPermi="['/MonitorService/Job/Export']"
-              >
-              <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
+              <el-button type="warning" plain :loading="exportLoading" @click="handleExport"
+                v-hasPermi="['/MonitorService/Job/Export']">
+                <i class="zhongtaiiconfont zhongtai-icon-daochu"></i>
                 <span style="margin-left:6px">导出</span>
               </el-button>
             </el-col>
@@ -116,45 +64,18 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
-        <el-table
-          v-loading="loading"
-          class="data_table"
-          border
-          :data="jobLogList"
-          @selection-change="handleSelectionChange"
-          :header-cell-style="cellSty"
-          style="width:100%"
-        >
+        <el-table v-loading="loading" class="data_table" border :data="jobLogList"
+          @selection-change="handleSelectionChange" :header-cell-style="cellSty" style="width:100%">
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="日志编号" width="80" align="center" prop="job_log_id" />
-          <el-table-column
-            label="任务名称"
-            align="center"
-            prop="job_name"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="任务组名"
-            align="center"
-            prop="job_group"
-            :show-overflow-tooltip="true"
-          >
+          <el-table-column label="任务名称" align="center" prop="job_name" :show-overflow-tooltip="true" />
+          <el-table-column label="任务组名" align="center" prop="job_group" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <dict-tag :options="dict.type.sys_job_group" :value="scope.row.job_group" />
             </template>
           </el-table-column>
-          <el-table-column
-            label="调用目标字符串"
-            align="center"
-            prop="invoke_target"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="日志信息"
-            align="center"
-            prop="job_message"
-            :show-overflow-tooltip="true"
-          />
+          <el-table-column label="调用目标字符串" align="center" prop="invoke_target" :show-overflow-tooltip="true" />
+          <el-table-column label="日志信息" align="center" prop="job_message" :show-overflow-tooltip="true" />
           <el-table-column label="执行状态" align="center" prop="status">
             <template slot-scope="scope">
               <dict-tag :options="dict.type.sys_common_status" :value="scope.row.status" />
@@ -167,31 +88,17 @@
           </el-table-column>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
-              <el-button
-                type="text"
-                icon="el-icon-view"
-                @click="handleView(scope.row)"
-              >详细</el-button>
+              <el-button type="text" icon="el-icon-view" @click="handleView(scope.row)">详细</el-button>
+              <el-button type="text" icon="el-icon-refresh-left" @click="handleRetry(scope.row)">重试</el-button>
             </template>
           </el-table-column>
         </el-table>
 
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
+        <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize" @pagination="getList" />
       </div>
       <!-- 调度日志详细 -->
-      <el-dialog
-        title="调度日志详细"
-        :close-on-click-modal="false"
-        :visible.sync="open"
-        width="700px"
-        append-to-body
-      >
+      <el-dialog title="调度日志详细" :close-on-click-modal="false" :visible.sync="open" width="700px" append-to-body>
         <el-form ref="form" :model="form" label-width="100px">
           <el-row>
             <el-col :span="12">
@@ -233,7 +140,8 @@ import {
   listJobLog,
   delJobLog,
   exportJobLog,
-  cleanJobLog
+  cleanJobLog,
+  retryJobLog
 } from "@/api/monitor/jobLog";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 export default {
@@ -314,7 +222,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.jobLogId);
+      this.ids = selection.map(item => item.job_log_id);
       this.multiple = !selection.length;
     },
     /** 详细按钮操作 */
@@ -322,32 +230,40 @@ export default {
       this.open = true;
       this.form = row;
     },
+    async handleRetry(row) {
+      try {
+        await retryJobLog(row.job_log_id);
+        this.getList();
+        this.$modal.msgSuccess("重试成功");
+      }
+      catch { }
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const jobLogIds = this.ids;
       this.$modal
         .confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项？')
-        .then(function() {
+        .then(function () {
           return delJobLog(jobLogIds);
         })
         .then(() => {
           this.getList();
           this.$modal.msgSuccess("删除成功");
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     /** 清空按钮操作 */
     handleClean() {
       this.$modal
         .confirm("是否确认清空所有调度日志数据项？")
-        .then(()=> {
-          return cleanJobLog(this.queryParams.jobName,this.queryParams.jobGroup);
+        .then(() => {
+          return cleanJobLog(this.queryParams.jobName, this.queryParams.jobGroup);
         })
         .then(() => {
           this.getList();
           this.$modal.msgSuccess("清空成功");
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -361,7 +277,7 @@ export default {
         .then(response => {
           this.exportLoading = false;
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }
 };

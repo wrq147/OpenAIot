@@ -14,7 +14,6 @@ namespace Common.EventBus
         public string MethodName { get; set; }
         public string MethodParams { get; set; }
         public bool DisConcurrent { get; set; }
-        public long JobId { get; set; }
         public QuartzContext Context { get; set; }
 
 
@@ -48,10 +47,6 @@ namespace Common.EventBus
                 else if (str.StartsWith("D"))
                 {
                     classs.Add(double.Parse(str.Replace("D", "")));
-                }
-                else if (str == "$id")
-                {
-                    classs.Add(this.JobId);
                 }
                 else if (str == "$context")
                 {

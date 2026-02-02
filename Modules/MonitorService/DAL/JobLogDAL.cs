@@ -2,7 +2,9 @@
 using Common.Share;
 using MonitorService.Model;
 using MyAccess.DB;
+using NPOI.SS.Formula.Functions;
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace MonitorService.DAL
@@ -147,6 +149,13 @@ namespace MonitorService.DAL
             {
                 var docmd = await new SqlBuilder(db).Delete<MZ_JobLog>("create_time<").AppendParam(overTime).DoAsync<DoExecSql>();
                 return docmd.RowCount;
+            }
+        }
+        public async Task<int> UpdateLog(MZ_JobLog entity)
+        {
+            using (DbHelp db = CreateDB())
+            {
+                return await new SqlBuilder(db).Update(entity).DoAsync();
             }
         }
     }

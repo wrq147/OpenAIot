@@ -9,6 +9,7 @@ using MonitorService.Business;
 using MonitorService.Model;
 using WeiXinService.Business;
 using Common.EventBus;
+using WeiXinService.TimerUtil;
 
 namespace WeiXinService
 {
@@ -36,9 +37,10 @@ namespace WeiXinService
                 await app.ServiceProvider.GetService<WxExecutor>().SyncNoticeMessage(evt);
             });
 
-            if (Constants.General.quick_init != true)
+
+            TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
-                TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
+                if (Constants.General.quick_init != true)
                 {
                     //添加定时刷新微信令牌的自动任务
                     string jobname = "WxRefreshJob";
@@ -60,9 +62,10 @@ namespace WeiXinService
 
                         await app.ServiceProvider.GetService<JobBLL>().InsertJob(job);
                     }
-                });
-            }
+                }
 
+                await TimerSchedule.InitScheduler(app.ServiceProvider);
+            });
             plg.RegisterQuartzTask();
         }
 

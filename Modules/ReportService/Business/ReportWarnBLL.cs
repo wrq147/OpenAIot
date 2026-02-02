@@ -39,7 +39,7 @@ namespace ReportService.Business
             var warnInfo = await _reportWarnDAL.Select(id);
             if (warnInfo == null)
             {
-                await TimerSchedule.DeleteJob(id);
+                await TimerSchedule.DeleteWarnJob(id);
                 return;
             }
 
@@ -307,25 +307,7 @@ namespace ReportService.Business
                 data.ShareId ??= string.Empty;
                 if (data.Status == "0")
                 {
-                    await TimerSchedule.CreateJob(data.Id,new List<string>() { data.TimerCron });
-                    //MZ_Job job = new MZ_Job();
-                    //job.concurrent = "0";
-                    //job.createId = 0;
-                    //job.create_time = DateTime.Now;
-                    //job.updateId = 0;
-                    //job.update_time = DateTime.Now;
-                    //job.cron_expression = data.TimerCron;
-                    //job.invoke_target = typeof(ReportWarnBLL).FullName + ".Execute('" + data.Id + "',$context,$id)";
-                    //job.job_group = "DEFAULT";
-                    //job.job_name = "ReportWarn-" + data.Id;
-                    //job.misfire_policy = "0";
-                    //job.status = "0";
-                    //var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                    //if (!rs.IsSuccess())
-                    //{
-                    //    return BusResponse<string>.Error(rs.Code, rs.Message);
-                    //}
-
+                    await TimerSchedule.CreateWarnJob(data.Id,new List<string>() { data.TimerCron });
                 }
 
                 await _reportWarnDAL.Insert(data);
@@ -349,16 +331,16 @@ namespace ReportService.Business
                 if (data.Status == "0" && old.Status == "1")
                 {
                     string cronStr = string.IsNullOrEmpty(data.TimerCron) ? old.TimerCron : data.TimerCron;
-                    await TimerSchedule.CreateJob(data.Id, new List<string>() { cronStr });
+                    await TimerSchedule.CreateWarnJob(data.Id, new List<string>() { cronStr });
                 }
                 else if (data.Status == "1" && old.Status == "0")
                 {
-                    await TimerSchedule.DeleteJob(data.Id);
+                    await TimerSchedule.DeleteWarnJob(data.Id);
                 }
                 else if (old.Status == "0" && !string.IsNullOrEmpty(data.TimerCron) && old.TimerCron != data.TimerCron)
                 {
-                    await TimerSchedule.DeleteJob(data.Id);
-                    await TimerSchedule.CreateJob(data.Id, new List<string>() { data.TimerCron });
+                    await TimerSchedule.DeleteWarnJob(data.Id);
+                    await TimerSchedule.CreateWarnJob(data.Id, new List<string>() { data.TimerCron });
                 }
                 data.SetUpdateBy(user);
                 await _reportWarnDAL.Update(data, x => x.Id == data.Id && x.OrgId == user.OrgId);

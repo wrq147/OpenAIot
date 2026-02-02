@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using TemplateAction.Core;
 using WeiXinService.DAL;
 using WeiXinService.Model;
+using WeiXinService.TimerUtil;
 
 namespace WeiXinService.Business
 {
@@ -46,15 +47,12 @@ namespace WeiXinService.Business
             _orgDAL = orgDAL;
             _userCropDAL = userCropDAL;
         }
-        public virtual async Task TimerExecute(string appId, long jobId)
+        public virtual async Task TimerExecute(string appId)
         {
             var syncData = (await _corpSyncDAL.SelectList(x => x.AppId == appId)).FirstOrDefault();
             if (syncData == null)
             {
-                if (jobId > 0)
-                {
-                    await _serviceProvider.GetService<JobBLL>().DeleteJob(jobId);
-                }
+                await TimerSchedule.DeleteJob(appId);
                 return;
             }
             MZ_CorpTask newTask = new MZ_CorpTask();
@@ -106,32 +104,17 @@ namespace WeiXinService.Business
             corpItem.UserName = data.username;
             corpItem.Status = "0";
             corpItem.UpdatedOn = DateTime.Now;
-
-            MZ_Job job = new MZ_Job();
-            job.concurrent = "0";
-            job.createId = 0;
-            job.create_time = DateTime.Now;
-            job.updateId = 0;
-            job.update_time = DateTime.Now;
+            string cronExp;
             if (corpItem.Speed == 1)
             {
-                job.cron_expression = "0 0/5 * * * ?";
+                cronExp = "0 0/5 * * * ?";
             }
             else
             {
-                job.cron_expression = "0 0 0/1 * * ? ";
+                cronExp = "0 0 0/1 * * ? ";
             }
-            job.invoke_target = typeof(CorpSyncBLL).FullName + ".TimerExecute('" + data.appid + "',$id)";
-            job.job_group = "DEFAULT";
-            job.job_name = "CorpSyncTimer-" + corpItem.AppId;
-            job.misfire_policy = "0";
-            job.status = "0";
-            var rs = await _serviceProvider.GetService<JobBLL>().InsertJob(job);
-            if (!rs.IsSuccess())
-            {
-                return BusResponse<string>.Error(rs.Code, rs.Message);
-            }
-            corpItem.JobId = rs.Data;
+            await TimerSchedule.CreateJob(data.appid, new List<string>() { cronExp });
+            corpItem.JobId = 0;
             if (isAdd)
             {
                 await _corpSyncDAL.Insert(corpItem);

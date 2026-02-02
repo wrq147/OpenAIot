@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
-namespace ReportService.TimerUtil
+namespace WeiXinService.TimerUtil
 {
     public class TimerSchedule
     {
@@ -19,8 +19,8 @@ namespace ReportService.TimerUtil
         {
             GeneralOption generalOption = provider.GetService<IOptions<GeneralOption>>().Value;
             MonitorOption monitorOption = provider.GetService<IOptions<MonitorOption>>().Value;
-            string instanceName = "ReportScheduler";
-            string instanceId = "Report_one_" + monitorOption.instance_id;
+            string instanceName = "WXScheduler";
+            string instanceId = "WX_one_" + monitorOption.instance_id;
             var factory = SchedulerBuilder.Create()
              .WithId(instanceId)
              .WithName(instanceName)
@@ -47,29 +47,19 @@ namespace ReportService.TimerUtil
             _scheduler.JobFactory = new IOCJobFactory(provider);
             await _scheduler.Start();
         }
-        public static async Task DeleteWarnJob(string warnId)
+        public static async Task DeleteJob(string appId)
         {
-            var jobKey = new JobKey("Report" + warnId);
-            await _scheduler.DeleteJob(jobKey);
-        }
-        public static async Task DeleteShareJob(string shareId)
-        {
-            var jobKey = new JobKey("Share" + shareId);
+            var jobKey = new JobKey("Wx" + appId);
             await _scheduler.DeleteJob(jobKey);
         }
 
-        /// <summary>
-        /// 创建告警定时计划任务
-        /// </summary>
-        /// <param name="warnId"></param>
-        /// <param name="cronExps"></param>
-        /// <returns></returns>
-        public static async Task CreateWarnJob(string warnId, List<string> cronExps)
+
+        public static async Task CreateJob(string appId, List<string> cronExps)
         {
             // 构建job信息
-            var jobKey = new JobKey("Report" + warnId);
-            IJobDetail jobDetail = JobBuilder.Create(typeof(TimerWarnConcurrentJob)).WithIdentity(jobKey).Build();
-            jobDetail.JobDataMap.Put("PlanId", warnId);
+            var jobKey = new JobKey("Wx" + appId);
+            IJobDetail jobDetail = JobBuilder.Create(typeof(TimerConcurrentJob)).WithIdentity(jobKey).Build();
+            jobDetail.JobDataMap.Put("PlanId", appId);
             int i = 0;
             List<ITrigger> triggers = new List<ITrigger>();
             foreach (var cron in cronExps)
@@ -77,28 +67,7 @@ namespace ReportService.TimerUtil
                 ITrigger trigger;
                 // 表达式调度构建器
                 CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(cron).WithMisfireHandlingInstructionFireAndProceed();
-                var triggetBuilder = TriggerBuilder.Create().WithIdentity("Report" + warnId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
-                trigger = triggetBuilder.Build();
-                triggers.Add(trigger);
-                ++i;
-            }
-            await _scheduler.ScheduleJob(jobDetail, triggers, true);
-        }
-
-        public static async Task CreateShareJob(string shareId, List<string> cronExps)
-        {
-            // 构建job信息
-            var jobKey = new JobKey("Share" + shareId);
-            IJobDetail jobDetail = JobBuilder.Create(typeof(TimerWarnConcurrentJob)).WithIdentity(jobKey).Build();
-            jobDetail.JobDataMap.Put("PlanId", shareId);
-            int i = 0;
-            List<ITrigger> triggers = new List<ITrigger>();
-            foreach (var cron in cronExps)
-            {
-                ITrigger trigger;
-                // 表达式调度构建器
-                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(cron).WithMisfireHandlingInstructionFireAndProceed();
-                var triggetBuilder = TriggerBuilder.Create().WithIdentity("Share" + shareId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
+                var triggetBuilder = TriggerBuilder.Create().WithIdentity("Wx" + appId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
                 trigger = triggetBuilder.Build();
                 triggers.Add(trigger);
                 ++i;

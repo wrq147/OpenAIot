@@ -161,6 +161,11 @@
                           <el-input v-else-if="param.type === 'string'" v-model="scope.row.paramValues[param.code]"
                             placeholder="请输入文本" class="param-input" size="small" />
 
+                          <!-- 参数类型：clip -->
+                          <template v-else-if="param.type === 'clip'">
+                            
+                          </template>
+
                           <!-- 帮助提示 -->
                           <el-tooltip effect="dark" :content="param.help" placement="top" enterable
                             class="help-tooltip">

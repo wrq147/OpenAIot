@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TimeZoneConverter;
@@ -353,11 +354,14 @@ namespace IoTService.Business
                 influxDBTimeZone = TZConvert.WindowsToIana(localTimeZone.Id);
             }
 
+            InfluxDBClientOptions clientOption = new InfluxDBClientOptions(storageConfig.url);
+            clientOption.Timeout = TimeSpan.FromSeconds(60);
+            clientOption.Token = storageConfig.token;
+            using var client = new InfluxDBClient(clientOption);
+            var queryApi = client.GetQueryApi();
             List<Out_MergeItem> finalList = new List<Out_MergeItem>();
             foreach (var merge_way in query.MergeWay)
             {
-                using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
-                var queryApi = client.GetQueryApi();
                 int totalNumbers = -1;
                 StringBuilder querysql = new StringBuilder();
                 if (query.Hours != null && query.Hours.Count > 0)

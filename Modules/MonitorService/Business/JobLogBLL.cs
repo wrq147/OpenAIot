@@ -1,6 +1,7 @@
 ﻿using Common.Share;
 using MonitorService.DAL;
 using MonitorService.Model;
+using MonitorService.Util;
 using System;
 using System.Threading.Tasks;
 using TemplateAction.Core;
@@ -16,7 +17,34 @@ namespace MonitorService.Business
             _joblog = joblog;
             _provider = provider;
         }
-
+        public async Task<BusResponse<string>> Retry(long id)
+        {
+            var jobLog = await _joblog.SelectJobLogById(id);
+            if (jobLog == null)
+            {
+                return BusResponse<string>.Error(111, "日志不存在");
+            }
+            var job = await _provider.GetService<JobDAL>().SelectJobByName(jobLog.job_name, jobLog.job_group);
+            if (job == null)
+            {
+                return BusResponse<string>.Error(112, "任务不存在");
+            }
+            MZ_JobLog newlog = new MZ_JobLog();
+            newlog.job_log_id = jobLog.job_log_id;
+            try
+            {
+                await ScheduleUtils.RetryLog(_provider, jobLog, job.concurrent == "1");
+                newlog.exception_info = string.Empty;
+                newlog.status = "0";
+            }
+            catch (Exception ex)
+            {
+                newlog.exception_info = ex.Message;
+                newlog.status = "1";
+            }
+            await _joblog.UpdateLog(newlog);
+            return BusResponse<string>.Success();
+        }
         /// <summary>
         /// 获取quartz调度器日志的计划任务
         /// </summary>

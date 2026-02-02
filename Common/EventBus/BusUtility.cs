@@ -37,9 +37,8 @@ namespace Common.EventBus
         /// <param name="methodName"></param>
         /// <param name="methodParams"></param>
         /// <param name="context"></param>
-        /// <param name="jobId"></param>
         /// <returns></returns>
-        public static async Task Trigger(string className, string methodName, string methodParams, QuartzContext context, long jobId)
+        public static async Task Trigger(string className, string methodName, string methodParams, QuartzContext context)
         {
             QuartzExeEvent exeEvt = new QuartzExeEvent();
             exeEvt.ClassName = className;
@@ -47,7 +46,6 @@ namespace Common.EventBus
             exeEvt.MethodParams = methodParams;
             exeEvt.DisConcurrent = false;
             exeEvt.Context = context;
-            exeEvt.JobId = jobId;
             string moduleName = className.Substring(0, className.IndexOf('.'));
             await TAEventDispatcher.Instance.Dispatch($"{QuartzExeEvent.EventKey}.{moduleName}", exeEvt);
         }
@@ -60,9 +58,8 @@ namespace Common.EventBus
         /// <param name="methodName"></param>
         /// <param name="methodParams"></param>
         /// <param name="context"></param>
-        /// <param name="jobId"></param>
         /// <returns></returns>
-        public static async Task<QuartzExeResponse> TriggerWait(string className, string methodName, string methodParams, QuartzContext context, long jobId)
+        public static async Task<QuartzExeResponse> TriggerWait(string className, string methodName, string methodParams, QuartzContext context)
         {
             QuartzExeEvent exeEvt = new QuartzExeEvent();
             exeEvt.ClassName = className;
@@ -70,7 +67,6 @@ namespace Common.EventBus
             exeEvt.MethodParams = methodParams;
             exeEvt.DisConcurrent = true;
             exeEvt.Context = context;
-            exeEvt.JobId = jobId;
             string moduleName = className.Substring(0, className.IndexOf('.'));
             return await TAEventDispatcher.Instance.DispathWait<QuartzExeEvent, QuartzExeResponse>($"{QuartzExeEvent.EventKey}.{moduleName}", exeEvt);
         }

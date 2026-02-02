@@ -5,21 +5,16 @@ using Common.Share;
 using DeveloperService.Business;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
-using MonitorService.Model;
 using MonitorService.Util;
 using MyAccess.DB.Builder.WhereToSql;
-using Quartz;
 using ReportService.DAL;
 using ReportService.Models;
+using ReportService.TimerUtil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
-using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using System.Web;
 using TemplateAction.Core;
 
 namespace ReportService.Business
@@ -137,53 +132,18 @@ namespace ReportService.Business
                 }
                 if (data.TimerStatus == "0" && old.TimerStatus == "1")
                 {
-                    MZ_Job job = new MZ_Job();
-                    job.concurrent = "0";
-                    job.createId = 0;
-                    job.create_time = DateTime.Now;
-                    job.updateId = 0;
-                    job.update_time = DateTime.Now;
-                    job.cron_expression = data.TimerCron;
-                    job.invoke_target = typeof(ShareBLL).FullName + ".Execute('" + data.Id + "',$context,$id)";
-                    job.job_group = "DEFAULT";
-                    job.job_name = "ReportShare-" + data.Id;
-                    job.misfire_policy = "0";
-                    job.status = "0";
-                    var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                    if (!rs.IsSuccess())
-                    {
-                        return BusResponse<int>.Error(rs.Code, rs.Message);
-                    }
-                    data.TimerJobId = rs.Data;
+                    await TimerSchedule.CreateShareJob(data.Id, new List<string>() { data.TimerCron });
                 }
                 else if (data.TimerStatus == "1" && old.TimerStatus == "0")
                 {
-                    await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-                    data.TimerJobId = 0;
+                    await TimerSchedule.DeleteShareJob(data.Id);
                 }
                 else if (data.TimerStatus == "0" && old.TimerStatus == "0")
                 {
                     if (!string.IsNullOrEmpty(data.TimerCron) && data.TimerCron != old.TimerCron)
                     {
-                        await _provider.GetService<JobBLL>().DeleteJob(old.TimerJobId.Value);
-                        MZ_Job job = new MZ_Job();
-                        job.concurrent = "0";
-                        job.createId = 0;
-                        job.create_time = DateTime.Now;
-                        job.updateId = 0;
-                        job.update_time = DateTime.Now;
-                        job.cron_expression = data.TimerCron;
-                        job.invoke_target = typeof(ShareBLL).FullName + ".Execute('" + data.Id + "',$context,$id)";
-                        job.job_group = "DEFAULT";
-                        job.job_name = "ReportShare-" + data.Id;
-                        job.misfire_policy = "0";
-                        job.status = "0";
-                        var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                        if (!rs.IsSuccess())
-                        {
-                            return BusResponse<int>.Error(rs.Code, rs.Message);
-                        }
-                        data.TimerJobId = rs.Data;
+                        await TimerSchedule.DeleteShareJob(data.Id);
+                        await TimerSchedule.CreateShareJob(data.Id, new List<string>() { data.TimerCron });
                     }
                 }
                 data.SetUpdateBy(user);
@@ -235,54 +195,28 @@ namespace ReportService.Business
             data.NoticeUserType ??= 0;
             data.NoticeUsers ??= string.Empty;
             data.UsingPassword ??= string.Empty;
+            data.TimerJobId = 0;
             if (data.TimerStatus == "0")
             {
-                MZ_Job job = new MZ_Job();
-                job.concurrent = "0";
-                job.createId = 0;
-                job.create_time = DateTime.Now;
-                job.updateId = 0;
-                job.update_time = DateTime.Now;
-                job.cron_expression = data.TimerCron;
-                job.invoke_target = typeof(ShareBLL).FullName + ".Execute('" + data.Id + "',$context,$id)";
-                job.job_group = "DEFAULT";
-                job.job_name = "ReportShare-" + data.Id;
-                job.misfire_policy = "0";
-                job.status = "0";
-                var rs = await _provider.GetService<JobBLL>().InsertJob(job);
-                if (!rs.IsSuccess())
-                {
-                    return BusResponse<MZ_ReportShare>.Error(rs.Code, rs.Message);
-                }
-                data.TimerJobId = rs.Data;
-            }
-            else
-            {
-                data.TimerJobId = 0;
+                await TimerSchedule.CreateShareJob(data.Id, new List<string>() { data.TimerCron });
             }
 
             await _shareDAL.Insert(data);
             return BusResponse<MZ_ReportShare>.Success(data);
         }
 
-        public virtual async Task Execute(string id, QuartzContext context, long jobId)
+        public virtual async Task Execute(string id, QuartzContext context)
         {
             var shareInfo = await _shareDAL.Select(id);
             if (shareInfo == null)
             {
-                if (jobId > 0)
-                {
-                    await _provider.GetService<JobBLL>().DeleteJob(jobId);
-                }
+                await TimerSchedule.DeleteShareJob(id);
                 return;
             }
             MZ_Report report = await _reportDAL.Select(shareInfo.ReportId);
             if (report == null)
             {
-                if (jobId > 0)
-                {
-                    await _provider.GetService<JobBLL>().DeleteJob(jobId);
-                }
+                await TimerSchedule.DeleteShareJob(id);
                 return;
             }
             var userDAL = _provider.GetService<UserDAL>();

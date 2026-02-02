@@ -16,12 +16,12 @@ namespace IoTVideoService.PlanUtil
     [DisallowConcurrentExecution]
     public class PlanConcurrentJob : IJob
     {
-        private ILogger<QuartzDisallowConcurrentJob> _log;
+        private ILogger<PlanConcurrentJob> _log;
         private ITAServiceProvider _provider;
         public PlanConcurrentJob(ITAServiceProvider provider, ILoggerFactory factory)
         {
             _provider = provider;
-            _log = factory.CreateLogger<QuartzDisallowConcurrentJob>();
+            _log = factory.CreateLogger<PlanConcurrentJob>();
         }
         public async Task Execute(IJobExecutionContext context)
         {

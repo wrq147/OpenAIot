@@ -98,5 +98,16 @@ namespace MonitorService.Controller
         {
             return this.Success(await _joblogBLL.CleanJobLog(name, group));
         }
+
+        /// <summary>
+        /// 任务重新执行一次
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<AjaxResult> Retry(long id)
+        {
+            return (await _joblogBLL.Retry(id)).ToAjaxResult();
+        }
     }
 }

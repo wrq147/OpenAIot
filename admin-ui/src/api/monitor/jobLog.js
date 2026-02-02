@@ -30,3 +30,11 @@ export function cleanJobLog(name,group) {
 export function exportJobLog(query) {
   return download.resource('/MonitorService/JobLog/Export', query);
 }
+
+export function retryJobLog(id) {
+  return request({
+    url: '/MonitorService/JobLog/Retry',
+    method: 'get',
+    params:{id}
+  })
+}
