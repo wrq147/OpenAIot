@@ -479,12 +479,6 @@ namespace IoTService.Business
                         {
                             //j是数据
                             DateTime? time = fluxTable[i].Records[j].GetTimeInDateTime()?.ToLocalTime();
-                            string fieldOri = fluxTable[i].Records[j].GetField();
-                            int prefixidx = fieldOri.IndexOf("#");
-                            if (prefixidx != -1)
-                            {
-                                fieldOri = fieldOri.Substring(prefixidx + 1);
-                            }
                             Dictionary<string, object> values = fluxTable[i].Records[j].Values;
                             string tmpdxId = string.Empty;
                             if (values.TryGetValue("DxId", out object tmpid))

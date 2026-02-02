@@ -1317,9 +1317,9 @@
             值
             </summary>
         </member>
-        <member name="M:ReportService.TimerUtil.TimerSchedule.CreateJob(System.String,System.Collections.Generic.List{System.String})">
+        <member name="M:ReportService.TimerUtil.TimerSchedule.CreateWarnJob(System.String,System.Collections.Generic.List{System.String})">
             <summary>
-            创建定时计划任务
+            创建告警定时计划任务
             </summary>
             <param name="warnId"></param>
             <param name="cronExps"></param>

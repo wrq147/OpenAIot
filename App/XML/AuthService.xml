@@ -2010,7 +2010,7 @@
             <param name="field"></param>
             <param name="val"></param>
         </member>
-        <member name="M:AuthService.Fields.FieldUtility.CheckAddForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction,System.Collections.Generic.HashSet{System.String})">
+        <member name="M:AuthService.Fields.FieldUtility.CheckAddForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,System.Collections.Generic.HashSet{System.String})">
             <summary>
             检查表单新增的输入
             </summary>
@@ -2019,11 +2019,10 @@
             <param name="formobj"></param>
             <param name="orgId"></param>
             <param name="formName"></param>
-            <param name="ac"></param>
             <param name="filterFields"></param>
             <returns></returns>
         </member>
-        <member name="M:AuthService.Fields.FieldUtility.CheckEditForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,TemplateAction.Core.TAAction,System.Collections.Generic.HashSet{System.String})">
+        <member name="M:AuthService.Fields.FieldUtility.CheckEditForm``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,System.String,System.Collections.Generic.HashSet{System.String})">
             <summary>
             检查表单编辑的输入
             </summary>
@@ -2032,7 +2031,6 @@
             <param name="formobj"></param>
             <param name="orgId"></param>
             <param name="formName"></param>
-            <param name="ac"></param>
             <param name="filterFields"></param>
             <returns></returns>
         </member>
@@ -2053,7 +2051,7 @@
             <param name="formobj"></param>
             <returns></returns>
         </member>
-        <member name="M:AuthService.Fields.FieldUtility.GenerateExtObject``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64,TemplateAction.Core.TAAction)">
+        <member name="M:AuthService.Fields.FieldUtility.GenerateExtObject``1(TemplateAction.Core.ITAServiceProvider,``0,System.Int64)">
             <summary>
             生成表单的扩展对象
             </summary>
@@ -2061,7 +2059,6 @@
             <param name="provider"></param>
             <param name="formobj"></param>
             <param name="orgId"></param>
-            <param name="ac"></param>
             <returns></returns>
         </member>
         <member name="T:AuthService.Fields.HyperlinkField">

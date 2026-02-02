@@ -54,7 +54,7 @@ namespace MESService.Business
 
             return tmppage;
         }
-        public virtual async Task<BusResponse<MZ_WorkReport>> Info(string id, TAAction ac)
+        public virtual async Task<BusResponse<MZ_WorkReport>> Info(string id)
         {
             WorkReportDAL reportDAL = _provider.GetService<WorkReportDAL>();
             var info = await reportDAL.Select(id);
@@ -63,7 +63,7 @@ namespace MESService.Business
                 return BusResponse<MZ_WorkReport>.Error(111, "报工单不存在");
             }
             info.RepBat = await _provider.GetService<WorkBatchDAL>().Select(info.BatchNo);
-            await FieldUtility.GenerateExtObject(_provider, info.RepBat, info.RepBat.OrgId.Value, ac);
+            await FieldUtility.GenerateExtObject(_provider, info.RepBat, info.RepBat.OrgId.Value);
             await FieldUtility.GenerateExtVals(_provider, info.RepBat);
             var wkorder = await _provider.GetService<WorkOrderDAL>().Select(info.WorkOrderId);
             if (wkorder != null)
@@ -89,7 +89,7 @@ namespace MESService.Business
             GeneralRedisHelper tmpredis = _provider.GetService<GeneralRedisHelper>();
             return await tmpredis.GenerateNumber("WR");
         }
-        public virtual async Task<BusResponse<int>> Update(MZ_WorkReport data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<int>> Update(MZ_WorkReport data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
@@ -161,7 +161,7 @@ namespace MESService.Business
                 {
                     filterIds = new HashSet<string>();
                 }
-                var checkRsp = await FieldUtility.CheckEditForm(_provider, data.RepBat, user.OrgId, "报工", action, filterIds);
+                var checkRsp = await FieldUtility.CheckEditForm(_provider, data.RepBat, user.OrgId, "报工", filterIds);
                 if (!checkRsp.IsSuccess())
                 {
                     return checkRsp;
@@ -222,7 +222,7 @@ namespace MESService.Business
 
             return BusResponse<int>.Success(await reportDAL.Update(data));
         }
-        public virtual async Task<BusResponse<string>> Insert(MZ_WorkReport data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<string>> Insert(MZ_WorkReport data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
@@ -317,7 +317,7 @@ namespace MESService.Business
                 {
                     filterIds = new HashSet<string>();
                 }
-                var checkRsp = await FieldUtility.CheckAddForm(_provider, data.RepBat, user.OrgId, "报工", action, filterIds);
+                var checkRsp = await FieldUtility.CheckAddForm(_provider, data.RepBat, user.OrgId, "报工", filterIds);
                 if (!checkRsp.IsSuccess())
                 {
                     return checkRsp;

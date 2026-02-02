@@ -388,7 +388,7 @@ namespace GB28181Channel
                       IntPtr invoker, int* consumed,
                       IntPtr sock)
         {
-
+          
         }
 
         private void On_mk_http_access(IntPtr parserPtr,

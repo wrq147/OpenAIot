@@ -131,7 +131,6 @@ import {
   classSort,
   editClass
 } from "@/api/rules/productModel";
-import { getToken } from "@/utils/auth";
 export default {
   name: "proclassClass",
   mixins: [resizeTableCon],

@@ -33,8 +33,8 @@ namespace Common.Json
                         int tz;
                         if (int.TryParse(clientTZ, out tz))
                         {
-                            var clientTime = TimeZoneInfo.ConvertTimeToUtc(date).AddMinutes(-tz);
-                            return clientTime;
+                            var clientTime = DateTime.SpecifyKind(date.AddMinutes(tz), DateTimeKind.Utc);
+                            return TimeZoneInfo.ConvertTimeFromUtc(clientTime, TimeZoneInfo.Local);
                         }
 
                     }
@@ -58,19 +58,15 @@ namespace Common.Json
                 TAAction ac = TAAction.Current;
                 if (ac != null)
                 {
-                    DateTime? val = value as DateTime?;
-                    if (val != null)
+                    string clientTZ = ac.Context.Request.Header["TZ"];
+                    if (!string.IsNullOrEmpty(clientTZ))
                     {
-                        string clientTZ = ac.Context.Request.Header["TZ"];
-                        if (!string.IsNullOrEmpty(clientTZ))
+                        int tz;
+                        if (int.TryParse(clientTZ, out tz))
                         {
-                            int tz;
-                            if (int.TryParse(clientTZ, out tz))
-                            {
-                                var newDate = TimeZoneInfo.ConvertTimeFromUtc(val.Value.AddMinutes(tz), TimeZoneInfo.Local);
-                                writer.WriteStringValue(newDate.ToString(FORMAT_STR));
-                                return;
-                            }
+                            var clientTime = TimeZoneInfo.ConvertTimeToUtc(date).AddMinutes(-tz);
+                            writer.WriteStringValue(clientTime.ToString(FORMAT_STR));
+                            return;
                         }
                     }
                 }

@@ -51,7 +51,7 @@ namespace ProducerService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<string>> Add(MZ_Product data)
         {
-            return (await _productBLL.Add(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _productBLL.Add(data, GetUser())).ToAjaxResult();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace ProducerService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<int>> Edit(MZ_Product data)
         {
-            return (await _productBLL.Edit(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _productBLL.Edit(data, GetUser())).ToAjaxResult();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace ProducerService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_Product>> Info(string id)
         {
-            return (await _productBLL.Info(id, this.IntentAction)).ToAjaxResult();
+            return (await _productBLL.Info(id)).ToAjaxResult();
         }
         /// <summary>
         /// 生成产品sku编号

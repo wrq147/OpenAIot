@@ -1,5 +1,4 @@
-﻿using Common;
-using IoTAIService.AIProject.Items;
+﻿using IoTAIService.AIProject.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +18,7 @@ namespace IoTAIService.AIProject
         public async Task Init()
         {
             await FaceProject.Init(_provider);
+            await DetectionProject.Init(_provider);
         }
     }
 }

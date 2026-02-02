@@ -70,6 +70,7 @@
 
 <script>
 import Player from 'xgplayer'
+import Mp4Plugin from "xgplayer-mp4"
 import "xgplayer/dist/index.min.css"
 import { getChannelList } from "@/api/rules/video";
 import {
@@ -172,7 +173,8 @@ export default {
             el: this.$refs.historyPlayer,
             isLive: false,
             autoplay: true,
-            url: recordFile.PlayUrl
+            url: recordFile.PlayUrl,
+            plugins: [Mp4Plugin]
           });
           this.historyPlayer.play();
         }

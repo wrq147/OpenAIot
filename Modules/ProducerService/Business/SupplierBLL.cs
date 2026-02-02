@@ -58,18 +58,18 @@ namespace ProducerService.Business
             GeneralRedisHelper tmpredis = _provider.GetService<GeneralRedisHelper>();
             return await tmpredis.GenerateNumber("GY");
         }
-        public virtual async Task<BusResponse<MZ_Supplier>> Info(string id, TAAction ac)
+        public virtual async Task<BusResponse<MZ_Supplier>> Info(string id)
         {
             var supplierInfo = await _supplierDAL.Select(id);
             if (supplierInfo == null)
             {
                 return BusResponse<MZ_Supplier>.Error(111, "供应商不存在");
             }
-            await FieldUtility.GenerateExtObject(_provider, supplierInfo, supplierInfo.OrgId.Value, ac);
+            await FieldUtility.GenerateExtObject(_provider, supplierInfo, supplierInfo.OrgId.Value);
             await FieldUtility.GenerateExtVals(_provider, supplierInfo);
             return BusResponse<MZ_Supplier>.Success(supplierInfo);
         }
-        public virtual async Task<BusResponse<string>> Add(MZ_Supplier data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<string>> Add(MZ_Supplier data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
@@ -83,7 +83,7 @@ namespace ProducerService.Business
                 return BusResponse<string>.Error(111, "供应商名称不能为空");
             }
 
-            var checkRsp = await FieldUtility.CheckAddForm(_provider, data, user.OrgId, "供应商", action);
+            var checkRsp = await FieldUtility.CheckAddForm(_provider, data, user.OrgId, "供应商");
             if (!checkRsp.IsSuccess())
             {
                 return checkRsp;
@@ -120,7 +120,7 @@ namespace ProducerService.Business
             return BusResponse<string>.Success(data.Id);
         }
 
-        public virtual async Task<BusResponse<int>> Edit(MZ_Supplier data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<int>> Edit(MZ_Supplier data, IUserInfo user)
         {
             var tmpsupplier = await _supplierDAL.Select(data.Id);
             if (tmpsupplier == null)
@@ -135,7 +135,7 @@ namespace ProducerService.Business
             {
                 return BusResponse<int>.Error(113, "供应商名称不能为空");
             }
-            var checkRsp = await FieldUtility.CheckEditForm(_provider, data, user.OrgId, "供应商", action);
+            var checkRsp = await FieldUtility.CheckEditForm(_provider, data, user.OrgId, "供应商");
             if (!checkRsp.IsSuccess())
             {
                 return checkRsp;

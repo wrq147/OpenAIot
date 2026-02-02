@@ -44,7 +44,7 @@ namespace ProducerService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<string>> Add(MZ_Supplier data)
         {
-            return (await _supplierBLL.Add(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _supplierBLL.Add(data, GetUser())).ToAjaxResult();
         }
         /// <summary>
         /// 修改供应商
@@ -55,7 +55,7 @@ namespace ProducerService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<int>> Edit(MZ_Supplier data)
         {
-            return (await _supplierBLL.Edit(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _supplierBLL.Edit(data, GetUser())).ToAjaxResult();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace ProducerService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_Supplier>> Info(string id)
         {
-            return (await _supplierBLL.Info(id, this.IntentAction)).ToAjaxResult();
+            return (await _supplierBLL.Info(id)).ToAjaxResult();
         }
     }
 }

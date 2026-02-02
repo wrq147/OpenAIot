@@ -421,7 +421,7 @@ namespace IoTService.Business
                         continue;
                     }
 
-                    int pageSize = 100;
+                    int pageSize = 20;
                     int totalCount = deviceList.Count;
                     int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 

@@ -427,7 +427,7 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:Common.EventBus.BusUtility.Trigger(System.String,System.String,System.String,Common.EventBus.QuartzContext,System.Int64)">
+        <member name="M:Common.EventBus.BusUtility.Trigger(System.String,System.String,System.String,Common.EventBus.QuartzContext)">
             <summary>
             触发执行定时任务
             </summary>
@@ -435,10 +435,9 @@
             <param name="methodName"></param>
             <param name="methodParams"></param>
             <param name="context"></param>
-            <param name="jobId"></param>
             <returns></returns>
         </member>
-        <member name="M:Common.EventBus.BusUtility.TriggerWait(System.String,System.String,System.String,Common.EventBus.QuartzContext,System.Int64)">
+        <member name="M:Common.EventBus.BusUtility.TriggerWait(System.String,System.String,System.String,Common.EventBus.QuartzContext)">
             <summary>
             触发执行等待定时任务
             </summary>
@@ -446,7 +445,6 @@
             <param name="methodName"></param>
             <param name="methodParams"></param>
             <param name="context"></param>
-            <param name="jobId"></param>
             <returns></returns>
         </member>
         <member name="T:Common.EventBus.CallEvent">

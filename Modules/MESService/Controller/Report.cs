@@ -52,7 +52,7 @@ namespace MESService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<string>> Add(MZ_WorkReport data)
         {
-            return (await _reportBLL.Insert(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _reportBLL.Insert(data, GetUser())).ToAjaxResult();
         }
         /// <summary>
         /// 获取报工信息
@@ -62,7 +62,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_WorkReport>> Info(string id)
         {
-            return (await _reportBLL.Info(id, this.IntentAction)).ToAjaxResult();
+            return (await _reportBLL.Info(id)).ToAjaxResult();
         }
         /// <summary>
         /// 修改生产报工
@@ -73,7 +73,7 @@ namespace MESService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<int>> Edit(MZ_WorkReport data)
         {
-            return (await _reportBLL.Update(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _reportBLL.Update(data, GetUser())).ToAjaxResult();
         }
 
         /// <summary>

@@ -28,36 +28,36 @@ namespace MESService.Business
             return tpage;
         }
 
-        public virtual async Task<BusResponse<MZ_ProductOper>> Info(string id, TAAction ac)
+        public virtual async Task<BusResponse<MZ_ProductOper>> Info(string id)
         {
             var info = await _operDAL.Select(id);
             if (info == null)
             {
                 return BusResponse<MZ_ProductOper>.Error(111, "工序不存在");
             }
-            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value, ac);
+            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value);
             await FieldUtility.GenerateExtVals(_provider, info);
             return BusResponse<MZ_ProductOper>.Success(info);
         }
-        public virtual async Task<BusResponse<MZ_ProductRouteOper>> RouteInfo(string id, TAAction ac)
+        public virtual async Task<BusResponse<MZ_ProductRouteOper>> RouteInfo(string id)
         {
             var info = await _provider.GetService<RouteOperDAL>().Select(id);
             if (info == null)
             {
                 return BusResponse<MZ_ProductRouteOper>.Error(111, "工艺路线明细不存在");
             }
-            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value, ac);
+            await FieldUtility.GenerateExtObject(_provider, info, info.OrgId.Value);
             await FieldUtility.GenerateExtVals(_provider, info);
             return BusResponse<MZ_ProductRouteOper>.Success(info);
         }
 
-        public virtual async Task<BusResponse<string>> Add(MZ_ProductOper data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<string>> Add(MZ_ProductOper data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
                 return BusResponse<string>.Error(133, "请切换到企业账号");
             }
-            var checkRsp = await FieldUtility.CheckAddForm(_provider, data, user.OrgId, "工序", action);
+            var checkRsp = await FieldUtility.CheckAddForm(_provider, data, user.OrgId, "工序");
             if (!checkRsp.IsSuccess())
             {
                 return checkRsp;
@@ -75,7 +75,7 @@ namespace MESService.Business
             return BusResponse<string>.Success(data.Id);
         }
 
-        public virtual async Task<BusResponse<int>> Edit(MZ_ProductOper data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<int>> Edit(MZ_ProductOper data, IUserInfo user)
         {
             var old = await _operDAL.Select(data.Id);
             if (old == null)
@@ -87,7 +87,7 @@ namespace MESService.Business
                 return BusResponse<int>.Error(112, "所属组织错误");
             }
 
-            var checkRsp = await FieldUtility.CheckEditForm(_provider, data, user.OrgId, "产品", action);
+            var checkRsp = await FieldUtility.CheckEditForm(_provider, data, user.OrgId, "产品");
             if (!checkRsp.IsSuccess())
             {
                 return checkRsp;

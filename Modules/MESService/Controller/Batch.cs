@@ -42,7 +42,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_WorkBatch>> Info(string id)
         {
-            return (await _batchBLL.Info(id, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _batchBLL.Info(id, GetUser())).ToAjaxResult();
         }
     }
 }

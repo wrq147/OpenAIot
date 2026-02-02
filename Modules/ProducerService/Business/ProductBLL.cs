@@ -92,7 +92,7 @@ namespace ProducerService.Business
 
             return tpage;
         }
-        public virtual async Task<BusResponse<string>> Add(MZ_Product data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<string>> Add(MZ_Product data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
@@ -115,7 +115,7 @@ namespace ProducerService.Business
 
 
 
-            var checkRsp = await FieldUtility.CheckAddForm(_provider, data, user.OrgId, "产品", action);
+            var checkRsp = await FieldUtility.CheckAddForm(_provider, data, user.OrgId, "产品");
             if (!checkRsp.IsSuccess())
             {
                 return checkRsp;
@@ -152,7 +152,7 @@ namespace ProducerService.Business
 
             return BusResponse<string>.Success(data.Id);
         }
-        public virtual async Task<BusResponse<int>> Edit(MZ_Product data, IUserInfo user, TAAction action)
+        public virtual async Task<BusResponse<int>> Edit(MZ_Product data, IUserInfo user)
         {
             var tmpproduct = await _productDAL.Select(data.Id);
             if (tmpproduct == null)
@@ -169,7 +169,7 @@ namespace ProducerService.Business
             }
 
 
-            var checkRsp = await FieldUtility.CheckEditForm(_provider, data, user.OrgId, "产品", action);
+            var checkRsp = await FieldUtility.CheckEditForm(_provider, data, user.OrgId, "产品");
             if (!checkRsp.IsSuccess())
             {
                 return checkRsp;
@@ -202,7 +202,7 @@ namespace ProducerService.Business
             await _provider.GetService<ProductBatchDAL>().Delete(x => x.ProductId == id);
             return BusResponse<int>.Success(res);
         }
-        public virtual async Task<BusResponse<MZ_Product>> Info(string id, TAAction ac)
+        public virtual async Task<BusResponse<MZ_Product>> Info(string id)
         {
             var tmpproduct = await _productDAL.SelectWithTypeById(id);
             if (tmpproduct == null)
@@ -238,7 +238,7 @@ namespace ProducerService.Business
                 }
             }
 
-            await FieldUtility.GenerateExtObject(_provider, tmpproduct, tmpproduct.OrgId.Value, ac);
+            await FieldUtility.GenerateExtObject(_provider, tmpproduct, tmpproduct.OrgId.Value);
             await FieldUtility.GenerateExtVals(_provider, tmpproduct);
             return BusResponse<MZ_Product>.Success(tmpproduct);
         }

@@ -6,6 +6,10 @@ namespace ChannelUtility.Tsl
 {
     public class TslNumberToStringConverter : JsonConverter<string>
     {
+        public override bool CanConvert(Type typeToConvert)
+        {
+            return typeToConvert == typeof(string);
+        }
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             // 处理数值类型的值

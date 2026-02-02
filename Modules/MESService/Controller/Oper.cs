@@ -43,7 +43,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_ProductOper>> Info(string id)
         {
-            return (await _operBLL.Info(id, this.IntentAction)).ToAjaxResult();
+            return (await _operBLL.Info(id)).ToAjaxResult();
         }
         /// <summary>
         /// 获取工艺路线明细
@@ -53,7 +53,7 @@ namespace MESService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_ProductRouteOper>> RouteInfo(string id)
         {
-            return (await _operBLL.RouteInfo(id, this.IntentAction)).ToAjaxResult();
+            return (await _operBLL.RouteInfo(id)).ToAjaxResult();
         }
         /// <summary>
         /// 添加工序
@@ -64,7 +64,7 @@ namespace MESService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<string>> Add(MZ_ProductOper data)
         {
-            return (await _operBLL.Add(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _operBLL.Add(data, GetUser())).ToAjaxResult();
         }
         /// <summary>
         /// 修改工序
@@ -75,7 +75,7 @@ namespace MESService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<int>> Edit(MZ_ProductOper data)
         {
-            return (await _operBLL.Edit(data, GetUser(), this.IntentAction)).ToAjaxResult();
+            return (await _operBLL.Edit(data, GetUser())).ToAjaxResult();
         }
 
         /// <summary>

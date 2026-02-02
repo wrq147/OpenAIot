@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Common
 {
@@ -81,7 +82,8 @@ namespace Common
                                     int tz;
                                     if (int.TryParse(clientTZ, out tz))
                                     {
-                                        return TimeZoneInfo.ConvertTimeFromUtc(val.Value.AddMinutes(tz), TimeZoneInfo.Local);
+                                        var clientTime = DateTime.SpecifyKind(val.Value.AddMinutes(tz), DateTimeKind.Utc);
+                                        return TimeZoneInfo.ConvertTimeFromUtc(clientTime, TimeZoneInfo.Local);
                                     }
                                 }
                             }

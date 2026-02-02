@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AuthService.Fields
 {
@@ -268,10 +269,9 @@ namespace AuthService.Fields
         /// <param name="formobj"></param>
         /// <param name="orgId"></param>
         /// <param name="formName"></param>
-        /// <param name="ac"></param>
         /// <param name="filterFields"></param>
         /// <returns></returns>
-        public static async Task<BusResponse<string>> CheckAddForm<T>(ITAServiceProvider provider, T formobj, long orgId, string formName, TAAction ac, HashSet<string> filterFields = null) where T : IFieldEntity
+        public static async Task<BusResponse<string>> CheckAddForm<T>(ITAServiceProvider provider, T formobj, long orgId, string formName, HashSet<string> filterFields = null) where T : IFieldEntity
         {
             var extfields = await provider.GetService<OrgBLL>().GetExtFormFields(orgId, formName);
             foreach (var ext in extfields)
@@ -317,16 +317,7 @@ namespace AuthService.Fields
                     double? val = (double?)mapval;
                     if (val != null && val > 0)
                     {
-                        string clientTZ = ac.Context.Request.Header["TZ"];
-                        if (!string.IsNullOrEmpty(clientTZ))
-                        {
-                            if (int.TryParse(clientTZ, out int tz))
-                            {
-                                DateTime dt = DateTimeOffset.FromUnixTimeMilliseconds((long)val).LocalDateTime;
-                                dt = TimeZoneInfo.ConvertTimeFromUtc(dt.AddMinutes(tz), TimeZoneInfo.Local);
-                                SetExtVal(formobj, ext.mapid, (double)new DateTimeOffset(dt).ToUnixTimeMilliseconds());
-                            }
-                        }
+                        SetExtVal(formobj, ext.mapid, (double)val);
                     }
                 }
             }
@@ -342,10 +333,9 @@ namespace AuthService.Fields
         /// <param name="formobj"></param>
         /// <param name="orgId"></param>
         /// <param name="formName"></param>
-        /// <param name="ac"></param>
         /// <param name="filterFields"></param>
         /// <returns></returns>
-        public static async Task<BusResponse<int>> CheckEditForm<T>(ITAServiceProvider provider, T formobj, long orgId, string formName, TAAction ac, HashSet<string> filterFields = null) where T : IFieldEntity
+        public static async Task<BusResponse<int>> CheckEditForm<T>(ITAServiceProvider provider, T formobj, long orgId, string formName, HashSet<string> filterFields = null) where T : IFieldEntity
         {
             var extfields = await provider.GetService<OrgBLL>().GetExtFormFields(orgId, formName);
             foreach (var ext in extfields)
@@ -384,16 +374,7 @@ namespace AuthService.Fields
                     double? val = (double?)mapval;
                     if (val != null && val > 0)
                     {
-                        string clientTZ = ac.Context.Request.Header["TZ"];
-                        if (!string.IsNullOrEmpty(clientTZ))
-                        {
-                            if (int.TryParse(clientTZ, out int tz))
-                            {
-                                DateTime dt = DateTimeOffset.FromUnixTimeMilliseconds((long)val).LocalDateTime;
-                                dt = TimeZoneInfo.ConvertTimeFromUtc(dt.AddMinutes(tz), TimeZoneInfo.Local);
-                                SetExtVal(formobj, ext.mapid, (double)new DateTimeOffset(dt).ToUnixTimeMilliseconds());
-                            }
-                        }
+                        SetExtVal(formobj, ext.mapid, (double)val);
                     }
                 }
             }
@@ -549,9 +530,8 @@ namespace AuthService.Fields
         /// <param name="provider"></param>
         /// <param name="formobj"></param>
         /// <param name="orgId"></param>
-        /// <param name="ac"></param>
         /// <returns></returns>
-        public static async Task GenerateExtObject<T>(ITAServiceProvider provider, T formobj, long orgId, TAAction ac) where T : IFieldEntity
+        public static async Task GenerateExtObject<T>(ITAServiceProvider provider, T formobj, long orgId) where T : IFieldEntity
         {
             string formName = formobj.GetFormName();
             var extObjects = new Dictionary<string, object>();
@@ -649,17 +629,7 @@ namespace AuthService.Fields
                     double? val = (double?)GetExtVal(formobj, ext.mapid);
                     if (val != null && val > 0)
                     {
-                        string clientTZ = ac.Context.Request.Header["TZ"];
-                        if (!string.IsNullOrEmpty(clientTZ))
-                        {
-                            if (int.TryParse(clientTZ, out int tz))
-                            {
-                                DateTime dt = DateTimeOffset.FromUnixTimeMilliseconds((long)val).LocalDateTime;
-                                dt = TimeZoneInfo.ConvertTimeFromUtc(dt.AddMinutes(tz), TimeZoneInfo.Local);
-                                SetExtVal(formobj, ext.mapid, (double)new DateTimeOffset(dt).ToUnixTimeMilliseconds());
-                            }
-                        }
-
+                        SetExtVal(formobj, ext.mapid, (double)val);
                     }
                 }
             }

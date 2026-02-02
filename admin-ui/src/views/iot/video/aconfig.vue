@@ -11,8 +11,8 @@
         <div class="config-card-body">
           <el-form :inline="true" :model="configForm" class="detection-form">
             <el-form-item label="运动块占比阈值" prop="MotionRatio" class="form-item">
-              <el-input-number v-model="configForm.MotionRatio" :step="0.01" :precision="2" :min="0"
-                :max="1" placeholder="请输入0-1之间的数值" class="input-number">
+              <el-input-number v-model="configForm.MotionRatio" :step="0.01" :precision="2" :min="0" :max="1"
+                placeholder="请输入0-1之间的数值" class="input-number">
                 <template slot="append">%</template>
               </el-input-number>
               <el-tooltip style="margin-left:5px;" effect="dark" content="检测到的运动块占画面的比例阈值，超过该值触发AI分析" placement="top">
@@ -132,56 +132,11 @@
               </el-table-column>
               <el-table-column label="操作" width="240" fixed="right" align="center">
                 <template slot-scope="scope">
-                  <el-popover placement="left" width="500" trigger="click"
-                    :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0" popper-class="param-popover"
-                    :append-to-body="true">
-                    <!-- Popover内容：参数配置表单 -->
-                    <div class="param-config-content">
-                      <el-form :model="scope.row.paramValues" label-width="120px" class="param-form">
-                        <el-form-item v-for="(param, index) in scope.row.ParamList" :key="index" :label="param.name"
-                          class="param-form-item">
-                          <!-- 参数类型：float -->
-                          <el-input-number v-if="param.type === 'float'" v-model="scope.row.paramValues[param.code]"
-                            :min="param.min" :max="param.max" :step="0.01" :precision="2" placeholder="请输入数值"
-                            class="param-input" size="small" />
-
-                          <!-- 参数类型：boolean -->
-                          <el-switch v-else-if="param.type === 'boolean'" v-model="scope.row.paramValues[param.code]"
-                            active-text="是" inactive-text="否" active-color="#67c23a" inactive-color="#909399"
-                            class="param-switch" />
-
-                          <!-- 参数类型：enum -->
-                          <el-select v-else-if="param.type === 'enum'" v-model="scope.row.paramValues[param.code]"
-                            placeholder="请选择" class="param-select" size="small">
-                            <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
-                              :value="option.value" />
-                          </el-select>
-
-                          <!-- 参数类型：string -->
-                          <el-input v-else-if="param.type === 'string'" v-model="scope.row.paramValues[param.code]"
-                            placeholder="请输入文本" class="param-input" size="small" />
-
-                          <!-- 参数类型：clip -->
-                          <template v-else-if="param.type === 'clip'">
-                            
-                          </template>
-
-                          <!-- 帮助提示 -->
-                          <el-tooltip effect="dark" :content="param.help" placement="top" enterable
-                            class="help-tooltip">
-                            <i class="el-icon-question-circle"></i>
-                          </el-tooltip>
-                        </el-form-item>
-                      </el-form>
-                    </div>
-
-                    <!-- Popover触发按钮 -->
-                    <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini" class="config-btn"
-                      @click.stop>
-                      配置参数
-                    </el-button>
-                  </el-popover>
-
+                  <el-button type="primary" icon="el-icon-setting" size="mini" class="config-btn"
+                    @click="openParamConfigDialog(scope.row, scope.$index)"
+                    :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0">
+                    配置参数
+                  </el-button>
                   <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeConfiguredProject(scope.row)"
                     class="remove-btn">
                     移除
@@ -202,6 +157,102 @@
       </div>
     </div>
 
+    <el-dialog title="AI项目参数配置" :visible.sync="paramConfigDialog.visible" width="700px" append-to-body
+      :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
+
+
+      <div class="param-config-content">
+        <el-form label-width="120px" class="param-form">
+          <el-form-item v-for="(param, index) in paramConfigDialog.currentRow.ParamList" :key="index"
+            :label="param.name" class="param-form-item">
+            <!-- 参数类型：float -->
+            <el-input-number v-if="param.type === 'float'"
+              v-model="paramConfigDialog.currentRow.paramValues[param.code]" :min="param.min" :max="param.max"
+              :step="0.01" :precision="2" placeholder="请输入数值" class="param-input" size="small" />
+
+            <!-- 参数类型：boolean -->
+            <el-switch v-else-if="param.type === 'boolean'"
+              v-model="paramConfigDialog.currentRow.paramValues[param.code]" active-text="是" inactive-text="否"
+              active-color="#67c23a" inactive-color="#909399" class="param-switch" />
+
+            <!-- 参数类型：enum -->
+            <el-select v-else-if="param.type === 'enum'" v-model="paramConfigDialog.currentRow.paramValues[param.code]"
+              placeholder="请选择" class="param-select" size="small">
+              <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
+                :value="option.value" />
+            </el-select>
+
+            <!-- 参数类型：string -->
+            <el-input v-else-if="param.type === 'string'" v-model="paramConfigDialog.currentRow.paramValues[param.code]"
+              placeholder="请输入文本" class="param-input" size="small" />
+
+            <!-- 参数类型：clip -->
+            <template v-else-if="param.type === 'clip'">
+              <div style="width: 380px;">
+                <!-- 检测目标配置 -->
+                <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #ebeef5;">
+                  <div style="font-size: 13px; color: #666;">检测目标<span style="color: #f56c6c;">*</span></div>
+                  <div style="margin-bottom: 8px;">
+                    <el-radio-group v-model="paramConfigDialog.clipmode">
+                      <el-radio label="text">文本描述</el-radio>
+                      <el-radio label="image">上传图片</el-radio>
+                    </el-radio-group>
+                  </div>
+
+                  <!-- 文本输入模式 -->
+                  <el-input v-if="paramConfigDialog.clipmode === 'text'" v-model="paramConfigDialog.clipText"
+                    type="textarea" rows="2" placeholder="请输入检测目标描述（如：红色汽车、行人）" size="small" style="width: 100%;" />
+
+                  <!-- 图片上传模式 -->
+                  <el-upload v-else  action="#" :show-file-list="false"
+                    :before-upload="(file) => handleClipImageUpload(file, 'targetImage')"
+                    :on-error="() => this.$message.error('目标图片上传失败')" accept="image/*">
+                    <img v-if="paramConfigDialog.clipImg" :src="paramConfigDialog.clipImg" alt="目标图片"
+                      style="width:128px;height:128px;display: block; object-fit: cover;">
+                    <i v-else class="el-icon-plus" style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
+                  </el-upload>
+                </div>
+
+                <!-- 测试图片配置 -->
+                <div style="margin-bottom: 12px;">
+                  <div style="font-size: 13px; color: #666; margin-bottom: 8px;">测试图片<span style="color: #f56c6c;">*</span></div>
+                  <el-upload action="#" :show-file-list="false"
+                    :before-upload="(file) => handleClipImageUpload(file, 'testImage')"
+                    :on-error="() => this.$message.error('测试图片上传失败')" accept="image/*">
+                    <img v-if="paramConfigDialog.clipTest" :src="paramConfigDialog.clipTest" alt="测试图片"
+                      style="width:128px;height:128px;display: block; object-fit: cover;">
+                    <i v-else class="el-icon-plus" style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
+                  </el-upload>
+                </div>
+
+                <!-- 生成按钮 & 特征向量展示 -->
+                <div style="display: flex; align-items: center;">
+                  <el-button type="success" icon="el-icon-magic-stick"
+                    @click="handleGenerateClipFeature(paramConfigDialog.currentRow, param.code)">
+                    生成特征向量
+                  </el-button>
+                  <div
+                    style="font-size: 12px; color: #666; flex: 1; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                    :title="paramConfigDialog.currentRow.paramValues[param.code] || '未生成特征向量'">
+                    {{ paramConfigDialog.currentRow.paramValues[param.code] ? '已生成特征向量（长度：' +
+                      JSON.parse(paramConfigDialog.currentRow.paramValues[param.code]).length + '）' : '未生成特征向量' }}
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- 帮助提示 -->
+            <el-tooltip effect="dark" :content="param.help" placement="top" enterable class="help-tooltip">
+              <i class="el-icon-question-circle"></i>
+            </el-tooltip>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="paramConfigDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="confirmParamConfig">确认保存参数</el-button>
+      </div>
+    </el-dialog>
   </el-dialog>
 </template>
 
@@ -229,7 +280,17 @@ export default {
       configuredProjects: [],
       allProjects: [],
       configForm: { "MotionRatio": 0.08, "CoolDownMs": 300, "Tasks": [] },
-      projectId: null
+      projectId: null,
+      paramConfigDialog: {
+        clipmode: 'text',
+        clipText: '',
+        clipImg: '',
+        clipTest: '',
+        visible: false,       // 弹窗显隐
+        currentIndex: -1,
+        currentRow: {},     // 当前操作的项目行数据
+        loading: false        // 弹窗内加载状态
+      },
     }
   },
   computed: {
@@ -256,7 +317,6 @@ export default {
       this.allloading = true;
       await this.initData(id);
       this.allloading = false;
-
     },
     /**
      * 初始化弹窗数据
@@ -341,25 +401,6 @@ export default {
       }
     },
 
-    /**
-     * 关闭Popover弹窗
-     */
-    closePopover(row) {
-      // 手动关闭所有Popover（Element UI点击触发模式下的通用关闭方式）
-      const popovers = document.querySelectorAll('.el-popover');
-      popovers.forEach(popover => {
-        if (popover.textContent.includes(row.Name)) {
-          popover.style.display = 'none';
-        }
-      });
-      // 或者使用Element UI的内置方法
-      this.$nextTick(() => {
-        const trigger = document.querySelector(`.el-button:contains("配置参数")`);
-        if (trigger) {
-          trigger.click();
-        }
-      });
-    },
 
     /**
      * 移除单个已配置项目
@@ -440,7 +481,58 @@ export default {
         this.$message.error('参数配置保存失败，请重试！')
         this.confirmLoading = false
       }
-    }
+    },
+    openParamConfigDialog(row, idx) {
+      // 赋值当前行数据，打开弹窗
+      row.paramValues = row.paramValues || {};
+      console.info(row)
+      this.paramConfigDialog.currentIndex = idx;
+      this.paramConfigDialog.currentRow = JSON.parse(JSON.stringify(row));
+      this.paramConfigDialog.visible = true;
+    },
+    confirmParamConfig() {
+      this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
+      this.paramConfigDialog.visible = false;
+      this.$message.success('参数配置已保存');
+    },
+    // 处理clip图片上传（转换为Base64）
+    handleClipImageUpload(file, imageType) {
+      // 1. 校验图片格式和大小（可选，优化体验）
+      const isImage = file.type.startsWith('image/');
+      const isLt2M = file.size / 1024 / 1024 < 2; // 限制2M以内
+
+      if (!isImage) {
+        this.$message.error('请上传图片格式文件！');
+        return false; // 阻止上传
+      }
+      if (!isLt2M) {
+        this.$message.error('图片大小不能超过2MB！');
+        return false; // 阻止上传
+      }
+
+      // 2. 使用FileReader读取文件，转换为Base64
+      const reader = new FileReader();
+      // 读取完成后的回调
+      reader.onload = (e) => {
+        const base64Str = e.target.result; // 获取Base64编码（包含data:image/xxx;base64,前缀）
+
+        // 3. 存储Base64数据和预览链接
+        if (imageType === 'targetImage') {
+          this.paramConfigDialog.clipImg = base64Str;
+        } else if (imageType === 'testImage') {
+          this.paramConfigDialog.clipTest = base64Str;
+        }
+
+        // 强制更新视图（避免数据更新后视图不刷新）
+        this.$forceUpdate();
+      };
+
+      // 4. 开始读取文件为DataURL（即Base64格式）
+      reader.readAsDataURL(file);
+
+      // 5. 返回false，阻止el-upload的默认接口提交行为
+      return false;
+    },
   }
 }
 </script>
@@ -483,9 +575,9 @@ export default {
 }
 
 .config-card-body {
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
 }
 
 .detection-form {
@@ -639,8 +731,6 @@ export default {
 
 .param-form {
   padding: 16px;
-  max-height: 400px;
-  overflow-y: auto;
 }
 
 .param-form-item {

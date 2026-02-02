@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -8,14 +9,8 @@ namespace ChannelUtility
 {
     public class JsonObjectConverter : JsonConverter<object>
     {
-        private static readonly JsonSerializerOptions _objectOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Converters = { new JsonObjectConverter() },
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        };
 
-        public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        private object? ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
             {
@@ -54,8 +49,25 @@ namespace ChannelUtility
                     return null;
 
                 case JsonTokenType.StartObject:
-                    // 使用嵌套选项处理对象，避免递归调用当前转换器
-                    return JsonSerializer.Deserialize<IDictionary<string, object>>(ref reader, _objectOptions);
+                    var expandoDict = new Dictionary<string, object>();
+                    reader.Read(); // 跳过StartObject，移动到第一个属性名
+                    while (reader.TokenType != JsonTokenType.EndObject)
+                    {
+                        // 读取属性名
+                        if (reader.TokenType != JsonTokenType.PropertyName)
+                        {
+                            throw new JsonException($"预期属性名，实际为 {reader.TokenType}");
+                        }
+                        string propName = reader.GetString()!;
+                        reader.Read(); // 跳过属性名，移动到属性值
+
+                        // 递归读取属性值（嵌套对象/数组也会走当前逻辑）
+                        object? propValue = ReadValue(ref reader, options);
+                        expandoDict[propName] = propValue!;
+
+                        reader.Read(); // 移动到下一个属性名/EndObject
+                    }
+                    return expandoDict;
 
                 case JsonTokenType.StartArray:
                     // 处理数组
@@ -63,7 +75,7 @@ namespace ChannelUtility
                     reader.Read(); // 移动到数组第一个元素
                     while (reader.TokenType != JsonTokenType.EndArray)
                     {
-                        list.Add(Read(ref reader, typeof(object), _objectOptions)!);
+                        list.Add(Read(ref reader, typeof(object), options)!);
                         reader.Read();
                     }
                     return list;
@@ -73,7 +85,10 @@ namespace ChannelUtility
                     throw new JsonException($"不支持的JSON类型：{reader.TokenType}");
             }
         }
-
+        public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return ReadValue(ref reader, options);
+        }
         public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
             if (value is null)

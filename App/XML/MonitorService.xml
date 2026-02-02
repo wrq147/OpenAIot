@@ -346,6 +346,13 @@
             <param name="group"></param>
             <returns></returns>
         </member>
+        <member name="M:MonitorService.Controller.JobLog.Retry(System.Int64)">
+            <summary>
+            任务重新执行一次
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:MonitorService.Controller.Online">
             <summary>
             在线用户
