@@ -2,82 +2,186 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid 'e94d1d986049a5982cf302464be2c3dec05e63e1'
-    oldFile: !uuid '31b5e837626bfcc39701a23702fb488a6e25d3e8'
-  /Channel/FixVideoChannel:
-    newFile: !uuid '9e72b4b744995a64ce23627849b2e41e8e429fdf'
-    oldFile: !uuid '607315d479cef153d1f869cc3da5d7bd44e39323'
-  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid 'b555dbbc6566fcdf3d8589b508514f6e859266f6'
-    oldFile: !uuid 'e4e46c707a9ba042c516c5088a058d84b98d72da'
-  /Channel/OnvifChannel:
-    newFile: !uuid 'f084d602166b9f4d9d8bb1d3f7e150bff3149f51'
-    oldFile: null
-  /Channel/OnvifChannel/MinioHelper.cs:
-    newFile: !uuid '645f26d2b65b8a747f79dda9e41f36549bfcc233'
-    oldFile: null
-  /Channel/OnvifChannel/OnvifChannel.csproj:
-    newFile: !uuid '38856dfea9f3e89def842b3b9e0ba7c0b43e8182'
-    oldFile: null
-  /Channel/OnvifChannel/OnvifHostService.cs:
-    newFile: !uuid 'c149f314df007286cb736cf8489c28924f0bf1d4'
-    oldFile: null
-  /Channel/OnvifChannel/OnvifOption.cs:
-    newFile: !uuid '676da52a5b0e947bc4734fa70f0d57723668590c'
-    oldFile: null
-  /Channel/OnvifChannel/Program.cs:
-    newFile: !uuid '219562bdde09ff43749bb2dfb9d8040ecd94e37d'
-    oldFile: null
-  /Channel/OnvifChannel/appsettings.json:
-    newFile: !uuid '5412a03d48f2fd756a6eac00c2892a5912e36d6f'
-    oldFile: null
-  /Channel/OnvifChannel/config.ini:
-    newFile: !uuid '2eb48dedf088abd0f457d9ac7a181be8ee399993'
-    oldFile: null
-  /DigitalCard.sln:
-    newFile: !uuid 'e671a505f5533346daa9b09fe66d99d32469bf8e'
-    oldFile: !uuid '4f3797d9d064a4335085a9544b65bf897fe6f0ab'
+  /App:
+    newFile: !uuid '9580cb70f63a108e7a0853a4909ffd910e29e607'
+    oldFile: !uuid '20bece0e6870fd09dab52c52a2aad08bb3c9de45'
+  /App/XML:
+    newFile: !uuid '130000c80d045f8d629612e943e5c3450cefc460'
+    oldFile: !uuid '88fde46818079ad361fb19739fe74b5405aac303'
+  /App/XML/IoTAIService.xml:
+    newFile: !uuid 'de3a08986f3540ee8d494421c3b9a1ea069bb581'
+    oldFile: !uuid '20db14768d0f1b336ff8e68a65aaec070c6e79f1'
+  /Common:
+    newFile: !uuid '0818f275442b2a0aaa961a19a1856ed22e13ed8a'
+    oldFile: !uuid 'ff589b7eec31d863ac9532980eb3993bdb94b361'
+  /Common/EventBus:
+    newFile: !uuid '3efea5efa51ab3f454e166c634d23cb3e0a7b97e'
+    oldFile: !uuid 'd36ef61fdb70305ca3c75f334daf7c1a989fd2b4'
+  /Common/EventBus/BusUtility.cs:
+    newFile: !uuid '1e034cf5452b17bc6f11eee1045b858ceb8b80d1'
+    oldFile: !uuid '75f589e6d03eb528f09ab2be3d64872830057c5f'
+  /Common/EventBus/QuartzExeEvent.cs:
+    newFile: !uuid 'aefd0b3d90f4714eb46075285c713a5167b3f35a'
+    oldFile: !uuid '05555062f0c297b764460cfa85222ca5f6ffc04f'
   /Modules:
-    newFile: !uuid 'b0199b7be25c445f5387c9f0158ae2b432df427f'
-    oldFile: !uuid '034485715dd829a4d70a691269f8b7d154145f84'
-  /Modules/IoTAIService:
-    newFile: !uuid '4f5f0e2890394854ea9280325f5e9cec73e9ec21'
-    oldFile: !uuid '01a62ec20405356f72e64e78ed626382aa3a479c'
-  /Modules/IoTAIService/AIProject:
-    newFile: !uuid '53dbee949725ae1a414bb5f914fb221d78726879'
-    oldFile: !uuid '7c259ea0ac4c498c32e653564c11d665de90ba45'
-  /Modules/IoTAIService/AIProject/AIProjectInfo.cs:
-    newFile: !uuid '58afb770251bbd5e99cf09ec8b4f83a0fdc8fc7a'
-    oldFile: !uuid 'a161f1e28a3629b042c6aa69be5a062015e0bda9'
-  /Modules/IoTAIService/AIProject/Items:
-    newFile: !uuid '39041bc7056d5e78dd814aebc8af46dd6b7d7177'
-    oldFile: !uuid '1a3b85a83fbc6e7679562fdf4e6a421e63af7c5c'
-  /Modules/IoTAIService/AIProject/Items/DetectionProject.cs:
-    newFile: !uuid '4815ccbed62539ae66b1b290a7831d33053093e8'
+    newFile: !uuid '6c2788f05bdb3c01472b75de4252db091b6164e2'
+    oldFile: !uuid 'b0199b7be25c445f5387c9f0158ae2b432df427f'
+  /Modules/AfterService:
+    newFile: !uuid 'b78a89bce4664e627600177a4579eae3a9a9e73a'
+    oldFile: !uuid '91ded30b6a5b16ae42bbf77a9b762847d1267853'
+  /Modules/AfterService/PlanUtil:
+    newFile: !uuid '62c93d009cb084d4a6e29402d302d86ce6a086f9'
+    oldFile: !uuid '2ad4a55e5e0e149d3f0e794134f3115f6544110e'
+  /Modules/AfterService/PlanUtil/PlanConcurrentJob.cs:
+    newFile: !uuid 'b3dfbd2985745936d0885f1389fffd313af8075a'
+    oldFile: !uuid '715f33d1e6223d6efcc59504869be762080302a7'
+  /Modules/IoTRulesService:
+    newFile: !uuid 'f6c818c595316a91e757c8a6567d2f178ce108ad'
+    oldFile: !uuid 'a8f9d4569aebac0f420b2b1fec7dc8fd25fe338d'
+  /Modules/IoTRulesService/Business:
+    newFile: !uuid '1fa64a0c8127e1bb33f802eab7d496c548c2b35d'
+    oldFile: !uuid '129b7261eec66ca019996c522c5de5bbf9dacc7b'
+  /Modules/IoTRulesService/Business/RuleBLL.cs:
+    newFile: !uuid 'cf385fca56be7710931c232ee7529fec15663307'
+    oldFile: !uuid '561f508eccc5ab283611c11852630d7c96bb2f42'
+  /Modules/IoTRulesService/TimerUtil:
+    newFile: !uuid '5614615f4f3ad1df14ab4adbb201a86442d79b49'
+    oldFile: !uuid 'ea8ed02fa967cb196f469cc9311a2b69ec9c00d2'
+  /Modules/IoTRulesService/TimerUtil/TimerConcurrentJob.cs:
+    newFile: !uuid 'ef537fd57474ef541afb9da38b896119a03ddb2d'
+    oldFile: !uuid 'ab2a46453f6e05c5f1a7be27e72f1848461ddbd5'
+  /Modules/IoTService:
+    newFile: !uuid '40517c57b4073ea0e80ea42e3b2079349e3e0b87'
+    oldFile: !uuid 'a1fb54a67743719f8bfbbd147c1edc3d19cf527d'
+  /Modules/IoTService/Business:
+    newFile: !uuid '36b9ced8a8ff9b40f457d2ec4e6a8f888dd7b3c6'
+    oldFile: !uuid 'c77b0531facc12fec0467d7c07781186e9566fab'
+  /Modules/IoTService/Business/IotInfluxBLL.cs:
+    newFile: !uuid '07b5012ff0b23b48dad85a4dd389ce5782248a8c'
+    oldFile: !uuid 'f8c2726eb069ab007c3cc7d7139c9bda907e54fc'
+  /Modules/IoTVideoService:
+    newFile: !uuid '52006d38ab20184d693b4783a81dea1044dd9573'
+    oldFile: !uuid 'b4aa66df384caa7718f3bae15f6b058657a0e4ea'
+  /Modules/IoTVideoService/PlanUtil:
+    newFile: !uuid 'a55e223b1f203a72681ce9987d06c6aaff58aa0b'
+    oldFile: !uuid '23e4e972ff8bac88576cea220726d2602a518018'
+  /Modules/IoTVideoService/PlanUtil/PlanConcurrentJob.cs:
+    newFile: !uuid 'd343ed32ba0dc4bdcc048fbce0709e2704d12ab4'
+    oldFile: !uuid '543c3095b246f1be841241c56fbeb89895ddae3b'
+  /Modules/MonitorService:
+    newFile: !uuid 'a2915c370295b5bd86196fa887fd51a711348646'
+    oldFile: !uuid '1ae234593c1d312071ee2055bd7a63837b6de2c5'
+  /Modules/MonitorService/Business:
+    newFile: !uuid 'a54b38de4e4cc7c12d0de524d71a3244b95280a1'
+    oldFile: !uuid 'c69bf3e1fe947a50f30c4d363a6589c12ee648a1'
+  /Modules/MonitorService/Business/JobLogBLL.cs:
+    newFile: !uuid '416bbb1ec7628f5bb0d9852718a08df2bb4836c6'
+    oldFile: !uuid '7b9427ec57a0f22e1b1dac6a29ba5328de57fd75'
+  /Modules/MonitorService/Controller:
+    newFile: !uuid '9f81b6f837b84180d1dd92a4128417bcc0124e03'
+    oldFile: !uuid 'd7486319156bcade32d88d4ff5789c826b80cefc'
+  /Modules/MonitorService/Controller/JobLog.cs:
+    newFile: !uuid 'fae8968584a3e500fb9ea8ef6e182558f3da17d6'
+    oldFile: !uuid 'baf56f8a0a46450d2e0fe0e4650dc2f5a5389e9f'
+  /Modules/MonitorService/DAL:
+    newFile: !uuid '76794748d9668769adef956e6b3c7f818bff5c11'
+    oldFile: !uuid 'fbedf44b46e650c4991b3373c69cedf1150a604c'
+  /Modules/MonitorService/DAL/JobLogDAL.cs:
+    newFile: !uuid '3a9a2a63c96253508e8e978620988ea8ddc0c32e'
+    oldFile: !uuid '301b0e5da408ea850eaa148001dd54f5aba8a2cb'
+  /Modules/MonitorService/Util:
+    newFile: !uuid '5ce6db404c794f26d95d6532ff161d6bb93a3247'
+    oldFile: !uuid '92c98d133685574ee8c9f7912aff31b2e36f4c51'
+  /Modules/MonitorService/Util/ScheduleUtils.cs:
+    newFile: !uuid '44388d1f4350fea33e27076fdccace776ca400d5'
+    oldFile: !uuid 'bce92d31eed1201d2515b0563c9480e4f5de0f82'
+  /Modules/ReportService:
+    newFile: !uuid 'aacd718c323eebf02182a371dc4c2d896dffa9b1'
+    oldFile: !uuid '16ec34b5c3caa3c366ae9ef07c631ac0dcefed00'
+  /Modules/ReportService/Business:
+    newFile: !uuid '78ed7533305567ab6b0c9551c935550b2f1e97cb'
+    oldFile: !uuid '74edd82b7918cde3b6fefde4abfddfe5e3a05581'
+  /Modules/ReportService/Business/ReportWarnBLL.cs:
+    newFile: !uuid 'f8811d4c6d4c549a480d8182219b8be519759211'
+    oldFile: !uuid 'da065b4ac54608ac231f26565e76dc4f1481ec88'
+  /Modules/ReportService/Business/ShareBLL.cs:
+    newFile: !uuid 'ca8ad9f5924032eba6187568a81b18e198a595c2'
+    oldFile: !uuid 'a87b41fde6a85af6074a1be6cf8502aa7fdf680e'
+  /Modules/ReportService/TimerUtil:
+    newFile: !uuid 'fa952618dadef5a32e6ca9b0b5da3517539c8486'
+    oldFile: !uuid '4fa7b24188865c009c44caa04cb96972f9a34c71'
+  /Modules/ReportService/TimerUtil/TimerConcurrentJob.cs:
+    newFile: null
+    oldFile: !uuid '77b3f38a81d0f88a01263ef48fdbc8979baf528d'
+  /Modules/ReportService/TimerUtil/TimerSchedule.cs:
+    newFile: !uuid '2a05547fba5624962ee5b8885b4962921be89739'
+    oldFile: !uuid 'a467206d8d1288a11979e40e91a3477670b86139'
+  /Modules/ReportService/TimerUtil/TimerShareConcurrentJob.cs:
+    newFile: !uuid '785997351e4a904ed47543c3ec43250176494f6e'
     oldFile: null
-  /Modules/IoTAIService/AIProject/Items/FaceProject.cs:
-    newFile: !uuid '44d87a0cb2f734ac7203fce9957f07f3dc8fda4b'
-    oldFile: !uuid 'd5e13514d294db40eb025b58613042dda9fa566b'
+  /Modules/ReportService/TimerUtil/TimerWarnConcurrentJob.cs:
+    newFile: !uuid '2062b810f38448b12820dae82df223e25cbeb334'
+    oldFile: null
+  /Modules/WeiXinService:
+    newFile: !uuid '6e6bcec7e98a27fe34c11931b5fab0bf4e61f230'
+    oldFile: !uuid '74800b7ca26f805e2b944b85c75d6419a4b59574'
+  /Modules/WeiXinService/Business:
+    newFile: !uuid 'aa7ec40aeb34a5f58c80e324977301d45c9a729b'
+    oldFile: !uuid '9b45eb538e472740190b8865f82c067e027de575'
+  /Modules/WeiXinService/Business/CorpSyncBLL.cs:
+    newFile: !uuid '7bd0b76414748472580d64137c582194755bb07d'
+    oldFile: !uuid 'eb4158c17c4833a9917cdda3fe200294d7ee1b8f'
+  /Modules/WeiXinService/PluginConfig.cs:
+    newFile: !uuid 'e179f293d7487fbfe0e82a7b7db2831cc04aea29'
+    oldFile: !uuid '41a7fbbde4013606b197824c9ce1b62ba76d7845'
+  /Modules/WeiXinService/TimerUtil:
+    newFile: !uuid '95d1746db4f7fff43652d7352d94bbafce8f1761'
+    oldFile: null
+  /Modules/WeiXinService/TimerUtil/TimerConcurrentJob.cs:
+    newFile: !uuid 'db23b17596ff0f5486a49708a9d8f6c648be079d'
+    oldFile: null
+  /Modules/WeiXinService/TimerUtil/TimerSchedule.cs:
+    newFile: !uuid '4fc439befa1ac0bc7a556ddccb7df05aef2fdda6'
+    oldFile: null
   /admin-ui:
-    newFile: !uuid 'e45b83055a8e4cc78d4572f2e626d7a76fd1f5fb'
-    oldFile: !uuid '32842103d893f7b2daf6daf30bb06caa174f52cd'
+    newFile: !uuid 'efc68ac82a50a2cbe761fef072dee2db0b22abef'
+    oldFile: !uuid 'e45b83055a8e4cc78d4572f2e626d7a76fd1f5fb'
   /admin-ui/src:
-    newFile: !uuid 'f84e08aad803bcf21b3a2fb5b28cb81eb539860d'
-    oldFile: !uuid '969cd2eb357fd2ddb213301c5d53f8e59edbd4a3'
+    newFile: !uuid '86e72c096f9bddda611a6a1568dbe9b3826c0660'
+    oldFile: !uuid 'f84e08aad803bcf21b3a2fb5b28cb81eb539860d'
+  /admin-ui/src/api:
+    newFile: !uuid 'f1b3c7434d1fdc7a65d683e225e25757494a7c9b'
+    oldFile: !uuid '9df7ed1f348a01db94312cec82fab06877a164a1'
+  /admin-ui/src/api/monitor:
+    newFile: !uuid '5a67d67dfe664abc323a1537b5413a5cf983554c'
+    oldFile: !uuid '838c4c707efac6a7cfa62b49b3a13665f6688e7a'
+  /admin-ui/src/api/monitor/jobLog.js:
+    newFile: !uuid 'db135176f6e397d3600273ecca5a5fc1ae38ff3d'
+    oldFile: !uuid 'b38657b8b7073355211fab874c7b0c4a56f0ba01'
   /admin-ui/src/views:
-    newFile: !uuid '452bd43d8255bc7695240803735257909ae88293'
-    oldFile: !uuid '9611f9091cc3d069cd4caed8d201f7b9eb0b5717'
+    newFile: !uuid '5229a86d9dc3cfa61543bcce6e4d11606ccd2f8e'
+    oldFile: !uuid '452bd43d8255bc7695240803735257909ae88293'
   /admin-ui/src/views/iot:
-    newFile: !uuid '7aa08f12bf0538a7da5442f439dab5c50a94dff7'
-    oldFile: !uuid '64e6ddce7484737a239a127473404a36e9a4c367'
+    newFile: !uuid 'e9c1cbbf64327cf33d4af24ec4c12262c6233ae8'
+    oldFile: !uuid '7aa08f12bf0538a7da5442f439dab5c50a94dff7'
   /admin-ui/src/views/iot/video:
-    newFile: !uuid '5032773b82724c33a828265ae638be08c68a0f43'
-    oldFile: !uuid '7dde0676293bb2a81768a2b248210ba3ededfc0a'
+    newFile: !uuid '7d2d10bc62f537b9e8da3e6f9f032d759a6b178d'
+    oldFile: !uuid '5032773b82724c33a828265ae638be08c68a0f43'
   /admin-ui/src/views/iot/video/aconfig.vue:
-    newFile: !uuid '6767b6ad9dd36008e4fd5414c023704f72b67bc0'
-    oldFile: !uuid '15f260334a53b4e045e87e57c19f91fabf75622c'
-gitCommitId: !uuid 'c4142cba386afd1ef4fa6038222278787ffdefac'
-renames: {
-  }
-revisionId: 159
+    newFile: !uuid '9a0c631d54364e2ce45ec4cc6beca907c6954335'
+    oldFile: !uuid '6767b6ad9dd36008e4fd5414c023704f72b67bc0'
+  /admin-ui/src/views/monitor:
+    newFile: !uuid '45c8d9c640b9c5bb57c659cb89ca96c39dbd8902'
+    oldFile: !uuid '905f07741f53cb322cbe9c83f1d28e97288d97ae'
+  /admin-ui/src/views/monitor/job:
+    newFile: !uuid '5f7f53141cec3cb158518bb01d2fc97fbede2707'
+    oldFile: !uuid '22d91afe8d6ca862277620142a215826d743f9d5'
+  /admin-ui/src/views/monitor/job/log.vue:
+    newFile: !uuid 'fd31a8837743ac4413f31ff16d1f876c830c93c4'
+    oldFile: !uuid 'eab5ddd1cec296ccf35ef5c42d5017d6d18e6ea5'
+gitCommitId: !uuid 'cdac7a4fc53a9755b37b2396b78961b3511611be'
+renames:
+  /Modules/ReportService/TimerUtil/TimerShareConcurrentJob.cs: /Modules/ReportService/TimerUtil/TimerConcurrentJob.cs
+  /Modules/ReportService/TimerUtil/TimerWarnConcurrentJob.cs: /Modules/ReportService/TimerUtil/TimerConcurrentJob.cs
+  /Modules/WeiXinService/TimerUtil/TimerConcurrentJob.cs: /Modules/ReportService/TimerUtil/TimerConcurrentJob.cs
+revisionId: 160
