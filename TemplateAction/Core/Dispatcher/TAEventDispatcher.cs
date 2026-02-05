@@ -225,7 +225,7 @@ namespace TemplateAction.Core
         /// <param name="key"></param>
         /// <param name="evt"></param>
         /// <returns></returns>
-        public async Task<Z> DispathWait<T, Z>(string key, T evt) where T : ResponseEvent where Z : EvtResponse
+        public async Task<Z> DispathWait<T, Z>(string key, T evt) where T : ResponseEvent where Z : EvtResponse, new()
         {
             for (int i = 0; i < _scopelist.Count; i++)
             {
@@ -235,7 +235,11 @@ namespace TemplateAction.Core
                     return rsp;
                 }
             }
-            return null;
+            var reply = new Z();
+            reply.IsDone = false;
+            reply.Code = 999;
+            reply.Message = "Call的回复数据异常";
+            return reply;
         }
 
     }

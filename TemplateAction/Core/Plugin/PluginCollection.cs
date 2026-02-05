@@ -570,7 +570,7 @@ namespace TemplateAction.Core
 
         public async Task<Z> DispathWait<T, Z>(string key, T evt)
             where T : ResponseEvent
-            where Z : EvtResponse
+            where Z : EvtResponse, new()
         {
             PluginObject[] tarr = GetAllPlugin();
             foreach (PluginObject plg in tarr)

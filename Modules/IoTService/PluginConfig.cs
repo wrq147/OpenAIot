@@ -175,7 +175,7 @@ namespace IoTService
                         devjob.invoke_target = typeof(IotWinRuleBLL).FullName + ".NoticeCalDevice($context)";
                         devjob.job_group = winrulegroup;
                         devjob.job_name = winrulejobname;
-                        devjob.misfire_policy = "1";
+                        devjob.misfire_policy = "3";
                         devjob.status = "0";
 
                         await jobBLL.InsertJob(devjob);

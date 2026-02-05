@@ -75,7 +75,7 @@ namespace Common.EventBus
         /// <returns></returns>
         public async Task<Z> DispathWait<T, Z>(string key, T evt)
             where T : ResponseEvent
-            where Z : EvtResponse
+            where Z : EvtResponse, new()
         {
             var requestTimeout = TimeSpan.FromSeconds(8);
             if (evt is QuartzExeEvent)
@@ -92,22 +92,22 @@ namespace Common.EventBus
                 });
                 if (replyMsg.Data == null)
                 {
-                    var reply = new EvtResponse();
+                    var reply = new Z();
                     reply.IsDone = false;
                     reply.Code = Constants.PARSE_ERR;
                     reply.Message = "Call的回复数据异常";
-                    return (Z)reply;
+                    return reply;
                 }
                 replyMsg.Data.IsDone = true;
                 return replyMsg.Data;
             }
             catch (Exception ex)
             {
-                var reply = new EvtResponse();
+                var reply = new Z();
                 reply.IsDone = false;
                 reply.Code = Constants.TIME_OUT;
                 reply.Message = "Call请求超时被取消";
-                return (Z)reply;
+                return reply;
             }
 
         }

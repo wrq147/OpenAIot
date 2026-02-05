@@ -303,7 +303,7 @@ namespace IoTService.Business
                     return BusResponse<List<Out_MergeItem>>.Error(131, "参数格式错误");
                 }
             }
-            var dviddict = devices.ToDictionary(x => x.DeviceId);
+            var dviddict = devices.ToDictionary(x => x.Id);
 
             if (prod == null)
             {
@@ -488,13 +488,14 @@ namespace IoTService.Business
                                     tmpdxId = tmpid.ToString();
                                 }
                             }
-                            string tmpNumber = string.Empty;
-                            if (values.TryGetValue("DeviceId", out object tmpdid))
+                            else
                             {
-                                if (tmpdid != null)
-                                {
-                                    tmpNumber = dviddict[tmpdid.ToString()].DeviceNumber;
-                                }
+                                continue;
+                            }
+                            string tmpNumber = string.Empty;
+                            if (dviddict.TryGetValue(tmpdxId, out MZ_IotDevice tmpddvv))
+                            {
+                                tmpNumber = tmpddvv.DeviceNumber;
                             }
                             switch (pp.option.type)
                             {
@@ -542,23 +543,23 @@ namespace IoTService.Business
             IEnumerable<IGrouping<string, Out_MergeItem>> tmplist;
             if (query.WindowWay == 0)
             {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd") + "|" + x.Number + "|" + x.MergeWay);
+                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd") + "|" + x.Id + "|" + x.MergeWay);
             }
             else if (query.WindowWay == 1)
             {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM") + "|" + x.Number + "|" + x.MergeWay);
+                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM") + "|" + x.Id + "|" + x.MergeWay);
             }
             else if (query.WindowWay == 2)
             {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH") + "|" + x.Number + "|" + x.MergeWay);
+                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH") + "|" + x.Id + "|" + x.MergeWay);
             }
             else if (query.WindowWay == 3 || query.WindowWay == 4)
             {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm") + "|" + x.Number + "|" + x.MergeWay);
+                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm") + "|" + x.Id + "|" + x.MergeWay);
             }
             else
             {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm:ss") + "|" + x.Number + "|" + x.MergeWay);
+                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm:ss") + "|" + x.Id + "|" + x.MergeWay);
             }
 
 

@@ -36,7 +36,7 @@ namespace TemplateAction.Core
             }
         }
 
-        public async Task<Z> DispathWait<T, Z>(string key, T evt) where T : ResponseEvent where Z : EvtResponse
+        public async Task<Z> DispathWait<T, Z>(string key, T evt) where T : ResponseEvent where Z : EvtResponse, new()
         {
             ITAResponseEventHandler val;
             if (_responseHandlers.TryGetValue(key, out val))

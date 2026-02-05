@@ -89,7 +89,7 @@
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button type="text" icon="el-icon-view" @click="handleView(scope.row)">详细</el-button>
-              <el-button type="text" icon="el-icon-refresh-left" @click="handleRetry(scope.row)">重试</el-button>
+              <el-button v-if="scope.row.status==1" type="text" icon="el-icon-refresh-left" @click="handleRetry(scope.row)">重试</el-button>
             </template>
           </el-table-column>
         </el-table>
