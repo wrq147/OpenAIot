@@ -3,21 +3,15 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid 'b703f29696e5d8285c69f8260286886e48882683'
-    oldFile: !uuid 'bb7b1ee01f4299908216c8bf91fdec34410d5221'
+    newFile: !uuid '597592f17d67c4673798e9d6efdbc30af4e414b4'
+    oldFile: !uuid 'b703f29696e5d8285c69f8260286886e48882683'
   /Channel/ChannelUtility:
-    newFile: !uuid '3d93ce2a5acf622a9a1bc71103be077b5e8ef664'
-    oldFile: !uuid 'bae6c86e757d48c780b482592a4733b11758ee74'
+    newFile: !uuid '375b22959956e4d6346053f385a1e5510f36f666'
+    oldFile: !uuid '3d93ce2a5acf622a9a1bc71103be077b5e8ef664'
   /Channel/ChannelUtility/ClientBusProxy.cs:
-    newFile: !uuid '132e96e807b65d86d6888cbded5a5a62ab3b3037'
-    oldFile: !uuid 'baa65a0cb67d9862e819dcecf8d4b3fc49eedd46'
-  /Channel/ModbusChannel:
-    newFile: !uuid '21d6303f206defff922b97995c627c4bced904a7'
-    oldFile: !uuid '63e05f13d593581b69a66337730c87712ea08c42'
-  /Channel/ModbusChannel/GpioTask.cs:
-    newFile: !uuid '84c193f63a2fc04e6c00da8592ee6f8e367c1399'
-    oldFile: !uuid 'bb7072aceaeb4a58b5425fce90b00bf2d188bca5'
-gitCommitId: !uuid 'dc0924f724913c2bae954b9dfaa87b0a0afeaffe'
+    newFile: !uuid '288d40491267cba453b19f550799738f75a2d602'
+    oldFile: !uuid '132e96e807b65d86d6888cbded5a5a62ab3b3037'
+gitCommitId: !uuid '2b1ea4b9fc617330d671a666b3e80d502f379a52'
 renames: {
   }
-revisionId: 163
+revisionId: 164
