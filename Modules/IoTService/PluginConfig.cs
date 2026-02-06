@@ -207,26 +207,22 @@ namespace IoTService
                 }
 
 
-                var generalOption = app.ServiceProvider.GetService<IOptions<GeneralOption>>();
-                if (!string.IsNullOrEmpty(generalOption.Value.event_bus_conn))
+                var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+                var nodesub = await bus.SubscribeCoreAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default);
+                var _ = Task.Run(async () =>
                 {
-                    var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
-                    var nodesub = await bus.SubscribeCoreAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default);
-                    var _ = Task.Run(async () =>
+                    await foreach (var msg in nodesub.Msgs.ReadAllAsync())
                     {
-                        await foreach (var msg in nodesub.Msgs.ReadAllAsync())
+                        try
                         {
-                            try
-                            {
-                                await app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
-                            }
-                            catch { }
+                            await app.ServiceProvider.GetService<ServerBusProxy>().UpdateUpList();
                         }
-                    });
+                        catch { }
+                    }
+                });
 
-                    //设置规则执行节点
-                    await app.ServiceProvider.GetService<ServerBusProxy>().RegNode();
-                }
+                //设置规则执行节点
+                await app.ServiceProvider.GetService<ServerBusProxy>().RegNode();
             });
 
 

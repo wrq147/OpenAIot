@@ -6,8 +6,6 @@ using IoTAIService.AICode;
 using IoTAIService.AIProject;
 using IoTAIService.Business;
 using IoTAIService.DAL;
-using IoTRulesService.DataParser;
-using IoTService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
@@ -15,10 +13,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.IO.Compression;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
@@ -48,6 +44,7 @@ namespace IoTAIService
             services.AddSingleton<AICache>();
             services.AddSingleton<AIProjectManager>();
             services.AddSingleton<PythonExe>();
+            services.AddSingleton<AIBusProxy>();
         }
         private ITAServiceProvider _provider;
         protected override async void Configure(ITAApplication app, PluginObject plg)
@@ -62,18 +59,48 @@ namespace IoTAIService
                     await milvusBLL.CreateMemberCollection();
                 }
 
+                var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
+                _ = Task.Run(async () =>
+               {
+                   string tkey = "device.ai." + aiOption.Value.AINodeName;
+                   if (string.IsNullOrEmpty(aiOption.Value.AINodeName))
+                   {
+                       tkey = "device.ai";
+                   }
+                   await foreach (var msg in bus.SubscribeAsync(tkey, "AIDeviceG", DefalutNatsJsonSerializer<string>.Default))
+                   {
+                       try
+                       {
+                           var rs = System.Text.Json.JsonSerializer.Deserialize<AIDetectRequestMeesage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
+                           await MessageHandler(rs);
+                       }
+                       catch (Exception ex)
+                       {
+                           Console.WriteLine(ex.ToString());
+                       }
+                   }
+               });
+
+                var nodesub = await bus.SubscribeCoreAsync("RuleNode.Change", "RuleNode" + MyAccess.Core.StringTool.GetGUID(), DefalutNatsJsonSerializer<string>.Default);
+                _ = Task.Run(async () =>
+               {
+                   await foreach (var msg in nodesub.Msgs.ReadAllAsync())
+                   {
+                       try
+                       {
+                           await app.ServiceProvider.GetService<AIBusProxy>().UpdateUpList();
+                       }
+                       catch { }
+                   }
+               });
+
                 //初始化AI项目
                 await app.ServiceProvider.GetService<AIProjectManager>().Init();
+                await app.ServiceProvider.GetService<AIBusProxy>().RegNode();
+                await app.ServiceProvider.GetService<AIBusProxy>().UpdateUpList();
             });
-
-            app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener += MessageHandler;
-
         }
-        public override void Unload(ITAApplication app, PluginObject plg)
-        {
-            app.ServiceProvider.GetService<MessageRunner>().OtherMessageListener -= MessageHandler;
-            base.Unload(app, plg);
-        }
+
         private async Task DownAIDetectResponse(string nodeid, string videoId, List<BoxItem> boxlist, bool needConf = false)
         {
             AIDetectResponseMessage msg = new AIDetectResponseMessage();
@@ -125,14 +152,9 @@ namespace IoTAIService
             }
         }
 
-        private async Task MessageHandler(BaseDeviceMessage msg)
+        private async Task MessageHandler(AIDetectRequestMeesage detectReq)
         {
-            if (msg.MsgType != "AIDetectReq")
-            {
-                return;
-            }
             var aiCache = _provider.GetService<AICache>();
-            AIDetectRequestMeesage detectReq = (AIDetectRequestMeesage)msg;
             List<AIConfigData> videoConfigs;
             if (detectReq.Configs != null)
             {
@@ -206,13 +228,7 @@ namespace IoTAIService
                                     //发送人脸数量属性
                                     Dictionary<string, object> newvals = new Dictionary<string, object>();
                                     newvals.Add("FaceCount", facenum);
-                                    ReadPropertyMessageReply rpmsg = new ReadPropertyMessageReply();
-                                    rpmsg.ProductId = string.Empty;
-                                    rpmsg.DeviceId = detectReq.DeviceId;
-                                    rpmsg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-                                    rpmsg.Properties = newvals;
-                                    rpmsg.IsTagSync = false;
-                                    await _provider.GetService<DeviceMessageHandler>().ExeMessage(rpmsg);
+                                    await _provider.GetService<AIBusProxy>().SendPropertyReply(string.Empty, detectReq.DeviceId, newvals);
                                     //人脸数量变化事件
 
                                 }

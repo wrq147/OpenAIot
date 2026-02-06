@@ -7,6 +7,10 @@ namespace ChannelUtility
     {
         public string NodeId { get; set; }
         /// <summary>
+        /// 是否处理AI
+        /// </summary>
+        public bool EnableAI { get; set; }
+        /// <summary>
         /// rabbitmq连接字符串
         /// </summary>
         public string EventConn { get; set; }

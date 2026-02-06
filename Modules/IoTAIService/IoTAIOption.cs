@@ -8,6 +8,7 @@ namespace IoTAIService
 {
     public class IoTAIOption
     {
+        public string AINodeName { get; set; }
         public string PythonHome { get; set; }
         /// <summary>
         /// 是否初始化Milvus表

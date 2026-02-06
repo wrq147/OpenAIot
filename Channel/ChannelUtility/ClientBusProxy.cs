@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 
 
 namespace ChannelUtility
@@ -189,6 +188,27 @@ namespace ChannelUtility
                  }
              });
 
+
+            if (_option.EnableAI == true)
+            {
+                var aiNodeSub = await _bus.SubscribeCoreAsync("AINode.Change", "AINode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                _subscriptions.Add(aiNodeSub);
+                _ = Task.Run(async () =>
+                {
+                    await foreach (var msg in aiNodeSub.Msgs.ReadAllAsync().ConfigureAwait(false))
+                    {
+                        try
+                        {
+                            UpdateUpAIList();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Write(ex.Message);
+                        }
+                    }
+                });
+                UpdateUpAIList();
+            }
 
 
             //发送节点上线
@@ -437,6 +457,46 @@ namespace ChannelUtility
         }
 
 
+        private List<string> _upAIList;
+        private readonly ReaderWriterLockSlim _lockAI = new ReaderWriterLockSlim();
+
+        public void UpdateUpAIList()
+        {
+            var dict = _redis.HashGetAll<string>("AIExeNodes");
+            var tmplist = new List<string>();
+            if (dict != null)
+            {
+                foreach (var item in dict)
+                {
+                    tmplist.Add(item.Key);
+                }
+            }
+
+            _lockAI.EnterWriteLock();
+            try
+            {
+                _upAIList = tmplist;
+            }
+            finally
+            {
+                _lockAI.ExitWriteLock();
+            }
+        }
+        private string GetUpAIKey(string deviceId)
+        {
+            _lockAI.EnterReadLock();
+            try
+            {
+                if (_upAIList == null || _upAIList.Count == 0) return "device.ai";
+                int pos = Math.Abs(deviceId.GetHashCode() % _upAIList.Count);
+                return "device.ai." + _upAIList[pos];
+            }
+            finally
+            {
+                _lockAI.ExitReadLock();
+            }
+
+        }
 
         /// <summary>
         /// 发送设备在线给事件总线
@@ -549,7 +609,7 @@ namespace ChannelUtility
 
             await _bus.PublishAsync(new NatsMsg<string>()
             {
-                Subject = GetUpKey(deviceId),
+                Subject = GetUpAIKey(deviceId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }

@@ -19,8 +19,8 @@
 	  <Folder Include="AIScript\" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Channel\ChannelUtility\ChannelUtility.csproj" />
 	  <ProjectReference Include="..\DeveloperService\DeveloperService.csproj" />
-	  <ProjectReference Include="..\IoTRulesService\IoTRulesService.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="AIModel\FaceDetection.onnx">
