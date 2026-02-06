@@ -116,7 +116,7 @@ namespace ChannelUtility
                             continue;
                         }
                         var rs = System.Text.Json.JsonSerializer.Deserialize<BaseDeviceMessage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
-                        if (!string.IsNullOrEmpty(msg.ReplyTo))
+                        if (string.IsNullOrEmpty(rs.MessageId) && !string.IsNullOrEmpty(msg.ReplyTo))
                         {
                             rs.MessageId = msg.ReplyTo;
                         }
