@@ -84,7 +84,7 @@ namespace ModbusChannel
                                 int ipin = Convert.ToInt32(cmds[1]);
                                 EnablePin(ipin);
                                 var pinval = _controller.Read(ipin);
-                                await _eventBus.PushReply(_dtuId, (pinval == PinValue.High ? 1 : 0).ToString(), rawMsg.MessageId);
+                                await _eventBus.PublishReply(rawMsg.MessageId, (pinval == PinValue.High ? 1 : 0).ToString());
                             }
                             break;
                         case "Write":

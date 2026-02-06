@@ -705,7 +705,15 @@ namespace ChannelUtility
                 Subject = GetUpKey(msg.DeviceId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+        }
 
+        public async Task PublishReply(string msgId, string data)
+        {
+            await _bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = msgId,
+                Data = data
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
         //供程序员显式调用的Dispose方法
