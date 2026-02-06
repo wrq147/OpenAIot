@@ -2,76 +2,22 @@
 branches: {
   }
 fileChange:
-  /Common:
-    newFile: !uuid '1de91b107d358ba19265d2165e5122a48de20d88'
-    oldFile: !uuid 'e00956f94a859a39fd44c439c63bea762f81dce0'
-  /Common/EventBus:
-    newFile: !uuid '28ee6ba52b4a4b7c686aa5bb855186a5fd94dd49'
-    oldFile: !uuid '3efea5efa51ab3f454e166c634d23cb3e0a7b97e'
-  /Common/EventBus/NatsScope.cs:
-    newFile: !uuid '3db3b6e54d0a6a079d714f08789876100f0f540c'
-    oldFile: !uuid '68fa345064409ece41e691881e0fb6cb500994d7'
-  /Modules:
-    newFile: !uuid 'b7f87079861423fe9f4e04dfd6c2738861710d64'
-    oldFile: !uuid '4557cdf74f44853b0374af1bf173e048d0015704'
-  /Modules/IoTService:
-    newFile: !uuid 'db9513c1d1b5806ffa891ee29b4075f971c307b9'
-    oldFile: !uuid '905a9ed20189f2844a2ae1856bf92027c4242524'
-  /Modules/IoTService/Business:
-    newFile: !uuid 'f53ff12f1467d86e31dea233e00e6e5d1e16418b'
-    oldFile: !uuid 'f8f7031d7f917056916315ad25b739ac0518b3ac'
-  /Modules/IoTService/Business/IotInfluxBLL.cs:
-    newFile: !uuid 'd71159504582c8ca4ffd0085114332df3d0100d6'
-    oldFile: !uuid 'a62eb5a9947c3ac6177a3f95194f747b2ab1b30b'
-  /Modules/IoTService/Business/IotWinRuleBLL.cs:
-    newFile: !uuid '255bd7846374904727b7971e5c2575474427583b'
-    oldFile: !uuid '3b1aa0ba241214b5bf01dd53959af77e5a50b512'
-  /Modules/IoTService/PluginConfig.cs:
-    newFile: !uuid '7992adf4076735275eb2ee858e4acffa66bcb2f2'
-    oldFile: !uuid '98e1370e64a83ed312298f7eb309ec456c29f00c'
-  /TemplateAction:
-    newFile: !uuid '26ace3114c067bfc94158898784bc46b60105c58'
-    oldFile: !uuid '3c9074d2750f6950370874e727adba9c91ae346b'
-  /TemplateAction/Core:
-    newFile: !uuid 'ed69a9667a7d8726d2ea2c72d3fd08ffeb196b83'
-    oldFile: !uuid 'c6a6156d11d4e5290fd291c68f1c7ca2523649b5'
-  /TemplateAction/Core/Dispatcher:
-    newFile: !uuid '15e66917bb8c287a04a4929029a9de759b73b706'
-    oldFile: !uuid '601e59c970eaf3b3299c1d55c3aec3380b3c6826'
-  /TemplateAction/Core/Dispatcher/IDispatcher.cs:
-    newFile: !uuid '1f677b4e9ba6af8004b6ff6fbd51cf039a105bc0'
-    oldFile: !uuid '90ba8fef332ccce279c6b13807c28d375abee2d5'
-  /TemplateAction/Core/Dispatcher/TAEventDispatcher.cs:
-    newFile: !uuid '45fb5d24ed3e6c6c2d18d9b42e1e58f18fb1e9f3'
-    oldFile: !uuid '15910bffcb88847e90cbd263d351965df4d5a078'
-  /TemplateAction/Core/Plugin:
-    newFile: !uuid 'd9ee36e774bfc330650372ec3fddd4941bc77347'
-    oldFile: !uuid '1cd5d075630aeb27ecc4c2716fa154210da355b8'
-  /TemplateAction/Core/Plugin/PluginCollection.cs:
-    newFile: !uuid 'ad7934e8778e07c6cdef42a4aaa91f0cc5d4176f'
-    oldFile: !uuid 'a93cc39a5bcbb864c1b2896b3e78e34595e51279'
-  /TemplateAction/Core/Plugin/PluginEventDispatcher.cs:
-    newFile: !uuid 'c76063909286194efb703d60310a205a8905bcb6'
-    oldFile: !uuid '6e775a5dacc1e3091aeb39905c08074c415de157'
-  /admin-ui:
-    newFile: !uuid 'cec5f84d68d7643aa574602172e99995a2220611'
-    oldFile: !uuid '89e54973d98b347da7ba4224b107229cea717f40'
-  /admin-ui/src:
-    newFile: !uuid '71a5ce4640ef87e5e1cdbb66e1e61b65c92bfe6d'
-    oldFile: !uuid '63cdb53a3d0f0cfe2067762c037d5d95bc6a43ea'
-  /admin-ui/src/views:
-    newFile: !uuid 'f77318cbdb6254775bcf25e7d55a9aede17ea2c9'
-    oldFile: !uuid '4987c16adb4f6aedb85df7668ffe70f6c7ecd30e'
-  /admin-ui/src/views/monitor:
-    newFile: !uuid 'bc8d09ad01da48719fe211e3d4a191f556c5e562'
-    oldFile: !uuid '45c8d9c640b9c5bb57c659cb89ca96c39dbd8902'
-  /admin-ui/src/views/monitor/job:
-    newFile: !uuid 'a0469630e0d78183367970672fbae213097499bc'
-    oldFile: !uuid '5f7f53141cec3cb158518bb01d2fc97fbede2707'
-  /admin-ui/src/views/monitor/job/log.vue:
-    newFile: !uuid '6873dd77fe81119a2911fa4bad5b148616db5902'
-    oldFile: !uuid 'fd31a8837743ac4413f31ff16d1f876c830c93c4'
-gitCommitId: !uuid 'e0202534892ece226a4718e03203b76dd4136402'
+  /Channel:
+    newFile: !uuid 'b703f29696e5d8285c69f8260286886e48882683'
+    oldFile: !uuid 'bb7b1ee01f4299908216c8bf91fdec34410d5221'
+  /Channel/ChannelUtility:
+    newFile: !uuid '3d93ce2a5acf622a9a1bc71103be077b5e8ef664'
+    oldFile: !uuid 'bae6c86e757d48c780b482592a4733b11758ee74'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid '132e96e807b65d86d6888cbded5a5a62ab3b3037'
+    oldFile: !uuid 'baa65a0cb67d9862e819dcecf8d4b3fc49eedd46'
+  /Channel/ModbusChannel:
+    newFile: !uuid '21d6303f206defff922b97995c627c4bced904a7'
+    oldFile: !uuid '63e05f13d593581b69a66337730c87712ea08c42'
+  /Channel/ModbusChannel/GpioTask.cs:
+    newFile: !uuid '84c193f63a2fc04e6c00da8592ee6f8e367c1399'
+    oldFile: !uuid 'bb7072aceaeb4a58b5425fce90b00bf2d188bca5'
+gitCommitId: !uuid 'dc0924f724913c2bae954b9dfaa87b0a0afeaffe'
 renames: {
   }
-revisionId: 162
+revisionId: 163
