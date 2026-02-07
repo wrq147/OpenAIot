@@ -48,6 +48,7 @@ namespace IoTAIService
             services.AddSingleton<AIProjectManager>();
             services.AddSingleton<PythonExe>();
             services.AddSingleton<AIBusProxy>();
+            services.AddSingleton<AIRedisHelper>();
         }
         private ITAServiceProvider _provider;
         protected override async void Configure(ITAApplication app, PluginObject plg)

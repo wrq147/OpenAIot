@@ -21,7 +21,7 @@ namespace IoTAIService.Business
         /// <returns></returns>
         public virtual async Task ExecuteSendHeartbeat()
         {
-            GeneralRedisHelper redis = _provider.GetService<GeneralRedisHelper>();
+            AIRedisHelper redis = _provider.GetService<AIRedisHelper>();
             var dict = redis.HashGetAll<string>("AIExeNodes");
             var serverBus = _provider.GetService<AIBusProxy>();
             var isneedupdate = false;

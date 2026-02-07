@@ -27,7 +27,7 @@ namespace IoTAIService
         public async Task RegNode()
         {
             var option = _provider.GetService<IOptions<IoTAIOption>>();
-            GeneralRedisHelper redis = _provider.GetService<GeneralRedisHelper>();
+            AIRedisHelper redis = _provider.GetService<AIRedisHelper>();
             if (!string.IsNullOrEmpty(option.Value.AINodeName))
             {
                 await redis.HashSetAsync("AIExeNodes", option.Value.AINodeName, DateTime.Now.AddSeconds(600).ToString("o"));
@@ -52,7 +52,7 @@ namespace IoTAIService
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         public async Task UpdateUpList()
         {
-            GeneralRedisHelper redis = _provider.GetService<GeneralRedisHelper>();
+            AIRedisHelper redis = _provider.GetService<AIRedisHelper>();
             var dict = await redis.HashGetAllAsync<string>("RuleExeNodes");
             var tmplist = new List<string>();
             if (dict != null)

@@ -4,6 +4,28 @@
         <name>IoTAIService</name>
     </assembly>
     <members>
+        <member name="M:IoTAIService.AIBusProxy.SendEvent(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Collections.Generic.HashSet{System.Int64},System.String,System.String)">
+            <summary>
+            发送服务端事件
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="eventId"></param>
+            <param name="outputs"></param>
+            <param name="redirectFromProductId"></param>
+            <param name="ruleId"></param>
+            <param name="fromDtuId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AIBusProxy.SendPropertyReply(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            发送服务端属性回复
+            </summary>
+            <param name="productId"></param>
+            <param name="deviceId"></param>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
         <member name="T:IoTAIService.AICode.ExecutionProviderType">
             <summary>
             执行提供者类型
@@ -75,6 +97,12 @@
             <summary>
             通用检测项目
             </summary>
+        </member>
+        <member name="M:IoTAIService.Business.AINodeBLL.ExecuteSendHeartbeat">
+            <summary>
+            定时心跳验证iot节点是否存活
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:IoTAIService.Controller.Face">
             <summary>
