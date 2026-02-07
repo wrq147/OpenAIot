@@ -8,6 +8,8 @@ using IoTAIService.Business;
 using IoTAIService.DAL;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using MonitorService.Business;
+using MonitorService.Model;
 using NATS.Client.Core;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -36,6 +38,7 @@ namespace IoTAIService
             services.AddDAL<AiHouseDAL>();
             services.AddSingleton<MilvusBLL>();
             services.AddBLL<AiMemBLL>();
+            services.AddBLL<AINodeBLL>();
 
             services.AddSingleton<FaceDetOnnxRunner>();
             services.AddSingleton<FaceRecogRunner>();
@@ -59,6 +62,31 @@ namespace IoTAIService
                     await milvusBLL.CreateMemberCollection();
                 }
 
+                if (Constants.General.quick_init != true)
+                {
+                    //添加定时检测节点心跳
+                    string heartjobname = "AINodeHeartCheck";
+                    string heartgroup = "SYSTEM";
+                    var jobBLL = app.ServiceProvider.GetService<JobBLL>();
+                    if (!await jobBLL.ExistJob(heartjobname, heartgroup))
+                    {
+                        MZ_Job devjob = new MZ_Job();
+                        devjob.concurrent = "0";
+                        devjob.createId = 0;
+                        devjob.create_time = DateTime.Now;
+                        devjob.updateId = 0;
+                        devjob.update_time = DateTime.Now;
+                        devjob.cron_expression = "0 * * * * ?";
+                        devjob.invoke_target = typeof(AINodeBLL).FullName + ".ExecuteSendHeartbeat()";
+                        devjob.job_group = heartgroup;
+                        devjob.job_name = heartjobname;
+                        devjob.misfire_policy = "2";
+                        devjob.status = "0";
+
+                        await jobBLL.InsertJob(devjob);
+                    }
+                }
+
                 var bus = app.ServiceProvider.GetService<NatsScope>().Bus;
                 _ = Task.Run(async () =>
                {
@@ -71,6 +99,13 @@ namespace IoTAIService
                    {
                        try
                        {
+                           if (string.IsNullOrEmpty(msg.Data))
+                           {
+                               var tmpoption = _provider.GetService<IOptions<IoTAIOption>>();
+                               var redis = _provider.GetService<GeneralRedisHelper>();
+                               await redis.HashSetAsync("AIExeNodes", tmpoption.Value.AINodeName, DateTime.Now.AddSeconds(130).ToString("o"));
+                               return;
+                           }
                            var rs = System.Text.Json.JsonSerializer.Deserialize<AIDetectRequestMeesage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
                            await MessageHandler(rs);
                        }

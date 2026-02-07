@@ -33,7 +33,15 @@ namespace IoTAIService
                 await redis.HashSetAsync("AIExeNodes", option.Value.AINodeName, DateTime.Now.AddSeconds(600).ToString("o"));
             }
             var bus = _provider.GetService<NatsScope>().Bus;
-
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "AINode.Change",
+                Data = string.Empty
+            }, DefalutNatsJsonSerializer<string>.Default);
+        }
+        public async Task PublishNodeChange()
+        {
+            var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = "AINode.Change",
@@ -137,6 +145,16 @@ namespace IoTAIService
                 Subject = GetUpKey(deviceId),
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, DefalutNatsJsonSerializer<string>.Default);
+        }
+
+        public async Task TestUpNode(string nodename)
+        {
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = "device.ai." + nodename,
+                Data = string.Empty
+            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
     }
 }
