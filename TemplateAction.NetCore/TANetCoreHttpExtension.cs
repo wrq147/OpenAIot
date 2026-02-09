@@ -146,27 +146,36 @@ namespace TemplateAction.NetCore
             {
                 appBuilder.Use(async (context, next) =>
                 {
-                    TANetCoreHttpApplication taapp = context.Features.Get<TANetCoreHttpApplication>();
-                    if (taapp != null)
+                    try
                     {
-                        string requestUrl = context.Request.Path;
-                        if (requestUrl.EndsWith(TAUtility.FILE_EXT, StringComparison.OrdinalIgnoreCase))
+                        TANetCoreHttpApplication taapp = context.Features.Get<TANetCoreHttpApplication>();
+                        if (taapp != null)
                         {
-                            context.Response.ContentType = "application/json";
-                            await context.Response.WriteAsync("{\"Code\":-667,\"Message\":\"文件受限制不能访问\"}");
-                            return;
-                        }
+                            string requestUrl = context.Request.Path;
+                            if (requestUrl.EndsWith(TAUtility.FILE_EXT, StringComparison.OrdinalIgnoreCase))
+                            {
+                                context.Response.ContentType = "application/json";
+                                await context.Response.WriteAsync("{\"Code\":-667,\"Message\":\"文件受限制不能访问\"}");
+                                return;
+                            }
 
-                        TANetCoreHttpContext tacontext = new TANetCoreHttpContext(context);
-                        TAActionBuilder builder = tacontext.Application.Route(tacontext);
-                        if (builder != null)
-                        {
-                            await builder.OutputAsync();
-                            return;
-                        }
+                            TANetCoreHttpContext tacontext = new TANetCoreHttpContext(context);
+                            TAActionBuilder builder = tacontext.Application.Route(tacontext);
+                            if (builder != null)
+                            {
+                                await builder.OutputAsync();
+                                return;
+                            }
 
+                        }
+                        await next.Invoke();
                     }
-                    await next.Invoke();
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        await context.Response.WriteAsync("服务器发生未预期错误，请联系管理员");
+                    }
                 });
                 return Task.CompletedTask;
             });

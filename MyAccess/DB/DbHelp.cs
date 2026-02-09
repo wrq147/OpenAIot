@@ -109,6 +109,10 @@ namespace MyAccess.DB
                     mDbTrans = null;
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             finally
             {
                 Close();
@@ -123,6 +127,10 @@ namespace MyAccess.DB
                     mDbTrans.Rollback();
                     mDbTrans = null;
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {
@@ -162,6 +170,10 @@ namespace MyAccess.DB
                         Sql = null
                     });
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -185,6 +197,10 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = null
                     });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -221,6 +237,10 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -244,6 +264,10 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = sql
                     });
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -271,7 +295,10 @@ namespace MyAccess.DB
                         mConn.Close();
                     }
                 }
-                catch{}
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 mConn = null;
             }
 
@@ -297,6 +324,10 @@ namespace MyAccess.DB
                     mDbTrans = null;
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             finally
             {
                 await CloseAsync();
@@ -312,6 +343,10 @@ namespace MyAccess.DB
                     await mDbTrans.RollbackAsync();
                     mDbTrans = null;
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {
@@ -352,6 +387,10 @@ namespace MyAccess.DB
                         Sql = null
                     });
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -375,6 +414,10 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = null
                     });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -404,6 +447,10 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -428,6 +475,10 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -451,7 +502,10 @@ namespace MyAccess.DB
                         await mConn.CloseAsync();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 mConn = null;
             }
         }
