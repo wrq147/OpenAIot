@@ -10,9 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
-using NATS.Client.Core;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -108,7 +105,7 @@ namespace IoTAIService
                                return;
                            }
                            var rs = System.Text.Json.JsonSerializer.Deserialize<AIDetectRequestMeesage>(msg.Data, JsonMessageSerializerConfig.DefaultOptions);
-                           await MessageHandler(rs);
+                           await _provider.GetService<AIProjectManager>().MessageHandler(rs);
                        }
                        catch (Exception ex)
                        {
@@ -137,143 +134,6 @@ namespace IoTAIService
             });
         }
 
-        private async Task DownAIDetectResponse(string nodeid, string videoId, List<BoxItem> boxlist, bool needConf = false)
-        {
-            AIDetectResponseMessage msg = new AIDetectResponseMessage();
-            msg.DeviceId = videoId;
-            msg.ProductId = string.Empty;
-            msg.NeedConf = needConf;
-            var bus = _provider.GetService<NatsScope>().Bus;
-            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-
-            await bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = "node." + nodeid,
-                Data = msgbody
-            }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-        }
-
-        private Image<Rgb24> FastZlibDecompressToRgb24Image(byte[] compressedData, int width, int height)
-        {
-            // 入参校验
-            if (compressedData == null || compressedData.Length == 0)
-            {
-                Console.WriteLine("压缩数据为空，解压失败");
-                return null;
-            }
-            if (width <= 0 || height <= 0)
-            {
-                Console.WriteLine("宽高参数非法");
-                return null;
-            }
-
-            try
-            {
-                int expectedLength = width * height * 3;
-
-                // 步骤2：Zlib解压得到RGB24原始数据
-                using (var msIn = new MemoryStream(compressedData))
-                using (var zlibStream = new DeflateStream(msIn, CompressionMode.Decompress))
-                using (var msOut = new MemoryStream(expectedLength))
-                {
-                    zlibStream.CopyTo(msOut);
-                    Image<Rgb24> rgbImage = Image.Load<Rgb24>(msOut);
-                    return rgbImage;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"解压并创建Image失败：{ex.Message}");
-                return null;
-            }
-        }
-
-        private async Task MessageHandler(AIDetectRequestMeesage detectReq)
-        {
-            var aiCache = _provider.GetService<AICache>();
-            List<AIConfigData> videoConfigs;
-            if (detectReq.Configs != null)
-            {
-                videoConfigs = detectReq.Configs;
-                aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
-            }
-            else
-            {
-                videoConfigs = aiCache.GetVideoAIConfig(detectReq.DeviceId);
-            }
-            if (videoConfigs == null)
-            {
-                await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
-                return;
-            }
-            byte[] frameData = Encoding.UTF8.GetBytes(detectReq.Frame);
-            using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
-            {
-                int facenum = 0;
-                //处理画框
-                List<BoxItem> boxlist = new List<BoxItem>();
-                foreach (var config in videoConfigs)
-                {
-                    switch (config.DetType)
-                    {
-                        case "Face":
-                            {
-                                var tparam = new DataDetectParam(config.DetParams);
-                                float tThreshold = tparam.GetFloat("threshold", 0.8f);
-                                float tIOU = tparam.GetFloat("iou_threshold", 0.2f);
-                                bool tEnableHouse = tparam.GetBool("enable_house");
-
-                                var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(image, tThreshold, tIOU);
-                                facenum = tbbx.Count;
-                                if (config.IsDraw)
-                                {
-                                    for (int i = 0; i < tbbx.Count; i++)
-                                    {
-                                        var titem = tbbx[i];
-                                        boxlist.Add(new BoxItem()
-                                        {
-                                            x1 = titem.X1,
-                                            x2 = titem.X2,
-                                            y1 = titem.Y1,
-                                            y2 = titem.Y2,
-                                            score = titem.Score,
-                                            label = "人脸",
-                                            color = "#67C23A"
-                                        });
-                                    }
-                                }
-                            }
-                            break;
-                    }
-                }
-                //回复画框
-                await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
-
-
-                //处理事件
-                foreach (var config in videoConfigs)
-                {
-                    switch (config.DetType)
-                    {
-                        case "Face":
-                            {
-                                //开始生成设备属性和事件
-                                int lastFaceNum = aiCache.GetVideoInt(detectReq.DeviceId, "face_num");
-                                if (lastFaceNum != facenum)
-                                {
-                                    //发送人脸数量属性
-                                    Dictionary<string, object> newvals = new Dictionary<string, object>();
-                                    newvals.Add("FaceCount", facenum);
-                                    await _provider.GetService<AIBusProxy>().SendPropertyReply(string.Empty, detectReq.DeviceId, newvals);
-                                    //人脸数量变化事件
-
-                                }
-                                aiCache.SetVideoInt(detectReq.DeviceId, "face_num", facenum);
-                            }
-                            break;
-                    }
-                }
-            }
-        }
+     
     }
 }

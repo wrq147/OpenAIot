@@ -17,6 +17,10 @@ namespace IoTAIService
         /// </summary>
         public string Code { get; set; }
         /// <summary>
+        /// 执行阶段：Detect、Infer
+        /// </summary>
+        public string Stage { get; set; }
+        /// <summary>
         /// AI项目备注
         /// </summary>
         public string Remark { get; set; }

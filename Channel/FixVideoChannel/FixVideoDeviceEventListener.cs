@@ -55,7 +55,6 @@ namespace FixVideoChannel
                     videoData.Configs.Add(new AIConfigData()
                     {
                         DetType = it.Code,
-                        IsDraw = it.EnableDraw,
                         DetParams = it.paramValues
                     });
                 }

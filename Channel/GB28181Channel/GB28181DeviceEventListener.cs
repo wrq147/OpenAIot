@@ -74,7 +74,6 @@ namespace GB28181Channel
                     videoData.Configs.Add(new AIConfigData()
                     {
                         DetType = it.Code,
-                        IsDraw = it.EnableDraw,
                         DetParams = it.paramValues
                     });
                 }

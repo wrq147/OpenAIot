@@ -38,5 +38,9 @@ namespace IoTAIService
         /// 人脸空间变换模型
         /// </summary>
         public string FaceSTNFile { get; set; }
+        /// <summary>
+        /// YoloWorld模型
+        /// </summary>
+        public string YoloWorldFile { get; set; }
     }
 }

@@ -66,6 +66,12 @@
               @selection-change="handleSelectionChange" :row-class-name="tableRowClassName" class="project-table">
               <el-table-column type="selection" width="55" />
               <el-table-column label="项目名称" prop="Name" width="120" align="center" />
+              <el-table-column label="执行阶段" width="100" align="center">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.Stage=='Detect'">检测阶段</span>
+                  <span v-else-if="scope.row.Stage=='Infer'">推理阶段</span>
+                </template>
+              </el-table-column>
               <el-table-column label="项目描述" prop="Remark">
                 <template slot-scope="scope">
                   <div class="remark-text">
@@ -118,16 +124,17 @@
             <el-table v-else :data="configuredProjects" border stripe style="width: 100%" v-loading="loading"
               class="project-table" row-key="Code">
               <el-table-column label="项目名称" prop="Name" width="120" align="center" />
+              <el-table-column label="执行阶段" width="100" align="center">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.Stage=='Detect'">检测阶段</span>
+                  <span v-else-if="scope.row.Stage=='Infer'">推理阶段</span>
+                </template>
+              </el-table-column>
               <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip>
                 <template slot-scope="scope">
                   <div class="remark-text">
                     <CollapseText :text="scope.row.Remark" :max-lines="3" :line-height="18" />
                   </div>
-                </template>
-              </el-table-column>
-              <el-table-column label="启用绘制" width="80" align="center">
-                <template slot-scope="scope">
-                  <el-switch v-model="scope.row.enableDraw" />
                 </template>
               </el-table-column>
               <el-table-column label="操作" width="240" fixed="right" align="center">
@@ -386,7 +393,6 @@ export default {
         this.addLoading = true
         for (let i = 0; i < this.selectedProjects.length; i++) {
           let newitem = JSON.parse(JSON.stringify(this.selectedProjects[i]));
-          newitem["enableDraw"] = false;
           // 初始化参数值
           newitem["paramValues"] = {};
           this.configuredProjects.push(newitem)

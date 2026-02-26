@@ -24,10 +24,6 @@ namespace ChannelUtility.Message
     public class AIConfigData
     {
         public string DetType { get; set; }
-        /// <summary>
-        /// 是否启用绘制
-        /// </summary>
-        public bool IsDraw { get; set; }
         public Dictionary<string, object> DetParams { get; set; }
     }
 }

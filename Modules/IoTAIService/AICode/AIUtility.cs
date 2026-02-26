@@ -1,4 +1,5 @@
 ﻿using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,5 +105,39 @@ namespace IoTAIService.AICode
             }
         }
 
+        /// <summary>
+        /// 将float[][]转换为指定形状的DenseTensor
+        /// </summary>
+        /// <param name="twoDArray">输入的二维浮点数组（如N个512维向量 → float[N][512]）</param>
+        /// <param name="targetShape">目标张量形状（YOLO-World需为 new[] {1, N, 512}）</param>
+        /// <returns>连续内存的DenseTensor</returns>
+        /// <exception cref="ArgumentException">形状不匹配时抛出</exception>
+        public static DenseTensor<float> ToDenseTensor(this float[][] twoDArray, int[] targetShape)
+        {
+            if (twoDArray == null || twoDArray.Length == 0)
+                throw new ArgumentNullException(nameof(twoDArray), "二维数组不能为空");
+            if (targetShape == null || targetShape.Length != 3)
+                throw new ArgumentException("目标形状需为3维（batch, num_classes, embed_dim）", nameof(targetShape));
+
+            // 1. 验证形状匹配：targetShape[1] = 类别数，targetShape[2] = 嵌入维度
+            int numClasses = targetShape[1];
+            int embedDim = targetShape[2];
+            if (twoDArray.Length != numClasses)
+                throw new ArgumentException($"二维数组行数({twoDArray.Length})需等于类别数({numClasses})");
+            if (twoDArray.Any(row => row.Length != embedDim))
+                throw new ArgumentException($"二维数组每行长度需等于嵌入维度({embedDim})");
+
+            // 2. 展平float[][]为一维float[]（连续内存）
+            float[] flatArray = new float[numClasses * embedDim];
+            int index = 0;
+            foreach (var row in twoDArray)
+            {
+                Array.Copy(row, 0, flatArray, index, embedDim);
+                index += embedDim;
+            }
+
+            // 3. 创建DenseTensor<float>（核心：指定目标形状）
+            return new DenseTensor<float>(flatArray, targetShape);
+        }
     }
 }
