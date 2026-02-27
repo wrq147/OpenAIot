@@ -1,0 +1,447 @@
+# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+
+# Objects365 dataset https://www.objects365.org/ by Megvii
+# Documentation: https://docs.ultralytics.com/datasets/detect/objects365/
+# Example usage: yolo train data=Objects365.yaml
+# parent
+# ├── ultralytics
+# └── datasets
+#     └── Objects365 ← downloads here (712 GB = 367G data + 345G zips)
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: Objects365 # dataset root dir
+train: images/train # train images (relative to 'path') 1742289 images
+val: images/val # val images (relative to 'path') 80000 images
+test: # test images (optional)
+
+# Classes
+names:
+  0: 人
+  1: 运动鞋
+  2: 椅子
+  3: 其他鞋类
+  4: 帽子
+  5: 轿车
+  6: 台灯
+  7: 眼镜
+  8: 瓶子
+  9: 书桌
+  10: 杯子
+  11: 路灯
+  12: 柜子/架子
+  13: 手提包/挎包
+  14: 手镯
+  15: 盘子
+  16: 画/相框
+  17: 头盔
+  18: 书
+  19: 手套
+  20: 收纳箱
+  21: 船
+  22: 皮鞋
+  23: 花
+  24: 长椅
+  25: 盆栽
+  26: 碗/盆
+  27: 旗帜
+  28: 枕头
+  29: 靴子
+  30: 花瓶
+  31: 麦克风
+  32: 项链
+  33: 戒指
+  34: 运动型多用途汽车
+  35: 高脚杯
+  36: 腰带
+  37: 显示器/电视
+  38: 双肩包
+  39: 雨伞
+  40: 交通信号灯
+  41: 音箱
+  42: 手表
+  43: 领带
+  44: 垃圾桶
+  45: 拖鞋
+  46: 自行车
+  47: 凳子
+  48: 桶
+  49: 厢式货车
+  50: 沙发
+  51: 凉鞋
+  52: 篮子
+  53: 鼓
+  54: 笔
+  55: 公交车
+  56: 野鸟
+  57: 高跟鞋
+  58: 摩托车
+  59: 吉他
+  60: 地毯
+  61: 手机
+  62: 面包
+  63: 相机
+  64: 罐装食品
+  65: 卡车
+  66: 交通锥
+  67: 镲片
+  68: 救生圈
+  69: 毛巾
+  70: 毛绒玩具
+  71: 蜡烛
+  72: 帆船
+  73: 笔记本电脑
+  74: 遮阳篷
+  75: 床
+  76: 水龙头
+  77: 帐篷
+  78: 马
+  79: 镜子
+  80: 电源插座
+  81: 水槽
+  82: 苹果
+  83: 空调
+  84: 刀
+  85: 曲棍球杆
+  86: 桨
+  87: 皮卡车
+  88: 叉子
+  89: 交通标志
+  90: 气球
+  91: 三脚架
+  92: 狗
+  93: 勺子
+  94: 时钟
+  95: 锅
+  96: 牛
+  97: 蛋糕
+  98: 餐桌
+  99: 羊
+  100: 衣架
+  101: 黑板/白板
+  102: 餐巾纸
+  103: 其他鱼类
+  104: 橙子/橘子
+  105: 洗漱用品
+  106: 键盘
+  107: 西红柿
+  108: 灯笼
+  109: 工程机械车辆
+  110: 风扇
+  111: 绿叶蔬菜
+  112: 香蕉
+  113: 棒球手套
+  114: 飞机
+  115: 鼠标
+  116: 火车
+  117: 南瓜
+  118: 足球
+  119: 滑雪板
+  120: 行李箱
+  121: 床头柜
+  122: 茶壶
+  123: 电话
+  124: 手推车
+  125: 耳机
+  126: 跑车
+  127: 停车标志
+  128: 甜点
+  129: 踏板车
+  130: 婴儿车
+  131: 起重机
+  132: 遥控器
+  133: 冰箱
+  134: 烤箱
+  135: 柠檬
+  136: 鸭子
+  137: 棒球棒
+  138: 监控摄像头
+  139: 猫
+  140: 水壶
+  141: 西兰花
+  142: 钢琴
+  143: 披萨
+  144: 大象
+  145: 滑板
+  146: 冲浪板
+  147: 枪
+  148: 轮滑鞋/滑雪靴
+  149: 燃气灶
+  150: 甜甜圈
+  151: 领结
+  152: 胡萝卜
+  153: 马桶
+  154: 风筝
+  155: 草莓
+  156: 其他球类
+  157: 铲子
+  158: 辣椒
+  159: 电脑主机
+  160: 卫生纸
+  161: 清洁用品
+  162: 筷子
+  163: 微波炉
+  164: 鸽子
+  165: 棒球
+  166: 砧板
+  167: 茶几
+  168: 边桌
+  169: 剪刀
+  170: 马克笔
+  171: 馅饼
+  172: 梯子
+  173: 滑雪单板
+  174: 饼干
+  175: 暖气片
+  176: 消防栓
+  177: 篮球
+  178: 斑马
+  179: 葡萄
+  180: 长颈鹿
+  181: 土豆
+  182: 香肠
+  183: 三轮车
+  184: 小提琴
+  185: 鸡蛋
+  186: 灭火器
+  187: 糖果
+  188: 消防车
+  189: 台球
+  190: 转换器
+  191: 浴缸
+  192: 轮椅
+  193: 高尔夫球杆
+  194: 公文包
+  195: 黄瓜
+  196: 雪茄/香烟
+  197: 画笔
+  198: 梨
+  199: 重型卡车
+  200: 汉堡
+  201: 抽油烟机
+  202: 延长线
+  203: 夹子
+  204: 网球拍
+  205: 文件夹
+  206: 美式橄榄球
+  207: 耳机
+  208: 口罩
+  209: 水壶
+  210: 网球
+  211: 轮船
+  212: 秋千
+  213: 咖啡机
+  214: 滑梯
+  215: 马车
+  216: 洋葱
+  217: 四季豆
+  218: 投影仪
+  219: 飞盘
+  220: 洗衣机/烘干机
+  221: 鸡
+  222: 打印机
+  223: 西瓜
+  224: 萨克斯
+  225: 纸巾
+  226: 牙刷
+  227: 冰淇淋
+  228: 热气球
+  229: 大提琴
+  230: 薯条
+  231: 秤
+  232: 奖杯
+  233: 卷心菜
+  234: 热狗
+  235: 搅拌机
+  236: 桃子
+  237: 米饭
+  238: 钱包
+  239: 排球
+  240: 鹿
+  241: 鹅
+  242: 胶带
+  243: 平板电脑
+  244: 化妆品
+  245: 小号
+  246: 菠萝
+  247: 高尔夫球
+  248: 救护车
+  249: 停车计时器
+  250: 芒果
+  251: 钥匙
+  252: 跨栏
+  253: 鱼竿
+  254: 奖牌
+  255: 长笛
+  256: 刷子
+  257: 企鹅
+  258: 扩音器
+  259: 玉米
+  260: 生菜
+  261: 大蒜
+  262: 天鹅
+  263: 直升机
+  264: 葱
+  265: 三明治
+  266: 坚果
+  267: 限速标志
+  268: 电磁炉
+  269: 扫帚
+  270: 长号
+  271: 李子
+  272: 黄包车
+  273: 金鱼
+  274: 猕猴桃
+  275: 路由器/调制解调器
+  276: 扑克牌
+  277: 烤面包机
+  278: 虾
+  279: 寿司
+  280: 奶酪
+  281: 便签纸
+  282: 樱桃
+  283: 钳子
+  284: 光盘
+  285: 意大利面
+  286: 锤子
+  287: 台球杆
+  288: 牛油果
+  289: 哈密瓜
+  290: 保温瓶
+  291: 蘑菇
+  292: 螺丝刀
+  293: 肥皂
+  294: 录音机
+  295: 熊
+  296: 茄子
+  297: 黑板擦
+  298: 椰子
+  299: 卷尺/直尺
+  300: 猪
+  301: 淋浴喷头
+  302: 地球仪
+  303: 薯片
+  304: 牛排
+  305: 人行横道标志
+  306: 订书机
+  307: 骆驼
+  308: 一级方程式赛车
+  309: 石榴
+  310: 洗碗机
+  311: 螃蟹
+  312: 平衡车
+  313: 肉丸
+  314: 电饭煲
+  315: 大号
+  316: 计算器
+  317: 木瓜
+  318: 羚羊
+  319: 鹦鹉
+  320: 海豹
+  321: 蝴蝶
+  322: 哑铃
+  323: 驴
+  324: 狮子
+  325: 小便池
+  326: 海豚
+  327: 电钻
+  328: 吹风机
+  329: 蛋挞
+  330: 水母
+  331: 跑步机
+  332: 打火机
+  333: 西柚
+  334: 棋盘
+  335: 拖把
+  336: 萝卜
+  337: 包子
+  338: 靶子
+  339: 法式面包
+  340: 春卷
+  341: 猴子
+  342: 兔子
+  343: 铅笔盒
+  344: 牦牛
+  345: 紫甘蓝
+  346: 望远镜
+  347: 芦笋
+  348: 杠铃
+  349: 扇贝
+  350: 面条
+  351: 梳子
+  352: 饺子
+  353: 生蚝
+  354: 乒乓球拍
+  355: 化妆刷/眼线笔
+  356: 链锯
+  357: 橡皮
+  358: 龙虾
+  359: 榴莲
+  360: 秋葵
+  361: 口红
+  362: 化妆镜
+  363: 冰壶
+  364: 乒乓球
+
+# Download script/URL (optional) ---------------------------------------------------------------------------------------
+download: |
+  from concurrent.futures import ThreadPoolExecutor
+  from pathlib import Path
+
+  import numpy as np
+
+  from ultralytics.utils import TQDM
+  from ultralytics.utils.checks import check_requirements
+  from ultralytics.utils.downloads import download
+  from ultralytics.utils.ops import xyxy2xywhn
+
+  check_requirements("faster-coco-eval")
+  from faster_coco_eval import COCO
+
+  # Train, Val Splits
+  dir = Path(yaml["path"])
+  for split, patches in [("train", 50 + 1), ("val", 43 + 1)]:
+      print(f"Processing {split} in {patches} patches ...")
+      images, labels = dir / "images" / split, dir / "labels" / split
+      images.mkdir(parents=True, exist_ok=True)
+      labels.mkdir(parents=True, exist_ok=True)
+
+      # Download
+      url = f"https://dorc.ks3-cn-beijing.ksyun.com/data-set/2020Objects365%E6%95%B0%E6%8D%AE%E9%9B%86/{split}/"
+      if split == "train":
+          download([f"{url}zhiyuan_objv2_{split}.tar.gz"], dir=dir)  # annotations json
+          download([f"{url}patch{i}.tar.gz" for i in range(patches)], dir=images, threads=17)  # 51 patches / 17 threads = 3
+      elif split == "val":
+          download([f"{url}zhiyuan_objv2_{split}.json"], dir=dir)  # annotations json
+          download([f"{url}images/v1/patch{i}.tar.gz" for i in range(15 + 1)], dir=images, threads=16)
+          download([f"{url}images/v2/patch{i}.tar.gz" for i in range(16, patches)], dir=images, threads=16)
+
+      # Move
+      files = list(images.rglob("*.jpg"))
+      with ThreadPoolExecutor(max_workers=16) as executor:
+          list(TQDM(executor.map(lambda f: f.rename(images / f.name), files), total=len(files), desc=f"Moving {split} images"))
+
+      # Labels
+      coco = COCO(dir / f"zhiyuan_objv2_{split}.json")
+      names = [x["name"] for x in coco.loadCats(coco.getCatIds())]
+      for cid, cat in enumerate(names):
+          catIds = coco.getCatIds(catNms=[cat])
+          imgIds = coco.getImgIds(catIds=catIds)
+
+          def process_annotation(im):
+              """Process and write annotations for a single image."""
+              try:
+                  width, height = im["width"], im["height"]
+                  path = Path(im["file_name"])
+                  with open(labels / path.with_suffix(".txt").name, "a", encoding="utf-8") as file:
+                      annIds = coco.getAnnIds(imgIds=im["id"], catIds=catIds, iscrowd=None)
+                      for a in coco.loadAnns(annIds):
+                          x, y, w, h = a["bbox"]  # bounding box in xywh (xy top-left corner)
+                          xyxy = np.array([x, y, x + w, y + h])[None]  # pixels(1,4)
+                          x, y, w, h = xyxy2xywhn(xyxy, w=width, h=height, clip=True)[0]  # normalized and clipped
+                          file.write(f"{cid} {x:.5f} {y:.5f} {w:.5f} {h:.5f}\n")
+              except Exception as e:
+                  print(e)
+
+          images_list = coco.loadImgs(imgIds)
+          with ThreadPoolExecutor(max_workers=16) as executor:
+              list(TQDM(executor.map(process_annotation, images_list), total=len(images_list), desc=f"Class {cid + 1}/{len(names)} {cat}"))
