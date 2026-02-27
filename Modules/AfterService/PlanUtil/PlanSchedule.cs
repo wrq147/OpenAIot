@@ -71,7 +71,7 @@ namespace AfterService.PlanUtil
             {
                 ITrigger trigger;
                 // 表达式调度构建器
-                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(cron).WithMisfireHandlingInstructionIgnoreMisfires();
+                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(cron).WithMisfireHandlingInstructionFireAndProceed();
                 var triggetBuilder = TriggerBuilder.Create().WithIdentity("After" + planId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
                 trigger = triggetBuilder.Build();
                 triggers.Add(trigger);

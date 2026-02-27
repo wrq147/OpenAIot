@@ -1,12 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Python.Runtime;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace IoTAIService
@@ -29,24 +24,28 @@ namespace IoTAIService
         }
         public void Invoke(string name)
         {
-            //using (Py.GIL())
-            //{
-            //    try
-            //    {
-            //        dynamic testModule = Py.Import(name);
-            //        var result = testModule.exexx(10, 20);
-            //        Console.WriteLine($"调用Python add函数结果: {result}");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"调用出错: {ex.Message}");
-            //    }
-            //    finally
-            //    {
-            //        // 关闭Python引擎
-            //        PythonEngine.Shutdown();
-            //    }
-            //}
+            using (Py.GIL())
+            {
+                try
+                {
+                    dynamic sys = Py.Import("sys");
+                    string scriptDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIScript";
+                    sys.path.append(scriptDir);
+
+                    dynamic targetModule = Py.Import(name);
+                    var result = targetModule.exexx(10, 20);
+                    Console.WriteLine($"调用Python add函数结果: {result}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"调用出错: {ex.Message}");
+                }
+                finally
+                {
+                    // 关闭Python引擎
+                    PythonEngine.Shutdown();
+                }
+            }
         }
     }
 }

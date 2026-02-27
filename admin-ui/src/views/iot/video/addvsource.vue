@@ -8,21 +8,37 @@
       <el-form-item label="视频源类型">
         <el-radio-group :disabled="formId != null" v-model="sourceForm.VideoType">
           <el-radio :label="0">固定地址</el-radio>
-          <el-radio :label="1">GB28181</el-radio>
+          <el-radio :label="1">GB28181设备</el-radio>
+          <el-radio :label="3">Onvif设备</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="视频Key" prop="VideoKey">
         <el-input v-model="sourceForm.VideoKey" :disabled="true" />
       </el-form-item>
-      <el-form-item v-if="sourceForm.VideoType == 0" label="拉流地址" prop="PullAddr">
-        <el-input v-model="sourceForm.PullAddr" placeholder="请输入拉流地址" />
-      </el-form-item>
-      <el-form-item v-if="sourceForm.VideoType == 1" label="设备SIP" prop="UserName">
-        <el-input v-model="sourceForm.UserName" placeholder="请输入注册用户名" />
-      </el-form-item>
-      <el-form-item v-if="sourceForm.VideoType == 1" label="设备密码" prop="UserPwd">
-        <el-input v-model="sourceForm.UserPwd" placeholder="请输入设备密码" />
-      </el-form-item>
+      <template v-if="sourceForm.VideoType == 0">
+        <el-form-item label="拉流地址" prop="PullAddr">
+          <el-input v-model="sourceForm.PullAddr" placeholder="请输入拉流地址" />
+        </el-form-item>
+      </template>
+      <template v-else-if="sourceForm.VideoType == 1">
+        <el-form-item label="设备SIP" prop="UserName">
+          <el-input v-model="sourceForm.UserName" placeholder="请输入注册用户名" />
+        </el-form-item>
+        <el-form-item label="设备密码" prop="UserPwd">
+          <el-input v-model="sourceForm.UserPwd" placeholder="请输入设备密码" />
+        </el-form-item>
+      </template>
+      <template v-else-if="sourceForm.VideoType == 3">
+        <el-form-item label="设备Ip" prop="PullAddr">
+          <el-input v-model="sourceForm.PullAddr" placeholder="请输入设备Ip" />
+        </el-form-item>
+        <el-form-item label="设备用户名" prop="UserName">
+          <el-input v-model="sourceForm.UserName" placeholder="请输入设备用户名" />
+        </el-form-item>
+        <el-form-item label="设备密码" prop="UserPwd">
+          <el-input v-model="sourceForm.UserPwd" placeholder="请输入设备密码" />
+        </el-form-item>
+      </template>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="cancel">取消</el-button>

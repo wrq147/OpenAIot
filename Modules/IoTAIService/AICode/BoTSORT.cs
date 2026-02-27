@@ -1,0 +1,1677 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
+namespace IoTAIService.AICode
+{
+    #region 1. 基础矩阵/向量结构体（替代MathNet）
+    /// <summary>
+    /// 3x3矩阵（GMC单应性矩阵专用）
+    /// </summary>
+    public struct Matrix3x3
+    {
+        public float M11, M12, M13;
+        public float M21, M22, M23;
+        public float M31, M32, M33;
+
+        /// <summary>
+        /// 单位矩阵
+        /// </summary>
+        public static Matrix3x3 Identity => new Matrix3x3
+        {
+            M11 = 1,
+            M22 = 1,
+            M33 = 1,
+            M12 = 0,
+            M13 = 0,
+            M21 = 0,
+            M23 = 0,
+            M31 = 0,
+            M32 = 0
+        };
+
+        /// <summary>
+        /// 矩阵乘法
+        /// </summary>
+        public static Matrix3x3 operator *(Matrix3x3 a, Matrix3x3 b)
+        {
+            return new Matrix3x3
+            {
+                M11 = a.M11 * b.M11 + a.M12 * b.M21 + a.M13 * b.M31,
+                M12 = a.M11 * b.M12 + a.M12 * b.M22 + a.M13 * b.M32,
+                M13 = a.M11 * b.M13 + a.M12 * b.M23 + a.M13 * b.M33,
+
+                M21 = a.M21 * b.M11 + a.M22 * b.M21 + a.M23 * b.M31,
+                M22 = a.M21 * b.M12 + a.M22 * b.M22 + a.M23 * b.M32,
+                M23 = a.M21 * b.M13 + a.M22 * b.M23 + a.M23 * b.M33,
+
+                M31 = a.M31 * b.M11 + a.M32 * b.M21 + a.M33 * b.M31,
+                M32 = a.M31 * b.M12 + a.M32 * b.M22 + a.M33 * b.M32,
+                M33 = a.M31 * b.M13 + a.M32 * b.M23 + a.M33 * b.M33
+            };
+        }
+
+        /// <summary>
+        /// 矩阵×向量（齐次坐标）
+        /// </summary>
+        public static float[] operator *(Matrix3x3 m, float[] v)
+        {
+            if (v == null || v.Length != 3)
+                throw new ArgumentException("向量必须为3维（齐次坐标）");
+
+            return new[]
+            {
+                m.M11*v[0] + m.M12*v[1] + m.M13*v[2],
+                m.M21*v[0] + m.M22*v[1] + m.M23*v[2],
+                m.M31*v[0] + m.M32*v[1] + m.M33*v[2]
+            };
+        }
+
+        /// <summary>
+        /// 矩阵求逆（3x3）
+        /// </summary>
+        public Matrix3x3 Invert()
+        {
+            // 计算行列式
+            float det = M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
+            if (Math.Abs(det) < 1e-6) return Identity;
+
+            float invDet = 1 / det;
+
+            // 伴随矩阵转置
+            return new Matrix3x3
+            {
+                M11 = invDet * (M22 * M33 - M23 * M32),
+                M12 = invDet * (M13 * M32 - M12 * M33),
+                M13 = invDet * (M12 * M23 - M13 * M22),
+
+                M21 = invDet * (M23 * M31 - M21 * M33),
+                M22 = invDet * (M11 * M33 - M13 * M31),
+                M23 = invDet * (M13 * M21 - M11 * M23),
+
+                M31 = invDet * (M21 * M32 - M22 * M31),
+                M32 = invDet * (M12 * M31 - M11 * M32),
+                M33 = invDet * (M11 * M22 - M12 * M21)
+            };
+        }
+    }
+
+    /// <summary>
+    /// 8x8矩阵（卡尔曼滤波专用）
+    /// </summary>
+    public struct Matrix8x8
+    {
+        public float M11, M12, M13, M14, M15, M16, M17, M18;
+        public float M21, M22, M23, M24, M25, M26, M27, M28;
+        public float M31, M32, M33, M34, M35, M36, M37, M38;
+        public float M41, M42, M43, M44, M45, M46, M47, M48;
+        public float M51, M52, M53, M54, M55, M56, M57, M58;
+        public float M61, M62, M63, M64, M65, M66, M67, M68;
+        public float M71, M72, M73, M74, M75, M76, M77, M78;
+        public float M81, M82, M83, M84, M85, M86, M87, M88;
+
+        /// <summary>
+        /// 单位矩阵
+        /// </summary>
+        public static Matrix8x8 Identity => new Matrix8x8
+        {
+            M11 = 1,
+            M22 = 1,
+            M33 = 1,
+            M44 = 1,
+            M55 = 1,
+            M66 = 1,
+            M77 = 1,
+            M88 = 1
+        };
+
+        /// <summary>
+        /// 零矩阵
+        /// </summary>
+        public static Matrix8x8 Zero => new Matrix8x8();
+
+        /// <summary>
+        /// 矩阵乘法
+        /// </summary>
+        public static Matrix8x8 operator *(Matrix8x8 a, Matrix8x8 b)
+        {
+            Matrix8x8 res = new Matrix8x8();
+
+            // 完整8x8矩阵乘法
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    float sum = 0;
+                    for (int k = 0; k < 8; k++)
+                    {
+                        sum += GetElement(a, i, k) * GetElement(b, k, j);
+                    }
+                    SetElement(ref res, i, j, sum);
+                }
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵×向量
+        /// </summary>
+        public static float[] operator *(Matrix8x8 m, float[] v)
+        {
+            if (v == null || v.Length != 8)
+                throw new ArgumentException("向量必须为8维");
+
+            float[] res = new float[8];
+            for (int i = 0; i < 8; i++)
+            {
+                float sum = 0;
+                for (int j = 0; j < 8; j++)
+                {
+                    sum += GetElement(m, i, j) * v[j];
+                }
+                res[i] = sum;
+            }
+
+            return res;
+        }
+        /// <summary>
+        /// 8x8矩阵 × 8x4矩阵 = 8x4矩阵（卡尔曼滤波核心乘法）
+        /// </summary>
+        public static Matrix8x4 operator *(Matrix8x8 a, Matrix8x4 b)
+        {
+            Matrix8x4 res = new Matrix8x4();
+
+            // 矩阵乘法核心逻辑：8x8 × 8x4 = 8x4
+            for (int i = 0; i < 8; i++)  // 结果矩阵的行（0-7）
+            {
+                for (int j = 0; j < 4; j++)  // 结果矩阵的列（0-3）
+                {
+                    float sum = 0;
+                    for (int k = 0; k < 8; k++)  // 累加维度（0-7）
+                    {
+                        // a的第i行第k列 × b的第k行第j列
+                        sum += Matrix8x8.GetElement(a, i, k) * Matrix8x4.GetElement(b, k, j);
+                    }
+                    // 设置结果矩阵的第i行第j列
+                    Matrix8x4.SetElement(ref res, i, j, sum);
+                }
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵数乘
+        /// </summary>
+        public static Matrix8x8 operator *(Matrix8x8 m, float s)
+        {
+            Matrix8x8 res = m;
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    SetElement(ref res, i, j, GetElement(res, i, j) * s);
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵加法
+        /// </summary>
+        public static Matrix8x8 operator +(Matrix8x8 a, Matrix8x8 b)
+        {
+            Matrix8x8 res = new Matrix8x8();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    SetElement(ref res, i, j, GetElement(a, i, j) + GetElement(b, i, j));
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵减法
+        /// </summary>
+        public static Matrix8x8 operator -(Matrix8x8 a, Matrix8x8 b)
+        {
+            Matrix8x8 res = new Matrix8x8();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    SetElement(ref res, i, j, GetElement(a, i, j) - GetElement(b, i, j));
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵转置
+        /// </summary>
+        public Matrix8x8 Transpose()
+        {
+            Matrix8x8 res = new Matrix8x8();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    SetElement(ref res, i, j, GetElement(this, j, i));
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 获取矩阵元素（辅助方法）
+        /// </summary>
+        public static float GetElement(Matrix8x8 m, int row, int col)
+        {
+            if (row < 0 || row >= 8 || col < 0 || col >= 8) return 0;
+
+            return row switch
+            {
+                0 => col switch { 0 => m.M11, 1 => m.M12, 2 => m.M13, 3 => m.M14, 4 => m.M15, 5 => m.M16, 6 => m.M17, 7 => m.M18, _ => 0 },
+                1 => col switch { 0 => m.M21, 1 => m.M22, 2 => m.M23, 3 => m.M24, 4 => m.M25, 5 => m.M26, 6 => m.M27, 7 => m.M28, _ => 0 },
+                2 => col switch { 0 => m.M31, 1 => m.M32, 2 => m.M33, 3 => m.M34, 4 => m.M35, 5 => m.M36, 6 => m.M37, 7 => m.M38, _ => 0 },
+                3 => col switch { 0 => m.M41, 1 => m.M42, 2 => m.M43, 3 => m.M44, 4 => m.M45, 5 => m.M46, 6 => m.M47, 7 => m.M48, _ => 0 },
+                4 => col switch { 0 => m.M51, 1 => m.M52, 2 => m.M53, 3 => m.M54, 4 => m.M55, 5 => m.M56, 6 => m.M57, 7 => m.M58, _ => 0 },
+                5 => col switch { 0 => m.M61, 1 => m.M62, 2 => m.M63, 3 => m.M64, 4 => m.M65, 5 => m.M66, 6 => m.M67, 7 => m.M68, _ => 0 },
+                6 => col switch { 0 => m.M71, 1 => m.M72, 2 => m.M73, 3 => m.M74, 4 => m.M75, 5 => m.M76, 6 => m.M77, 7 => m.M78, _ => 0 },
+                7 => col switch { 0 => m.M81, 1 => m.M82, 2 => m.M83, 3 => m.M84, 4 => m.M85, 5 => m.M86, 6 => m.M87, 7 => m.M88, _ => 0 },
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// 设置矩阵元素（辅助方法）- 补充缺失的核心方法
+        /// </summary>
+        public static void SetElement(ref Matrix8x8 m, int row, int col, float value)
+        {
+            if (row < 0 || row >= 8 || col < 0 || col >= 8) return;
+
+            switch (row)
+            {
+                case 0:
+                    switch (col)
+                    {
+                        case 0: m.M11 = value; break;
+                        case 1: m.M12 = value; break;
+                        case 2: m.M13 = value; break;
+                        case 3: m.M14 = value; break;
+                        case 4: m.M15 = value; break;
+                        case 5: m.M16 = value; break;
+                        case 6: m.M17 = value; break;
+                        case 7: m.M18 = value; break;
+                    }
+                    break;
+                case 1:
+                    switch (col)
+                    {
+                        case 0: m.M21 = value; break;
+                        case 1: m.M22 = value; break;
+                        case 2: m.M23 = value; break;
+                        case 3: m.M24 = value; break;
+                        case 4: m.M25 = value; break;
+                        case 5: m.M26 = value; break;
+                        case 6: m.M27 = value; break;
+                        case 7: m.M28 = value; break;
+                    }
+                    break;
+                case 2:
+                    switch (col)
+                    {
+                        case 0: m.M31 = value; break;
+                        case 1: m.M32 = value; break;
+                        case 2: m.M33 = value; break;
+                        case 3: m.M34 = value; break;
+                        case 4: m.M35 = value; break;
+                        case 5: m.M36 = value; break;
+                        case 6: m.M37 = value; break;
+                        case 7: m.M38 = value; break;
+                    }
+                    break;
+                case 3:
+                    switch (col)
+                    {
+                        case 0: m.M41 = value; break;
+                        case 1: m.M42 = value; break;
+                        case 2: m.M43 = value; break;
+                        case 3: m.M44 = value; break;
+                        case 4: m.M45 = value; break;
+                        case 5: m.M46 = value; break;
+                        case 6: m.M47 = value; break;
+                        case 7: m.M48 = value; break;
+                    }
+                    break;
+                case 4:
+                    switch (col)
+                    {
+                        case 0: m.M51 = value; break;
+                        case 1: m.M52 = value; break;
+                        case 2: m.M53 = value; break;
+                        case 3: m.M54 = value; break;
+                        case 4: m.M55 = value; break;
+                        case 5: m.M56 = value; break;
+                        case 6: m.M57 = value; break;
+                        case 7: m.M58 = value; break;
+                    }
+                    break;
+                case 5:
+                    switch (col)
+                    {
+                        case 0: m.M61 = value; break;
+                        case 1: m.M62 = value; break;
+                        case 2: m.M63 = value; break;
+                        case 3: m.M64 = value; break;
+                        case 4: m.M65 = value; break;
+                        case 5: m.M66 = value; break;
+                        case 6: m.M67 = value; break;
+                        case 7: m.M68 = value; break;
+                    }
+                    break;
+                case 6:
+                    switch (col)
+                    {
+                        case 0: m.M71 = value; break;
+                        case 1: m.M72 = value; break;
+                        case 2: m.M73 = value; break;
+                        case 3: m.M74 = value; break;
+                        case 4: m.M75 = value; break;
+                        case 5: m.M76 = value; break;
+                        case 6: m.M77 = value; break;
+                        case 7: m.M78 = value; break;
+                    }
+                    break;
+                case 7:
+                    switch (col)
+                    {
+                        case 0: m.M81 = value; break;
+                        case 1: m.M82 = value; break;
+                        case 2: m.M83 = value; break;
+                        case 3: m.M84 = value; break;
+                        case 4: m.M85 = value; break;
+                        case 5: m.M86 = value; break;
+                        case 6: m.M87 = value; break;
+                        case 7: m.M88 = value; break;
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 4x4子矩阵求逆（卡尔曼滤波创新协方差求逆）
+        /// </summary>
+        public static float[][] Invert4x4(float[][] m)
+        {
+            if (m == null || m.Length != 4 || m.Any(row => row == null || row.Length != 4))
+                throw new ArgumentException("矩阵必须是4x4");
+
+            // 简化实现：仅处理对角占优矩阵（卡尔曼滤波场景适用）
+            float[][] inv = new float[4][];
+            for (int i = 0; i < 4; i++)
+            {
+                inv[i] = new float[4];
+                inv[i][i] = 1 / (m[i][i] + 1e-6f); // 加小值避免除零
+            }
+            return inv;
+        }
+    }
+
+    /// <summary>
+    /// 4x8观测矩阵（卡尔曼滤波专用）
+    /// </summary>
+    public struct Matrix4x8
+    {
+        public float M11, M12, M13, M14, M15, M16, M17, M18;
+        public float M21, M22, M23, M24, M25, M26, M27, M28;
+        public float M31, M32, M33, M34, M35, M36, M37, M38;
+        public float M41, M42, M43, M44, M45, M46, M47, M48;
+
+        /// <summary>
+        /// 单位观测矩阵（仅观测前4维）
+        /// </summary>
+        public static Matrix4x8 Identity => new Matrix4x8
+        {
+            M11 = 1,
+            M22 = 1,
+            M33 = 1,
+            M44 = 1
+        };
+
+        /// <summary>
+        /// 矩阵×向量
+        /// </summary>
+        public static float[] operator *(Matrix4x8 m, float[] v)
+        {
+            if (v == null || v.Length != 8)
+                throw new ArgumentException("向量必须为8维");
+
+            float[] res = new float[4];
+            for (int i = 0; i < 4; i++)
+            {
+                float sum = 0;
+                for (int j = 0; j < 8; j++)
+                {
+                    sum += GetElement(m, i, j) * v[j];
+                }
+                res[i] = sum;
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵乘法（4x8 × 8x8 = 4x8）
+        /// </summary>
+        public static Matrix4x8 operator *(Matrix4x8 a, Matrix8x8 b)
+        {
+            Matrix4x8 res = new Matrix4x8();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    float sum = 0;
+                    for (int k = 0; k < 8; k++)
+                    {
+                        sum += GetElement(a, i, k) * Matrix8x8.GetElement(b, k, j);
+                    }
+                    SetElement(ref res, i, j, sum);
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 矩阵乘法（8x4 × 4x8 = 8x8）- 新增：卡尔曼增益计算需要
+        /// </summary>
+        public static Matrix8x8 operator *(Matrix8x4 a, Matrix4x8 b)
+        {
+            Matrix8x8 res = new Matrix8x8();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    float sum = 0;
+                    for (int k = 0; k < 4; k++)
+                    {
+                        sum += Matrix8x4.GetElement(a, i, k) * GetElement(b, k, j);
+                    }
+                    Matrix8x8.SetElement(ref res, i, j, sum);
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 获取矩阵元素（辅助方法）
+        /// </summary>
+        public static float GetElement(Matrix4x8 m, int row, int col)
+        {
+            if (row < 0 || row >= 4 || col < 0 || col >= 8) return 0;
+
+            return row switch
+            {
+                0 => col switch { 0 => m.M11, 1 => m.M12, 2 => m.M13, 3 => m.M14, 4 => m.M15, 5 => m.M16, 6 => m.M17, 7 => m.M18, _ => 0 },
+                1 => col switch { 0 => m.M21, 1 => m.M22, 2 => m.M23, 3 => m.M24, 4 => m.M25, 5 => m.M26, 6 => m.M27, 7 => m.M28, _ => 0 },
+                2 => col switch { 0 => m.M31, 1 => m.M32, 2 => m.M33, 3 => m.M34, 4 => m.M35, 5 => m.M36, 6 => m.M37, 7 => m.M38, _ => 0 },
+                3 => col switch { 0 => m.M41, 1 => m.M42, 2 => m.M43, 3 => m.M44, 4 => m.M45, 5 => m.M46, 6 => m.M47, 7 => m.M48, _ => 0 },
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// 设置矩阵元素（辅助方法）
+        /// </summary>
+        public static void SetElement(ref Matrix4x8 m, int row, int col, float value)
+        {
+            if (row < 0 || row >= 4 || col < 0 || col >= 8) return;
+
+            switch (row)
+            {
+                case 0:
+                    switch (col)
+                    {
+                        case 0: m.M11 = value; break;
+                        case 1: m.M12 = value; break;
+                        case 2: m.M13 = value; break;
+                        case 3: m.M14 = value; break;
+                        case 4: m.M15 = value; break;
+                        case 5: m.M16 = value; break;
+                        case 6: m.M17 = value; break;
+                        case 7: m.M18 = value; break;
+                    }
+                    break;
+                case 1:
+                    switch (col)
+                    {
+                        case 0: m.M21 = value; break;
+                        case 1: m.M22 = value; break;
+                        case 2: m.M23 = value; break;
+                        case 3: m.M24 = value; break;
+                        case 4: m.M25 = value; break;
+                        case 5: m.M26 = value; break;
+                        case 6: m.M27 = value; break;
+                        case 7: m.M28 = value; break;
+                    }
+                    break;
+                case 2:
+                    switch (col)
+                    {
+                        case 0: m.M31 = value; break;
+                        case 1: m.M32 = value; break;
+                        case 2: m.M33 = value; break;
+                        case 3: m.M34 = value; break;
+                        case 4: m.M35 = value; break;
+                        case 5: m.M36 = value; break;
+                        case 6: m.M37 = value; break;
+                        case 7: m.M38 = value; break;
+                    }
+                    break;
+                case 3:
+                    switch (col)
+                    {
+                        case 0: m.M41 = value; break;
+                        case 1: m.M42 = value; break;
+                        case 2: m.M43 = value; break;
+                        case 3: m.M44 = value; break;
+                        case 4: m.M45 = value; break;
+                        case 5: m.M46 = value; break;
+                        case 6: m.M47 = value; break;
+                        case 7: m.M48 = value; break;
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 转置为8x4矩阵
+        /// </summary>
+        public Matrix8x4 Transpose()
+        {
+            Matrix8x4 res = new Matrix8x4();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Matrix8x4.SetElement(ref res, j, i, GetElement(this, i, j));
+                }
+            }
+            return res;
+        }
+    }
+
+    /// <summary>
+    /// 8x4矩阵（卡尔曼增益专用）
+    /// </summary>
+    public struct Matrix8x4
+    {
+        public float M11, M12, M13, M14;
+        public float M21, M22, M23, M24;
+        public float M31, M32, M33, M34;
+        public float M41, M42, M43, M44;
+        public float M51, M52, M53, M54;
+        public float M61, M62, M63, M64;
+        public float M71, M72, M73, M74;
+        public float M81, M82, M83, M84;
+
+        /// <summary>
+        /// 获取矩阵元素（辅助方法）
+        /// </summary>
+        public static float GetElement(Matrix8x4 m, int row, int col)
+        {
+            if (row < 0 || row >= 8 || col < 0 || col >= 4) return 0;
+
+            return row switch
+            {
+                0 => col switch { 0 => m.M11, 1 => m.M12, 2 => m.M13, 3 => m.M14, _ => 0 },
+                1 => col switch { 0 => m.M21, 1 => m.M22, 2 => m.M23, 3 => m.M24, _ => 0 },
+                2 => col switch { 0 => m.M31, 1 => m.M32, 2 => m.M33, 3 => m.M34, _ => 0 },
+                3 => col switch { 0 => m.M41, 1 => m.M42, 2 => m.M43, 3 => m.M44, _ => 0 },
+                4 => col switch { 0 => m.M51, 1 => m.M52, 2 => m.M53, 3 => m.M54, _ => 0 },
+                5 => col switch { 0 => m.M61, 1 => m.M62, 2 => m.M63, 3 => m.M64, _ => 0 },
+                6 => col switch { 0 => m.M71, 1 => m.M72, 2 => m.M73, 3 => m.M74, _ => 0 },
+                7 => col switch { 0 => m.M81, 1 => m.M82, 2 => m.M83, 3 => m.M84, _ => 0 },
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// 设置矩阵元素（辅助方法）
+        /// </summary>
+        public static void SetElement(ref Matrix8x4 m, int row, int col, float value)
+        {
+            if (row < 0 || row >= 8 || col < 0 || col >= 4) return;
+
+            switch (row)
+            {
+                case 0:
+                    switch (col)
+                    {
+                        case 0: m.M11 = value; break;
+                        case 1: m.M12 = value; break;
+                        case 2: m.M13 = value; break;
+                        case 3: m.M14 = value; break;
+                    }
+                    break;
+                case 1:
+                    switch (col)
+                    {
+                        case 0: m.M21 = value; break;
+                        case 1: m.M22 = value; break;
+                        case 2: m.M23 = value; break;
+                        case 3: m.M24 = value; break;
+                    }
+                    break;
+                case 2:
+                    switch (col)
+                    {
+                        case 0: m.M31 = value; break;
+                        case 1: m.M32 = value; break;
+                        case 2: m.M33 = value; break;
+                        case 3: m.M34 = value; break;
+                    }
+                    break;
+                case 3:
+                    switch (col)
+                    {
+                        case 0: m.M41 = value; break;
+                        case 1: m.M42 = value; break;
+                        case 2: m.M43 = value; break;
+                        case 3: m.M44 = value; break;
+                    }
+                    break;
+                case 4:
+                    switch (col)
+                    {
+                        case 0: m.M51 = value; break;
+                        case 1: m.M52 = value; break;
+                        case 2: m.M53 = value; break;
+                        case 3: m.M54 = value; break;
+                    }
+                    break;
+                case 5:
+                    switch (col)
+                    {
+                        case 0: m.M61 = value; break;
+                        case 1: m.M62 = value; break;
+                        case 2: m.M63 = value; break;
+                        case 3: m.M64 = value; break;
+                    }
+                    break;
+                case 6:
+                    switch (col)
+                    {
+                        case 0: m.M71 = value; break;
+                        case 1: m.M72 = value; break;
+                        case 2: m.M73 = value; break;
+                        case 3: m.M74 = value; break;
+                    }
+                    break;
+                case 7:
+                    switch (col)
+                    {
+                        case 0: m.M81 = value; break;
+                        case 1: m.M82 = value; break;
+                        case 2: m.M83 = value; break;
+                        case 3: m.M84 = value; break;
+                    }
+                    break;
+            }
+        }
+    }
+    #endregion
+
+    #region 2. 配置类
+    /// <summary>
+    /// BoT-SORT核心配置
+    /// </summary>
+    public class BoTSORTConfig
+    {
+        // 跟踪阈值
+        public float TrackThresh { get; set; } = 0.5f;
+        public float TrackLowThresh { get; set; } = 0.1f;
+        public float NewTrackThresh { get; set; } = 0.6f;
+
+        // 匹配阈值
+        public float MatchThresh { get; set; } = 0.8f;
+        public float LowConfMatchThresh { get; set; } = 0.4f;
+
+        // ReID配置
+        public float AppearanceThresh { get; set; } = 0.25f;
+        public float Lambda { get; set; } = 0.98f; // ReID/IoU融合权重
+        public int ReIDFeatureDim { get; set; } = 512; // OSNet默认512维特征
+
+        // 轨迹管理
+        public int TrackBuffer { get; set; } = 30;
+        public int MaxLostFrames { get; set; } = 30;
+
+        // GMC配置
+        public bool EnableGMC { get; set; } = true;
+        public int GMCFeaturePoints { get; set; } = 500;
+        public float GMCInlierThreshold { get; set; } = 5.0f;
+    }
+    #endregion
+
+    #region 3. ReID接口
+    /// <summary>
+    /// ReID特征提取接口（标准化对接OSNet）
+    /// </summary>
+    public interface IReIDExtractor
+    {
+        /// <summary>
+        /// 从图像ROI中提取ReID特征
+        /// </summary>
+        /// <param name="image">原始图像</param>
+        /// <param name="roi">目标检测框（x1,y1,x2,y2）</param>
+        /// <returns>归一化的特征向量（OSNet默认512维）</returns>
+        float[] ExtractFeature(Image<Rgba32> image, RectangleF roi);
+
+        /// <summary>
+        /// 计算两个特征的余弦相似度
+        /// </summary>
+        /// <param name="feat1">特征1</param>
+        /// <param name="feat2">特征2</param>
+        /// <returns>相似度（0-1）</returns>
+        float CalculateCosineSimilarity(float[] feat1, float[] feat2);
+    }
+
+    /// <summary>
+    /// OSNet ReID提取器基类（预留ONNX Runtime对接）
+    /// </summary>
+    public abstract class OSNetReIDExtractor : IReIDExtractor
+    {
+        protected readonly BoTSORTConfig _config;
+        protected readonly int _inputWidth = 128; // OSNet默认输入尺寸
+        protected readonly int _inputHeight = 256;
+
+        public OSNetReIDExtractor(BoTSORTConfig config)
+        {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+        }
+
+        /// <summary>
+        /// 加载OSNet ONNX模型
+        /// </summary>
+        /// <param name="onnxModelPath">模型路径</param>
+        public abstract void LoadModel(string onnxModelPath);
+
+        /// <summary>
+        /// 预处理ROI图像（OSNet要求：归一化、Resize、通道转换等）
+        /// </summary>
+        protected abstract float[] Preprocess(Image<Rgba32> roiImage);
+
+        /// <summary>
+        /// 推理OSNet模型获取特征
+        /// </summary>
+        protected abstract float[] Inference(float[] inputTensor);
+
+        /// <summary>
+        /// 特征归一化（L2归一化）
+        /// </summary>
+        protected float[] NormalizeFeature(float[] feature)
+        {
+            if (feature == null || feature.Length == 0)
+                return new float[_config.ReIDFeatureDim];
+
+            float norm = (float)Math.Sqrt(feature.Sum(x => x * x) + 1e-6f);
+            return feature.Select(x => x / norm).ToArray();
+        }
+
+        public abstract float[] ExtractFeature(Image<Rgba32> image, RectangleF roi);
+
+        public float CalculateCosineSimilarity(float[] feat1, float[] feat2)
+        {
+            if (feat1 == null || feat2 == null || feat1.Length != feat2.Length)
+                return 0f;
+
+            float dotProduct = 0f;
+            for (int i = 0; i < feat1.Length; i++)
+            {
+                dotProduct += feat1[i] * feat2[i];
+            }
+            // 余弦相似度范围限制在0-1
+            return Math.Max(0, Math.Min(1, dotProduct));
+        }
+    }
+    #endregion
+
+    #region 4. BoTDetection类
+    /// <summary>
+    /// 检测框实体（含ReID特征）
+    /// </summary>
+    public class BoTDetection
+    {
+        // 基础信息
+        public float X1 { get; set; }
+        public float Y1 { get; set; }
+        public float X2 { get; set; }
+        public float Y2 { get; set; }
+        public float Confidence { get; set; }
+        public int ClassId { get; set; }
+
+        // 衍生属性
+        /// <summary>
+        /// 检测框宽度（确保非负）
+        /// </summary>
+        public float Width
+        {
+            get => Math.Max(0, X2 - X1);
+            set
+            {
+                if (value < 0) value = 0;
+                X2 = X1 + value;
+            }
+        }
+
+        /// <summary>
+        /// 检测框高度（确保非负）
+        /// </summary>
+        public float Height
+        {
+            get => Math.Max(0, Y2 - Y1);
+            set
+            {
+                if (value < 0) value = 0;
+                Y2 = Y1 + value;
+            }
+        }
+
+        /// <summary>
+        /// 宽高比（Aspect Ratio），修复除以零问题
+        /// </summary>
+        public float AspectRatio
+        {
+            get
+            {
+                float h = Height;
+                if (h < 1e-6f) return 1.0f; // 高度接近0时默认宽高比为1
+                return Width / h;
+            }
+        }
+
+        /// <summary>
+        /// 检测框中心坐标（确保有效）
+        /// </summary>
+        public Vector2 Center
+        {
+            get => new Vector2((X1 + X2) / 2f, (Y1 + Y2) / 2f);
+            set
+            {
+                X1 = value.X - Width / 2f;
+                Y1 = value.Y - Height / 2f;
+                X2 = value.X + Width / 2f;
+                Y2 = value.Y + Height / 2f;
+            }
+        }
+
+        /// <summary>
+        /// 检测框面积（确保非负）
+        /// </summary>
+        public float Area => Width * Height;
+
+        /// <summary>
+        /// 检测框ROI（确保有效）
+        /// </summary>
+        public RectangleF Roi => new RectangleF(X1, Y1, Width, Height);
+
+        // ReID特征
+        public float[] ReIDFeature { get; set; }
+
+        // 构造函数
+        public BoTDetection() { }
+
+        public BoTDetection(float x1, float y1, float x2, float y2, float confidence = 0f, int classId = 0)
+        {
+            // 确保坐标合法（x1<=x2, y1<=y2）
+            X1 = Math.Min(x1, x2);
+            Y1 = Math.Min(y1, y2);
+            X2 = Math.Max(x1, x2);
+            Y2 = Math.Max(y1, y2);
+            Confidence = confidence;
+            ClassId = classId;
+        }
+    }
+    #endregion
+
+    #region 5. 卡尔曼滤波类
+    /// <summary>
+    /// 8维卡尔曼滤波（BoT-SORT标准，无MathNet依赖）
+    /// 状态向量：[x, y, a, h, vx, vy, va, vh]
+    /// x,y: 中心坐标 | a: 宽高比 | h: 高度 | v: 对应速度
+    /// </summary>
+    public class BoTKalmanFilter
+    {
+        private readonly BoTSORTConfig _config;
+
+        // 状态向量 (8x1)
+        private float[] _x;
+        // 协方差矩阵 (8x8)
+        private Matrix8x8 _P;
+        // 状态转移矩阵 (8x8)
+        private Matrix8x8 _F;
+        // 观测矩阵 (4x8)：仅观测x,y,a,h
+        private Matrix4x8 _H;
+        // 过程噪声协方差 (8x8)
+        private Matrix8x8 _Q;
+        // 观测噪声协方差 (4x4，用二维数组表示)
+        private float[][] _R;
+
+        private const float DT = 1.0f / 30.0f; // 帧间隔
+
+        public BoTKalmanFilter(BoTSORTConfig config)
+        {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            InitializeMatrices();
+        }
+
+        /// <summary>
+        /// 初始化卡尔曼滤波矩阵
+        /// </summary>
+        private void InitializeMatrices()
+        {
+            // 初始状态向量（全0）
+            _x = new float[8];
+
+            // 初始协方差矩阵（对角为1000）
+            _P = Matrix8x8.Identity * 1000;
+
+            // 状态转移矩阵F
+            _F = Matrix8x8.Identity;
+            Matrix8x8.SetElement(ref _F, 0, 4, DT);
+            Matrix8x8.SetElement(ref _F, 1, 5, DT);
+            Matrix8x8.SetElement(ref _F, 2, 6, DT);
+            Matrix8x8.SetElement(ref _F, 3, 7, DT);
+
+            // 观测矩阵H
+            _H = Matrix4x8.Identity;
+
+            // 过程噪声Q
+            _Q = Matrix8x8.Identity * 0.01f;
+
+            // 观测噪声R（4x4对角矩阵）
+            _R = new float[4][];
+            for (int i = 0; i < 4; i++)
+            {
+                _R[i] = new float[4];
+                _R[i][i] = 0.1f;
+            }
+        }
+
+        /// <summary>
+        /// 初始化状态（从检测框）
+        /// </summary>
+        /// <param name="detection">检测框</param>
+        public void Initialize(BoTDetection detection)
+        {
+            if (detection == null) throw new ArgumentNullException(nameof(detection));
+
+            _x[0] = detection.Center.X;       // x
+            _x[1] = detection.Center.Y;       // y
+            _x[2] = detection.AspectRatio;    // a（宽高比）
+            _x[3] = detection.Height;         // h（高度）
+            _x[4] = 0; // vx
+            _x[5] = 0; // vy
+            _x[6] = 0; // va
+            _x[7] = 0; // vh
+        }
+
+        /// <summary>
+        /// 预测下一状态
+        /// </summary>
+        public void Predict()
+        {
+            // x = F * x
+            _x = _F * _x;
+
+            // P = F * P * F^T + Q
+            var fTranspose = _F.Transpose();
+            _P = _F * _P * fTranspose + _Q;
+        }
+
+        /// <summary>
+        /// 更新状态（基于观测值）
+        /// </summary>
+        /// <param name="detection">检测框</param>
+        public void Update(BoTDetection detection)
+        {
+            if (detection == null) throw new ArgumentNullException(nameof(detection));
+
+            // 构建观测向量 [x, y, a, h]
+            float[] z = new[]
+            {
+                detection.Center.X,
+                detection.Center.Y,
+                detection.AspectRatio,
+                detection.Height
+            };
+
+            // 计算残差 y = z - H*x
+            float[] hx = _H * _x;
+            float[] y = new float[4];
+            for (int i = 0; i < 4; i++)
+            {
+                y[i] = z[i] - hx[i];
+            }
+
+            // 创新协方差 S = H*P*H^T + R
+            var hp = _H * _P;
+            var hTranspose = _H.Transpose(); // hTranspose 是 Matrix8x4 类型（8行4列）
+
+            // 计算 H*P*H^T
+            float[][] s = new float[4][];
+            for (int i = 0; i < 4; i++)
+            {
+                s[i] = new float[4];
+                for (int j = 0; j < 4; j++)
+                {
+                    float sum = 0;
+                    for (int x = 0; x < 8; x++)
+                    {
+                        // 修复：hp是Matrix4x8（4行8列），hTranspose是Matrix8x4（8行4列）
+                        // 原错误：Matrix4x8.GetElement(hTranspose, x, j)
+                        // 正确写法：Matrix8x4.GetElement(hTranspose, x, j)
+                        sum += Matrix4x8.GetElement(hp, i, x) * Matrix8x4.GetElement(hTranspose, x, j);
+                    }
+                    s[i][j] = sum + _R[i][j];
+                }
+            }
+
+            // 卡尔曼增益 K = P * H^T * S^-1
+            var pHT = _P * hTranspose;
+            float[][] invS = Matrix8x8.Invert4x4(s);
+
+            // 计算卡尔曼增益 K (8x4)
+            Matrix8x4 k = new Matrix8x4();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    float sum = 0;
+                    for (int kIdx = 0; kIdx < 4; kIdx++)
+                    {
+                        sum += Matrix8x4.GetElement(pHT, i, kIdx) * invS[kIdx][j];
+                    }
+                    Matrix8x4.SetElement(ref k, i, j, sum);
+                }
+            }
+
+            // 更新状态 x = x + K*y
+            float[] ky = new float[8];
+            for (int i = 0; i < 8; i++)
+            {
+                float sum = 0;
+                for (int j = 0; j < 4; j++)
+                {
+                    sum += Matrix8x4.GetElement(k, i, j) * y[j];
+                }
+                ky[i] = sum;
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                _x[i] += ky[i];
+            }
+
+            // 更新协方差 P = (I - K*H) * P
+            var kh = k * _H;
+            var ikh = Matrix8x8.Identity - kh;
+            _P = ikh * _P;
+        }
+
+        /// <summary>
+        /// 获取预测的检测框参数
+        /// </summary>
+        /// <returns>[x, y, a, h]</returns>
+        public float[] GetPredictedState()
+        {
+            return new[] { _x[0], _x[1], _x[2], _x[3] };
+        }
+    }
+    #endregion
+
+    #region 6. BoTTrack类
+    /// <summary>
+    /// 跟踪轨迹实体
+    /// </summary>
+    public class BoTTrack
+    {
+        public int TrackId { get; }
+        public BoTSORTConfig Config { get; }
+        public BoTKalmanFilter Kf { get; }
+        public IReIDExtractor ReIDExtractor { get; }
+
+        // 轨迹状态
+        public BoTDetection LastDetection { get; private set; }
+        public float[] LastReIDFeature { get; private set; }
+        public int TimeSinceUpdate { get; private set; }
+        public int LostFrames { get; private set; }
+        public bool IsActive => TimeSinceUpdate < Config.TrackBuffer;
+        public bool IsLost => LostFrames > Config.MaxLostFrames;
+
+        public BoTTrack(int trackId, BoTDetection detection, BoTSORTConfig config, IReIDExtractor reidExtractor)
+        {
+            if (detection == null) throw new ArgumentNullException(nameof(detection));
+            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (reidExtractor == null) throw new ArgumentNullException(nameof(reidExtractor));
+
+            TrackId = trackId;
+            Config = config;
+            ReIDExtractor = reidExtractor;
+            Kf = new BoTKalmanFilter(config);
+            Kf.Initialize(detection);
+
+            LastDetection = detection;
+            LastReIDFeature = detection.ReIDFeature;
+            TimeSinceUpdate = 0;
+            LostFrames = 0;
+        }
+
+        /// <summary>
+        /// 预测轨迹
+        /// </summary>
+        public void Predict()
+        {
+            Kf.Predict();
+            TimeSinceUpdate++;
+            LostFrames++;
+        }
+
+        /// <summary>
+        /// 更新轨迹
+        /// </summary>
+        /// <param name="detection">新检测框</param>
+        public void Update(BoTDetection detection)
+        {
+            if (detection == null) throw new ArgumentNullException(nameof(detection));
+
+            Kf.Update(detection);
+            LastDetection = detection;
+            LastReIDFeature = detection.ReIDFeature;
+            TimeSinceUpdate = 0;
+            LostFrames = 0;
+        }
+
+        /// <summary>
+        /// 获取运动补偿后的预测框
+        /// </summary>
+        /// <param name="homography">单应性矩阵（GMC）</param>
+        /// <returns>预测检测框</returns>
+        public BoTDetection GetCompensatedPrediction(Matrix3x3? homography = null)
+        {
+            var pred = Kf.GetPredictedState();
+            float x = pred[0], y = pred[1], a = pred[2], h = pred[3];
+
+            // 应用GMC运动补偿：使用单应性矩阵的逆矩阵
+            if (homography.HasValue && Config.EnableGMC)
+            {
+                // 单应性矩阵变换：需要用逆矩阵补偿相机运动
+                var invH = homography.Value.Invert();
+                float[] point = new[] { x, y, 1.0f };
+                float[] transformed = invH * point;
+
+                // 齐次坐标归一化
+                if (Math.Abs(transformed[2]) > 1e-6)
+                {
+                    x = transformed[0] / transformed[2];
+                    y = transformed[1] / transformed[2];
+                }
+            }
+
+            // 计算预测框坐标
+            float w = a * h;
+            return new BoTDetection
+            {
+                X1 = x - w / 2,
+                Y1 = y - h / 2,
+                X2 = x + w / 2,
+                Y2 = y + h / 2,
+                ReIDFeature = LastReIDFeature
+            };
+        }
+    }
+    #endregion
+
+    #region 7. 全局运动补偿（GMC）
+    /// <summary>
+    /// 全局运动补偿（基于ORB特征+单应性矩阵）
+    /// </summary>
+    public class GlobalMotionCompensator
+    {
+        private readonly BoTSORTConfig _config;
+
+        public GlobalMotionCompensator(BoTSORTConfig config)
+        {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+        }
+
+        /// <summary>
+        /// 估计相机运动（单应性矩阵）
+        /// </summary>
+        /// <param name="prevFrame">上一帧</param>
+        /// <param name="currFrame">当前帧</param>
+        /// <returns>单应性矩阵（单位矩阵表示估计失败）</returns>
+        public Matrix3x3 EstimateHomography(Image<Rgba32> prevFrame, Image<Rgba32> currFrame)
+        {
+            if (!_config.EnableGMC || prevFrame == null || currFrame == null)
+                return Matrix3x3.Identity;
+
+            try
+            {
+                // 1. 提取ORB特征点（实际需对接OpenCVSharp）
+                var (prevPoints, currPoints) = ExtractORBFeatures(prevFrame, currFrame);
+                if (prevPoints.Count < 10 || currPoints.Count < 10)
+                    return Matrix3x3.Identity;
+
+                // 2. 计算单应性矩阵（RANSAC）
+                return ComputeHomographyRANSAC(prevPoints, currPoints);
+            }
+            catch
+            {
+                return Matrix3x3.Identity;
+            }
+        }
+
+        /// <summary>
+        /// 提取ORB特征点（对接OpenCVSharp实现）
+        /// </summary>
+        private (List<Vector2>, List<Vector2>) ExtractORBFeatures(Image<Rgba32> prev, Image<Rgba32> curr)
+        {
+            // 占位实现：实际需对接OpenCV
+            return (new List<Vector2>(), new List<Vector2>());
+        }
+
+        /// <summary>
+        /// RANSAC计算单应性矩阵
+        /// </summary>
+        private Matrix3x3 ComputeHomographyRANSAC(List<Vector2> srcPoints, List<Vector2> dstPoints)
+        {
+            // 占位实现：实际需实现RANSAC算法
+            return Matrix3x3.Identity;
+        }
+    }
+    #endregion
+
+    #region 8. BoT-SORT核心跟踪器
+    /// <summary>
+    /// BoT-SORT核心跟踪器（完整实现）
+    /// </summary>
+    public class BoTSORTTracker : IDisposable
+    {
+        private readonly BoTSORTConfig _config;
+        private readonly IReIDExtractor _reidExtractor;
+        private readonly GlobalMotionCompensator _gmc;
+        private readonly List<BoTTrack> _tracks = new List<BoTTrack>();
+        private int _nextTrackId = 0;
+        private Image<Rgba32> _prevFrame;
+
+        public BoTSORTTracker(BoTSORTConfig config, IReIDExtractor reidExtractor)
+        {
+            _config = config ?? new BoTSORTConfig();
+            _reidExtractor = reidExtractor ?? throw new ArgumentNullException(nameof(reidExtractor));
+            _gmc = new GlobalMotionCompensator(_config);
+        }
+
+        /// <summary>
+        /// 更新跟踪器（核心方法）
+        /// </summary>
+        /// <param name="currFrame">当前帧图像</param>
+        /// <param name="detections">原始检测框（无ReID特征）</param>
+        /// <returns>跟踪结果</returns>
+        public List<BoTTrack> Update(Image<Rgba32> currFrame, List<BoTDetection> detections)
+        {
+            if (currFrame == null) throw new ArgumentNullException(nameof(currFrame));
+            if (detections == null) detections = new List<BoTDetection>();
+
+            // 1. 预处理检测框：提取ReID特征
+            var processedDetections = ProcessDetections(currFrame, detections);
+
+            // 2. 估计相机运动（GMC）
+            var homography = _gmc.EstimateHomography(_prevFrame, currFrame);
+
+            // 3. 预测所有轨迹
+            foreach (var track in _tracks.ToList()) // 用ToList避免迭代时修改
+            {
+                track.Predict();
+            }
+
+            // 4. 拆分高低置信度检测框
+            var highConfDets = processedDetections
+                .Where(d => d.Confidence >= _config.TrackThresh)
+                .ToList();
+
+            var lowConfDets = processedDetections
+                .Where(d => d.Confidence >= _config.TrackLowThresh && d.Confidence < _config.TrackThresh)
+                .ToList();
+
+            // 5. 第一阶段匹配：高置信度框 + 活跃轨迹
+            var (matchedTracks1, unmatchedDets1) = FusedMatching(highConfDets,
+                _tracks.Where(t => t.IsActive).ToList(), homography, false);
+
+            // 6. 第二阶段匹配：低置信度框 + 未匹配轨迹
+            var unmatchedTracks = _tracks.Where(t => !matchedTracks1.Contains(t)).ToList();
+            var (matchedTracks2, _) = FusedMatching(lowConfDets, unmatchedTracks, homography, true);
+
+            // 7. 更新匹配的轨迹
+            UpdateMatchedTracks(matchedTracks1, highConfDets);
+            UpdateMatchedTracks(matchedTracks2, lowConfDets);
+
+            // 8. 创建新轨迹
+            CreateNewTracks(unmatchedDets1);
+
+            // 9. 清理失效轨迹
+            CleanupLostTracks();
+
+            // 10. 保存当前帧
+            _prevFrame?.Dispose();
+            _prevFrame = currFrame.Clone();
+
+            return _tracks.Where(t => t.IsActive).ToList();
+        }
+
+        /// <summary>
+        /// 预处理检测框：提取ReID特征
+        /// </summary>
+        private List<BoTDetection> ProcessDetections(Image<Rgba32> frame, List<BoTDetection> detections)
+        {
+            var result = new List<BoTDetection>();
+            foreach (var det in detections)
+            {
+                if (det == null || det.Confidence < _config.TrackLowThresh)
+                    continue;
+
+                // 提取ReID特征（OSNet）
+                det.ReIDFeature = _reidExtractor.ExtractFeature(frame, det.Roi);
+                result.Add(det);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// IoU+ReID融合匹配
+        /// </summary>
+        private (List<BoTTrack> matchedTracks, List<BoTDetection> unmatchedDets)
+            FusedMatching(List<BoTDetection> detections, List<BoTTrack> tracks, Matrix3x3 homography, bool isLowConf)
+        {
+            var matchedTracks = new List<BoTTrack>();
+            var unmatchedDets = new List<BoTDetection>(detections);
+            var matchThresh = isLowConf ? _config.LowConfMatchThresh : _config.MatchThresh;
+
+            foreach (var det in detections.ToList())
+            {
+                if (det == null) continue;
+
+                BoTTrack bestTrack = null;
+                float maxFusedScore = 0;
+
+                foreach (var track in tracks)
+                {
+                    if (track == null || matchedTracks.Contains(track))
+                        continue;
+
+                    // 1. 计算IoU（运动补偿后）
+                    var predBbox = track.GetCompensatedPrediction(homography);
+                    float iou = CalculateIoU(det, predBbox);
+
+                    // 2. 计算ReID相似度
+                    float reidSim = 0;
+                    if (track.LastReIDFeature != null && det.ReIDFeature != null)
+                    {
+                        reidSim = _reidExtractor.CalculateCosineSimilarity(track.LastReIDFeature, det.ReIDFeature);
+                    }
+
+                    // 3. 融合得分：lambda*ReID + (1-lambda)*IoU
+                    float fusedScore = _config.Lambda * reidSim + (1 - _config.Lambda) * iou;
+
+                    // 4. 筛选最优匹配
+                    if (fusedScore > maxFusedScore && fusedScore >= matchThresh && reidSim >= _config.AppearanceThresh)
+                    {
+                        maxFusedScore = fusedScore;
+                        bestTrack = track;
+                    }
+                }
+
+                if (bestTrack != null)
+                {
+                    matchedTracks.Add(bestTrack);
+                    unmatchedDets.Remove(det);
+                }
+            }
+
+            return (matchedTracks, unmatchedDets);
+        }
+
+        /// <summary>
+        /// 计算IoU（交并比）
+        /// </summary>
+        private float CalculateIoU(BoTDetection a, BoTDetection b)
+        {
+            if (a == null || b == null) return 0;
+
+            var x1 = Math.Max(a.X1, b.X1);
+            var y1 = Math.Max(a.Y1, b.Y1);
+            var x2 = Math.Min(a.X2, b.X2);
+            var y2 = Math.Min(a.Y2, b.Y2);
+
+            var intersection = Math.Max(0, x2 - x1) * Math.Max(0, y2 - y1);
+            if (intersection == 0)
+                return 0;
+
+            var union = a.Area + b.Area - intersection;
+            return union > 0 ? intersection / union : 0;
+        }
+
+        /// <summary>
+        /// 更新匹配的轨迹
+        /// </summary>
+        private void UpdateMatchedTracks(List<BoTTrack> matchedTracks, List<BoTDetection> detections)
+        {
+            foreach (var track in matchedTracks)
+            {
+                if (track == null) continue;
+
+                // 找到匹配的检测框
+                var matchedDet = detections
+                    .Where(d => d != null)
+                    .OrderByDescending(d => CalculateIoU(d, track.GetCompensatedPrediction()))
+                    .FirstOrDefault(d => CalculateIoU(d, track.GetCompensatedPrediction()) > _config.MatchThresh * 0.5);
+
+                if (matchedDet != null)
+                {
+                    track.Update(matchedDet);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 创建新轨迹
+        /// </summary>
+        private void CreateNewTracks(List<BoTDetection> detections)
+        {
+            foreach (var det in detections)
+            {
+                if (det == null || det.Confidence < _config.NewTrackThresh)
+                    continue;
+
+                _tracks.Add(new BoTTrack(_nextTrackId++, det, _config, _reidExtractor));
+            }
+        }
+
+        /// <summary>
+        /// 清理失效轨迹
+        /// </summary>
+        private void CleanupLostTracks()
+        {
+            var lostTracks = _tracks.Where(t => t.IsLost).ToList();
+            foreach (var track in lostTracks)
+            {
+                _tracks.Remove(track);
+            }
+        }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            _prevFrame?.Dispose();
+            _tracks.Clear();
+        }
+    }
+    #endregion
+
+    #region 9. OSNet对接示例
+    /// <summary>
+    /// OSNet ReID提取器（ONNX Runtime实现）
+    /// </summary>
+    public class OSNetReIDExtractorONNX : OSNetReIDExtractor
+    {
+        private IntPtr _onnxSession; // ONNX Runtime会话句柄
+        private bool _isInitialized = false;
+
+        public OSNetReIDExtractorONNX(BoTSORTConfig config) : base(config)
+        {
+        }
+
+        public override void LoadModel(string onnxModelPath)
+        {
+            if (string.IsNullOrEmpty(onnxModelPath) || !System.IO.File.Exists(onnxModelPath))
+                throw new System.IO.FileNotFoundException("OSNet模型文件不存在", onnxModelPath);
+
+            // 实际实现：初始化ONNX Runtime会话
+            _isInitialized = true;
+        }
+
+        protected override float[] Preprocess(Image<Rgba32> roiImage)
+        {
+            if (!_isInitialized)
+                throw new InvalidOperationException("OSNet模型未初始化");
+            if (roiImage == null)
+                return new float[_inputWidth * _inputHeight * 3];
+
+            // OSNet预处理流程占位实现
+            return new float[_inputWidth * _inputHeight * 3];
+        }
+
+        protected override float[] Inference(float[] inputTensor)
+        {
+            if (!_isInitialized)
+                throw new InvalidOperationException("OSNet模型未初始化");
+            if (inputTensor == null)
+                return new float[_config.ReIDFeatureDim];
+
+            // ONNX推理占位实现
+            return NormalizeFeature(new float[_config.ReIDFeatureDim]);
+        }
+
+        public override float[] ExtractFeature(Image<Rgba32> image, RectangleF roi)
+        {
+            if (image == null || roi.Width <= 0 || roi.Height <= 0)
+                return new float[_config.ReIDFeatureDim];
+
+            // 裁剪ROI
+            Rectangle cropRect = RectangleFToRectangle(roi, image.Width, image.Height);
+            using var roiImage = image.Clone(ctx => ctx.Crop(cropRect));
+
+            // 预处理
+            var input = Preprocess(roiImage);
+
+            // 推理
+            var feature = Inference(input);
+
+            // 归一化
+            return NormalizeFeature(feature);
+        }
+        /// <summary>
+        /// 工具方法：将RectangleF安全转换为Rectangle（适配ImageSharp）
+        /// </summary>
+        /// <param name="fRect">浮点矩形</param>
+        /// <param name="imageWidth">图像宽度（用于边界检查）</param>
+        /// <param name="imageHeight">图像高度（用于边界检查）</param>
+        /// <returns>整数矩形（确保在图像范围内，无负坐标）</returns>
+        private Rectangle RectangleFToRectangle(RectangleF fRect, int imageWidth, int imageHeight)
+        {
+            // 1. 四舍五入到整数（比直接强制转换更准确）
+            int x = (int)Math.Round(fRect.X);
+            int y = (int)Math.Round(fRect.Y);
+            int width = (int)Math.Round(fRect.Width);
+            int height = (int)Math.Round(fRect.Height);
+
+            // 2. 边界检查：确保坐标非负，且不超出图像范围
+            x = Math.Max(0, x);
+            y = Math.Max(0, y);
+            width = Math.Max(1, width); // 至少1像素宽
+            height = Math.Max(1, height); // 至少1像素高
+            x = Math.Min(x, imageWidth - width); // 避免右边界超出
+            y = Math.Min(y, imageHeight - height); // 避免下边界超出
+
+            return new Rectangle(x, y, width, height);
+        }
+    }
+    #endregion
+
+    #region 10. 使用示例
+    public class UsageExample
+    {
+        public static void Run()
+        {
+            try
+            {
+                // 1. 配置跟踪器
+                var config = new BoTSORTConfig
+                {
+                    TrackThresh = 0.5f,
+                    ReIDFeatureDim = 512,
+                    EnableGMC = true
+                };
+
+                // 2. 初始化OSNet ReID提取器
+                var reidExtractor = new OSNetReIDExtractorONNX(config);
+                reidExtractor.LoadModel("osnet_x0_25_msmt17.onnx"); // 替换为实际模型路径
+
+                // 3. 初始化BoT-SORT跟踪器
+                using var tracker = new BoTSORTTracker(config, reidExtractor);
+
+                // 4. 逐帧处理（示例）
+                using var frame1 = Image.Load<Rgba32>("frame1.jpg");
+                var detections1 = new List<BoTDetection>
+                {
+                    new BoTDetection(100, 200, 300, 400, 0.95f, 0) // 行人类别
+                };
+
+                // 更新跟踪器
+                var tracks1 = tracker.Update(frame1, detections1);
+
+                // 输出结果
+                foreach (var track in tracks1)
+                {
+                    Console.WriteLine($"Track ID: {track.TrackId}, BBox: ({track.LastDetection.X1:F1},{track.LastDetection.Y1:F1})-({track.LastDetection.X2:F1},{track.LastDetection.Y2:F1})");
+                }
+
+                // 处理下一帧
+                using var frame2 = Image.Load<Rgba32>("frame2.jpg");
+                var detections2 = new List<BoTDetection>
+                {
+                    new BoTDetection(105, 205, 305, 405, 0.90f, 0)
+                };
+
+                var tracks2 = tracker.Update(frame2, detections2);
+                foreach (var track in tracks2)
+                {
+                    Console.WriteLine($"Track ID: {track.TrackId}, BBox: ({track.LastDetection.X1:F1},{track.LastDetection.Y1:F1})-({track.LastDetection.X2:F1},{track.LastDetection.Y2:F1})");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"运行错误: {ex.Message}");
+            }
+        }
+    }
+    #endregion
+}

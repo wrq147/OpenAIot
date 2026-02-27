@@ -51,7 +51,6 @@ namespace IoTVideoService.PlanUtil
         /// <summary>
         /// 创建定时计划任务
         /// </summary>
-        /// <param name="scheduler"></param>
         /// <param name="planId"></param>
         /// <param name="tasks"></param>
         /// <returns></returns>
@@ -67,7 +66,7 @@ namespace IoTVideoService.PlanUtil
             {
                 ITrigger trigger;
                 // 表达式调度构建器
-                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(task.CronExpression).WithMisfireHandlingInstructionIgnoreMisfires();
+                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(task.CronExpression).WithMisfireHandlingInstructionFireAndProceed();
                 var triggetBuilder = TriggerBuilder.Create().WithIdentity("VIDTRI" + planId + "_" + i).ForJob(jobDetail).WithSchedule(cronScheduleBuilder);
                 triggetBuilder.UsingJobData("TData", task.OperType.ToString());
                 trigger = triggetBuilder.Build();

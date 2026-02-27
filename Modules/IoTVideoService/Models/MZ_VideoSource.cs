@@ -24,7 +24,7 @@ namespace IoTVideoService.Models
         /// </summary>
         public string Position { get; set; }
         /// <summary>
-        /// 摄像头类型:0为固定地址,1为GB28181
+        /// 摄像头类型:0为固定地址,1为GB28181设备，2为GB28181通道，3为Onvif设备
         /// </summary>
         public byte? VideoType { get; set; }
         /// <summary>

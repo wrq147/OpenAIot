@@ -114,7 +114,7 @@ namespace IoTVideoService.Business
             data.VideoKey = null;
             data.OrgId = null;
 
-            if (old.VideoType == 0 && !string.IsNullOrEmpty(data.PullAddr) && old.PullAddr != data.PullAddr && !string.IsNullOrEmpty(old.NodeId))
+            if ((old.VideoType == 0 || old.VideoType == 3) && !string.IsNullOrEmpty(data.PullAddr) && old.PullAddr != data.PullAddr && !string.IsNullOrEmpty(old.NodeId))
             {
                 //更新拉流
                 old.PullAddr = data.PullAddr;

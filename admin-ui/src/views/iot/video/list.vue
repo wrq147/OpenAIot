@@ -37,6 +37,7 @@
                                     <span v-if="scope.row.VideoType == 0">固定地址</span>
                                     <span v-else-if="scope.row.VideoType == 1">GB28181设备</span>
                                     <span v-else-if="scope.row.VideoType == 2">通道</span>
+                                    <span v-else-if="scope.row.VideoType==3">Onvif设备</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="视频Key" align="center" prop="VideoKey" width="260"
@@ -49,6 +50,9 @@
                                     <div v-else-if="scope.row.VideoType == 1">
                                         <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }},{{
                                             scope.row.NodeId!=""?"【已注册】":"【未注册】" }}</div>
+                                    </div>
+                                    <div v-else-if="scope.row.VideoType == 3">
+                                        <div>设备用户名：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
                                     </div>
                                 </template>
                             </el-table-column>

@@ -458,7 +458,7 @@
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoType">
             <summary>
-            摄像头类型:0为固定地址,1为GB28181
+            摄像头类型:0为固定地址,1为GB28181设备，2为GB28181通道，3为Onvif设备
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoKey">
@@ -495,7 +495,6 @@
             <summary>
             创建定时计划任务
             </summary>
-            <param name="scheduler"></param>
             <param name="planId"></param>
             <param name="tasks"></param>
             <returns></returns>

@@ -26,6 +26,15 @@
             <param name="properties"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.AICode.AIUtility.ToDenseTensor(System.Single[][],System.Int32[])">
+            <summary>
+            将float[][]转换为指定形状的DenseTensor
+            </summary>
+            <param name="twoDArray">输入的二维浮点数组（如N个512维向量 → float[N][512]）</param>
+            <param name="targetShape">目标张量形状（YOLO-World需为 new[] {1, N, 512}）</param>
+            <returns>连续内存的DenseTensor</returns>
+            <exception cref="T:System.ArgumentException">形状不匹配时抛出</exception>
+        </member>
         <member name="T:IoTAIService.AICode.ExecutionProviderType">
             <summary>
             执行提供者类型
@@ -48,6 +57,31 @@
             调整边界框到原始尺寸
             </summary>
         </member>
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.PostprocessOutput(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Single,System.Single,System.Single,System.Single,System.Collections.Generic.List{System.String})">
+            <summary>
+            后处理：解析模型输出，过滤低置信度结果，执行NMS，还原检测框到原图坐标
+            </summary>
+            <param name="output"></param>
+            <param name="confidenceThreshold"></param>
+            <param name="iouThreshold"></param>
+            <param name="scaleX"></param>
+            <param name="scaleY"></param>
+            <param name="classes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.ApplyNMS(System.Collections.Generic.List{IoTAIService.AICode.YoloWorldDetectRunner.DetectionResult},System.Single)">
+            <summary>
+            非极大值抑制（NMS）：去除重叠的高置信度框
+            </summary>
+            <param name="detections">检测结果列表</param>
+            <param name="iouThreshold">IOU阈值</param>
+            <returns>去重后的检测结果</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.CalculateIOU(IoTAIService.AICode.YoloWorldDetectRunner.DetectionResult,IoTAIService.AICode.YoloWorldDetectRunner.DetectionResult)">
+            <summary>
+            计算两个检测框的IOU（交并比）
+            </summary>
+        </member>
         <member name="P:IoTAIService.AIProjectInfo.Name">
             <summary>
             AI项目名称
@@ -56,6 +90,11 @@
         <member name="P:IoTAIService.AIProjectInfo.Code">
             <summary>
             AI项目代码
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectInfo.Stage">
+            <summary>
+            执行阶段：Detect、Infer
             </summary>
         </member>
         <member name="P:IoTAIService.AIProjectInfo.Remark">
@@ -93,7 +132,7 @@
             枚举元素
             </summary>
         </member>
-        <member name="T:IoTAIService.AIProject.Items.DetectionProject">
+        <member name="T:IoTAIService.AIProject.Items.GeneralDetect">
             <summary>
             通用检测项目
             </summary>
@@ -225,6 +264,11 @@
         <member name="P:IoTAIService.IoTAIOption.FaceSTNFile">
             <summary>
             人脸空间变换模型
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.YoloWorldFile">
+            <summary>
+            YoloWorld模型
             </summary>
         </member>
         <member name="P:IoTAIService.Models.In_FaceDetect.ImageBase64">
