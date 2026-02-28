@@ -54,54 +54,30 @@ namespace FixVideoChannel
         /// <summary>
         /// Zlib快速压缩降采样后的RGB数据
         /// </summary>
-        private static byte[] FastZlibCompress(byte[] rawData, int width, int height, int scale = 2)
+        private static byte[] FastZlibCompress(byte[] rawData, int width, int height)
         {
             if (rawData == null || rawData.Length == 0)
                 return null;
 
-            // 第一步：先降采样
-            byte[] downsampled = UltraFastDownsample(rawData, width, height, scale);
-
-            // 第二步：Zlib快速压缩
             using (var ms = new MemoryStream())
             {
                 using (var zlib = new DeflateStream(ms, CompressionLevel.Fastest, true))
                 {
-                    zlib.Write(downsampled, 0, downsampled.Length);
+                    zlib.Write(rawData, 0, rawData.Length);
                 }
                 return ms.ToArray();
             }
         }
 
-        // 复用之前的超极速降采样方法
-        private static byte[] UltraFastDownsample(byte[] rawData, int width, int height, int scale)
-        {
-            if (rawData == null || rawData.Length == 0 || scale <= 1)
-                return rawData;
-
-            int newWidth = width / scale;
-            int newHeight = height / scale;
-            int pixelSize = 3;
-            byte[] result = new byte[newWidth * newHeight * pixelSize];
-
-            int destIndex = 0;
-            for (int y = 0; y < height; y += scale)
-            {
-                for (int x = 0; x < width; x += scale)
-                {
-                    int srcIndex = (y * width + x) * pixelSize;
-                    if (srcIndex + 2 >= rawData.Length) break;
-
-                    result[destIndex++] = rawData[srcIndex];
-                    result[destIndex++] = rawData[srcIndex + 1];
-                    result[destIndex++] = rawData[srcIndex + 2];
-                }
-            }
-            return result;
-        }
-
-
-        // AI检测
+        /// <summary>
+        /// AI检测
+        /// </summary>
+        /// <param name="videoData"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="motionRatio"></param>
+        /// <param name="listener"></param>
+        /// <param name="data"></param>
         public static void Detect(VideoData videoData, int width, int height, float motionRatio, IVideoDeviceEventListener listener, byte[] data)
         {
             if (listener == null)
@@ -116,7 +92,7 @@ namespace FixVideoChannel
                 configs = videoData.Configs;
                 videoData.NeedUp = false;
             }
-            listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width / 2, height / 2, configs);
+            listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs);
         }
         public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
         {
@@ -131,10 +107,10 @@ namespace FixVideoChannel
             foreach (var box in tmpboxArr)
             {
                 // 1. 坐标校验与裁剪（防止越界）
-                int x1 = (int)Math.Max(0, box.x1 * 2);
-                int y1 = (int)Math.Max(0, box.y1 * 2);
-                int x2 = (int)Math.Min(width - 1, box.x2 * 2);
-                int y2 = (int)Math.Min(height - 1, box.y2 * 2);
+                int x1 = (int)Math.Max(0, box.x1);
+                int y1 = (int)Math.Max(0, box.y1);
+                int x2 = (int)Math.Min(width - 1, box.x2);
+                int y2 = (int)Math.Min(height - 1, box.y2);
 
                 // 跳过无效框
                 if (x1 >= x2 || y1 >= y2)
