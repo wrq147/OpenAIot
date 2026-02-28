@@ -12,6 +12,7 @@ namespace FixVideoChannel
         public string event_user { get; set; }
         public string event_pass { get; set; }
         public string redis_conn { get; set; }
+        public string ai_conn { get; set; }
         public string node_id { get; set; }
         /// <summary>
         /// ZLMediaKit的RTMP播放端口

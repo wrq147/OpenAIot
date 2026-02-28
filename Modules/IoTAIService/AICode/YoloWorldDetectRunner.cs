@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace IoTAIService.AICode
@@ -23,12 +24,13 @@ namespace IoTAIService.AICode
             public float Y2 { get; set; }        // 检测框右下角Y（原图坐标）
         }
 
-        public YoloWorldDetectRunner(IOptions<IoTAIOption> option)
+        public YoloWorldDetectRunner()
         {
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloWorld.onnx";
             // 初始化ONNX推理会话
             var sessionOptions = new SessionOptions();
             AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(option.Value.YoloWorldFile, sessionOptions);
+            _session = new InferenceSession(modelPath, sessionOptions);
         }
 
         public List<DetectionResult> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)

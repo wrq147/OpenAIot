@@ -68,8 +68,8 @@
               <el-table-column label="项目名称" prop="Name" width="120" align="center" />
               <el-table-column label="执行阶段" width="100" align="center">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.Stage=='Detect'">检测阶段</span>
-                  <span v-else-if="scope.row.Stage=='Infer'">推理阶段</span>
+                  <span v-if="scope.row.Stage == 'Detect'">检测阶段</span>
+                  <span v-else-if="scope.row.Stage == 'Infer'">推理阶段</span>
                 </template>
               </el-table-column>
               <el-table-column label="项目描述" prop="Remark">
@@ -126,8 +126,8 @@
               <el-table-column label="项目名称" prop="Name" width="120" align="center" />
               <el-table-column label="执行阶段" width="100" align="center">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.Stage=='Detect'">检测阶段</span>
-                  <span v-else-if="scope.row.Stage=='Infer'">推理阶段</span>
+                  <span v-if="scope.row.Stage == 'Detect'">检测阶段</span>
+                  <span v-else-if="scope.row.Stage == 'Infer'">推理阶段</span>
                 </template>
               </el-table-column>
               <el-table-column label="项目描述" prop="Remark" show-overflow-tooltip>
@@ -137,17 +137,12 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="240" fixed="right" align="center">
+              <el-table-column label="操作" width="220" fixed="right" align="center">
                 <template slot-scope="scope">
-                  <el-button type="primary" icon="el-icon-setting" size="mini" class="config-btn"
-                    @click="openParamConfigDialog(scope.row, scope.$index)"
-                    :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0">
-                    配置参数
-                  </el-button>
-                  <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeConfiguredProject(scope.row)"
-                    class="remove-btn">
-                    移除
-                  </el-button>
+                  <el-link type="primary" icon="el-icon-setting" class="config-btn" @click="openParamConfigDialog(scope.row, scope.$index)"
+                    :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0">配置</el-link>
+                  <el-link type="primary" v-if="scope.row.Stage == 'Detect'" icon="el-icon-document-checked" @click="TestConfiguredProject(scope.row)" class="config-btn">测试</el-link>
+                  <el-link type="danger" class="remove-btn" icon="el-icon-delete" @click="removeConfiguredProject(scope.row)">移除</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -211,26 +206,16 @@
                     type="textarea" rows="2" placeholder="请输入检测目标描述（如：红色汽车、行人）" size="small" style="width: 100%;" />
 
                   <!-- 图片上传模式 -->
-                  <el-upload v-else  action="#" :show-file-list="false"
+                  <el-upload v-else action="#" :show-file-list="false"
                     :before-upload="(file) => handleClipImageUpload(file, 'targetImage')"
                     :on-error="() => this.$message.error('目标图片上传失败')" accept="image/*">
                     <img v-if="paramConfigDialog.clipImg" :src="paramConfigDialog.clipImg" alt="目标图片"
                       style="width:128px;height:128px;display: block; object-fit: cover;">
-                    <i v-else class="el-icon-plus" style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
+                    <i v-else class="el-icon-plus"
+                      style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
                   </el-upload>
                 </div>
 
-                <!-- 测试图片配置 -->
-                <div style="margin-bottom: 12px;">
-                  <div style="font-size: 13px; color: #666; margin-bottom: 8px;">测试图片<span style="color: #f56c6c;">*</span></div>
-                  <el-upload action="#" :show-file-list="false"
-                    :before-upload="(file) => handleClipImageUpload(file, 'testImage')"
-                    :on-error="() => this.$message.error('测试图片上传失败')" accept="image/*">
-                    <img v-if="paramConfigDialog.clipTest" :src="paramConfigDialog.clipTest" alt="测试图片"
-                      style="width:128px;height:128px;display: block; object-fit: cover;">
-                    <i v-else class="el-icon-plus" style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
-                  </el-upload>
-                </div>
 
                 <!-- 生成按钮 & 特征向量展示 -->
                 <div style="display: flex; align-items: center;">
@@ -260,6 +245,53 @@
         <el-button type="primary" @click="confirmParamConfig">确认保存参数</el-button>
       </div>
     </el-dialog>
+
+
+    <!-- AI项目测试弹窗 -->
+    <el-dialog title="AI项目测试" :visible.sync="testDialog.visible" width="700px" append-to-body
+      :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
+      <div class="test-config-content">
+        <div class="test-project-info">
+          <span class="info-label">测试项目：</span>
+          <span class="info-value">{{ testDialog.currentRow.Name || '-' }}</span>
+        </div>
+
+        <!-- 上传测试图片 -->
+        <div class="test-image-upload">
+          <div class="upload-title">
+            <span>上传测试图片</span>
+            <span style="color: #f56c6c; font-size: 12px;">* 支持jpg/png，≤2MB</span>
+          </div>
+          <el-upload 
+            action="#" 
+            :show-file-list="false"
+            :before-upload="handleTestImageUpload"
+            :on-error="handleTestImageError" 
+            accept="image/*">
+            <img v-if="testDialog.testImage" :src="testDialog.testImage" 
+                 style="width:220px;height:220px;object-fit:cover;">
+            <i v-else class="el-icon-plus"
+              style="font-size:36px;width:220px;height:220px;line-height:220px;text-align:center;border:1px dashed #d9d9d9;">
+            </i>
+          </el-upload>
+        </div>
+
+        <!-- 测试结果图片 -->
+        <div v-if="testDialog.testResultImage" class="test-result-image-box">
+          <div class="result-title">检测结果</div>
+          <img :src="testDialog.testResultImage" class="test-result-img" />
+        </div>
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="testDialog.visible = false">关闭</el-button>
+        <el-button type="primary" @click="executeTest" 
+                   :disabled="!testDialog.testImage" :loading="testDialog.testLoading">
+          开始测试
+        </el-button>
+      </div>
+    </el-dialog>
+
   </el-dialog>
 </template>
 
@@ -298,6 +330,13 @@ export default {
         currentRow: {},     // 当前操作的项目行数据
         loading: false        // 弹窗内加载状态
       },
+      testDialog: {
+        visible: false,
+        currentRow: {},      // 当前测试的项目数据
+        testImage: '',       // 测试图片base64
+        testResult: null,    // 测试结果
+        testLoading: false   // 测试加载状态
+      }
     }
   },
   computed: {
@@ -539,6 +578,81 @@ export default {
       // 5. 返回false，阻止el-upload的默认接口提交行为
       return false;
     },
+    // 测试图片上传错误处理
+    handleTestImageError() {
+      this.$message.error('测试图片上传失败');
+    },
+    // 打开测试弹窗
+    TestConfiguredProject(row) {
+      this.testDialog = {
+        visible: true,
+        currentRow: JSON.parse(JSON.stringify(row)),
+        testImage: "",
+        testResultImage: "",
+        testLoading: false
+      };
+    },
+
+    // 测试图片上传（转base64）
+    handleTestImageUpload(file) {
+      const isImage = file.type.startsWith('image/');
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isImage) {
+        this.$message.error('只能上传图片！');
+        return false;
+      }
+      if (!isLt2M) {
+        this.$message.error('图片不能超过2MB！');
+        return false;
+      }
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        this.testDialog.testImage = e.target.result;
+        this.testDialog.testResultImage = "";
+      };
+      reader.readAsDataURL(file);
+      return false;
+    },
+
+    // 执行AI测试（后端返回 base64 图片）
+    async executeTest() {
+      try {
+        this.testDialog.testLoading = true;
+        this.testDialog.testResultImage = "";
+
+        // 构造传给后端的数据
+        const params = {
+          projectCode: this.testDialog.currentRow.Code,
+          paramValues: this.testDialog.currentRow.paramValues || {},
+          imageBase64: this.testDialog.testImage, // 带头部的base64
+          videoId: this.projectId
+        };
+
+        // ========== 这里调用你的真实接口 ==========
+        // const res = await testAIDetect(params);
+        // const base64 = res.data; 
+
+        // 模拟后端返回 base64 图片（正式使用删掉这段）
+        await new Promise(r => setTimeout(r, 1200));
+        const base64 = this.testDialog.testImage; // 模拟用原图当结果图
+
+        // 自动补全 base64 图片头部（后端如果没带，前端自动加上）
+        let resultBase64 = base64;
+        if (!base64.startsWith('data:image/')) {
+          resultBase64 = 'data:image/jpeg;base64,' + base64;
+        }
+
+        this.testDialog.testResultImage = resultBase64;
+        this.$message.success('测试完成');
+
+      } catch (err) {
+        this.$message.error('测试失败：' + (err.message || '接口异常'));
+      } finally {
+        this.testDialog.testLoading = false;
+      }
+    },
+
   }
 }
 </script>
@@ -786,5 +900,36 @@ export default {
 ::v-deep .el-table {
   position: relative;
   z-index: 1;
+}
+
+.test-config-content {
+  padding: 10px;
+}
+.test-project-info {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ebeef5;
+}
+.info-label {
+  font-weight: 600;
+  color: #666;
+}
+.test-image-upload {
+  margin-bottom: 20px;
+}
+.upload-title {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.result-title {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.test-result-img {
+  max-width: 100%;
+  max-height: 400px;
+  border: 1px solid #eee;
+  border-radius: 4px;
 }
 </style>

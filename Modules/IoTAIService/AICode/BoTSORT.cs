@@ -963,7 +963,7 @@ namespace IoTAIService.AICode
         // 观测噪声协方差 (4x4，用二维数组表示)
         private float[][] _R;
 
-        private const float DT = 1.0f / 30.0f; // 帧间隔
+        private const float DT = 1.0f / 10.0f; // 帧间隔
 
         public BoTKalmanFilter(BoTSORTConfig config)
         {

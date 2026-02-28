@@ -1,9 +1,12 @@
 ﻿using ChannelUtility.Message;
 using ChannelUtility.Redis;
 using ChannelUtility.Tsl;
+using MessagePack;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using NATS.Client.Core;
+using NetMQ;
+using NetMQ.Sockets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,31 +192,17 @@ namespace ChannelUtility
              });
 
 
-            if (_option.EnableAI == true)
+            if (!string.IsNullOrEmpty(_option.AIConn))
             {
-                var aiNodeSub = await _bus.SubscribeCoreAsync("AINode.Change", "AINode" + Guid.NewGuid().ToString("N"), ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-                _subscriptions.Add(aiNodeSub);
-                _ = Task.Run(async () =>
-                {
-                    await foreach (var msg in aiNodeSub.Msgs.ReadAllAsync().ConfigureAwait(false))
-                    {
-                        try
-                        {
-                            UpdateUpAIList();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.Write(ex.Message);
-                        }
-                    }
-                });
-                UpdateUpAIList();
+                _ai_publisher = new PublisherSocket();
+                _ai_publisher.Bind(_option.AIConn);
             }
 
 
             //发送节点上线
             await this.SendNodeOnline();
         }
+        private PublisherSocket _ai_publisher;
         private async Task SendNodeOnline()
         {
             try
@@ -457,46 +446,6 @@ namespace ChannelUtility
         }
 
 
-        private List<string> _upAIList;
-        private readonly ReaderWriterLockSlim _lockAI = new ReaderWriterLockSlim();
-
-        public void UpdateUpAIList()
-        {
-            var dict = _redis.HashGetAll<string>("AIExeNodes");
-            var tmplist = new List<string>();
-            if (dict != null)
-            {
-                foreach (var item in dict)
-                {
-                    tmplist.Add(item.Key);
-                }
-            }
-
-            _lockAI.EnterWriteLock();
-            try
-            {
-                _upAIList = tmplist;
-            }
-            finally
-            {
-                _lockAI.ExitWriteLock();
-            }
-        }
-        private string GetUpAIKey(string deviceId)
-        {
-            _lockAI.EnterReadLock();
-            try
-            {
-                if (_upAIList == null || _upAIList.Count == 0) return "device.ai";
-                int pos = Math.Abs(deviceId.GetHashCode() % _upAIList.Count);
-                return "device.ai." + _upAIList[pos];
-            }
-            finally
-            {
-                _lockAI.ExitReadLock();
-            }
-
-        }
 
         /// <summary>
         /// 发送设备在线给事件总线
@@ -594,24 +543,25 @@ namespace ChannelUtility
         /// <param name="height"></param>
         /// <param name="configs"></param>
         /// <returns></returns>
-        public async Task PublishAIDetectRequest(string deviceId, string videoKey, float motionRatio, byte[] frameData, int width, int height, List<AIConfigData> configs)
+        public void PublishAIDetectRequest(string deviceId, string videoKey, float motionRatio, byte[] frameData, int width, int height, List<AIConfigData> configs)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
-            msg.ProductId = string.Empty;
             msg.MRatio = motionRatio;
-            msg.Frame = Encoding.UTF8.GetString(frameData);
+            msg.Frame = frameData;
             msg.Width = width;
             msg.Height = height;
             msg.NodeId = this._nodeId;
             msg.VideoKey = videoKey;
-            msg.Configs = configs;
-
-            await _bus.PublishAsync(new NatsMsg<string>()
+            if (configs != null)
             {
-                Subject = GetUpAIKey(deviceId),
-                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
-            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
+                msg.Configs = System.Text.Json.JsonSerializer.Serialize(configs, JsonMessageSerializerConfig.ObjectOptions);
+            }
+
+            var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+            byte[] serializedData = MessagePackSerializer.Serialize(msg, options);
+
+            _ai_publisher.SendFrame(serializedData);
         }
         public async Task<string> WaitPublishMediaUserVerify(string username)
         {
@@ -792,6 +742,10 @@ namespace ChannelUtility
             if (disposing)
             {
                 //TODO:在这里加入清理"托管资源"的代码，应该是xxx.Dispose();
+                if (_ai_publisher != null)
+                {
+                    _ai_publisher.Dispose();
+                }
             }
             //TODO:在这里加入清理"非托管资源"的代码
         }

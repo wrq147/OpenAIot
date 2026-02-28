@@ -24,30 +24,7 @@ namespace IoTAIService
             _provider = provider;
             _log = logFactory.CreateLogger<AIBusProxy>();
         }
-        public async Task RegNode()
-        {
-            var option = _provider.GetService<IOptions<IoTAIOption>>();
-            AIRedisHelper redis = _provider.GetService<AIRedisHelper>();
-            if (!string.IsNullOrEmpty(option.Value.AINodeName))
-            {
-                await redis.HashSetAsync("AIExeNodes", option.Value.AINodeName, DateTime.Now.AddSeconds(600).ToString("o"));
-            }
-            var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = "AINode.Change",
-                Data = string.Empty
-            }, DefalutNatsJsonSerializer<string>.Default);
-        }
-        public async Task PublishNodeChange()
-        {
-            var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = "AINode.Change",
-                Data = string.Empty
-            }, DefalutNatsJsonSerializer<string>.Default);
-        }
+
         private List<string> _upList;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         public async Task UpdateUpList()
@@ -147,14 +124,5 @@ namespace IoTAIService
             }, DefalutNatsJsonSerializer<string>.Default);
         }
 
-        public async Task TestUpNode(string nodename)
-        {
-            var bus = _provider.GetService<NatsScope>().Bus;
-            await bus.PublishAsync(new NatsMsg<string>()
-            {
-                Subject = "device.ai." + nodename,
-                Data = string.Empty
-            }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-        }
     }
 }

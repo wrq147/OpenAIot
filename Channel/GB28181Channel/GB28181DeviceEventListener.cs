@@ -22,10 +22,10 @@ namespace GB28181Channel
         {
             _serviceProvider = serviceProvider;
         }
-        public async Task OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs)
+        public void OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
+            eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
         }
         public async Task OnSendRecordFile(string videoId, string videoKey, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage, byte saveType)
         {

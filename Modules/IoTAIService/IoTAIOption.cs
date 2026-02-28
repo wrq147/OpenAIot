@@ -8,7 +8,7 @@ namespace IoTAIService
 {
     public class IoTAIOption
     {
-        public string AINodeName { get; set; }
+        public string FramePushConn { get; set; }
         public string PythonHome { get; set; }
         /// <summary>
         /// 是否初始化Milvus表
@@ -22,25 +22,5 @@ namespace IoTAIService
         /// Milvus数据库名称
         /// </summary>
         public string MilvusDatabase { get; set; }
-        /// <summary>
-        /// 人脸检测模型
-        /// </summary>
-        public string FaceDetectionFile { get; set; }
-        /// <summary>
-        /// 人脸关键点模型
-        /// </summary>
-        public string FaceKeyPointsFile { get; set; }
-        /// <summary>
-        /// 人脸识别模型
-        /// </summary>
-        public string FaceRecogFile { get; set; }
-        /// <summary>
-        /// 人脸空间变换模型
-        /// </summary>
-        public string FaceSTNFile { get; set; }
-        /// <summary>
-        /// YoloWorld模型
-        /// </summary>
-        public string YoloWorldFile { get; set; }
     }
 }

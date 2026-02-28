@@ -15,12 +15,13 @@ namespace IoTAIService.AICode
     {
         private readonly InferenceSession _session;
 
-        public FaceDetOnnxRunner(IOptions<IoTAIOption> option)
+        public FaceDetOnnxRunner()
         {
             // 初始化ONNX推理会话
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "FaceDetection.onnx";
             var sessionOptions = new SessionOptions();
             AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(option.Value.FaceDetectionFile, sessionOptions);
+            _session = new InferenceSession(modelPath, sessionOptions);
         }
 
         public List<BBox> Predict(Image<Rgb24> image, float conf_threshold = 0.8f, float iou_threshold = 0.2f)

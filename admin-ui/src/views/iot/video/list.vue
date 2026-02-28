@@ -32,7 +32,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column label="安装位置" prop="Position" width="260" :show-overflow-tooltip="true" />
-                            <el-table-column label="VideoType" align="center" width="120">
+                            <el-table-column label="视频类型" align="center" width="120">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.VideoType == 0">固定地址</span>
                                     <span v-else-if="scope.row.VideoType == 1">GB28181设备</span>
@@ -48,12 +48,17 @@
                                         <div>推流地址：{{ scope.row.PullAddr }}</div>
                                     </div>
                                     <div v-else-if="scope.row.VideoType == 1">
-                                        <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }},{{
-                                            scope.row.NodeId!=""?"【已注册】":"【未注册】" }}</div>
+                                        <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
                                     </div>
                                     <div v-else-if="scope.row.VideoType == 3">
                                         <div>设备用户名：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
                                     </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="视频状态" align="center" width="100">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.NodeId!=''">已注册</span>
+                                    <span v-else>未注册</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center" fixed="right" class-name="small-padding"

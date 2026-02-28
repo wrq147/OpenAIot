@@ -10,7 +10,7 @@ namespace IoTAIService.AICode
     /// </summary>
     public class KalmanFilter
     {
-        private const float dt = 1.0f / 30.0f; // 帧间隔（默认30fps）
+        private const float dt = 1.0f / 10.0f; // 帧间隔（默认30fps）
         private readonly Matrix4x4 _F; // 状态转移矩阵
         private readonly Matrix4x4 _H; // 观测矩阵
         private readonly Matrix4x4 _Q; // 过程噪声

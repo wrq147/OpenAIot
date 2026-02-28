@@ -38,7 +38,7 @@ namespace FixVideoChannel
                 {
                     var option = configSec.Get<FixVideoOption>();
                     x.NodeId = option.node_id;
-                    x.EnableAI = true;
+                    x.AIConn = option.ai_conn;
                     x.EventConn = option.event_conn;
                     x.EventUser = option.event_user;
                     x.EventPass = option.event_pass;

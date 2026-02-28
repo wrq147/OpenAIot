@@ -32,7 +32,6 @@ namespace ChannelUtility
             { "ChangeProduct", typeof(ChangeProductMessage) },
             { "StartReadAll", typeof(StartReadAllMessage) },
             { "ModMatch", typeof(ModbusMatchMessage) },
-            { "AIDetectReq",typeof(AIDetectRequestMeesage) },
             { "AIDetectResp",typeof(AIDetectResponseMessage) },
             { "DelVItem", typeof(MediaDelItemMessage) },
             { "UpVItem", typeof(MediaItemMessage) },

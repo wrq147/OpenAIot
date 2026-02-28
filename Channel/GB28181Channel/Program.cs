@@ -40,7 +40,7 @@ namespace GB28181Channel
                 {
                     var option = configSec.Get<GB28181Option>();
                     x.NodeId = option.sip_service_id;
-                    x.EnableAI = true;
+                    x.AIConn = option.ai_conn;
                     x.EventConn = option.event_conn;
                     x.EventUser = option.event_user;
                     x.EventPass = option.event_pass;

@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace IoTAIService.AICode
@@ -16,9 +17,10 @@ namespace IoTAIService.AICode
 
         public FaceKeyPointsRunner(IOptions<IoTAIOption> option)
         {
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "FaceKeyPoints.onnx";
             var sessionOptions = new SessionOptions();
             AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(option.Value.FaceKeyPointsFile, sessionOptions);
+            _session = new InferenceSession(modelPath, sessionOptions);
         }
         public Tensor<float> Predict(Image<Rgb24> image)
         {

@@ -52,7 +52,7 @@ namespace GB28181Channel
         }
         #endregion
         /// <summary>
-        /// Zlib快速压缩降采样后的BGR数据
+        /// Zlib快速压缩降采样后的RGB数据
         /// </summary>
         private static byte[] FastZlibCompress(byte[] rawData, int width, int height, int scale = 2)
         {
@@ -100,6 +100,7 @@ namespace GB28181Channel
             return result;
         }
 
+
         // AI检测
         public static void Detect(VideoData videoData, int width, int height, float motionRatio, GB28181DeviceEventListener listener, byte[] data)
         {
@@ -107,7 +108,7 @@ namespace GB28181Channel
             {
                 return;
             }
-            byte[] pressData = FastZlibCompress(data, width, height, 2);
+            byte[] pressData = FastZlibCompress(data, width, height);
             pressData = data;
             List<AIConfigData> configs = null;
             if (videoData.NeedUp)
@@ -115,7 +116,7 @@ namespace GB28181Channel
                 configs = videoData.Configs;
                 videoData.NeedUp = false;
             }
-            Task t = listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width / 2, height / 2, configs);
+            listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width / 2, height / 2, configs);
         }
         public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
         {

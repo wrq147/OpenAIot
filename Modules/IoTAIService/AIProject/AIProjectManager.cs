@@ -93,13 +93,13 @@ namespace IoTAIService.AIProject
                 return null;
             }
         }
-        public async Task MessageHandler(AIDetectRequestMeesage detectReq)
+        public async Task MessageHandler(AIDetectRequestMeesage detectReq, List<AIConfigData> configs)
         {
             var aiCache = _provider.GetService<AICache>();
             List<AIConfigData> videoConfigs;
-            if (detectReq.Configs != null)
+            if (configs != null)
             {
-                videoConfigs = detectReq.Configs;
+                videoConfigs = configs;
                 aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
             }
             else
@@ -111,7 +111,7 @@ namespace IoTAIService.AIProject
                 await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
                 return;
             }
-            byte[] frameData = Encoding.UTF8.GetBytes(detectReq.Frame);
+            byte[] frameData = detectReq.Frame;
             using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
             {
                 //处理画框
