@@ -75,7 +75,7 @@ class WorldTrainer(DetectionTrainer):
         """延迟加载CNCLIP模型，用完即释放"""
         if self.cnclip_model is None:
             current_dir = os.getcwd()
-            model_file = os.path.join(current_dir, "clip_cn_vit-b-16.pt")
+            model_file = os.path.join(current_dir,"AIScript", "clip_cn_vit-b-16.pt")
             self.cnclip_model, self.cnclip_processor = load_from_name(
                 model_file,
                 device=self.device, vision_model_name="ViT-B-16",text_model_name="RoBERTa-wwm-ext-base-chinese", input_resolution=224

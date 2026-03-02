@@ -910,7 +910,7 @@ class WorldModel(DetectionModel):
         """
         device = next(self.model.parameters()).device
         current_dir = os.getcwd()
-        model_file = os.path.join(current_dir, "clip_cn_vit-b-16.pt")
+        model_file = os.path.join(current_dir,"AIScript", "clip_cn_vit-b-16.pt")
         if not getattr(self, "clip_model", None) and cache_clip_model:
             # For backwards compatibility of models lacking clip_model attribute
             model, preprocess = load_from_name(model_file, device=device, vision_model_name="ViT-B-16",text_model_name="RoBERTa-wwm-ext-base-chinese", input_resolution=224)

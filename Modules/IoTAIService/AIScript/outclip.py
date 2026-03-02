@@ -1,6 +1,7 @@
 import torch
 import cnclip
 import base64
+import os
 import numpy as np
 from PIL import Image
 from cnclip import load_from_name
@@ -13,7 +14,9 @@ class CNCLIPFeatureExtractor:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # 加载模型
-        model_path = "clip_cn_vit-b-16.pt"
+        current_dir = os.getcwd()
+        model_path = os.path.join(current_dir,"AIScript", "clip_cn_vit-b-16.pt")
+
         try:
             self.model, self.preprocess = load_from_name(
                 model_path,
@@ -91,6 +94,7 @@ def execall(text_list=None, base64_img_list=None):
     if text_list is None and base64_img_list is None:
         raise ValueError("必须传入text_list或base64_img_list中的至少一个")
     
+    print(text_list)
     extractor = CNCLIPFeatureExtractor()
     result = {}
     

@@ -98,9 +98,9 @@ namespace IoTAIService
                 if (string.IsNullOrEmpty(aiOption.PythonHome)) return;
 
                 Runtime.PythonDLL = AutoSetPythonDllPath(aiOption.PythonHome);
+
                 PythonEngine.Initialize();
                 PythonEngine.BeginAllowThreads();
-
                 using (Py.GIL())
                 {
                     dynamic sys = Py.Import("sys");
@@ -115,7 +115,7 @@ namespace IoTAIService
                 _isInitialized = false;
             }
         }
-       
+
         public async Task<object> GenerateCNClipFeature(List<string> strArr, List<string> imgArr)
         {
             return await Task.Run(() =>
@@ -128,9 +128,27 @@ namespace IoTAIService
                         {
                             _outclipModule = Py.Import("outclip");
                         }
-
+                        PyList strPyList = null;
+                        PyList imgPyList = null;
+                        if (strArr != null && strArr.Count > 0)
+                        {
+                            strPyList = new PyList();
+                            foreach (string str in strArr)
+                            {
+                                strPyList.Append(new PyString(str));
+                            }
+                        }
+                        if (imgArr != null && imgArr.Count > 0)
+                        {
+                            imgPyList = new PyList();
+                            foreach (string str in imgArr)
+                            {
+                                imgPyList.Append(new PyString(str));
+                            }
+                        }
+     
                         // 执行Python函数并获取结果
-                        dynamic result = _outclipModule.execall(strArr, imgArr);
+                        dynamic result = _outclipModule.execall(strPyList, imgPyList);
                         Console.WriteLine($"调用Python execall函数结果: {result}");
                         return ConvertPythonResultToCSharp(result);
                     }
