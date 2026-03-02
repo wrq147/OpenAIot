@@ -539,12 +539,6 @@
             通用检测项目
             </summary>
         </member>
-        <member name="M:IoTAIService.Business.AINodeBLL.ExecuteSendHeartbeat">
-            <summary>
-            定时心跳验证iot节点是否存活
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:IoTAIService.Controller.Clip">
             <summary>
             多模态特征提取
@@ -830,7 +824,7 @@
             真实姓名
             </summary>
         </member>
-        <member name="M:IoTAIService.PythonRuntimeHelper.AutoSetPythonDllPath(System.String)">
+        <member name="M:IoTAIService.PythonExe.AutoSetPythonDllPath(System.String)">
             <summary>
             从指定Python目录自动搜索并设置Python.Runtime的PythonDLL路径（跨平台）
             </summary>
@@ -838,19 +832,29 @@
             <returns>找到的Python库文件路径</returns>
             <exception cref="T:System.IO.FileNotFoundException">未找到有效Python库文件时抛出</exception>
         </member>
-        <member name="M:IoTAIService.PythonRuntimeHelper.GetPythonLibrarySearchRules">
+        <member name="M:IoTAIService.PythonExe.GetPythonLibrarySearchRules">
             <summary>
             根据操作系统获取Python库文件的搜索规则
             </summary>
         </member>
-        <member name="M:IoTAIService.PythonRuntimeHelper.GetPythonVersionFromFileName(System.String)">
+        <member name="M:IoTAIService.ReliableAISubscriber.StartReceiving">
             <summary>
-            从文件名提取Python版本号（用于排序）
+            启动订阅者（改为使用Thread）
             </summary>
         </member>
-        <member name="M:IoTAIService.PythonRuntimeHelper.IsInvalidSymbolicLink(System.String)">
+        <member name="M:IoTAIService.ReliableAISubscriber.ReceiveLoop">
             <summary>
-            判断是否为无效的符号链接（空链接/指向不存在的文件）
+            订阅消息的循环逻辑（线程执行的核心方法）
+            </summary>
+        </member>
+        <member name="M:IoTAIService.ReliableAISubscriber.Stop">
+            <summary>
+            停止订阅者（优雅退出）
+            </summary>
+        </member>
+        <member name="M:IoTAIService.ReliableAISubscriber.Dispose">
+            <summary>
+            完整释放资源
             </summary>
         </member>
     </members>

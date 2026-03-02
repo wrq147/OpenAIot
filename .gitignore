@@ -454,3 +454,4 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 mysql
 influxdb
+/Modules/IoTAIService/AIScript/clip_cn_vit-b-16.pt

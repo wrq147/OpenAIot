@@ -22,7 +22,7 @@ namespace IoTAIService.Controller
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public async Task<DefaultAjaxResult<string>> GenerateFeature(In_ClipFeature data)
         {
             PythonExe py = this.ServiceProvider.GetService<PythonExe>();

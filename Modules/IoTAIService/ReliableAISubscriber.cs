@@ -61,8 +61,12 @@ namespace IoTAIService
                 {
                     if (!_isConnected)
                     {
-                        // 同步调用异步的重连方法（Thread中无法直接await）
-                        ReconnectAsync().GetAwaiter().GetResult();
+                        _subscriber?.Dispose();
+                        _subscriber = new SubscriberSocket();
+                        _subscriber.Connect(_connectAddress);
+                        _subscriber.SubscribeToAnyTopic();
+                        Console.WriteLine("订阅者重连成功");
+                        _isConnected = true;
                     }
                     if (_isConnected)
                     {
@@ -94,35 +98,7 @@ namespace IoTAIService
             }
         }
 
-        /// <summary>
-        /// 重连逻辑（保持原有逻辑，适配Thread调用）
-        /// </summary>
-        private async Task ReconnectAsync()
-        {
-            int retry = 0;
-            while (!_cts.Token.IsCancellationRequested)
-            {
-                try
-                {
-                    _subscriber?.Dispose();
-                    _subscriber = new SubscriberSocket();
-                    _subscriber.Connect(_connectAddress);
-                    _subscriber.SubscribeToAnyTopic();
-                    Console.WriteLine("订阅者重连成功");
-                    _isConnected = false;
-                    break; // 重连成功后退出重连循环
-                }
-                catch (Exception ex)
-                {
-                    _isConnected = false;
-                    retry++;
-                    Console.WriteLine($"重连失败（第{retry}次）：{ex.Message}");
-                }
-                // 重连间隔1秒，处理取消令牌
-                await Task.Delay(1000, _cts.Token);
-            }
-        }
-
+   
         /// <summary>
         /// 停止订阅者（优雅退出）
         /// </summary>

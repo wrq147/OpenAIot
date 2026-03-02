@@ -139,10 +139,13 @@
               </el-table-column>
               <el-table-column label="操作" width="220" fixed="right" align="center">
                 <template slot-scope="scope">
-                  <el-link type="primary" icon="el-icon-setting" class="config-btn" @click="openParamConfigDialog(scope.row, scope.$index)"
+                  <el-link type="primary" icon="el-icon-setting" class="config-btn"
+                    @click="openParamConfigDialog(scope.row, scope.$index)"
                     :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0">配置</el-link>
-                  <el-link type="primary" v-if="scope.row.Stage == 'Detect'" icon="el-icon-document-checked" @click="TestConfiguredProject(scope.row)" class="config-btn">测试</el-link>
-                  <el-link type="danger" class="remove-btn" icon="el-icon-delete" @click="removeConfiguredProject(scope.row)">移除</el-link>
+                  <el-link type="primary" v-if="scope.row.Stage == 'Detect'" icon="el-icon-document-checked"
+                    @click="TestConfiguredProject(scope.row)" class="config-btn">测试</el-link>
+                  <el-link type="danger" class="remove-btn" icon="el-icon-delete"
+                    @click="removeConfiguredProject(scope.row)">移除</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -203,11 +206,12 @@
 
                   <!-- 文本输入模式 -->
                   <el-input v-if="paramConfigDialog.clipmode === 'text'" v-model="paramConfigDialog.clipText"
-                    type="textarea" rows="2" placeholder="请输入检测目标描述（如：红色汽车、行人）" size="small" style="width: 100%;" />
+                    type="textarea" rows="2" placeholder="请输入检测目标描述（如：红色汽车,行人）多个需要用逗号分隔" size="small"
+                    style="width: 100%;" />
 
                   <!-- 图片上传模式 -->
                   <el-upload v-else action="#" :show-file-list="false"
-                    :before-upload="(file) => handleClipImageUpload(file, 'targetImage')"
+                    :before-upload="(file) => handleClipImageUpload(file)"
                     :on-error="() => this.$message.error('目标图片上传失败')" accept="image/*">
                     <img v-if="paramConfigDialog.clipImg" :src="paramConfigDialog.clipImg" alt="目标图片"
                       style="width:128px;height:128px;display: block; object-fit: cover;">
@@ -262,14 +266,10 @@
             <span>上传测试图片</span>
             <span style="color: #f56c6c; font-size: 12px;">* 支持jpg/png，≤2MB</span>
           </div>
-          <el-upload 
-            action="#" 
-            :show-file-list="false"
-            :before-upload="handleTestImageUpload"
-            :on-error="handleTestImageError" 
-            accept="image/*">
-            <img v-if="testDialog.testImage" :src="testDialog.testImage" 
-                 style="width:220px;height:220px;object-fit:cover;">
+          <el-upload action="#" :show-file-list="false" :before-upload="handleTestImageUpload"
+            :on-error="handleTestImageError" accept="image/*">
+            <img v-if="testDialog.testImage" :src="testDialog.testImage"
+              style="width:220px;height:220px;object-fit:cover;">
             <i v-else class="el-icon-plus"
               style="font-size:36px;width:220px;height:220px;line-height:220px;text-align:center;border:1px dashed #d9d9d9;">
             </i>
@@ -285,8 +285,8 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="testDialog.visible = false">关闭</el-button>
-        <el-button type="primary" @click="executeTest" 
-                   :disabled="!testDialog.testImage" :loading="testDialog.testLoading">
+        <el-button type="primary" @click="executeTest" :disabled="!testDialog.testImage"
+          :loading="testDialog.testLoading">
           开始测试
         </el-button>
       </div>
@@ -298,6 +298,7 @@
 <script>
 import CollapseText from '@/components/CollapseText/index.vue';
 import { getAIProjectList, getVideoDetail, editVideoSource } from "@/api/rules/video";
+import { generateFeature } from "@/api/ai/clip";
 export default {
   name: 'AIConfigDialog',
   components: {
@@ -530,7 +531,6 @@ export default {
     openParamConfigDialog(row, idx) {
       // 赋值当前行数据，打开弹窗
       row.paramValues = row.paramValues || {};
-      console.info(row)
       this.paramConfigDialog.currentIndex = idx;
       this.paramConfigDialog.currentRow = JSON.parse(JSON.stringify(row));
       this.paramConfigDialog.visible = true;
@@ -541,7 +541,7 @@ export default {
       this.$message.success('参数配置已保存');
     },
     // 处理clip图片上传（转换为Base64）
-    handleClipImageUpload(file, imageType) {
+    handleClipImageUpload(file) {
       // 1. 校验图片格式和大小（可选，优化体验）
       const isImage = file.type.startsWith('image/');
       const isLt2M = file.size / 1024 / 1024 < 2; // 限制2M以内
@@ -561,12 +561,7 @@ export default {
       reader.onload = (e) => {
         const base64Str = e.target.result; // 获取Base64编码（包含data:image/xxx;base64,前缀）
 
-        // 3. 存储Base64数据和预览链接
-        if (imageType === 'targetImage') {
-          this.paramConfigDialog.clipImg = base64Str;
-        } else if (imageType === 'testImage') {
-          this.paramConfigDialog.clipTest = base64Str;
-        }
+        this.paramConfigDialog.clipImg = base64Str;
 
         // 强制更新视图（避免数据更新后视图不刷新）
         this.$forceUpdate();
@@ -652,7 +647,17 @@ export default {
         this.testDialog.testLoading = false;
       }
     },
+    async handleGenerateClipFeature(row, code) {
+      if (this.paramConfigDialog.clipmode == "text") {
+        let tarr = this.paramConfigDialog.clipText.split(',');
+        let res = await generateFeature({ StrArr: tarr });
+      }
+      else if (this.paramConfigDialog.clipmode == "image") {
+        let res = await generateFeature({ ImgArr:[this.paramConfigDialog.clipImg] });
+      }
 
+
+    }
   }
 }
 </script>
@@ -905,27 +910,33 @@ export default {
 .test-config-content {
   padding: 10px;
 }
+
 .test-project-info {
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px dashed #ebeef5;
 }
+
 .info-label {
   font-weight: 600;
   color: #666;
 }
+
 .test-image-upload {
   margin-bottom: 20px;
 }
+
 .upload-title {
   margin-bottom: 8px;
   font-size: 14px;
 }
+
 .result-title {
   margin-bottom: 10px;
   font-size: 14px;
   font-weight: 600;
 }
+
 .test-result-img {
   max-width: 100%;
   max-height: 400px;
