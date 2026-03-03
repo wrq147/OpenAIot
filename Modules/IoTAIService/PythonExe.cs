@@ -116,7 +116,7 @@ namespace IoTAIService
             }
         }
 
-        public async Task<object> GenerateCNClipFeature(List<string> strArr, List<string> imgArr)
+        public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr, List<string> imgArr)
         {
             return await Task.Run(() =>
             {
@@ -143,14 +143,30 @@ namespace IoTAIService
                             imgPyList = new PyList();
                             foreach (string str in imgArr)
                             {
-                                imgPyList.Append(new PyString(str));
+                                var base64Str = str.Replace("data:image/png;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");
+                                imgPyList.Append(new PyString(base64Str));
                             }
                         }
-     
+
                         // 执行Python函数并获取结果
                         dynamic result = _outclipModule.execall(strPyList, imgPyList);
-                        Console.WriteLine($"调用Python execall函数结果: {result}");
-                        return ConvertPythonResultToCSharp(result);
+                        var pyDict = new PyDict(result);
+                        List<List<float>> rs = null;
+                        if (strPyList != null)
+                        {
+                            var txt_feat = pyDict.GetItem("text_features");
+                            rs = Convert2DPyListTo2DList(txt_feat);
+                        }
+                        if (imgPyList != null)
+                        {
+                            var img_feat = pyDict.GetItem("image_features");
+                            rs = Convert2DPyListTo2DList(img_feat);
+                        }
+                        if (rs == null)
+                        {
+                            return new List<List<float>>();
+                        }
+                        return rs;
                     }
                     catch (Exception ex)
                     {
@@ -161,69 +177,27 @@ namespace IoTAIService
                 }
             });
         }
-        private object ConvertPythonResultToCSharp(dynamic pythonResult)
+
+        private List<List<float>> Convert2DPyListTo2DList(PyObject pyObj)
         {
-            // 情况1：如果返回的是字符串
-            if (pythonResult is PyString pyStr)
+            var nestedList = new List<List<float>>();
+            var pyList = new PyList(pyObj);
+            foreach (PyObject item in pyList)
             {
-                return pyStr.ToString();
+                nestedList.Add(Convert1DPyListTo2DList(item));
             }
-
-            // 情况2：如果返回的是数字（int/float）
-            if (pythonResult is PyInt pyInt)
-            {
-                return pyInt.ToInt32();
-            }
-            if (pythonResult is PyFloat pyFloat)
-            {
-                return pyFloat.ToDouble();
-            }
-
-            // 情况3：如果返回的是列表（最常见）
-            if (pythonResult is PyList pyList)
-            {
-                List<object> csharpList = new List<object>();
-                foreach (var item in pyList)
-                {
-                    // 递归转换列表中的每个元素
-                    csharpList.Add(ConvertPythonResultToCSharp(item));
-                }
-                return csharpList;
-            }
-
-            // 情况4：如果返回的是字典
-            if (pythonResult is PyDict pyDict)
-            {
-                Dictionary<object, object> csharpDict = new Dictionary<object, object>();
-                foreach (var key in pyDict.Keys())
-                {
-                    var value = pyDict[key];
-                    csharpDict.Add(ConvertPythonResultToCSharp(key), ConvertPythonResultToCSharp(value));
-                }
-                return csharpDict;
-            }
-
-            // 情况5：如果是numpy数组（AI场景常见）
-            try
-            {
-                // 尝试调用numpy数组的tolist()方法转为普通列表
-                dynamic tolistMethod = pythonResult.tolist;
-                if (tolistMethod != null)
-                {
-                    dynamic listResult = pythonResult.tolist();
-                    return ConvertPythonResultToCSharp(listResult);
-                }
-            }
-            catch
-            {
-                // 不是numpy数组，继续后续判断
-            }
-
-            // 其他情况：直接返回字符串表示或原始对象
-            return pythonResult?.ToString() ?? null;
+            return nestedList;
         }
-
-
+        private List<float> Convert1DPyListTo2DList(PyObject pyObj)
+        {
+            var nestedList = new List<float>();
+            var pyList = new PyList(pyObj);
+            foreach (PyObject item in pyList)
+            {
+                nestedList.Add(item.As<float>());
+            }
+            return nestedList;
+        }
         public void Dispose()
         {
             if (_isInitialized)

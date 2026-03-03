@@ -8,7 +8,10 @@ namespace IoTAIService
 {
     public class IoTAIOption
     {
-        public string FramePushConn { get; set; }
+        /// <summary>
+        /// 监听的帧发布源
+        /// </summary>
+        public string[] FramePushConns { get; set; }
         public string PythonHome { get; set; }
         /// <summary>
         /// 是否初始化Milvus表

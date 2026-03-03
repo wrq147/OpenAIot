@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Common.EventBus;
+using Common.Share;
 using IoTAIService.AICode;
 using IoTAIService.AIProject.Items;
 using NATS.Client.Core;
@@ -93,6 +94,48 @@ namespace IoTAIService.AIProject
                 return null;
             }
         }
+        public async Task<BusResponse<string>> TestDetect(string code, string img, string paramsJson)
+        {
+            var base64Str = img.Replace("data:image/png;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");
+            if (_detects.TryGetValue(code, out IDetect tmpdet))
+            {
+                string rsbase64 = null;
+                byte[] byteArray = Convert.FromBase64String(base64Str);
+                using (Image<Rgb24> rgbImage = Image.Load<Rgb24>(byteArray))
+                {
+                    var paramDict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(paramsJson, JsonMessageSerializerConfig.DefaultOptions);
+                    AIConfigData config = new AIConfigData();
+                    config.DetType = code;
+                    config.DetParams = paramDict;
+                    var boxs = tmpdet.GenerateBoxs(rgbImage, config);
+                    List<BoxItem> items = new List<BoxItem>();
+                    foreach (var itembox in boxs)
+                    {
+                        items.Add(new BoxItem()
+                        {
+                            x1 = itembox.x1,
+                            x2 = itembox.x2,
+                            y1 = itembox.y1,
+                            y2 = itembox.y2,
+                            score = itembox.score,
+                            label = itembox.label,
+                            color = itembox.color
+                        });
+                    }
+
+                    rsbase64 = AIUtility.DrawJpeg(rgbImage, items);
+                }
+                if (string.IsNullOrEmpty(rsbase64))
+                {
+                    return BusResponse<string>.Error(210, "返回错误");
+                }
+                return BusResponse<string>.Success(rsbase64);
+            }
+            else
+            {
+                return BusResponse<string>.Error(211, "AI项目不存在");
+            }
+        }
         public async Task MessageHandler(AIDetectRequestMeesage detectReq, List<AIConfigData> configs)
         {
             var aiCache = _provider.GetService<AICache>();
@@ -120,7 +163,7 @@ namespace IoTAIService.AIProject
                 {
                     if (_detects.TryGetValue(config.DetType, out IDetect tmpdet))
                     {
-                        var boxs = tmpdet.GenerateBoxs(detectReq.DeviceId, image, config);
+                        var boxs = tmpdet.GenerateBoxs(image, config);
                         boxlist.AddRange(boxs);
                     }
                 }

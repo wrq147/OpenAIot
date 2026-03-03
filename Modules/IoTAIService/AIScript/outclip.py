@@ -9,13 +9,15 @@ from cnclip import load_from_name
 
 class CNCLIPFeatureExtractor:
     """中文CLIP特征提取器（支持Base64/字节数组输入）"""
+
     def __init__(self):
         # 设置设备（优先使用GPU）
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # 加载模型
         current_dir = os.getcwd()
-        model_path = os.path.join(current_dir,"AIScript", "clip_cn_vit-b-16.pt")
+        model_path = os.path.join(
+            current_dir, "AIScript", "clip_cn_vit-b-16.pt")
 
         try:
             self.model, self.preprocess = load_from_name(
@@ -34,12 +36,12 @@ class CNCLIPFeatureExtractor:
         """批量提取文本特征"""
         if not isinstance(text_list, list) or len(text_list) == 0:
             raise ValueError("text_list必须是非空字符串列表")
-        
+
         text = cnclip.tokenize(text_list).to(self.device)
         with torch.no_grad():
             text_features = self.model.encode_text(text)
             text_features /= text_features.norm(p=2, dim=-1, keepdim=True)
-        
+
         return text_features.cpu().numpy()
 
     def _decode_base64_to_image(self, base64_str):
@@ -65,7 +67,7 @@ class CNCLIPFeatureExtractor:
         """
         if not isinstance(base64_list, list) or len(base64_list) == 0:
             raise ValueError("base64_list必须是非空字符串列表")
-        
+
         image_tensors = []
         for base64_str in base64_list:
             # 解码Base64为图片
@@ -73,17 +75,20 @@ class CNCLIPFeatureExtractor:
             # 预处理 + 转换为tensor
             img_tensor = self.preprocess(img).to(self.device)
             image_tensors.append(img_tensor)
-        
+
         # 批量提取特征
         batch_images = torch.stack(image_tensors)
         with torch.no_grad():
             image_features = self.model.encode_image(batch_images)
             image_features /= image_features.norm(p=2, dim=-1, keepdim=True)
-        
+
         return image_features.cpu().numpy()
 
 
+global_extractor = None
 # 外部调用入口（支持Base64/文本输入）
+
+
 def execall(text_list=None, base64_img_list=None):
     """
     特征提取统一入口
@@ -93,19 +98,20 @@ def execall(text_list=None, base64_img_list=None):
     """
     if text_list is None and base64_img_list is None:
         raise ValueError("必须传入text_list或base64_img_list中的至少一个")
-    
-    print(text_list)
-    extractor = CNCLIPFeatureExtractor()
+
+    global global_extractor
+    if global_extractor is None:
+        global_extractor = CNCLIPFeatureExtractor()
     result = {}
-    
+
     # 提取文本特征
     if text_list is not None and len(text_list) > 0:
-        result["text_features"] = extractor.get_text_features(text_list)
-        print(f"文本特征提取完成，形状: {result['text_features'].shape}")
-    
+        result["text_features"] = global_extractor.get_text_features(
+            text_list).tolist()
+
     # 提取Base64图片特征
     if base64_img_list is not None and len(base64_img_list) > 0:
-        result["image_features"] = extractor.get_image_features_from_base64(base64_img_list)
-        print(f"Base64图片特征提取完成，形状: {result['image_features'].shape}")
-    
+        result["image_features"] = global_extractor.get_image_features_from_base64(
+            base64_img_list).tolist()
+
     return result

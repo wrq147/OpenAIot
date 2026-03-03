@@ -67,9 +67,8 @@ namespace IoTAIService.Controller
                     // Base64 解码为字节数组
                     byte[] imageBytes = Convert.FromBase64String(base64Data);
                     List<Out_FaceBox> tlist = new List<Out_FaceBox>();
-                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                    using (var originalImage = Image.Load<Rgb24>(imageBytes))
                     {
-                        var originalImage = Image.Load<Rgb24>(ms);
                         var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
                         foreach (var titem in tbbx)
                         {
@@ -143,9 +142,8 @@ namespace IoTAIService.Controller
                 {
                     // Base64 解码为字节数组
                     byte[] imageBytes = Convert.FromBase64String(base64Data);
-                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                    using (var originalImage = Image.Load<Rgb24>(imageBytes))
                     {
-                        var originalImage = Image.Load<Rgb24>(ms);
                         var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
                         var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
                         var faceRecogRunner = _provider.GetService<FaceRecogRunner>();

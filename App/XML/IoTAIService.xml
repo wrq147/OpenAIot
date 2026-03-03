@@ -26,6 +26,24 @@
             <param name="properties"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.AICode.AIUtility.GetFontByFamilyName(System.String,System.Single)">
+            <summary>
+            根据字体家族名称创建字体
+            </summary>
+            <param name="familyName">字体家族名称</param>
+            <param name="size">字体大小</param>
+            <returns>字体实例（不存在则返回null）</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.AIUtility.DrawRectangle(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Int32,System.Int32,System.Int32,System.Int32,SixLabors.ImageSharp.PixelFormats.Rgb24,System.Int32)">
+            <summary>
+            绘制矩形边框
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.AIUtility.DrawLabel(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Int32,System.Int32,System.String,SixLabors.ImageSharp.PixelFormats.Rgb24)">
+            <summary>
+            绘制标签（背景框+文字）
+            </summary>
+        </member>
         <member name="M:IoTAIService.AICode.AIUtility.ToDenseTensor(System.Single[][],System.Int32[])">
             <summary>
             将float[][]转换为指定形状的DenseTensor
@@ -634,9 +652,26 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="T:IoTAIService.Controller.Project">
+            <summary>
+            AI项目API
+            </summary>
+        </member>
+        <member name="M:IoTAIService.Controller.Project.DrawBoxs(IoTAIService.Models.In_TestProject)">
+            <summary>
+            测试AI项目并画检测
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTAIService.ImageExtends.IsAreaValid(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},SixLabors.ImageSharp.Rectangle)">
             <summary>
             验证区域是否在图像范围内
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.FramePushConns">
+            <summary>
+            监听的帧发布源
             </summary>
         </member>
         <member name="P:IoTAIService.IoTAIOption.InitMilvus">
@@ -837,24 +872,55 @@
             根据操作系统获取Python库文件的搜索规则
             </summary>
         </member>
-        <member name="M:IoTAIService.ReliableAISubscriber.StartReceiving">
+        <member name="M:IoTAIService.ReliableAISubscriber.InitializeConnectionPool">
             <summary>
-            启动订阅者（改为使用Thread）
+            初始化连接池，为每个地址创建连接对象
             </summary>
         </member>
-        <member name="M:IoTAIService.ReliableAISubscriber.ReceiveLoop">
+        <member name="M:IoTAIService.ReliableAISubscriber.StartReceiving">
             <summary>
-            订阅消息的循环逻辑（线程执行的核心方法）
+            启动所有订阅连接（每个连接一个独立线程）
             </summary>
+        </member>
+        <member name="M:IoTAIService.ReliableAISubscriber.ReceiveLoop(IoTAIService.SubscriberConnection)">
+            <summary>
+            单个连接的消息接收循环
+            </summary>
+            <param name="connection">当前连接</param>
         </member>
         <member name="M:IoTAIService.ReliableAISubscriber.Stop">
             <summary>
-            停止订阅者（优雅退出）
+            停止所有订阅连接（优雅退出）
             </summary>
         </member>
         <member name="M:IoTAIService.ReliableAISubscriber.Dispose">
             <summary>
-            完整释放资源
+            释放所有资源
+            </summary>
+        </member>
+        <member name="T:IoTAIService.SubscriberConnection">
+            <summary>
+            连接池项，封装单个订阅连接的信息
+            </summary>
+        </member>
+        <member name="P:IoTAIService.SubscriberConnection.Socket">
+            <summary>
+            订阅Socket
+            </summary>
+        </member>
+        <member name="P:IoTAIService.SubscriberConnection.Address">
+            <summary>
+            连接地址
+            </summary>
+        </member>
+        <member name="P:IoTAIService.SubscriberConnection.IsConnected">
+            <summary>
+            是否连接成功
+            </summary>
+        </member>
+        <member name="P:IoTAIService.SubscriberConnection.ReceiveThread">
+            <summary>
+            接收线程
             </summary>
         </member>
     </members>

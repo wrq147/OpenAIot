@@ -48,7 +48,7 @@ namespace IoTAIService.AIProject.Items
             });
         }
 
-        public List<BoxItem> GenerateBoxs(string deviceId, Image<Rgb24> image, AIConfigData config)
+        public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
         {
             throw new NotImplementedException();
         }
