@@ -2,7 +2,6 @@
 using Common;
 using IoTAIService.AICode;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using NPOI.HSSF.Record.CF;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
@@ -61,13 +60,6 @@ namespace IoTAIService.AIProject.Items
                         code="feature",
                         type="clip",
                         help="请预先生成目标检测特征"
-                    },
-                    new AIProjectParam() {
-                        name="是否绘制检测框",
-                        code="if_draw",
-                        type="boolean",
-                        defval=false,
-                        help="是否在视频上绘制检测框"
                     }
                 }
             });
@@ -132,7 +124,8 @@ namespace IoTAIService.AIProject.Items
                 var xxlist = row as List<object>;
                 foreach (var value in xxlist)
                 {
-                    flatArray[index++] = (float)value;
+                    var tt = value.GetType();
+                    flatArray[index++] = Convert.ToSingle(value);
                 }
             }
 

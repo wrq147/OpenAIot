@@ -25,11 +25,10 @@ namespace IoTAIService.AICode
         // 静态构造函数：初始化全局字体（仅在类第一次被使用时执行）
         static AIUtility()
         {
-            _globalDefaultFont = GetFontByFamilyName("Arial", 12)
-                                 ?? GetFontByFamilyName("SimSun", 12) // 宋体（Windows）
-                                 ?? GetFontByFamilyName("PingFang SC", 12) // 苹方（macOS）
-                                 ?? GetFontByFamilyName("Noto Sans", 12) // 思源黑体（Linux）
-                                 ?? SystemFonts.Families.FirstOrDefault().CreateFont(12);
+            _globalDefaultFont = GetFontByFamilyName("SimSun", 12) // 宋体（Windows）
+                                    ?? GetFontByFamilyName("PingFang SC", 12) // 苹方（macOS）
+                                    ?? GetFontByFamilyName("Noto Sans CJK SC", 12) // 思源黑体（Linux）
+                                    ?? SystemFonts.Families.FirstOrDefault().CreateFont(12);
         }
 
         /// <summary>

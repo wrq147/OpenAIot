@@ -15,6 +15,7 @@ namespace IoTAIService
         private ITAServiceProvider _provider;
         private bool _isInitialized = false;
         private dynamic _outclipModule;
+        private IntPtr _initThreadState;
         public PythonExe(ITAServiceProvider provider)
         {
             _provider = provider;
@@ -98,15 +99,19 @@ namespace IoTAIService
                 if (string.IsNullOrEmpty(aiOption.PythonHome)) return;
 
                 Runtime.PythonDLL = AutoSetPythonDllPath(aiOption.PythonHome);
-
                 PythonEngine.Initialize();
-                PythonEngine.BeginAllowThreads();
-                using (Py.GIL())
+                _initThreadState = PythonEngine.BeginAllowThreads();
+                //异步加载模块
+                Task.Run(() =>
                 {
-                    dynamic sys = Py.Import("sys");
-                    string scriptDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIScript";
-                    sys.path.append(scriptDir);
-                }
+                    using (Py.GIL())
+                    {
+                        dynamic sys = Py.Import("sys");
+                        string scriptDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIScript";
+                        sys.path.append(scriptDir);
+                        _outclipModule = Py.Import("outclip");
+                    }
+                });
                 _isInitialized = true;
             }
             catch (Exception ex)
@@ -118,16 +123,12 @@ namespace IoTAIService
 
         public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr, List<string> imgArr)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 using (Py.GIL())
                 {
                     try
                     {
-                        if (_outclipModule == null)
-                        {
-                            _outclipModule = Py.Import("outclip");
-                        }
                         PyList strPyList = null;
                         PyList imgPyList = null;
                         if (strArr != null && strArr.Count > 0)
@@ -202,6 +203,7 @@ namespace IoTAIService
         {
             if (_isInitialized)
             {
+                PythonEngine.EndAllowThreads(_initThreadState);
                 PythonEngine.Shutdown();
                 _isInitialized = false;
             }

@@ -85,7 +85,7 @@ class CNCLIPFeatureExtractor:
         return image_features.cpu().numpy()
 
 
-global_extractor = None
+global_extractor = CNCLIPFeatureExtractor()
 # 外部调用入口（支持Base64/文本输入）
 
 
@@ -100,8 +100,6 @@ def execall(text_list=None, base64_img_list=None):
         raise ValueError("必须传入text_list或base64_img_list中的至少一个")
 
     global global_extractor
-    if global_extractor is None:
-        global_extractor = CNCLIPFeatureExtractor()
     result = {}
 
     # 提取文本特征

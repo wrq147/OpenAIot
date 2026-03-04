@@ -231,38 +231,54 @@
         <el-button type="primary" @click="confirmParamConfig"
           :loading="paramConfigDialog.generateLoading">确认保存参数</el-button>
       </div>
+      <div v-if="paramConfigDialog.generateLoading" class="loading-mask">
+        <div class="loading-content">
+          <el-icon class="loading-icon">
+            <Loading />
+          </el-icon>
+          <p class="loading-text">{{ paramConfigDialog.generateTxt }}</p>
+          <p class="loading-subtext">这个过程可能需要十几秒，请耐心等待</p>
+        </div>
+      </div>
     </el-dialog>
 
 
     <!-- AI项目测试弹窗 -->
     <el-dialog :title="testDialog.title" :visible.sync="testDialog.visible" width="700px" append-to-body
-      :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
+      :close-on-click-modal="false" :destroy-on-close="true" top="5vh">
       <div class="test-config-content">
-        <div class="test-project-info">
-          <span class="info-label">测试项目：</span>
-          <span class="info-value">{{ testDialog.currentRow.Name || '-' }}</span>
-        </div>
 
-        <!-- 上传测试图片 -->
-        <div class="test-image-upload">
-          <div class="upload-title">
-            <span>上传测试图片</span>
-            <span style="color: #f56c6c; font-size: 12px;">* 支持jpg/png，≤2MB</span>
+        <div class="test-content-wrapper">
+          <!-- 上传测试图片 -->
+          <div class="test-image-upload">
+            <div class="upload-title">
+              <span>上传测试图片</span>
+              <span style="color: #f56c6c; font-size: 12px;">* 支持jpg/png，≤2MB</span>
+            </div>
+            <el-upload action="#" :show-file-list="false" :before-upload="handleTestImageUpload"
+              :on-error="handleTestImageError" accept="image/*">
+              <img v-if="testDialog.testImage" :src="testDialog.testImage"
+                style="width:220px;height:220px;object-fit:cover;">
+              <i v-else class="el-icon-plus"
+                style="font-size:36px;width:220px;height:220px;line-height:220px;text-align:center;border:1px dashed #d9d9d9;">
+              </i>
+            </el-upload>
           </div>
-          <el-upload action="#" :show-file-list="false" :before-upload="handleTestImageUpload"
-            :on-error="handleTestImageError" accept="image/*">
-            <img v-if="testDialog.testImage" :src="testDialog.testImage"
-              style="width:220px;height:220px;object-fit:cover;">
-            <i v-else class="el-icon-plus"
-              style="font-size:36px;width:220px;height:220px;line-height:220px;text-align:center;border:1px dashed #d9d9d9;">
-            </i>
-          </el-upload>
-        </div>
 
-        <!-- 测试结果图片 -->
-        <div v-if="testDialog.testResultImage" class="test-result-image-box">
-          <div class="result-title">检测结果</div>
-          <img :src="testDialog.testResultImage" class="test-result-img" />
+          <!-- 分割线 -->
+          <div class="test-divider"></div>
+
+          <!-- 测试结果图片 -->
+          <div class="test-result-container">
+            <div class="result-title">检测结果</div>
+            <div :class="{ 'empty': !testDialog.testResultImage }">
+              <img v-if="testDialog.testResultImage" :src="testDialog.testResultImage" class="test-result-img" />
+              <div v-else class="result-empty">
+                <el-empty :image-size="100" description="暂无检测结果，请上传图片并执行测试"></el-empty>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -314,6 +330,7 @@ export default {
         currentIndex: -1,
         currentRow: {},     // 当前操作的项目行数据
         generateLoading: false,
+        generateTxt: "正在保存参数中...",
         title: 'AI项目参数配置'
       },
       testDialog: {
@@ -449,7 +466,7 @@ export default {
      * 移除单个已配置项目
      */
     removeConfiguredProject(idx) {
-      let project=this.configuredProjects[idx];
+      let project = this.configuredProjects[idx];
       this.$confirm(
         '确定要移除【' + project.Name + '】项目吗？',
         '提示',
@@ -527,7 +544,7 @@ export default {
       }
     },
     openParamConfigDialog(idx) {
-      let row=this.configuredProjects[idx];
+      let row = this.configuredProjects[idx];
       // 赋值当前行数据，打开弹窗
       row.paramValues = row.paramValues || {};
       this.paramConfigDialog.currentIndex = idx;
@@ -559,7 +576,7 @@ export default {
 
         // 显示加载状态和提示
         this.paramConfigDialog.generateLoading = true;
-        this.$message.info('正在生成特征向量，请稍候...');
+        this.paramConfigDialog.generateTxt = "正在生成特征向量，请稍候...";
 
         let res;
         if (this.paramConfigDialog.clipmode === "text") {
@@ -579,10 +596,11 @@ export default {
 
         // 保存生成的特征向量
         this.paramConfigDialog.currentRow.paramValues[clipParam.code] = res.data;
-        this.$message.success('特征向量生成成功！');
+        this.paramConfigDialog.generateTxt = "正在保存参数中...";
       }
       this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
       this.paramConfigDialog.visible = false;
+      this.paramConfigDialog.generateLoading = false;
       this.$message.success('参数配置已保存');
     },
     // 处理clip图片上传（转换为Base64）
@@ -624,7 +642,7 @@ export default {
     },
     // 打开测试弹窗
     TestConfiguredProject(idx) {
-      let row=this.configuredProjects[idx];
+      let row = this.configuredProjects[idx];
       this.testDialog = {
         visible: true,
         currentRow: JSON.parse(JSON.stringify(row)),
@@ -941,24 +959,46 @@ export default {
   padding: 10px;
 }
 
-.test-project-info {
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed #ebeef5;
-}
 
-.info-label {
-  font-weight: 600;
-  color: #666;
+.test-content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
 }
 
 .test-image-upload {
-  margin-bottom: 20px;
+  flex: 0 0 auto;
 }
 
 .upload-title {
   margin-bottom: 8px;
   font-size: 14px;
+}
+
+.test-divider {
+  width: 1px;
+  height: 250px;
+  background-color: #ebeef5;
+  flex: 0 0 auto;
+}
+
+.test-result-container {
+  flex: 1;
+  /* 占满剩余宽度 */
+  min-width: 0;
+  /* 解决flex子元素溢出问题 */
+}
+
+.test-result-container .empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  border: 1px dashed #ebeef5;
+  border-radius: 4px;
 }
 
 .result-title {
@@ -972,5 +1012,48 @@ export default {
   max-height: 400px;
   border: 1px solid #eee;
   border-radius: 4px;
+}
+
+.result-empty {
+  width: 100%;
+  height: 100%;
+}
+
+.loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 4px;
+}
+
+.loading-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.loading-icon {
+  font-size: 32px;
+  color: #409eff;
+  margin-bottom: 12px;
+  animation: el-loading-rotate 1.5s linear infinite;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.loading-subtext {
+  font-size: 12px;
+  color: #666;
 }
 </style>
