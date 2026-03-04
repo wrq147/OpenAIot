@@ -104,10 +104,10 @@
                 <span class="header-title">已配置AI项目</span>
                 <el-badge :value="configuredProjects.length" class="count-badge" type="primary" />
               </div>
-              <el-button type="text" icon="el-icon-delete" @click="batchRemoveConfigured"
-                :disabled="configuredProjects.length === 0" class="batch-remove-btn">
-                批量移除
-              </el-button>
+               <el-link  type="danger" icon="el-icon-delete" @click="batchRemoveConfigured" :disabled="configuredProjects.length === 0">
+                全部移除
+              </el-link>
+
             </div>
 
             <!-- 空状态 -->
@@ -831,9 +831,6 @@ export default {
   width: 200px;
 }
 
-.batch-remove-btn {
-  color: #f56c6c;
-}
 
 /* 分割线 */
 .divider {
