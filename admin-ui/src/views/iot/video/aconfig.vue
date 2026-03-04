@@ -137,15 +137,15 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="220" fixed="right" align="center">
+              <el-table-column label="操作" width="180" fixed="right" align="center">
                 <template slot-scope="scope">
                   <el-link type="primary" icon="el-icon-setting" class="config-btn"
-                    @click="openParamConfigDialog(scope.row, scope.$index)"
+                    @click="openParamConfigDialog(scope.$index)"
                     :disabled="!scope.row.ParamList || scope.row.ParamList.length === 0">配置</el-link>
                   <el-link type="primary" v-if="scope.row.Stage == 'Detect'" icon="el-icon-document-checked"
-                    @click="TestConfiguredProject(scope.row)" class="config-btn">测试</el-link>
+                    @click="TestConfiguredProject(scope.$index)" class="config-btn">测试</el-link>
                   <el-link type="danger" class="remove-btn" icon="el-icon-delete"
-                    @click="removeConfiguredProject(scope.row)">移除</el-link>
+                    @click="removeConfiguredProject(scope.$index)">移除</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -194,7 +194,7 @@
             <!-- 参数类型：clip -->
             <template v-else-if="param.type === 'clip'">
               <div style="width: 380px;">
-                <!-- 检测目标配置 -->
+                <!-- 目标配置 -->
                 <div style="margin-bottom: 8px;">
                   <el-radio-group v-model="paramConfigDialog.clipmode">
                     <el-radio label="text">文本描述</el-radio>
@@ -204,7 +204,7 @@
 
                 <!-- 文本输入模式 -->
                 <el-input v-if="paramConfigDialog.clipmode === 'text'" v-model="paramConfigDialog.clipText"
-                  type="textarea" rows="2" placeholder="请输入检测目标描述（如：红色汽车,行人）多个需要用逗号分隔" size="small"
+                  type="textarea" rows="2" placeholder="请输入目标描述（如：红色汽车,行人）多个需要用逗号分隔" size="small"
                   style="width: 100%;" />
 
                 <!-- 图片上传模式 -->
@@ -235,7 +235,7 @@
 
 
     <!-- AI项目测试弹窗 -->
-    <el-dialog title="AI项目测试" :visible.sync="testDialog.visible" width="700px" append-to-body
+    <el-dialog :title="testDialog.title" :visible.sync="testDialog.visible" width="700px" append-to-body
       :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
       <div class="test-config-content">
         <div class="test-project-info">
@@ -321,7 +321,8 @@ export default {
         currentRow: {},      // 当前测试的项目数据
         testImage: '',       // 测试图片base64
         testResult: null,    // 测试结果
-        testLoading: false   // 测试加载状态
+        testLoading: false,
+        title: 'AI项目测试'
       }
     }
   },
@@ -380,7 +381,7 @@ export default {
           x["Remark"] = prj.Remark;
           x["ParamList"] = prj.ParamList || [];
           // 初始化参数值
-          x["paramValues"] = x.paramValues || {};
+          x["paramValues"] = x.paramValues || this.initParamValues(x["ParamList"]);
           configarr.push(x);
         }
       }
@@ -390,7 +391,18 @@ export default {
       this.selectedProjects = []
       this.optionalSearchText = ''
     },
-
+    /**
+     * 初始化参数默认值
+     */
+    initParamValues(paramList = []) {
+      const paramValues = {};
+      paramList.forEach(param => {
+        if (param.defval != null) {
+          paramValues[param.code] = param.defval;
+        }
+      });
+      return paramValues;
+    },
     /**
      * 处理表格行样式
      */
@@ -419,7 +431,7 @@ export default {
         for (let i = 0; i < this.selectedProjects.length; i++) {
           let newitem = JSON.parse(JSON.stringify(this.selectedProjects[i]));
           // 初始化参数值
-          newitem["paramValues"] = {};
+          newitem["paramValues"] = this.initParamValues(newitem.ParamList || []);
           this.configuredProjects.push(newitem)
         }
 
@@ -436,7 +448,8 @@ export default {
     /**
      * 移除单个已配置项目
      */
-    removeConfiguredProject(project) {
+    removeConfiguredProject(idx) {
+      let project=this.configuredProjects[idx];
       this.$confirm(
         '确定要移除【' + project.Name + '】项目吗？',
         '提示',
@@ -513,7 +526,8 @@ export default {
         this.confirmLoading = false
       }
     },
-    openParamConfigDialog(row, idx) {
+    openParamConfigDialog(idx) {
+      let row=this.configuredProjects[idx];
       // 赋值当前行数据，打开弹窗
       row.paramValues = row.paramValues || {};
       this.paramConfigDialog.currentIndex = idx;
@@ -609,12 +623,14 @@ export default {
       this.$message.error('测试图片上传失败');
     },
     // 打开测试弹窗
-    TestConfiguredProject(row) {
+    TestConfiguredProject(idx) {
+      let row=this.configuredProjects[idx];
       this.testDialog = {
         visible: true,
         currentRow: JSON.parse(JSON.stringify(row)),
         testImage: "",
         testResultImage: "",
+        title: `测试项目【${row.Name}】`,
         testLoading: false
       };
     },

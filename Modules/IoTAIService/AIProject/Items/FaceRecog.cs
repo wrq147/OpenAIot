@@ -56,6 +56,7 @@ namespace IoTAIService.AIProject.Items
                         name="启用人脸库",
                         code="enable_house",
                         type="boolean",
+                        defval=false,
                         help="是否匹配人脸库，并触发相应事件"
                     },
                 }

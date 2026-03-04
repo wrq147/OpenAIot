@@ -47,7 +47,7 @@ namespace IoTAIService
         /// 参数说明
         /// </summary>
         public string help { get; set; }
-
+        public object defval { get; set; }
         public float min { get; set; }
         public float max { get; set; }
 

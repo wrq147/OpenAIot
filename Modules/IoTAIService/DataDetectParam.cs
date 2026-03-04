@@ -35,5 +35,27 @@ namespace IoTAIService
                 return def;
             }
         }
+        public string GetString(string key, string def = "")
+        {
+            if (_param.TryGetValue(key, out object tval))
+            {
+                return Convert.ToString(tval);
+            }
+            else
+            {
+                return def;
+            }
+        }
+        public object Get(string key)
+        {
+            if (_param.TryGetValue(key, out object tval))
+            {
+                return tval;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -67,7 +67,6 @@ namespace IoTAIService
                 connection.ReceiveThread = new Thread(() => ReceiveLoop(connection));
                 connection.ReceiveThread.IsBackground = true;
                 connection.ReceiveThread.Start();
-                Console.WriteLine($"启动订阅连接: {connection.Address}");
             }
         }
 

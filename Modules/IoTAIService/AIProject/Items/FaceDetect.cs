@@ -33,22 +33,25 @@ namespace IoTAIService.AIProject.Items
                         name="人脸阈值",
                         code="threshold",
                         type="float",
+                        defval=0.8f,
                         min=0,
                         max=1,
-                        help="0~1的区间值,值越小对人脸的检测越模糊"
+                        help="0~1的区间值,值越小,对人脸的检测越模糊"
                     },
                     new AIProjectParam()
                     {
                         name="交并阈值",
                         code="iou_threshold",
                         type="float",
+                        defval=0.2f,
                         min=0,
                         max=1,
-                        help="0~1的区间值,值越小越不会检测重合人脸"
+                        help="0~1的区间值,值越小,越不会检测重合人脸"
                     },
                     new AIProjectParam() {
                         name="是否绘制人脸",
                         code="if_draw",
+                        defval=false,
                         type="boolean",
                         help="是否在视频上绘制人脸框"
                     }
