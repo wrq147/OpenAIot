@@ -38,7 +38,7 @@ namespace IoTAIService.AICode
             int originalWidth = image.Width;
             int originalHeight = image.Height;
             // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image, out float scaleX, out float scaleY);
+            var inputTensor = PreprocessImage(image);
             // 2. 准备输入
             var inputs = new List<NamedOnnxValue> {    
                 // 图片输入：假设已预处理为(1,3,640,640)的Tensor<float>
@@ -51,12 +51,12 @@ namespace IoTAIService.AICode
             using var outputs = _session.Run(inputs);
             var outputTensor = outputs.First().AsTensor<float>();
             // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, scaleX, scaleY, originalWidth, originalHeight, classes);
+            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, classes);
 
             return detectionResults;
         }
         // 图像预处理：缩放、归一化等
-        private Tensor<float> PreprocessImage(Image<Rgb24> input, out float scaleX, out float scaleY)
+        private Tensor<float> PreprocessImage(Image<Rgb24> input)
         {
             Image<Rgb24> image = input.Clone();
             int originalWidth = image.Width;
@@ -65,8 +65,8 @@ namespace IoTAIService.AICode
             float ratio = Math.Min((float)640 / originalWidth, (float)640 / originalHeight);
             int resizedWidth = (int)(originalWidth * ratio);
             int resizedHeight = (int)(originalHeight * ratio);
-            scaleX = (float)originalWidth / resizedWidth;
-            scaleY = (float)originalHeight / resizedHeight;
+            float scaleX = (float)originalWidth / resizedWidth;
+            float scaleY = (float)originalHeight / resizedHeight;
             // 缩放为640x640
             image.Mutate(x => x.Resize(640, 640));
 
@@ -94,13 +94,11 @@ namespace IoTAIService.AICode
         /// <param name="output"></param>
         /// <param name="confidenceThreshold"></param>
         /// <param name="iouThreshold"></param>
-        /// <param name="scaleX"></param>
-        /// <param name="scaleY"></param>
         /// <param name="originalWidth"></param>
         /// <param name="originalHeight"></param>
         /// <param name="classes"></param>
         /// <returns></returns>
-        private List<DetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, float scaleX, float scaleY, int originalWidth, int originalHeight, List<string> classes)
+        private List<DetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, List<string> classes)
         {
             var results = new List<DetectionResult>();
             int numClasses = classes.Count;
@@ -153,10 +151,10 @@ namespace IoTAIService.AICode
                 y2 = (y2 - paddingY) / gain;
 
                 // 坐标范围限制（对齐官方clip_boxes）
-                //x1 = Math.Clamp(x1, 0, originalWidth);
-                //y1 = Math.Clamp(y1, 0, originalHeight);
-                //x2 = Math.Clamp(x2, 0, originalWidth);
-                //y2 = Math.Clamp(y2, 0, originalHeight);
+                x1 = Math.Clamp(x1, 0, originalWidth);
+                y1 = Math.Clamp(y1, 0, originalHeight);
+                x2 = Math.Clamp(x2, 0, originalWidth);
+                y2 = Math.Clamp(y2, 0, originalHeight);
 
                 results.Add(new DetectionResult
                 {
