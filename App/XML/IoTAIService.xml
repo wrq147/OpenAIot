@@ -477,7 +477,7 @@
             调整边界框到原始尺寸
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.PostprocessOutput(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Single,System.Single,System.Single,System.Single,System.Collections.Generic.List{System.String})">
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.PostprocessOutput(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Collections.Generic.List{System.String})">
             <summary>
             后处理：解析模型输出，过滤低置信度结果，执行NMS，还原检测框到原图坐标
             </summary>
@@ -486,6 +486,8 @@
             <param name="iouThreshold"></param>
             <param name="scaleX"></param>
             <param name="scaleY"></param>
+            <param name="originalWidth"></param>
+            <param name="originalHeight"></param>
             <param name="classes"></param>
             <returns></returns>
         </member>

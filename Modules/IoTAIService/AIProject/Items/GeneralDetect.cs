@@ -116,8 +116,9 @@ namespace IoTAIService.AIProject.Items
             int colCount = tmplist.Count;
 
 
-            // 展平嵌套列表为一维数组（DenseTensor底层存储格式）
-            float[] flatArray = new float[rowCount * colCount];
+            // 计算总元素数 = 批次 × 行数 × 列数
+            int totalElements = 1 * rowCount * colCount;
+            float[] flatArray = new float[totalElements];
             int index = 0;
             foreach (var row in data)
             {
@@ -129,8 +130,9 @@ namespace IoTAIService.AIProject.Items
                 }
             }
 
-            // 创建DenseTensor：参数1=一维数组，参数2=张量形状
-            var tensorShape = new int[] { rowCount, colCount };
+            // ---------------------- 第三步：创建三维DenseTensor ----------------------
+            // 张量形状：[batch, rowCount, colCount]（对应batch/文本长度/嵌入维度）
+            var tensorShape = new int[] { 1, rowCount, colCount };
             return new DenseTensor<float>(flatArray, tensorShape);
         }
     }

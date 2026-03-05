@@ -35,6 +35,8 @@ namespace IoTAIService.AICode
 
         public List<DetectionResult> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)
         {
+            int originalWidth = image.Width;
+            int originalHeight = image.Height;
             // 1. 图像预处理（与训练时保持一致）
             var inputTensor = PreprocessImage(image, out float scaleX, out float scaleY);
             // 2. 准备输入
@@ -49,13 +51,14 @@ namespace IoTAIService.AICode
             using var outputs = _session.Run(inputs);
             var outputTensor = outputs.First().AsTensor<float>();
             // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, scaleX, scaleY, classes);
+            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, scaleX, scaleY, originalWidth, originalHeight, classes);
 
             return detectionResults;
         }
         // 图像预处理：缩放、归一化等
-        private Tensor<float> PreprocessImage(Image<Rgb24> image, out float scaleX, out float scaleY)
+        private Tensor<float> PreprocessImage(Image<Rgb24> input, out float scaleX, out float scaleY)
         {
+            Image<Rgb24> image = input.Clone();
             int originalWidth = image.Width;
             int originalHeight = image.Height;
             // 计算缩放比例（保持宽高比，填充黑边）
@@ -84,6 +87,7 @@ namespace IoTAIService.AICode
         }
 
 
+
         /// <summary>
         /// 后处理：解析模型输出，过滤低置信度结果，执行NMS，还原检测框到原图坐标
         /// </summary>
@@ -92,29 +96,40 @@ namespace IoTAIService.AICode
         /// <param name="iouThreshold"></param>
         /// <param name="scaleX"></param>
         /// <param name="scaleY"></param>
+        /// <param name="originalWidth"></param>
+        /// <param name="originalHeight"></param>
         /// <param name="classes"></param>
         /// <returns></returns>
-        private List<DetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, float scaleX, float scaleY, List<string> classes)
+        private List<DetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, float scaleX, float scaleY, int originalWidth, int originalHeight, List<string> classes)
         {
             var results = new List<DetectionResult>();
             int numClasses = classes.Count;
-            int numBoxes = output.Dimensions[1]; // 输出维度：[1, num_boxes, 4 + num_classes]
+            int numBoxes = output.Dimensions[2]; // 输出维度：[1, 4 + num_classes, num_boxes]
+
 
             // 解析每个检测框
             for (int i = 0; i < numBoxes; i++)
             {
-                // 检测框坐标（xyxy格式，模型输出是归一化到0-1的坐标）
-                float x1 = output[0, i, 0] * 640;
-                float y1 = output[0, i, 1] * 640;
-                float x2 = output[0, i, 2] * 640;
-                float y2 = output[0, i, 3] * 640;
+                // 检测框坐标
+                float cx = output[0, 0, i];
+                float cy = output[0, 1, i];
+                float w = output[0, 2, i];
+                float h = output[0, 3, i];
+
+                // 纯格式转换（严格对齐官方xywh2xyxy逐行逻辑）
+                float wh_half_w = w / 2;
+                float wh_half_h = h / 2;
+                float x1 = cx - wh_half_w;
+                float y1 = cy - wh_half_h;
+                float x2 = cx + wh_half_w;
+                float y2 = cy + wh_half_h;
 
                 // 遍历所有类别，获取最高置信度的类别
                 float maxConf = 0;
                 int maxClassIdx = -1;
                 for (int c = 0; c < numClasses; c++)
                 {
-                    float conf = output[0, i, 4 + c];
+                    float conf = output[0, 4 + c, i];
                     if (conf > maxConf)
                     {
                         maxConf = conf;
@@ -126,19 +141,22 @@ namespace IoTAIService.AICode
                 if (maxConf < confidenceThreshold || maxClassIdx == -1)
                     continue;
 
-                // 还原检测框到原图坐标（扣除填充的黑边，再缩放）
-                float paddingX = (640 - (x2 - x1) * scaleX / scaleX) / 2; // 简化：实际需根据缩放后的尺寸计算填充
-                float paddingY = (640 - (y2 - y1) * scaleY / scaleY) / 2;
-                x1 = (x1 - paddingX) * scaleX;
-                y1 = (y1 - paddingY) * scaleY;
-                x2 = (x2 - paddingX) * scaleX;
-                y2 = (y2 - paddingY) * scaleY;
+                // 计算padding（对齐官方scale_boxes）
+                float gain = Math.Min(640 / originalWidth, 640 / originalHeight);
+                float paddingX = (float)Math.Round((640 - (originalWidth * gain)) / 2 - 0.1);
+                float paddingY = (float)Math.Round((640 - (originalHeight * gain)) / 2 - 0.1);
 
-                // 确保坐标在原图范围内
-                x1 = Math.Clamp(x1, 0, float.MaxValue);
-                y1 = Math.Clamp(y1, 0, float.MaxValue);
-                x2 = Math.Clamp(x2, 0, float.MaxValue);
-                y2 = Math.Clamp(y2, 0, float.MaxValue);
+                // 直接去padding + 缩放到原图（无需×640，因为已是像素值）
+                x1 = (x1 - paddingX) / gain;
+                y1 = (y1 - paddingY) / gain;
+                x2 = (x2 - paddingX) / gain;
+                y2 = (y2 - paddingY) / gain;
+
+                // 坐标范围限制（对齐官方clip_boxes）
+                //x1 = Math.Clamp(x1, 0, originalWidth);
+                //y1 = Math.Clamp(y1, 0, originalHeight);
+                //x2 = Math.Clamp(x2, 0, originalWidth);
+                //y2 = Math.Clamp(y2, 0, originalHeight);
 
                 results.Add(new DetectionResult
                 {

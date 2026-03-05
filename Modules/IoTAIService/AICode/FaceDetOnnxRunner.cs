@@ -62,9 +62,10 @@ namespace IoTAIService.AICode
             return (clsOutputs, regOutputs);
         }
         // 图像预处理：缩放、归一化等
-        private Tensor<float> PreprocessImage(Image<Rgb24> image)
+        private Tensor<float> PreprocessImage(Image<Rgb24> input)
         {
             // 缩放为320x320
+            Image<Rgb24> image = input.Clone();
             image.Mutate(x => x.Resize(320, 320));
 
             // 转换为张量
