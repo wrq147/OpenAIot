@@ -2,25 +2,58 @@
 branches: {
   }
 fileChange:
-  /admin-ui:
-    newFile: !uuid 'c28a0328bc2d4ef59eaa57aa21ac7b809dcfceb9'
-    oldFile: !uuid 'c8d1dab08dd8950e14ffa269ca8a586388ae940a'
-  /admin-ui/src:
-    newFile: !uuid '4ae3d6c6c611ea57a0013e2d0d5498b00e2e0476'
-    oldFile: !uuid 'a977897bf5a8c16ef8ae4716f12adb5f24be5cc4'
-  /admin-ui/src/views:
-    newFile: !uuid '8a562a4b614f1db0467e448549f35f83b82d7cf9'
-    oldFile: !uuid 'eaf71bcfd22e958b43ce1ae117a83b06ac28c1d0'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '52c64b672644b6a0156132477310da3eade8bbb2'
-    oldFile: !uuid 'd2ee0382d6ee5bdb88c480de3b50cefff36d0944'
-  /admin-ui/src/views/iot/video:
-    newFile: !uuid '7014971c795a8ea6e57b0b81f396ceae0c3df950'
-    oldFile: !uuid 'd69ae8a947c2781c0239761e05ca46a73b6cb119'
-  /admin-ui/src/views/iot/video/aconfig.vue:
-    newFile: !uuid 'cceebad4aafa2e9a7330138e50fe4d0b446b1230'
-    oldFile: !uuid '6aa87a27bad2ddcffa72ec4865685b6e56271f92'
-gitCommitId: !uuid '1631083b729a6ab6051fba4961542c4ac095167b'
+  /App:
+    newFile: !uuid '8a608c308543c8408b34f0f6643ab88bca2e2ccb'
+    oldFile: !uuid '6e4be8e8704327d5cb4c86b0717e6f4967e10e6a'
+  /App/XML:
+    newFile: !uuid '961263428383b4d78714f6db0db065525391c5b2'
+    oldFile: !uuid 'c9718f6f1d16b1e0573555f4d1266c24e2899477'
+  /App/XML/IoTAIService.xml:
+    newFile: !uuid '9a40d431e0a0c524b342a3906c796e7ff794e370'
+    oldFile: !uuid '4dcc1339769c8b94bb6cb7a54573853d3ebdf7b5'
+  /Modules:
+    newFile: !uuid '46551b5d7a22e49266f797619de23ba9b4ee126a'
+    oldFile: !uuid 'fc072dcb29b02a469f14d7b439c51d3835f8d961'
+  /Modules/IoTAIService:
+    newFile: !uuid '4992f4dbe4fa41121839f33264404eef132189a5'
+    oldFile: !uuid '66ecab6b599b1b0785e2808fbd56d942ea0fd583'
+  /Modules/IoTAIService/AICode:
+    newFile: !uuid 'adfa029d8656475e4fecc0e3559a653a9e6e8c87'
+    oldFile: !uuid '0543aa645ac189760ef96b1416f91003ff6a3192'
+  /Modules/IoTAIService/AICode/FaceDetOnnxRunner.cs:
+    newFile: !uuid '00e26cd6ef9db69db56629367f28de259dce76de'
+    oldFile: !uuid '2268baaddd69c2a5a081e4e431ecc53b84e394ad'
+  /Modules/IoTAIService/AICode/FaceKeyPointsRunner.cs:
+    newFile: !uuid 'e3fdcbbc53f1a51069d2681883af49b4018a9754'
+    oldFile: !uuid '5c5a8e49e309fcf829f0a1cb31376172c9b6e9b0'
+  /Modules/IoTAIService/AICode/FaceRecogRunner.cs:
+    newFile: !uuid '1cbb623a86717ebb5185b23893452a408e74695a'
+    oldFile: !uuid 'c767b20a7f608f247617d076f656f839898bc804'
+  /Modules/IoTAIService/AICode/FaceSTNRunner.cs:
+    newFile: !uuid '21c9217e485fea382a1d5165ea8fbd2a54054f5f'
+    oldFile: !uuid '4511eadacc49eea2db7a96b1736eb9f18ee416bf'
+  /Modules/IoTAIService/AICode/YoloWorldDetectRunner.cs:
+    newFile: !uuid 'ffc575f6539a16e6dfc5c2b2829ad16abe6ff98a'
+    oldFile: !uuid 'c2089f1966090805ee70f563f1f6ad2135aad53e'
+  /Modules/IoTAIService/AIModel:
+    newFile: !uuid 'ca3af7fceffd130eff75eaa1d4aea87093a39d1a'
+    oldFile: !uuid '118ffde212718bcc27adf1b0f4adef01ba88b553'
+  /Modules/IoTAIService/AIModel/YoloWorld.onnx:
+    newFile: !uuid '7c2b2bd4ec1895ccddbb50c9bb254723fcfb0fd8'
+    oldFile: null
+  /Modules/IoTAIService/AIProject:
+    newFile: !uuid 'd3753f0073948dc6c41fc31a7d2216096bd61ad0'
+    oldFile: !uuid 'b35a4fcb67186ed6f4be0724af637d06fbefae57'
+  /Modules/IoTAIService/AIProject/Items:
+    newFile: !uuid '0949aa07606f651c21e84b4a1d21868a07399ce6'
+    oldFile: !uuid '5e7856b4b74b7e3f74b44d8f0bddb5b8dd60fcba'
+  /Modules/IoTAIService/AIProject/Items/GeneralDetect.cs:
+    newFile: !uuid '92259f94a551d29649571466da4bd01f87e7290f'
+    oldFile: !uuid '3c658265991f7f1cb70db2b80dc83a34da0817a1'
+  /Modules/IoTAIService/IoTAIService.csproj:
+    newFile: !uuid 'e9d2f6cccfb1fc4b1975bdaf7a97c5f008717e3b'
+    oldFile: !uuid 'cece213ae9be930887c03f5fb49c576c49e0283a'
+gitCommitId: !uuid '15eab8142e86c0ddc526e024659e1f0287f391b6'
 renames: {
   }
-revisionId: 179
+revisionId: 180
