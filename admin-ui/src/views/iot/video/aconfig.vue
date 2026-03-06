@@ -169,8 +169,15 @@
 
       <div class="param-config-content">
         <el-form label-width="120px" class="param-form">
-          <el-form-item v-for="(param, index) in paramConfigDialog.currentRow.ParamList" :key="index"
+          <el-form-item label-width="150px" v-for="(param, index) in paramConfigDialog.currentRow.ParamList" :key="index"
             :label="param.name" class="param-form-item">
+            <template slot="label">
+              <!-- 帮助提示 -->
+              <el-tooltip effect="dark" :content="param.help" placement="top" enterable class="help-tooltip">
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+              <span style="margin-right:10px;">{{ param.name }}</span>
+            </template>
             <!-- 参数类型：float -->
             <el-input-number v-if="param.type === 'float'"
               v-model="paramConfigDialog.currentRow.paramValues[param.code]" :min="param.min" :max="param.max"
@@ -220,10 +227,7 @@
               </div>
             </template>
 
-            <!-- 帮助提示 -->
-            <el-tooltip effect="dark" :content="param.help" placement="top" enterable class="help-tooltip">
-              <i class="el-icon-question-circle"></i>
-            </el-tooltip>
+
           </el-form-item>
         </el-form>
       </div>
@@ -924,7 +928,7 @@ export default {
 }
 
 .help-tooltip {
-  margin-left: 8px;
+  margin-right: 8px;
   color: #409eff;
   cursor: pointer;
   font-size: 14px;

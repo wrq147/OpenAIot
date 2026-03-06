@@ -59,7 +59,7 @@ namespace IoTAIService.AIProject.Items
                         name="目标特征",
                         code="feature",
                         type="clip",
-                        help="请预先生成目标检测特征"
+                        help="必填项,用来生成目标检测特征"
                     }
                 }
             });
