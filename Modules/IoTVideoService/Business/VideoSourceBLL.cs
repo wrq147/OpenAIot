@@ -210,6 +210,11 @@ namespace IoTVideoService.Business
                 aiConfig = System.Text.Json.JsonSerializer.Deserialize<AIConfig>(source.AITasks, MyDefaultTextJsonConfig.DefaultOptions);
             }
 
+            if (aiConfig != null)
+            {
+                aiConfig.OrgId = source.OrgId.Value;
+            }
+
             MediaItemMessage msg = new MediaItemMessage();
             msg.DeviceId = string.Empty;
             msg.ProductId = string.Empty;

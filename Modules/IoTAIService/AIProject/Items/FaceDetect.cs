@@ -53,9 +53,8 @@ namespace IoTAIService.AIProject.Items
         }
         public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
         {
-            var tparam = new DataDetectParam(config.DetParams);
-            float tThreshold = tparam.GetFloat("threshold", 0.8f);
-            float tIOU = tparam.GetFloat("iou_threshold", 0.2f);
+            float tThreshold = config.GetFloat("threshold", 0.8f);
+            float tIOU = config.GetFloat("iou_threshold", 0.2f);
             List<BoxItem> tmpboxs = new List<BoxItem>();
             var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(image, tThreshold, tIOU);
             for (int i = 0; i < tbbx.Count; i++)

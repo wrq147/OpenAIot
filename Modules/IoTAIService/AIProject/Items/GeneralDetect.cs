@@ -67,12 +67,11 @@ namespace IoTAIService.AIProject.Items
 
         public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
         {
-            var tparam = new DataDetectParam(config.DetParams);
-            float tThreshold = tparam.GetFloat("threshold", 0.2f);
-            float tIOU = tparam.GetFloat("iou_threshold", 0.2f);
-            string featureTxt = tparam.GetString("feature-txt");
-            string featureImg = tparam.GetString("feature-img");
-            List<object> feature = tparam.Get("feature") as List<object>;
+            float tThreshold = config.GetFloat("threshold", 0.2f);
+            float tIOU = config.GetFloat("iou_threshold", 0.2f);
+            string featureTxt = config.GetString("feature-txt");
+            string featureImg = config.GetString("feature-img");
+            List<object> feature = config.Get("feature") as List<object>;
             List<string> tclasses = null;
             if (!string.IsNullOrEmpty(featureTxt))
             {

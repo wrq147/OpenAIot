@@ -130,5 +130,47 @@ namespace IoTAIService.Business
             }
             return BusResponse<List<long>>.Success(newhs.ToList());
         }
+        public virtual async Task<BusResponse<List<long>>> Search(float[] vectors, List<string> houseIds, float score = 0.8f)
+        {
+            SearchParameters searchParameters = new();
+            searchParameters.OutputFields.Add("mem_id");
+            if (houseIds != null && houseIds.Count > 0)
+            {
+                // 过滤掉空/空白的houseId，避免无效条件
+                var validHouseIds = houseIds.Where(id => !string.IsNullOrWhiteSpace(id)).ToList();
+                if (validHouseIds.Count > 0)
+                {
+                    // 拼接 OR 条件：h_id='id1' OR h_id='id2' OR ...
+                    var idConditions = validHouseIds.Select(id => $"h_id='{id}'");
+                    searchParameters.Expression = string.Join(" OR ", idConditions);
+                }
+            }
+
+
+            MilvusCollection collection = _client.GetCollection("MemCollect");
+            var results = await collection.SearchAsync(
+                vectorFieldName: "mem_vector",
+                vectors: new ReadOnlyMemory<float>[] { vectors },
+                SimilarityMetricType.Cosine,
+                limit: 10, searchParameters);
+            List<long> tmplist = new List<long>();
+            foreach (var item in results.FieldsData)
+            {
+                if (item.FieldName == "mem_id")
+                {
+                    tmplist.AddRange((item as FieldData<long>).Data);
+                }
+            }
+            HashSet<long> newhs = new HashSet<long>();
+            List<long> newlist = new List<long>();
+            for (int i = 0; i < tmplist.Count; i++)
+            {
+                if (results.Scores[i] > score && !newhs.Contains(tmplist[i]))
+                {
+                    newhs.Add(tmplist[i]);
+                }
+            }
+            return BusResponse<List<long>>.Success(newhs.ToList());
+        }
     }
 }

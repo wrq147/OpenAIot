@@ -140,6 +140,12 @@ namespace IoTAIService.AIProject
         public async Task MessageHandler(AIDetectRequestMeesage detectReq, List<AIConfigData> configs)
         {
             var aiCache = _provider.GetService<AICache>();
+            //空帧则清除ai视频处理数据
+            if (detectReq.Frame == null || detectReq.Frame.Length == 0)
+            {
+                aiCache.ClearVideo(detectReq.DeviceId);
+                return;
+            }
             List<AIConfigData> videoConfigs;
             if (configs != null)
             {

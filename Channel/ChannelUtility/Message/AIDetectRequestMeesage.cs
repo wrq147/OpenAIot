@@ -46,6 +46,7 @@ namespace ChannelUtility.Message
     public class AIConfigData
     {
         public string DetType { get; set; }
+        public long OrgId { get; set; }
         public Dictionary<string, object> DetParams { get; set; }
     }
 }

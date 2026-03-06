@@ -9,9 +9,16 @@ namespace IoTAIService
     public class IoTAIOption
     {
         /// <summary>
+        /// AI任务线程数量（默认4）
+        /// </summary>
+        public int runer_count { get; set; }
+        /// <summary>
         /// 监听的帧发布源
         /// </summary>
         public string[] FramePushConns { get; set; }
+        /// <summary>
+        /// Python的根目录
+        /// </summary>
         public string PythonHome { get; set; }
         /// <summary>
         /// 是否初始化Milvus表

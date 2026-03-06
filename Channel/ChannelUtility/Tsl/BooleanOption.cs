@@ -15,7 +15,7 @@ namespace ChannelUtility.Tsl
         /// false显示值
         /// </summary>
         public string falseText { get; set; }
-        protected override object InnerRawTo(object input)
+        public override object InnerRawTo(object input)
         {
             return Convert.ToBoolean(input);
         }

@@ -990,7 +990,7 @@
         </member>
         <member name="P:IoTService.IotOption.runer_count">
             <summary>
-            规则执行者数量（默认3）
+            规则执行者数量（默认4）
             </summary>
         </member>
         <member name="P:IoTService.IotOption.node_name">
@@ -3231,6 +3231,44 @@
             <param name="msisdns"></param>
             <param name="iccids"></param>
             <returns></returns>
+        </member>
+        <member name="T:IoTService.TslExtensions">
+            <summary>
+            物模型扩展方法
+            </summary>
+        </member>
+        <member name="M:IoTService.TslExtensions.RawTo(ChannelUtility.Tsl.BaseValueOption,System.Object,System.Func{System.String,System.Object})">
+            <summary>
+            原数据转换成显示数据
+            </summary>
+            <param name="input"></param>
+            <param name="getProp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.TslExtensions.RawToProp(ChannelUtility.Tsl.TslModel,System.Collections.Generic.IDictionary{System.String,System.Object},System.Func{System.String,System.Object})">
+            <summary>
+            原数据转换成显示数据
+            </summary>
+            <param name="input"></param>
+            <param name="getProp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.TslExtensions.PropertyList(ChannelUtility.Tsl.TslModel,System.Collections.Generic.Dictionary{System.String,ChannelUtility.DevicePropertyValue},System.Func{ChannelUtility.Tsl.BaseProperty,System.Threading.Tasks.Task{System.Boolean}})">
+            <summary>
+            获取显示用设备属性
+            </summary>
+            <param name="input"></param>
+            <param name="validate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.TslExtensions.GetModbusBytes(ChannelUtility.Tsl.BaseFunc,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            功能转modbus字节
+            </summary>
+            <param name="mode"></param>
+            <param name="inputData"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
         </member>
     </members>
 </doc>

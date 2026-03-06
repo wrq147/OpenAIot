@@ -19,7 +19,7 @@ namespace ChannelUtility.Tsl
         {
             this.type = "geo";
         }
-        protected override object InnerRawTo(object input)
+        public override object InnerRawTo(object input)
         {
             if (input is string s)
             {

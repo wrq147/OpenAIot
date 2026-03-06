@@ -13,23 +13,10 @@ namespace IoTAIService
         {
             _provider = provider;
         }
-        public int GetVideoInt(string videoId, string key, int def = 0)
+        public VideoCache GetVideoCache(string videoId)
         {
             var cache = _provider.GetService<CacheHelper>();
-            var videoNum = cache.GetCache<string>($"AIVideo:{videoId}:{key}");
-            if (string.IsNullOrEmpty(videoNum))
-            {
-                return def;
-            }
-            else
-            {
-                return Convert.ToInt32(videoNum);
-            }
-        }
-        public void SetVideoInt(string videoId, string key, int val)
-        {
-            var cache = _provider.GetService<CacheHelper>();
-            cache.SetCache<string>($"AIVideo:{videoId}:{key}", val.ToString(), DateTime.Now.AddSeconds(120));
+            return cache.GetCache<VideoCache>($"AICache:{videoId}");
         }
         public List<AIConfigData> GetVideoAIConfig(string videoId)
         {
@@ -39,7 +26,64 @@ namespace IoTAIService
         public void SetVideoAIConfig(string videoId, List<AIConfigData> configs)
         {
             var cache = _provider.GetService<CacheHelper>();
-            cache.SetCache<List<AIConfigData>>($"AIConfig:{videoId}", configs, DateTime.Now.AddMinutes(10));
+            cache.SetCache($"AIConfig:{videoId}", configs);
+            cache.SetCache($"AICache:{videoId}", new VideoCache());
+        }
+        public void ClearVideo(string videoId)
+        {
+            var cache = _provider.GetService<CacheHelper>();
+            cache.RemoveCache($"AIConfig:{videoId}");
+            cache.RemoveCache($"AICache:{videoId}");
+        }
+
+        public class VideoCache
+        {
+            private Dictionary<string, object> _videoData = new Dictionary<string, object>();
+            public int GetInt(string key, int def = 0)
+            {
+                if (_videoData.TryGetValue(key, out object videoNum))
+                {
+                    return Convert.ToInt32(videoNum);
+                }
+                else
+                {
+                    return def;
+                }
+            }
+            public void SetInt(string key, int val)
+            {
+                _videoData[key] = val;
+            }
+            public DateTime GetDateTime(string key, DateTime def)
+            {
+                if (_videoData.TryGetValue(key, out object data))
+                {
+                    return Convert.ToDateTime(data);
+                }
+                else
+                {
+                    return def;
+                }
+            }
+            public void SetDateTime(string key, DateTime val)
+            {
+                _videoData[key] = val;
+            }
+            public T GetItem<T>(string key) where T : class
+            {
+                if (_videoData.TryGetValue(key, out object videoNum))
+                {
+                    return videoNum as T;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            public void SetItem<T>(string key, T val) where T : class
+            {
+                _videoData[key] = val;
+            }
         }
     }
 }

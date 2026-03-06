@@ -15,7 +15,7 @@ namespace ChannelUtility.Tsl
         /// </summary>
         public Dictionary<string, string> elements { get; set; }
 
-        protected override object InnerRawTo(object input)
+        public override object InnerRawTo(object input)
         {
             string key = (input ?? "").ToString();
 

@@ -678,9 +678,19 @@
             验证区域是否在图像范围内
             </summary>
         </member>
+        <member name="P:IoTAIService.IoTAIOption.runer_count">
+            <summary>
+            AI任务线程数量（默认4）
+            </summary>
+        </member>
         <member name="P:IoTAIService.IoTAIOption.FramePushConns">
             <summary>
             监听的帧发布源
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.PythonHome">
+            <summary>
+            Python的根目录
             </summary>
         </member>
         <member name="P:IoTAIService.IoTAIOption.InitMilvus">

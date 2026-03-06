@@ -487,6 +487,25 @@ namespace ChannelUtility
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
+            if (_ai_publisher != null)
+            {
+                await Task.Delay(100);
+                //清除AI处理数据
+                AIDetectRequestMeesage aireq = new AIDetectRequestMeesage();
+                aireq.DeviceId = deviceId;
+                aireq.MRatio = 0;
+                aireq.Frame = new byte[0];
+                aireq.Width = 0;
+                aireq.Height = 0;
+                aireq.NodeId = string.Empty;
+                aireq.VideoKey = string.Empty;
+
+                var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+                byte[] serializedData = MessagePackSerializer.Serialize(msg, options);
+                _ai_publisher.SendFrame(serializedData);
+            }
+
+
         }
         public async Task PublishRawUp(string deviceId, byte[] data, string prefix, bool needReturn = false)
         {

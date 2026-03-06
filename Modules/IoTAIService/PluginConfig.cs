@@ -48,6 +48,7 @@ namespace IoTAIService
             services.AddSingleton<AIBusProxy>();
             services.AddSingleton<AIRedisHelper>();
             services.AddSingleton<ReliableAISubscriber>();
+            services.AddSingleton<AITaskRuner>();
         }
         private ITAServiceProvider _provider;
 

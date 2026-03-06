@@ -38,6 +38,7 @@ namespace ChannelUtility.Message
     {
         public float MotionRatio { get; set; }
         public int CoolDownMs { get; set; }
+        public long OrgId { get; set; }
         public List<AIDetectItem> Tasks { get; set; }
     }
     public class AIDetectItem

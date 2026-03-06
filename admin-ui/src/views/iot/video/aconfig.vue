@@ -104,7 +104,8 @@
                 <span class="header-title">已配置AI项目</span>
                 <el-badge :value="configuredProjects.length" class="count-badge" type="primary" />
               </div>
-               <el-link  type="danger" icon="el-icon-delete" @click="batchRemoveConfigured" :disabled="configuredProjects.length === 0">
+              <el-link type="danger" icon="el-icon-delete" @click="batchRemoveConfigured"
+                :disabled="configuredProjects.length === 0">
                 全部移除
               </el-link>
 
@@ -559,49 +560,55 @@ export default {
       this.paramConfigDialog.title = `项目【${row.Name}】的参数配置`;
     },
     async confirmParamConfig() {
-      // 1. 检查是否有clip类型参数需要生成特征向量
-      const clipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'clip');
+      try {
+        // 1. 检查是否有clip类型参数需要生成特征向量
+        const clipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'clip');
 
-      // 2. 如果有clip参数且未生成特征向量，则自动生成
-      if (clipParam) {
-        // 前置校验
-        if (this.paramConfigDialog.clipmode === "text" && !this.paramConfigDialog.clipText.trim()) {
-          this.$message.warning('请输入检测目标描述');
-          return;
-        }
-        if (this.paramConfigDialog.clipmode === "image" && !this.paramConfigDialog.clipImg) {
-          this.$message.warning('请上传检测目标图片');
-          return;
-        }
-
-        // 显示加载状态和提示
-        this.paramConfigDialog.generateLoading = true;
-        this.paramConfigDialog.generateTxt = "正在生成特征向量，请稍候...";
-
-        let res;
-        if (this.paramConfigDialog.clipmode === "text") {
-          // 过滤空值
-          let tarr = this.paramConfigDialog.clipText.split(',').filter(item => item.trim());
-          if (tarr.length === 0) {
-            this.$message.warning('检测目标描述不能为空');
-            this.paramConfigDialog.generateLoading = false;
+        // 2. 如果有clip参数且未生成特征向量，则自动生成
+        if (clipParam) {
+          // 前置校验
+          if (this.paramConfigDialog.clipmode === "text" && !this.paramConfigDialog.clipText.trim()) {
+            this.$message.warning('请输入检测目标描述');
             return;
           }
-          this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"] = tarr.join(',');
-          res = await generateFeature({ StrArr: tarr });
-        } else if (this.paramConfigDialog.clipmode === "image") {
-          res = await generateFeature({ ImgArr: [this.paramConfigDialog.clipImg] });
-          this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"] = this.paramConfigDialog.clipImg;
-        }
+          if (this.paramConfigDialog.clipmode === "image" && !this.paramConfigDialog.clipImg) {
+            this.$message.warning('请上传检测目标图片');
+            return;
+          }
 
-        // 保存生成的特征向量
-        this.paramConfigDialog.currentRow.paramValues[clipParam.code] = res.data;
-        this.paramConfigDialog.generateTxt = "正在保存参数中...";
+          // 显示加载状态和提示
+          this.paramConfigDialog.generateLoading = true;
+          this.paramConfigDialog.generateTxt = "正在生成特征向量，请稍候...";
+
+          let res;
+          if (this.paramConfigDialog.clipmode === "text") {
+            // 过滤空值
+            let tarr = this.paramConfigDialog.clipText.split(',').filter(item => item.trim());
+            if (tarr.length === 0) {
+              this.$message.warning('检测目标描述不能为空');
+              this.paramConfigDialog.generateLoading = false;
+              return;
+            }
+            this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"] = tarr.join(',');
+            res = await generateFeature({ StrArr: tarr });
+          } else if (this.paramConfigDialog.clipmode === "image") {
+            res = await generateFeature({ ImgArr: [this.paramConfigDialog.clipImg] });
+            this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"] = this.paramConfigDialog.clipImg;
+          }
+
+          // 保存生成的特征向量
+          this.paramConfigDialog.currentRow.paramValues[clipParam.code] = res.data;
+          this.paramConfigDialog.generateTxt = "正在保存参数中...";
+        }
+        this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
+        this.paramConfigDialog.visible = false;
+        this.paramConfigDialog.generateLoading = false;
+        this.$message.success('参数配置已保存');
       }
-      this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
-      this.paramConfigDialog.visible = false;
-      this.paramConfigDialog.generateLoading = false;
-      this.$message.success('参数配置已保存');
+      catch (ex) {
+        this.paramConfigDialog.generateLoading = false;
+      }
+
     },
     // 处理clip图片上传（转换为Base64）
     handleClipImageUpload(file) {

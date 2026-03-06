@@ -76,6 +76,7 @@ namespace IoTAIService
         /// <param name="connection">当前连接</param>
         private void ReceiveLoop(SubscriberConnection connection)
         {
+            AITaskRuner runner = _provider.GetService<AITaskRuner>();
             while (!_cts.Token.IsCancellationRequested)
             {
                 try
@@ -110,11 +111,11 @@ namespace IoTAIService
                             configList = System.Text.Json.JsonSerializer.Deserialize<List<AIConfigData>>(aiFrame.Configs, JsonMessageSerializerConfig.DefaultOptions);
                         }
 
-                        // 处理消息（同步调用异步方法）
-                        _provider.GetService<AIProjectManager>()
-                                 .MessageHandler(aiFrame, configList)
-                                 .GetAwaiter()
-                                 .GetResult();
+                        // 处理消息
+                        runner.PushConcurrentTask(aiFrame.DeviceId, async () =>
+                        {
+                            await _provider.GetService<AIProjectManager>().MessageHandler(aiFrame, configList);
+                        });
                     }
                 }
                 catch (Exception ex)

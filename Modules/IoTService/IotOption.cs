@@ -4,7 +4,7 @@ namespace IoTService
     public class IotOption
     {
         /// <summary>
-        /// 规则执行者数量（默认3）
+        /// 规则执行者数量（默认4）
         /// </summary>
         public int runer_count { get; set; }
         /// <summary>

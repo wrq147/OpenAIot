@@ -12,7 +12,7 @@ namespace ChannelUtility.Tsl
         /// 格式化字符串
         /// </summary>
         public string format { get; set; }
-        protected override object InnerRawTo(object input)
+        public override object InnerRawTo(object input)
         {
             if (input is string)
             {

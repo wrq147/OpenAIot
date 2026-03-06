@@ -74,6 +74,7 @@ namespace GB28181Channel
                     videoData.Configs.Add(new AIConfigData()
                     {
                         DetType = it.Code,
+                        OrgId = upItemResponse.Config.OrgId,
                         DetParams = it.paramValues
                     });
                 }

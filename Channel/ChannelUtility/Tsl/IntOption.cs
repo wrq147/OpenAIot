@@ -1,5 +1,4 @@
-﻿using Jint.Runtime;
-using System;
+﻿using System;
 using System.Diagnostics.Contracts;
 using System.Text;
 
@@ -23,7 +22,7 @@ namespace ChannelUtility.Tsl
         {
             return Math.Min(max, Math.Max(min, Convert.ToInt32(input)));
         }
-        protected override object InnerRawTo(object input)
+        public override object InnerRawTo(object input)
         {
             long tmpval = 0;
             if (min >= 0)

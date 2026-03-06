@@ -48,7 +48,7 @@ namespace ChannelUtility.Tsl
             val = Math.Truncate(val * factor) / factor;
             return val;
         }
-        protected override object InnerRawTo(object input)
+        public override object InnerRawTo(object input)
         {
             if (decimals < 1) decimals = 1;
             if (decimals > 8) decimals = 8;
