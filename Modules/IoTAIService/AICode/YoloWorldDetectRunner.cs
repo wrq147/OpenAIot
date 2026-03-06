@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Options;
+﻿using DeveloperService.Controller;
+using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using NPOI.SS.Formula.Functions;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -37,8 +40,9 @@ namespace IoTAIService.AICode
         {
             int originalWidth = image.Width;
             int originalHeight = image.Height;
+            float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
             // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image);
+            var inputTensor = PreprocessImage(image, gain);
             // 2. 准备输入
             var inputs = new List<NamedOnnxValue> {    
                 // 图片输入：假设已预处理为(1,3,640,640)的Tensor<float>
@@ -51,24 +55,45 @@ namespace IoTAIService.AICode
             using var outputs = _session.Run(inputs);
             var outputTensor = outputs.First().AsTensor<float>();
             // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, classes);
+            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain, classes);
 
             return detectionResults;
         }
-        // 图像预处理：缩放、归一化等
-        private Tensor<float> PreprocessImage(Image<Rgb24> input)
+        /// <summary>
+        /// 图像预处理：缩放、归一化等
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="gain"></param>
+        /// <returns></returns>
+        private Tensor<float> PreprocessImage(Image<Rgb24> input, float gain)
         {
             Image<Rgb24> image = input.Clone();
             int originalWidth = image.Width;
             int originalHeight = image.Height;
             // 计算缩放比例（保持宽高比，填充黑边）
-            float ratio = Math.Min((float)640 / originalWidth, (float)640 / originalHeight);
-            int resizedWidth = (int)(originalWidth * ratio);
-            int resizedHeight = (int)(originalHeight * ratio);
-            float scaleX = (float)originalWidth / resizedWidth;
-            float scaleY = (float)originalHeight / resizedHeight;
-            // 缩放为640x640
-            image.Mutate(x => x.Resize(640, 640));
+            float resizedWidth = originalWidth * gain;
+            float resizedHeight = originalHeight * gain;
+            float dw = (640 - resizedWidth) / 2.0f;
+            float dh = (640 - resizedHeight) / 2.0f;
+            if (originalWidth != resizedWidth || originalHeight != resizedHeight)
+            {
+                image.Mutate(x => x.Resize(
+                    width: (int)resizedWidth,
+                    height: (int)resizedHeight,
+                    sampler: KnownResamplers.Triangle));
+            }
+            int top = (int)Math.Round(dh - 0.1f);
+            int left = (int)Math.Round(dw - 0.1f);
+
+            // 7. 填充黑边（对齐cv2.copyMakeBorder）
+            Image<Rgb24> paddedImg = new Image<Rgb24>(640, 640);
+            paddedImg.Mutate(x =>
+            {
+                // 填充背景色
+                x.Fill(new Rgb24(114, 114, 114));
+                // 粘贴缩放后的图片（top/left为填充量）
+                x.DrawImage(image, new Point(left, top), 1.0f);
+            });
 
             // 转换为张量
             var tensor = new DenseTensor<float>(new[] { 1, 3, 640, 640 });
@@ -76,7 +101,7 @@ namespace IoTAIService.AICode
             {
                 for (int x = 0; x < 640; x++)
                 {
-                    var pixel = image[x, y];
+                    var pixel = paddedImg[x, y];
                     // 归一化
                     tensor[0, 0, y, x] = pixel.R / 255f;
                     tensor[0, 1, y, x] = pixel.G / 255f;
@@ -88,6 +113,7 @@ namespace IoTAIService.AICode
 
 
 
+
         /// <summary>
         /// 后处理：解析模型输出，过滤低置信度结果，执行NMS，还原检测框到原图坐标
         /// </summary>
@@ -96,9 +122,10 @@ namespace IoTAIService.AICode
         /// <param name="iouThreshold"></param>
         /// <param name="originalWidth"></param>
         /// <param name="originalHeight"></param>
+        /// <param name="gain"></param>
         /// <param name="classes"></param>
         /// <returns></returns>
-        private List<DetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, List<string> classes)
+        private List<DetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, float gain, List<string> classes)
         {
             var results = new List<DetectionResult>();
             int numClasses = classes.Count;
@@ -139,10 +166,9 @@ namespace IoTAIService.AICode
                 if (maxConf < confidenceThreshold || maxClassIdx == -1)
                     continue;
 
-                // 计算padding（对齐官方scale_boxes）
-                float gain = Math.Min(640 / originalWidth, 640 / originalHeight);
-                float paddingX = (float)Math.Round((640 - (originalWidth * gain)) / 2 - 0.1);
-                float paddingY = (float)Math.Round((640 - (originalHeight * gain)) / 2 - 0.1);
+                // 计算padding
+                float paddingX = (640 - (originalWidth * gain)) / 2 - 0.1f;
+                float paddingY = (640 - (originalHeight * gain)) / 2 - 0.1f;
 
                 // 直接去padding + 缩放到原图（无需×640，因为已是像素值）
                 x1 = (x1 - paddingX) / gain;
@@ -160,10 +186,10 @@ namespace IoTAIService.AICode
                 {
                     Label = classes[maxClassIdx],
                     Confidence = maxConf,
-                    X1 = x1,
-                    Y1 = y1,
-                    X2 = x2,
-                    Y2 = y2
+                    X1 = (int)x1,
+                    Y1 = (int)y1,
+                    X2 = (int)x2,
+                    Y2 = (int)y2
                 });
             }
 

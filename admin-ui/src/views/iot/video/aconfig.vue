@@ -244,7 +244,7 @@
 
 
     <!-- AI项目测试弹窗 -->
-    <el-dialog :title="testDialog.title" :visible.sync="testDialog.visible" width="700px" append-to-body
+    <el-dialog :title="testDialog.title" :visible.sync="testDialog.visible" width="900px" append-to-body
       :close-on-click-modal="false" :destroy-on-close="true" top="5vh">
       <div class="test-config-content">
 
