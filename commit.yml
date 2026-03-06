@@ -2,40 +2,55 @@
 branches: {
   }
 fileChange:
+  /Channel:
+    newFile: !uuid '6918b99f98b868008fc9e29765342d7d56787659'
+    oldFile: !uuid '72cc369c466ee95ae6b620191163e03e3fc79441'
+  /Channel/ChannelUtility:
+    newFile: !uuid '5c9f9018fc862169395c275844dab8ded0d28116'
+    oldFile: !uuid 'c61b1acdd93df68e87e3203e03e92ffd3b768b5c'
+  /Channel/ChannelUtility/ClientBusProxy.cs:
+    newFile: !uuid '1f120b6195cb663dc28c189e4a40e782eec1feb2'
+    oldFile: !uuid '5c03dca93dd3ef79bb294815028b3553f0a8a96e'
+  /Channel/ChannelUtility/Message:
+    newFile: !uuid 'eecf9a63a45cfc8988e83070df38c4b91878f813'
+    oldFile: !uuid '2ecfd34aeb26f9f87e800d7567928486a047b20c'
+  /Channel/ChannelUtility/Message/AIDetectRequestMeesage.cs:
+    newFile: !uuid 'e0f1e4595334ef70f5b0955dceea0819d4256cee'
+    oldFile: !uuid 'c24a30c4f41701eb3f450b361978bb09b100829e'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '87d4a187cf68e31562631f1fa8bda63326676c70'
+    oldFile: !uuid '99110733e29dfa3ae85d73d23f65f8f6486ab0c1'
+  /Channel/FixVideoChannel/AIDetectorTask.cs:
+    newFile: !uuid '0a53339b1a209cf08dd13e0dbe0d64651e609930'
+    oldFile: !uuid 'b20c3fd9d6a0efc9ba9adb140adba59055d8c72a'
+  /Channel/FixVideoChannel/FixVideoDeviceEventListener.cs:
+    newFile: !uuid 'b8f30a9153444e10e0dc676c249d6b2714ac2009'
+    oldFile: !uuid 'e773872a411fd903a338f82d9b325abf4c1511e2'
+  /Channel/FixVideoChannel/IVideoDeviceEventListener.cs:
+    newFile: !uuid '89045cf2d7f187b71ca9d61c384d639885c5dfeb'
+    oldFile: !uuid '74d2b907ee2fe57c9c1d4e187d381c01ad5c20f3'
+  /Channel/GB28181Channel:
+    newFile: !uuid 'c20bc1732e5dc775399c79c28d6f9afe3aad90be'
+    oldFile: !uuid 'b2966d03b726ac4577ae61c15361058514071402'
+  /Channel/GB28181Channel/AIDetectorTask.cs:
+    newFile: !uuid 'b28088199a906333414c25c09c81a38798a06070'
+    oldFile: !uuid '7f0183b4ad3c24d62ef022667793cb2fa5912827'
+  /Channel/GB28181Channel/GB28181DeviceEventListener.cs:
+    newFile: !uuid 'eb1a14ca20af84c97ee53bd5619fc407780b57e8'
+    oldFile: !uuid '61900879910c0687bd43918277a4d71588b76e73'
   /Modules:
-    newFile: !uuid 'fdda1eb80b88236edfd6e078510282460c319ad4'
-    oldFile: !uuid '2269b1991acb3a9091e7060626e84a3e49963a49'
+    newFile: !uuid '7c407c28a5b6917198c913ceeb0c2bf8e4660c9d'
+    oldFile: !uuid 'fdda1eb80b88236edfd6e078510282460c319ad4'
   /Modules/IoTAIService:
-    newFile: !uuid '62397bcff1f42069d04e0a5e6e172c7b17a4ada6'
-    oldFile: !uuid '7032b326e0221caa4ccb65bbe39805a4f286cdcd'
+    newFile: !uuid '4460d383d33516913706ac4b3c7387d39f0792e2'
+    oldFile: !uuid '62397bcff1f42069d04e0a5e6e172c7b17a4ada6'
   /Modules/IoTAIService/AIProject:
-    newFile: !uuid '60a3a2eb3138166c488eb495c13d14c2d89f39bb'
-    oldFile: !uuid 'aaabb700c2a13df71241533a604bb9b331748b54'
-  /Modules/IoTAIService/AIProject/Items:
-    newFile: !uuid '037437b0a552907797963359d89a4ea02bbecbc8'
-    oldFile: !uuid 'f65d804a463add9825261f72caa6dbda667b7a31'
-  /Modules/IoTAIService/AIProject/Items/GeneralDetect.cs:
-    newFile: !uuid 'a0d93939bf3234a2369863d2b66d1dea7c46f282'
-    oldFile: !uuid '4c89067ef694ee5c26efbfd225755bcbc4eef9c2'
-  /admin-ui:
-    newFile: !uuid '3edcc47cea0b38f874ad3dde81e3f1847f2f41fe'
-    oldFile: !uuid 'c6aac6fee83f1782d212446280d0ae84d5428ca9'
-  /admin-ui/src:
-    newFile: !uuid '4074f12cd970961b28506db42f675a00fc8edbdc'
-    oldFile: !uuid '51fa0c646701cf3b96f5bc72f140060c1867ab1e'
-  /admin-ui/src/views:
-    newFile: !uuid 'f5d6fe616a05456a309a62cf82f2c82fb53e8cbe'
-    oldFile: !uuid '220a6e0aaf4adfed72391195b532f07c08e0f587'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '9cbef3dfa0b442b4ca8cec94042124432ee8b103'
-    oldFile: !uuid '89a740e5625ce5d37f4eb7269f9ff36ef627d566'
-  /admin-ui/src/views/iot/video:
-    newFile: !uuid 'c82ecdfd8c24391a589367092b2c19103c48a154'
-    oldFile: !uuid '5ed01008b145281935ad186b521ce893c9e61ec8'
-  /admin-ui/src/views/iot/video/aconfig.vue:
-    newFile: !uuid '0e2b6c8329706a9ee69a98ed0e609c642c3f5a1d'
-    oldFile: !uuid '0c199f8c21ba6473ea479c4b87d9cb3745cab24e'
-gitCommitId: !uuid '358ee2825e88604d1d624b43bce6ecbe397550b8'
+    newFile: !uuid 'baba75d13a9c059aeea685fc6f716f263e3d60f9'
+    oldFile: !uuid '60a3a2eb3138166c488eb495c13d14c2d89f39bb'
+  /Modules/IoTAIService/AIProject/AIProjectManager.cs:
+    newFile: !uuid 'f26e99f4c2bc4aacc0e937b8e4b1250556725ee7'
+    oldFile: !uuid '19789a29d6eea434e8f8446ffe123c9ea685a072'
+gitCommitId: !uuid 'ed62b29be70d630ac5a015ed66d23b574918d87a'
 renames: {
   }
-revisionId: 184
+revisionId: 185
