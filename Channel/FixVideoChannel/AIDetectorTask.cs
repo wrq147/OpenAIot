@@ -91,7 +91,7 @@ namespace FixVideoChannel
                 configs = videoData.Configs;
                 videoData.NeedUp = false;
             }
-            listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs);
+            listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
         }
         public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
         {

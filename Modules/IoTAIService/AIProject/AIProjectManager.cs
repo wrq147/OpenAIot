@@ -140,55 +140,59 @@ namespace IoTAIService.AIProject
         public async Task MessageHandler(AIDetectRequestMeesage detectReq, List<AIConfigData> configs)
         {
             var aiCache = _provider.GetService<AICache>();
-            //空帧则清除ai视频处理数据
-            if (detectReq.Frame == null || detectReq.Frame.Length == 0)
+            if (detectReq.DataType == 0)
             {
+                //清除ai视频处理数据
                 aiCache.ClearVideo(detectReq.DeviceId);
                 return;
             }
-            List<AIConfigData> videoConfigs;
-            if (configs != null)
+            else if (detectReq.DataType == 1)
             {
-                videoConfigs = configs;
-                aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
-            }
-            else
-            {
-                videoConfigs = aiCache.GetVideoAIConfig(detectReq.DeviceId);
-            }
-            if (videoConfigs == null)
-            {
-                await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
-                return;
-            }
-            byte[] frameData = detectReq.Frame;
-            using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
-            {
-                //处理画框
-                List<BoxItem> boxlist = new List<BoxItem>();
-                foreach (var config in videoConfigs)
+                List<AIConfigData> videoConfigs;
+                if (configs != null)
                 {
-                    if (_detects.TryGetValue(config.DetType, out IDetect tmpdet))
-                    {
-                        var boxs = tmpdet.GenerateBoxs(image, config);
-                        boxlist.AddRange(boxs);
-                    }
+                    videoConfigs = configs;
+                    aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
                 }
-
-                //回复画框
-                await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
-
-
-                //处理事件
-                foreach (var config in videoConfigs)
+                else
                 {
-                    if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
-                    {
-                        await tmpinfer.Execute(detectReq.DeviceId, image, config, boxlist);
-                    }
+                    videoConfigs = aiCache.GetVideoAIConfig(detectReq.DeviceId);
                 }
+                if (videoConfigs == null)
+                {
+                    await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
+                    return;
+                }
+                byte[] frameData = detectReq.Frame;
+                using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
+                {
+                    //处理画框
+                    List<BoxItem> boxlist = new List<BoxItem>();
+                    foreach (var config in videoConfigs)
+                    {
+                        if (_detects.TryGetValue(config.DetType, out IDetect tmpdet))
+                        {
+                            var boxs = tmpdet.GenerateBoxs(image, config);
+                            boxlist.AddRange(boxs);
+                        }
+                    }
 
+                    //回复画框
+                    await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
+
+
+                    //处理事件
+                    foreach (var config in videoConfigs)
+                    {
+                        if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
+                        {
+                            await tmpinfer.Execute(detectReq.DeviceId, image, config, boxlist);
+                        }
+                    }
+
+                }
             }
+           
         }
     }
 }

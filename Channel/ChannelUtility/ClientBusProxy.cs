@@ -499,6 +499,8 @@ namespace ChannelUtility
                 aireq.Height = 0;
                 aireq.NodeId = string.Empty;
                 aireq.VideoKey = string.Empty;
+                aireq.Configs = string.Empty;
+                aireq.DataType = 0;
 
                 var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
                 byte[] serializedData = MessagePackSerializer.Serialize(msg, options);
@@ -551,6 +553,7 @@ namespace ChannelUtility
 
 
 
+
         /// <summary>
         /// 上报AI检测请求
         /// </summary>
@@ -561,8 +564,8 @@ namespace ChannelUtility
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="configs"></param>
-        /// <returns></returns>
-        public void PublishAIDetectRequest(string deviceId, string videoKey, float motionRatio, byte[] frameData, int width, int height, List<AIConfigData> configs)
+        /// <param name="dataType"></param>
+        public void PublishAIDetectRequest(string deviceId, string videoKey, float motionRatio, byte[] frameData, int width, int height, List<AIConfigData> configs, byte dataType)
         {
             AIDetectRequestMeesage msg = new AIDetectRequestMeesage();
             msg.DeviceId = deviceId;
@@ -576,7 +579,11 @@ namespace ChannelUtility
             {
                 msg.Configs = System.Text.Json.JsonSerializer.Serialize(configs, JsonMessageSerializerConfig.ObjectOptions);
             }
-
+            else
+            {
+                msg.Configs = string.Empty;
+            }
+            msg.DataType = dataType;
             var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
             byte[] serializedData = MessagePackSerializer.Serialize(msg, options);
 

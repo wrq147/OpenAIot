@@ -31,10 +31,10 @@ namespace FixVideoChannel
             await eventBus.Connected(item.Id);
         }
 
-        public void OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs)
+        public void OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs, byte dataType)
         {
             var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs);
+            eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs, dataType);
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MessagePack;
+using Microsoft.VisualBasic;
 namespace ChannelUtility.Message
 {
     [MessagePackObject]
@@ -25,22 +26,25 @@ namespace ChannelUtility.Message
         public float MRatio { get; set; }
 
         /// <summary>
-        /// 图像帧（JPEG压缩后的字节数组，无额外开销）
+        /// 数据帧
         /// </summary>
         [Key(4)]
         public byte[] Frame { get; set; }
-
         [Key(5)]
         public int Width { get; set; }
 
         [Key(6)]
         public int Height { get; set; }
-
         /// <summary>
         /// AI配置JSON字符串（需解析为List<AIConfigData>）
         /// </summary>
         [Key(7)]
         public string Configs { get; set; }
+        /// <summary>
+        /// 数据类型：0为清除，1为图像，2为音频
+        /// </summary>
+        [Key(8)]
+        public byte DataType { get; set; }
     }
 
     public class AIConfigData
