@@ -1,6 +1,7 @@
 ﻿using Common.Share;
 using Microsoft.Extensions.Options;
 using Milvus.Client;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,6 +70,19 @@ namespace IoTAIService.Business
                 return BusResponse<int>.Error(111, "删除成员向量失败");
             }
         }
+        public virtual async Task<BusResponse<int>> DelFromMemberHouse(string[] houseIds)
+        {
+            MilvusCollection collection = _client.GetCollection("MemCollect");
+            var res = await collection.DeleteAsync("h_id in [" + string.Join(',', houseIds.Select(id => $"\"{id}\"")) + "]");
+            if (res.DeleteCount > 0)
+            {
+                return BusResponse<int>.Success((int)res.DeleteCount);
+            }
+            else
+            {
+                return BusResponse<int>.Error(111, "删除成员向量失败");
+            }
+        }
         public virtual async Task<BusResponse<long>> InsertToMemberCollection(long uid, string houseid, float[] data)
         {
             List<string> houseIds = new List<string>();
@@ -102,7 +116,7 @@ namespace IoTAIService.Business
             searchParameters.OutputFields.Add("mem_id");
             if (!string.IsNullOrEmpty(houseId))
             {
-                searchParameters.Expression = "h_id='" + houseId + "'";
+                searchParameters.Expression = "h_id==\"" + houseId + "\"";
             }
 
             MilvusCollection collection = _client.GetCollection("MemCollect");
@@ -136,14 +150,7 @@ namespace IoTAIService.Business
             searchParameters.OutputFields.Add("mem_id");
             if (houseIds != null && houseIds.Count > 0)
             {
-                // 过滤掉空/空白的houseId，避免无效条件
-                var validHouseIds = houseIds.Where(id => !string.IsNullOrWhiteSpace(id)).ToList();
-                if (validHouseIds.Count > 0)
-                {
-                    // 拼接 OR 条件：h_id='id1' OR h_id='id2' OR ...
-                    var idConditions = validHouseIds.Select(id => $"h_id='{id}'");
-                    searchParameters.Expression = string.Join(" OR ", idConditions);
-                }
+                searchParameters.Expression = "h_id in [" + string.Join(',', houseIds.Select(id => $"\"{id}\"")) + "]";
             }
 
 

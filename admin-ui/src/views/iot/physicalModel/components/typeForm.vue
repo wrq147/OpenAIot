@@ -69,13 +69,6 @@
       <el-form-item label="为假描述" prop="falseText" v-if="typeForm.type == 'boolean'">
         <el-input v-model="typeForm.falseText" placeholder="请输入为假时的文字描述" />
       </el-form-item>
-      <el-form-item label="是否图片" v-if="typeForm.type == 'file'">
-        <el-switch
-          v-model="typeForm.isimg"
-          active-color="#13ce66"
-          inactive-color="#ff4949">
-        </el-switch>
-      </el-form-item>
       <el-form-item label="文件类型" prop="bodyType" v-if="typeForm.type == 'file'">
         <el-select v-model="typeForm.bodyType" placeholder="请选择文件类型" style="width: 100%">
           <el-option v-for="item in bodyTypeList" :key="item" :label="item" :value="item"></el-option>

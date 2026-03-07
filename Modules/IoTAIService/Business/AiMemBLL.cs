@@ -100,6 +100,7 @@ namespace IoTAIService.Business
             {
                 await _aimemDAL.Delete(x => x.OrgId == user.OrgId && ids.Contains(x.HouseId));
                 var num = await _aiHouseDAL.Delete(x => x.OrgId == user.OrgId && ids.Contains(x.Id));
+                await _provider.GetService<MilvusBLL>().DelFromMemberHouse(ids);
                 return BusResponse<int>.Success(num);
             }
             catch (Exception ex)

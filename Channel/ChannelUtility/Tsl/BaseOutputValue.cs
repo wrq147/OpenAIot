@@ -33,9 +33,5 @@ namespace ChannelUtility.Tsl
         /// 判断枚举是否多选
         /// </summary>
         public bool multi { get; set; }
-        /// <summary>
-        /// 是否是图片
-        /// </summary>
-        public bool isimg { get; set; }
     }
 }

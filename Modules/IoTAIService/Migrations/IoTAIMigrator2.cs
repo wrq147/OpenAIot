@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IoTAIService.Migrations
 {
-    [Migration(20260307001)]
+    [Migration(20260307003)]
     public class IoTAIMigrator2 : Migration
     {
         public override void Up()
@@ -24,13 +24,26 @@ namespace IoTAIService.Migrations
                 Sort = 1
             });
 
+            this.Execute.Sql("delete FROM mz_iot_code where Id=10002");
             Insert.IntoTable("mz_iot_code").Row(new
             {
                 Id = 10002,
                 Name = "陌生人闯入",
                 Code = "UnkIn",
                 CodeGroup = 731,
-                OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"人脸图\",\"code\":\"face_img\",\"type\":\"file\",\"isimg\":true,\"bodyType\":\"base64\"}]}",
+                OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"抓拍图\",\"code\":\"face_img\",\"type\":\"file\",\"bodyType\":\"base64\"}]}",
+                CodeType = 2,
+                Sort = 1
+            });
+
+            this.Execute.Sql("delete FROM mz_iot_code where Id=10003");
+            Insert.IntoTable("mz_iot_code").Row(new
+            {
+                Id = 10003,
+                Name = "熟人闯入",
+                Code = "KnwIn",
+                CodeGroup = 731,
+                OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"抓拍图\",\"code\":\"face_img\",\"type\":\"file\",\"bodyType\":\"base64\"},{\"name\":\"闯入者\",\"code\":\"face_name\",\"type\":\"string\"},{\"name\":\"闯入者Id\",\"code\":\"name_id\",\"type\":\"string\"}]}",
                 CodeType = 2,
                 Sort = 1
             });

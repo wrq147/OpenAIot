@@ -3,8 +3,8 @@ using Common;
 using IoTAIService.AICode;
 using IoTAIService.Business;
 using IoTAIService.DAL;
-using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using TemplateAction.Label;
 
 namespace IoTAIService.AIProject.Items
 {
@@ -96,16 +95,31 @@ namespace IoTAIService.AIProject.Items
                         }
                     }
 
-                    //触发人脸库事件
+                    //触发熟人闯入事件
                     if (addMemList.Count > 0)
                     {
                         var tmemlist = await _provider.GetService<AiMemDAL>().SelectFaceMem(addMemList);
+                        foreach (var tmem in tmemlist)
+                        {
+                            int idx = addMemList.IndexOf(tmem.MemId.Value);
+                            if (idx >= 0)
+                            {
+                                Dictionary<string, object> outputs = new Dictionary<string, object>();
+                                outputs.Add("face_img", knowList[idx].ToBase64String(JpegFormat.Instance));
+                                outputs.Add("face_name", tmem.MemInfo == null ? "佚名" : tmem.MemInfo.RealName);
+                                outputs.Add("name_id", tmem.MemInfo == null ? string.Empty : tmem.MemInfo.Id.ToString());
+                                await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "KnwIn", outputs);
+                            }
+                        }
+
                     }
 
-                    //触发陌生人事件
-                    if (unknowList.Count > 0)
+                    //触发陌生人闯入事件
+                    foreach (var unknow in unknowList)
                     {
-
+                        Dictionary<string, object> outputs = new Dictionary<string, object>();
+                        outputs.Add("face_img", unknow.ToBase64String(JpegFormat.Instance));
+                        await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "UnkIn", outputs);
                     }
                 }
 

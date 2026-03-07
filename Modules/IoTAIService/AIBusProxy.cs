@@ -72,11 +72,8 @@ namespace IoTAIService
         /// <param name="deviceId"></param>
         /// <param name="eventId"></param>
         /// <param name="outputs"></param>
-        /// <param name="redirectFromProductId"></param>
-        /// <param name="ruleId"></param>
-        /// <param name="fromDtuId"></param>
         /// <returns></returns>
-        public async Task SendEvent(string productId, string deviceId, string eventId, IDictionary<string, object> outputs, string redirectFromProductId = null, HashSet<long> ruleId = null, string fromDtuId = null, string fromNode = null)
+        public async Task SendEvent(string productId, string deviceId, string eventId, IDictionary<string, object> outputs)
         {
             DeviceEventMessage msg = new DeviceEventMessage();
             msg.DeviceId = deviceId;
@@ -84,10 +81,10 @@ namespace IoTAIService
             msg.EventId = eventId;
             msg.Outputs = outputs;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            msg.RedirectFromProductId = redirectFromProductId;
-            msg.RuleIds = ruleId;
-            msg.RedirecDtuId = fromDtuId;
-            msg.NodeId = fromNode;
+            msg.RedirectFromProductId = null;
+            msg.RuleIds = null;
+            msg.RedirecDtuId = null;
+            msg.NodeId = null;
             var bus = _provider.GetService<NatsScope>().Bus;
             await bus.PublishAsync(new NatsMsg<string>()
             {

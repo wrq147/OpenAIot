@@ -527,13 +527,6 @@
               :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否图片" v-if="paramsForm.type == 'file'">
-          <el-switch
-            v-model="paramsForm.isimg"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-        </el-form-item>
         <el-form-item label="文件类型" v-if="paramsForm.type == 'file'">
           <el-select v-model="paramsForm.bodyType" placeholder="请选择文件类型" style="width: 100%">
             <el-option label="url" value="url"></el-option>
