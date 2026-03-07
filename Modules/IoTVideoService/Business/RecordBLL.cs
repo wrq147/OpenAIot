@@ -216,6 +216,12 @@ namespace IoTVideoService.Business
             return BusResponse<string>.Success();
         }
 
+        public virtual async Task InsertKey(MZ_IotRecordKey data)
+        {
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            data.Id = snowflake.NextId().ToString();
+            await _provider.GetService<RecordKeyDAL>().Insert(data);
+        }
         public virtual async Task<List<MZ_IotRecordKey>> SelectKeyList(In_RecordKeyList query)
         {
             return await _provider.GetService<RecordKeyDAL>().SelectList(x => x.VideoKey == query.Key && x.KeyDate >= query.beginTime && x.KeyDate < query.endTime);

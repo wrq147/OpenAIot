@@ -34,7 +34,7 @@ namespace ChannelUtility.Tsl
         /// </summary>
         public string[] Targets { get; set; }
         /// <summary>
-        /// 事件沉默周期，单位秒（默认表示86400S，最小60秒）
+        /// 事件沉默周期，单位秒
         /// </summary>
         public int SilenceTime { get; set; }
     }

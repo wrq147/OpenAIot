@@ -20,59 +20,108 @@ namespace IoTAIService.AIProject.Items
     {
         private ITAServiceProvider _provider;
 
-        public async Task Execute(string deviceId, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
+        public async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
             var tboxlist = boxes.Where(x => x.label == "人脸").ToList();
             var facenum = tboxlist.Count;
             var aiCache = _provider.GetService<AICache>();
-            var videoData = aiCache.GetVideoCache(deviceId);
+            var videoData = aiCache.GetVideoCache(req.DeviceId);
             int lastFaceNum = videoData.GetInt("face_num", -1);
+            var aiBusProxy = _provider.GetService<AIBusProxy>();
             if (lastFaceNum != facenum || lastFaceNum == -1)
             {
                 //发送人脸数量属性
                 Dictionary<string, object> newvals = new Dictionary<string, object>();
                 newvals.Add("FaceCount", facenum);
-                await _provider.GetService<AIBusProxy>().SendPropertyReply(string.Empty, deviceId, newvals);
+                await aiBusProxy.SendPropertyReply(string.Empty, req.DeviceId, newvals);
             }
 
             videoData.SetInt("face_num", facenum);
-            if (facenum > 0)
+
+            #region 跟踪人脸框
+            var tracker = videoData.GetItem<ByteTrack>("face_track");
+            if (tracker == null)
+            {
+                tracker = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
+            }
+            (var tracklist, var addlist, var rmlist) = tracker.Update(tboxlist);
+            #endregion
+
+            if (facenum > 0 && addlist.Count > 0)
             {
                 var nowtime = DateTime.Now;
-                List<string> hselist = videoData.GetItem<List<string>>("house_list");
-                var curtime = videoData.GetDateTime("house_time", nowtime);
-                if (hselist == null || (nowtime - curtime).TotalSeconds > 60)
-                {
-                    var tmplist = await _provider.GetService<AiHouseDAL>().SelectList(x => x.OrgId == config.OrgId);
-                    hselist = tmplist.Select(x => x.Id).ToList();
-                    videoData.SetDateTime("house_time", nowtime);
-                }
+                var tmplist = await _provider.GetService<AiHouseDAL>().SelectList(x => x.OrgId == config.OrgId);
+                List<string> hselist = tmplist.Select(x => x.Id).ToList();
 
-                if (hselist.Count > 0)
+                //处理人脸识别事件
+                float tscore = config.GetFloat("facescore", 0.8f);
+                var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
+                var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
+                var milBLL = _provider.GetService<MilvusBLL>();
+                if (addlist.Count > 0)
                 {
-                    //处理人脸识别事件
-                    float tscore = config.GetFloat("facescore", 0.8f);
-                    var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
-                    var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
-                    var milBLL = _provider.GetService<MilvusBLL>();
-                    foreach (var titem in tboxlist)
+                    List<long> addMemList = new List<long>();
+                    List<Image<Rgb24>> knowList = new List<Image<Rgb24>>();
+                    List<Image<Rgb24>> unknowList = new List<Image<Rgb24>>();
+                    var addfaces = addlist.Select(x => x.CurrentDetection);
+                    foreach (var titem in addfaces)
                     {
                         var tmpimg = image.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
                         var tmpstn = faceSTNRunner.Predict(tmpimg);
                         var recogdata = faceRecogRunner.PredictTensor(tmpstn);
                         var tmpfls = recogdata.ToArray<float>();
-                        var tmprsp = await milBLL.Search(tmpfls, hselist, tscore);
-                        if (tmprsp.IsSuccess())
+                        if (hselist.Count > 0)
                         {
-                            //tlist.AddRange(tmprsp.Data);
+                            var tmprsp = await milBLL.Search(tmpfls, hselist, tscore);
+                            if (tmprsp.IsSuccess())
+                            {
+                                if (tmprsp.Data.Count > 0)
+                                {
+                                    long tmpid = tmprsp.Data.First();
+                                    if (!addMemList.Contains(tmpid))
+                                    {
+                                        addMemList.Add(tmpid);
+                                        knowList.Add(tmpimg);
+                                    }
+                                }
+                                else
+                                {
+                                    unknowList.Add(tmpimg);
+                                }
+                            }
                         }
+                        else
+                        {
+                            unknowList.Add(tmpimg);
+                        }
+                    }
+
+                    //触发人脸库事件
+                    if (addMemList.Count > 0)
+                    {
+                        var tmemlist = await _provider.GetService<AiMemDAL>().SelectFaceMem(addMemList);
+                    }
+
+                    //触发陌生人事件
+                    if (unknowList.Count > 0)
+                    {
+
                     }
                 }
 
-                //触发陌生人事件
 
+                var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
+                if ((DateTime.Now - tmpkeyTime).TotalSeconds > 60)
+                {
+                    var fileHelper = _provider.GetService<FileHelper>();
+                    var turl = await fileHelper.UploadRgb24File(image);
+                    if (!string.IsNullOrEmpty(turl))
+                    {
+                        videoData.SetDateTime("LastKeyTime", DateTime.Now);
+                        await aiBusProxy.SendMediaKey(req.DeviceId, req.VideoKey, "人员闯入", turl);
+                    }
+                }
             }
-
         }
 
         public async Task Init(ITAServiceProvider provider)

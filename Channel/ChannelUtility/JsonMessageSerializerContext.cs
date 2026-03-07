@@ -35,6 +35,7 @@ namespace ChannelUtility
     [JsonSerializable(typeof(double?))]
     [JsonSerializable(typeof(string))]
     [JsonSerializable(typeof(NodeOnlineMessage))]
+    [JsonSerializable(typeof(MediaKeyMessage))]
     [JsonSerializable(typeof(MediaRecordCleanMessage))]
     [JsonSerializable(typeof(MediaPTZMessageReply))]
     [JsonSerializable(typeof(MediaPTZMessage))]

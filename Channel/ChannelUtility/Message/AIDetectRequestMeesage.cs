@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MessagePack;
-using Microsoft.VisualBasic;
+
 namespace ChannelUtility.Message
 {
     [MessagePackObject]

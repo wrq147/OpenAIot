@@ -11,6 +11,6 @@ namespace IoTAIService.AIProject.Items
 {
     public interface IInfer : IAIProject
     {
-        Task Execute(string deviceId, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes);
+        Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes);
     }
 }

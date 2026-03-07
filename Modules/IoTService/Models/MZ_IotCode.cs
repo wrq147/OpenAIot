@@ -32,7 +32,7 @@ namespace IoTService.Models
         /// </summary>
         public string OptionData { get; set; }
         /// <summary>
-        /// 0为属性、1为功能
+        /// 0为属性、1为功能、2为事件
         /// </summary>
         public int? CodeType { get; set; }
         /// <summary>

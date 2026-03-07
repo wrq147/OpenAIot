@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChannelUtility.Message;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -81,34 +82,16 @@ namespace IoTAIService.AICode
         public Vector2 GetPredictedCenter() => new Vector2(_x.X, _x.Y);
     }
 
-    /// <summary>
-    /// 检测框实体（无修改）
-    /// </summary>
-    public class Detection
-    {
-        public float X1 { get; set; } // 左上角X
-        public float Y1 { get; set; } // 左上角Y
-        public float X2 { get; set; } // 右下角X
-        public float Y2 { get; set; } // 右下角Y
-        public float Confidence { get; set; } // 置信度
-        public int ClassId { get; set; } // 类别ID
-
-        // 计算框的中心
-        public Vector2 GetCenter() => new Vector2((X1 + X2) / 2, (Y1 + Y2) / 2);
-        // 计算框的面积
-        public float GetArea() => (X2 - X1) * (Y2 - Y1);
-    }
-
     // 跟踪轨迹实体（无修改）
     public class Track
     {
         public int Id { get; set; } // 唯一跟踪ID
-        public Detection CurrentDetection { get; set; } // 当前检测框
+        public BoxItem CurrentDetection { get; set; } // 当前检测框
         public KalmanFilter Kf { get; set; } // 卡尔曼滤波器
         public int TimeSinceUpdate { get; set; } // 未更新帧数
         public bool IsActive => TimeSinceUpdate < 30; // 轨迹是否活跃（track_buffer=30）
 
-        public Track(Detection detection, int id)
+        public Track(BoxItem detection, int id)
         {
             Id = id;
             CurrentDetection = detection;
@@ -118,7 +101,7 @@ namespace IoTAIService.AICode
         }
 
         // 更新轨迹
-        public void Update(Detection detection)
+        public void Update(BoxItem detection)
         {
             CurrentDetection = detection;
             Kf.Update(detection.GetCenter());
@@ -151,7 +134,7 @@ namespace IoTAIService.AICode
         }
 
         // 核心方法：处理单张图片的检测结果，返回跟踪结果
-        public List<Track> Update(List<Detection> detections)
+        public (List<Track>, List<Track>, List<Track>) Update(List<BoxItem> detections)
         {
             // 1. 预测所有现有轨迹的下一状态
             foreach (var track in _tracks)
@@ -160,8 +143,8 @@ namespace IoTAIService.AICode
             }
 
             // 2. 拆分检测框：高置信度（用于初始匹配）、低置信度（用于补充匹配）
-            var highConfDets = detections.Where(d => d.Confidence >= _trackThresh).ToList();
-            var lowConfDets = detections.Where(d => d.Confidence >= _trackLowThresh && d.Confidence < _trackThresh).ToList();
+            var highConfDets = detections.Where(d => d.score >= _trackThresh).ToList();
+            var lowConfDets = detections.Where(d => d.score >= _trackLowThresh && d.score < _trackThresh).ToList();
 
             // 3. 第一步匹配：高置信度框 vs 现有轨迹（IoU匹配）
             var (matchedTracks, unmatchedHighDets) = Match(highConfDets, _tracks, _matchThresh);
@@ -181,24 +164,36 @@ namespace IoTAIService.AICode
             }
 
             // 6. 新建轨迹：未匹配的高置信度检测框
+            List<Track> newTracks = new List<Track>();
             foreach (var det in unmatchedHighDets)
             {
-                _tracks.Add(new Track(det, _nextTrackId++));
+                var tmptrack = new Track(det, _nextTrackId++);
+                _tracks.Add(tmptrack);
+                newTracks.Add(tmptrack);
             }
 
             // 7. 清理失效轨迹（超过track_buffer未更新）
-            _tracks.RemoveAll(t => !t.IsActive);
+            List<Track> delTracks = new List<Track>();
+            for (int i = _tracks.Count - 1; i >= 0; i--)
+            {
+                var tmptrack = _tracks[i];
+                if (!tmptrack.IsActive)
+                {
+                    delTracks.Add(tmptrack);
+                    _tracks.RemoveAt(i);
+                }
+            }
 
             // 返回当前活跃的轨迹
-            return _tracks.Where(t => t.IsActive).ToList();
+            return (_tracks.Where(t => t.IsActive).ToList(), newTracks, delTracks);
         }
 
         // IoU匹配核心逻辑
-        private (List<Track> matchedTracks, List<Detection> unmatchedDetections) Match(
-            List<Detection> detections, List<Track> tracks, float iouThresh)
+        private (List<Track> matchedTracks, List<BoxItem> unmatchedDetections) Match(
+            List<BoxItem> detections, List<Track> tracks, float iouThresh)
         {
             var matchedTracks = new List<Track>();
-            var unmatchedDetections = new List<Detection>(detections);
+            var unmatchedDetections = new List<BoxItem>(detections);
 
             // 遍历每个检测框，找IoU最高的轨迹
             foreach (var det in detections.ToList())
@@ -229,65 +224,18 @@ namespace IoTAIService.AICode
         }
 
         // 计算两个检测框的IoU（交并比）
-        private float CalculateIoU(Detection a, Detection b)
+        private float CalculateIoU(BoxItem a, BoxItem b)
         {
-            var x1 = Math.Max(a.X1, b.X1);
-            var y1 = Math.Max(a.Y1, b.Y1);
-            var x2 = Math.Min(a.X2, b.X2);
-            var y2 = Math.Min(a.Y2, b.Y2);
+            var x1 = Math.Max(a.x1, b.x1);
+            var y1 = Math.Max(a.y1, b.y1);
+            var x2 = Math.Min(a.x2, b.x2);
+            var y2 = Math.Min(a.y2, b.y2);
 
             var intersection = Math.Max(0, x2 - x1) * Math.Max(0, y2 - y1);
             if (intersection == 0) return 0;
 
             var union = a.GetArea() + b.GetArea() - intersection;
             return intersection / union;
-        }
-    }
-
-    // 测试示例
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // 1. 初始化ByteTrack跟踪器
-            var tracker = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
-
-            // 2. 模拟第1张图片的检测结果（比如检测到1个人）
-            var dets1 = new List<Detection>
-            {
-                new Detection { X1 = 100, Y1 = 200, X2 = 300, Y2 = 400, Confidence = 0.9f, ClassId = 0 }
-            };
-            var tracks1 = tracker.Update(dets1);
-            Console.WriteLine("第1张图跟踪结果：");
-            foreach (var t in tracks1)
-            {
-                Console.WriteLine($"ID: {t.Id}, 框位置: ({t.CurrentDetection.X1},{t.CurrentDetection.Y1})-({t.CurrentDetection.X2},{t.CurrentDetection.Y2})");
-            }
-
-            // 3. 模拟第2张图片的检测结果（同一个人位置轻微移动）
-            var dets2 = new List<Detection>
-            {
-                new Detection { X1 = 105, Y1 = 205, X2 = 305, Y2 = 405, Confidence = 0.85f, ClassId = 0 }
-            };
-            var tracks2 = tracker.Update(dets2);
-            Console.WriteLine("\n第2张图跟踪结果：");
-            foreach (var t in tracks2)
-            {
-                Console.WriteLine($"ID: {t.Id}, 框位置: ({t.CurrentDetection.X1},{t.CurrentDetection.Y1})-({t.CurrentDetection.X2},{t.CurrentDetection.Y2})");
-            }
-
-            // 4. 模拟第3张图片的检测结果（新增1个人）
-            var dets3 = new List<Detection>
-            {
-                new Detection { X1 = 110, Y1 = 210, X2 = 310, Y2 = 410, Confidence = 0.9f, ClassId = 0 },
-                new Detection { X1 = 400, Y1 = 150, X2 = 600, Y2 = 350, Confidence = 0.88f, ClassId = 0 }
-            };
-            var tracks3 = tracker.Update(dets3);
-            Console.WriteLine("\n第3张图跟踪结果：");
-            foreach (var t in tracks3)
-            {
-                Console.WriteLine($"ID: {t.Id}, 框位置: ({t.CurrentDetection.X1},{t.CurrentDetection.Y1})-({t.CurrentDetection.X2},{t.CurrentDetection.Y2})");
-            }
         }
     }
 }

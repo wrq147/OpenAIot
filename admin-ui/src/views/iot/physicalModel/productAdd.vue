@@ -527,6 +527,19 @@
               :value="item.value"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="是否图片" v-if="paramsForm.type == 'file'">
+          <el-switch
+            v-model="paramsForm.isimg"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="文件类型" v-if="paramsForm.type == 'file'">
+          <el-select v-model="paramsForm.bodyType" placeholder="请选择文件类型" style="width: 100%">
+            <el-option label="url" value="url"></el-option>
+            <el-option label="base64" value="base64"></el-option>
+          </el-select>
+        </el-form-item>
         <enum-item v-model="paramsForm" v-if="paramsForm.type == 'enum'" :hasKey="true"></enum-item>
         <el-form-item v-if="activeParams == 'inputs'" label="默认值" prop="defval">
           <el-row>
@@ -677,7 +690,7 @@ export default {
         { alabel: "时间", label: "时间型(Date)", value: "date", paramshow: true },
         { alabel: "布尔", label: "布尔型(Boolean)", value: "boolean", paramshow: true },
         { alabel: "枚举", label: "枚举型(Enum)", value: "enum", paramshow: true },
-        { alabel: "文件", label: "文件类型(File)", value: "file", paramshow: false },
+        { alabel: "文件", label: "文件类型(File)", value: "file", paramshow: true },
         { alabel: "位置", label: "设备位置(Geo)", value: "geo", paramshow: false }
       ], //数据类型列表
       attrCodeList: [], //用于判断是否包含了该属性定义

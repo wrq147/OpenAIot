@@ -693,7 +693,7 @@
             <summary>
             标识符模板树
             </summary>
-            <param name="t">0为属性、1为功能</param>
+            <param name="t">0为属性、1为功能、2为事件</param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.IotProduct.PropRuleList(System.String)">
@@ -1895,7 +1895,7 @@
         </member>
         <member name="P:IoTService.Models.MZ_IotCode.CodeType">
             <summary>
-            0为属性、1为功能
+            0为属性、1为功能、2为事件
             </summary>
         </member>
         <member name="P:IoTService.Models.MZ_IotCode.Sort">

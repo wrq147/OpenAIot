@@ -43,6 +43,13 @@
         </div>
       </div>
     </el-form-item>
+    <el-form-item label="是否多选">
+      <el-switch
+        v-model="curVal.multi"
+        active-color="#13ce66"
+        inactive-color="#ff4949">
+      </el-switch>
+    </el-form-item>
     <el-dialog :close-on-click-modal="false" :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body :destroy-on-close="true">
       <el-upload
         ref="uploadref"

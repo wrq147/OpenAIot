@@ -335,7 +335,7 @@ namespace IoTService.Controller
         /// <summary>
         /// 标识符模板树
         /// </summary>
-        /// <param name="t">0为属性、1为功能</param>
+        /// <param name="t">0为属性、1为功能、2为事件</param>
         /// <returns></returns>
         [HttpGet]
         public async Task<AjaxResult> CodeListTree(int t)

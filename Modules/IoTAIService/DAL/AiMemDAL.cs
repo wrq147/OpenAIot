@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using TemplateAction.Label;
 
 namespace IoTAIService.DAL
 {
@@ -29,6 +30,11 @@ namespace IoTAIService.DAL
         {
             return (await new SqlBuilder(help).Append("select HouseId,Count(1) as TotalFace from mz_ai_mem where OrgId=").AppendParam(orgId).Append(" group by HouseId")
                 .DoAsync<DoQuerySql<Out_FaceCount>>()).ToList();
+        }
+        public virtual async Task<List<MZ_AIMem>> SelectFaceMem(List<long> ids)
+        {
+            var tsql = new SqlBuilder(help).Query<MZ_AIMem>().Include(x => x.MemInfo, x => x.MemId).Where(x => ids.Contains(x.MemId.Value));
+            return await tsql.ToListAsync();
         }
     }
 }

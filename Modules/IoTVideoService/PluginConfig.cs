@@ -5,6 +5,7 @@ using IoTRulesService.DataParser;
 using IoTService.Business;
 using IoTVideoService.Business;
 using IoTVideoService.DAL;
+using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Configuration;
 using MonitorService.Business;
@@ -117,6 +118,18 @@ namespace IoTVideoService
                     {
                         MediaRecordFileMessage rfile = (MediaRecordFileMessage)msg;
                         await _provider.GetService<RecordBLL>().InsertRecordFile(rfile);
+                    }
+                    break;
+                case "MediaKey":
+                    {
+                        MediaKeyMessage keyMessage = (MediaKeyMessage)msg;
+
+                        MZ_IotRecordKey key = new MZ_IotRecordKey();
+                        key.VideoKey = keyMessage.VideoKey;
+                        key.KeyDate = keyMessage.KeyDate;
+                        key.EvtDes = keyMessage.EvtDes;
+                        key.FilePath = keyMessage.FilePath;
+                        await _provider.GetService<RecordBLL>().InsertKey(key);
                     }
                     break;
                 case "NodeOn":

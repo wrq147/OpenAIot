@@ -124,5 +124,21 @@ namespace IoTAIService
             }, DefalutNatsJsonSerializer<string>.Default);
         }
 
+        public async Task SendMediaKey(string deviceId, string videoKey, string des, string path)
+        {
+            MediaKeyMessage msg = new MediaKeyMessage();
+            msg.ProductId = string.Empty;
+            msg.DeviceId = deviceId;
+            msg.VideoKey = videoKey;
+            msg.KeyDate = DateTime.Now;
+            msg.EvtDes = des;
+            msg.FilePath = path;
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
+            {
+                Subject = GetUpKey(deviceId),
+                Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
+            }, DefalutNatsJsonSerializer<string>.Default);
+        }
     }
 }

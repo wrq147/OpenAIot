@@ -450,11 +450,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:IoTAIService.AICode.Detection">
-            <summary>
-            检测框实体（无修改）
-            </summary>
-        </member>
         <member name="T:IoTAIService.AICode.ExecutionProviderType">
             <summary>
             执行提供者类型

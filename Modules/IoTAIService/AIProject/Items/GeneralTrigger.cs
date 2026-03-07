@@ -10,9 +10,9 @@ using TemplateAction.Core;
 
 namespace IoTAIService.AIProject.Items
 {
-    public class RuleTrigger : IInfer
+    public class GeneralTrigger : IInfer
     {
-        public Task Execute(string deviceId, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
+        public Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
             throw new NotImplementedException();
         }

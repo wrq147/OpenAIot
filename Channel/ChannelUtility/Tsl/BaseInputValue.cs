@@ -31,6 +31,10 @@ namespace ChannelUtility.Tsl
         /// </summary>
         public string remark { get; set; }
         /// <summary>
+        /// url,base64
+        /// </summary>
+        public string bodyType { get; set; }
+        /// <summary>
         /// 枚举类型使用的枚举元素
         /// </summary>
         public Dictionary<string, string> elements { get; set; }
@@ -38,5 +42,9 @@ namespace ChannelUtility.Tsl
         /// 判断枚举是否多选
         /// </summary>
         public bool multi { get; set; }
+        /// <summary>
+        /// 是否是图片
+        /// </summary>
+        public bool isimg { get; set; }
     }
 }

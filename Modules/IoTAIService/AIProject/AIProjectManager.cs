@@ -186,7 +186,7 @@ namespace IoTAIService.AIProject
                     {
                         if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
                         {
-                            await tmpinfer.Execute(detectReq.DeviceId, image, config, boxlist);
+                            await tmpinfer.Execute(detectReq, image, config, boxlist);
                         }
                     }
 
