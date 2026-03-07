@@ -1,0 +1,98 @@
+/**
+ * 引用 iOS 系统库，示例如下：
+ * import { UIDevice } from "UIKit";
+ * [可选实现，按需引入]
+ */
+import { IOSTcpClient } from "tcp-client";
+/* 引入 interface.uts 文件中定义的变量 */
+import { ConnectorOptions, ITcpConnector, TcpConnector } from '../interface.uts';
+
+/* 引入 unierror.uts 文件中定义的变量 */
+import { ConnectorFailImpl } from '../unierror';
+
+/**
+ * 引入三方库
+ * [可选实现，按需引入]
+ *
+ * 在 iOS 平台引入三方库有以下两种方式：
+ * 1、通过引入三方库framework 或者.a 等方式，需要将 .framework 放到 ./Frameworks 目录下，将.a 放到 ./Libs 目录下。更多信息[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#ios-平台原生配置)
+ * 2、通过 cocoaPods 方式引入，将要引入的 pod 信息配置到 config.json 文件下的 dependencies-pods 字段下。详细配置方式[详见](https://uniapp.dcloud.net.cn/plugin/uts-ios-cocoapods.html)
+ *
+ * 在通过上述任意方式依赖三方库后，使用时需要在文件中 import:
+ * 示例：import { LottieLoopMode	} from 'Lottie'
+ */
+
+/**
+ * UTSiOS 为平台内置对象，不需要 import 可直接调用其API，[详见](https://uniapp.dcloud.net.cn/uts/utsios.html)
+ */
+
+class IosTcpClient implements ITcpConnector {
+	_ip : string;
+	_port : number;
+	_client : IOSTcpClient | null;
+	onClose : () => void;
+	onMessage : (data : ArrayBuffer) => void;
+	constructor(ip : string, port : number) {
+		this._ip = ip;
+		this._port = port;
+		this._client = null;
+		this._dataOutputStream = null;
+		this._bufferedReader = null;
+		this.onClose = () => { };
+		this.onMessage = (data : ArrayBuffer) => { };
+	}
+	connect() {
+		this._client = new IOSTcpClient(this._ip, this._port.toInt());
+		this._client?.connect();
+		this._client?.setDataReceivedCallback((data) => {
+			this.onMessage(ArrayBuffer.fromData(data));
+		});
+		this._client.setDisconnectCallback(() => {
+			this.onClose();
+		});
+	}
+	write(data : ArrayBuffer) {
+		this._client?.send(data.toData());
+	}
+	writeString(data : string) {
+		const encoder = new TextEncoder();
+		const byteArray : Uint8Array = encoder.encode(data);
+		this._client?.send(byteArray.buffer.toData());
+	}
+	close() {
+		this._client?.disconnect();
+	}
+
+}
+
+/**
+ * 异步方法
+ *
+ * uni-app项目中（vue/nvue）调用示例：
+ * 1、引入方法声明 import { myApi } from "@/uni_modules/uts-api"
+ * 2、方法调用
+ * myApi({
+ *   paramA: false,
+ *   complete: (res) => {
+ *      console.log(res)
+ *   }
+ * });
+ *
+ */
+export const qzTcp : TcpConnector = function (options : ConnectorOptions) {
+	const client : IosTcpClient = new IosTcpClient(options.address, options.port);
+	setTimeout(() => {
+		try {
+			client.connect();
+			if (options.success != null) {
+				options.success(client);
+			}
+		}
+		catch (err) {
+			if (options.fail != null) {
+				options.fail(err);
+			}
+		}
+	}, 10);
+	return client;
+}

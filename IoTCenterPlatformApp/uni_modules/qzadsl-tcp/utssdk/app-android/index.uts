@@ -1,0 +1,125 @@
+/**
+ * 引用 Android 系统库，示例如下：
+ * import { Context } from "android.content.Context";
+ * [可选实现，按需引入]
+ */
+import { Socket } from "java.net";
+import { InputStreamReader, DataOutputStream, BufferedReader } from "java.io"
+import { Charset } from "java.nio.charset"
+import { ByteBuffer } from "java.nio"
+
+/* 引入 interface.uts 文件中定义的变量 */
+import { ConnectorOptions, ITcpConnector, TcpConnector } from '../interface.uts';
+
+/* 引入 unierror.uts 文件中定义的变量 */
+import { ConnectorFailImpl } from '../unierror';
+import Option from 'android.app.VoiceInteractor.PickOptionRequest.Option';
+
+/**
+ * 引入三方库
+ * [可选实现，按需引入]
+ *
+ * 在 Android 平台引入三方库有以下两种方式：
+ * 1、[推荐] 通过 仓储 方式引入，将 三方库的依赖信息 配置到 config.json 文件下的 dependencies 字段下。详细配置方式[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#dependencies)
+ * 2、直接引入，将 三方库的aar或jar文件 放到libs目录下。更多信息[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#android%E5%B9%B3%E5%8F%B0%E5%8E%9F%E7%94%9F%E9%85%8D%E7%BD%AE)
+ *
+ * 在通过上述任意方式依赖三方库后，使用时需要在文件中 import，如下示例：
+ * import { LottieAnimationView } from 'com.airbnb.lottie.LottieAnimationView'
+ */
+
+/**
+ * UTSAndroid 为平台内置对象，不需要 import 可直接调用其API，[详见](https://uniapp.dcloud.net.cn/uts/utsandroid.html#utsandroid)
+ */
+
+class AndroidTcpClient implements ITcpConnector {
+	_ip : string;
+	_port : number;
+	_client : Socket | null;
+	_dataOutputStream : DataOutputStream | null;
+	_bufferedReader : BufferedReader | null;
+	onClose : () => void;
+	onMessage : (data : ArrayBuffer) => void;
+	constructor(ip : string, port : number) {
+		this._ip = ip;
+		this._port = port;
+		this._client = null;
+		this._dataOutputStream = null;
+		this._bufferedReader = null;
+		this.onClose = () => { };
+		this.onMessage = (data : ArrayBuffer) => { };
+	}
+	connect() {
+		this._client = new Socket(this._ip, this._port.toInt());
+		this._dataOutputStream = new DataOutputStream(this._client?.getOutputStream());
+		this._bufferedReader = new BufferedReader(new InputStreamReader(this._client?.getInputStream()));
+		startReceivingMessages();
+	}
+	write(data : ArrayBuffer) {
+		this._dataOutputStream?.write(data.toByteBuffer().array());
+	}
+	writeString(data : string) {
+		const encoder = new TextEncoder();
+		const byteArray : Uint8Array = encoder.encode(data);
+		this._dataOutputStream?.write(byteArray.buffer?.toByteBuffer().array());
+	}
+	close() {
+		this._client?.close();
+	}
+	async startReceivingMessages() {
+		UTSAndroid.getDispatcher(null).async((_) => {
+			let buffer = ByteBuffer.allocate(1024);
+			while (this._client?.isConnected == true && this._bufferedReader != null) {
+				let bytesRead : Int | null = this._bufferedReader?.read(Charset.forName("UTF-8").decode(buffer));
+				if (bytesRead == -1) break;
+				let sourceByteArray : Uint8Array = new Uint8Array(ArrayBuffer.fromByteBuffer(buffer));
+				let targetByteArray : Uint8Array = new Uint8Array(sourceByteArray.slice(0, bytesRead));
+				let receivedData : ArrayBuffer = targetByteArray.buffer ?? new ArrayBuffer(0);
+				this.onMessage(receivedData);
+			}
+			this.onClose();
+		}, null);
+	}
+}
+/**
+ * 异步方法
+ *
+ * uni-app项目中（vue/nvue）调用示例：
+ * 1、引入方法声明 import { myApi } from "@/uni_modules/uts-api"
+ * 2、方法调用
+ * myApi({
+ *   paramA: false,
+ *   complete: (res) => {
+ *      console.log(res)
+ *   }
+ * });
+ * uni-app x项目（uvue）中调用示例：
+ * 1、引入方法及参数声明 import { myApi, MyApiOptions } from "@/uni_modules/uts-api";
+ * 2、方法调用
+ * let options = {
+ *   paramA: false,
+ *   complete: (res : any) => {
+ *     console.log(res)
+ *   }
+ * } as MyApiOptions;
+ * myApi(options);
+ *
+ */
+
+export const qzTcp : TcpConnector = function (options : ConnectorOptions) {
+	const client : AndroidTcpClient = new AndroidTcpClient(options.address, options.port);
+	UTSAndroid.getDispatcher(null).async((_) => {
+		try{
+			client.connect();
+			if (options.success != null) {
+				options.success(client);
+			}
+		}
+		catch(err){
+			if (options.fail != null) {
+				options.fail(err);
+			}
+		}
+	}, null);
+	Promise.resolve(syncMethod(value));
+	return client;
+}

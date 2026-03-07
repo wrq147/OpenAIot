@@ -1,0 +1,27 @@
+/**
+ * interface.uts
+ * uts插件接口定义文件，按规范定义接口文件可以在HBuilderX中更好的做到语法提示
+ */
+
+/**
+ * myApi 异步函数的参数，在type里定义函数需要的参数以及api成功、失败的相关回调函数。
+ */
+export type ConnectorOptions = {
+	address : string,
+	port : number,
+	success ?: (res : ITcpConnector) => void
+	fail ?: (res : any) => void
+}
+
+export interface ITcpConnector {
+	onClose : () => void;
+	onMessage : (data : ArrayBuffer) => void;
+	close() : void;
+	write(data : ArrayBuffer) : void;
+	writeString(data : string) : void;
+}
+
+
+
+/* 异步函数定义 */
+export type TcpConnector = (options : ConnectorOptions) => ITcpConnector
