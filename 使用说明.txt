@@ -35,11 +35,11 @@ sudo systemctl enable docker
 三、目录结构说明：
 admin-ui：中台前端
 AirJointUI和AirJointUI.Desktop  嵌入式联控屏
-IoTCenterPlatform：中台英文版移动端项目
-IoTCenterPlatform：中台中文版移动端项目
+IoTCenterPlatformApp：中台移动端项目
 App：中台后端启动入口项目
 Channel：中台物联通道项目
 DigitalWxApp：数字名片移动端项目
+energyAdminUI：能碳管理项目
 Modules：中台后端各个模块
 MyAccess：中台后端的ORM
 TemplateAction和TemplateAction.NetCore：中台后端的模块化MVC框架
