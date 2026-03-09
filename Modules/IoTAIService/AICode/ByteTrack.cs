@@ -1,4 +1,5 @@
 ﻿using ChannelUtility.Message;
+using DeveloperService.Controller;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,26 @@ using System.Numerics;
 namespace IoTAIService.AICode
 {
     /// <summary>
+    /// 运动方向枚举（8个主方向）
+    /// </summary>
+    public enum MovementDirection
+    {
+        Unknown,    // 未知/静止
+        Up,         // 上
+        Down,       // 下
+        Left,       // 左
+        Right,      // 右
+        UpLeft,     // 左上
+        UpRight,    // 右上
+        DownLeft,   // 左下
+        DownRight   // 右下
+    }
+    /// <summary>
     /// 卡尔曼滤波类（ByteTrack核心依赖）
     /// </summary>
     public class KalmanFilter
     {
-        private const float dt = 1.0f / 10.0f; // 帧间隔（默认30fps）
+        private const float dt = 1.0f / 10.0f; // 帧间隔
         private readonly Matrix4x4 _F; // 状态转移矩阵
         private readonly Matrix4x4 _H; // 观测矩阵
         private readonly Matrix4x4 _Q; // 过程噪声
@@ -80,11 +96,20 @@ namespace IoTAIService.AICode
         /// </summary>
         /// <returns></returns>
         public Vector2 GetPredictedCenter() => new Vector2(_x.X, _x.Y);
+
+        /// <summary>
+        /// 获取速度向量 [vx, vy]
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetVelocity() => new Vector2(_x.Z, _x.W);
     }
 
     // 跟踪轨迹实体（无修改）
     public class Track
     {
+        private readonly Queue<Vector2> _positionHistory = new Queue<Vector2>(capacity: 5);
+        private const float _minSpeedThreshold = 0.1f; // 最小速度阈值（过滤静止）
+
         public int Id { get; set; } // 唯一跟踪ID
         public BoxItem CurrentDetection { get; set; } // 当前检测框
         public KalmanFilter Kf { get; set; } // 卡尔曼滤波器
@@ -96,15 +121,24 @@ namespace IoTAIService.AICode
             Id = id;
             CurrentDetection = detection;
             Kf = new KalmanFilter();
-            Kf.Update(detection.GetCenter());
+            var tmpcenter = detection.GetCenter();
+            Kf.Update(tmpcenter);
             TimeSinceUpdate = 0;
+            _positionHistory.Enqueue(tmpcenter);
         }
 
         // 更新轨迹
         public void Update(BoxItem detection)
         {
             CurrentDetection = detection;
-            Kf.Update(detection.GetCenter());
+            var center = detection.GetCenter();
+            Kf.Update(center);
+
+            // 更新位置历史
+            _positionHistory.Enqueue(center);
+            if (_positionHistory.Count > 5) // 只保留最近5帧
+                _positionHistory.Dequeue();
+
             TimeSinceUpdate = 0;
         }
 
@@ -114,6 +148,66 @@ namespace IoTAIService.AICode
             Kf.Predict();
             TimeSinceUpdate++;
         }
+        /// <summary>
+        /// 获取当前运动方向
+        /// </summary>
+        /// <returns></returns>
+        public MovementDirection GetMovementDirection()
+        {
+            // 1. 获取卡尔曼滤波器输出的速度向量
+            var velocity = Kf.GetVelocity();
+
+            // 2. 过滤静止状态（速度低于阈值）
+            if (Math.Abs(velocity.X) < _minSpeedThreshold && Math.Abs(velocity.Y) < _minSpeedThreshold)
+            {
+                // 验证历史位置是否真的静止
+                if (_positionHistory.Count < 2)
+                    return MovementDirection.Unknown;
+
+                var first = _positionHistory.First();
+                var last = _positionHistory.Last();
+                if (Vector2.Distance(first, last) < _minSpeedThreshold * 5)
+                    return MovementDirection.Unknown;
+            }
+
+            // 3. 计算方向角度（弧度）
+            float angle = (float)Math.Atan2(velocity.Y, velocity.X);
+            // 转换为角度（0-360度）
+            float degrees = (angle * 180 / (float)Math.PI + 360) % 360;
+
+            // 4. 根据角度判断方向
+            if (degrees >= 337.5 || degrees < 22.5)
+                return MovementDirection.Right;
+            else if (degrees >= 22.5 && degrees < 67.5)
+                return MovementDirection.DownRight;
+            else if (degrees >= 67.5 && degrees < 112.5)
+                return MovementDirection.Down;
+            else if (degrees >= 112.5 && degrees < 157.5)
+                return MovementDirection.DownLeft;
+            else if (degrees >= 157.5 && degrees < 202.5)
+                return MovementDirection.Left;
+            else if (degrees >= 202.5 && degrees < 247.5)
+                return MovementDirection.UpLeft;
+            else if (degrees >= 247.5 && degrees < 292.5)
+                return MovementDirection.Up;
+            else // 292.5-337.5
+                return MovementDirection.UpRight;
+        }
+
+        /// <summary>
+        /// 获取运动速度（像素/帧）
+        /// </summary>
+        /// <returns></returns>
+        public float GetMovementSpeed()
+        {
+            var velocity = Kf.GetVelocity();
+            return velocity.Length(); // 速度向量的模长
+        }
+
+        /// <summary>
+        /// 获取历史位置列表
+        /// </summary>
+        public List<Vector2> GetPositionHistory() => _positionHistory.ToList();
     }
 
     // ByteTrack核心跟踪器（无修改）
@@ -203,7 +297,7 @@ namespace IoTAIService.AICode
 
                 foreach (var track in tracks)
                 {
-                    if (matchedTracks.Contains(track)) continue;
+                    if (matchedTracks.Contains(track) || !string.Equals(track.CurrentDetection.label, det.label)) continue;
 
                     var iou = CalculateIoU(det, track.CurrentDetection);
                     if (iou > maxIoU && iou >= iouThresh)

@@ -57,70 +57,69 @@ namespace IoTAIService.AIProject.Items
                 var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
                 var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
                 var milBLL = _provider.GetService<MilvusBLL>();
-                if (addlist.Count > 0)
+
+
+                List<long> addMemList = new List<long>();
+                List<Image<Rgb24>> knowList = new List<Image<Rgb24>>();
+                List<Image<Rgb24>> unknowList = new List<Image<Rgb24>>();
+                var addfaces = addlist.Select(x => x.CurrentDetection);
+                foreach (var titem in addfaces)
                 {
-                    List<long> addMemList = new List<long>();
-                    List<Image<Rgb24>> knowList = new List<Image<Rgb24>>();
-                    List<Image<Rgb24>> unknowList = new List<Image<Rgb24>>();
-                    var addfaces = addlist.Select(x => x.CurrentDetection);
-                    foreach (var titem in addfaces)
+                    var tmpimg = image.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
+                    var tmpstn = faceSTNRunner.Predict(tmpimg);
+                    var recogdata = faceRecogRunner.PredictTensor(tmpstn);
+                    var tmpfls = recogdata.ToArray<float>();
+                    if (hselist.Count > 0)
                     {
-                        var tmpimg = image.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
-                        var tmpstn = faceSTNRunner.Predict(tmpimg);
-                        var recogdata = faceRecogRunner.PredictTensor(tmpstn);
-                        var tmpfls = recogdata.ToArray<float>();
-                        if (hselist.Count > 0)
+                        var tmprsp = await milBLL.Search(tmpfls, hselist, tscore);
+                        if (tmprsp.IsSuccess())
                         {
-                            var tmprsp = await milBLL.Search(tmpfls, hselist, tscore);
-                            if (tmprsp.IsSuccess())
+                            if (tmprsp.Data.Count > 0)
                             {
-                                if (tmprsp.Data.Count > 0)
+                                long tmpid = tmprsp.Data.First();
+                                if (!addMemList.Contains(tmpid))
                                 {
-                                    long tmpid = tmprsp.Data.First();
-                                    if (!addMemList.Contains(tmpid))
-                                    {
-                                        addMemList.Add(tmpid);
-                                        knowList.Add(tmpimg);
-                                    }
-                                }
-                                else
-                                {
-                                    unknowList.Add(tmpimg);
+                                    addMemList.Add(tmpid);
+                                    knowList.Add(tmpimg);
                                 }
                             }
-                        }
-                        else
-                        {
-                            unknowList.Add(tmpimg);
-                        }
-                    }
-
-                    //触发熟人闯入事件
-                    if (addMemList.Count > 0)
-                    {
-                        var tmemlist = await _provider.GetService<AiMemDAL>().SelectFaceMem(addMemList);
-                        foreach (var tmem in tmemlist)
-                        {
-                            int idx = addMemList.IndexOf(tmem.MemId.Value);
-                            if (idx >= 0)
+                            else
                             {
-                                Dictionary<string, object> outputs = new Dictionary<string, object>();
-                                outputs.Add("face_img", knowList[idx].ToBase64String(JpegFormat.Instance));
-                                outputs.Add("face_name", tmem.MemInfo == null ? "佚名" : tmem.MemInfo.RealName);
-                                outputs.Add("name_id", tmem.MemInfo == null ? string.Empty : tmem.MemInfo.Id.ToString());
-                                await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "KnwIn", outputs);
+                                unknowList.Add(tmpimg);
                             }
                         }
-
                     }
-
-                    //触发陌生人闯入事件
-                    foreach (var unknow in unknowList)
+                    else
                     {
-                        Dictionary<string, object> outputs = new Dictionary<string, object>();
-                        outputs.Add("face_img", unknow.ToBase64String(JpegFormat.Instance));
-                        await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "UnkIn", outputs);
+                        unknowList.Add(tmpimg);
                     }
+                }
+
+                //触发熟人闯入事件
+                if (addMemList.Count > 0)
+                {
+                    var tmemlist = await _provider.GetService<AiMemDAL>().SelectFaceMem(addMemList);
+                    foreach (var tmem in tmemlist)
+                    {
+                        int idx = addMemList.IndexOf(tmem.MemId.Value);
+                        if (idx >= 0)
+                        {
+                            Dictionary<string, object> outputs = new Dictionary<string, object>();
+                            outputs.Add("face_img", knowList[idx].ToBase64String(JpegFormat.Instance));
+                            outputs.Add("face_name", tmem.MemInfo == null ? "佚名" : tmem.MemInfo.RealName);
+                            outputs.Add("name_id", tmem.MemInfo == null ? string.Empty : tmem.MemInfo.Id.ToString());
+                            await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "KnwIn", outputs);
+                        }
+                    }
+
+                }
+
+                //触发陌生人闯入事件
+                foreach (var unknow in unknowList)
+                {
+                    Dictionary<string, object> outputs = new Dictionary<string, object>();
+                    outputs.Add("face_img", unknow.ToBase64String(JpegFormat.Instance));
+                    await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "UnkIn", outputs);
                 }
 
 
