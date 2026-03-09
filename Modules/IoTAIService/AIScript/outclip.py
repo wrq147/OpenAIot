@@ -2,6 +2,7 @@ import torch
 import cnclip
 import base64
 import os
+import io
 import numpy as np
 from PIL import Image
 from cnclip import load_from_name
@@ -54,7 +55,7 @@ class CNCLIPFeatureExtractor:
             # 解码Base64为字节数据
             img_bytes = base64.b64decode(base64_str)
             # 从字节数据加载图片（自动识别尺寸）
-            img = Image.open(np.io.BytesIO(img_bytes)).convert("RGB")
+            img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
             return img
         except Exception as e:
             raise RuntimeError(f"Base64图片解码失败: {str(e)}")

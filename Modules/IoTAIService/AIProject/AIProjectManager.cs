@@ -123,7 +123,7 @@ namespace IoTAIService.AIProject
                             color = itembox.color
                         });
                     }
-
+                    
                     rsbase64 = AIUtility.DrawJpeg(rgbImage, items);
                 }
                 if (string.IsNullOrEmpty(rsbase64))

@@ -10,6 +10,9 @@ using TemplateAction.Core;
 
 namespace IoTAIService.AIProject.Items
 {
+    /// <summary>
+    /// 通用推理项目
+    /// </summary>
     public class GeneralTrigger : IInfer
     {
         public Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)

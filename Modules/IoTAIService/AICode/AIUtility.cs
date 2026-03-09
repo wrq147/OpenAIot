@@ -58,7 +58,7 @@ namespace IoTAIService.AICode
             var tmpboxArr = boxs;
             if (tmpboxArr.Count == 0)
             {
-                return null;
+                return image.ToBase64String(JpegFormat.Instance);
             }
 
             // 遍历所有检测框
