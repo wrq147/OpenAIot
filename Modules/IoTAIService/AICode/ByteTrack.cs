@@ -7,21 +7,7 @@ using System.Numerics;
 
 namespace IoTAIService.AICode
 {
-    /// <summary>
-    /// 运动方向枚举（8个主方向）
-    /// </summary>
-    public enum MovementDirection
-    {
-        Unknown,    // 未知/静止
-        Up,         // 上
-        Down,       // 下
-        Left,       // 左
-        Right,      // 右
-        UpLeft,     // 左上
-        UpRight,    // 右上
-        DownLeft,   // 左下
-        DownRight   // 右下
-    }
+
     /// <summary>
     /// 卡尔曼滤波类（ByteTrack核心依赖）
     /// </summary>
@@ -104,9 +90,10 @@ namespace IoTAIService.AICode
         public Vector2 GetVelocity() => new Vector2(_x.Z, _x.W);
     }
 
-    // 跟踪轨迹实体（无修改）
+    // 跟踪轨迹实体
     public class Track
     {
+        private readonly Dictionary<string, RegionStatus> _regionStatusDict = new Dictionary<string, RegionStatus>();
         private readonly Queue<Vector2> _positionHistory = new Queue<Vector2>(capacity: 5);
         private const float _minSpeedThreshold = 0.1f; // 最小速度阈值（过滤静止）
 
@@ -208,9 +195,80 @@ namespace IoTAIService.AICode
         /// 获取历史位置列表
         /// </summary>
         public List<Vector2> GetPositionHistory() => _positionHistory.ToList();
+
+
+        /// <summary>
+        /// 更新目标在指定区域的状态
+        /// </summary>
+        /// <param name="region">监控区域</param>
+        /// <returns>区域状态（是否入侵）</returns>
+        public RegionStatus UpdateRegionStatus(MonitoringRegion region)
+        {
+            if (!region.IsActive) return RegionStatus.Outside;
+
+            // 获取目标当前中心位置
+            Vector2 currentPos = Kf.GetPredictedCenter();
+            bool isInRegion = region.ContainsPoint(currentPos);
+
+            // 获取上一帧的区域状态（默认外部）
+            if (!_regionStatusDict.ContainsKey(region.Id))
+                _regionStatusDict[region.Id] = RegionStatus.Outside;
+
+            RegionStatus lastStatus = _regionStatusDict[region.Id];
+            RegionStatus currentStatus;
+
+            // 判断状态变化
+            if (isInRegion)
+            {
+                if (lastStatus == RegionStatus.Outside || lastStatus == RegionStatus.Exited)
+                {
+                    // 从外部进入内部：触发入侵告警
+                    currentStatus = RegionStatus.Entered;
+                }
+                else
+                {
+                    // 持续在内部
+                    currentStatus = RegionStatus.Inside;
+                }
+            }
+            else
+            {
+                if (lastStatus == RegionStatus.Inside || lastStatus == RegionStatus.Entered)
+                {
+                    // 从内部离开
+                    currentStatus = RegionStatus.Exited;
+                }
+                else
+                {
+                    // 持续在外部
+                    currentStatus = RegionStatus.Outside;
+                }
+            }
+
+            // 更新状态字典（将Entered/Exited转换为Inside/Outside，避免状态残留）
+            _regionStatusDict[region.Id] = currentStatus switch
+            {
+                RegionStatus.Entered => RegionStatus.Inside,
+                RegionStatus.Exited => RegionStatus.Outside,
+                _ => currentStatus
+            };
+
+            return currentStatus;
+        }
+
+        /// <summary>
+        /// 获取目标在指定区域的当前状态
+        /// </summary>
+        /// <param name="regionId">区域ID</param>
+        /// <returns></returns>
+        public RegionStatus GetRegionStatus(string regionId)
+        {
+            return _regionStatusDict.TryGetValue(regionId, out var status) ? status : RegionStatus.Outside;
+        }
+
     }
 
-    // ByteTrack核心跟踪器（无修改）
+    // ByteTrack核心跟踪器
     public class ByteTrack
     {
         private readonly float _trackThresh; // 高置信度阈值（默认0.5）

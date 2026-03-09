@@ -63,6 +63,14 @@ namespace IoTAIService.AIProject.Items
                 Remark = "通过物体跟踪，触发检测事件。",
                 ParamList = new List<AIProjectParam>()
                 {
+                    new AIProjectParam()
+                    {
+                        name="区域入侵检测",
+                        code="is_area",
+                        type="boolean",
+                        defval=false,
+                        help="是否启用区域入侵检测"
+                    },
                 }
             });
         }

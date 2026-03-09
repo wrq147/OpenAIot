@@ -40,7 +40,7 @@ namespace IoTAIService
         /// </summary>
         public string code { get; set; }
         /// <summary>
-        /// 参数类型：boolean、enum、float、string、clip
+        /// 参数类型：boolean、enum、float、string、clip、area
         /// </summary>
         public string type { get; set; }
         /// <summary>

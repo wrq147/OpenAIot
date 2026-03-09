@@ -36,6 +36,14 @@ namespace IoTAIService.AIProject.Items
                 {
                     new AIProjectParam()
                     {
+                        name="开启高精度",
+                        code="is_hight",
+                        type="boolean",
+                        defval=false,
+                        help="是否启用高精度模型，需要GPU"
+                    },
+                    new AIProjectParam()
+                    {
                         name="检测阈值",
                         code="threshold",
                         type="float",
