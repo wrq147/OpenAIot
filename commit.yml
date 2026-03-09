@@ -2,10 +2,52 @@
 branches: {
   }
 fileChange:
-  /使用说明.txt:
-    newFile: !uuid '7cb7c7a66e9fd31d47e372ccafa62a5140e126a4'
-    oldFile: !uuid '176678aa7b256f7a6441bd2003e32af1f1250f81'
-gitCommitId: !uuid 'd1f3266d3e80bae7bee0a23a950fb9d1eca85be8'
+  /App:
+    newFile: !uuid '976c011780a82fc921ea12091939e1f9edca3a73'
+    oldFile: !uuid '89b0932ae35b11e643deaced88a045808d5a93d5'
+  /App/XML:
+    newFile: !uuid 'bbfaac488518cdb74c48480bf73d1cf90b433b1a'
+    oldFile: !uuid '5ad69a19a81bea99a8a0e31a3712458d95a280d8'
+  /App/XML/IoTAIService.xml:
+    newFile: !uuid '5c7f285b60a96fafce47bc7561e3618a9ee8369f'
+    oldFile: !uuid '294c01867efac1b2bf6f0eb600debf1f4c35cd85'
+  /Modules:
+    newFile: !uuid 'fbc66cf62bea4cda443f8e75202aad156e3ce3b8'
+    oldFile: !uuid 'da607df68de8ecd802219080ade56e2039b94128'
+  /Modules/IoTAIService:
+    newFile: !uuid 'f33f25aebea1a865e1bae1e3a5a0a55bb48d2893'
+    oldFile: !uuid 'c539e0dd488419710dc975622342dd011ebbd6bb'
+  /Modules/IoTAIService/AICode:
+    newFile: !uuid '23a10fc03f1d06244c90f2ce689963f9165223ba'
+    oldFile: !uuid '40be01592ab0b5c1238589b7b1cf1291929a230f'
+  /Modules/IoTAIService/AICode/AIUtility.cs:
+    newFile: !uuid 'fed309fd34c95f155027ca2c36c2496f20b0712c'
+    oldFile: !uuid '32bdc8005b92a5e06e2173b3695fc4624c7b27a8'
+  /Modules/IoTAIService/AIModel:
+    newFile: !uuid '7bde8dc856a0a26b43388c37dd943019eadbc21b'
+    oldFile: !uuid 'e95f20a57893276ef5f55d203c4e61ca2267be49'
+  /Modules/IoTAIService/AIModel/YoloWorld.onnx:
+    newFile: !uuid '82e54f14dad324a1e83d85f40a93bb93d945479b'
+    oldFile: !uuid '4e8a3cdf92ece7f7e19f7e45c60a88d6f011520b'
+  /Modules/IoTAIService/AIProject:
+    newFile: !uuid '7fb15bd6e9d0508d8baba771a769b4b013dfdf4d'
+    oldFile: !uuid '459c1d79b789090dae083b8e0950dc4d002bffe5'
+  /Modules/IoTAIService/AIProject/AIProjectManager.cs:
+    newFile: !uuid '7d08150a25c2cc716aba760a592c60301e44251b'
+    oldFile: !uuid '137316b31cf12f5c4f4207f77dd04192a14ac730'
+  /Modules/IoTAIService/AIProject/Items:
+    newFile: !uuid 'd2152c93c540880384fdd82df78070a5dd4f6ecf'
+    oldFile: !uuid '56b93b7fa29014d0f952b3e076b9a3d97b5cea5e'
+  /Modules/IoTAIService/AIProject/Items/GeneralTrigger.cs:
+    newFile: !uuid '3ea2a97612c7030f0eae011604ed173a2f29f8ec'
+    oldFile: !uuid 'b03370ada63e1e3964cc46fa31b88b579bcebe4c'
+  /Modules/IoTAIService/AIScript:
+    newFile: !uuid '563a8db488d7878613ed53d5a1b8ecd6803fa624'
+    oldFile: !uuid '57b21ed874289ebde359966d28b16a593117ffdd'
+  /Modules/IoTAIService/AIScript/outclip.py:
+    newFile: !uuid '409afe971d12b85c01017bdff7b32c8cb28c0621'
+    oldFile: !uuid '4a9488c082a4457558ddf10958156a294fab66e3'
+gitCommitId: !uuid '43cc892f071dfaacd47d6e28b98f1e2d690c23c7'
 renames: {
   }
-revisionId: 190
+revisionId: 191
