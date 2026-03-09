@@ -40,7 +40,7 @@ namespace IoTAIService
         /// </summary>
         public string code { get; set; }
         /// <summary>
-        /// 参数类型：boolean、enum、float、string、clip、area
+        /// 参数类型：boolean、enum、float、string、clip、region
         /// </summary>
         public string type { get; set; }
         /// <summary>
@@ -55,5 +55,9 @@ namespace IoTAIService
         /// 枚举元素
         /// </summary>
         public Dictionary<string, string> elements { get; set; }
+        /// <summary>
+        /// 是否多选
+        /// </summary>
+        public bool multi { get; set; }
     }
 }

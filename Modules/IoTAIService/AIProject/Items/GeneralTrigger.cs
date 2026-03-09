@@ -60,16 +60,35 @@ namespace IoTAIService.AIProject.Items
                 Name = "通用推理",
                 Code = tkey,
                 Stage = "Infer",
-                Remark = "通过物体跟踪，触发检测事件。",
+                Remark = "通过物体跟踪，触发物体入侵事件。",
                 ParamList = new List<AIProjectParam>()
                 {
                     new AIProjectParam()
                     {
-                        name="区域入侵检测",
-                        code="is_area",
-                        type="boolean",
-                        defval=false,
+                        name="入侵区域",
+                        code="inv_zone",
+                        type="region",
                         help="是否启用区域入侵检测"
+                    },
+                    new AIProjectParam()
+                    {
+                        name="移动方向",
+                        code="direct",
+                        type="enum",
+                        multi=true,
+                        elements=new Dictionary<string, string>()
+                        {
+                            { "未知", "Unknown" },
+                            { "上", "Up" },
+                            { "下", "Down" },
+                            { "左", "Left" },
+                            { "右", "Right" },
+                            { "左上", "UpLeft" },
+                            { "右上", "UpRight" },
+                            { "左下", "DownLeft" },
+                            { "右下", "DownRight" }
+                        },
+                        help="设置触发的移动方向"
                     },
                 }
             });

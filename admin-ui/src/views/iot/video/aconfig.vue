@@ -189,7 +189,7 @@
               active-color="#67c23a" inactive-color="#909399" class="param-switch" />
 
             <!-- 参数类型：enum -->
-            <el-select v-else-if="param.type === 'enum'" v-model="paramConfigDialog.currentRow.paramValues[param.code]"
+            <el-select v-else-if="param.type === 'enum'" :multiple="param.multi" v-model="paramConfigDialog.currentRow.paramValues[param.code]"
               placeholder="请选择" class="param-select" size="small">
               <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
                 :value="option.value" />
@@ -227,6 +227,7 @@
               </div>
             </template>
 
+            <!-- 参数类型：region（设置入侵区域） -->
 
           </el-form-item>
         </el-form>

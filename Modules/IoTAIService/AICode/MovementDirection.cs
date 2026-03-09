@@ -11,7 +11,7 @@ namespace IoTAIService.AICode
     /// </summary>
     public enum MovementDirection
     {
-        Unknown,    // 未知/静止
+        Unknown,    // 未知
         Up,         // 上
         Down,       // 下
         Left,       // 左
