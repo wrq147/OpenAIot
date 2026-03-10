@@ -165,8 +165,6 @@
 
     <el-dialog :title="paramConfigDialog.title" :visible.sync="paramConfigDialog.visible" width="730px" append-to-body
       :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
-
-
       <div class="param-config-content">
         <el-form label-width="120px">
           <el-form-item label-width="150px" v-for="(param, index) in paramConfigDialog.currentRow.ParamList"
@@ -192,8 +190,7 @@
             <el-select v-else-if="param.type === 'enum'" :multiple="param.multi"
               v-model="paramConfigDialog.currentRow.paramValues[param.code]" placeholder="请选择" class="param-select"
               size="small">
-              <el-option v-for="(value,label) in param.elements" :key="value" :label="label"
-                :value="value" />
+              <el-option v-for="(value, label) in param.elements" :key="value" :label="label" :value="value" />
             </el-select>
 
             <!-- 参数类型：string -->
@@ -228,15 +225,26 @@
               </div>
             </template>
 
-            <!-- 参数类型：region（入侵区域配置） -->
+            <!-- 参数类型：region（入侵区域配置）- 支持多区域 -->
             <template v-else-if="param.type === 'region'">
               <div style="width: 450px;">
-                <!-- 区域类型选择 -->
-                <div style="height: 45px; display: flex; align-items: center;">
+                <!-- 区域类型选择 + 多区域操作 -->
+                <div style="height: 45px; display: flex; align-items: center; justify-content: space-between;">
                   <el-radio-group v-model="paramConfigDialog.regionType" @change="changeRegionType">
                     <el-radio label="Rectangle">矩形区域</el-radio>
                     <el-radio label="Polygon">多边形区域</el-radio>
                   </el-radio-group>
+                </div>
+
+                <!-- 区域列表选择 -->
+                <div style="margin-bottom: 10px;">
+                  <el-select :disabled="paramConfigDialog.regions.length === 0"
+                    v-model="paramConfigDialog.currentRegionIndex" @change="onRegionSelectChange" size="small" empty-text="暂无区域"
+                    placeholder="选择要编辑的区域" style="width: 100%;">
+                    <el-option v-for="(region, idx) in paramConfigDialog.regions" :key="idx"
+                      :label="`${paramConfigDialog.regionType}区域 ${idx + 1}`" :value="idx" />
+                      <el-option v-if="paramConfigDialog.regions.length === 0"  label="暂无区域" :value="-1" />
+                  </el-select>
                 </div>
 
                 <!-- 参考图上传 -->
@@ -245,13 +253,22 @@
                     accept="image/*">
                     <el-button size="small" type="default" icon="el-icon-picture">上传参考背景图</el-button>
                   </el-upload>
+                  <el-button style="margin-left:10px;" size="small" type="primary" icon="el-icon-plus" @click="addNewRegion">
+                    添加区域
+                  </el-button>
+                  <el-button size="small" type="danger" icon="el-icon-delete" @click="deleteCurrentRegion"
+                    :disabled="paramConfigDialog.regions.length === 0 || paramConfigDialog.currentRegionIndex === -1">
+                    删除当前区域
+                  </el-button>
                 </div>
 
                 <!-- 区域绘制画布 -->
                 <div style="position: relative; border: 1px solid #d9d9d9; border-radius: 4px;">
                   <!-- 绘制的区域覆盖层 -->
-                  <canvas v-if="paramConfigDialog.regionImage" ref="regionCanvas" @click="drawRegionPoint"></canvas>
-                  <div v-else style="width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; color: #999;">
+                  <canvas v-if="paramConfigDialog.regionImage" ref="regionCanvas" @click="drawRegionPoint"
+                    @dblclick="finishDrawRegion"></canvas>
+                  <div v-else
+                    style="width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; color: #999;">
                     请上传参考背景图后绘制入侵区域
                   </div>
                 </div>
@@ -259,24 +276,24 @@
                 <!-- 操作提示和按钮 -->
                 <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
                   <div style="font-size: 12px; color: #666;">
-                    <span v-if="paramConfigDialog.regionType === 'Rectangle'">
-                      点击画布左上角和右下角确定矩形区域
+                    <span v-if="paramConfigDialog.isDrawing">
+                      {{ paramConfigDialog.regionType === 'Rectangle' ? '点击画布左上角和右下角确定矩形区域' : '点击画布添加多边形顶点，双击完成绘制' }}
+                      <span style="color: #f56c6c; margin-left: 10px;">
+                        已选点：{{ paramConfigDialog.tempPoints.length }}
+                        <span v-if="paramConfigDialog.regionType === 'Polygon'">（至少3个）</span>
+                      </span>
                     </span>
                     <span v-else>
-                      点击画布添加多边形顶点，双击完成绘制
-                    </span>
-                    <span style="color: #f56c6c; margin-left: 10px;">
-                      已选点：{{ paramConfigDialog.regionPoints.length }}
-                      <span v-if="paramConfigDialog.regionType === 'Polygon'">（至少3个）</span>
+                      当前共 <span style="color: #409eff;">{{ paramConfigDialog.regions.length }}</span> 个区域
+                      <span v-if="paramConfigDialog.currentRegionIndex !== -1">
+                        | 正在编辑：区域 {{ paramConfigDialog.currentRegionIndex + 1 }}
+                      </span>
                     </span>
                   </div>
-                  <el-button size="small" type="primary" icon="el-icon-refresh" @click="clearRegion">清空</el-button>
                 </div>
 
               </div>
             </template>
-
-
           </el-form-item>
         </el-form>
       </div>
@@ -296,12 +313,10 @@
       </div>
     </el-dialog>
 
-
     <!-- AI项目测试弹窗 -->
     <el-dialog :title="testDialog.title" :visible.sync="testDialog.visible" width="900px" append-to-body
       :close-on-click-modal="false" :destroy-on-close="true" top="5vh">
       <div class="test-config-content">
-
         <div class="test-content-wrapper">
           <!-- 上传测试图片 -->
           <div class="test-image-upload">
@@ -332,10 +347,8 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="testDialog.visible = false">关闭</el-button>
         <el-button type="primary" @click="executeTest" :disabled="!testDialog.testImage"
@@ -344,7 +357,6 @@
         </el-button>
       </div>
     </el-dialog>
-
   </el-dialog>
 </template>
 
@@ -382,22 +394,25 @@ export default {
         clipTest: '',
         visible: false,       // 弹窗显隐
         currentIndex: -1,
-        currentRow: {},     // 当前操作的项目行数据
+        currentRow: {},       // 当前操作的项目行数据
         generateLoading: false,
         generateTxt: "正在保存参数中...",
         title: 'AI项目参数配置',
 
-        regionType: 'Rectangle', // 区域类型：Rectangle/Polygon
-        regionImage: null, // 区域绘制参考图
-        regionPoints: [], // 区域顶点坐标（相对比例）
-        regionFinish: false, // 多边形绘制是否完成
+        // 多区域配置相关
+        regionType: 'Rectangle',      // 区域类型：Rectangle/Polygon
+        regionImage: null,            // 区域绘制参考图
+        regions: [],                  // 所有区域数据 [{ type, points,isdraw }]
+        currentRegionIndex: -1,       // 当前编辑的区域索引
+        tempPoints: [],               // 绘制中的临时点
+        isDrawing: false,             // 是否正在绘制
         canvasScale: { width: 1, height: 1 } // canvas缩放比例
       },
       testDialog: {
         visible: false,
         currentRow: {},      // 当前测试的项目数据
         testImage: '',       // 测试图片base64
-        testResult: null,    // 测试结果
+        testResultImage: '', // 测试结果图片base64
         testLoading: false,
         title: 'AI项目测试'
       }
@@ -410,13 +425,11 @@ export default {
         tmparr = this.allProjects.filter(tmpProj => {
           return !this.configuredProjects.some(cp => cp.Code === tmpProj.Code);
         });
-      }
-      else {
+      } else {
         tmparr = this.allProjects.filter(tmpProj => {
           return !this.configuredProjects.some(cp => cp.Code === tmpProj.Code) && tmpProj.Name.toLowerCase().indexOf(this.optionalSearchText.toLowerCase()) > -1;
         });
       }
-
       return tmparr;
     }
   },
@@ -428,6 +441,7 @@ export default {
       await this.initData(id);
       this.allloading = false;
     },
+
     /**
      * 初始化弹窗数据
      */
@@ -462,12 +476,12 @@ export default {
           configarr.push(x);
         }
       }
-
       this.configuredProjects = configarr;
       // 重置状态
       this.selectedProjects = []
       this.optionalSearchText = ''
     },
+
     /**
      * 初始化参数默认值
      */
@@ -480,6 +494,7 @@ export default {
       });
       return paramValues;
     },
+
     /**
      * 处理表格行样式
      */
@@ -511,7 +526,6 @@ export default {
           newitem["paramValues"] = this.initParamValues(newitem.ParamList || []);
           this.configuredProjects.push(newitem)
         }
-
         this.selectedProjects = []
         this.$message.success(`成功添加 ${this.configuredProjects.length} 个项目`)
         this.addLoading = false
@@ -520,7 +534,6 @@ export default {
         this.addLoading = false
       }
     },
-
 
     /**
      * 移除单个已配置项目
@@ -597,42 +610,54 @@ export default {
         })
         this.visible = false
         this.confirmLoading = false
-
       } catch (error) {
         this.$message.error('参数配置保存失败，请重试！')
         this.confirmLoading = false
       }
     },
+
+    /**
+     * 打开参数配置弹窗
+     */
     openParamConfigDialog(idx) {
       let row = this.configuredProjects[idx];
       // 赋值当前行数据，打开弹窗
       row.paramValues = row.paramValues || {};
       this.paramConfigDialog.currentIndex = idx;
       this.paramConfigDialog.currentRow = JSON.parse(JSON.stringify(row));
+
+      // 初始化clip参数
       const clipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'clip');
       if (clipParam) {
         this.paramConfigDialog.clipText = this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"];
         this.paramConfigDialog.clipImg = this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"];
       }
 
-      // 初始化region参数
+      // 初始化多区域参数
       const regionParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'region');
       if (regionParam) {
-        const regionData = this.paramConfigDialog.currentRow.paramValues[regionParam.code] || { type: 'Rectangle', points: [] };
-        this.paramConfigDialog.regionType = regionData.type;
-        this.paramConfigDialog.regionPoints = regionData.points || [];
+        const regionData = this.paramConfigDialog.currentRow.paramValues[regionParam.code] || [];
+        // 兼容旧数据格式（单区域）
+        this.paramConfigDialog.regions = Array.isArray(regionData)
+          ? regionData
+          : (regionData.points ? [regionData] : []);
+        this.paramConfigDialog.regionType = 'Rectangle';
+        this.paramConfigDialog.currentRegionIndex = this.paramConfigDialog.regions.length > 0 ? 0 : -1;
         this.paramConfigDialog.regionImage = '';
-        this.paramConfigDialog.regionFinish = false;
+        this.paramConfigDialog.tempPoints = [];
+        this.paramConfigDialog.isDrawing = false;
       }
 
       this.paramConfigDialog.visible = true;
       this.paramConfigDialog.generateLoading = false;
       this.paramConfigDialog.title = `项目【${row.Name}】的参数配置`;
-
     },
+
+    /**
+     * 确认保存参数配置
+     */
     async confirmParamConfig() {
       try {
-
         // 检查是否有clip类型参数需要生成特征向量
         const clipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'clip');
         // 如果有clip参数且未生成特征向量，则自动生成
@@ -672,71 +697,80 @@ export default {
           this.paramConfigDialog.generateTxt = "正在保存参数中...";
         }
 
-        // 保存region类型参数
+        // 保存多区域参数
         const regionParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'region');
-        if (regionParam && this.paramConfigDialog.regionPoints.length > 0) {
-          if (this.paramConfigDialog.regionType == "Rectangle" && this.paramConfigDialog.regionPoints.length < 2) {
-            this.$message.error('矩形区域顶点数不对');
+        if (regionParam) {
+          // 验证所有区域的有效性
+          const validRegions = this.paramConfigDialog.regions.filter(region => {
+            if (region.type === 'Rectangle') {
+              return region.points && region.points.length >= 2;
+            } else if (region.type === 'Polygon') {
+              return region.points && region.points.length >= 3;
+            }
+            return false;
+          });
+
+          if (validRegions.length === 0 && this.paramConfigDialog.regions.length > 0) {
+            this.$message.error('请确保所有区域都绘制完成且顶点数符合要求');
+            this.paramConfigDialog.generateLoading = false;
             return;
           }
-          else if (this.paramConfigDialog.regionType == "Polygon" && this.paramConfigDialog.regionPoints.length < 3) {
-            this.$message.error('多边形区域顶点数不对');
-            return;
-          }
-          this.paramConfigDialog.currentRow.paramValues[regionParam.code] = {
-            type: this.paramConfigDialog.regionType,
-            points: this.paramConfigDialog.regionPoints
-          };
+
+          // 保存多区域数据
+          this.paramConfigDialog.currentRow.paramValues[regionParam.code] = validRegions;
         }
 
         this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
         this.paramConfigDialog.visible = false;
         this.paramConfigDialog.generateLoading = false;
         this.$message.success('参数配置已保存');
-      }
-      catch (ex) {
+      } catch (ex) {
         this.paramConfigDialog.generateLoading = false;
+        this.$message.error('保存参数失败：' + (ex.message || '系统异常'));
       }
-
     },
-    // 处理clip图片上传（转换为Base64）
+
+    /**
+     * 处理clip图片上传（转换为Base64）
+     */
     handleClipImageUpload(file) {
-      // 1. 校验图片格式和大小（可选，优化体验）
+      // 1. 校验图片格式和大小
       const isImage = file.type.startsWith('image/');
       const isLt2M = file.size / 1024 / 1024 < 2; // 限制2M以内
 
       if (!isImage) {
         this.$message.error('请上传图片格式文件！');
-        return false; // 阻止上传
+        return false;
       }
       if (!isLt2M) {
         this.$message.error('图片大小不能超过2MB！');
-        return false; // 阻止上传
+        return false;
       }
 
       // 2. 使用FileReader读取文件，转换为Base64
       const reader = new FileReader();
-      // 读取完成后的回调
       reader.onload = (e) => {
-        const base64Str = e.target.result; // 获取Base64编码（包含data:image/xxx;base64,前缀）
-
-        this.paramConfigDialog.clipImg = base64Str;
-
-        // 强制更新视图（避免数据更新后视图不刷新）
+        this.paramConfigDialog.clipImg = e.target.result;
         this.$forceUpdate();
       };
 
-      // 4. 开始读取文件为DataURL（即Base64格式）
+      // 4. 开始读取文件为DataURL
       reader.readAsDataURL(file);
 
       // 5. 返回false，阻止el-upload的默认接口提交行为
       return false;
     },
-    // 测试图片上传错误处理
+
+    /**
+     * 测试图片上传错误处理
+     */
     handleTestImageError() {
       this.$message.error('测试图片上传失败');
     },
-    // 打开测试弹窗
+
+    /**
+     * 打开测试弹窗
+     */
     TestConfiguredProject(idx) {
       let row = this.configuredProjects[idx];
       this.testDialog = {
@@ -749,7 +783,9 @@ export default {
       };
     },
 
-    // 测试图片上传（转base64）
+    /**
+     * 测试图片上传（转base64）
+     */
     handleTestImageUpload(file) {
       const isImage = file.type.startsWith('image/');
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -771,7 +807,9 @@ export default {
       return false;
     },
 
-    // 执行AI测试（后端返回 base64 图片）
+    /**
+     * 执行AI测试
+     */
     async executeTest() {
       try {
         this.testDialog.testLoading = true;
@@ -787,7 +825,7 @@ export default {
         const res = await drawBoxs(params);
         const base64 = res.data;
 
-        // 自动补全 base64 图片头部（后端如果没带，前端自动加上）
+        // 自动补全 base64 图片头部
         let resultBase64 = base64;
         if (!base64.startsWith('data:image/')) {
           resultBase64 = 'data:image/jpeg;base64,' + base64;
@@ -795,7 +833,6 @@ export default {
 
         this.testDialog.testResultImage = resultBase64;
         this.$message.success('测试完成');
-
       } catch (err) {
         this.$message.error('测试失败：' + (err.message || '接口异常'));
       } finally {
@@ -803,11 +840,9 @@ export default {
       }
     },
 
-
-
     /**
-    * 处理区域参考图上传
-    */
+     * 处理区域参考图上传
+     */
     handleRegionImageUpload(file) {
       const isImage = file.type.startsWith('image/');
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -823,8 +858,8 @@ export default {
 
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.paramConfigDialog.regionPoints = [];
-        this.paramConfigDialog.regionFinish = false;
+        // 重置绘制状态
+        this.paramConfigDialog.tempPoints = [];
 
         // 图片加载完成后初始化canvas
         this.paramConfigDialog.regionImage = new Image();
@@ -834,7 +869,6 @@ export default {
             this.initRegionCanvas();
           });
         };
-
       };
       reader.readAsDataURL(file);
       return false;
@@ -844,133 +878,219 @@ export default {
      * 初始化区域绘制画布
      */
     initRegionCanvas() {
-      const canvas = this.$refs.regionCanvas[0];
-      const container = canvas.parentElement;
-      // 2. 获取图片原始比例
+      const canvas = this.$refs.regionCanvas;
+      if (!canvas) return;
+
+      const ctxCanvas = Array.isArray(canvas) ? canvas[0] : canvas;
+      const container = ctxCanvas.parentElement;
+
+      // 获取图片原始比例
       const img = this.paramConfigDialog.regionImage;
-      const imgRatio = img.width / img.height; // 图片宽高比
+      const imgRatio = img.width / img.height;
 
-      let canvasWidth = container.clientWidth
-      let canvasHeight = canvasWidth / imgRatio; 
+      let canvasWidth = container.clientWidth;
+      let canvasHeight = canvasWidth / imgRatio;
 
-      canvas.width = img.width;
-      canvas.height = img.height;
+      // 设置canvas实际尺寸和显示尺寸
+      ctxCanvas.width = img.width;
+      ctxCanvas.height = img.height;
+      ctxCanvas.style.width = `${canvasWidth}px`;
+      ctxCanvas.style.height = `${canvasHeight}px`;
+      ctxCanvas.style.display = 'block';
+      ctxCanvas.style.margin = '0 auto';
 
-      canvas.style.width = `${canvasWidth}px`;
-      canvas.style.height = `${canvasHeight}px`;
-      canvas.style.display = 'block';
-      canvas.style.margin = '0 auto'; // 居中显示
-
-      // 计算缩放比例：画布实际尺寸 / 显示尺寸（用于坐标转换）
+      // 计算缩放比例
       this.paramConfigDialog.canvasScale = {
-        width: this.paramConfigDialog.regionImage.width / canvasWidth,
-        height: this.paramConfigDialog.regionImage.height / canvasHeight
+        width: img.width / canvasWidth,
+        height: img.height / canvasHeight
       };
 
+      // 绘制所有区域
       this.drawRegionCanvas();
     },
 
     /**
-     * 绘制区域点和连线
+     * 绘制所有区域和临时点
      */
     drawRegionCanvas() {
-      const canvas = this.$refs.regionCanvas[0];
-      const ctx = canvas.getContext('2d');
-      const points = this.paramConfigDialog.regionPoints;
+      const canvas = this.$refs.regionCanvas;
+      if (!canvas || !this.paramConfigDialog.regionImage) return;
+
+      const ctxCanvas = Array.isArray(canvas) ? canvas[0] : canvas;
+      const ctx = ctxCanvas.getContext('2d');
+      const img = this.paramConfigDialog.regionImage;
 
       // 清空画布
-      ctx.drawImage(this.paramConfigDialog.regionImage, 0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, ctxCanvas.width, ctxCanvas.height);
+      ctx.drawImage(img, 0, 0, ctxCanvas.width, ctxCanvas.height);
 
+      // 绘制所有已保存的区域
+      this.paramConfigDialog.regions.forEach((region, regionIdx) => {
+        const points = region.points || [];
+        if (points.length === 0) return;
 
+        // 转换相对坐标为画布绝对坐标
+        const absPoints = points.map(p => ({
+          x: p.x * ctxCanvas.width,
+          y: p.y * ctxCanvas.height
+        }));
 
-      // 转换相对坐标为画布绝对坐标
-      const absPoints = points.map(p => ({
-        x: p.x * canvas.width,
-        y: p.y * canvas.height
-      }));
+        // 设置绘制样式
+        ctx.beginPath();
+        ctx.strokeStyle = regionIdx === this.paramConfigDialog.currentRegionIndex ? '#ff4757' : '#2ed573';
+        ctx.lineWidth = regionIdx === this.paramConfigDialog.currentRegionIndex ? 3 : 2;
+        ctx.fillStyle = 'rgba(255, 71, 87, 0.1)';
 
-      // 绘制连线
-      ctx.beginPath();
-      ctx.strokeStyle = '#ff4757';
-      ctx.lineWidth = 2;
-
-      if (this.paramConfigDialog.regionType === 'Rectangle' && absPoints.length >= 2) {
-        const p1 = absPoints[0];
-        const p2 = absPoints[1];
-        ctx.rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
-      } else if (this.paramConfigDialog.regionType === 'Polygon') {
-        if (absPoints.length > 0) {
+        // 绘制区域
+        if (region.type === 'Rectangle' && absPoints.length >= 2) {
+          const p1 = absPoints[0];
+          const p2 = absPoints[1];
+          const x = Math.min(p1.x, p2.x);
+          const y = Math.min(p1.y, p2.y);
+          const width = Math.abs(p2.x - p1.x);
+          const height = Math.abs(p2.y - p1.y);
+          ctx.rect(x, y, width, height);
+          ctx.fill();
+        } else if (region.type === 'Polygon' && absPoints.length >= 3) {
           ctx.moveTo(absPoints[0].x, absPoints[0].y);
           for (let i = 1; i < absPoints.length; i++) {
             ctx.lineTo(absPoints[i].x, absPoints[i].y);
           }
-          if (this.paramConfigDialog.regionFinish && absPoints.length >= 3) {
-            ctx.closePath();
-          }
+          ctx.closePath();
+          ctx.fill();
         }
-      }
-      ctx.stroke();
+        ctx.stroke();
 
-      // 绘制顶点
-      absPoints.forEach((p, index) => {
-        ctx.fillStyle = index === 0 ? '#ff4757' : '#2ed573';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-        ctx.fill();
+        // 绘制顶点
+        absPoints.forEach((p, pointIdx) => {
+          ctx.fillStyle = regionIdx === this.paramConfigDialog.currentRegionIndex ? '#ff4757' : '#2ed573';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
       });
 
+      // 绘制临时绘制中的点和线
+      if (this.paramConfigDialog.isDrawing && this.paramConfigDialog.tempPoints.length > 0) {
+        const tempAbsPoints = this.paramConfigDialog.tempPoints.map(p => ({
+          x: p.x * ctxCanvas.width,
+          y: p.y * ctxCanvas.height
+        }));
 
+        ctx.beginPath();
+        ctx.strokeStyle = '#ff4757';
+        ctx.lineWidth = 2;
+        ctx.moveTo(tempAbsPoints[0].x, tempAbsPoints[0].y);
+
+        for (let i = 1; i < tempAbsPoints.length; i++) {
+          ctx.lineTo(tempAbsPoints[i].x, tempAbsPoints[i].y);
+        }
+
+        // 矩形区域实时预览
+        if (this.paramConfigDialog.regionType === 'Rectangle' && tempAbsPoints.length === 1) {
+          const rect = ctxCanvas.getBoundingClientRect();
+          const mouseX = (this.paramConfigDialog.mouseX - rect.left) * this.paramConfigDialog.canvasScale.width;
+          const mouseY = (this.paramConfigDialog.mouseY - rect.top) * this.paramConfigDialog.canvasScale.height;
+
+          ctx.rect(
+            tempAbsPoints[0].x,
+            tempAbsPoints[0].y,
+            mouseX - tempAbsPoints[0].x,
+            mouseY - tempAbsPoints[0].y
+          );
+        }
+
+        ctx.stroke();
+
+        // 绘制临时顶点
+        tempAbsPoints.forEach((p, index) => {
+          ctx.fillStyle = '#ff4757';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
     },
 
     /**
      * 点击画布添加区域点
      */
     drawRegionPoint(e) {
+      if (!this.paramConfigDialog.regionImage || !this.paramConfigDialog.isDrawing) return;
 
-      if (!this.paramConfigDialog.regionImage || this.paramConfigDialog.regionFinish) return;
+      // 记录鼠标位置用于实时预览
+      this.paramConfigDialog.mouseX = e.clientX;
+      this.paramConfigDialog.mouseY = e.clientY;
 
-      let canvas = this.$refs.regionCanvas[0];
-      const rect = canvas.getBoundingClientRect();
+      let canvas = this.$refs.regionCanvas;
+      const ctxCanvas = Array.isArray(canvas) ? canvas[0] : canvas;
+      const rect = ctxCanvas.getBoundingClientRect();
       const scale = this.paramConfigDialog.canvasScale;
 
       // 计算相对坐标（0-1）
-      const x = (e.clientX - rect.left) * scale.width / canvas.width;
-      const y = (e.clientY - rect.top) * scale.height / canvas.height;
-
+      const x = (e.clientX - rect.left) * scale.width / ctxCanvas.width;
+      const y = (e.clientY - rect.top) * scale.height / ctxCanvas.height;
 
       // 边界处理
       const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
       const relX = clamp(x, 0, 1);
       const relY = clamp(y, 0, 1);
 
-
       // 处理矩形区域（最多2个点）
       if (this.paramConfigDialog.regionType === 'Rectangle') {
-        if (this.paramConfigDialog.regionPoints.length === 0) {
+        if (this.paramConfigDialog.tempPoints.length === 0) {
           // 第一个点（左上角）
-          this.paramConfigDialog.regionPoints = [{ x: relX, y: relY }];
-        } else if (this.paramConfigDialog.regionPoints.length === 1) {
-          // 第二个点（右下角）
-          this.paramConfigDialog.regionPoints = [
-            this.paramConfigDialog.regionPoints[0],
-            { x: relX, y: relY }
-          ];
+          this.paramConfigDialog.tempPoints = [{ x: relX, y: relY }];
+        } else if (this.paramConfigDialog.tempPoints.length === 1) {
+          // 第二个点（右下角）- 直接完成绘制
+          this.paramConfigDialog.tempPoints.push({ x: relX, y: relY });
+          this.finishDrawRegion();
+          return;
         }
       }
       // 处理多边形区域（双击完成）
       else if (this.paramConfigDialog.regionType === 'Polygon') {
-        // 检测双击
-        if (e.detail === 2 && this.paramConfigDialog.regionPoints.length >= 3) {
-          this.paramConfigDialog.regionFinish = true;
+        // 添加顶点（最多20个）
+        if (this.paramConfigDialog.tempPoints.length < 20) {
+          this.paramConfigDialog.tempPoints.push({ x: relX, y: relY });
         } else {
-          // 添加顶点（最多20个）
-          if (this.paramConfigDialog.regionPoints.length < 20) {
-            this.paramConfigDialog.regionPoints.push({ x: relX, y: relY });
-          } else {
-            this.$message.warning('多边形顶点数量不能超过20个');
-          }
+          this.$message.warning('多边形顶点数量不能超过20个');
         }
       }
+
+      // 重绘画布
+      this.drawRegionCanvas();
+    },
+
+    /**
+     * 完成区域绘制
+     */
+    finishDrawRegion() {
+      if (!this.paramConfigDialog.isDrawing || this.paramConfigDialog.tempPoints.length === 0) return;
+
+      // 验证顶点数量
+      if (this.paramConfigDialog.regionType === 'Rectangle' && this.paramConfigDialog.tempPoints.length < 2) {
+        this.$message.warning('矩形区域需要至少2个顶点');
+        return;
+      }
+      if (this.paramConfigDialog.regionType === 'Polygon' && this.paramConfigDialog.tempPoints.length < 3) {
+        this.$message.warning('多边形区域需要至少3个顶点');
+        return;
+      }
+
+      // 创建新区域
+      const newRegion = {
+        type: this.paramConfigDialog.regionType,
+        points: JSON.parse(JSON.stringify(this.paramConfigDialog.tempPoints)),
+        isdraw: false
+      };
+
+      // 更新当前编辑的区域
+      this.paramConfigDialog.regions[this.paramConfigDialog.currentRegionIndex] = newRegion;
+
+      // 重置绘制状态
+      this.paramConfigDialog.tempPoints = [];
+      this.paramConfigDialog.isDrawing = false;
 
       // 重绘画布
       this.drawRegionCanvas();
@@ -980,24 +1100,65 @@ export default {
      * 切换区域类型
      */
     changeRegionType() {
-      this.paramConfigDialog.regionPoints = [];
-      this.paramConfigDialog.regionFinish = false;
-
+      this.paramConfigDialog.tempPoints = [];
+      this.paramConfigDialog.regions[this.paramConfigDialog.currentRegionIndex] = {
+        type: this.paramConfigDialog.regionType,
+        points: [],
+        isdraw: true
+      };
       this.$nextTick(() => {
         this.drawRegionCanvas();
       });
     },
-
-    /**
-     * 清空区域
-     */
-    clearRegion() {
-      this.paramConfigDialog.regionPoints = [];
-      this.paramConfigDialog.regionFinish = false;
-      this.drawRegionCanvas();
+    onRegionSelectChange(index) {
+      // 校验选中的索引是否有效
+      if (index === -1 || !this.paramConfigDialog.regions[index]) return;
+      // 获取选中的区域
+      const selectedRegion = this.paramConfigDialog.regions[index];
+      this.paramConfigDialog.regionType = selectedRegion.type;
+      this.paramConfigDialog.isDrawing = selectedRegion.isdraw;
+      this.paramConfigDialog.tempPoints = [...(selectedRegion.points || [])];
+      this.renderRegionCanvas();
     },
 
+    /**
+     * 添加新区域
+     */
+    addNewRegion() {
+      const newRegion = {
+        type: this.paramConfigDialog.regionType,
+        points: [],
+        isdraw: true
+      };
+      this.paramConfigDialog.isDrawing = true;
+      this.paramConfigDialog.regions.push(newRegion);
+      this.paramConfigDialog.currentRegionIndex = this.paramConfigDialog.regions.length - 1;
 
+    },
+
+    /**
+     * 删除当前选中的区域
+     */
+    deleteCurrentRegion() {
+      if (this.paramConfigDialog.currentRegionIndex === -1 || this.paramConfigDialog.regions.length === 0) {
+        this.$message.warning('请先选择要删除的区域');
+        return;
+      }
+
+      this.paramConfigDialog.regions.splice(this.paramConfigDialog.currentRegionIndex, 1);
+
+      // 更新当前选中索引
+      if (this.paramConfigDialog.regions.length > 0) {
+        this.paramConfigDialog.currentRegionIndex = this.paramConfigDialog.regions.length - 1;
+        this.onRegionSelectChange(this.paramConfigDialog.currentRegionIndex);
+      } else {
+        this.paramConfigDialog.currentRegionIndex = -1;
+        this.drawRegionCanvas();
+      }
+      this.$message.success('区域已删除');
+    },
+
+  
   }
 }
 </script>
@@ -1017,7 +1178,6 @@ export default {
   flex-direction: column;
 }
 
-
 /* 检测参数配置 */
 .detection-config-card {
   background: #fff;
@@ -1031,7 +1191,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
 
 .config-card-title {
   font-size: 15px;
@@ -1123,7 +1282,6 @@ export default {
   width: 200px;
 }
 
-
 /* 分割线 */
 .divider {
   display: flex;
@@ -1156,7 +1314,6 @@ export default {
   color: #666;
   line-height: 1.4;
 }
-
 
 /* 按钮样式 */
 .column-footer {
@@ -1191,8 +1348,6 @@ export default {
   padding: 0;
 }
 
-
-
 .param-form-item {
   margin-bottom: 12px;
 }
@@ -1212,7 +1367,6 @@ export default {
   cursor: pointer;
   font-size: 14px;
 }
-
 
 /* 弹窗底部操作按钮 */
 .dialog-bottom-actions {
@@ -1246,7 +1400,6 @@ export default {
   padding: 10px;
 }
 
-
 .test-content-wrapper {
   display: flex;
   align-items: flex-start;
@@ -1273,9 +1426,7 @@ export default {
 
 .test-result-container {
   flex: 1;
-  /* 占满剩余宽度 */
   min-width: 0;
-  /* 解决flex子元素溢出问题 */
 }
 
 .test-result-container .empty {
@@ -1343,7 +1494,6 @@ export default {
   font-size: 12px;
   color: #666;
 }
-
 
 .region-draw-area {
   position: relative;
