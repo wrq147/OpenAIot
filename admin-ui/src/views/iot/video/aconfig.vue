@@ -163,14 +163,14 @@
       </div>
     </div>
 
-    <el-dialog :title="paramConfigDialog.title" :visible.sync="paramConfigDialog.visible" width="700px" append-to-body
+    <el-dialog :title="paramConfigDialog.title" :visible.sync="paramConfigDialog.visible" width="730px" append-to-body
       :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
 
 
       <div class="param-config-content">
-        <el-form label-width="120px" class="param-form">
-          <el-form-item label-width="150px" v-for="(param, index) in paramConfigDialog.currentRow.ParamList" :key="index"
-            :label="param.name" class="param-form-item">
+        <el-form label-width="120px">
+          <el-form-item label-width="150px" v-for="(param, index) in paramConfigDialog.currentRow.ParamList"
+            :key="index" :label="param.name" class="param-form-item">
             <template slot="label">
               <!-- 帮助提示 -->
               <el-tooltip effect="dark" :content="param.help" placement="top" enterable class="help-tooltip">
@@ -189,10 +189,11 @@
               active-color="#67c23a" inactive-color="#909399" class="param-switch" />
 
             <!-- 参数类型：enum -->
-            <el-select v-else-if="param.type === 'enum'" :multiple="param.multi" v-model="paramConfigDialog.currentRow.paramValues[param.code]"
-              placeholder="请选择" class="param-select" size="small">
-              <el-option v-for="option in param.options || []" :key="option.value" :label="option.label"
-                :value="option.value" />
+            <el-select v-else-if="param.type === 'enum'" :multiple="param.multi"
+              v-model="paramConfigDialog.currentRow.paramValues[param.code]" placeholder="请选择" class="param-select"
+              size="small">
+              <el-option v-for="(value,label) in param.elements" :key="value" :label="label"
+                :value="value" />
             </el-select>
 
             <!-- 参数类型：string -->
@@ -227,7 +228,54 @@
               </div>
             </template>
 
-            <!-- 参数类型：region（设置入侵区域） -->
+            <!-- 参数类型：region（入侵区域配置） -->
+            <template v-else-if="param.type === 'region'">
+              <div style="width: 450px;">
+                <!-- 区域类型选择 -->
+                <div style="height: 45px; display: flex; align-items: center;">
+                  <el-radio-group v-model="paramConfigDialog.regionType" @change="changeRegionType">
+                    <el-radio label="Rectangle">矩形区域</el-radio>
+                    <el-radio label="Polygon">多边形区域</el-radio>
+                  </el-radio-group>
+                </div>
+
+                <!-- 参考图上传 -->
+                <div style="margin-bottom: 10px;display: flex; align-items: center;">
+                  <el-upload action="#" :show-file-list="false" :before-upload="handleRegionImageUpload"
+                    accept="image/*">
+                    <el-button size="small" type="default" icon="el-icon-picture">上传参考背景图</el-button>
+                  </el-upload>
+                </div>
+
+                <!-- 区域绘制画布 -->
+                <div style="position: relative; border: 1px solid #d9d9d9; border-radius: 4px;">
+                  <!-- 绘制的区域覆盖层 -->
+                  <canvas v-if="paramConfigDialog.regionImage" ref="regionCanvas" @click="drawRegionPoint"></canvas>
+                  <div v-else style="width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; color: #999;">
+                    请上传参考背景图后绘制入侵区域
+                  </div>
+                </div>
+
+                <!-- 操作提示和按钮 -->
+                <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-size: 12px; color: #666;">
+                    <span v-if="paramConfigDialog.regionType === 'Rectangle'">
+                      点击画布左上角和右下角确定矩形区域
+                    </span>
+                    <span v-else>
+                      点击画布添加多边形顶点，双击完成绘制
+                    </span>
+                    <span style="color: #f56c6c; margin-left: 10px;">
+                      已选点：{{ paramConfigDialog.regionPoints.length }}
+                      <span v-if="paramConfigDialog.regionType === 'Polygon'">（至少3个）</span>
+                    </span>
+                  </div>
+                  <el-button size="small" type="primary" icon="el-icon-refresh" @click="clearRegion">清空</el-button>
+                </div>
+
+              </div>
+            </template>
+
 
           </el-form-item>
         </el-form>
@@ -337,7 +385,13 @@ export default {
         currentRow: {},     // 当前操作的项目行数据
         generateLoading: false,
         generateTxt: "正在保存参数中...",
-        title: 'AI项目参数配置'
+        title: 'AI项目参数配置',
+
+        regionType: 'Rectangle', // 区域类型：Rectangle/Polygon
+        regionImage: null, // 区域绘制参考图
+        regionPoints: [], // 区域顶点坐标（相对比例）
+        regionFinish: false, // 多边形绘制是否完成
+        canvasScale: { width: 1, height: 1 } // canvas缩放比例
       },
       testDialog: {
         visible: false,
@@ -560,16 +614,28 @@ export default {
         this.paramConfigDialog.clipText = this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"];
         this.paramConfigDialog.clipImg = this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"];
       }
+
+      // 初始化region参数
+      const regionParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'region');
+      if (regionParam) {
+        const regionData = this.paramConfigDialog.currentRow.paramValues[regionParam.code] || { type: 'Rectangle', points: [] };
+        this.paramConfigDialog.regionType = regionData.type;
+        this.paramConfigDialog.regionPoints = regionData.points || [];
+        this.paramConfigDialog.regionImage = '';
+        this.paramConfigDialog.regionFinish = false;
+      }
+
       this.paramConfigDialog.visible = true;
       this.paramConfigDialog.generateLoading = false;
       this.paramConfigDialog.title = `项目【${row.Name}】的参数配置`;
+
     },
     async confirmParamConfig() {
       try {
-        // 1. 检查是否有clip类型参数需要生成特征向量
-        const clipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'clip');
 
-        // 2. 如果有clip参数且未生成特征向量，则自动生成
+        // 检查是否有clip类型参数需要生成特征向量
+        const clipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'clip');
+        // 如果有clip参数且未生成特征向量，则自动生成
         if (clipParam) {
           // 前置校验
           if (this.paramConfigDialog.clipmode === "text" && !this.paramConfigDialog.clipText.trim()) {
@@ -605,6 +671,24 @@ export default {
           this.paramConfigDialog.currentRow.paramValues[clipParam.code] = res.data;
           this.paramConfigDialog.generateTxt = "正在保存参数中...";
         }
+
+        // 保存region类型参数
+        const regionParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'region');
+        if (regionParam && this.paramConfigDialog.regionPoints.length > 0) {
+          if (this.paramConfigDialog.regionType == "Rectangle" && this.paramConfigDialog.regionPoints.length < 2) {
+            this.$message.error('矩形区域顶点数不对');
+            return;
+          }
+          else if (this.paramConfigDialog.regionType == "Polygon" && this.paramConfigDialog.regionPoints.length < 3) {
+            this.$message.error('多边形区域顶点数不对');
+            return;
+          }
+          this.paramConfigDialog.currentRow.paramValues[regionParam.code] = {
+            type: this.paramConfigDialog.regionType,
+            points: this.paramConfigDialog.regionPoints
+          };
+        }
+
         this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
         this.paramConfigDialog.visible = false;
         this.paramConfigDialog.generateLoading = false;
@@ -718,6 +802,202 @@ export default {
         this.testDialog.testLoading = false;
       }
     },
+
+
+
+    /**
+    * 处理区域参考图上传
+    */
+    handleRegionImageUpload(file) {
+      const isImage = file.type.startsWith('image/');
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isImage) {
+        this.$message.error('请上传图片格式文件！');
+        return false;
+      }
+      if (!isLt2M) {
+        this.$message.error('图片大小不能超过2MB！');
+        return false;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.paramConfigDialog.regionPoints = [];
+        this.paramConfigDialog.regionFinish = false;
+
+        // 图片加载完成后初始化canvas
+        this.paramConfigDialog.regionImage = new Image();
+        this.paramConfigDialog.regionImage.src = e.target.result;
+        this.paramConfigDialog.regionImage.onload = () => {
+          this.$nextTick(() => {
+            this.initRegionCanvas();
+          });
+        };
+
+      };
+      reader.readAsDataURL(file);
+      return false;
+    },
+
+    /**
+     * 初始化区域绘制画布
+     */
+    initRegionCanvas() {
+      const canvas = this.$refs.regionCanvas[0];
+      const container = canvas.parentElement;
+      // 2. 获取图片原始比例
+      const img = this.paramConfigDialog.regionImage;
+      const imgRatio = img.width / img.height; // 图片宽高比
+
+      let canvasWidth = container.clientWidth
+      let canvasHeight = canvasWidth / imgRatio; 
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      canvas.style.width = `${canvasWidth}px`;
+      canvas.style.height = `${canvasHeight}px`;
+      canvas.style.display = 'block';
+      canvas.style.margin = '0 auto'; // 居中显示
+
+      // 计算缩放比例：画布实际尺寸 / 显示尺寸（用于坐标转换）
+      this.paramConfigDialog.canvasScale = {
+        width: this.paramConfigDialog.regionImage.width / canvasWidth,
+        height: this.paramConfigDialog.regionImage.height / canvasHeight
+      };
+
+      this.drawRegionCanvas();
+    },
+
+    /**
+     * 绘制区域点和连线
+     */
+    drawRegionCanvas() {
+      const canvas = this.$refs.regionCanvas[0];
+      const ctx = canvas.getContext('2d');
+      const points = this.paramConfigDialog.regionPoints;
+
+      // 清空画布
+      ctx.drawImage(this.paramConfigDialog.regionImage, 0, 0, canvas.width, canvas.height);
+
+
+
+      // 转换相对坐标为画布绝对坐标
+      const absPoints = points.map(p => ({
+        x: p.x * canvas.width,
+        y: p.y * canvas.height
+      }));
+
+      // 绘制连线
+      ctx.beginPath();
+      ctx.strokeStyle = '#ff4757';
+      ctx.lineWidth = 2;
+
+      if (this.paramConfigDialog.regionType === 'Rectangle' && absPoints.length >= 2) {
+        const p1 = absPoints[0];
+        const p2 = absPoints[1];
+        ctx.rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+      } else if (this.paramConfigDialog.regionType === 'Polygon') {
+        if (absPoints.length > 0) {
+          ctx.moveTo(absPoints[0].x, absPoints[0].y);
+          for (let i = 1; i < absPoints.length; i++) {
+            ctx.lineTo(absPoints[i].x, absPoints[i].y);
+          }
+          if (this.paramConfigDialog.regionFinish && absPoints.length >= 3) {
+            ctx.closePath();
+          }
+        }
+      }
+      ctx.stroke();
+
+      // 绘制顶点
+      absPoints.forEach((p, index) => {
+        ctx.fillStyle = index === 0 ? '#ff4757' : '#2ed573';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+
+    },
+
+    /**
+     * 点击画布添加区域点
+     */
+    drawRegionPoint(e) {
+
+      if (!this.paramConfigDialog.regionImage || this.paramConfigDialog.regionFinish) return;
+
+      let canvas = this.$refs.regionCanvas[0];
+      const rect = canvas.getBoundingClientRect();
+      const scale = this.paramConfigDialog.canvasScale;
+
+      // 计算相对坐标（0-1）
+      const x = (e.clientX - rect.left) * scale.width / canvas.width;
+      const y = (e.clientY - rect.top) * scale.height / canvas.height;
+
+
+      // 边界处理
+      const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+      const relX = clamp(x, 0, 1);
+      const relY = clamp(y, 0, 1);
+
+
+      // 处理矩形区域（最多2个点）
+      if (this.paramConfigDialog.regionType === 'Rectangle') {
+        if (this.paramConfigDialog.regionPoints.length === 0) {
+          // 第一个点（左上角）
+          this.paramConfigDialog.regionPoints = [{ x: relX, y: relY }];
+        } else if (this.paramConfigDialog.regionPoints.length === 1) {
+          // 第二个点（右下角）
+          this.paramConfigDialog.regionPoints = [
+            this.paramConfigDialog.regionPoints[0],
+            { x: relX, y: relY }
+          ];
+        }
+      }
+      // 处理多边形区域（双击完成）
+      else if (this.paramConfigDialog.regionType === 'Polygon') {
+        // 检测双击
+        if (e.detail === 2 && this.paramConfigDialog.regionPoints.length >= 3) {
+          this.paramConfigDialog.regionFinish = true;
+        } else {
+          // 添加顶点（最多20个）
+          if (this.paramConfigDialog.regionPoints.length < 20) {
+            this.paramConfigDialog.regionPoints.push({ x: relX, y: relY });
+          } else {
+            this.$message.warning('多边形顶点数量不能超过20个');
+          }
+        }
+      }
+
+      // 重绘画布
+      this.drawRegionCanvas();
+    },
+
+    /**
+     * 切换区域类型
+     */
+    changeRegionType() {
+      this.paramConfigDialog.regionPoints = [];
+      this.paramConfigDialog.regionFinish = false;
+
+      this.$nextTick(() => {
+        this.drawRegionCanvas();
+      });
+    },
+
+    /**
+     * 清空区域
+     */
+    clearRegion() {
+      this.paramConfigDialog.regionPoints = [];
+      this.paramConfigDialog.regionFinish = false;
+      this.drawRegionCanvas();
+    },
+
+
   }
 }
 </script>
@@ -911,9 +1191,7 @@ export default {
   padding: 0;
 }
 
-.param-form {
-  padding: 16px;
-}
+
 
 .param-form-item {
   margin-bottom: 12px;
@@ -1064,5 +1342,28 @@ export default {
 .loading-subtext {
   font-size: 12px;
   color: #666;
+}
+
+
+.region-draw-area {
+  position: relative;
+}
+
+.region-point {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff4757;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.region-line {
+  position: absolute;
+  background: #ff4757;
+  height: 2px;
+  transform-origin: left center;
+  z-index: 1;
 }
 </style>

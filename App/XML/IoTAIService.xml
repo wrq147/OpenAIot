@@ -447,6 +447,43 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.AICode.KalmanFilter.GetVelocity">
+            <summary>
+            获取速度向量 [vx, vy]
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.Track.GetMovementDirection">
+            <summary>
+            获取当前运动方向
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.Track.GetMovementSpeed">
+            <summary>
+            获取运动速度（像素/帧）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.Track.GetPositionHistory">
+            <summary>
+            获取历史位置列表
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.Track.UpdateRegionStatus(IoTAIService.AICode.MonitoringRegion)">
+            <summary>
+            更新目标在指定区域的状态
+            </summary>
+            <param name="region">监控区域</param>
+            <returns>区域状态（是否入侵）</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.Track.GetRegionStatus(System.String)">
+            <summary>
+            获取目标在指定区域的当前状态
+            </summary>
+            <param name="regionId">区域ID</param>
+            <returns></returns>
+        </member>
         <member name="T:IoTAIService.AICode.ExecutionProviderType">
             <summary>
             执行提供者类型
@@ -467,6 +504,54 @@
         <member name="M:IoTAIService.AICode.FaceDetOnnxRunner.ResizeBBoxes(System.Collections.Generic.List{IoTAIService.AICode.BBox},System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             调整边界框到原始尺寸
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AICode.RegionType">
+            <summary>
+            区域类型
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AICode.RegionStatus">
+            <summary>
+            目标区域状态
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AICode.MonitoringRegion">
+            <summary>
+            监控区域实体
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.MonitoringRegion.CreateRectangle(System.Single,System.Single,System.Single,System.Single,System.String,System.String)">
+            <summary>
+            矩形区域快捷创建
+            </summary>
+            <param name="x1">左</param>
+            <param name="y1">上</param>
+            <param name="x2">右</param>
+            <param name="y2">下</param>
+            <param name="id">区域ID</param>
+            <param name="name">区域名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.MonitoringRegion.CreatePolygon(System.Collections.Generic.List{System.Numerics.Vector2},System.String,System.String)">
+            <summary>
+            多边形区域快捷创建
+            </summary>
+            <param name="vertices">顶点坐标列表</param>
+            <param name="id">区域ID</param>
+            <param name="name">区域名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.MonitoringRegion.ContainsPoint(System.Numerics.Vector2)">
+            <summary>
+            判断点是否在区域内
+            </summary>
+            <param name="point">目标点（中心坐标）</param>
+            <returns></returns>
+        </member>
+        <member name="T:IoTAIService.AICode.MovementDirection">
+            <summary>
+            运动方向枚举（8个主方向）
             </summary>
         </member>
         <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
@@ -540,7 +625,7 @@
         </member>
         <member name="P:IoTAIService.AIProjectParam.type">
             <summary>
-            参数类型：boolean、enum、float、string、clip
+            参数类型：boolean、enum、float、string、clip、region
             </summary>
         </member>
         <member name="P:IoTAIService.AIProjectParam.help">
@@ -551,6 +636,11 @@
         <member name="P:IoTAIService.AIProjectParam.elements">
             <summary>
             枚举元素
+            </summary>
+        </member>
+        <member name="P:IoTAIService.AIProjectParam.multi">
+            <summary>
+            是否多选
             </summary>
         </member>
         <member name="T:IoTAIService.AIProject.Items.GeneralDetect">

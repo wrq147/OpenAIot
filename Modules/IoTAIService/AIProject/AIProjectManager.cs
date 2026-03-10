@@ -43,6 +43,7 @@ namespace IoTAIService.AIProject
             await new GeneralDetect().Init(_provider);
             await new FaceDetect().Init(_provider);
             await new FaceRecog().Init(_provider);
+            await new GeneralTrigger().Init(_provider);
         }
 
         private async Task DownAIDetectResponse(string nodeid, string videoId, List<BoxItem> boxlist, bool needConf = false)
