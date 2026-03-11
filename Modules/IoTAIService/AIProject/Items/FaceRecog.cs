@@ -43,7 +43,7 @@ namespace IoTAIService.AIProject.Items
             {
                 tracker = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
             }
-            (var tracklist, var addlist, var rmlist) = tracker.Update(tboxlist);
+            (var tracklist, var addlist) = tracker.Update(tboxlist);
             #endregion
 
             if (facenum > 0 && addlist.Count > 0)

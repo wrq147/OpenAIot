@@ -89,14 +89,21 @@ namespace IoTAIService.AICode
         /// <returns></returns>
         public Vector2 GetVelocity() => new Vector2(_x.Z, _x.W);
     }
-
+    public class RegionStayInfo
+    {
+        public DateTime? EnterTime { get; set; }
+        public DateTime? ExitTime { get; set; }
+        public bool IsSend { get; set; }
+    }
     // 跟踪轨迹实体
     public class Track
     {
         private readonly Dictionary<string, RegionStatus> _regionStatusDict = new Dictionary<string, RegionStatus>();
+        private readonly Dictionary<string, RegionStayInfo> _regionStayDict = new Dictionary<string, RegionStayInfo>();
         private readonly Queue<Vector2> _positionHistory = new Queue<Vector2>(capacity: 5);
         private const float _minSpeedThreshold = 0.1f; // 最小速度阈值（过滤静止）
-
+        public DateTime CreatedOn { get; set; }
+        public bool IsSend { get; set; }
         public int Id { get; set; } // 唯一跟踪ID
         public BoxItem CurrentDetection { get; set; } // 当前检测框
         public KalmanFilter Kf { get; set; } // 卡尔曼滤波器
@@ -112,6 +119,8 @@ namespace IoTAIService.AICode
             Kf.Update(tmpcenter);
             TimeSinceUpdate = 0;
             _positionHistory.Enqueue(tmpcenter);
+            CreatedOn = DateTime.Now;
+            IsSend = false;
         }
 
         // 更新轨迹
@@ -224,6 +233,12 @@ namespace IoTAIService.AICode
                 {
                     // 从外部进入内部：触发入侵告警
                     currentStatus = RegionStatus.Entered;
+                    _regionStayDict[region.Id] = new RegionStayInfo()
+                    {
+                        EnterTime = DateTime.Now,
+                        ExitTime = null,
+                        IsSend = false
+                    };
                 }
                 else
                 {
@@ -237,6 +252,12 @@ namespace IoTAIService.AICode
                 {
                     // 从内部离开
                     currentStatus = RegionStatus.Exited;
+                    _regionStayDict[region.Id] = new RegionStayInfo()
+                    {
+                        EnterTime = null,
+                        ExitTime = DateTime.Now,
+                        IsSend = false
+                    };
                 }
                 else
                 {
@@ -265,7 +286,22 @@ namespace IoTAIService.AICode
         {
             return _regionStatusDict.TryGetValue(regionId, out var status) ? status : RegionStatus.Outside;
         }
-
+        /// <summary>
+        /// 获取目标在指定区域的停留信息
+        /// </summary>
+        /// <param name="regionId"></param>
+        /// <returns></returns>
+        public RegionStayInfo GetRegionStay(string regionId)
+        {
+            if(_regionStayDict.TryGetValue(regionId, out var info))
+            {
+                return info;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     // ByteTrack核心跟踪器
@@ -286,7 +322,7 @@ namespace IoTAIService.AICode
         }
 
         // 核心方法：处理单张图片的检测结果，返回跟踪结果
-        public (List<Track>, List<Track>, List<Track>) Update(List<BoxItem> detections)
+        public (List<Track>, List<Track>) Update(List<BoxItem> detections)
         {
             // 1. 预测所有现有轨迹的下一状态
             foreach (var track in _tracks)
@@ -325,19 +361,10 @@ namespace IoTAIService.AICode
             }
 
             // 7. 清理失效轨迹（超过track_buffer未更新）
-            List<Track> delTracks = new List<Track>();
-            for (int i = _tracks.Count - 1; i >= 0; i--)
-            {
-                var tmptrack = _tracks[i];
-                if (!tmptrack.IsActive)
-                {
-                    delTracks.Add(tmptrack);
-                    _tracks.RemoveAt(i);
-                }
-            }
+            _tracks.RemoveAll(track => !track.IsActive);
 
             // 返回当前活跃的轨迹
-            return (_tracks.Where(t => t.IsActive).ToList(), newTracks, delTracks);
+            return (_tracks.Where(t => t.IsActive).ToList(), newTracks);
         }
 
         // IoU匹配核心逻辑

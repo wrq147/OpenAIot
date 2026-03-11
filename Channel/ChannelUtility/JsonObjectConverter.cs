@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -49,7 +48,9 @@ namespace ChannelUtility
                     return null;
 
                 case JsonTokenType.StartObject:
-                    var expandoDict = new Dictionary<string, object>();
+                    var expando = new ExpandoObject();
+                    var expandoDict = (IDictionary<string, object>)expando;
+
                     reader.Read(); // 跳过StartObject，移动到第一个属性名
                     while (reader.TokenType != JsonTokenType.EndObject)
                     {
@@ -67,7 +68,7 @@ namespace ChannelUtility
 
                         reader.Read(); // 移动到下一个属性名/EndObject
                     }
-                    return expandoDict;
+                    return expando;
 
                 case JsonTokenType.StartArray:
                     // 处理数组

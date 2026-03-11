@@ -129,12 +129,6 @@ namespace IoTVideoService
 .OnColumn("VideoKey").Ascending()
 .WithOptions().NonClustered();
 
-            Create.Index()
-.OnTable("mz_iot_record_file")
-.OnColumn("PlanId").Ascending()
-.OnColumn("Status").Ascending()
-.WithOptions().NonClustered();
-
 
 
             Create.Table("mz_iot_record_key").WithDescription("录像播放文件的关键帧")

@@ -1,5 +1,6 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
+using Common.Json;
 using IoTAIService.AIProject;
 using MessagePack;
 using Microsoft.Extensions.Options;
@@ -108,7 +109,7 @@ namespace IoTAIService
                         List<AIConfigData> configList = null;
                         if (!string.IsNullOrEmpty(aiFrame.Configs))
                         {
-                            configList = System.Text.Json.JsonSerializer.Deserialize<List<AIConfigData>>(aiFrame.Configs, JsonMessageSerializerConfig.DefaultOptions);
+                            configList = System.Text.Json.JsonSerializer.Deserialize<List<AIConfigData>>(aiFrame.Configs, MyDefaultTextJsonConfig.DefaultOptions);
                         }
 
                         // 处理消息
