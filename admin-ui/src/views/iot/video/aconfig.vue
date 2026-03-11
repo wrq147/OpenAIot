@@ -164,7 +164,7 @@
     </div>
 
     <el-dialog :title="paramConfigDialog.title" :visible.sync="paramConfigDialog.visible" width="730px" append-to-body
-      :close-on-click-modal="false" :destroy-on-close="true" top="10vh">
+      :close-on-click-modal="false" :destroy-on-close="true" top="2vh">
       <div class="param-config-content">
         <el-form label-width="120px">
           <el-form-item label-width="150px" v-for="(param, index) in paramConfigDialog.currentRow.ParamList"
@@ -229,7 +229,7 @@
             <template v-else-if="param.type === 'region'">
               <div style="width: 450px;">
                 <!-- 区域类型选择 + 多区域操作 -->
-                <div style="height: 45px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="height: 40px; display: flex; align-items: center; justify-content: space-between;">
                   <el-radio-group v-model="paramConfigDialog.regionType" @change="changeRegionType">
                     <el-radio label="Rectangle">矩形区域</el-radio>
                     <el-radio label="Polygon">多边形区域</el-radio>
@@ -239,11 +239,11 @@
                 <!-- 区域列表选择 -->
                 <div style="margin-bottom: 10px;">
                   <el-select :disabled="paramConfigDialog.regions.length === 0"
-                    v-model="paramConfigDialog.currentRegionIndex" @change="onRegionSelectChange" size="small" empty-text="暂无区域"
-                    placeholder="选择要编辑的区域" style="width: 100%;">
+                    v-model="paramConfigDialog.currentRegionIndex" @change="onRegionSelectChange" size="small"
+                    empty-text="暂无区域" placeholder="选择要编辑的区域" style="width: 100%;">
                     <el-option v-for="(region, idx) in paramConfigDialog.regions" :key="idx"
-                      :label="`${paramConfigDialog.regionType}区域 ${idx + 1}`" :value="idx" />
-                      <el-option v-if="paramConfigDialog.regions.length === 0"  label="暂无区域" :value="-1" />
+                      :label="`${region.type}区域 ${idx + 1}`" :value="idx" />
+                    <el-option v-if="paramConfigDialog.regions.length === 0" label="暂无区域" :value="-1" />
                   </el-select>
                 </div>
 
@@ -253,7 +253,8 @@
                     accept="image/*">
                     <el-button size="small" type="default" icon="el-icon-picture">上传参考背景图</el-button>
                   </el-upload>
-                  <el-button style="margin-left:10px;" size="small" type="primary" icon="el-icon-plus" @click="addNewRegion">
+                  <el-button style="margin-left:10px;" size="small" type="primary" icon="el-icon-plus"
+                    @click="addNewRegion">
                     添加区域
                   </el-button>
                   <el-button size="small" type="danger" icon="el-icon-delete" @click="deleteCurrentRegion"
@@ -643,7 +644,8 @@ export default {
           : (regionData.points ? [regionData] : []);
         this.paramConfigDialog.regionType = 'Rectangle';
         this.paramConfigDialog.currentRegionIndex = this.paramConfigDialog.regions.length > 0 ? 0 : -1;
-        this.paramConfigDialog.regionImage = '';
+        let base64img = this.paramConfigDialog.currentRow.paramValues[regionParam.code + "-img"];
+        this.initRegionImg(base64img);
         this.paramConfigDialog.tempPoints = [];
         this.paramConfigDialog.isDrawing = false;
       }
@@ -718,6 +720,7 @@ export default {
 
           // 保存多区域数据
           this.paramConfigDialog.currentRow.paramValues[regionParam.code] = validRegions;
+          this.paramConfigDialog.currentRow.paramValues[regionParam.code + "-img"] = this.paramConfigDialog.regionImage.src;
         }
 
         this.configuredProjects[this.paramConfigDialog.currentIndex] = this.paramConfigDialog.currentRow;
@@ -858,22 +861,24 @@ export default {
 
       const reader = new FileReader();
       reader.onload = (e) => {
-        // 重置绘制状态
-        this.paramConfigDialog.tempPoints = [];
-
-        // 图片加载完成后初始化canvas
-        this.paramConfigDialog.regionImage = new Image();
-        this.paramConfigDialog.regionImage.src = e.target.result;
-        this.paramConfigDialog.regionImage.onload = () => {
-          this.$nextTick(() => {
-            this.initRegionCanvas();
-          });
-        };
+        this.initRegionImg(e.target.result);
       };
       reader.readAsDataURL(file);
       return false;
     },
+    initRegionImg(imgbase64) {
+      // 重置绘制状态
+      this.paramConfigDialog.tempPoints = [];
 
+      // 图片加载完成后初始化canvas
+      this.paramConfigDialog.regionImage = new Image();
+      this.paramConfigDialog.regionImage.src = imgbase64;
+      this.paramConfigDialog.regionImage.onload = () => {
+        this.$nextTick(() => {
+          this.initRegionCanvas();
+        });
+      };
+    },
     /**
      * 初始化区域绘制画布
      */
@@ -921,8 +926,9 @@ export default {
       const img = this.paramConfigDialog.regionImage;
 
       // 清空画布
-      ctx.clearRect(0, 0, ctxCanvas.width, ctxCanvas.height);
+      // ctx.clearRect(0, 0, ctxCanvas.width, ctxCanvas.height);
       ctx.drawImage(img, 0, 0, ctxCanvas.width, ctxCanvas.height);
+
 
       // 绘制所有已保存的区域
       this.paramConfigDialog.regions.forEach((region, regionIdx) => {
@@ -1101,14 +1107,13 @@ export default {
      */
     changeRegionType() {
       this.paramConfigDialog.tempPoints = [];
+      this.paramConfigDialog.isDrawing = true;
       this.paramConfigDialog.regions[this.paramConfigDialog.currentRegionIndex] = {
         type: this.paramConfigDialog.regionType,
         points: [],
         isdraw: true
       };
-      this.$nextTick(() => {
-        this.drawRegionCanvas();
-      });
+      this.drawRegionCanvas();
     },
     onRegionSelectChange(index) {
       // 校验选中的索引是否有效
@@ -1118,7 +1123,7 @@ export default {
       this.paramConfigDialog.regionType = selectedRegion.type;
       this.paramConfigDialog.isDrawing = selectedRegion.isdraw;
       this.paramConfigDialog.tempPoints = [...(selectedRegion.points || [])];
-      this.renderRegionCanvas();
+      this.drawRegionCanvas();
     },
 
     /**
@@ -1158,7 +1163,7 @@ export default {
       this.$message.success('区域已删除');
     },
 
-  
+
   }
 }
 </script>

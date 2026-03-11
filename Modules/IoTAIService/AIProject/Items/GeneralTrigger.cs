@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using static StackExchange.Redis.Role;
 
 namespace IoTAIService.AIProject.Items
 {
@@ -34,6 +33,12 @@ namespace IoTAIService.AIProject.Items
             }
             (var tracklist, var addlist, var rmlist) = tracker.Update(boxes);
             #endregion
+
+            var zonelist = config.Get<List<object>>("inv_zone");
+            if (zonelist != null && zonelist.Count > 0)
+            {
+
+            }
 
             if (addlist.Count > 0)
             {
@@ -68,7 +73,7 @@ namespace IoTAIService.AIProject.Items
                         name="入侵区域",
                         code="inv_zone",
                         type="region",
-                        help="是否启用区域入侵检测"
+                        help="设置触发的检测区域"
                     },
                     new AIProjectParam()
                     {

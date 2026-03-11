@@ -50,5 +50,16 @@ namespace IoTAIService
                 return null;
             }
         }
+        public static T Get<T>(this AIConfigData data, string key) where T : class
+        {
+            if (data.DetParams.TryGetValue(key, out object tval))
+            {
+                return tval as T;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
