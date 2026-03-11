@@ -33,6 +33,7 @@ namespace IoTAIService
             services.AddSingleton<FaceSTNRunner>();
             services.AddSingleton<FaceKeyPointsRunner>();
             services.AddSingleton<YoloWorldDetectRunner>();
+            services.AddSingleton<YoloLargeWorldDetectRunner>();
             services.AddSingleton<AICache>();
             services.AddSingleton<AIProjectManager>();
             services.AddSingleton<PythonExe>();

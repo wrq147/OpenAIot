@@ -455,3 +455,4 @@ $RECYCLE.BIN/
 mysql
 influxdb
 /Modules/IoTAIService/AIScript/clip_cn_vit-b-16.pt
+/Modules/IoTAIService/AIModel/LargeYoloWorld.onnx

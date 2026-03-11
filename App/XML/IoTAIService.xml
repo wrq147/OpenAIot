@@ -561,6 +561,40 @@
             运动方向枚举（8个主方向）
             </summary>
         </member>
+        <member name="M:IoTAIService.AICode.YoloLargeWorldDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
+            <summary>
+            图像预处理：缩放、归一化等
+            </summary>
+            <param name="input"></param>
+            <param name="gain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloLargeWorldDetectRunner.PostprocessOutput(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Collections.Generic.List{System.String})">
+            <summary>
+            后处理：解析模型输出，过滤低置信度结果，执行NMS，还原检测框到原图坐标
+            </summary>
+            <param name="output"></param>
+            <param name="confidenceThreshold"></param>
+            <param name="iouThreshold"></param>
+            <param name="originalWidth"></param>
+            <param name="originalHeight"></param>
+            <param name="gain"></param>
+            <param name="classes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloLargeWorldDetectRunner.ApplyNMS(System.Collections.Generic.List{IoTAIService.AICode.YoloWorldDetectionResult},System.Single)">
+            <summary>
+            非极大值抑制（NMS）：去除重叠的高置信度框
+            </summary>
+            <param name="detections">检测结果列表</param>
+            <param name="iouThreshold">IOU阈值</param>
+            <returns>去重后的检测结果</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloLargeWorldDetectRunner.CalculateIOU(IoTAIService.AICode.YoloWorldDetectionResult,IoTAIService.AICode.YoloWorldDetectionResult)">
+            <summary>
+            计算两个检测框的IOU（交并比）
+            </summary>
+        </member>
         <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
             <summary>
             图像预处理：缩放、归一化等
@@ -582,7 +616,7 @@
             <param name="classes"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.ApplyNMS(System.Collections.Generic.List{IoTAIService.AICode.YoloWorldDetectRunner.DetectionResult},System.Single)">
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.ApplyNMS(System.Collections.Generic.List{IoTAIService.AICode.YoloWorldDetectionResult},System.Single)">
             <summary>
             非极大值抑制（NMS）：去除重叠的高置信度框
             </summary>
@@ -590,7 +624,7 @@
             <param name="iouThreshold">IOU阈值</param>
             <returns>去重后的检测结果</returns>
         </member>
-        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.CalculateIOU(IoTAIService.AICode.YoloWorldDetectRunner.DetectionResult,IoTAIService.AICode.YoloWorldDetectRunner.DetectionResult)">
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.CalculateIOU(IoTAIService.AICode.YoloWorldDetectionResult,IoTAIService.AICode.YoloWorldDetectionResult)">
             <summary>
             计算两个检测框的IOU（交并比）
             </summary>

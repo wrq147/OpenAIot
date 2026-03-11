@@ -1,8 +1,5 @@
-﻿using DeveloperService.Controller;
-using Microsoft.Extensions.Options;
-using Microsoft.ML.OnnxRuntime;
+﻿using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using NPOI.SS.Formula.Functions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -14,23 +11,14 @@ using System.Linq;
 
 namespace IoTAIService.AICode
 {
-    public class YoloWorldDetectionResult
-    {
-        public string Label { get; set; }    // 类别标签
-        public float Confidence { get; set; } // 置信度
-        public float X1 { get; set; }        // 检测框左上角X（原图坐标）
-        public float Y1 { get; set; }        // 检测框左上角Y（原图坐标）
-        public float X2 { get; set; }        // 检测框右下角X（原图坐标）
-        public float Y2 { get; set; }        // 检测框右下角Y（原图坐标）
-    }
-
-    public class YoloWorldDetectRunner
+    public class YoloLargeWorldDetectRunner
     {
         private readonly InferenceSession _session;
 
-        public YoloWorldDetectRunner()
+
+        public YoloLargeWorldDetectRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloWorld.onnx";
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "LargeYoloWorld.onnx";
             // 初始化ONNX推理会话
             var sessionOptions = new SessionOptions();
             AIUtility.TryEnableGpu(sessionOptions);
@@ -47,7 +35,7 @@ namespace IoTAIService.AICode
             // 2. 准备输入
             var inputs = new List<NamedOnnxValue> {    
                 // 图片输入：假设已预处理为(1,3,640,640)的Tensor<float>
-                 NamedOnnxValue.CreateFromTensor("images", inputTensor),
+                NamedOnnxValue.CreateFromTensor("images", inputTensor),
                 // 文本嵌入输入：传入转换后的Tensor<float>
                 NamedOnnxValue.CreateFromTensor("text_embeds", classEmbeds)
             };
