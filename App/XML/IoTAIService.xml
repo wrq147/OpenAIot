@@ -484,6 +484,13 @@
             <param name="regionId">区域ID</param>
             <returns></returns>
         </member>
+        <member name="M:IoTAIService.AICode.Track.GetRegionStay(System.String)">
+            <summary>
+            获取目标在指定区域的停留信息
+            </summary>
+            <param name="regionId"></param>
+            <returns></returns>
+        </member>
         <member name="T:IoTAIService.AICode.ExecutionProviderType">
             <summary>
             执行提供者类型

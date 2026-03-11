@@ -128,6 +128,25 @@ namespace IoTAIService.AIProject.Items
                     }
                 }
             }
+
+
+            //存储视频关键帧
+            if (addlist.Count > 0)
+            {
+                var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
+                if ((DateTime.Now - tmpkeyTime).TotalSeconds > 60)
+                {
+                    var fileHelper = _provider.GetService<FileHelper>();
+                    var turl = await fileHelper.UploadRgb24File(image);
+                    if (!string.IsNullOrEmpty(turl))
+                    {
+                        videoData.SetDateTime("LastKeyTime", DateTime.Now);
+                        await aiBusProxy.SendMediaKey(req.DeviceId, req.VideoKey, "物体闯入", turl);
+                    }
+                }
+            }
+
+
         }
 
         public async Task Init(ITAServiceProvider provider)

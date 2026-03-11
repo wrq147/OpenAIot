@@ -121,8 +121,11 @@ namespace IoTAIService.AIProject.Items
                     outputs.Add("face_img", unknow.ToBase64String(JpegFormat.Instance));
                     await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "UnkIn", outputs);
                 }
+            }
 
-
+            if(addlist.Count > 0)
+            {
+                //存储视频关键帧
                 var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
                 if ((DateTime.Now - tmpkeyTime).TotalSeconds > 60)
                 {
