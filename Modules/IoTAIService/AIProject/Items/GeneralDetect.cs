@@ -75,7 +75,6 @@ namespace IoTAIService.AIProject.Items
 
         public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
         {
-            bool isHight = config.GetBool("is_hight", false);
             float tThreshold = config.GetFloat("threshold", 0.2f);
             float tIOU = config.GetFloat("iou_threshold", 0.2f);
             string featureTxt = config.GetString("feature-txt");
@@ -93,15 +92,7 @@ namespace IoTAIService.AIProject.Items
                 tclasses.Add("图片特征");
             }
             var tfeature = ConvertListToDenseTensor(feature);
-            List<YoloWorldDetectionResult> tbbx;
-            if (isHight)
-            {
-                tbbx = _provider.GetService<YoloLargeWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
-            }
-            else
-            {
-                tbbx = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
-            }
+            List<YoloWorldDetectionResult> tbbx = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
             List<BoxItem> boxes = new List<BoxItem>();
             foreach (var tbx in tbbx)
             {
