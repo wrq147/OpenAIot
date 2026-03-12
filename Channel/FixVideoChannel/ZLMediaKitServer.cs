@@ -92,23 +92,33 @@ namespace FixVideoChannel
                 return;
             }
             context.LastFrame = mkFrame;
-
-            if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
+            try
             {
-                if (item.Configs != null && item.Configs.Count > 0)
+                if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
                 {
-                    mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                    if (context.LastFrame != null)
+                    if (item.Configs != null && item.Configs.Count > 0)
                     {
-                        mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                        context.LastFrame = null;
-                    }
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
+                        if (context.LastFrame != null)
+                        {
+                            mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                            context.LastFrame = null;
+                        }
 
-                    return;
+                        return;
+                    }
                 }
+                mk_media.MkMediaInputFrame(context.Media, mkFrame);
             }
-            mk_media.MkMediaInputFrame(context.Media, mkFrame);
-            context.LastFrame = null;
+            catch (Exception e)
+            {
+                Console.WriteLine("解码异常：" + e.Message);
+
+            }
+            finally
+            {
+                context.LastFrame = null;
+            }
         }
         private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
         {

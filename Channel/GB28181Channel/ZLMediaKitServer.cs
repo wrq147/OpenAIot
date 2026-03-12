@@ -90,27 +90,37 @@ namespace GB28181Channel
                 return;
             }
             context.LastFrame = mkFrame;
-            var storage = _provider.GetService<IDeviceStorage>();
-            var device = storage.GetDevice(context.DeviceId);
-            if (device != null)
+            try
             {
-                if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
+                var storage = _provider.GetService<IDeviceStorage>();
+                var device = storage.GetDevice(context.DeviceId);
+                if (device != null)
                 {
-                    mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                    if (context.LastFrame != null)
+                    if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
                     {
-                        mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                        context.LastFrame = null;
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
+                        if (context.LastFrame != null)
+                        {
+                            mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                            context.LastFrame = null;
+                        }
+                        return;
                     }
-
-                    return;
+                }
+                if (context.Media != null)
+                {
+                    mk_media.MkMediaInputFrame(context.Media, mkFrame);
                 }
             }
-            if (context.Media != null)
+            catch (Exception e)
             {
-                mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                Console.WriteLine("解码异常：" + e.Message);
+
             }
-            context.LastFrame = null;
+            finally
+            {
+                context.LastFrame = null;
+            }
         }
         private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
         {
@@ -388,7 +398,7 @@ namespace GB28181Channel
                       IntPtr invoker, int* consumed,
                       IntPtr sock)
         {
-          
+
         }
 
         private void On_mk_http_access(IntPtr parserPtr,

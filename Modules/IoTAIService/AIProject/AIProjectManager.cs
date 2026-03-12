@@ -78,15 +78,14 @@ namespace IoTAIService.AIProject
 
             try
             {
-                int expectedLength = width * height * 3;
-
-                // 步骤2：Zlib解压得到RGB24原始数据
+                //Zlib解压得到RGB24原始数据
                 using (var msIn = new MemoryStream(compressedData))
                 using (var zlibStream = new DeflateStream(msIn, CompressionMode.Decompress))
-                using (var msOut = new MemoryStream(expectedLength))
+                using (var msOut = new MemoryStream())
                 {
                     zlibStream.CopyTo(msOut);
-                    Image<Rgb24> rgbImage = Image.Load<Rgb24>(msOut);
+                    byte[] pixelBytes = msOut.ToArray();
+                    Image<Rgb24> rgbImage = Image.LoadPixelData<Rgb24>(pixelBytes, width, height);
                     return rgbImage;
                 }
             }
@@ -167,6 +166,12 @@ namespace IoTAIService.AIProject
                 byte[] frameData = detectReq.Frame;
                 using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
                 {
+                    if (image == null)
+                    {
+                        Console.WriteLine("AI解释异常：视频帧不存在");
+                        return;
+                    }
+                    image.Save("E:\\kl.jpg");
                     //处理画框
                     List<BoxItem> boxlist = new List<BoxItem>();
                     foreach (var config in videoConfigs)

@@ -84,7 +84,6 @@ namespace FixVideoChannel
                 return;
             }
             byte[] pressData = FastZlibCompress(data, width, height);
-            pressData = data;
             List<AIConfigData> configs = null;
             if (videoData.NeedUp)
             {
