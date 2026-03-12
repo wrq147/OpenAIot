@@ -6,6 +6,8 @@ using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Ocsp;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,173 +26,197 @@ namespace GB28181Channel
         }
         public void OnSendAIDetectRequest(string videoId, string videoKey, float motionRatio, byte[] pressData, int width, int height, List<AIConfigData> confs, byte dataType)
         {
-            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs, dataType);
+            try
+            {
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs, dataType);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
         public async Task OnSendRecordFile(string videoId, string videoKey, string fileName, ulong fileSize, ulong startTime, float timeLen, byte storage, byte saveType)
         {
-            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishRecordFile(videoId, videoKey, fileName, fileSize, startTime, timeLen, storage, saveType);
+            try
+            {
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                await eventBus.PublishRecordFile(videoId, videoKey, fileName, fileSize, startTime, timeLen, storage, saveType);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
 
         public async Task OnDeviceDownMessage(BaseDeviceMessage msg, GB28181Server server)
         {
-            if (msg is AIDetectResponseMessage aiResponse)
+            try
             {
-                var storage = _serviceProvider.GetService<IDeviceStorage>() as InMemoryDeviceStorage;
-                var deviceId = storage.GetDeviceIdByDtuId(aiResponse.DeviceId);
-                if (deviceId == null)
+                if (msg is AIDetectResponseMessage aiResponse)
                 {
-                    return;
-                }
-                var device = storage.GetDevice(deviceId);
-                if (device == null)
-                {
-                    return;
-                }
-                if (device.VideoData == null)
-                {
-                    return;
-                }
-                if (aiResponse.NeedConf == true)
-                {
-                    device.VideoData.NeedUp = true;
-                }
-                else
-                {
-                    device.VideoData.BoxList = aiResponse.BoxList;
-                }
-            }
-            else if (msg is MediaItemMessage upItemResponse)
-            {
-                var storage = _serviceProvider.GetService<IDeviceStorage>();
-
-                VideoData videoData = new VideoData();
-                videoData.Item = upItemResponse.Item;
-                videoData.Configs = new List<AIConfigData>();
-                videoData.NeedUp = true;
-                foreach (var it in upItemResponse.Config.Tasks)
-                {
-                    videoData.Configs.Add(new AIConfigData()
+                    var storage = _serviceProvider.GetService<IDeviceStorage>() as InMemoryDeviceStorage;
+                    var deviceId = storage.GetDeviceIdByDtuId(aiResponse.DeviceId);
+                    if (deviceId == null)
                     {
-                        DetType = it.Code,
-                        OrgId = upItemResponse.Config.OrgId,
-                        DetParams = it.paramValues
-                    });
-                }
-                videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
-                videoData.MotionRatio = upItemResponse.Config.MotionRatio;
-
-
-                storage.UpdateDeviceMediaInfo(upItemResponse.Item.UserName, videoData);
-                var newdevice = storage.GetDevice(upItemResponse.Item.UserName);
-                if (newdevice == null)
-                {
-                    Console.WriteLine($"[异常] 设备{upItemResponse.Item.UserName}不存在");
-                    return;
-                }
-
-                var device = storage.GetDevice(upItemResponse.Item.UserName);
-                if (device == null)
-                {
-                    return;
-                }
-                await server.SendCatalogQuery(device);
-
-                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.Connected(upItemResponse.Item.Id, newdevice.DeviceIp);
-            }
-            else if (msg is MediaPTZMessage ptzMessage)
-            {
-                var storage = _serviceProvider.GetService<IDeviceStorage>();
-                var channelList = storage.GetChannelsByDeviceId(ptzMessage.UserName);
-                if (channelList.Count == 0)
-                {
-                    return;
-                }
-                var channinfo = channelList.Where(x => x.PushKey == ptzMessage.VideoKey).FirstOrDefault();
-                if (channinfo == null)
-                {
-                    return;
-                }
-
-                await server.SendPTZControl(new GB28181.DTO.PTZControlParams()
-                {
-                    DeviceId = ptzMessage.UserName,
-                    ChannelId = channinfo.ChannelId,
-                    MessageId = ptzMessage.MessageId,
-                    CommandType = ptzMessage.CommandType,
-                    Speed = ptzMessage.Speed,
-                    PresetId = ptzMessage.PresetId
-                });
-            }
-            else if (msg is MediaPresetMessage presetMessage)
-            {
-                var storage = _serviceProvider.GetService<IDeviceStorage>();
-                var device = storage.GetDevice(presetMessage.UserName);
-                if (device == null)
-                {
-                    return;
-                }
-                if (device.PresetList != null)
-                {
-                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                    await eventBus.PublishMediaPresetReply(presetMessage.MessageId, presetMessage.DeviceId, presetMessage.UserName, device.PresetList);
-                }
-                else
-                {
-                    await server.GetPresetList(presetMessage.UserName, presetMessage.MessageId);
-                }
-            }
-            else if (msg is MediaRecordStartMessage startRec)
-            {
-                ZLMediaKitServer.Instance.RecorderStart(startRec, 0, (rs, err) =>
-                {
-                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                    _ = eventBus.PublishRecordStartReply(startRec.MessageId, startRec.DeviceId, rs, err);
-                });
-            }
-            else if (msg is MediaRecordStopMessage stopRec)
-            {
-                ZLMediaKitServer.Instance.RecorderStop(stopRec, (rs, err) =>
-                {
-                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                    _ = eventBus.PublishRecordStopReply(msg.MessageId, msg.DeviceId, rs, err);
-                });
-            }
-            else if (msg is MediaRecordCleanMessage cleanRec)
-            {
-                //删除文件
-                var fileRecs = cleanRec.Records.Where(x => x.Storage == 0);
-                var streamIds = fileRecs.Select(x => x.StreamId).Distinct().ToList();
-                var dates = fileRecs.Select(x => x.Date).ToList();
-                foreach (var tstreamId in streamIds)
-                {
-                    foreach (var tdate in dates)
+                        return;
+                    }
+                    var device = storage.GetDevice(deviceId);
+                    if (device == null)
                     {
-                        string tMp4Path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "record" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
-                        if (Directory.Exists(tMp4Path))
-                        {
-                            Directory.Delete(tMp4Path, true);
-                        }
-
-                        string tHlsPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
-                        if (Directory.Exists(tHlsPath))
-                        {
-                            Directory.Delete(tHlsPath, true);
-                        }
+                        return;
+                    }
+                    if (device.VideoData == null)
+                    {
+                        return;
+                    }
+                    if (aiResponse.NeedConf == true)
+                    {
+                        device.VideoData.NeedUp = true;
+                    }
+                    else
+                    {
+                        device.VideoData.BoxList = aiResponse.BoxList;
                     }
                 }
-
-                //删除mino中的文件
-                var minoRecs = cleanRec.Records.Where(x => x.Storage == 1);
-                foreach (var rec in minoRecs)
+                else if (msg is MediaItemMessage upItemResponse)
                 {
-                    string upfilePosition = $"{rec.StreamId}/{rec.Date}/{rec.FileName}";
-                    await _serviceProvider.GetService<MinioHelper>().RemoveFile(upfilePosition);
-                }
+                    var storage = _serviceProvider.GetService<IDeviceStorage>();
 
+                    VideoData videoData = new VideoData();
+                    videoData.Item = upItemResponse.Item;
+                    videoData.Configs = new List<AIConfigData>();
+                    videoData.NeedUp = true;
+                    foreach (var it in upItemResponse.Config.Tasks)
+                    {
+                        videoData.Configs.Add(new AIConfigData()
+                        {
+                            DetType = it.Code,
+                            OrgId = upItemResponse.Config.OrgId,
+                            DetParams = it.paramValues
+                        });
+                    }
+                    videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
+                    videoData.MotionRatio = upItemResponse.Config.MotionRatio;
+
+
+                    storage.UpdateDeviceMediaInfo(upItemResponse.Item.UserName, videoData);
+                    var newdevice = storage.GetDevice(upItemResponse.Item.UserName);
+                    if (newdevice == null)
+                    {
+                        Console.WriteLine($"[异常] 设备{upItemResponse.Item.UserName}不存在");
+                        return;
+                    }
+
+                    var device = storage.GetDevice(upItemResponse.Item.UserName);
+                    if (device == null)
+                    {
+                        return;
+                    }
+                    await server.SendCatalogQuery(device);
+
+                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                    await eventBus.Connected(upItemResponse.Item.Id, newdevice.DeviceIp);
+                }
+                else if (msg is MediaPTZMessage ptzMessage)
+                {
+                    var storage = _serviceProvider.GetService<IDeviceStorage>();
+                    var channelList = storage.GetChannelsByDeviceId(ptzMessage.UserName);
+                    if (channelList.Count == 0)
+                    {
+                        return;
+                    }
+                    var channinfo = channelList.Where(x => x.PushKey == ptzMessage.VideoKey).FirstOrDefault();
+                    if (channinfo == null)
+                    {
+                        return;
+                    }
+
+                    await server.SendPTZControl(new GB28181.DTO.PTZControlParams()
+                    {
+                        DeviceId = ptzMessage.UserName,
+                        ChannelId = channinfo.ChannelId,
+                        MessageId = ptzMessage.MessageId,
+                        CommandType = ptzMessage.CommandType,
+                        Speed = ptzMessage.Speed,
+                        PresetId = ptzMessage.PresetId
+                    });
+                }
+                else if (msg is MediaPresetMessage presetMessage)
+                {
+                    var storage = _serviceProvider.GetService<IDeviceStorage>();
+                    var device = storage.GetDevice(presetMessage.UserName);
+                    if (device == null)
+                    {
+                        return;
+                    }
+                    if (device.PresetList != null)
+                    {
+                        var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                        await eventBus.PublishMediaPresetReply(presetMessage.MessageId, presetMessage.DeviceId, presetMessage.UserName, device.PresetList);
+                    }
+                    else
+                    {
+                        await server.GetPresetList(presetMessage.UserName, presetMessage.MessageId);
+                    }
+                }
+                else if (msg is MediaRecordStartMessage startRec)
+                {
+                    ZLMediaKitServer.Instance.RecorderStart(startRec, 0, (rs, err) =>
+                    {
+                        var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                        _ = eventBus.PublishRecordStartReply(startRec.MessageId, startRec.DeviceId, rs, err);
+                    });
+                }
+                else if (msg is MediaRecordStopMessage stopRec)
+                {
+                    ZLMediaKitServer.Instance.RecorderStop(stopRec, (rs, err) =>
+                    {
+                        var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                        _ = eventBus.PublishRecordStopReply(msg.MessageId, msg.DeviceId, rs, err);
+                    });
+                }
+                else if (msg is MediaRecordCleanMessage cleanRec)
+                {
+                    //删除文件
+                    var fileRecs = cleanRec.Records.Where(x => x.Storage == 0);
+                    var streamIds = fileRecs.Select(x => x.StreamId).Distinct().ToList();
+                    var dates = fileRecs.Select(x => x.Date).ToList();
+                    foreach (var tstreamId in streamIds)
+                    {
+                        foreach (var tdate in dates)
+                        {
+                            string tMp4Path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "record" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
+                            if (Directory.Exists(tMp4Path))
+                            {
+                                Directory.Delete(tMp4Path, true);
+                            }
+
+                            string tHlsPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "www" + Path.DirectorySeparatorChar + "live" + tstreamId + Path.DirectorySeparatorChar + tdate;
+                            if (Directory.Exists(tHlsPath))
+                            {
+                                Directory.Delete(tHlsPath, true);
+                            }
+                        }
+                    }
+
+                    //删除mino中的文件
+                    var minoRecs = cleanRec.Records.Where(x => x.Storage == 1);
+                    foreach (var rec in minoRecs)
+                    {
+                        string upfilePosition = $"{rec.StreamId}/{rec.Date}/{rec.FileName}";
+                        await _serviceProvider.GetService<MinioHelper>().RemoveFile(upfilePosition);
+                    }
+
+                }
             }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+     
         }
 
         /// <summary>
@@ -199,9 +225,17 @@ namespace GB28181Channel
         /// <param name="e"></param>
         public async Task OnDeviceRegistered(object? sender, DeviceRegisteredEventArgs e)
         {
-            var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
-            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            eventBus.PublishMediaNotFound(e.Device.DeviceId, 1);
+            try
+            {
+                var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                eventBus.PublishMediaNotFound(e.Device.DeviceId, 1);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
 
         /// <summary>
@@ -212,59 +246,95 @@ namespace GB28181Channel
         /// <returns></returns>
         public async Task OnDeviceOffline(object? sender, DeviceOfflineEventArgs e)
         {
-            var storage = _serviceProvider.GetService<IDeviceStorage>();
-            var device = storage.GetDevice(e.DeviceId);
-            if (device != null && device.VideoData != null && !string.IsNullOrEmpty(device.VideoData.Item.Id))
+            try
             {
-                //停止视频
-                var channelList = storage.GetChannelsByDeviceId(e.DeviceId);
-                foreach (var channel in channelList)
+                var storage = _serviceProvider.GetService<IDeviceStorage>();
+                var device = storage.GetDevice(e.DeviceId);
+                if (device != null && device.VideoData != null && !string.IsNullOrEmpty(device.VideoData.Item.Id))
                 {
-                    ZLMediaKitServer.Instance.CloseMediaSource(channel.PushKey);
-                }
+                    //停止视频
+                    var channelList = storage.GetChannelsByDeviceId(e.DeviceId);
+                    foreach (var channel in channelList)
+                    {
+                        ZLMediaKitServer.Instance.CloseMediaSource(channel.PushKey);
+                    }
 
-                var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
-                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-                await eventBus.Disconnect(device.VideoData.Item.Id);
-                eventBus.PublishMediaNotReader(device.DeviceId, 1);
+                    var option = _serviceProvider.GetService<IOptions<GB28181Option>>().Value;
+                    var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                    await eventBus.Disconnect(device.VideoData.Item.Id);
+                    eventBus.PublishMediaNotReader(device.DeviceId, 1);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+      
         }
         public async Task OnPresetListReceived(object? sender, PresetListReceivedEventArgs e)
         {
-            if (string.IsNullOrEmpty(e.MessageId))
+            try
             {
-                return;
+                if (string.IsNullOrEmpty(e.MessageId))
+                {
+                    return;
+                }
+                var storage = _serviceProvider.GetService<IDeviceStorage>();
+                var device = storage.GetDevice(e.DeviceId);
+                if (device == null)
+                {
+                    return;
+                }
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                await eventBus.PublishMediaPresetReply(e.MessageId, device.VideoData.Item.Id, e.DeviceId, device.PresetList);
+
             }
-            var storage = _serviceProvider.GetService<IDeviceStorage>();
-            var device = storage.GetDevice(e.DeviceId);
-            if (device == null)
+            catch(Exception ex)
             {
-                return;
+                Console.WriteLine(ex.Message);
             }
-            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishMediaPresetReply(e.MessageId, device.VideoData.Item.Id, e.DeviceId, device.PresetList);
+
         }
         public async Task OnPTZEventOk(object? sender, PTZEventOkArgs e)
         {
-            if (string.IsNullOrEmpty(e.MessageId))
+            try
             {
-                return;
+
+                if (string.IsNullOrEmpty(e.MessageId))
+                {
+                    return;
+                }
+                var storage = _serviceProvider.GetService<IDeviceStorage>();
+                var device = storage.GetDevice(e.DeviceId);
+                if (device == null)
+                {
+                    return;
+                }
+                var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                await eventBus.PublishMediaPTZReply(e.MessageId, device.VideoData.Item.Id, e.IsSuccess, e.Reason);
+
             }
-            var storage = _serviceProvider.GetService<IDeviceStorage>();
-            var device = storage.GetDevice(e.DeviceId);
-            if (device == null)
+            catch (Exception ex)
             {
-                return;
+                Console.WriteLine(ex.Message);
             }
-            var eventBus = _serviceProvider.GetService<ClientBusProxy>();
-            await eventBus.PublishMediaPTZReply(e.MessageId, device.VideoData.Item.Id, e.IsSuccess, e.Reason);
+
         }
         public async Task OnStreamPlay(object? sender, StreamPlayEventArgs e)
         {
-            if (e.IsSuccess == true)
+            try
             {
-                ZLMediaKitServer.Instance.BindSsrc(e);
+
+                if (e.IsSuccess == true)
+                {
+                    ZLMediaKitServer.Instance.BindSsrc(e);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+   
         }
     }
 }

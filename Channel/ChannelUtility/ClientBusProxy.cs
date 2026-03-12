@@ -503,7 +503,7 @@ namespace ChannelUtility
                 aireq.DataType = 0;
 
                 var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
-                byte[] serializedData = MessagePackSerializer.Serialize(msg, options);
+                byte[] serializedData = MessagePackSerializer.Serialize(aireq, options);
                 _ai_publisher.SendFrame(serializedData);
             }
 

@@ -24,22 +24,20 @@ namespace IoTAIService.AICode
 
         public KalmanFilter()
         {
-            // 修复1：用Identity属性替代CreateIdentity()
             _F = Matrix4x4.Identity;
             _F.M13 = dt;
             _F.M24 = dt;
 
-            // 修复2：观测矩阵初始化（兼容所有版本）
+            // 观测矩阵初始化
             _H = Matrix4x4.Identity;
             _H.M33 = 0;
             _H.M44 = 0;
 
-            // 修复3：噪声矩阵初始化（用Scale替代CreateScale）
-            _Q = Matrix4x4.CreateScale(0.01f); // 若此方法也不存在，见下方备用方案
+            _Q = Matrix4x4.CreateScale(0.01f);
             _R = Matrix4x4.CreateScale(0.1f);
 
             _x = Vector4.Zero;
-            // 修复4：协方差矩阵初始化
+            // 协方差矩阵初始化
             _P = Matrix4x4.Identity * 1000;
         }
 

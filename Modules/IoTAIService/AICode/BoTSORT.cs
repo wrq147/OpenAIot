@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+﻿using ChannelUtility.Message;
+using NPOI.HPSF;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 
 namespace IoTAIService.AICode
 {
@@ -844,99 +846,27 @@ namespace IoTAIService.AICode
 
     #region 4. BoTDetection类
     /// <summary>
-    /// 检测框实体（含ReID特征）
+    /// 检测信息实体（含ReID特征）
     /// </summary>
     public class BoTDetection
     {
-        // 基础信息
-        public float X1 { get; set; }
-        public float Y1 { get; set; }
-        public float X2 { get; set; }
-        public float Y2 { get; set; }
-        public float Confidence { get; set; }
-        public int ClassId { get; set; }
-
-        // 衍生属性
-        /// <summary>
-        /// 检测框宽度（确保非负）
-        /// </summary>
-        public float Width
-        {
-            get => Math.Max(0, X2 - X1);
-            set
-            {
-                if (value < 0) value = 0;
-                X2 = X1 + value;
-            }
-        }
-
-        /// <summary>
-        /// 检测框高度（确保非负）
-        /// </summary>
-        public float Height
-        {
-            get => Math.Max(0, Y2 - Y1);
-            set
-            {
-                if (value < 0) value = 0;
-                Y2 = Y1 + value;
-            }
-        }
-
-        /// <summary>
-        /// 宽高比（Aspect Ratio），修复除以零问题
-        /// </summary>
-        public float AspectRatio
-        {
-            get
-            {
-                float h = Height;
-                if (h < 1e-6f) return 1.0f; // 高度接近0时默认宽高比为1
-                return Width / h;
-            }
-        }
-
-        /// <summary>
-        /// 检测框中心坐标（确保有效）
-        /// </summary>
-        public Vector2 Center
-        {
-            get => new Vector2((X1 + X2) / 2f, (Y1 + Y2) / 2f);
-            set
-            {
-                X1 = value.X - Width / 2f;
-                Y1 = value.Y - Height / 2f;
-                X2 = value.X + Width / 2f;
-                Y2 = value.Y + Height / 2f;
-            }
-        }
-
-        /// <summary>
-        /// 检测框面积（确保非负）
-        /// </summary>
-        public float Area => Width * Height;
-
-        /// <summary>
-        /// 检测框ROI（确保有效）
-        /// </summary>
-        public RectangleF Roi => new RectangleF(X1, Y1, Width, Height);
-
-        // ReID特征
-        public float[] ReIDFeature { get; set; }
-
-        // 构造函数
         public BoTDetection() { }
 
-        public BoTDetection(float x1, float y1, float x2, float y2, float confidence = 0f, int classId = 0)
+        public BoTDetection(float x1, float y1, float x2, float y2, float confidence, string classId)
         {
-            // 确保坐标合法（x1<=x2, y1<=y2）
-            X1 = Math.Min(x1, x2);
-            Y1 = Math.Min(y1, y2);
-            X2 = Math.Max(x1, x2);
-            Y2 = Math.Max(y1, y2);
-            Confidence = confidence;
-            ClassId = classId;
+            this.Box = new BoxItem
+            {
+                x1 = Math.Min(x1, x2),
+                y1 = Math.Min(y1, y2),
+                x2 = Math.Max(x1, x2),
+                y2 = Math.Max(y1, y2),
+                score = confidence,
+                label = classId
+            };
         }
+        public BoxItem Box { get; set; }
+        // ReID特征
+        public float[] ReIDFeature { get; set; }
     }
     #endregion
 
@@ -1011,11 +941,11 @@ namespace IoTAIService.AICode
         public void Initialize(BoTDetection detection)
         {
             if (detection == null) throw new ArgumentNullException(nameof(detection));
-
-            _x[0] = detection.Center.X;       // x
-            _x[1] = detection.Center.Y;       // y
-            _x[2] = detection.AspectRatio;    // a（宽高比）
-            _x[3] = detection.Height;         // h（高度）
+            var tcenter = detection.Box.GetCenter();
+            _x[0] = tcenter.X;       // x
+            _x[1] = tcenter.Y;       // y
+            _x[2] = detection.Box.AspectRatio();    // a（宽高比）
+            _x[3] = detection.Box.Height();         // h（高度）
             _x[4] = 0; // vx
             _x[5] = 0; // vy
             _x[6] = 0; // va
@@ -1042,14 +972,14 @@ namespace IoTAIService.AICode
         public void Update(BoTDetection detection)
         {
             if (detection == null) throw new ArgumentNullException(nameof(detection));
-
+            var tcenter = detection.Box.GetCenter();
             // 构建观测向量 [x, y, a, h]
             float[] z = new[]
             {
-                detection.Center.X,
-                detection.Center.Y,
-                detection.AspectRatio,
-                detection.Height
+                tcenter.X,
+                tcenter.Y,
+                detection.Box.AspectRatio(),
+                detection.Box.Height()
             };
 
             // 计算残差 y = z - H*x
@@ -1226,12 +1156,16 @@ namespace IoTAIService.AICode
 
             // 计算预测框坐标
             float w = a * h;
+
             return new BoTDetection
             {
-                X1 = x - w / 2,
-                Y1 = y - h / 2,
-                X2 = x + w / 2,
-                Y2 = y + h / 2,
+                Box = new BoxItem
+                {
+                    x1 = x - w / 2,
+                    y1 = y - h / 2,
+                    x2 = x + w / 2,
+                    y2 = y + h / 2,
+                },
                 ReIDFeature = LastReIDFeature
             };
         }
@@ -1343,11 +1277,11 @@ namespace IoTAIService.AICode
 
             // 4. 拆分高低置信度检测框
             var highConfDets = processedDetections
-                .Where(d => d.Confidence >= _config.TrackThresh)
+                .Where(d => d.Box.score >= _config.TrackThresh)
                 .ToList();
 
             var lowConfDets = processedDetections
-                .Where(d => d.Confidence >= _config.TrackLowThresh && d.Confidence < _config.TrackThresh)
+                .Where(d => d.Box.score >= _config.TrackLowThresh && d.Box.score < _config.TrackThresh)
                 .ToList();
 
             // 5. 第一阶段匹配：高置信度框 + 活跃轨迹
@@ -1383,11 +1317,12 @@ namespace IoTAIService.AICode
             var result = new List<BoTDetection>();
             foreach (var det in detections)
             {
-                if (det == null || det.Confidence < _config.TrackLowThresh)
+                if (det == null || det.Box.score < _config.TrackLowThresh)
                     continue;
 
                 // 提取ReID特征（OSNet）
-                det.ReIDFeature = _reidExtractor.ExtractFeature(frame, det.Roi);
+                var roi = new RectangleF(det.Box.x1, det.Box.y1, det.Box.Width(), det.Box.Height());
+                det.ReIDFeature = _reidExtractor.ExtractFeature(frame, roi);
                 result.Add(det);
             }
             return result;
@@ -1454,16 +1389,16 @@ namespace IoTAIService.AICode
         {
             if (a == null || b == null) return 0;
 
-            var x1 = Math.Max(a.X1, b.X1);
-            var y1 = Math.Max(a.Y1, b.Y1);
-            var x2 = Math.Min(a.X2, b.X2);
-            var y2 = Math.Min(a.Y2, b.Y2);
+            var x1 = Math.Max(a.Box.x1, b.Box.x1);
+            var y1 = Math.Max(a.Box.y1, b.Box.y1);
+            var x2 = Math.Min(a.Box.x2, b.Box.x2);
+            var y2 = Math.Min(a.Box.y2, b.Box.y2);
 
             var intersection = Math.Max(0, x2 - x1) * Math.Max(0, y2 - y1);
             if (intersection == 0)
                 return 0;
 
-            var union = a.Area + b.Area - intersection;
+            var union = a.Box.GetArea() + b.Box.GetArea() - intersection;
             return union > 0 ? intersection / union : 0;
         }
 
@@ -1496,7 +1431,7 @@ namespace IoTAIService.AICode
         {
             foreach (var det in detections)
             {
-                if (det == null || det.Confidence < _config.NewTrackThresh)
+                if (det == null || det.Box.score < _config.NewTrackThresh)
                     continue;
 
                 _tracks.Add(new BoTTrack(_nextTrackId++, det, _config, _reidExtractor));
@@ -1642,30 +1577,22 @@ namespace IoTAIService.AICode
                 using var frame1 = Image.Load<Rgba32>("frame1.jpg");
                 var detections1 = new List<BoTDetection>
                 {
-                    new BoTDetection(100, 200, 300, 400, 0.95f, 0) // 行人类别
+                    new BoTDetection(100, 200, 300, 400, 0.95f, "行人")
                 };
 
                 // 更新跟踪器
                 var tracks1 = tracker.Update(frame1, detections1);
 
-                // 输出结果
-                foreach (var track in tracks1)
-                {
-                    Console.WriteLine($"Track ID: {track.TrackId}, BBox: ({track.LastDetection.X1:F1},{track.LastDetection.Y1:F1})-({track.LastDetection.X2:F1},{track.LastDetection.Y2:F1})");
-                }
 
                 // 处理下一帧
                 using var frame2 = Image.Load<Rgba32>("frame2.jpg");
                 var detections2 = new List<BoTDetection>
                 {
-                    new BoTDetection(105, 205, 305, 405, 0.90f, 0)
+                    new BoTDetection(105, 205, 305, 405, 0.90f, "行人")
                 };
 
                 var tracks2 = tracker.Update(frame2, detections2);
-                foreach (var track in tracks2)
-                {
-                    Console.WriteLine($"Track ID: {track.TrackId}, BBox: ({track.LastDetection.X1:F1},{track.LastDetection.Y1:F1})-({track.LastDetection.X2:F1},{track.LastDetection.Y2:F1})");
-                }
+
             }
             catch (Exception ex)
             {

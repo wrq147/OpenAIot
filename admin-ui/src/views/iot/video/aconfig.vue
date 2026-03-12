@@ -11,7 +11,7 @@
         <div class="config-card-body">
           <el-form :inline="true" :model="configForm" class="detection-form">
             <el-form-item label="运动块占比阈值" prop="MotionRatio" class="form-item">
-              <el-input-number v-model="configForm.MotionRatio" :step="0.01" :precision="2" :min="0" :max="1"
+              <el-input-number v-model="configForm.MotionRatio" :step="0.001" :precision="3" :min="0" :max="1"
                 placeholder="请输入0-1之间的数值" class="input-number">
                 <template slot="append">%</template>
               </el-input-number>
@@ -386,7 +386,7 @@ export default {
       // 已配置项目列表
       configuredProjects: [],
       allProjects: [],
-      configForm: { "MotionRatio": 0.08, "CoolDownMs": 300, "Tasks": [] },
+      configForm: { "MotionRatio": 0.001, "CoolDownMs": 300, "Tasks": [] },
       projectId: null,
       paramConfigDialog: {
         clipmode: 'text',

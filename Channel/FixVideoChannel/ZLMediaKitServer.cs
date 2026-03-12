@@ -129,6 +129,10 @@ namespace FixVideoChannel
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            if (context == null || string.IsNullOrEmpty(context.VideoKey))
+            {
+                return;
+            }
             byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
             try
             {

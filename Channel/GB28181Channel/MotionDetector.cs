@@ -1,6 +1,5 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using System;
 
 
@@ -11,12 +10,12 @@ namespace GB28181Channel
     /// </summary>
     public class MotionDetector
     {
-        // 像素块运动差异阈值（块亮度差>此值判定为运动）
-        public int BlockDiffThreshold { get; set; } = 30;
-        // 运动块占比阈值（0-1，如0.08=8%块运动即触发）
-        public float MotionBlockRatioThreshold { get; set; } = 0.08f;
+        // 建议值：10-80（越小越灵敏，10能检测极微小变化）
+        public int RgbDiffThreshold { get; set; } = 10;
+        // 运动块占比阈值（0-1，如0.2%块运动即触发）
+        public float MotionBlockRatioThreshold { get; set; } = 0.001f;
         // 最小运动块数（过滤微小抖动）
-        public int MinMotionBlocks { get; set; } = 20;
+        public int MinMotionBlocks { get; set; } = 10;
         // 像素块大小（8x8/16x16，越小越灵敏但计算量越大）
         public int BlockSize { get; set; } = 16;
         // 冷却时间（ms）：避免高频触发
@@ -30,7 +29,7 @@ namespace GB28181Channel
         private class MotionContext
         {
             // 上一帧灰度图像数据
-            public byte[] LastGrayPixels { get; set; }
+            public byte[] LastPixels { get; set; }
             // 上一帧宽高
             public int LastWidth { get; set; }
             public int LastHeight { get; set; }
@@ -60,27 +59,18 @@ namespace GB28181Channel
                     return (false, 0);
                 }
 
-                // 2. 将RGB24字节数组转为灰度图
-                using var image = Image.LoadPixelData<Rgb24>(rgb24Data, width, height);
-                using var grayImage = image.Clone(x => x.Grayscale());
-
-                // 3. 提取灰度像素数组
-                byte[] currentGrayPixels = GetGrayPixelArray(grayImage);
-
                 // 4. 第一帧初始化（无参考帧，直接返回false）
-                if (_context.LastGrayPixels == null || _context.LastGrayPixels.Length != currentGrayPixels.Length)
+                if (_context.LastPixels == null || _context.LastPixels.Length != rgb24Data.Length)
                 {
-                    UpdateContext(currentGrayPixels, width, height);
+                    UpdateContext(rgb24Data, width, height);
                     return (false, 0);
                 }
 
-                // 5. 像素块运动检测（核心判断逻辑）
-                var (isMotionDetected, motionRatio) = CheckBlockMotion(
-                    _context.LastGrayPixels, currentGrayPixels,
-                    _context.LastWidth, _context.LastHeight);
+                // 5. 像素块运动检测
+                var (isMotionDetected, motionRatio) = CheckBlockMotion(_context.LastPixels, rgb24Data, _context.LastWidth, _context.LastHeight);
 
                 // 6. 更新上下文
-                UpdateContext(currentGrayPixels, width, height);
+                UpdateContext(rgb24Data, width, height);
 
                 // 7. 标记触发时间
                 if (isMotionDetected)
@@ -101,31 +91,9 @@ namespace GB28181Channel
 
 
         /// <summary>
-        /// 提取灰度图像的像素数组（单通道）
+        /// 像素块运动检测
         /// </summary>
-        private byte[] GetGrayPixelArray(Image<Rgb24> grayImage)
-        {
-            int width = grayImage.Width;
-            int height = grayImage.Height;
-            byte[] pixels = new byte[width * height];
-            int index = 0;
-
-            // ImageSharp的灰度图中，R=G=B，取R通道即可
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    pixels[index++] = grayImage[x, y].R;
-                }
-            }
-
-            return pixels;
-        }
-
-        /// <summary>
-        /// 像素块运动检测（统计运动块占比）
-        /// </summary>
-        private (bool, float) CheckBlockMotion(byte[] lastGray, byte[] currentGray, int width, int height)
+        private (bool, float) CheckBlockMotion(byte[] lastRgb, byte[] currentRgb, int width, int height)
         {
             int blockCountX = width / BlockSize;
             int blockCountY = height / BlockSize;
@@ -141,12 +109,10 @@ namespace GB28181Channel
                     int blockStartY = by * BlockSize;
 
                     // 计算当前块和上一帧块的平均亮度差
-                    int lastAvg = GetBlockAverageBrightness(lastGray, width, height, blockStartX, blockStartY);
-                    int currentAvg = GetBlockAverageBrightness(currentGray, width, height, blockStartX, blockStartY);
-                    int diff = Math.Abs(lastAvg - currentAvg);
+                    int rgbDiff = CalculateRgbBlockDiff(lastRgb, currentRgb, width, height, blockStartX, blockStartY);
 
-                    // 亮度差超过实例专属阈值，判定为运动块
-                    if (diff > BlockDiffThreshold)
+                    // RGB差异超过阈值，判定为运动块
+                    if (rgbDiff > RgbDiffThreshold)
                     {
                         motionBlockCount++;
                     }
@@ -164,30 +130,41 @@ namespace GB28181Channel
         /// <summary>
         /// 计算像素块的平均亮度
         /// </summary>
-        private int GetBlockAverageBrightness(byte[] grayPixels, int width, int height, int startX, int startY)
+        private int CalculateRgbBlockDiff(byte[] lastRgb, byte[] currentRgb, int width, int height, int startX, int startY)
         {
-            long sum = 0;
+            int totalDiff = 0;
             int pixelCount = 0;
-
+            int pixelStride = 3;
             for (int y = startY; y < startY + BlockSize && y < height; y++)
             {
                 for (int x = startX; x < startX + BlockSize && x < width; x++)
                 {
-                    int index = y * width + x;
-                    sum += grayPixels[index];
-                    pixelCount++;
+                    int pixelIndex = (y * width + x) * pixelStride;
+                    // 边界检查
+                    if (pixelIndex + 2 >= lastRgb.Length || pixelIndex + 2 >= currentRgb.Length)
+                        continue;
+
+                    // 计算R/G/B三个通道的差值绝对值
+                    int rDiff = Math.Abs(lastRgb[pixelIndex] - currentRgb[pixelIndex]);
+                    int gDiff = Math.Abs(lastRgb[pixelIndex + 1] - currentRgb[pixelIndex + 1]);
+                    int bDiff = Math.Abs(lastRgb[pixelIndex + 2] - currentRgb[pixelIndex + 2]);
+
+                    // 累加为该像素的综合差异
+                    totalDiff += rDiff + gDiff + bDiff;
+                    ++pixelCount;
                 }
             }
 
-            return pixelCount == 0 ? 0 : (int)(sum / pixelCount);
+            return pixelCount == 0 ? 0 : totalDiff / pixelCount;
         }
 
         /// <summary>
         /// 更新实例上下文
         /// </summary>
-        private void UpdateContext(byte[] grayPixels, int width, int height)
+        private void UpdateContext(byte[] pixels, int width, int height)
         {
-            _context.LastGrayPixels = (byte[])grayPixels.Clone();
+            _context.LastPixels = new byte[pixels.Length];
+            Array.Copy(pixels, _context.LastPixels, pixels.Length);
             _context.LastWidth = width;
             _context.LastHeight = height;
         }
@@ -198,7 +175,7 @@ namespace GB28181Channel
         /// </summary>
         public void ResetContext()
         {
-            _context.LastGrayPixels = null;
+            _context.LastPixels = null;
             _context.LastTriggerTime = 0;
         }
     }

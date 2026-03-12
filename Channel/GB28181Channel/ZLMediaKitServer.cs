@@ -131,6 +131,10 @@ namespace GB28181Channel
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            if (context == null || string.IsNullOrEmpty(context.VideoKey))
+            {
+                return;
+            }
             byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
             try
             {
@@ -168,8 +172,8 @@ namespace GB28181Channel
                         hasDraw = true;
                     }
 
-                    if (hasDraw)
-                    {
+                    //if (hasDraw)
+                    //{
                         byte[] yuvData;
                         int[] yuvLineSizes;
                         int alignedLineSize = (w * 3 + 31) & ~31;
@@ -202,7 +206,7 @@ namespace GB28181Channel
                                 context.LastFrame = null;
                             }
                         }
-                    }
+                    //}
                 }
 
             }

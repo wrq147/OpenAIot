@@ -249,37 +249,7 @@
         </member>
         <member name="T:IoTAIService.AICode.BoTDetection">
             <summary>
-            检测框实体（含ReID特征）
-            </summary>
-        </member>
-        <member name="P:IoTAIService.AICode.BoTDetection.Width">
-            <summary>
-            检测框宽度（确保非负）
-            </summary>
-        </member>
-        <member name="P:IoTAIService.AICode.BoTDetection.Height">
-            <summary>
-            检测框高度（确保非负）
-            </summary>
-        </member>
-        <member name="P:IoTAIService.AICode.BoTDetection.AspectRatio">
-            <summary>
-            宽高比（Aspect Ratio），修复除以零问题
-            </summary>
-        </member>
-        <member name="P:IoTAIService.AICode.BoTDetection.Center">
-            <summary>
-            检测框中心坐标（确保有效）
-            </summary>
-        </member>
-        <member name="P:IoTAIService.AICode.BoTDetection.Area">
-            <summary>
-            检测框面积（确保非负）
-            </summary>
-        </member>
-        <member name="P:IoTAIService.AICode.BoTDetection.Roi">
-            <summary>
-            检测框ROI（确保有效）
+            检测信息实体（含ReID特征）
             </summary>
         </member>
         <member name="T:IoTAIService.AICode.BoTKalmanFilter">
@@ -424,6 +394,21 @@
             <param name="imageWidth">图像宽度（用于边界检查）</param>
             <param name="imageHeight">图像高度（用于边界检查）</param>
             <returns>整数矩形（确保在图像范围内，无负坐标）</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.BoxItemExtensions.Width(ChannelUtility.Message.BoxItem)">
+            <summary>
+            检测框宽度
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.BoxItemExtensions.Height(ChannelUtility.Message.BoxItem)">
+            <summary>
+            检测框高度
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.BoxItemExtensions.AspectRatio(ChannelUtility.Message.BoxItem)">
+            <summary>
+            宽高比（Aspect Ratio
+            </summary>
         </member>
         <member name="T:IoTAIService.AICode.KalmanFilter">
             <summary>

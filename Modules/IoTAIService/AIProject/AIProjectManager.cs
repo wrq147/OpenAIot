@@ -5,6 +5,7 @@ using Common.Share;
 using IoTAIService.AICode;
 using IoTAIService.AIProject.Items;
 using NATS.Client.Core;
+using Org.BouncyCastle.Ocsp;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
@@ -52,6 +53,7 @@ namespace IoTAIService.AIProject
             msg.DeviceId = videoId;
             msg.ProductId = string.Empty;
             msg.NeedConf = needConf;
+            msg.BoxList = boxlist;
             var bus = _provider.GetService<NatsScope>().Bus;
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
 
@@ -123,7 +125,7 @@ namespace IoTAIService.AIProject
                             color = itembox.color
                         });
                     }
-                    
+
                     rsbase64 = AIUtility.DrawJpeg(rgbImage, items);
                 }
                 if (string.IsNullOrEmpty(rsbase64))
@@ -182,9 +184,14 @@ namespace IoTAIService.AIProject
                             boxlist.AddRange(boxs);
                         }
                     }
-
-                    //回复画框
-                    await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
+                    var videoData = aiCache.GetVideoCache(detectReq.DeviceId);
+                    var totalBoxCount = videoData.GetInt("total_box_count");
+                    if (totalBoxCount != 0 || boxlist.Count != 0)
+                    {
+                        //回复画框
+                        await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
+                    }
+                    videoData.SetInt("total_box_count", boxlist.Count);
 
 
                     //处理事件
@@ -198,7 +205,7 @@ namespace IoTAIService.AIProject
 
                 }
             }
-           
+
         }
     }
 }
