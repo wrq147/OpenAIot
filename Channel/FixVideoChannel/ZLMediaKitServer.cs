@@ -99,11 +99,8 @@ namespace FixVideoChannel
                 {
                     if (item.Configs != null && item.Configs.Count > 0)
                     {
-                        if (item.BoxList != null && item.BoxList.Count > 0)
-                        {
-                            mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                            return;
-                        }
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
+                        return;
                     }
                 }
                 if (context.Media != null)
@@ -159,7 +156,6 @@ namespace FixVideoChannel
                     }
 
 
-
                     // 执行绘制
                     if (item.BoxList != null && item.BoxList.Count > 0)
                     {
@@ -200,6 +196,7 @@ namespace FixVideoChannel
             finally
             {
                 FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
+                context.LastFrame = null;
             }
         }
 
@@ -355,6 +352,7 @@ namespace FixVideoChannel
                     continue;
                 }
                 MkTrackT mkTrack = (MkTrackT)tracks[i];
+
                 if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                 {
                     int codec_id = mk_track.MkTrackCodecId(mkTrack);
@@ -363,12 +361,14 @@ namespace FixVideoChannel
                     float tfps = mk_track.MkTrackVideoFps(mkTrack);
                     int bit_rate = mk_track.MkTrackBitRate(mkTrack);
                     mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
+
                     MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                     context.VideoDecoder = mkDecoder;
                     context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
 
                     mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, user_data);
                     mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, user_data);
+
                 }
                 else
                 {
@@ -604,6 +604,8 @@ namespace FixVideoChannel
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
         public MotionDetector Motion { get; set; }
+        // 上次触发时间
+        public long LastTriggerTime { get; set; } = 0;
     }
     public static class CallbackHelper
     {

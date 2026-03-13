@@ -92,6 +92,7 @@ namespace GB28181Channel
                 return;
             }
 
+
             try
             {
                 var storage = _provider.GetService<IDeviceStorage>();
@@ -100,8 +101,10 @@ namespace GB28181Channel
                 {
                     if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
                     {
-                        if (device.VideoData.BoxList != null && device.VideoData.BoxList.Count > 0)
+                        long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                        if (currentTime - context.LastTriggerTime >= device.VideoData.CoolDownMs)
                         {
+                            context.LastTriggerTime = currentTime;
                             mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                             return;
                         }
@@ -151,7 +154,6 @@ namespace GB28181Channel
                         context.Motion = new MotionDetector();
                     }
 
-                    context.Motion.CoolDownMs = device.VideoData.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
                     // 执行AI检测
                     var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
@@ -258,14 +260,10 @@ namespace GB28181Channel
                     {
                         MkTrackT mkTrack = mk_events_objects.MkMediaSourceGetTrack(mediaSourceT, i);
                         if (mkTrack == null) { continue; }
+                        mk_media.MkMediaInitTrack(context.Media, mkTrack);
                         if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                         {
-                            int codec_id = mk_track.MkTrackCodecId(mkTrack);
-                            int width = mk_track.MkTrackVideoWidth(mkTrack);
-                            int height = mk_track.MkTrackVideoHeight(mkTrack);
-                            float tfps = mk_track.MkTrackVideoFps(mkTrack);
-                            int bit_rate = mk_track.MkTrackBitRate(mkTrack);
-                            mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
+
 
                             MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                             context.VideoDecoder = mkDecoder;
@@ -273,10 +271,13 @@ namespace GB28181Channel
 
                             mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
                             mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
-                        }
-                        else
-                        {
-                            mk_media.MkMediaInitTrack(context.Media, mkTrack);
+
+                            int codec_id = mk_track.MkTrackCodecId(mkTrack);
+                            int width = mk_track.MkTrackVideoWidth(mkTrack);
+                            int height = mk_track.MkTrackVideoHeight(mkTrack);
+                            float tfps = mk_track.MkTrackVideoFps(mkTrack);
+                            int bit_rate = mk_track.MkTrackBitRate(mkTrack);
+                            mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
                         }
                     }
                     mk_media.MkMediaInitComplete(context.Media);
@@ -377,7 +378,10 @@ namespace GB28181Channel
                 mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
                 mk_util.MkIniRelease(toption);
             }
-
+            else
+            {
+                mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, "无发布权限，中断推流", null);
+            }
         }
         private void On_mk_media_play(IntPtr url,
                                IntPtr invoker,
@@ -653,6 +657,8 @@ namespace GB28181Channel
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
         public MotionDetector Motion { get; set; }
+        // 上次触发时间
+        public long LastTriggerTime { get; set; } = 0;
     }
 
     public static class CallbackHelper

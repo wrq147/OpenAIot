@@ -686,27 +686,17 @@ namespace GB28181Channel.GB28181
         private async Task HandleKeepaliveMessage(string deviceId, SIPEndPoint remoteEP, SIPRequest req)
         {
             bool needRegDevice = !_heartbeatMap.ContainsKey(deviceId);
-            _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
-
-            if (needRegDevice)
+            var device = _deviceStorage.GetDevice(deviceId);
+            if (needRegDevice|| device == null)
             {
                 // 通知设备重新注册：返回401 Unauthorized响应，携带认证挑战
                 var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Need re-register");
-
-                // 构造WWW-Authenticate头（与注册阶段的认证逻辑一致）
-                var nonce = Guid.NewGuid().ToString("N"); // 随机挑战值
-                var realm = _serverId; // 认证域，与注册阶段保持一致
-                var sipDigest = new SIPAuthorisationDigest(SIPAuthorisationHeadersEnum.WWWAuthenticate, DigestAlgorithmsEnum.MD5);
-                sipDigest.Qop = "auth";
-                sipDigest.Nonce = nonce;
-                sipDigest.Realm = realm;
-                unauthorizedResp.Header.AuthenticationHeaders = new List<SIPAuthenticationHeader> { new SIPAuthenticationHeader(sipDigest) };
-
                 await _sipTransport.SendResponseAsync(unauthorizedResp);
                 Console.WriteLine($"[心跳检测] {deviceId} @ {remoteEP} 未注册，要求重新注册");
             }
             else
             {
+                _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
                 var response = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
                 await _sipTransport.SendResponseAsync(response);
                 Console.WriteLine($"[心跳] {deviceId} @ {remoteEP}");

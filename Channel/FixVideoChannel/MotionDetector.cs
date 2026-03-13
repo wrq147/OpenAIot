@@ -17,7 +17,6 @@ namespace FixVideoChannel
         public int BlockSize { get; set; } = 16;
         // 冷却时间（ms）：避免高频触发
         public int CoolDownMs { get; set; } = 200;
-
         // 实例上下文
         private readonly MotionContext _context = new MotionContext();
         /// <summary>
@@ -48,28 +47,26 @@ namespace FixVideoChannel
         public (bool, float) IsMotionKeyframe(byte[] rgb24Data, int width, int height)
         {
             try
-            {
-                // 1. 冷却时间判断
+            {               
+                // 冷却时间判断
                 long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 if (currentTime - _context.LastTriggerTime < CoolDownMs)
                 {
                     return (false, 0);
                 }
-
-                // 4. 第一帧初始化（无参考帧，直接返回false）
+                // 第一帧初始化（无参考帧，直接返回false）
                 if (_context.LastPixels == null || _context.LastPixels.Length != rgb24Data.Length)
                 {
                     UpdateContext(rgb24Data, width, height);
                     return (false, 0);
                 }
 
-                // 5. 像素块运动检测
+                // 像素块运动检测
                 var (isMotionDetected, motionRatio) = CheckBlockMotion(_context.LastPixels, rgb24Data, _context.LastWidth, _context.LastHeight);
 
-                // 6. 更新上下文
+                // 更新上下文
                 UpdateContext(rgb24Data, width, height);
 
-                // 7. 标记触发时间
                 if (isMotionDetected)
                 {
                     _context.LastTriggerTime = currentTime;
@@ -173,7 +170,6 @@ namespace FixVideoChannel
         public void ResetContext()
         {
             _context.LastPixels = null;
-            _context.LastTriggerTime = 0;
         }
     }
 }
