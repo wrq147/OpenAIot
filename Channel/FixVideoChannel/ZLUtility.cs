@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FixVideoChannel
 {
     public static class ZLUtility
-    {
+    {   
         /// <summary>
         /// RGB24转换到目标YUV格式
         /// </summary>
@@ -243,4 +243,5 @@ namespace FixVideoChannel
         AV_PIX_FMT_RGB24 = 2,       // RGB24（R→G→B）
         AV_PIX_FMT_BGR24 = 3        // BGR24（B→G→R，ZLMediaKit 默认）
     }
+
 }

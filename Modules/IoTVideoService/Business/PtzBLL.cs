@@ -81,12 +81,7 @@ namespace IoTVideoService.Business
         public async Task<string> GetPlayUrl(string sId, string cId, string type)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sId && x.VideoType == 1)).FirstOrDefault();
-            if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
-            {
-                return string.Empty;
-            }
-
+            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sId)).FirstOrDefault();
             if (videoSource.VideoType == 0)
             {
                 var option = _provider.GetService<IOptions<VideoOption>>();
@@ -119,6 +114,10 @@ namespace IoTVideoService.Business
             }
             else if (videoSource.VideoType == 1)
             {
+                if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
+                {
+                    return string.Empty;
+                }
                 var option = _provider.GetService<IOptions<VideoOption>>();
                 if (option.Value.GB28181Servers.Count == 0)
                 {

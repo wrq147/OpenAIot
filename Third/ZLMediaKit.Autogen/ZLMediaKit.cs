@@ -68,7 +68,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -98,7 +98,7 @@ namespace ZLMediaKit
             __Instance = Marshal.AllocHGlobal(sizeof(global::ZLMediaKit.MkConfig.__Internal));
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            *((global::ZLMediaKit.MkConfig.__Internal*) __Instance) = *((global::ZLMediaKit.MkConfig.__Internal*) __0.__Instance);
+            *((global::ZLMediaKit.MkConfig.__Internal*)__Instance) = *((global::ZLMediaKit.MkConfig.__Internal*)__0.__Instance);
             if (__0.__log_file_path_OwnsNativeMemory)
                 this.LogFilePath = __0.LogFilePath;
             if (__0.__ini_OwnsNativeMemory)
@@ -111,12 +111,12 @@ namespace ZLMediaKit
 
         public void Dispose()
         {
-            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+            Dispose(disposing: true, callNativeDtor: __ownsNativeInstance);
         }
 
         partial void DisposePartial(bool disposing);
 
-        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor)
         {
             if (__Instance == IntPtr.Zero)
                 return;
@@ -195,7 +195,7 @@ namespace ZLMediaKit
                 var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
                 Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
                 Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
-                ((__Internal*)__Instance)->log_file_path = (IntPtr) __bytePtr0;
+                ((__Internal*)__Instance)->log_file_path = (IntPtr)__bytePtr0;
             }
         }
 
@@ -246,7 +246,7 @@ namespace ZLMediaKit
                 var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
                 Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
                 Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
-                ((__Internal*)__Instance)->ini = (IntPtr) __bytePtr0;
+                ((__Internal*)__Instance)->ini = (IntPtr)__bytePtr0;
             }
         }
 
@@ -284,7 +284,7 @@ namespace ZLMediaKit
                 var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
                 Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
                 Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
-                ((__Internal*)__Instance)->ssl = (IntPtr) __bytePtr0;
+                ((__Internal*)__Instance)->ssl = (IntPtr)__bytePtr0;
             }
         }
 
@@ -309,7 +309,7 @@ namespace ZLMediaKit
                 var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
                 Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
                 Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
-                ((__Internal*)__Instance)->ssl_pwd = (IntPtr) __bytePtr0;
+                ((__Internal*)__Instance)->ssl_pwd = (IntPtr)__bytePtr0;
             }
         }
     }
@@ -678,7 +678,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -708,17 +708,17 @@ namespace ZLMediaKit
             __Instance = Marshal.AllocHGlobal(sizeof(global::ZLMediaKit.MkEvents.__Internal));
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            *((global::ZLMediaKit.MkEvents.__Internal*) __Instance) = *((global::ZLMediaKit.MkEvents.__Internal*) __0.__Instance);
+            *((global::ZLMediaKit.MkEvents.__Internal*)__Instance) = *((global::ZLMediaKit.MkEvents.__Internal*)__0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+            Dispose(disposing: true, callNativeDtor: __ownsNativeInstance);
         }
 
         partial void DisposePartial(bool disposing);
 
-        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor)
         {
             if (__Instance == IntPtr.Zero)
                 return;
@@ -756,7 +756,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_media_changed;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_int___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_int___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_int___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_int___IntPtr));
             }
 
             set
@@ -785,7 +785,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_media_publish;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr));
             }
 
             set
@@ -814,7 +814,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_media_play;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr));
             }
 
             set
@@ -843,7 +843,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_media_not_found;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Func_int___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Func_int___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Func_int___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Func_int___IntPtr___IntPtr));
             }
 
             set
@@ -864,7 +864,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_media_no_reader;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -891,7 +891,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_http_request;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr_intPtr___IntPtr));
             }
 
             set
@@ -920,7 +920,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_http_access;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_string8_int___IntPtr___IntPtr));
             }
 
             set
@@ -949,7 +949,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_http_before_access;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_sbytePtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_sbytePtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_sbytePtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_sbytePtr___IntPtr));
             }
 
             set
@@ -974,7 +974,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtsp_get_realm;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr___IntPtr));
             }
 
             set
@@ -1009,7 +1009,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtsp_auth;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_string8_string8_int___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_string8_string8_int___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_string8_string8_int___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_string8_string8_int___IntPtr___IntPtr));
             }
 
             set
@@ -1028,7 +1028,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_record_mp4;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -1047,7 +1047,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_record_ts;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -1066,7 +1066,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_shell_login;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_string8_string8___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_string8_string8___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_string8_string8___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_string8_string8___IntPtr___IntPtr));
             }
 
             set
@@ -1093,7 +1093,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_flow_report;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr));
             }
 
             set
@@ -1122,7 +1122,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_log;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_int_string8_int_string8_string8) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_int_string8_int_string8_string8));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_int_string8_int_string8_string8)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_int_string8_int_string8_string8));
             }
 
             set
@@ -1153,7 +1153,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_media_send_rtp_stop;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_string8_string8_string8_string8_int_string8) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_string8_string8_string8_string8_int_string8));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_string8_string8_string8_string8_int_string8)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_string8_string8_string8_string8_int_string8));
             }
 
             set
@@ -1174,7 +1174,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtc_sctp_connecting;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -1188,7 +1188,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtc_sctp_connected;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -1202,7 +1202,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtc_sctp_failed;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -1216,7 +1216,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtc_sctp_closed;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -1241,7 +1241,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtc_sctp_send;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_bytePtr_ulong) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_bytePtr_ulong));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_bytePtr_ulong)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_bytePtr_ulong));
             }
 
             set
@@ -1270,7 +1270,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_rtc_sctp_received;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_ushort_uint_bytePtr_ulong) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_ushort_uint_bytePtr_ulong));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_ushort_uint_bytePtr_ulong)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_ushort_uint_bytePtr_ulong));
             }
 
             set
@@ -1331,7 +1331,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1387,7 +1387,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1443,7 +1443,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1499,7 +1499,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1555,7 +1555,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1619,7 +1619,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1649,17 +1649,17 @@ namespace ZLMediaKit
             __Instance = Marshal.AllocHGlobal(sizeof(global::ZLMediaKit.MkTcpSessionEvents.__Internal));
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            *((global::ZLMediaKit.MkTcpSessionEvents.__Internal*) __Instance) = *((global::ZLMediaKit.MkTcpSessionEvents.__Internal*) __0.__Instance);
+            *((global::ZLMediaKit.MkTcpSessionEvents.__Internal*)__Instance) = *((global::ZLMediaKit.MkTcpSessionEvents.__Internal*)__0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+            Dispose(disposing: true, callNativeDtor: __ownsNativeInstance);
         }
 
         partial void DisposePartial(bool disposing);
 
-        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor)
         {
             if (__Instance == IntPtr.Zero)
                 return;
@@ -1684,7 +1684,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_session_create;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr));
             }
 
             set
@@ -1709,7 +1709,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_session_data;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr___IntPtr));
             }
 
             set
@@ -1732,7 +1732,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_session_manager;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr));
             }
 
             set
@@ -1759,7 +1759,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_session_disconnect;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr_int_string8) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr_int_string8));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action_ushort___IntPtr_int_string8)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action_ushort___IntPtr_int_string8));
             }
 
             set
@@ -1814,7 +1814,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -1844,17 +1844,17 @@ namespace ZLMediaKit
             __Instance = Marshal.AllocHGlobal(sizeof(global::ZLMediaKit.MkTcpClientEvents.__Internal));
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            *((global::ZLMediaKit.MkTcpClientEvents.__Internal*) __Instance) = *((global::ZLMediaKit.MkTcpClientEvents.__Internal*) __0.__Instance);
+            *((global::ZLMediaKit.MkTcpClientEvents.__Internal*)__Instance) = *((global::ZLMediaKit.MkTcpClientEvents.__Internal*)__0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+            Dispose(disposing: true, callNativeDtor: __ownsNativeInstance);
         }
 
         partial void DisposePartial(bool disposing);
 
-        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor)
         {
             if (__Instance == IntPtr.Zero)
                 return;
@@ -1881,7 +1881,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_client_connect;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_int_string8) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_int_string8));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_int_string8)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_int_string8));
             }
 
             set
@@ -1910,7 +1910,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_client_disconnect;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr_int_string8) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_int_string8));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr_int_string8)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr_int_string8));
             }
 
             set
@@ -1933,7 +1933,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_client_data;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr___IntPtr));
             }
 
             set
@@ -1954,7 +1954,7 @@ namespace ZLMediaKit
             get
             {
                 var __ptr0 = ((__Internal*)__Instance)->on_mk_tcp_client_manager;
-                return __ptr0 == IntPtr.Zero? null : (global::ZLMediaKit.Delegates.Action___IntPtr) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
+                return __ptr0 == IntPtr.Zero ? null : (global::ZLMediaKit.Delegates.Action___IntPtr)Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::ZLMediaKit.Delegates.Action___IntPtr));
             }
 
             set
@@ -2537,7 +2537,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -2593,7 +2593,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -2649,7 +2649,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -3232,7 +3232,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -3310,7 +3310,7 @@ namespace ZLMediaKit
             private static void* __CopyValue(__Internal native)
             {
                 var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-                *(__Internal*) ret = native;
+                *(__Internal*)ret = native;
                 return ret.ToPointer();
             }
 
@@ -3340,17 +3340,17 @@ namespace ZLMediaKit
                 __Instance = Marshal.AllocHGlobal(sizeof(global::ZLMediaKit.CodecArgs.Video.__Internal));
                 __ownsNativeInstance = true;
                 NativeToManagedMap[__Instance] = this;
-                *((global::ZLMediaKit.CodecArgs.Video.__Internal*) __Instance) = *((global::ZLMediaKit.CodecArgs.Video.__Internal*) __0.__Instance);
+                *((global::ZLMediaKit.CodecArgs.Video.__Internal*)__Instance) = *((global::ZLMediaKit.CodecArgs.Video.__Internal*)__0.__Instance);
             }
 
             public void Dispose()
             {
-                Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+                Dispose(disposing: true, callNativeDtor: __ownsNativeInstance);
             }
 
             partial void DisposePartial(bool disposing);
 
-            internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+            internal protected virtual void Dispose(bool disposing, bool callNativeDtor)
             {
                 if (__Instance == IntPtr.Zero)
                     return;
@@ -3444,7 +3444,7 @@ namespace ZLMediaKit
             private static void* __CopyValue(__Internal native)
             {
                 var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-                *(__Internal*) ret = native;
+                *(__Internal*)ret = native;
                 return ret.ToPointer();
             }
 
@@ -3474,17 +3474,17 @@ namespace ZLMediaKit
                 __Instance = Marshal.AllocHGlobal(sizeof(global::ZLMediaKit.CodecArgs.Audio.__Internal));
                 __ownsNativeInstance = true;
                 NativeToManagedMap[__Instance] = this;
-                *((global::ZLMediaKit.CodecArgs.Audio.__Internal*) __Instance) = *((global::ZLMediaKit.CodecArgs.Audio.__Internal*) __0.__Instance);
+                *((global::ZLMediaKit.CodecArgs.Audio.__Internal*)__Instance) = *((global::ZLMediaKit.CodecArgs.Audio.__Internal*)__0.__Instance);
             }
 
             public void Dispose()
             {
-                Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+                Dispose(disposing: true, callNativeDtor: __ownsNativeInstance);
             }
 
             partial void DisposePartial(bool disposing);
 
-            internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+            internal protected virtual void Dispose(bool disposing, bool callNativeDtor)
             {
                 if (__Instance == IntPtr.Zero)
                     return;
@@ -3543,7 +3543,7 @@ namespace ZLMediaKit
 
         private CodecArgs(void* native, bool skipVTables = false) : this()
         {
-            __instance = *(global::ZLMediaKit.CodecArgs.__Internal*) native;
+            __instance = *(global::ZLMediaKit.CodecArgs.__Internal*)native;
         }
 
         public CodecArgs(global::ZLMediaKit.CodecArgs __0)
@@ -3568,7 +3568,7 @@ namespace ZLMediaKit
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                __instance.video = *(global::ZLMediaKit.CodecArgs.Video.__Internal*) value.__Instance;
+                __instance.video = *(global::ZLMediaKit.CodecArgs.Video.__Internal*)value.__Instance;
             }
         }
 
@@ -3583,7 +3583,7 @@ namespace ZLMediaKit
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                __instance.audio = *(global::ZLMediaKit.CodecArgs.Audio.__Internal*) value.__Instance;
+                __instance.audio = *(global::ZLMediaKit.CodecArgs.Audio.__Internal*)value.__Instance;
             }
         }
     }
@@ -4005,7 +4005,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4444,7 +4444,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4500,7 +4500,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4556,7 +4556,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4612,7 +4612,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4668,7 +4668,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4724,7 +4724,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4780,7 +4780,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4836,7 +4836,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4892,7 +4892,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -4948,7 +4948,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -5004,7 +5004,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -5060,7 +5060,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -6171,7 +6171,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -6347,7 +6347,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -6403,7 +6403,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -6860,7 +6860,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -6913,8 +6913,8 @@ namespace ZLMediaKit
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_media_input_h265", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkMediaInputH265(IntPtr ctx, IntPtr data, int len, ulong dts, ulong pts);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_media_input_yuv", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern void MkMediaInputYuv(IntPtr ctx, [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)] IntPtr[] yuv, int[] linesize, ulong cts);
+            [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_media_input_yuv", CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern void MkMediaInputYuv(IntPtr ctx, IntPtr[] yuv, [In] int[] linesize, ulong cts);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_media_input_aac", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int MkMediaInputAac(IntPtr ctx, IntPtr data, int len, ulong dts, IntPtr adts);
@@ -7233,6 +7233,7 @@ namespace ZLMediaKit
                 throw new ArgumentOutOfRangeException("yuv", "The dimensions of the provided array don't match the required size.");
             if (linesize == null || linesize.Length != 3)
                 throw new ArgumentOutOfRangeException("linesize", "The dimensions of the provided array don't match the required size.");
+            // 调用非托管接口
             __Internal.MkMediaInputYuv(__arg0, yuv, linesize, cts);
         }
 
@@ -7600,7 +7601,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -7656,7 +7657,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -7712,7 +7713,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -7768,7 +7769,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -8210,7 +8211,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -8531,7 +8532,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -8789,7 +8790,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9137,7 +9138,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9406,7 +9407,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9661,7 +9662,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9717,7 +9718,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9773,7 +9774,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9829,7 +9830,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 
@@ -9885,7 +9886,7 @@ namespace ZLMediaKit
         private static void* __CopyValue(__Internal native)
         {
             var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            *(__Internal*) ret = native;
+            *(__Internal*)ret = native;
             return ret.ToPointer();
         }
 

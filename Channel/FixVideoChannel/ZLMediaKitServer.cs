@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -91,39 +92,35 @@ namespace FixVideoChannel
             {
                 return;
             }
-            context.LastFrame = mkFrame;
+
             try
             {
                 if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
                 {
                     if (item.Configs != null && item.Configs.Count > 0)
                     {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                        if (context.LastFrame != null)
+                        if (item.BoxList != null && item.BoxList.Count > 0)
                         {
-                            mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                            context.LastFrame = null;
+                            mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
+                            return;
                         }
-
-                        return;
                     }
                 }
-                mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                if (context.Media != null)
+                {
+                    mk_media.MkMediaInputFrame(context.Media, mkFrame);
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine("解码异常：" + e.Message);
 
             }
-            finally
-            {
-                context.LastFrame = null;
-            }
         }
         private void OnDecodeFrame(IntPtr user_data, IntPtr yuvFrame)
         {
             MkFramePixT pixFrame = (MkFramePixT)yuvFrame;
-            ZLMediaKit.AVFrame avFrame = mk_transcode.MkFramePixGetAvFrame(pixFrame);
+            AVFrame avFrame = mk_transcode.MkFramePixGetAvFrame(pixFrame);
             long lpts = mk_transcode.MkGetAvFramePts(avFrame);
             int w = mk_transcode.MkGetAvFrameWidth(avFrame);
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
@@ -133,6 +130,7 @@ namespace FixVideoChannel
             {
                 return;
             }
+
             byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
             try
             {
@@ -150,7 +148,6 @@ namespace FixVideoChannel
                     {
                         context.Motion = new MotionDetector();
                     }
-                    bool hasDraw = false;
 
                     context.Motion.CoolDownMs = item.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
@@ -167,42 +164,35 @@ namespace FixVideoChannel
                     if (item.BoxList != null && item.BoxList.Count > 0)
                     {
                         AIDetectorTask.Draw(rgb24, w, h, item.BoxList);
-                        hasDraw = true;
                     }
 
-                    if (hasDraw)
+                    byte[] yuvData;
+                    int[] yuvLineSizes;
+                    int alignedLineSize = (w * 3 + 31) & ~31;
+                    if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                     {
-                        byte[] yuvData;
-                        int[] yuvLineSizes;
-                        int alignedLineSize = (w * 3 + 31) & ~31;
-                        if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                        return;
+                    }
+                    if (yuvLineSizes == null || yuvLineSizes.Length != 3)
+                    {
+                        Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
+                        return;
+                    }
+                    unsafe
+                    {
+                        // 3. 固定托管YUV数组，防止GC回收/移动
+                        fixed (byte* pYuvBase = yuvData)
                         {
-                            return;
-                        }
-                        // 2. 校验行大小数组长度（必须为3）
-                        if (yuvLineSizes == null || yuvLineSizes.Length != 3)
-                        {
-                            Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
-                            return;
-                        }
+                            // 4. 构建3个平面的指针数组（对应 C 层 const char* yuv[3]）
+                            IntPtr[] yuvPlanes = new IntPtr[3];
+                            // Y平面：起始地址
+                            yuvPlanes[0] = (IntPtr)pYuvBase;
+                            // U平面：Y平面后偏移 w*h 字节
+                            yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
+                            // V平面：U平面后偏移 (w/2)*(h/2) 字节
+                            yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
 
-                        unsafe
-                        {
-                            // 3. 固定托管YUV数组，防止GC回收/移动
-                            fixed (byte* pYuvBase = yuvData)
-                            {
-                                // 4. 构建3个平面的指针数组（对应 C 层 const char* yuv[3]）
-                                IntPtr[] yuvPlanes = new IntPtr[3];
-                                // Y平面：起始地址
-                                yuvPlanes[0] = (IntPtr)pYuvBase;
-                                // U平面：Y平面后偏移 w*h 字节
-                                yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
-                                // V平面：U平面后偏移 (w/2)*(h/2) 字节
-                                yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
-
-                                mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
-                                context.LastFrame = null;
-                            }
+                            mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
                         }
                     }
                 }
@@ -212,6 +202,8 @@ namespace FixVideoChannel
                 FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
             }
         }
+
+
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
             MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
@@ -259,10 +251,7 @@ namespace FixVideoChannel
                 return;
             }
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            if (_videoKeyItems.ContainsKey(streamId))
-            {
-                mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
-            }
+            mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
         }
         private void On_mk_http_request(IntPtr parserPtr,
                               IntPtr invoker, int* consumed,
@@ -366,9 +355,14 @@ namespace FixVideoChannel
                     continue;
                 }
                 MkTrackT mkTrack = (MkTrackT)tracks[i];
-                mk_media.MkMediaInitTrack(context.Media, mkTrack);
                 if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                 {
+                    int codec_id = mk_track.MkTrackCodecId(mkTrack);
+                    int width = mk_track.MkTrackVideoWidth(mkTrack);
+                    int height = mk_track.MkTrackVideoHeight(mkTrack);
+                    float tfps = mk_track.MkTrackVideoFps(mkTrack);
+                    int bit_rate = mk_track.MkTrackBitRate(mkTrack);
+                    mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
                     MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                     context.VideoDecoder = mkDecoder;
                     context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
@@ -376,7 +370,12 @@ namespace FixVideoChannel
                     mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, user_data);
                     mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, user_data);
                 }
+                else
+                {
+                    mk_media.MkMediaInitTrack(context.Media, mkTrack);
+                }
             }
+
             mk_media.MkMediaInitComplete(context.Media);
         }
         private void OnShutdown(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
@@ -604,7 +603,6 @@ namespace FixVideoChannel
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
-        public MkFrameT LastFrame { get; set; }
         public MotionDetector Motion { get; set; }
     }
     public static class CallbackHelper
