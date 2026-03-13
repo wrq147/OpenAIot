@@ -2,76 +2,31 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '3bfc80c90076bf399b26b07178a83f23fe3a57b1'
-    oldFile: !uuid '99c581f0415476d8d662006b1bd3bfd6dd4a84d9'
-  /App/XML:
-    newFile: !uuid 'd36e47621bb790f644cefbc1d99c82a9a0477e31'
-    oldFile: !uuid '49db1fcffa26f91f729d47c75c2c9bf06a480722'
-  /App/XML/IoTVideoService.xml:
-    newFile: !uuid 'a8ababc35aac998ff740558c889e757489df6995'
-    oldFile: !uuid 'c1c1d73520f1ed8a59c2dfea7d5f22ffc65e32da'
   /Channel:
-    newFile: !uuid '76a9fe05231dd4d8112d8bb90660ce95d02a6129'
-    oldFile: !uuid '84b1da72724791a9cd7f55c419cb316b393e9c0f'
+    newFile: !uuid 'bc005dc5c379e5483570272824b607a9e62646d2'
+    oldFile: !uuid '76a9fe05231dd4d8112d8bb90660ce95d02a6129'
   /Channel/FixVideoChannel:
-    newFile: !uuid '1411d070aaedfc59af5b4fb483aa30ce84d7df31'
-    oldFile: !uuid '43da04f4cf73bd005f93e21ca5d5f6b58d937189'
+    newFile: !uuid '4a5d9ac4ccb9170a348a2d2c09d55115aec0ca39'
+    oldFile: !uuid '1411d070aaedfc59af5b4fb483aa30ce84d7df31'
+  /Channel/FixVideoChannel/MotionDetector.cs:
+    newFile: !uuid 'fb577170a0c568cf085e4c1406d9feaafcee8d2a'
+    oldFile: !uuid '4f7129e5a08af5dafabd35ae9d79e97d493ec172'
   /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '9b22d7fb568cc34b183f990fd779b3873a184a91'
-    oldFile: !uuid 'a1560caec8b7bc2afbb097e66f4b868faff821a3'
-  /Channel/FixVideoChannel/ZLUtility.cs:
-    newFile: !uuid 'a64200a0bb4bfc66f6696bcaeab21e0dcef14a80'
-    oldFile: !uuid '3c5c360dd3845951c04f0bb06c461aefb13ddb2b'
-  /Channel/FixVideoChannel/appsettings.json:
-    newFile: !uuid 'c7d015216f067edbc625200c30f2ae12e1daf029'
-    oldFile: !uuid 'd75b030ed3a0d011d4a7507b3779a266eaccf9e5'
+    newFile: !uuid 'aedaddbaa6b62b01213770c0a4b11d5ff8518989'
+    oldFile: !uuid '9b22d7fb568cc34b183f990fd779b3873a184a91'
   /Channel/GB28181Channel:
-    newFile: !uuid 'f18b82188ad441124ec359ac5a7eefa95a40c862'
-    oldFile: !uuid '859d3c5d9d48c5de08023020b912405a7e188cb5'
+    newFile: !uuid '3f98aa840de0291369d5b011f60241d5a119731d'
+    oldFile: !uuid 'f18b82188ad441124ec359ac5a7eefa95a40c862'
+  /Channel/GB28181Channel/GB28181:
+    newFile: !uuid '55db87c2737d186d2b14ab3346e6acd48e65a669'
+    oldFile: !uuid '43daccdfe40460e66d7f25468c70dbfaa2b1dbb3'
+  /Channel/GB28181Channel/GB28181/GB28181Server.cs:
+    newFile: !uuid '9c14404bde74b2119ca14561a1fec456832f049a'
+    oldFile: !uuid 'f0182d9db7993ea00612452f91e3415fa90c3350'
   /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '1f807574d869af771e291e2a74a38caa13837713'
-    oldFile: !uuid '95ad2a139041a1b0fccba56bf75e4aa4f59e0843'
-  /Modules:
-    newFile: !uuid 'f6a8f3d3a2fb766872543bcbfe23eeeb81a7a12c'
-    oldFile: !uuid '5411a0d49da5165195cb67ee0fb684d4f8b24e11'
-  /Modules/IoTVideoService:
-    newFile: !uuid '8b8a429fc4993521e54f9756f3787a4cb519ef36'
-    oldFile: !uuid 'f485026be81eb0296c660223ad87018a781d93b9'
-  /Modules/IoTVideoService/Business:
-    newFile: !uuid '076acc2ff20abbd31551256d7d3bfa3ada81e10d'
-    oldFile: !uuid '9893f735ade13dc181d8178b81bfde76e4b86576'
-  /Modules/IoTVideoService/Business/PtzBLL.cs:
-    newFile: !uuid '84a40d5f25f89b8b5f520f51439dbc933c51a5ef'
-    oldFile: !uuid 'd8a61fe0f8f94ed3a5fb7974c2f79d697d996dc2'
-  /Modules/IoTVideoService/Controller:
-    newFile: !uuid 'ec5a609e223dfa3f5509309035eb5dc1b5d265a6'
-    oldFile: !uuid 'b6dde3057b468c3158d70648c060780b64777b56'
-  /Modules/IoTVideoService/Controller/Ptz.cs:
-    newFile: !uuid '0fe94c3bf04506dd3a1a2a8e886d9a05a01a4204'
-    oldFile: !uuid 'f7948b80305eb320991aff1255b6330648a329d8'
-  /Third:
-    newFile: !uuid 'b25b23474e0bd3cb25b98aba0aeef54eca19fbc3'
-    oldFile: !uuid '05375fc8bc352227ddefe2f6d6826738fe20944b'
-  /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '4d0b2330f773d1a8b3d41aab25beb8cc00f64282'
-    oldFile: !uuid '9aeb57e2a75b11bff98a76bc1fe60379fbd07259'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
-    newFile: !uuid 'f8165f2f85d6e1f0a98cedba64d0512194cdfd57'
-    oldFile: !uuid '6f799451c8e3cc8383c117b16bc7e6907cbc6333'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: !uuid '4a8b5856cae610b471aa52601fa0cd0d87ba1ef9'
-    oldFile: !uuid '7a16a1bb66a0330b533482c15e1a72645d189630'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
-    newFile: !uuid 'b0defaf8e5938ee2bc3e941a46b1fef65c1565f0'
-    oldFile: !uuid '7389a32f4788c7c29a8c30e8d2252a9d93129e61'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
-    newFile: !uuid 'b209bbdcadc21cb517449c88602fc826c5def40e'
-    oldFile: !uuid 'a119b3fb420f6bceb3af82aec6662922d26bd6e3'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/mk_api.dll:
-    newFile: !uuid '6b76619094d961eeb6f14468536d217aed063bab'
-    oldFile: !uuid '3db295b06872851d3a3b86f75da77a9d5d6daf30'
-gitCommitId: !uuid 'aa0ae9f5b07512242784be0db41b584a1aa3c9ce'
+    newFile: !uuid 'ff12c394e1f7e06b1f57fe9a2edac4273dfcfb66'
+    oldFile: !uuid '1f807574d869af771e291e2a74a38caa13837713'
+gitCommitId: !uuid 'aa551d68b997836513a51c77094392c4043216ed'
 renames: {
   }
-revisionId: 204
+revisionId: 205
