@@ -34,9 +34,9 @@ void rgb24_to_nv12(
         int uv_pos = (j / 2) * width;
 
         for (int i = 0; i < width; i++) {
-            const uint8_t b = *src++;
-            const uint8_t g = *src++;
             const uint8_t r = *src++;
+            const uint8_t g = *src++;
+            const uint8_t b = *src++;
             
             int Y, U, V;
             CALC_YUV(r, g, b, Y, U, V);
@@ -71,9 +71,9 @@ void rgb24_to_yuv420p(
         int uv_pos = (j / 2) * (width / 2);
 
         for (int i = 0; i < width; i++) {
-            const uint8_t b = *src++;
-            const uint8_t g = *src++;
             const uint8_t r = *src++;
+            const uint8_t g = *src++;
+            const uint8_t b = *src++;
             
             int Y, U, V;
             CALC_YUV(r, g, b, Y, U, V);
@@ -108,9 +108,9 @@ void rgb24_to_yuv422p(
         int uv_pos = j * (width / 2);
 
         for (int i = 0; i < width; i++) {
-            const uint8_t b = *src++;
-            const uint8_t g = *src++;
             const uint8_t r = *src++;
+            const uint8_t g = *src++;
+            const uint8_t b = *src++;
             
             int Y, U, V;
             CALC_YUV(r, g, b, Y, U, V);
@@ -145,9 +145,9 @@ void rgb24_to_yuv444p(
         uint8_t* dst_v = v + j * width;
 
         for (int i = 0; i < width; i++) {
-            const uint8_t b = *src++;
-            const uint8_t g = *src++;
             const uint8_t r = *src++;
+            const uint8_t g = *src++;
+            const uint8_t b = *src++;
             
             int Y, U, V;
             CALC_YUV(r, g, b, Y, U, V);
