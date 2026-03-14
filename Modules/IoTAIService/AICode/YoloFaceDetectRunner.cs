@@ -11,22 +11,19 @@ using System.Linq;
 
 namespace IoTAIService.AICode
 {
-
-
-    public class YoloWorldDetectRunner
+    public class YoloFaceDetectRunner
     {
         private readonly InferenceSession _session;
 
-        public YoloWorldDetectRunner()
+        public YoloFaceDetectRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloWorld.onnx";
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloFace.onnx";
             // 初始化ONNX推理会话
             var sessionOptions = new SessionOptions();
             AIUtility.TryEnableGpu(sessionOptions);
             _session = new InferenceSession(modelPath, sessionOptions);
         }
-
-        public List<YoloDetectionResult> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)
+        public List<YoloDetectionResult> Predict(Image<Rgb24> image, float confidenceThreshold = 0.8f, float iouThreshold = 0.45f)
         {
             int originalWidth = image.Width;
             int originalHeight = image.Height;
@@ -37,15 +34,13 @@ namespace IoTAIService.AICode
             var inputs = new List<NamedOnnxValue> {    
                 // 图片输入：假设已预处理为(1,3,640,640)的Tensor<float>
                  NamedOnnxValue.CreateFromTensor("images", inputTensor),
-                // 文本嵌入输入：传入转换后的Tensor<float>
-                NamedOnnxValue.CreateFromTensor("text_embeds", classEmbeds)
             };
 
             // 3. 执行推理
             using var outputs = _session.Run(inputs);
             var outputTensor = outputs.First().AsTensor<float>();
             // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain, classes);
+            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain);
 
             return detectionResults;
         }
@@ -113,12 +108,10 @@ namespace IoTAIService.AICode
         /// <param name="originalWidth"></param>
         /// <param name="originalHeight"></param>
         /// <param name="gain"></param>
-        /// <param name="classes"></param>
         /// <returns></returns>
-        private List<YoloDetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, float gain, List<string> classes)
+        private List<YoloDetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, float gain)
         {
             var results = new List<YoloDetectionResult>();
-            int numClasses = classes.Count;
             int numBoxes = output.Dimensions[2]; // 输出维度：[1, 4 + num_classes, num_boxes]
 
 
@@ -142,7 +135,7 @@ namespace IoTAIService.AICode
                 // 遍历所有类别，获取最高置信度的类别
                 float maxConf = 0;
                 int maxClassIdx = -1;
-                for (int c = 0; c < numClasses; c++)
+                for (int c = 0; c < 1; c++)
                 {
                     float conf = output[0, 4 + c, i];
                     if (conf > maxConf)
@@ -174,7 +167,7 @@ namespace IoTAIService.AICode
 
                 results.Add(new YoloDetectionResult
                 {
-                    Label = classes[maxClassIdx],
+                    Label = "人脸",
                     Confidence = maxConf,
                     X1 = (int)x1,
                     Y1 = (int)y1,

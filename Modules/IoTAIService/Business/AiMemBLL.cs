@@ -148,7 +148,7 @@ namespace IoTAIService.Business
             {
                 var fileHelper = _provider.GetService<FileHelper>();
                 var originalImage = await fileHelper.CreateRgb24FromUrl(data.FaceImg);
-                var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage);
+                var tbbx = _provider.GetService<YoloFaceDetectRunner>().Predict(originalImage);
                 if (tbbx.Count > 0)
                 {
                     var faceRecogRunner = _provider.GetService<FaceRecogRunner>();

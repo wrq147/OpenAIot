@@ -69,7 +69,7 @@ namespace IoTAIService.Controller
                     List<Out_FaceBox> tlist = new List<Out_FaceBox>();
                     using (var originalImage = Image.Load<Rgb24>(imageBytes))
                     {
-                        var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
+                        var tbbx = _provider.GetService<YoloFaceDetectRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
                         foreach (var titem in tbbx)
                         {
                             tlist.Add(new Out_FaceBox()
@@ -78,7 +78,7 @@ namespace IoTAIService.Controller
                                 X2 = titem.X2,
                                 Y1 = titem.Y1,
                                 Y2 = titem.Y2,
-                                Score = titem.Score
+                                Score = titem.Confidence
                             });
                         }
                     }
@@ -97,7 +97,7 @@ namespace IoTAIService.Controller
             {
                 List<Out_FaceBox> tlist = new List<Out_FaceBox>();
                 var originalImage = await _provider.GetService<FileHelper>().CreateRgb24FromUrl(data.ImageUrl);
-                var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
+                var tbbx = _provider.GetService<YoloFaceDetectRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
                 foreach (var titem in tbbx)
                 {
                     tlist.Add(new Out_FaceBox()
@@ -106,7 +106,7 @@ namespace IoTAIService.Controller
                         X2 = titem.X2,
                         Y1 = titem.Y1,
                         Y2 = titem.Y2,
-                        Score = titem.Score
+                        Score = titem.Confidence
                     });
                 }
                 return this.Success(tlist);
@@ -144,7 +144,7 @@ namespace IoTAIService.Controller
                     byte[] imageBytes = Convert.FromBase64String(base64Data);
                     using (var originalImage = Image.Load<Rgb24>(imageBytes))
                     {
-                        var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
+                        var tbbx = _provider.GetService<YoloFaceDetectRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
                         var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
                         var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
                         var milBLL = _provider.GetService<MilvusBLL>();
@@ -175,7 +175,7 @@ namespace IoTAIService.Controller
             {
 
                 var originalImage = await _provider.GetService<FileHelper>().CreateRgb24FromUrl(data.ImageUrl);
-                var tbbx = _provider.GetService<FaceDetOnnxRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
+                var tbbx = _provider.GetService<YoloFaceDetectRunner>().Predict(originalImage, data.Threshold, data.IOU_Threshold);
                 var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
                 var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
                 var milBLL = _provider.GetService<MilvusBLL>();

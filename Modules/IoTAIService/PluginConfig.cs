@@ -28,8 +28,8 @@ namespace IoTAIService
             services.AddSingleton<MilvusBLL>();
             services.AddBLL<AiMemBLL>();
 
-            services.AddSingleton<FaceDetOnnxRunner>();
             services.AddSingleton<FaceRecogRunner>();
+            services.AddSingleton<YoloFaceDetectRunner>();
             services.AddSingleton<FaceSTNRunner>();
             services.AddSingleton<FaceKeyPointsRunner>();
             services.AddSingleton<YoloWorldDetectRunner>();

@@ -92,7 +92,7 @@ namespace IoTAIService.AIProject.Items
                 tclasses.Add("图片特征");
             }
             var tfeature = ConvertListToDenseTensor(feature);
-            List<YoloWorldDetectionResult> tbbx = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
+            List<YoloDetectionResult> tbbx = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
             List<BoxItem> boxes = new List<BoxItem>();
             foreach (var tbx in tbbx)
             {

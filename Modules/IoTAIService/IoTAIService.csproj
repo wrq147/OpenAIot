@@ -39,6 +39,9 @@
 	  <None Update="AIModel\LargeYoloWorld.onnx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="AIModel\YoloFace.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="AIModel\YoloWorld.onnx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
