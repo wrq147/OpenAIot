@@ -73,7 +73,7 @@ namespace GB28181Channel
                         // 4. 配置JPG编码器（优先速度，适配高性能场景）
                         var jpgEncoder = new JpegEncoder
                         {
-                            Quality = 80,
+                            Quality = 85,
                         };
 
                         // 5. 编码为JPG并写入内存流
