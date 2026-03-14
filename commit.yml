@@ -2,16 +2,40 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '76fe04c29ecc0b134148fbc5dc180c7ad0b6d00b'
-    oldFile: !uuid 'a875010278d994bf7cee47c79c71485225243a42'
-  /Channel/GB28181Channel:
-    newFile: !uuid '6c4698b6e450d64555268da2b89df408e57ca449'
-    oldFile: !uuid '4aa698d7e767ae613307d5706fa86164576aae56'
-  /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '5d0342af31c4ef6a8fc1ae69b04870cb2ea281a8'
-    oldFile: !uuid 'a530714497e3d42525992afcea2cdff48dfea371'
-gitCommitId: !uuid '07a3ee65981903b9893ca45cbb4e64cd8987a607'
+  /Third:
+    newFile: !uuid '6c57a580478520e87c02a3bed61fe65e1d46fdc8'
+    oldFile: !uuid 'c2fbdb17c432b69c31294852b04a2840e3066bd2'
+  /Third/RGBToYUV:
+    newFile: !uuid '9be9be207fbf520f2a29129d2c442ef21e6648b7'
+    oldFile: !uuid 'cef5201f7347272f9f20378d9f550335c4abc371'
+  /Third/RGBToYUV/convert.c:
+    newFile: !uuid '6f1ff85a779b9a570bd20081d65169c60dd24b00'
+    oldFile: !uuid 'badf32a42f0fc42c1007642ad895a7e8c3deca96'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid '80c9ab929c28e6c9f5799a7f99633d0e4831f41e'
+    oldFile: !uuid 'a9c86c7b537cd8928d92a1d15b427fa4b5b2c832'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid '104d92fde5d97fe93462d2a59ae9e082c32f7314'
+    oldFile: !uuid 'f4d022c219de20c518584699525260d0ff9f73a0'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
+    newFile: !uuid 'aca625e8a6b93bd26cd99c8a765f6af7bf5a227a'
+    oldFile: !uuid '5c27ccc512a3a0660c137ecab2eb475de61bb343'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
+    newFile: !uuid 'f2edb58f89efa590ed2e27241234b0e270adb13a'
+    oldFile: !uuid '98273247806bca52a94949f234bb852740deb14e'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libconvert.so:
+    newFile: !uuid 'f22e501c5453fe6e0635d55a512c7fba2296fed3'
+    oldFile: !uuid '5dbb9d3eb38985fd2fc210a9d8307378e6674620'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
+    newFile: !uuid '58e344e99c158b065668ff250da4807901f953f0'
+    oldFile: !uuid '18ebfc0d174cea51f9dfeaa20b06324fc647d535'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
+    newFile: !uuid '85c5ee39d7ebf159fb23f6f4f93ad5922486eefa'
+    oldFile: !uuid '9c87ce987c9521da52c8077f82bd06fa16956118'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/convert.dll:
+    newFile: !uuid 'a05f9f3a8e333686e374fdea482b9c9c24036c69'
+    oldFile: !uuid 'f2485329f240afa3e8ec90079a433b98b04ad974'
+gitCommitId: !uuid '257560dad7f2b32acf752e019a039d54ac9f6e99'
 renames: {
   }
-revisionId: 207
+revisionId: 208
