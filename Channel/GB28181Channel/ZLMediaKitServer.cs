@@ -158,9 +158,10 @@ namespace GB28181Channel
 
 
                     // 执行绘制
-                    if (device.VideoData.BoxList != null && device.VideoData.BoxList.Count > 0)
+                    var tmpboxlist = device.VideoData.BoxList;
+                    if (tmpboxlist != null && tmpboxlist.Count > 0)
                     {
-                        AIDetectorTask.Draw(rgb24, w, h, device.VideoData.BoxList);
+                        AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                     }
 
                     byte[] yuvData;

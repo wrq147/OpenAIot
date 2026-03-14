@@ -159,9 +159,10 @@ namespace FixVideoChannel
                     }
 
                     // 执行绘制
-                    if (item.BoxList != null && item.BoxList.Count > 0)
+                    var tmpboxlist = item.BoxList;
+                    if (tmpboxlist != null && tmpboxlist.Count > 0)
                     {
-                        AIDetectorTask.Draw(rgb24, w, h, item.BoxList);
+                        AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                     }
 
 
@@ -624,10 +625,17 @@ namespace FixVideoChannel
     }
     public class VideoData
     {
+        private List<BoxItem> _boxList;
+
+        // 公开属性：每次赋新值
+        public List<BoxItem> BoxList
+        {
+            get => Volatile.Read(ref _boxList);
+            set => Volatile.Write(ref _boxList, value);
+        }
         public VideoCaptureItem Item { get; set; }
         public float MotionRatio { get; set; }
         public int CoolDownMs { get; set; }
-        public List<BoxItem> BoxList { get; set; }
         public List<AIConfigData> Configs { get; set; }
         public bool NeedUp { get; set; }
     }

@@ -58,7 +58,7 @@ namespace GB28181Channel
                 {
                     return (false, 0);
                 }
-
+ 
                 // 4. 第一帧初始化（无参考帧，直接返回false）
                 if (_context.LastPixels == null || _context.LastPixels.Length != rgb24Data.Length)
                 {
