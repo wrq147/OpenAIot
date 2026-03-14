@@ -8,18 +8,12 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using ZLMediaKit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GB28181Channel
 {
@@ -87,7 +81,7 @@ namespace GB28181Channel
         {
             var mkFrame = (MkFrameT)frame;
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
-            if (context == null)
+            if (context == null || !context.CanParse)
             {
                 return;
             }
@@ -99,15 +93,10 @@ namespace GB28181Channel
                 var device = storage.GetDevice(context.DeviceId);
                 if (device != null)
                 {
-                    if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
+                    if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0 && context.VideoDecoder != null)
                     {
-                        long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                        if (currentTime - context.LastTriggerTime >= device.VideoData.CoolDownMs)
-                        {
-                            context.LastTriggerTime = currentTime;
-                            mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
-                            return;
-                        }
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
+                        return;
                     }
                 }
                 if (context.Media != null)
@@ -138,6 +127,10 @@ namespace GB28181Channel
             byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
             try
             {
+                if (context.Swscale == null)
+                {
+                    return;
+                }
                 unsafe
                 {
                     fixed (byte* pRgb = rgb24)
@@ -154,6 +147,7 @@ namespace GB28181Channel
                         context.Motion = new MotionDetector();
                     }
 
+                    context.Motion.CoolDownMs = device.VideoData.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
                     // 执行AI检测
                     var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
@@ -197,12 +191,19 @@ namespace GB28181Channel
                             yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
                             // V平面：U平面后偏移 (w/2)*(h/2) 字节
                             yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
-
+                            if (context.Media == null)
+                            {
+                                return;
+                            }
                             mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
                         }
                     }
                 }
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {
@@ -310,25 +311,31 @@ namespace GB28181Channel
                     {
                         return;
                     }
-                    if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
-                    {
-                        CallbackHelper.FreeInstancePtr(contextPtr);
-                    }
+
                     if (_contextMap.TryRemove(channelInfo.PushKey, out FrameContext context))
                     {
+                        context.CanParse = false;
+                        Thread.Sleep(200);
                         if (context.Swscale != null)
                         {
                             mk_transcode.MkSwscaleRelease(context.Swscale);
+                            context.Swscale = null;
                         }
                         if (context.VideoDecoder != null)
                         {
                             mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
+                            context.VideoDecoder = null;
                         }
                         if (context.Media != null)
                         {
                             mk_media.MkMediaRelease(context.Media);
+                            context.Media = null;
                         }
                         FrameBufferPool.ClearCache(channelInfo.PushKey);
+                    }
+                    if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
+                    {
+                        CallbackHelper.FreeInstancePtr(contextPtr);
                     }
                 }
 
@@ -521,9 +528,10 @@ namespace GB28181Channel
         }
         public void BindSsrc(StreamPlayEventArgs e)
         {
-            string streamId = ZLUtility.SsrcToStreamId(e.Params.Ssrc);
+            string streamId = int.Parse(e.Params.Ssrc.Substring(1)).ToString("x");
             _cache.Set(streamId, e.Params, TimeSpan.FromSeconds(60));
         }
+
         private ConcurrentDictionary<string, RecordContext> _recordContexts = new ConcurrentDictionary<string, RecordContext>();
         public void RecorderStart(MediaRecordStartMessage msg, int retrycount, Action<bool, string> cb)
         {
@@ -649,6 +657,7 @@ namespace GB28181Channel
     }
     public class FrameContext
     {
+        public bool CanParse { get; set; } = true;
         public MkMediaSourceT SourceMedia { get; set; }
         public string VideoKey { get; set; }
         public string DeviceId { get; set; }
@@ -657,8 +666,6 @@ namespace GB28181Channel
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
         public MotionDetector Motion { get; set; }
-        // 上次触发时间
-        public long LastTriggerTime { get; set; } = 0;
     }
 
     public static class CallbackHelper

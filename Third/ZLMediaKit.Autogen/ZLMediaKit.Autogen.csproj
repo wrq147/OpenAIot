@@ -28,6 +28,10 @@
 		<Link>libmk_api.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	  <None Update="ZLMediaLibs\Linux\x64\libconvert.so">
+		  <Link>libconvert.so</Link>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
     <None Update="ZLMediaLibs\Windows\x64\avcodec-59.dll">
 		<Link>avcodec-59.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -80,6 +84,10 @@
 		<Link>x264.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	  <None Update="ZLMediaLibs\Windows\x64\convert.dll">
+		  <Link>convert.dll</Link>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None> 
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ZLMediaLibs\Linux\arm\" />

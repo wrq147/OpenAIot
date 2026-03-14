@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
+using ZLMediaKit;
 using static ZLMediaKit.CodecArgs;
 
 namespace FixVideoChannel
@@ -31,9 +32,9 @@ namespace FixVideoChannel
         {
             try
             {
+                ZLMediaKitServer.Instance.RemovePullProxy(item.Id);
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 await eventBus.Disconnect(item.Id);
-                ZLMediaKitServer.Instance.RemovePullProxy(item.Id);
             }
             catch (Exception ex)
             {
@@ -63,7 +64,7 @@ namespace FixVideoChannel
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 eventBus.PublishAIDetectRequest(videoId, videoKey, motionRatio, pressData, width, height, confs, dataType);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -148,11 +149,11 @@ namespace FixVideoChannel
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-          
+
         }
 
     }

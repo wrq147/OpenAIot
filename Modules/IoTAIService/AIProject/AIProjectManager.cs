@@ -5,15 +5,11 @@ using Common.Share;
 using IoTAIService.AICode;
 using IoTAIService.AIProject.Items;
 using NATS.Client.Core;
-using Org.BouncyCastle.Ocsp;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.Label;
@@ -64,39 +60,6 @@ namespace IoTAIService.AIProject
             }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
 
-        private Image<Rgb24> FastZlibDecompressToRgb24Image(byte[] compressedData, int width, int height)
-        {
-            // 入参校验
-            if (compressedData == null || compressedData.Length == 0)
-            {
-                Console.WriteLine("压缩数据为空，解压失败");
-                return null;
-            }
-            if (width <= 0 || height <= 0)
-            {
-                Console.WriteLine("宽高参数非法");
-                return null;
-            }
-
-            try
-            {
-                //Zlib解压得到RGB24原始数据
-                using (var msIn = new MemoryStream(compressedData))
-                using (var zlibStream = new DeflateStream(msIn, CompressionMode.Decompress))
-                using (var msOut = new MemoryStream())
-                {
-                    zlibStream.CopyTo(msOut);
-                    byte[] pixelBytes = msOut.ToArray();
-                    Image<Rgb24> rgbImage = Image.LoadPixelData<Rgb24>(pixelBytes, width, height);
-                    return rgbImage;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"解压并创建Image失败：{ex.Message}");
-                return null;
-            }
-        }
         public async Task<BusResponse<string>> TestDetect(string code, string img, string paramsJson)
         {
             var base64Str = img.Replace("data:image/png;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");
@@ -141,69 +104,76 @@ namespace IoTAIService.AIProject
         }
         public async Task MessageHandler(AIDetectRequestMeesage detectReq, List<AIConfigData> configs)
         {
-            var aiCache = _provider.GetService<AICache>();
-            if (detectReq.DataType == 0)
+            try
             {
-                //清除ai视频处理数据
-                aiCache.ClearVideo(detectReq.DeviceId);
-                return;
-            }
-            else if (detectReq.DataType == 1)
-            {
-                List<AIConfigData> videoConfigs;
-                if (configs != null)
+                var aiCache = _provider.GetService<AICache>();
+                if (detectReq.DataType == 0)
                 {
-                    videoConfigs = configs;
-                    aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
-                }
-                else
-                {
-                    videoConfigs = aiCache.GetVideoAIConfig(detectReq.DeviceId);
-                }
-                if (videoConfigs == null)
-                {
-                    await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
+                    //清除ai视频处理数据
+                    aiCache.ClearVideo(detectReq.DeviceId);
                     return;
                 }
-                byte[] frameData = detectReq.Frame;
-                using (var image = FastZlibDecompressToRgb24Image(frameData, detectReq.Width, detectReq.Height))
+                else if (detectReq.DataType == 1)
                 {
-                    if (image == null)
+                    List<AIConfigData> videoConfigs;
+                    if (configs != null)
                     {
-                        Console.WriteLine("AI解释异常：视频帧不存在");
+                        videoConfigs = configs;
+                        aiCache.SetVideoAIConfig(detectReq.DeviceId, videoConfigs);
+                    }
+                    else
+                    {
+                        videoConfigs = aiCache.GetVideoAIConfig(detectReq.DeviceId);
+                    }
+                    if (videoConfigs == null)
+                    {
+                        await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, null, true);
                         return;
                     }
-                    image.Save("E:\\kl.jpg");
-                    //处理画框
-                    List<BoxItem> boxlist = new List<BoxItem>();
-                    foreach (var config in videoConfigs)
+                    byte[] frameData = detectReq.Frame;
+                    using (var ms = new MemoryStream(frameData))
                     {
-                        if (_detects.TryGetValue(config.DetType, out IDetect tmpdet))
+                        var image = Image.Load<Rgb24>(ms);
+                        if (image == null)
                         {
-                            var boxs = tmpdet.GenerateBoxs(image, config);
-                            boxlist.AddRange(boxs);
+                            Console.WriteLine("AI解释异常：视频帧不存在");
+                            return;
                         }
-                    }
-                    var videoData = aiCache.GetVideoCache(detectReq.DeviceId);
-                    var totalBoxCount = videoData.GetInt("total_box_count");
-                    if (totalBoxCount != 0 || boxlist.Count != 0)
-                    {
-                        //回复画框
-                        await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
-                    }
-                    videoData.SetInt("total_box_count", boxlist.Count);
-
-
-                    //处理事件
-                    foreach (var config in videoConfigs)
-                    {
-                        if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
+                        //处理画框
+                        List<BoxItem> boxlist = new List<BoxItem>();
+                        foreach (var config in videoConfigs)
                         {
-                            await tmpinfer.Execute(detectReq, image, config, boxlist);
+                            if (_detects.TryGetValue(config.DetType, out IDetect tmpdet))
+                            {
+                                var boxs = tmpdet.GenerateBoxs(image, config);
+                                boxlist.AddRange(boxs);
+                            }
+                        }
+                        var videoData = aiCache.GetVideoCache(detectReq.DeviceId);
+                        var totalBoxCount = videoData.GetInt("total_box_count");
+                        if (totalBoxCount != 0 || boxlist.Count != 0)
+                        {
+                            //回复画框
+                            await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
+                        }
+                        videoData.SetInt("total_box_count", boxlist.Count);
+
+
+                        //处理事件
+                        foreach (var config in videoConfigs)
+                        {
+                            if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
+                            {
+                                await tmpinfer.Execute(detectReq, image, config, boxlist);
+                            }
                         }
                     }
 
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
 
         }

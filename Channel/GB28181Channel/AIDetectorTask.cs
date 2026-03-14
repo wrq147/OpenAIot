@@ -2,6 +2,7 @@
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -50,21 +51,42 @@ namespace GB28181Channel
             }
         }
         #endregion
-        /// <summary>
-        /// Zlib快速压缩降采样后的RGB数据
-        /// </summary>
-        private static byte[] FastZlibCompress(byte[] rawData, int width, int height)
-        {
-            if (rawData == null || rawData.Length == 0)
-                return null;
 
-            using (var ms = new MemoryStream())
+        private static byte[] FastJpgCompress(byte[] rawData, int width, int height)
+        {
+            // 1. 入参校验（避免无效数据导致异常）
+            if (rawData == null || rawData.Length == 0
+                || width <= 0 || height <= 0
+                || rawData.Length != width * height * 3)
             {
-                using (var zlib = new DeflateStream(ms, CompressionLevel.Fastest, true))
+                return null;
+            }
+
+            try
+            {
+                // 2. 预分配内存流（减少扩容开销，预估JPG大小为原数据的1/10）
+                using (var ms = new MemoryStream(rawData.Length / 10))
                 {
-                    zlib.Write(rawData, 0, rawData.Length);
+                    // 3. 加载RGB24数据到Image对象（直接映射像素，无额外拷贝）
+                    using (var image = Image.LoadPixelData<Rgb24>(rawData, width, height))
+                    {
+                        // 4. 配置JPG编码器（优先速度，适配高性能场景）
+                        var jpgEncoder = new JpegEncoder
+                        {
+                            Quality = 70,
+                        };
+
+                        // 5. 编码为JPG并写入内存流
+                        image.Save(ms, jpgEncoder);
+                        return ms.ToArray();
+                    }
                 }
-                return ms.ToArray();
+            }
+            catch (Exception ex)
+            {
+                // 捕获异常避免崩溃（可选：根据业务需求记录日志）
+                Console.WriteLine($"JPG压缩失败：{ex.Message}");
+                return null;
             }
         }
         /// <summary>
@@ -78,18 +100,22 @@ namespace GB28181Channel
         /// <param name="data"></param>
         public static void Detect(VideoData videoData, int width, int height, float motionRatio, GB28181DeviceEventListener listener, byte[] data)
         {
-            if (listener == null)
+            _ = Task.Run(() =>
             {
-                return;
-            }
-            byte[] pressData = FastZlibCompress(data, width, height);
-            List<AIConfigData> configs = null;
-            if (videoData.NeedUp)
-            {
-                configs = videoData.Configs;
-                videoData.NeedUp = false;
-            }
-            listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
+                if (listener == null)
+                {
+                    return;
+                }
+                byte[] pressData = FastJpgCompress(data, width, height);
+                List<AIConfigData> configs = null;
+                if (videoData.NeedUp)
+                {
+                    configs = videoData.Configs;
+                    videoData.NeedUp = false;
+                }
+                listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
+            });
+
         }
         public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
         {

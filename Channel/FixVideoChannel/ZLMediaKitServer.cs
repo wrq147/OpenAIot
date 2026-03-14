@@ -1,7 +1,6 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -88,16 +87,15 @@ namespace FixVideoChannel
         {
             var mkFrame = (MkFrameT)frame;
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
-            if (context == null)
+            if (context == null || !context.CanParse)
             {
                 return;
             }
-
             try
             {
                 if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
                 {
-                    if (item.Configs != null && item.Configs.Count > 0)
+                    if (item.Configs != null && item.Configs.Count > 0 && context.VideoDecoder != null)
                     {
                         mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
                         return;
@@ -131,6 +129,10 @@ namespace FixVideoChannel
             byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
             try
             {
+                if (context.Swscale == null)
+                {
+                    return;
+                }
                 unsafe
                 {
                     fixed (byte* pRgb = rgb24)
@@ -138,6 +140,7 @@ namespace FixVideoChannel
                         mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
                     }
                 }
+
 
                 if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
                 {
@@ -155,16 +158,17 @@ namespace FixVideoChannel
                         AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
                     }
 
-
                     // 执行绘制
                     if (item.BoxList != null && item.BoxList.Count > 0)
                     {
                         AIDetectorTask.Draw(rgb24, w, h, item.BoxList);
                     }
 
+
                     byte[] yuvData;
                     int[] yuvLineSizes;
                     int alignedLineSize = (w * 3 + 31) & ~31;
+
                     if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                     {
                         return;
@@ -174,6 +178,7 @@ namespace FixVideoChannel
                         Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
                         return;
                     }
+
                     unsafe
                     {
                         // 3. 固定托管YUV数组，防止GC回收/移动
@@ -187,16 +192,23 @@ namespace FixVideoChannel
                             yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
                             // V平面：U平面后偏移 (w/2)*(h/2) 字节
                             yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
-
+                            if (context.Media == null)
+                            {
+                                return;
+                            }
                             mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
                         }
                     }
+
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {
                 FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
-                context.LastFrame = null;
             }
         }
 
@@ -381,13 +393,17 @@ namespace FixVideoChannel
         private void OnShutdown(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
         {
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            context.CanParse = false;
+            Thread.Sleep(200);
             if (context.Swscale != null)
             {
                 mk_transcode.MkSwscaleRelease(context.Swscale);
+                context.Swscale = null;
             }
             if (context.VideoDecoder != null)
             {
                 mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
+                context.VideoDecoder = null;
             }
 
         }
@@ -483,25 +499,43 @@ namespace FixVideoChannel
             }
             cb.Invoke(isSuccess, reason);
         }
+        public FrameContext GetFrameContext(string id)
+        {
+            if (_players.TryGetValue(id, out MkPlayerT tmpt))
+            {
+                if (_IdToKeys.TryGetValue(id, out string tkey))
+                {
+                    if (_contextMap.TryGetValue(tkey, out FrameContext handle))
+                    {
+                        return handle;
+                    }
+                }
+            }
+            return null;
+        }
         public void RemovePullProxy(string id)
         {
             if (_players.TryRemove(id, out MkPlayerT tmpt))
             {
                 if (_IdToKeys.TryRemove(id, out string tkey))
                 {
+                    if (_contextMap.TryRemove(tkey, out FrameContext handle))
+                    {
+                        handle.CanParse = false;
+                        Thread.Sleep(200);
+                        if (handle.Media != null)
+                        {
+                            mk_media.MkMediaRelease(handle.Media);
+                            handle.Media = null;
+                        }
+                        FrameBufferPool.ClearCache(tkey);
+                    }
                     _videoKeyItems.TryRemove(tkey, out VideoData tmpval);
                     if (_contextPtrMap.TryRemove(tkey, out IntPtr contextPtr))
                     {
                         CallbackHelper.FreeInstancePtr(contextPtr);
                     }
-                    if (_contextMap.TryRemove(tkey, out FrameContext handle))
-                    {
-                        if (handle.Media != null)
-                        {
-                            mk_media.MkMediaRelease(handle.Media);
-                        }
-                        FrameBufferPool.ClearCache(tkey);
-                    }
+          
                 }
                 mk_player.MkPlayerRelease(tmpt);
             }
@@ -599,6 +633,7 @@ namespace FixVideoChannel
     }
     public class FrameContext
     {
+        public bool CanParse { get; set; } = true;
         public string VideoKey { get; set; }
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }
