@@ -95,7 +95,7 @@ namespace GB28181Channel
                 {
                     if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0 && context.VideoDecoder != null)
                     {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                         return;
                     }
                 }
@@ -261,10 +261,16 @@ namespace GB28181Channel
                     {
                         MkTrackT mkTrack = mk_events_objects.MkMediaSourceGetTrack(mediaSourceT, i);
                         if (mkTrack == null) { continue; }
-                        mk_media.MkMediaInitTrack(context.Media, mkTrack);
+
                         if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                         {
 
+                            int codec_id = mk_track.MkTrackCodecId(mkTrack);
+                            int width = mk_track.MkTrackVideoWidth(mkTrack);
+                            int height = mk_track.MkTrackVideoHeight(mkTrack);
+                            float tfps = mk_track.MkTrackVideoFps(mkTrack);
+                            int bit_rate = mk_track.MkTrackBitRate(mkTrack);
+                            mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
 
                             MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                             context.VideoDecoder = mkDecoder;
@@ -273,12 +279,10 @@ namespace GB28181Channel
                             mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
                             mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
 
-                            int codec_id = mk_track.MkTrackCodecId(mkTrack);
-                            int width = mk_track.MkTrackVideoWidth(mkTrack);
-                            int height = mk_track.MkTrackVideoHeight(mkTrack);
-                            float tfps = mk_track.MkTrackVideoFps(mkTrack);
-                            int bit_rate = mk_track.MkTrackBitRate(mkTrack);
-                            mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
+                        }
+                        else
+                        {
+                            mk_media.MkMediaInitTrack(context.Media, mkTrack);
                         }
                     }
                     mk_media.MkMediaInitComplete(context.Media);
