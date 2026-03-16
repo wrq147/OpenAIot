@@ -3,21 +3,84 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid 'e0a3f38a48c6dbcd96267bc3bf80780cb403d004'
-    oldFile: !uuid 'fec36db12ab1172f7f6637f390e0b2a8ccc893e8'
+    newFile: !uuid '16a385a7576066f977781296806152b06422eabf'
+    oldFile: !uuid 'e0a3f38a48c6dbcd96267bc3bf80780cb403d004'
   /Channel/FixVideoChannel:
-    newFile: !uuid '9f8bef94f7a4ccd384c6cf1f5a6dc320cd6cd565'
-    oldFile: !uuid '35f1ee349737e1743009e8902d4c0675837cbf41'
-  /Channel/FixVideoChannel/AIDetectorTask.cs:
-    newFile: !uuid 'aa750e429f997d5968bec0621dd3ec2ee49e6255'
-    oldFile: !uuid '79ebf0602074628b88dd91f1e9f7f964a826b1c5'
-  /Channel/GB28181Channel:
-    newFile: !uuid '367bfc922949ddfea5222f6e81450bf799fe2cc5'
-    oldFile: !uuid 'eb5a026e04f9c241bf3863728e8ed8245a388217'
-  /Channel/GB28181Channel/AIDetectorTask.cs:
-    newFile: !uuid '51e44f860ecef76b0a6e808c4ac8f6d3906722d5'
-    oldFile: !uuid 'a4b9797033bdf9a0ab3a2451eebbd5a71dd2f459'
-gitCommitId: !uuid 'b7b12b1c297f14c3d55180349493451fdd28c477'
+    newFile: !uuid 'e9db98362fad145d9d6b7364b380990d99a276ee'
+    oldFile: !uuid '9f8bef94f7a4ccd384c6cf1f5a6dc320cd6cd565'
+  /Channel/FixVideoChannel/config.ini:
+    newFile: !uuid '740ca02afd0e7af8e92b9ed2e834ff03de7ad89d'
+    oldFile: !uuid '2eb48dedf088abd0f457d9ac7a181be8ee399993'
+  /IOT_Skill:
+    newFile: !uuid '6d0569ed7ab8dd6f73fadeed3dcda6adbc00c6c6'
+    oldFile: null
+  /IOT_Skill/SKILL.md:
+    newFile: !uuid '3b3f4be0328e2fef67e9b5e3dad2ac5e307be0e1'
+    oldFile: null
+  /IOT_Skill/references:
+    newFile: !uuid '6bac4011cb855023261defc5c771e05209eb52a8'
+    oldFile: null
+  /IOT_Skill/references/环境监控使用说明.md:
+    newFile: !uuid '4e13e9049c81b7f2207139c3e8d1fa563075a5df'
+    oldFile: null
+  /IOT_Skill/scripts:
+    newFile: !uuid '6cd7e8e4f0405c0bcc7e5b8141b8f4fe347f3512'
+    oldFile: null
+  /IOT_Skill/scripts/requirements.txt:
+    newFile: !uuid '35f325ec007d691ce1952fd373ad3758d4c6484b'
+    oldFile: null
+  /IOT_Skill/scripts/rtmp_api_server.py:
+    newFile: !uuid 'ef78e08e0836e2a6f0ddeb103dd99a32bf5703a4'
+    oldFile: null
+  /Modules:
+    newFile: !uuid 'b9040a3e1bb66b73c434af9c95ac9acf9c0593d6'
+    oldFile: !uuid 'c8501f07d7b6adcfe81e55a0b7298139546ba5fe'
+  /Modules/AfterService:
+    newFile: !uuid '39bb6a90dc064aff85212b78ff10711b1c126ef2'
+    oldFile: !uuid '3866b82e845ef4e1ecba36749f24252bb3e0664f'
+  /Modules/AfterService/Controller:
+    newFile: !uuid '5bc2dc5a68c75265715a3df318c78911f0825fd3'
+    oldFile: !uuid '3848c2b58b4d359731bea5f54714fab5a9d7ca9c'
+  /Modules/AfterService/Controller/HttpSync.cs:
+    newFile: !uuid 'c93781b0af1ec1a2c3233903544530e395972437'
+    oldFile: !uuid 'd67695da4914f5829f2ff612f032174f60c311e5'
+  /Modules/AfterService/Model:
+    newFile: !uuid 'b0ef5ac70f1e06300d2645cfe54c1b5e26b3b4cb'
+    oldFile: !uuid 'f6fbdede36f6bdd6519da3d6fc39e6d981b598ab'
+  /Modules/AfterService/Model/Out_KfDevice.cs:
+    newFile: !uuid '438bdfdad9b25fe1d48aede7237b03beb79ee699'
+    oldFile: !uuid '9fcfb27d60c596d63760087c9360994b645f81c9'
+  /Modules/FlowService:
+    newFile: !uuid 'd2f1b7b62c226586ecc3bec2115a1fd6a9798b68'
+    oldFile: !uuid '0b188836794ed26e7efb21e78ba9e8649edc9c74'
+  /Modules/FlowService/FlowNode:
+    newFile: !uuid 'e79e0046cce97a73e95493d06be6a8f2b61660ca'
+    oldFile: !uuid 'a945e7be31a86da8980bc20b5e5ffe38e7e2402e'
+  /Modules/FlowService/FlowNode/Builder:
+    newFile: !uuid '4b039945b29a3dc48a1b8acf513cf79ea47d85f8'
+    oldFile: !uuid '242fca39feebd1c8cb24190f5f47c793bcd0d948'
+  /Modules/FlowService/FlowNode/Builder/Step:
+    newFile: !uuid '5bdfa13ff8ede6d465c2f10f9596043ca094f6dd'
+    oldFile: !uuid 'f2663a04ffa7bbbddcb4e550ce16d197dcc552bc'
+  /Modules/FlowService/FlowNode/Builder/Step/DataStep.cs:
+    newFile: !uuid 'ff6fcd164d6b2fcba3ac3201d75988c450bcb7dd'
+    oldFile: !uuid '40285c6caef82d0bf62eabfbc58e5964d780e60a'
+  /Modules/FlowService/FlowNode/Builder/WorkflowExecutor.cs:
+    newFile: !uuid '306d89e7f262ce93b2ac539d37424ae1ef0be3f4'
+    oldFile: !uuid 'd224585578ff78b41bfac949f12605c7b54ca5b4'
+  /Modules/IoTService:
+    newFile: !uuid 'a10ae7a264792e3ab65f9b7416877fcb39759e5a'
+    oldFile: !uuid '2fee9d40a1caef2bcf0b16674215a1571e6be5a1'
+  /Modules/IoTService/Models:
+    newFile: !uuid 'dbd3074c33e5867b3e4a1e3001d11663ddc9ee4d'
+    oldFile: !uuid '4800524b7bec003f94780dd7693ba2dd4afe863e'
+  /Modules/IoTService/Models/MZ_IotDevice.cs:
+    newFile: !uuid 'fb91620318ddcaf12cd58a89d45988ec02234994'
+    oldFile: !uuid 'c949b09b8d81081853a7d76d6681fce034cb01ec'
+  /悟空云开发者接口.doc:
+    newFile: !uuid 'd0b6d3651ae9120e0436383e0e035fde0de147f0'
+    oldFile: !uuid '11694f15238783a9be6891b757729d32d9020127'
+gitCommitId: !uuid '6614b501eec4c1578c49508745f211b8aa7ab2db'
 renames: {
   }
-revisionId: 211
+revisionId: 212
