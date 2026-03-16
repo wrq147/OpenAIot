@@ -690,7 +690,24 @@ namespace FlowService.FlowNode.Builder
                                 {
                                     if (!editMode.ContainsKey(initModel.fieldid))
                                     {
-                                        editMode.Add(initModel.fieldid, initModel.InitValue);
+                                        string tmpinitval = initModel.InitValue as string;
+                                        if (tmpinitval == "@办理人姓名")
+                                        {
+                                            MZ_AdminInfo tmpuserInfo = await _provider.GetService<UserDAL>().GetAdminById(action.User.UserId);
+                                            if (tmpuserInfo != null)
+                                            {
+                                                editMode.Add(initModel.fieldid, tmpuserInfo.RealName);
+                                            }
+                                            else
+                                            {
+                                                editMode.Add(initModel.fieldid, string.Empty);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            editMode.Add(initModel.fieldid, initModel.InitValue);
+                                        }
+
                                     }
                                 }
                             }

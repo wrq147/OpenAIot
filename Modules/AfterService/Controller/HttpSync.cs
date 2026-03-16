@@ -71,6 +71,7 @@ namespace AfterService.Controller
             var user = _develper.ToUserInfo();
             return this.Success(await this.ServiceProvider.GetService<DevPlaneBLL>().SelectNameList(user));
         }
+        //public async Task<DefaultAjaxResult>
         /// <summary>
         /// 查询房间列表
         /// </summary>

@@ -147,5 +147,16 @@ namespace AfterService.Model
         /// </summary>
         [DataIgnore]
         public string AreaCodeName { get; set; }
+        /// <summary>
+        /// 是否为视频监控设备
+        /// </summary>
+        [DataIgnore]
+        public bool? IsVideo
+        {
+            get
+            {
+                return this.DeviceId != null && this.DeviceId.StartsWith("VI_");
+            }
+        }
     }
 }
