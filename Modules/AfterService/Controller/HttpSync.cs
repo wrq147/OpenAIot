@@ -88,7 +88,6 @@ namespace AfterService.Controller
         /// <summary>
         /// 查询房间列表
         /// </summary>
-        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
         [ShareCheck]
@@ -98,6 +97,7 @@ namespace AfterService.Controller
             var tlist = await this.ServiceProvider.GetService<RoomBLL>().QueryList(new In_RoomList(), user);
             return this.Success(tlist);
         }
+
         /// <summary>
         /// 按房间查询实时数据（离线返回null）
         /// </summary>

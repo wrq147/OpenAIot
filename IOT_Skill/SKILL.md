@@ -7,11 +7,9 @@ version: 1.0.0
 # 接口使用指南
 
 ## 概述
-本技能提供多种设备的标准化调用方法，覆盖4大核心模块：
-1. 我的设备（查询我的设备列表和每个设备的所在位置、联网状态、设备名称、备注说明、通讯Id、第三方编码、拥有的功能）
-2. 设备实时属性（查询设备的实时属性信息）
-3. 执行设备功能（执行设备的某个功能）
-4. 环境监控（根据安装的监控设备获取画面的实时快照）
+本技能提供多种设备的标准化调用方法，由2大模块组成：
+1. 设备相关API（包括我的设备、设备实时属性、执行设备功能）
+2. 环境监控API（根据安装的监控设备获取画面的实时快照）
 
 ## 接口通用返回格式
 所有接口统一返回以下3个参数：
@@ -21,8 +19,13 @@ version: 1.0.0
 | message | 字符串 | 接口调用结果描述 | "执行成功" |
 | data | 任意类型 | 接口返回的业务数据，不同接口返回不同 | {"Id":"dev123456"} |
 
-## 接口列表
-### 1. 物联网设备管理接口
+## 1. 设备相关API
+服务器地址：http://127.0.0.1:880
+（1） 我的所有设备API
+接口介绍：查询我的设备列表和每个设备的所在位置、联网状态、设备名称、备注说明、通讯Id、第三方编码、拥有的功能
+请求方式：GET
+接口路径：/AfterService/HttpSync/MyDevices
+
 | 接口名称 | 触发短语 | 请求方式 | 接口路径 | 必需参数 |
 |----------|----------|----------|----------|----------|
 | 按批次编号查询设备 | "按编号查设备"、"获取设备信息" | GET | /IoTService/HttpSync/DeviceByNumber | number（批次编号） |
@@ -38,22 +41,21 @@ version: 1.0.0
 | 获取设备标签列表 | "设备标签"、"标签列表" | GET | /IoTService/HttpSync/TagList | number（批次编号） |
 | 物联卡续费 | "物联卡续费"、"设备服务续费" | POST | /IoTService/HttpSync/Recharge | number（批次编号）、month（续费月份） |
 
-### 2. 仓储管理接口
+## 2. 环境监控API
+### 接口使用前置条件
+1. 安装依赖：`pip install -r requirements.txt`
+2. 安装FFmpeg（OpenCV解码RTMP必需）：
+   - Ubuntu/Debian：`apt install ffmpeg`
+   - CentOS/RHEL：`yum install ffmpeg`
+   - Windows：下载FFmpeg并添加到环境变量
+3. 启动服务（默认端口9111）：`python scripts/rtmp_api_server.py`
+
 | 接口名称 | 触发短语 | 请求方式 | 接口路径 | 必需参数 |
 |----------|----------|----------|----------|----------|
 | 物品入库 | "物品入库"、"添加入库单" | POST | /StorageService/HttpSync/AddPileIn | StockNumber（入库单号）、ToHouseId（目标仓库Id）、InDate（入库时间）、Items（入库物品数组） |
 | 物品出库 | "物品出库"、"添加出库单" | POST | /StorageService/HttpSync/AddPileOut | StockNumber（出库单号）、FromHouseId（来源仓库Id）、ToAgentId（目标代理商Id）、OutDate（出库时间）、Items（出库物品数组） |
 | 清除指定入库单 | "清除入库单"、"删除入库记录" | GET | /StorageService/HttpSync/ClearPile | number（入库单号） |
 
-### 3. 规则与房间管理接口
-| 接口名称 | 触发短语 | 请求方式 | 接口路径 | 必需参数 |
-|----------|----------|----------|----------|----------|
-| 查询规则列表 | "规则列表"、"规则分页查询" | GET | /IoTRulesService/HttpRule/RuleListPage | pageNum（可选）、pageSize（可选） |
-| 查询规则模板详情 | "规则详情"、"规则模板信息" | GET | /IoTRulesService/HttpRule/RuleInfo | id（规则Id） |
-| 按房间查询实时数据 | "房间实时数据"、"房间设备数据" | GET | /AfterService/HttpSync/RoomLive | roomId（房间Id） |
-| 查询房间列表 | "房间列表"、"获取房间信息" | GET | /AfterService/HttpSync/RoomList | 无 |
-
 ## 参考资源
-查看 @references/环境监控使用说明.md 获取环境监控详细使用方式
-查看 @references/环境监控接口详情.md 获取环境监控完整接口参数说明
-查看 @examples/查询设备.py 获取设备查询完整示例
+查看 references/环境监控使用说明.md 获取环境监控详细使用方式
+查看 examples/查询设备.py 获取设备查询完整示例
