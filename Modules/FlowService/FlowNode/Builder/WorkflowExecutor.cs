@@ -688,26 +688,22 @@ namespace FlowService.FlowNode.Builder
                             {
                                 if (initModel.optionName == action.OutcomeValue)
                                 {
-                                    if (!editMode.ContainsKey(initModel.fieldid))
+                                    string tmpinitval = initModel.InitValue as string;
+                                    if (tmpinitval == "@办理人姓名" || tmpinitval == "@审批人姓名")
                                     {
-                                        string tmpinitval = initModel.InitValue as string;
-                                        if (tmpinitval == "@办理人姓名")
+                                        MZ_AdminInfo tmpuserInfo = await _provider.GetService<UserDAL>().GetAdminById(action.User.UserId);
+                                        if (tmpuserInfo != null)
                                         {
-                                            MZ_AdminInfo tmpuserInfo = await _provider.GetService<UserDAL>().GetAdminById(action.User.UserId);
-                                            if (tmpuserInfo != null)
-                                            {
-                                                editMode.Add(initModel.fieldid, tmpuserInfo.RealName);
-                                            }
-                                            else
-                                            {
-                                                editMode.Add(initModel.fieldid, string.Empty);
-                                            }
+                                            editMode[initModel.fieldid] = tmpuserInfo.RealName;
                                         }
                                         else
                                         {
-                                            editMode.Add(initModel.fieldid, initModel.InitValue);
+                                            editMode[initModel.fieldid] = string.Empty;
                                         }
-
+                                    }
+                                    else
+                                    {
+                                        editMode[initModel.fieldid] = initModel.InitValue;
                                     }
                                 }
                             }

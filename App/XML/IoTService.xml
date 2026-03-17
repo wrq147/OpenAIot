@@ -2163,6 +2163,11 @@
             区域代码地址名称
             </summary>
         </member>
+        <member name="P:IoTService.Models.MZ_IotDevice.IsVideo">
+            <summary>
+            是否为视频监控设备
+            </summary>
+        </member>
         <member name="P:IoTService.Models.MZ_IotDeviceTag.Id">
             <summary>
             编码Id

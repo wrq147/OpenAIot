@@ -117,7 +117,14 @@ export default {
       // 初始化表单
       let rsp = await flowRecord(this.nodeId);
       this.options = rsp.data.Step.Options;
-      let commitOperates = rsp.data.Step.FormPerms.toMap("id");
+      let commitOperates;
+      if(rsp.data.Step.FormPerms!=null){
+        commitOperates = rsp.data.Step.FormPerms.toMap("id");
+      }
+      else{
+        commitOperates = new Map();
+      }
+
       this.optionInit = rsp.data.Step.optionInit
       let jsondata = rsp.data.NodeField;
       //初始化参数

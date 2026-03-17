@@ -49,19 +49,26 @@
       </el-form-item>
       <el-form-item label="☞ 执行操作初始化" prop="text">
         <el-button type="text" @click="addTextLoad()">+ 添加</el-button>
-        <div v-for="(tmpitem, index) in nodeProps.optionInit" :key="'a' + index" style="margin-bottom: 10px;display:flex;align-items:center;">
+        <div v-for="(tmpitem, index) in nodeProps.optionInit" :key="'a' + index"
+          style="margin-bottom: 10px;display:flex;align-items:center;">
           <el-select v-model="nodeProps.optionInit[index].optionName" placeholder="操作">
             <el-option :label="nodeProps.exeTxt" :value="nodeProps.exeTxt"></el-option>
             <el-option :label="nodeProps.refuseTxt" :value="nodeProps.refuseTxt"></el-option>
           </el-select>
           <el-select v-model="nodeProps.optionInit[index].fieldid" placeholder="表单">
-            <el-option :label="ites.title" :value="ites.id" v-for="ites in loadforms" :key="'l'+ites.id"></el-option>
+            <el-option :label="ites.title" :value="ites.id" v-for="ites in loadforms" :key="'l' + ites.id"></el-option>
           </el-select>
-          <el-input type="text" v-model="nodeProps.optionInit[index].InitValue" placeholder="初始化值"/>
-          <el-button style="margin-left: 10px" size="mini" @click="dellTextLoad(index)" type="danger" icon="el-icon-delete" circle></el-button>
+          <el-autocomplete v-model="nodeProps.optionInit[index].InitValue" :fetch-suggestions="queryUserNodeSearch"
+            placeholder="请输入内容" @select="handleUseNodeSelect(index,$event)" :clearable="true">
+            <template slot-scope="{ item }">
+              <div class="atname">{{ item.name }}</div>
+            </template>
+          </el-autocomplete>
+          <el-button style="margin-left: 10px" size="mini" @click="dellTextLoad(index)" type="danger"
+            icon="el-icon-delete" circle></el-button>
         </div>
       </el-form-item>
-      
+
       <el-form-item label="⏱ 办理期限（为 0 则不生效）" prop="timeLimit">
         <el-input style="width: 180px" placeholder="时长" size="small" type="number"
           v-model="nodeProps.timeLimit.timeout.value">
@@ -146,7 +153,7 @@ export default {
     },
     loadforms() {
       return getItems(this.$store.state.flowable.design.formItems).filter((f) => {
-        return f.name === "TextareaInput"||f.name === "TextInput";
+        return f.name === "TextareaInput" || f.name === "TextInput";
       });
     },
     forms() {
@@ -154,7 +161,7 @@ export default {
         return f.name === "UserPicker";
       });
     },
-    formd(){
+    formd() {
       return getItems(this.$store.state.flowable.design.formItems).filter((f) => {
         return f.name === "DevicPicker";
       });
@@ -189,26 +196,32 @@ export default {
   },
   mounted() {
     if (checkPermi(['/AgentMan/'])) {
-      if(!this.approvalTypes.some(x=>x.name=="设备拥有者")){
+      if (!this.approvalTypes.some(x => x.name == "设备拥有者")) {
         this.approvalTypes.push({ name: "设备拥有者", type: "EQUIP_USER" })
       }
     }
 
   },
   methods: {
-    addTextLoad(){
+    queryUserNodeSearch(queryString, cb) {
+      cb([{ "name": "办理人姓名", "value": "@办理人姓名" }]);
+    },
+    handleUseNodeSelect(index,item){
+      this.nodeProps.optionInit[index].InitValue=item.value;
+    },
+    addTextLoad() {
       //添加初始化文本
-      if(this.nodeProps.optionInit==undefined){
-        this.nodeProps.optionInit=[]
+      if (this.nodeProps.optionInit == undefined) {
+        this.nodeProps.optionInit = []
       }
       this.nodeProps.optionInit.push({
-        optionName:'',
-        fieldid:'',
-        InitValue:''
+        optionName: '',
+        fieldid: '',
+        InitValue: ''
       })
     },
-    dellTextLoad(index){
-      this.nodeProps.optionInit.splice(index,1)
+    dellTextLoad(index) {
+      this.nodeProps.optionInit.splice(index, 1)
       this.$forceUpdate()
     },
     selectUser() {
@@ -302,7 +315,8 @@ export default {
 /deep/ .el-divider--horizontal {
   margin: 10px 0;
 }
-.item-desc{
-  color:#999;
+
+.item-desc {
+  color: #999;
 }
 </style>

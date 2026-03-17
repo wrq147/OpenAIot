@@ -16,7 +16,7 @@ namespace FlowService.FlowNode
         public long FlowId { get; set; }
         public NodeStatus NodeStatus { get; set; }
         public FormField[] NodeField { get; set; }
-        public WorkflowStep Step { get; set; }
+        public object Step { get; set; }
         public long TemplateId { get; set; }
         public Dictionary<string, List<Out_UserItem>> Assign { get; set; }
         [JsonIgnore]

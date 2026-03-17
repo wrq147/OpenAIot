@@ -4,6 +4,7 @@ namespace FlowService.FlowNode.Builder.Step
 {
     public class OptionItem
     {
+        public OptionItem() { }
         public OptionItem(string a,string t)
         {
             this.action = a;

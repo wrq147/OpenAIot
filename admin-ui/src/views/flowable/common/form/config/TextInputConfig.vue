@@ -8,7 +8,7 @@
           v-model="value.defaultValue"
           :fetch-suggestions="querySearch"
           placeholder="请输入内容"
-          @select="handleSelect"
+          @select="handleSelect" :clearable="true"
         >
         <template slot-scope="{ item }">
           <div class="atname">{{ item.name }}</div>

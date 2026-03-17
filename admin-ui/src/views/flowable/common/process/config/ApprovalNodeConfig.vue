@@ -170,7 +170,12 @@
           <el-select v-model="nodeProps.optionInit[index].fieldid" placeholder="表单">
             <el-option :label="ites.title" :value="ites.id" v-for="ites in loadforms" :key="'l'+ites.id"></el-option>
           </el-select>
-          <el-input type="text" v-model="nodeProps.optionInit[index].InitValue" placeholder="初始化值"/>
+          <el-autocomplete v-model="nodeProps.optionInit[index].InitValue" :fetch-suggestions="queryUserNodeSearch"
+            placeholder="请输入内容" @select="handleUseNodeSelect(index,$event)" :clearable="true">
+            <template slot-scope="{ item }">
+              <div class="atname">{{ item.name }}</div>
+            </template>
+          </el-autocomplete>
           <el-button style="margin-left: 10px" size="mini" @click="dellTextLoad(index)" type="danger" icon="el-icon-delete" circle></el-button>
         </div>
       </el-form-item>
@@ -348,6 +353,12 @@ export default {
     },
   },
   methods: {
+    queryUserNodeSearch(queryString, cb) {
+      cb([{ "name": "审批人姓名", "value": "@审批人姓名" }]);
+    },
+    handleUseNodeSelect(index,item){
+      this.nodeProps.optionInit[index].InitValue=item.value;
+    },
     addTextLoad(){
       //添加初始化文本
       if(this.nodeProps.optionInit==undefined){

@@ -1406,6 +1406,11 @@
             区域代码地址名称
             </summary>
         </member>
+        <member name="P:AfterService.Model.Out_KfDevice.IsVideo">
+            <summary>
+            是否为视频监控设备
+            </summary>
+        </member>
         <member name="P:AfterService.Model.Out_KFProductName.Id">
             <summary>
             产品Id
@@ -1444,6 +1449,46 @@
         <member name="P:AfterService.Model.Out_KFProtocalName.PhotoUrl">
             <summary>
             图片地址
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.DeviceNumber">
+            <summary>
+            第三方编码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.DeviceId">
+            <summary>
+            通讯Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.ProtocolId">
+            <summary>
+            设备协议Id
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.ProductName">
+            <summary>
+            设备所属产品名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.RoomName">
+            <summary>
+            设备所在房间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.Lng">
+            <summary>
+            经度
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.Lat">
+            <summary>
+            纬度
+            </summary>
+        </member>
+        <member name="T:AfterService.Model.DevFun">
+            <summary>
+            设备功能描述
             </summary>
         </member>
         <member name="P:AfterService.Model.Out_PlaneDay.TargetId">
