@@ -2,55 +2,25 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid 'fc574f94f2f0ab336a2110c52d5a0006e4267d73'
-    oldFile: !uuid '16a385a7576066f977781296806152b06422eabf'
-  /Channel/ChannelUtility:
-    newFile: !uuid '75f9febcf4556a8dab6bbda7a95f1aab3b7b4750'
-    oldFile: !uuid '345014e5b620b175cda911bd66ee92fedd01e1eb'
-  /Channel/ChannelUtility/Tsl:
-    newFile: !uuid '417d3af6061a199af47fe1f849fa932c1701b12c'
-    oldFile: !uuid 'ab007e879590bc403f2053c060410528fa75c447'
-  /Channel/ChannelUtility/Tsl/BaseAll.cs:
-    newFile: !uuid '6fa804011e6d92c22a6e486875970248efef92d7'
-    oldFile: !uuid '0305aafad975fcc2754da0be9ff10f855ed5a7d8'
   /IOT_Skill:
-    newFile: !uuid 'ac71657506b0318507478d8ba604da58a661a720'
-    oldFile: !uuid '0c6bc907df3fe56f4e33571bdcb1231fd9ea9510'
+    newFile: !uuid '037169c49a30bf54baa9698ca766834fd7a181dc'
+    oldFile: !uuid 'ac71657506b0318507478d8ba604da58a661a720'
   /IOT_Skill/SKILL.md:
-    newFile: !uuid '5c646706cb3bfab5e4cc3c9bd833b1d08d8c4017'
-    oldFile: !uuid 'a039afaf494e5519d8f5581381acb96c719e78cd'
+    newFile: !uuid 'c3a7b845f362d0c1e8670d5b2f15f1986b250404'
+    oldFile: !uuid '5c646706cb3bfab5e4cc3c9bd833b1d08d8c4017'
   /Modules:
-    newFile: !uuid '4bea1ff76162fe81beba0e09554253f1b4aa4e7c'
-    oldFile: !uuid '332d749ce68ede61b9450b3df8c5727cbf0a75c7'
+    newFile: !uuid '81fa9191fbb57c015750b026e7da683f733c21c4'
+    oldFile: !uuid '4bea1ff76162fe81beba0e09554253f1b4aa4e7c'
   /Modules/AfterService:
-    newFile: !uuid '623c5301bd120088f5a6b119511dd2c2f0a552ee'
-    oldFile: !uuid '1d9d7a46f2f89da90c344f8883800e1f997a7d3f'
-  /Modules/AfterService/Business:
-    newFile: !uuid 'b30f59d1fbcb9202e630808d362b225ead4db017'
-    oldFile: !uuid '15b7adc2827ca524d63f6320c3d3364b93e2de07'
-  /Modules/AfterService/Business/KFDeviceBLL.cs:
-    newFile: !uuid '169414ff9790d34bb37fd8cb1d746af1615cbaeb'
-    oldFile: !uuid 'f322f6271a18cb617dc3fff742f7d8278831ca0a'
+    newFile: !uuid 'b85da8b5c747463e796693146a32c1697c987d0e'
+    oldFile: !uuid '623c5301bd120088f5a6b119511dd2c2f0a552ee'
   /Modules/AfterService/Controller:
-    newFile: !uuid '10a8578aa1a6105cecf6dd56368db2d984a818f0'
-    oldFile: !uuid '93cc00bcda6e5c390eb42048d81e29f7aecce4bf'
+    newFile: !uuid 'c1e9065ad4b2bfb51ec2383a88826e0ff4779998'
+    oldFile: !uuid '10a8578aa1a6105cecf6dd56368db2d984a818f0'
   /Modules/AfterService/Controller/HttpSync.cs:
-    newFile: !uuid '122ebb0b7e4e42be7cf4552dff3fdad94f54d60a'
-    oldFile: !uuid '0682b3c40f0fcfc758da696a3498eab51a59cc4a'
-  /Modules/AfterService/DAL:
-    newFile: !uuid 'a9c40436833813c0bc84caf4b7b1ab7d81eaa68e'
-    oldFile: !uuid 'd73b5edbf7767c7468679c44af9c5b9072f46773'
-  /Modules/AfterService/DAL/KFDeviceDAL.cs:
-    newFile: !uuid '8109e3642dcc38463cea000b7d5c76dd68c9ad47'
-    oldFile: !uuid '78bf90ecb2f5eecdc71e717af35270a4f1ac3755'
-  /Modules/AfterService/Model:
-    newFile: !uuid '93817071869c65d0c42e901570d6f8d269a54d75'
-    oldFile: !uuid 'da9aa2c8e0615dc417e97d8333919ffb5861703a'
-  /Modules/AfterService/Model/Out_MyDevice.cs:
-    newFile: !uuid '7213f22bbc340a3617925ad03d03df21ac2091e8'
-    oldFile: !uuid 'cf7c4421b75ee5243f619f53c45da076cf6bf074'
-gitCommitId: !uuid '57b1318b7f1d134d6384f81c718e5bf1e6aa9a39'
+    newFile: !uuid 'c3691d33bb4a345bd3d58b234d94af80eedabcfb'
+    oldFile: !uuid '122ebb0b7e4e42be7cf4552dff3fdad94f54d60a'
+gitCommitId: !uuid 'af3649a6f1e3211baf701a7f432597215aa45a2c'
 renames: {
   }
-revisionId: 214
+revisionId: 215
