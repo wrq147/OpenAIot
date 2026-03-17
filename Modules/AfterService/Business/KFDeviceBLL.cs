@@ -1,17 +1,19 @@
-﻿using AuthService;
-using AuthService.Business;
-using Common.Share;
-using AfterService.DAL;
+﻿using AfterService.DAL;
 using AfterService.Model;
-using IoTService.DAL;
-using IoTService.Models;
-using TemplateAction.Core;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
+using AuthService;
+using AuthService.Business;
 using AuthService.DAL;
 using AuthService.Model;
+using ChannelUtility.Tsl;
+using Common.Share;
+using IoTService.DAL;
+using IoTService.Models;
+using NPOI.XSSF.UserModel;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TemplateAction.Core;
 
 namespace AfterService.Business
 {
@@ -42,7 +44,7 @@ namespace AfterService.Business
             }
             return await _deviceDAL.SelectKFProductList(user.OrgId, query);
         }
-        public virtual async Task<Dictionary<string,int>> SelectKFDevAreaInfo(string parentCode, string dstates, IUserInfo user, DataScope scope)
+        public virtual async Task<Dictionary<string, int>> SelectKFDevAreaInfo(string parentCode, string dstates, IUserInfo user, DataScope scope)
         {
             Dictionary<string, int> ret = new Dictionary<string, int>();
             if (parentCode == "100000")
@@ -234,7 +236,7 @@ namespace AfterService.Business
                 return BusResponse<int>.Error(122, "操作异常,请重新尝试");
             }
         }
-        public async Task<BusResponse<Out_DeviceOfRoom>> DevInfo(string id)
+        public virtual async Task<BusResponse<Out_DeviceOfRoom>> DevInfo(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -262,6 +264,73 @@ namespace AfterService.Business
             devNR.OrgId = device.OrgId;
             devNR.DeviceId = device.DeviceId;
             return BusResponse<Out_DeviceOfRoom>.Success(devNR);
+        }
+
+        public virtual async Task<List<Out_MyDevice>> SelectMyDevices(IUserInfo user)
+        {
+            var tmplist = await _deviceDAL.SelectMyDevices(user);
+            var protocolIds = tmplist.Select(x => x.ProtocolId).ToArray();
+            var protocolList = await _provider.GetService<IotProductDAL>().SelectProductTSL(protocolIds);
+            Dictionary<string, List<DevFun>> funDict = new Dictionary<string, List<DevFun>>();
+            Dictionary<string, List<DevProp>> propDict = new Dictionary<string, List<DevProp>>();
+            foreach (var protocol in protocolList)
+            {
+                #region 定义协议功能
+                var tsl = TslModel.CreateFrom(protocol.ModelTSL);
+                List<DevFun> tmpfuns = new List<DevFun>();
+                foreach (var funitem in tsl.functions)
+                {
+                    var tmpfunitem = new DevFun()
+                    {
+                        code = funitem.code,
+                        name = funitem.name,
+                        description = funitem.description
+                    };
+                    tmpfunitem.inputs = new List<DevFunParam>();
+                    foreach (var funparam in funitem.inputs)
+                    {
+                        tmpfunitem.inputs.Add(new DevFunParam()
+                        {
+                            name = funparam.name,
+                            code = funparam.code,
+                            type = funparam.type,
+                            remark = funparam.remark
+                        });
+                    }
+                    tmpfuns.Add(tmpfunitem);
+                }
+                funDict.Add(protocol.Id, tmpfuns);
+                #endregion
+
+                #region 定义协议属性
+                List<DevProp> tmpprops = new List<DevProp>();
+                foreach (var propitem in tsl.properties)
+                {
+                    tmpprops.Add(new DevProp()
+                    {
+                        name = propitem.name,
+                        code = propitem.code,
+                        description = propitem.description,
+                        type = propitem.option.type
+                    });
+                }
+                propDict.Add(protocol.Id, tmpprops);
+                #endregion
+
+            }
+
+            foreach (var mydev in tmplist)
+            {
+                if (funDict.TryGetValue(mydev.ProtocolId, out var tmpff))
+                {
+                    mydev.Funs = tmpff;
+                }
+                if (propDict.TryGetValue(mydev.ProtocolId, out var tmppp))
+                {
+                    mydev.Props = tmppp;
+                }
+            }
+            return tmplist;
         }
     }
 }

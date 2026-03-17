@@ -24,10 +24,7 @@ namespace AfterService.Model
         /// 设备所属产品名称
         /// </summary>
         public string ProductName { get; set; }
-        /// <summary>
-        /// 设备所在房间
-        /// </summary>
-        public string RoomName { get; set; }
+
         /// <summary>
         /// 经度
         /// </summary>
@@ -36,6 +33,23 @@ namespace AfterService.Model
         /// 纬度
         /// </summary>
         public double? Lat { get; set; }
+        /// <summary>
+        /// 所在区域代码
+        /// </summary>
+        public string AreaCode { get; set; }
+
+        /// <summary>
+        /// 设备所在房间
+        /// </summary>
+        public string RoomName { get; set; }
+        /// <summary>
+        /// 设备的功能定义
+        /// </summary>
+        public List<DevFun> Funs { get; set; }
+        /// <summary>
+        /// 设备的实时属性定义
+        /// </summary>
+        public List<DevProp> Props { get; set; }
     }
 
     /// <summary>
@@ -43,11 +57,61 @@ namespace AfterService.Model
     /// </summary>
     public class DevFun
     {
-
+        /// <summary>
+        /// 功能名称
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 标识符
+        /// </summary>
+        public string code { get; set; }
+        /// <summary>
+        /// 功能描述
+        /// </summary>
+        public string description { get; set; }
+        /// <summary>
+        /// 功能输入参数
+        /// </summary>
+        public List<DevFunParam> inputs { get; set; }
+    }
+    public class DevFunParam
+    {
+        /// <summary>
+        /// 参数名称
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 标识符
+        /// </summary>
+        public string code { get; set; }
+        /// <summary>
+        /// 参数数据类型
+        /// </summary>
+        public string type { get; set; }
+        /// <summary>
+        /// 参数备注
+        /// </summary>
+        public string remark { get; set; }
     }
 
     public class DevProp
     {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 标识符
+        /// </summary>
+        public string code { get; set; }
+        /// <summary>
+        /// 数据类型
+        /// </summary>
+        public string type { get; set; }
 
+        /// <summary>
+        /// 属性描述
+        /// </summary>
+        public string description { get; set; }
     }
 }

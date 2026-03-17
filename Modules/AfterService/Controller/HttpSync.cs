@@ -72,16 +72,19 @@ namespace AfterService.Controller
             return this.Success(await this.ServiceProvider.GetService<DevPlaneBLL>().SelectNameList(user));
         }
 
-        ///// <summary>
-        ///// 我的所有设备信息
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet]
-        //[ShareCheck]
-        //public async Task<DefaultAjaxResult<List<Out_MyDevice>>> MyDevices()
-        //{
+        /// <summary>
+        /// 我的所有设备信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ShareCheck]
+        public async Task<DefaultAjaxResult<List<Out_MyDevice>>> MyDevices()
+        {
+            var user = _develper.ToUserInfo();
+            var kfDeviceBLL = this.ServiceProvider.GetService<KFDeviceBLL>();
+            return this.Success(await kfDeviceBLL.SelectMyDevices(user));
+        }
 
-        //}
         /// <summary>
         /// 查询房间列表
         /// </summary>

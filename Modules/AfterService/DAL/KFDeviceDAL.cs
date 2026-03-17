@@ -286,32 +286,27 @@ namespace AfterService.DAL
             }
             return (await tsql.DoAsync<DoQuerySql<Out_DevAreaInfo>>()).ToFirst();
         }
-        //public virtual async Task<PageObject<Out_MyDevice>> SelectMyDevices(IUserInfo user)
-        //{
-        //    string roomOn = string.Empty;
-        //    if (user.OrgId > 0)
-        //    {
-        //        roomOn = " and rd.OrgId=" + user.OrgId;
-        //    }
-        //    var tsql = new SqlBuilder(help).Query<Out_KfDevice>().Append("select d.*,d.ProductId as ProtocolId,p.ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where ");
-        //    tsql.Append("(d.UseUserId=" + user.UserId);
+        public virtual async Task<List<Out_MyDevice>> SelectMyDevices(IUserInfo user)
+        {
+            string roomOn = string.Empty;
+            if (user.OrgId > 0)
+            {
+                roomOn = " and rd.OrgId=" + user.OrgId;
+            }
+            var tsql = new SqlBuilder(help).Query<Out_MyDevice>().Append("select d.*,d.ProductId as ProtocolId,p.ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId " + roomOn + " where ");
+            tsql.Append("(d.UseUserId=" + user.UserId);
 
-        //    if (user.OrgId > 0)
-        //    {
-        //        List<string> keys = new List<string>();
-        //        keys.Add(user.OrgId.ToString());
-        //        tsql.Append(" or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + user.OrgId);
-        //    }
-        //    tsql.Append(")");
+            if (user.OrgId > 0)
+            {
+                List<string> keys = new List<string>();
+                keys.Add(user.OrgId.ToString());
+                tsql.Append(" or d.OrgId=" + user.OrgId + " or ").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + user.OrgId);
+            }
+            tsql.Append(")").Take(200);
 
-
-        //    if (query.TargetOrgId != null && query.TargetOrgId != user.OrgId)
-        //    {
-        //        List<string> keys = new List<string>();
-        //        keys.Add(query.TargetOrgId.ToString());
-        //        tsql.Append(" and (").FullSearch("d.OwnerOrgPath", keys).Append(" or d.UseOrgId=" + query.TargetOrgId + ")");
-        //    }
-        //}
+            var tmplist = await tsql.ToListAsync();
+            return tmplist;
+        }
         public virtual async Task<PageObject<Out_KfDevice>> SelectWithGroupPage(In_KFDevListPage query, IUserInfo user, DataScope scope)
         {
 

@@ -6,7 +6,7 @@ namespace ChannelUtility.Tsl
     public class BaseAll
     {
         /// <summary>
-        /// 功能名称（必填项）
+        /// 名称（必填项）
         /// </summary>
         public string name { get; set; }
         /// <summary>
