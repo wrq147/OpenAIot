@@ -10,6 +10,10 @@ namespace AfterService.Model
     public class Out_MyDevice
     {
         /// <summary>
+        /// 设备名称
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
         /// 第三方编码
         /// </summary>
         public string DeviceNumber { get; set; }
@@ -25,7 +29,10 @@ namespace AfterService.Model
         /// 设备所属产品名称
         /// </summary>
         public string ProductName { get; set; }
-
+        /// <summary>
+        /// 0为离线，1为在线，2为未初始化
+        /// </summary>
+        public byte? Online { get; set; }
         /// <summary>
         /// 经度
         /// </summary>
@@ -104,6 +111,10 @@ namespace AfterService.Model
         /// 参数备注
         /// </summary>
         public string remark { get; set; }
+        /// <summary>
+        /// 枚举元素
+        /// </summary>
+        public Dictionary<string, string> elements { get; set; }
     }
 
     public class DevProp

@@ -294,7 +294,8 @@ namespace AfterService.Business
                             name = funparam.name,
                             code = funparam.code,
                             type = funparam.type,
-                            remark = funparam.remark
+                            remark = funparam.remark,
+                            elements = funparam.elements
                         });
                     }
                     tmpfuns.Add(tmpfunitem);
