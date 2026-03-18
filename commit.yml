@@ -2,64 +2,40 @@
 branches: {
   }
 fileChange:
-  /Common:
-    newFile: !uuid 'f14514cffe71234ebc82d8f8782adbb40cf3f123'
-    oldFile: !uuid '00467ec5d966e37a49572f5090b48a8478383d66'
-  /Common/EventBus:
-    newFile: !uuid '19e14b11738b232fc0312fa7c13359be48ab6d0c'
-    oldFile: !uuid '28ee6ba52b4a4b7c686aa5bb855186a5fd94dd49'
-  /Common/EventBus/PluginEventRegisterExtends.cs:
-    newFile: !uuid '0e3f92cbea607ea30b6d80f99cf1b89336cdfcb8'
-    oldFile: !uuid '791da9cbcacd3482630778482e29dd9c77f1dd61'
   /IOT_Skill:
-    newFile: !uuid 'c0ed36afd1a30bfa74d94421334231fdcbdc7935'
-    oldFile: !uuid '037169c49a30bf54baa9698ca766834fd7a181dc'
+    newFile: !uuid '23e17b521955dd7942eeff155f40f9aa90713c0a'
+    oldFile: !uuid 'c0ed36afd1a30bfa74d94421334231fdcbdc7935'
   /IOT_Skill/SKILL.md:
-    newFile: !uuid 'a54c480dc2848fd2367deaac086b8ed3e9a7fd3e'
-    oldFile: !uuid 'c3a7b845f362d0c1e8670d5b2f15f1986b250404'
+    newFile: !uuid '1c25dd3301d56797ad61a53cb7c9d6d304287176'
+    oldFile: !uuid 'a54c480dc2848fd2367deaac086b8ed3e9a7fd3e'
   /IOT_Skill/references:
-    newFile: !uuid '6c453747d8f1c84fd73e5882af38725296ddafad'
-    oldFile: !uuid '6bac4011cb855023261defc5c771e05209eb52a8'
-  /IOT_Skill/references/环境监控使用说明.md:
-    newFile: !uuid '6552d340af91fead6fa18d2e4236f8369e254fcf'
-    oldFile: !uuid '4e13e9049c81b7f2207139c3e8d1fa563075a5df'
-  /IOT_Skill/scripts:
-    newFile: !uuid 'effe2c5453db041ed01cb71109ae4c70d2ed94ef'
-    oldFile: !uuid '6cd7e8e4f0405c0bcc7e5b8141b8f4fe347f3512'
-  /IOT_Skill/scripts/rtmp_api_server.py:
-    newFile: !uuid '92820e72d0b9c59ce3835c4fafdf52efece0d4ad'
-    oldFile: !uuid 'ef78e08e0836e2a6f0ddeb103dd99a32bf5703a4'
-  /Modules:
-    newFile: !uuid 'ddd5f6c3e6508e3fbed637c124a077a48cc48c22'
-    oldFile: !uuid '81fa9191fbb57c015750b026e7da683f733c21c4'
-  /Modules/AfterService:
-    newFile: !uuid '7f11c011588126b351f74ff783983615d16d86c6'
-    oldFile: !uuid 'b85da8b5c747463e796693146a32c1697c987d0e'
-  /Modules/AfterService/Model:
-    newFile: !uuid 'fff3d077973a8dfcaf86e40299e05950b55c1a9a'
-    oldFile: !uuid '93817071869c65d0c42e901570d6f8d269a54d75'
-  /Modules/AfterService/Model/Out_MyDevice.cs:
-    newFile: !uuid 'f078f858391b4f0897d49b3daaa05da82b73fdda'
-    oldFile: !uuid '7213f22bbc340a3617925ad03d03df21ac2091e8'
-  /Modules/IoTVideoService:
-    newFile: !uuid 'ac4ecb9e64db23bd9c24ca06826ce42e6c8acae9'
-    oldFile: !uuid '8b8a429fc4993521e54f9756f3787a4cb519ef36'
-  /Modules/IoTVideoService/Business:
-    newFile: !uuid '18c1e27c32daf4c776e04a5d166f0f68ee5d4c2b'
-    oldFile: !uuid '076acc2ff20abbd31551256d7d3bfa3ada81e10d'
-  /Modules/IoTVideoService/Business/PtzBLL.cs:
-    newFile: !uuid '05e324f8e46da7bf50863e89868fc18f68193d94'
-    oldFile: !uuid '84a40d5f25f89b8b5f520f51439dbc933c51a5ef'
-  /Modules/IoTVideoService/Controller:
-    newFile: !uuid '8061ec3c25a0f1a04197a50fd320a2a96be7569b'
-    oldFile: !uuid 'ec5a609e223dfa3f5509309035eb5dc1b5d265a6'
-  /Modules/IoTVideoService/Controller/HttpSync.cs:
-    newFile: !uuid 'df2ba74d83001334b60974dfc1bb5634294c1edb'
+    newFile: !uuid '3e93d46e8709068b1a867dc87d132b722a28342a'
+    oldFile: !uuid '6c453747d8f1c84fd73e5882af38725296ddafad'
+  /IOT_Skill/references/我的所有设备.md:
+    newFile: !uuid '773959a4373bd9a693d88136329c8f2f712e1de3'
     oldFile: null
-  /Modules/IoTVideoService/Controller/Ptz.cs:
-    newFile: !uuid 'c313f7c264fe54b8ffdf9813e3401bcef504c211'
-    oldFile: !uuid '0fe94c3bf04506dd3a1a2a8e886d9a05a01a4204'
-gitCommitId: !uuid 'e83f0ca568e82f870be3bc7d12683cdbdab07f03'
+  /IOT_Skill/references/环境监控使用说明.md:
+    newFile: null
+    oldFile: !uuid '6552d340af91fead6fa18d2e4236f8369e254fcf'
+  /Modules:
+    newFile: !uuid '6106c77040e01b88c798bf9d575cbbf0ee2a9cc9'
+    oldFile: !uuid 'ddd5f6c3e6508e3fbed637c124a077a48cc48c22'
+  /Modules/AfterService:
+    newFile: !uuid '2dfd1a0217031f69dfa761f4a35fff0aa008e06d'
+    oldFile: !uuid '7f11c011588126b351f74ff783983615d16d86c6'
+  /Modules/AfterService/Business:
+    newFile: !uuid '27eb2e875a2499bf12b05928f26d774b5ccffcc9'
+    oldFile: !uuid 'b30f59d1fbcb9202e630808d362b225ead4db017'
+  /Modules/AfterService/Business/KFDeviceBLL.cs:
+    newFile: !uuid '112f92ed2f6835c6720a84affd2d7bfab13436cf'
+    oldFile: !uuid '169414ff9790d34bb37fd8cb1d746af1615cbaeb'
+  /Modules/AfterService/Model:
+    newFile: !uuid 'ac30f67160c3206f6b60803bf838f620c2ccb86e'
+    oldFile: !uuid 'fff3d077973a8dfcaf86e40299e05950b55c1a9a'
+  /Modules/AfterService/Model/Out_MyDevice.cs:
+    newFile: !uuid '28bab221ac9dca75807a2f0e46396435072f5f8f'
+    oldFile: !uuid 'f078f858391b4f0897d49b3daaa05da82b73fdda'
+gitCommitId: !uuid '00270160db9c0fec13ca66012c4c2600ffa86dcd'
 renames: {
   }
-revisionId: 216
+revisionId: 217
