@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyAccess.DB.Attr;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,6 +51,17 @@ namespace AfterService.Model
         /// 设备的实时属性定义
         /// </summary>
         public List<DevProp> Props { get; set; }
+
+        /// <summary>
+        /// 是否为视频监控设备
+        /// </summary>
+        public bool? IsVideo
+        {
+            get
+            {
+                return this.DeviceId != null && this.DeviceId.StartsWith("VI_");
+            }
+        }
     }
 
     /// <summary>

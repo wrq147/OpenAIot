@@ -38,7 +38,26 @@ namespace IoTVideoService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<string>> GetPlayUrl(string sid, string type, string cid = "")
         {
-            return this.Success(await _ptzBLL.GetPlayUrl(sid, cid, type));
+            var tdict = await _ptzBLL.GetPlayUrlDict(sid, type);
+            if (tdict.Count == 0)
+            {
+                return this.Error(15, "视频不存在", string.Empty);
+            }
+            if (string.IsNullOrEmpty(cid))
+            {
+                return this.Success(tdict.First().Value);
+            }
+            else
+            {
+                if (tdict.TryGetValue(cid, out var result))
+                {
+                    return this.Success(result);
+                }
+                else
+                {
+                    return this.Error(16, "通道不存在", string.Empty);
+                }
+            }
         }
 
         /// <summary>

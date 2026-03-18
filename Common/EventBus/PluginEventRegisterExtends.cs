@@ -248,7 +248,10 @@ namespace Common.EventBus
                             await t;
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 });
 
                 plg.Dispatcher.RegisterReponse($"{QuartzExeEvent.EventKey}.{plg.Name}", new DefaultResponseHandler<QuartzExeEvent, QuartzExeResponse>(async (tmpitem) =>

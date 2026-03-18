@@ -78,8 +78,9 @@ namespace IoTVideoService.Business
 
             return rtlist;
         }
-        public async Task<string> GetPlayUrl(string sId, string cId, string type)
+        public async Task<Dictionary<string, string>> GetPlayUrlDict(string sId, string type)
         {
+            Dictionary<string, string> tdict = new Dictionary<string, string>();
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sId)).FirstOrDefault();
             if (videoSource.VideoType == 0)
@@ -87,7 +88,7 @@ namespace IoTVideoService.Business
                 var option = _provider.GetService<IOptions<VideoOption>>();
                 if (option.Value.VideoServers.Count == 0)
                 {
-                    return string.Empty;
+                    return tdict;
                 }
                 ServerInfo serverInfo;
                 if (string.IsNullOrEmpty(videoSource.NodeId))
@@ -102,52 +103,60 @@ namespace IoTVideoService.Business
                 switch (type)
                 {
                     case "rtmp":
-                        return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}";
+                        tdict.Add(videoSource.VideoKey, $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{videoSource.VideoKey}");
+                        break;
                     case "flv":
-                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}.live.flv";
+                        tdict.Add(videoSource.VideoKey, $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}.live.flv");
+                        break;
                     case "hls":
-                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
+                        tdict.Add(videoSource.VideoKey, $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8");
+                        break;
                     default:
-                        return string.Empty;
-                }
 
+                        break;
+                }
+                return tdict;
             }
             else if (videoSource.VideoType == 1)
             {
                 if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
                 {
-                    return string.Empty;
+                    return tdict;
                 }
                 var option = _provider.GetService<IOptions<VideoOption>>();
                 if (option.Value.GB28181Servers.Count == 0)
                 {
-                    return string.Empty;
+                    return tdict;
                 }
                 if (string.IsNullOrEmpty(videoSource.NodeId))
                 {
-                    return string.Empty;
+                    return tdict;
                 }
                 ServerInfo serverInfo = option.Value.GB28181Servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
-                var channelSource = (await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoKey == cId && x.VideoType == 2)).FirstOrDefault();
-                if (channelSource == null)
+                var channelSourceList = (await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoType == 2)).ToList();
+                foreach (var channelSource in channelSourceList)
                 {
-                    return string.Empty;
+                    switch (type)
+                    {
+                        case "rtmp":
+                            tdict.Add(channelSource.VideoKey, $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{channelSource.VideoKey}");
+                            break;
+                        case "flv":
+                            tdict.Add(channelSource.VideoKey, $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}.live.flv");
+                            break;
+                        case "hls":
+                            tdict.Add(channelSource.VideoKey, $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8");
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                switch (type)
-                {
-                    case "rtmp":
-                        return $"rtmp://{serverInfo.Ip}:{serverInfo.RtmpPort}/live/{channelSource.VideoKey}";
-                    case "flv":
-                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{channelSource.VideoKey}.live.flv";
-                    case "hls":
-                        return $"http://{serverInfo.Ip}:{serverInfo.HttpPort}/live/{videoSource.VideoKey}/hls.m3u8";
-                    default:
-                        return string.Empty;
-                }
+
+                return tdict;
             }
             else
             {
-                return string.Empty;
+                return tdict;
             }
         }
         public async Task<List<PresetInfo>> GetPresetList(string sourceId)

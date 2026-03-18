@@ -198,7 +198,7 @@ async def list_monitor():
     }
 
 # ========== 启动服务 ==========
-def start_api_server(host: str = "0.0.0.0", port: int = 8000):
+def start_api_server(host: str = "0.0.0.0", port: int = 8111):
     """启动FastAPI服务（常驻）"""
     # 先清理僵尸进程（可选）
     for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
