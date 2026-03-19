@@ -2,46 +2,52 @@
 branches: {
   }
 fileChange:
-  /IOT_Skill:
-    newFile: !uuid '91c0558b140521a70215da477880b7d29fb29f50'
-    oldFile: !uuid '23e17b521955dd7942eeff155f40f9aa90713c0a'
-  /IOT_Skill/SKILL.md:
-    newFile: !uuid '5c738cc2d1bd56d7d09621cb0141f3e96c45c4e9'
-    oldFile: !uuid '1c25dd3301d56797ad61a53cb7c9d6d304287176'
-  /IOT_Skill/references:
-    newFile: !uuid '3c2a9439a3d447b8ae0a3bc2827ee7a9e5b15350'
-    oldFile: !uuid '3e93d46e8709068b1a867dc87d132b722a28342a'
-  /IOT_Skill/references/停止监控.md:
-    newFile: !uuid '2f113d33c1a58262509f71809d7a5262cc360dc3'
+  /App:
+    newFile: !uuid 'e1b5f66829b88be4b1d8f34c2d3e25c5308bbfe6'
+    oldFile: !uuid '42e2f04fd0b6600aa467fd3183ba72d0793cc250'
+  /App/XML:
+    newFile: !uuid '6e692792fd4ee6cb9e4cca1695d398021ef2ee52'
+    oldFile: !uuid '1c932901ee676e27a80c585c0706acfefd4a4e7a'
+  /App/XML/AfterService.xml:
+    newFile: !uuid '342942d46327e63ddfaa0f22b295b313b5911c4e'
+    oldFile: !uuid 'd6bc6bff285c67150afd11f7709781e40f4da1d2'
+  /App/XML/IoTVideoService.xml:
+    newFile: !uuid '29ddddeb53dd72afe4171ea441e245435e879120'
+    oldFile: !uuid 'a8ababc35aac998ff740558c889e757489df6995'
+  /Modules:
+    newFile: !uuid '81f6d120d16794eddc3326e0ee09fe27699fb37b'
+    oldFile: !uuid '6106c77040e01b88c798bf9d575cbbf0ee2a9cc9'
+  /Modules/IoTAIService:
+    newFile: !uuid '30a463e39b888437d1a546c94d86d5232eb7a334'
+    oldFile: !uuid '74e52ee86d114687b38b9d243463dd40cd434d77'
+  /Modules/IoTAIService/AIProject:
+    newFile: !uuid '21d05bea354f8f47b7b8c9679aaea23f60bc9829'
+    oldFile: !uuid '369ec323e5a93a173bdfc027b6546e72d7c9163c'
+  /Modules/IoTAIService/AIProject/Items:
+    newFile: !uuid 'b8d9687890528975c7ea8d9a841360c10c8ff10b'
+    oldFile: !uuid 'f006d0af5fdf3dc77b3f6886d6a38ac03a715522'
+  /Modules/IoTAIService/AIProject/Items/FaceRecog.cs:
+    newFile: !uuid '855257c076fe176030040dd91d7d0061b58c6954'
+    oldFile: !uuid 'd0b6a012a80b9ee87222e090139dd71d0bfa3a30'
+  /Modules/IoTAIService/Business:
+    newFile: !uuid '41557bd8995c75d1da8d3ec4ebf3c58ce9a19529'
+    oldFile: !uuid '423e776a41627265b20b758e26ea570d8bba7dd9'
+  /Modules/IoTAIService/Business/MilvusBLL.cs:
+    newFile: !uuid '4762416254c9ee38fd19195746d289001d890f98'
+    oldFile: !uuid 'c2fc15c7cbefa1dcba43c507dc84ce612564d86a'
+  /Modules/IoTAIService/Migrations:
+    newFile: !uuid '2c33cd2ead2c7098e446e2c28db523a01251cc96'
+    oldFile: !uuid '0cfef77fe1759d7216fee6472e958d34f97a1722'
+  /Modules/IoTAIService/Migrations/IoTAIMigrator2.cs:
+    newFile: !uuid 'a4397f320018a178451b7f568b3f10fdb75a611f'
+    oldFile: !uuid '759afacdc523f0e8b6bd509f3ca28b2e43bfee5c'
+  /Modules/IoTAIService/Models:
+    newFile: !uuid 'dfcd62cd9be1045fd2fd2c7a1aa82dc64070fac3'
+    oldFile: !uuid '07e4f34de66a27416b23dd022a6e34f4518a9673'
+  /Modules/IoTAIService/Models/Out_MemHouse.cs:
+    newFile: !uuid '9cb0d73f75fc44d57e2e7ad2d244c542bf712869'
     oldFile: null
-  /IOT_Skill/references/启动监控.md:
-    newFile: !uuid '35ae5809cf83abaa2ad4826b2101084350035926'
-    oldFile: null
-  /IOT_Skill/references/我的所有设备.md:
-    newFile: !uuid 'ec6ef62d7d87847bb2c909f99b97768ce16d90f2'
-    oldFile: !uuid '773959a4373bd9a693d88136329c8f2f712e1de3'
-  /IOT_Skill/references/执行设备功能.md:
-    newFile: !uuid 'afaec72f60f4caa3189c28eeac38bf7dc4f68473'
-    oldFile: null
-  /IOT_Skill/references/查看所有监控流状态.md:
-    newFile: !uuid 'd83e90eed36dab08677e280b853465118a0a4302'
-    oldFile: null
-  /IOT_Skill/references/获取rtmp流地址.md:
-    newFile: !uuid 'a5ad2c6861447b8108647111ed15464b4fa6e2e0'
-    oldFile: null
-  /IOT_Skill/references/获取最新画面.md:
-    newFile: !uuid 'b797e2fc301a9b615b039f38ad26b894ccdce807'
-    oldFile: null
-  /IOT_Skill/references/设备实时属性.md:
-    newFile: !uuid '41ddd2abfd6826d504a0df513a309019714ad525'
-    oldFile: null
-  /IOT_Skill/scripts:
-    newFile: !uuid 'e2c6c72dd6efd9bdd999466662bc7f89a873c000'
-    oldFile: !uuid 'effe2c5453db041ed01cb71109ae4c70d2ed94ef'
-  /IOT_Skill/scripts/rtmp_api_server.py:
-    newFile: !uuid 'a340037960d9410881aebbb1a4759b273b4d9006'
-    oldFile: !uuid '92820e72d0b9c59ce3835c4fafdf52efece0d4ad'
-gitCommitId: !uuid 'f3a2436df655769bd77a21bdcec5e14fde8e98dd'
+gitCommitId: !uuid '7802542f6f5f375b6f6f56992491332fb6145ad8'
 renames: {
   }
-revisionId: 218
+revisionId: 219
