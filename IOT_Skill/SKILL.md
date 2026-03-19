@@ -64,27 +64,30 @@ version: 1.0.0
 
 
 ### 启动监控（后台循环拉流）
-```bash
-curl -X POST http://127.0.0.1:8111/api/start-monitor \
--H "Content-Type: application/json" \
--d '{"stream_id":"stream1","rtmp_url":"rtmp://192.168.1.100/live/camera1"}'
-```
+接口介绍：如果要获取指定流的监控画面，应该先启动对应流的监控
+请求方式：POST
+接口路径：/api/start-monitor
+
+查看 references/启动监控.md 获取详细接口介绍和完整示例
 
 ### 停止监控
-```bash
-curl -X POST http://127.0.0.1:8111/api/stop_monitor \
--H "Content-Type: application/json" \
--d '{"stream_id":"stream1"}'
-```
+接口介绍：停止已启动监控的流，终止后台后台循环拉流
+请求方式：POST
+接口路径：/api/stop_monitor
 
-### 按需获取最新画面
-```bash
-curl -X POST http://127.0.0.1:8111/api/get_frame \
--H "Content-Type: application/json" \
--d '{"stream_id":"stream1"}'
-```
+查看 references/停止监控.md 获取详细接口介绍和完整示例
+
+
+### 获取最新画面
+接口介绍：获取指定流的最新监控画面
+请求方式：POST
+接口路径：/api/get_frame
+
+查看 references/获取最新画面.md 获取详细接口介绍和完整示例
 
 ### 查看所有监控流状态
-```bash
-curl http://127.0.0.1:8111/api/list-monitor
-```
+接口介绍：获取所有监控过的流状态，包含运行中和停止的
+请求方式：GET
+接口路径：/api/list-monitor
+
+查看 references/查看所有监控流状态.md 获取详细接口介绍和完整示例

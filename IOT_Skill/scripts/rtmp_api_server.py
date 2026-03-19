@@ -118,11 +118,7 @@ async def start_monitor(
     return {
         "code": 0,
         "message": f"{stream_id} 监控启动成功",
-        "data": {
-            "stream_id": stream_id,
-            "rtmp_url": rtmp_url,
-            "status": "running"
-        }
+        "data": ""
     }
 
 @app.post("/api/stop-monitor", summary="停止RTMP监控")
@@ -142,10 +138,7 @@ async def stop_monitor(
     return {
         "code": 0,
         "message": f"{stream_id} 监控停止成功",
-        "data": {
-            "stream_id": stream_id,
-            "status": "stopped"
-        }
+        "data": ""
     }
 
 @app.post("/api/get-frame", summary="获取最新画面")
@@ -172,11 +165,7 @@ async def get_frame(
     return {
         "code": 0,
         "message": "获取画面成功",
-        "data": {
-            "stream_id": stream_id,
-            "snapshot_base64": f"data:image/jpeg;base64,{jpg_base64}",
-            "error": ""
-        }
+        "data": f"data:image/jpeg;base64,{jpg_base64}"
     }
 
 @app.get("/api/list-monitor", summary="查看所有监控流状态")
