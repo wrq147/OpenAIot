@@ -2,52 +2,28 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid 'e1b5f66829b88be4b1d8f34c2d3e25c5308bbfe6'
-    oldFile: !uuid '42e2f04fd0b6600aa467fd3183ba72d0793cc250'
-  /App/XML:
-    newFile: !uuid '6e692792fd4ee6cb9e4cca1695d398021ef2ee52'
-    oldFile: !uuid '1c932901ee676e27a80c585c0706acfefd4a4e7a'
-  /App/XML/AfterService.xml:
-    newFile: !uuid '342942d46327e63ddfaa0f22b295b313b5911c4e'
-    oldFile: !uuid 'd6bc6bff285c67150afd11f7709781e40f4da1d2'
-  /App/XML/IoTVideoService.xml:
-    newFile: !uuid '29ddddeb53dd72afe4171ea441e245435e879120'
-    oldFile: !uuid 'a8ababc35aac998ff740558c889e757489df6995'
-  /Modules:
-    newFile: !uuid '81f6d120d16794eddc3326e0ee09fe27699fb37b'
-    oldFile: !uuid '6106c77040e01b88c798bf9d575cbbf0ee2a9cc9'
-  /Modules/IoTAIService:
-    newFile: !uuid '30a463e39b888437d1a546c94d86d5232eb7a334'
-    oldFile: !uuid '74e52ee86d114687b38b9d243463dd40cd434d77'
-  /Modules/IoTAIService/AIProject:
-    newFile: !uuid '21d05bea354f8f47b7b8c9679aaea23f60bc9829'
-    oldFile: !uuid '369ec323e5a93a173bdfc027b6546e72d7c9163c'
-  /Modules/IoTAIService/AIProject/Items:
-    newFile: !uuid 'b8d9687890528975c7ea8d9a841360c10c8ff10b'
-    oldFile: !uuid 'f006d0af5fdf3dc77b3f6886d6a38ac03a715522'
-  /Modules/IoTAIService/AIProject/Items/FaceRecog.cs:
-    newFile: !uuid '855257c076fe176030040dd91d7d0061b58c6954'
-    oldFile: !uuid 'd0b6a012a80b9ee87222e090139dd71d0bfa3a30'
-  /Modules/IoTAIService/Business:
-    newFile: !uuid '41557bd8995c75d1da8d3ec4ebf3c58ce9a19529'
-    oldFile: !uuid '423e776a41627265b20b758e26ea570d8bba7dd9'
-  /Modules/IoTAIService/Business/MilvusBLL.cs:
-    newFile: !uuid '4762416254c9ee38fd19195746d289001d890f98'
-    oldFile: !uuid 'c2fc15c7cbefa1dcba43c507dc84ce612564d86a'
-  /Modules/IoTAIService/Migrations:
-    newFile: !uuid '2c33cd2ead2c7098e446e2c28db523a01251cc96'
-    oldFile: !uuid '0cfef77fe1759d7216fee6472e958d34f97a1722'
-  /Modules/IoTAIService/Migrations/IoTAIMigrator2.cs:
-    newFile: !uuid 'a4397f320018a178451b7f568b3f10fdb75a611f'
-    oldFile: !uuid '759afacdc523f0e8b6bd509f3ca28b2e43bfee5c'
-  /Modules/IoTAIService/Models:
-    newFile: !uuid 'dfcd62cd9be1045fd2fd2c7a1aa82dc64070fac3'
-    oldFile: !uuid '07e4f34de66a27416b23dd022a6e34f4518a9673'
-  /Modules/IoTAIService/Models/Out_MemHouse.cs:
-    newFile: !uuid '9cb0d73f75fc44d57e2e7ad2d244c542bf712869'
-    oldFile: null
-gitCommitId: !uuid '7802542f6f5f375b6f6f56992491332fb6145ad8'
+  /IOT_Skill:
+    newFile: !uuid '84c3566a9ad9ea982026ea16e08398c31b3b3876'
+    oldFile: !uuid '91c0558b140521a70215da477880b7d29fb29f50'
+  /IOT_Skill/SKILL.md:
+    newFile: !uuid '44113342eeacc9e1f23d10dc9938505ed1168742'
+    oldFile: !uuid '5c738cc2d1bd56d7d09621cb0141f3e96c45c4e9'
+  /IOT_Skill/references:
+    newFile: !uuid '2ddc3d391ec54ff69a6399bcbf0c9d412364d709'
+    oldFile: !uuid '3c2a9439a3d447b8ae0a3bc2827ee7a9e5b15350'
+  /IOT_Skill/references/我的所有设备.md:
+    newFile: !uuid '170871c4694081ccbe801ea1a1770e0cf98509b2'
+    oldFile: !uuid 'ec6ef62d7d87847bb2c909f99b97768ce16d90f2'
+  /IOT_Skill/references/执行设备功能.md:
+    newFile: !uuid 'e5f9837a4854ea58a09b6117af170487f4609a93'
+    oldFile: !uuid 'afaec72f60f4caa3189c28eeac38bf7dc4f68473'
+  /IOT_Skill/references/获取rtmp流地址.md:
+    newFile: !uuid '4fb8c6cda6683493cc3ecad39434e6714ec4538d'
+    oldFile: !uuid 'a5ad2c6861447b8108647111ed15464b4fa6e2e0'
+  /IOT_Skill/references/设备实时属性.md:
+    newFile: !uuid '00ee161818e497f1a929633468da3f15844773b4'
+    oldFile: !uuid '41ddd2abfd6826d504a0df513a309019714ad525'
+gitCommitId: !uuid '75ffd6adec3f18fbe225fc8595231f2dbbf39c09'
 renames: {
   }
-revisionId: 219
+revisionId: 220
