@@ -4,6 +4,21 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="M:IoTVideoService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
+            <summary>
+            校验开发者权限
+            </summary>
+            <param name="ac"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.HttpSync.GetRtmpPlayUrl(System.String)">
+            <summary>
+            获取指定视频监控的Rtmp播放流
+            </summary>
+            <param name="id">通讯Id</param>
+            <returns></returns>
+        </member>
         <member name="M:IoTVideoService.Controller.Ptz.GetPresetList(System.String)">
             <summary>
             获取预置点列表

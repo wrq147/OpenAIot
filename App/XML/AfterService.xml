@@ -221,11 +221,16 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:AfterService.Controller.HttpSync.MyDevices">
+            <summary>
+            我的所有设备信息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:AfterService.Controller.HttpSync.RoomList">
             <summary>
             查询房间列表
             </summary>
-            <param name="query"></param>
             <returns></returns>
         </member>
         <member name="M:AfterService.Controller.HttpSync.RoomLive(System.String,System.Boolean,System.Boolean,System.Boolean)">
@@ -1451,6 +1456,11 @@
             图片地址
             </summary>
         </member>
+        <member name="P:AfterService.Model.Out_MyDevice.Name">
+            <summary>
+            设备名称
+            </summary>
+        </member>
         <member name="P:AfterService.Model.Out_MyDevice.DeviceNumber">
             <summary>
             第三方编码
@@ -1471,9 +1481,9 @@
             设备所属产品名称
             </summary>
         </member>
-        <member name="P:AfterService.Model.Out_MyDevice.RoomName">
+        <member name="P:AfterService.Model.Out_MyDevice.Online">
             <summary>
-            设备所在房间
+            0为离线，1为在线，2为未初始化
             </summary>
         </member>
         <member name="P:AfterService.Model.Out_MyDevice.Lng">
@@ -1486,9 +1496,99 @@
             纬度
             </summary>
         </member>
+        <member name="P:AfterService.Model.Out_MyDevice.AreaCode">
+            <summary>
+            所在区域代码
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.RoomName">
+            <summary>
+            设备所在房间
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.Funs">
+            <summary>
+            设备的功能定义
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.Props">
+            <summary>
+            设备的实时属性定义
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.Out_MyDevice.IsVideo">
+            <summary>
+            是否为视频监控设备
+            </summary>
+        </member>
         <member name="T:AfterService.Model.DevFun">
             <summary>
             设备功能描述
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFun.name">
+            <summary>
+            功能名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFun.code">
+            <summary>
+            标识符
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFun.description">
+            <summary>
+            功能描述
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFun.inputs">
+            <summary>
+            功能输入参数
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFunParam.name">
+            <summary>
+            参数名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFunParam.code">
+            <summary>
+            标识符
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFunParam.type">
+            <summary>
+            参数数据类型
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFunParam.remark">
+            <summary>
+            参数备注
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevFunParam.elements">
+            <summary>
+            枚举元素
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevProp.name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevProp.code">
+            <summary>
+            标识符
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevProp.type">
+            <summary>
+            数据类型
+            </summary>
+        </member>
+        <member name="P:AfterService.Model.DevProp.description">
+            <summary>
+            属性描述
             </summary>
         </member>
         <member name="P:AfterService.Model.Out_PlaneDay.TargetId">

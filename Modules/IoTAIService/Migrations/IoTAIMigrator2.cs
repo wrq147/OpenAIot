@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IoTAIService.Migrations
 {
-    [Migration(20260309001)]
+    [Migration(20260319001)]
     public class IoTAIMigrator2 : Migration
     {
         public override void Up()
@@ -43,7 +43,7 @@ namespace IoTAIService.Migrations
                 Name = "熟人闯入",
                 Code = "KnwIn",
                 CodeGroup = 731,
-                OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"抓拍图\",\"code\":\"face_img\",\"type\":\"file\",\"bodyType\":\"base64\"},{\"name\":\"闯入者\",\"code\":\"face_name\",\"type\":\"string\"},{\"name\":\"闯入者Id\",\"code\":\"name_id\",\"type\":\"string\"}]}",
+                OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"抓拍图\",\"code\":\"face_img\",\"type\":\"file\",\"bodyType\":\"base64\"},{\"name\":\"人脸库\",\"code\":\"face_house\",\"type\":\"string\"},{\"name\":\"闯入者\",\"code\":\"face_name\",\"type\":\"string\"},{\"name\":\"闯入者Id\",\"code\":\"name_id\",\"type\":\"string\"}]}",
                 CodeType = 2,
                 Sort = 1
             });

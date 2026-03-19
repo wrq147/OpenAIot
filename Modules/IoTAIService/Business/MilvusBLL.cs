@@ -1,7 +1,9 @@
 ﻿using Common.Share;
+using IoTAIService.Models;
 using Microsoft.Extensions.Options;
 using Milvus.Client;
 using Org.BouncyCastle.Crypto;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -144,10 +146,11 @@ namespace IoTAIService.Business
             }
             return BusResponse<List<long>>.Success(newhs.ToList());
         }
-        public virtual async Task<BusResponse<List<long>>> Search(float[] vectors, List<string> houseIds, float score = 0.8f)
+        public virtual async Task<BusResponse<List<Out_MemHouse>>> Search(float[] vectors, List<string> houseIds, float score = 0.8f)
         {
             SearchParameters searchParameters = new();
             searchParameters.OutputFields.Add("mem_id");
+            searchParameters.OutputFields.Add("h_id");
             if (houseIds != null && houseIds.Count > 0)
             {
                 searchParameters.Expression = "h_id in [" + string.Join(',', houseIds.Select(id => $"\"{id}\"")) + "]";
@@ -161,23 +164,32 @@ namespace IoTAIService.Business
                 SimilarityMetricType.Cosine,
                 limit: 10, searchParameters);
             List<long> tmplist = new List<long>();
+            List<string> tmphslist = new List<string>();
             foreach (var item in results.FieldsData)
             {
                 if (item.FieldName == "mem_id")
                 {
                     tmplist.AddRange((item as FieldData<long>).Data);
                 }
+                else if (item.FieldName == "h_id")
+                {
+                    tmphslist.AddRange((item as FieldData<string>).Data);
+                }
             }
-            HashSet<long> newhs = new HashSet<long>();
+            List<Out_MemHouse> newhs = new List<Out_MemHouse>();
             List<long> newlist = new List<long>();
             for (int i = 0; i < tmplist.Count; i++)
             {
-                if (results.Scores[i] > score && !newhs.Contains(tmplist[i]))
+                if (results.Scores[i] > score && !newhs.Exists(x=>x.MemId== tmplist[i]))
                 {
-                    newhs.Add(tmplist[i]);
+                    newhs.Add(new Out_MemHouse()
+                    {
+                        MemId = tmplist[i],
+                        HouseId = tmphslist[i]
+                    });
                 }
             }
-            return BusResponse<List<long>>.Success(newhs.ToList());
+            return BusResponse<List<Out_MemHouse>>.Success(newhs);
         }
     }
 }

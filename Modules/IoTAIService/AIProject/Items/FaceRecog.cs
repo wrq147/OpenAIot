@@ -3,6 +3,7 @@ using Common;
 using IoTAIService.AICode;
 using IoTAIService.Business;
 using IoTAIService.DAL;
+using IoTAIService.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
@@ -59,7 +60,7 @@ namespace IoTAIService.AIProject.Items
                 var milBLL = _provider.GetService<MilvusBLL>();
 
 
-                List<long> addMemList = new List<long>();
+                List<Out_MemHouse> addMemList = new List<Out_MemHouse>();
                 List<Image<Rgb24>> knowList = new List<Image<Rgb24>>();
                 List<Image<Rgb24>> unknowList = new List<Image<Rgb24>>();
                 var addfaces = addlist.Select(x => x.CurrentDetection);
@@ -76,10 +77,10 @@ namespace IoTAIService.AIProject.Items
                         {
                             if (tmprsp.Data.Count > 0)
                             {
-                                long tmpid = tmprsp.Data.First();
-                                if (!addMemList.Contains(tmpid))
+                                var tmpitem = tmprsp.Data.First();
+                                if (!addMemList.Exists(x => x.MemId == tmpitem.MemId))
                                 {
-                                    addMemList.Add(tmpid);
+                                    addMemList.Add(tmpitem);
                                     knowList.Add(tmpimg);
                                 }
                             }
@@ -98,15 +99,24 @@ namespace IoTAIService.AIProject.Items
                 //触发熟人闯入事件
                 if (addMemList.Count > 0)
                 {
-                    var tmemlist = await _provider.GetService<AiMemDAL>().SelectFaceMem(addMemList);
+                    var tmemlist = await _provider.GetService<AiMemDAL>().SelectFaceMem(addMemList.Select(x => x.MemId).ToList());
                     foreach (var tmem in tmemlist)
                     {
-                        int idx = addMemList.IndexOf(tmem.MemId.Value);
+                        int idx = addMemList.FindIndex(x => x.MemId == tmem.MemId);
                         if (idx >= 0)
                         {
+                            var tmphhh = tmplist.Where(x => x.Id == addMemList[idx].HouseId).FirstOrDefault();
                             Dictionary<string, object> outputs = new Dictionary<string, object>();
                             outputs.Add("face_img", knowList[idx].ToBase64String(JpegFormat.Instance));
                             outputs.Add("face_name", tmem.MemInfo == null ? "佚名" : tmem.MemInfo.RealName);
+                            if (tmphhh != null)
+                            {
+                                outputs.Add("face_house", tmphhh.HouseName);
+                            }
+                            else
+                            {
+                                outputs.Add("face_house", string.Empty);
+                            }
                             outputs.Add("name_id", tmem.MemInfo == null ? string.Empty : tmem.MemInfo.Id.ToString());
                             await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "KnwIn", outputs);
                         }
@@ -123,7 +133,7 @@ namespace IoTAIService.AIProject.Items
                 }
             }
 
-            if(addlist.Count > 0)
+            if (addlist.Count > 0)
             {
                 //存储视频关键帧
                 var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
