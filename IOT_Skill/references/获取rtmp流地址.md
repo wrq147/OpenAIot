@@ -13,7 +13,7 @@
 
 GET 请求
 ```bash
-curl /IoTVideoService/HttpSync/GetRtmpPlayUrl?id=dtu323
+curl -H "token: 123456789" /IoTVideoService/HttpSync/GetRtmpPlayUrl?id=dtu323
 ```
 
 响应示例：
