@@ -3,39 +3,45 @@ branches: {
   }
 fileChange:
   /IOT_Skill:
-    newFile: !uuid '23e17b521955dd7942eeff155f40f9aa90713c0a'
-    oldFile: !uuid 'c0ed36afd1a30bfa74d94421334231fdcbdc7935'
+    newFile: !uuid '91c0558b140521a70215da477880b7d29fb29f50'
+    oldFile: !uuid '23e17b521955dd7942eeff155f40f9aa90713c0a'
   /IOT_Skill/SKILL.md:
-    newFile: !uuid '1c25dd3301d56797ad61a53cb7c9d6d304287176'
-    oldFile: !uuid 'a54c480dc2848fd2367deaac086b8ed3e9a7fd3e'
+    newFile: !uuid '5c738cc2d1bd56d7d09621cb0141f3e96c45c4e9'
+    oldFile: !uuid '1c25dd3301d56797ad61a53cb7c9d6d304287176'
   /IOT_Skill/references:
-    newFile: !uuid '3e93d46e8709068b1a867dc87d132b722a28342a'
-    oldFile: !uuid '6c453747d8f1c84fd73e5882af38725296ddafad'
-  /IOT_Skill/references/我的所有设备.md:
-    newFile: !uuid '773959a4373bd9a693d88136329c8f2f712e1de3'
+    newFile: !uuid '3c2a9439a3d447b8ae0a3bc2827ee7a9e5b15350'
+    oldFile: !uuid '3e93d46e8709068b1a867dc87d132b722a28342a'
+  /IOT_Skill/references/停止监控.md:
+    newFile: !uuid '2f113d33c1a58262509f71809d7a5262cc360dc3'
     oldFile: null
-  /IOT_Skill/references/环境监控使用说明.md:
-    newFile: null
-    oldFile: !uuid '6552d340af91fead6fa18d2e4236f8369e254fcf'
-  /Modules:
-    newFile: !uuid '6106c77040e01b88c798bf9d575cbbf0ee2a9cc9'
-    oldFile: !uuid 'ddd5f6c3e6508e3fbed637c124a077a48cc48c22'
-  /Modules/AfterService:
-    newFile: !uuid '2dfd1a0217031f69dfa761f4a35fff0aa008e06d'
-    oldFile: !uuid '7f11c011588126b351f74ff783983615d16d86c6'
-  /Modules/AfterService/Business:
-    newFile: !uuid '27eb2e875a2499bf12b05928f26d774b5ccffcc9'
-    oldFile: !uuid 'b30f59d1fbcb9202e630808d362b225ead4db017'
-  /Modules/AfterService/Business/KFDeviceBLL.cs:
-    newFile: !uuid '112f92ed2f6835c6720a84affd2d7bfab13436cf'
-    oldFile: !uuid '169414ff9790d34bb37fd8cb1d746af1615cbaeb'
-  /Modules/AfterService/Model:
-    newFile: !uuid 'ac30f67160c3206f6b60803bf838f620c2ccb86e'
-    oldFile: !uuid 'fff3d077973a8dfcaf86e40299e05950b55c1a9a'
-  /Modules/AfterService/Model/Out_MyDevice.cs:
-    newFile: !uuid '28bab221ac9dca75807a2f0e46396435072f5f8f'
-    oldFile: !uuid 'f078f858391b4f0897d49b3daaa05da82b73fdda'
-gitCommitId: !uuid '00270160db9c0fec13ca66012c4c2600ffa86dcd'
+  /IOT_Skill/references/启动监控.md:
+    newFile: !uuid '35ae5809cf83abaa2ad4826b2101084350035926'
+    oldFile: null
+  /IOT_Skill/references/我的所有设备.md:
+    newFile: !uuid 'ec6ef62d7d87847bb2c909f99b97768ce16d90f2'
+    oldFile: !uuid '773959a4373bd9a693d88136329c8f2f712e1de3'
+  /IOT_Skill/references/执行设备功能.md:
+    newFile: !uuid 'afaec72f60f4caa3189c28eeac38bf7dc4f68473'
+    oldFile: null
+  /IOT_Skill/references/查看所有监控流状态.md:
+    newFile: !uuid 'd83e90eed36dab08677e280b853465118a0a4302'
+    oldFile: null
+  /IOT_Skill/references/获取rtmp流地址.md:
+    newFile: !uuid 'a5ad2c6861447b8108647111ed15464b4fa6e2e0'
+    oldFile: null
+  /IOT_Skill/references/获取最新画面.md:
+    newFile: !uuid 'b797e2fc301a9b615b039f38ad26b894ccdce807'
+    oldFile: null
+  /IOT_Skill/references/设备实时属性.md:
+    newFile: !uuid '41ddd2abfd6826d504a0df513a309019714ad525'
+    oldFile: null
+  /IOT_Skill/scripts:
+    newFile: !uuid 'e2c6c72dd6efd9bdd999466662bc7f89a873c000'
+    oldFile: !uuid 'effe2c5453db041ed01cb71109ae4c70d2ed94ef'
+  /IOT_Skill/scripts/rtmp_api_server.py:
+    newFile: !uuid 'a340037960d9410881aebbb1a4759b273b4d9006'
+    oldFile: !uuid '92820e72d0b9c59ce3835c4fafdf52efece0d4ad'
+gitCommitId: !uuid 'f3a2436df655769bd77a21bdcec5e14fde8e98dd'
 renames: {
   }
-revisionId: 217
+revisionId: 218
