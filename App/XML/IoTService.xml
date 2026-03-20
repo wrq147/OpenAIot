@@ -177,6 +177,7 @@
             <param name="number">设备唯一编号</param>
             <returns></returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:IoTService.Controller.HttpSync.ProductNames(IoTService.Models.In_ProductNamePage)" -->
         <member name="M:IoTService.Controller.HttpSync.TagList(System.String)">
             <summary>
             通过批次编号获取设备的标签列表
@@ -3241,6 +3242,22 @@
             <summary>
             物模型扩展方法
             </summary>
+        </member>
+        <member name="M:IoTService.TslExtensions.ByteTrueTo(System.Object,System.String[])">
+            <summary>
+            只处理为1的
+            </summary>
+            <param name="input"></param>
+            <param name="strs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.TslExtensions.ByteAllTo(System.Object,System.String[])">
+            <summary>
+            处理为1和为0的
+            </summary>
+            <param name="input"></param>
+            <param name="strs"></param>
+            <returns></returns>
         </member>
         <member name="M:IoTService.TslExtensions.RawTo(ChannelUtility.Tsl.BaseValueOption,System.Object,System.Func{System.String,System.Object})">
             <summary>

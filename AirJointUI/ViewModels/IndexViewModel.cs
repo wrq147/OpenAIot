@@ -196,8 +196,9 @@ namespace AirJointUI.ViewModels
             {
                 if (Interlocked.Exchange(ref inTimer, 1) == 0)
                 {
-                    await InitDevice();
-                    await InitInput();
+                    var allList = await DeviceApi.GetDeviceList();
+                    await InitDevice(allList);
+                    await InitInput(allList);
                     this.AlarmCount = await AlarmApi.GetAlarmCount();
 
                     Interlocked.Exchange(ref inTimer, 0);
@@ -209,11 +210,11 @@ namespace AirJointUI.ViewModels
             }
         }
         private List<DeviceItem> _tmpdevlist;
-        private async Task InitDevice()
+        private async Task InitDevice(List<DeviceItem> alllist)
         {
             if (_tmpdevlist == null)
             {
-                _tmpdevlist = await DeviceApi.GetDeviceList("178846327771205");
+                _tmpdevlist = alllist.Where(x => x.Name.Contains("设备")).ToList();
                 _tmpdevlist.Sort((a, b) => string.Compare(a.Name, b.Name));
             }
 
@@ -400,11 +401,11 @@ namespace AirJointUI.ViewModels
         private bool isNeedPage = false;
         private bool isMulti = false;
         private List<DeviceItem> _tmpiptlist;
-        private async Task InitInput()
+        private async Task InitInput(List<DeviceItem> alllist)
         {
             if (_tmpiptlist == null)
             {
-                _tmpiptlist = await DeviceApi.GetDeviceList("178846594043973");
+                _tmpiptlist = alllist.Where(x => x.Name.Contains("传感器")).ToList();
             }
 
             for (int i = 0; i < _tmpiptlist.Count; i++)

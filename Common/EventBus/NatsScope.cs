@@ -25,17 +25,29 @@ namespace Common.EventBus
                     {
                         if (_bus == null)
                         {
-                            var opts = new NatsOpts
+                            if (string.IsNullOrEmpty(_option.Value.event_bus_user) && string.IsNullOrEmpty(_option.Value.event_bus_pass))
                             {
-                                Url = _option.Value.event_bus_conn,
-                                AuthOpts = new NatsAuthOpts
+                                var opts = new NatsOpts
                                 {
-                                    Username = _option.Value.event_bus_user,
-                                    Password = _option.Value.event_bus_pass
-                                },
-                                ConnectTimeout = TimeSpan.FromSeconds(5)
-                            };
-                            _bus = new NatsConnection(opts);
+                                    Url = _option.Value.event_bus_conn,
+                                    ConnectTimeout = TimeSpan.FromSeconds(5)
+                                };
+                                _bus = new NatsConnection(opts);
+                            }
+                            else
+                            {
+                                var opts = new NatsOpts
+                                {
+                                    Url = _option.Value.event_bus_conn,
+                                    AuthOpts = new NatsAuthOpts
+                                    {
+                                        Username = _option.Value.event_bus_user,
+                                        Password = _option.Value.event_bus_pass
+                                    },
+                                    ConnectTimeout = TimeSpan.FromSeconds(5)
+                                };
+                                _bus = new NatsConnection(opts);
+                            }
                             _bus.ConnectAsync().AsTask().Wait();
                         }
                     }

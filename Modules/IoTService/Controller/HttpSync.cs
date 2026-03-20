@@ -178,6 +178,19 @@ namespace IoTService.Controller
             }
             return this.Success(old);
         }
+
+        /// 获取产品名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ShareCheck]
+        public async Task<DefaultAjaxResult<PageObject<Out_ProductName>>> ProductNames(In_ProductNamePage query)
+        {
+            var user = _develper.ToUserInfo();
+            IotProductBLL productBLL = this.ServiceProvider.GetService<IotProductBLL>();
+            return this.Success(await productBLL.ProductNamePage(query, user));
+        }
+
         /// <summary>
         /// 通过批次编号获取设备的标签列表
         /// </summary>

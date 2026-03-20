@@ -342,6 +342,33 @@ namespace GB28181Channel.GB28181
             return sdp.ToString();
         }
 
+
+
+        /// <summary>
+        /// 构建对讲SDP
+        /// </summary>
+        /// <param name="serverId"></param>
+        /// <param name="serverIp"></param>
+        /// <param name="localRtpPort"></param>
+        /// <param name="audioCodec"></param>
+        /// <param name="ssrc"></param>
+        /// <returns></returns>
+        public static string BuildTalkSDP(string serverId, string serverIp,int localRtpPort,string audioCodec, string ssrc)
+        {
+            var sdpBuilder = new StringBuilder();
+            sdpBuilder.AppendLine("v=0");
+            sdpBuilder.AppendLine($"o={serverId} {DateTime.Now.Ticks} {DateTime.Now.Ticks} IN IP4 {serverIp}");
+            sdpBuilder.AppendLine($"s=Talk");
+            sdpBuilder.AppendLine($"c=IN IP4 {serverIp}");
+            sdpBuilder.AppendLine("t=0 0");
+            sdpBuilder.AppendLine("m=audio " + localRtpPort + " RTP/AVP 8");
+            sdpBuilder.AppendLine($"a=rtpmap:8 {audioCodec}");
+            sdpBuilder.AppendLine("a=sendrecv");
+            sdpBuilder.AppendLine("f=v/a/1/8/1");
+            sdpBuilder.AppendLine($"y={ssrc}");
+            return sdpBuilder.ToString();
+        }
+
         private static readonly List<string> _usedNumbers = new List<string>();
         private static readonly Queue<string> _unusedNumbers = new Queue<string>();
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ChannelUtility.Tsl
@@ -15,6 +16,7 @@ namespace ChannelUtility.Tsl
         /// <summary>
         /// 数据长度
         /// </summary>
+        [JsonConverter(typeof(TslNumberToStringConverter))]
         public string NumRegister { get; set; }
         public int GetBitLen()
         {

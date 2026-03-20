@@ -9,31 +9,14 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Common\Common.csproj" />
-		<ProjectReference Include="..\Modules\AfterService\AfterService.csproj" />
 		<ProjectReference Include="..\Modules\AuthService\AuthService.csproj" />
-		<ProjectReference Include="..\Modules\CRMService\CRMService.csproj" />
 		<ProjectReference Include="..\Modules\DeveloperService\DeveloperService.csproj" />
 		<ProjectReference Include="..\Modules\DictService\DictService.csproj" />
-		<ProjectReference Include="..\Modules\DiscussService\DiscussService.csproj" />
-		<ProjectReference Include="..\Modules\EmailService\EmailService.csproj" />
-		<ProjectReference Include="..\Modules\FlowService\FlowService.csproj" />
-		<ProjectReference Include="..\Modules\IoTAIService\IoTAIService.csproj" />
 		<ProjectReference Include="..\Modules\IoTRulesService\IoTRulesService.csproj" />
 		<ProjectReference Include="..\Modules\IoTService\IoTService.csproj" />
-		<ProjectReference Include="..\Modules\IoTVideoService\IoTVideoService.csproj" />
 		<ProjectReference Include="..\Modules\MessageService\MessageService.csproj" />
-		<ProjectReference Include="..\Modules\MESService\MESService.csproj" />
 		<ProjectReference Include="..\Modules\MonitorService\MonitorService.csproj" />
 		<ProjectReference Include="..\Modules\MqttService\MqttService.csproj" />
-		<ProjectReference Include="..\Modules\PayService\PayService.csproj" />
-		<ProjectReference Include="..\Modules\ProducerService\ProducerService.csproj" />
-		<ProjectReference Include="..\Modules\ReportService\ReportService.csproj" />
-		<ProjectReference Include="..\Modules\SaleService\SaleService.csproj" />
-		<ProjectReference Include="..\Modules\ShortLinkService\ShortLinkService.csproj" />
-		<ProjectReference Include="..\Modules\SMSService\SMSService.csproj" />
-		<ProjectReference Include="..\Modules\StorageService\StorageService.csproj" />
-		<ProjectReference Include="..\Modules\ThirdPartyService\ThirdPartyService.csproj" />
-		<ProjectReference Include="..\Modules\WeiXinService\WeiXinService.csproj" />
 		<ProjectReference Include="..\MyAccess\MyAccess.csproj" />
 		<ProjectReference Include="..\TemplateAction.NetCore\TemplateAction.NetCore.csproj" />
 		<ProjectReference Include="..\TemplateAction\TemplateAction.csproj" />

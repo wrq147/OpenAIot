@@ -29,6 +29,8 @@ namespace GB28181Channel.GB28181
         public event Func<object?, StreamPlayEventArgs, Task> StreamPlayed;
         public event Func<object?, PresetListReceivedEventArgs, Task> PresetListReceived;
         public event Func<object?, PTZEventOkArgs, Task> PTZEventOk;
+        public event Func<object?, TalkEventArgs, Task> TalkStarted;
+        public event Func<object?, TalkEventArgs, Task> TalkStopped;
         #endregion
 
         // 核心字段
@@ -687,7 +689,7 @@ namespace GB28181Channel.GB28181
         {
             bool needRegDevice = !_heartbeatMap.ContainsKey(deviceId);
             var device = _deviceStorage.GetDevice(deviceId);
-            if (needRegDevice|| device == null)
+            if (needRegDevice || device == null)
             {
                 // 通知设备重新注册：返回401 Unauthorized响应，携带认证挑战
                 var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Need re-register");
@@ -1013,6 +1015,54 @@ namespace GB28181Channel.GB28181
         #endregion
 
         #region 扩展功能
+        public async Task<bool> StartTalk(TalkParams talkParams)
+        {
+            if (talkParams == null || string.IsNullOrEmpty(talkParams.DeviceId))
+            {
+                throw new ArgumentException("对讲参数无效");
+            }
+
+            var device = _deviceStorage.GetDevice(talkParams.DeviceId);
+            if (device == null)
+            {
+                Console.WriteLine($"[语音对讲] 设备{talkParams.DeviceId}不存在");
+                return false;
+            }
+
+
+            try
+            {
+                var ssrc = GB28181Util.GetPlaySsrc(_serverId);
+                // 构建对讲专用SDP
+                var sdp = GB28181Util.BuildTalkSDP(_serverId, _serverIp, talkParams.LocalRtpPort, talkParams.AudioCodec, ssrc);
+
+                // 构造对讲INVITE请求
+                var inviteRequest = CreateTalkInviteRequest(device, talkParams, sdp);
+
+                // 保存请求上下文
+                _requestContextMap.TryAdd(talkParams.SessionId, new RequestContext
+                {
+                    RequestType = nameof(SIPMethodsEnum.INVITE),
+                    CommandType = "Talk",
+                    DeviceId = talkParams.DeviceId,
+                    ChannelId = talkParams.ChannelId,
+                    RequestTime = DateTime.Now,
+                    ExtraData = talkParams
+                });
+
+                // 发送INVITE请求
+                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                await _sipTransport.SendRequestAsync(dstEnd, inviteRequest);
+
+                Console.WriteLine($"[语音对讲] 请求已发送：设备={talkParams.DeviceId} 会话={talkParams.SessionId} RTP端口={talkParams.LocalRtpPort}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[语音对讲] 发起失败：{ex.Message}");
+                return false;
+            }
+        }
         /// <summary>
         /// 获取设备通道的预置位列表
         /// </summary>
@@ -1262,6 +1312,53 @@ namespace GB28181Channel.GB28181
             var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
             await _sipTransport.SendRequestAsync(dstEnd, sipRequest);
         }
+
+        /// <summary>
+        /// 构造对讲INVITE请求
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="talkParams"></param>
+        /// <param name="sdp"></param>
+        /// <returns></returns>
+        private SIPRequest CreateTalkInviteRequest(DeviceInfo device, TalkParams talkParams, string sdp)
+        {
+            var toUri = new SIPURI(talkParams.ChannelId, $"{device.DeviceIp}:{device.DevicePort}", null, SIPSchemesEnum.sip);
+            var fromUri = new SIPURI(_serverId, $"{_serverIp}:{_sipPort}", null, SIPSchemesEnum.sip);
+
+            var inviteRequest = new SIPRequest(SIPMethodsEnum.INVITE, toUri);
+            inviteRequest.Header = new SIPHeader();
+
+            // 核心头域
+            inviteRequest.Header.CallId = talkParams.SessionId;
+            inviteRequest.Header.From = new SIPFromHeader(null, fromUri, talkParams.SessionId);
+            inviteRequest.Header.To = new SIPToHeader(null, toUri, null);
+            inviteRequest.Header.CSeq = GB28181Util.GenerateCSeq();
+            inviteRequest.Header.CSeqMethod = SIPMethodsEnum.INVITE;
+            inviteRequest.Header.MaxForwards = 70;
+
+            // Via头
+            string viaBranch = $"z9hG4bK-{Guid.NewGuid():N}";
+            var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, device.TransportProtocol);
+            inviteRequest.Header.Vias.Via.Add(viaHeader);
+
+            // Contact头
+            inviteRequest.Header.Contact = new List<SIPContactHeader>()
+            {
+                new SIPContactHeader(null, fromUri)
+            };
+
+            // 对讲专用Subject
+            inviteRequest.Header.Subject = $"Talk:{talkParams.ChannelId},{_serverId}";
+
+            // SDP体
+            inviteRequest.Body = sdp;
+            inviteRequest.Header.ContentType = "APPLICATION/SDP";
+            inviteRequest.Header.ContentLength = inviteRequest.BodyBuffer.Length;
+            inviteRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+
+            return inviteRequest;
+        }
+
         /// <summary>
         /// 创建SIP MESSAGE请求
         /// </summary>
@@ -1355,6 +1452,8 @@ namespace GB28181Channel.GB28181
 
             return ackRequest;
         }
+
+
         #endregion
 
         #region 事件触发方法

@@ -8,6 +8,7 @@ using MonitorService.DAL;
 using MonitorService.Model;
 using MonitorService.Util;
 using Quartz;
+using SQLitePCL;
 using System;
 using System.Threading.Tasks;
 using TemplateAction.Common;
@@ -185,7 +186,7 @@ namespace MonitorService
                         await jobBLL.InsertJob(job);
                     }
                 }
-               
+
             });
 
 

@@ -15,6 +15,7 @@ namespace GB28181Channel
         /// 消息协议：udp、tcp、both
         /// </summary>
         public string sip_protocol { get; set; }
+        public int talk_port { get; set; }
         public int rtp_port { get; set; }
         /// <summary>
         /// ZLMediaKit的RTMP播放端口

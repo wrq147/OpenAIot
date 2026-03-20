@@ -14,15 +14,12 @@ namespace AirJointUI.Api
         /// 获取设备列表
         /// </summary>
         /// <returns></returns>
-        public static async Task<List<DeviceItem>> GetDeviceList(string groupId = null)
+        public static async Task<List<DeviceItem>> GetDeviceList()
         {
             Dictionary<string, string> reqparams = new Dictionary<string, string>();
             reqparams.Add("showAll", "true");
             reqparams.Add("pageSize", "0");
-            if (!string.IsNullOrEmpty(groupId))
-            {
-                reqparams.Add("GroupId", groupId);
-            }
+
             try
             {
                 string rs = await HttpHelper.Instance.GetAsync(Constants.ContactUrl("/IoTService/HttpSync/ListPage"), reqparams);

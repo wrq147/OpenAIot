@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ChannelUtility.Tsl
 {
@@ -16,14 +17,17 @@ namespace ChannelUtility.Tsl
         /// <summary>
         /// 奇偶校验
         /// </summary>
+        [JsonConverter(typeof(TslNumberToStringConverter))]
         public string Parity { get; set; }
         /// <summary>
         /// 停止位
         /// </summary>
+        [JsonConverter(typeof(TslNumberToStringConverter))]
         public string StopBits { get; set; }
         /// <summary>
         /// Mode
         /// </summary>
+        [JsonConverter(typeof(TslNumberToStringConverter))]
         public string Mode { get; set; }
         /// <summary>
         /// 轮询周期时间（单位ms）

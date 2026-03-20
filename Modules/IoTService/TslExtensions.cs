@@ -15,6 +15,12 @@ namespace IoTService
     /// </summary>
     public static class TslExtensions
     {
+        /// <summary>
+        /// 只处理为1的
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="strs"></param>
+        /// <returns></returns>
         private static string ByteTrueTo(object input, params string[] strs)
         {
             try
@@ -56,6 +62,12 @@ namespace IoTService
                 return string.Empty;
             }
         }
+        /// <summary>
+        /// 处理为1和为0的
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="strs"></param>
+        /// <returns></returns>
         private static string ByteAllTo(object input, params string[] strs)
         {
             try

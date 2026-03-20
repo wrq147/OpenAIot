@@ -6,6 +6,7 @@ using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Org.BouncyCastle.Utilities.IO;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -37,6 +38,7 @@ namespace GB28181Channel
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordMp4Delegate;
         private ZLMediaKit.Delegates.Action___IntPtr _onRecordHLSDelegate;
         private ZLMediaKit.Delegates.Action___IntPtr_ulong_ulong_int___IntPtr _onFlowReportDelegate;
+        private OnMkMediaSourceSendRtpResult _OnSendRtp;
         private GB28181Server _server;
         private ConcurrentDictionary<string, PlaybackParams> _mediaDict;
         private ConcurrentDictionary<string, FrameContext> _contextMap;
@@ -58,6 +60,7 @@ namespace GB28181Channel
             _onRecordMp4Delegate = On_mk_record_mp4;
             _onRecordHLSDelegate = On_mk_record_hls;
             _onFlowReportDelegate = On_mk_flow_report;
+            _OnSendRtp = OnSendRtp;
         }
         private int On_mk_media_not_found(IntPtr url,
                                 IntPtr sock)
@@ -646,6 +649,32 @@ namespace GB28181Channel
                     OnMkFlowReport = _onFlowReportDelegate
                 };
                 MkEvents.MkEventsListen(_mkEvents);
+            }
+        }
+        private void OnSendRtp(IntPtr user_data, ushort local_port, int err, string msg)
+        {
+            if (err == 0)
+            {
+                Console.WriteLine("【RTP】开始发送RTP，端口: " + local_port);
+            }
+            else
+            {
+                mk_events_objects.MkMediaSourceStopSendRtp((MkMediaSourceT)user_data);
+                Console.WriteLine("【RTP】发送RTP失败,原因: " + msg);
+            }
+
+        }
+        public void Start_Rtp_Audio(string streamId)
+        {
+            var mkMedia = mk_events_objects.MkMediaSourceFind2("rtsp", "__defaultVhost__", "live", streamId, 0);
+            if (mkMedia != null)
+            {
+                MkIniT options = mk_util.MkIniCreate();
+                //可以配置tcp
+                mk_util.MkIniSetOptionInt(options, "close_delay_ms", 60000);
+                //0: tcp主动，1：udp主动，2：tcp被动，3：udp被动
+                mk_events_objects.MkMediaSourceStartSendRtp3(mkMedia, "127.0.0.1", (ushort)_option.talk_port, "1", 2, options, _OnSendRtp, mkMedia.__Instance);
+                mk_util.MkIniRelease(options);
             }
         }
 

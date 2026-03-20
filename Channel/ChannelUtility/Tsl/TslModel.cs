@@ -38,7 +38,7 @@ namespace ChannelUtility.Tsl
 
         public static readonly JsonSerializerOptions TSLOptions = new JsonSerializerOptions
         {
-            Converters = { new TslJsonConverter(), new TslStringToByteConverter(), new TslNumberToStringConverter(), new JsonObjectConverter() },
+            Converters = { new TslJsonConverter(), new TslStringToByteConverter(), new JsonObjectConverter() },
             TypeInfoResolver = TslJsonSerializerContext.Default
         };
         public static TslModel CreateFrom(string tsl)
