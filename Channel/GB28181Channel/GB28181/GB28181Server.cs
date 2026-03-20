@@ -9,9 +9,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.Intrinsics.Arm;
-using System.Text;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
@@ -391,26 +388,10 @@ namespace GB28181Channel.GB28181
         {
             try
             {
-                if (resp.Body?.Contains("audio") == true)
+                if (resp.Status == SIPResponseStatusCodesEnum.Ok && !string.IsNullOrEmpty(resp.Body))
                 {
-                    if (resp.Status == SIPResponseStatusCodesEnum.Ok)
-                    {
-                        Console.WriteLine($"[设备主动对讲] 来自{remoteEP} 会话={resp.Header.CallId}");
-
-                        // 可以在这里处理设备主动发起的对讲请求
-                        // 例如：发送ACK、记录对讲状态、触发事件等
-                        var ackReq = CreateAckRequest(resp, remoteEP);
-                        await _sipTransport.SendRequestAsync(remoteEP, ackReq);
-                    }
+                    Console.WriteLine($"[设备主动推流响应] {remoteEP} SDP={resp.Body.Substring(0, Math.Min(100, resp.Body.Length))}...");
                 }
-                else
-                {
-                    if (resp.Status == SIPResponseStatusCodesEnum.Ok && !string.IsNullOrEmpty(resp.Body))
-                    {
-                        Console.WriteLine($"[设备主动推流响应] {remoteEP} SDP={resp.Body.Substring(0, Math.Min(100, resp.Body.Length))}...");
-                    }
-                }
-
             }
             catch (Exception ex)
             {
@@ -929,7 +910,7 @@ namespace GB28181Channel.GB28181
             Console.WriteLine($"[点播请求] {channelId} @ {remoteEP}");
 
             try
-            {
+            {  
                 var sdp = SDP.ParseSDPDescription(req.Body);
                 var rtpPort = sdp.Media.First().Port;
 
@@ -982,7 +963,7 @@ namespace GB28181Channel.GB28181
                 Console.WriteLine($"[点播失败] {channelId}：{ex.Message}");
             }
         }
-
+   
         /// <summary>
         /// 处理停止推流
         /// </summary>
