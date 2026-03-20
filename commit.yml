@@ -2,28 +2,130 @@
 branches: {
   }
 fileChange:
-  /IOT_Skill:
-    newFile: !uuid '84c3566a9ad9ea982026ea16e08398c31b3b3876'
-    oldFile: !uuid '91c0558b140521a70215da477880b7d29fb29f50'
-  /IOT_Skill/SKILL.md:
-    newFile: !uuid '44113342eeacc9e1f23d10dc9938505ed1168742'
-    oldFile: !uuid '5c738cc2d1bd56d7d09621cb0141f3e96c45c4e9'
-  /IOT_Skill/references:
-    newFile: !uuid '2ddc3d391ec54ff69a6399bcbf0c9d412364d709'
-    oldFile: !uuid '3c2a9439a3d447b8ae0a3bc2827ee7a9e5b15350'
-  /IOT_Skill/references/我的所有设备.md:
-    newFile: !uuid '170871c4694081ccbe801ea1a1770e0cf98509b2'
-    oldFile: !uuid 'ec6ef62d7d87847bb2c909f99b97768ce16d90f2'
-  /IOT_Skill/references/执行设备功能.md:
-    newFile: !uuid 'e5f9837a4854ea58a09b6117af170487f4609a93'
-    oldFile: !uuid 'afaec72f60f4caa3189c28eeac38bf7dc4f68473'
-  /IOT_Skill/references/获取rtmp流地址.md:
-    newFile: !uuid '4fb8c6cda6683493cc3ecad39434e6714ec4538d'
-    oldFile: !uuid 'a5ad2c6861447b8108647111ed15464b4fa6e2e0'
-  /IOT_Skill/references/设备实时属性.md:
-    newFile: !uuid '00ee161818e497f1a929633468da3f15844773b4'
-    oldFile: !uuid '41ddd2abfd6826d504a0df513a309019714ad525'
-gitCommitId: !uuid '75ffd6adec3f18fbe225fc8595231f2dbbf39c09'
+  /AirJointUI:
+    newFile: !uuid '9ea420a195d60c52fd0cda11e1ce555bb52f6d56'
+    oldFile: !uuid '5ecb2735b2048b7e5bce452955b56c770a3b3775'
+  /AirJointUI/Api:
+    newFile: !uuid 'f830286312f97df834f0166ddf92f26967f89b1e'
+    oldFile: !uuid 'c9649701a604bf8b1471e99531b4a0638ef12f0c'
+  /AirJointUI/Api/DeviceApi.cs:
+    newFile: !uuid 'ad7b5f173383316e676c57f31cdb705dcb4baa88'
+    oldFile: !uuid '4e1ca8c54a945b093d290c7d19c5a4da29b722f1'
+  /AirJointUI/ViewModels:
+    newFile: !uuid 'd78a7fbd6fae1d2f9f70b92ceaa5031e9f3d4cc1'
+    oldFile: !uuid '95cee7211f122732d232e8331bd59637dc387f30'
+  /AirJointUI/ViewModels/IndexViewModel.cs:
+    newFile: !uuid 'd95c01d663fa71f78d29d8e813a8e89129e5491c'
+    oldFile: !uuid '706f1b0894077b0d6b872e0b09c5a99f905e20ab'
+  /App:
+    newFile: !uuid '2d3658dbe83a34b1e1dc2165f4e6023ba8dedadf'
+    oldFile: !uuid 'e1b5f66829b88be4b1d8f34c2d3e25c5308bbfe6'
+  /App/App.csproj:
+    newFile: !uuid '819350df48d8c321a2e116238490d36b24cbfdbc'
+    oldFile: !uuid '93e2da943489be053ff7731a1612f158d79d5737'
+  /App/XML:
+    newFile: !uuid '7d7ca2e202c3e7dd3d185132dbbb1321864b1c8e'
+    oldFile: !uuid '6e692792fd4ee6cb9e4cca1695d398021ef2ee52'
+  /App/XML/IoTService.xml:
+    newFile: !uuid '6055def17e87e1b8f7d727f7ea83704465578646'
+    oldFile: !uuid '0aa5c11713e7ad6b24cc19efcd6106b95b04d5aa'
+  /Channel:
+    newFile: !uuid '98fdc4dfbc1e80d848be587a8a0dc78c4f4b7d19'
+    oldFile: !uuid 'fc574f94f2f0ab336a2110c52d5a0006e4267d73'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'de9c42a0e62db4a61df3a6a2ff640fdac95d711c'
+    oldFile: !uuid '75f9febcf4556a8dab6bbda7a95f1aab3b7b4750'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid 'b53f9502a5c0642da03a121cd88ef30c12596a94'
+    oldFile: !uuid '417d3af6061a199af47fe1f849fa932c1701b12c'
+  /Channel/ChannelUtility/Tsl/ModbusInfo.cs:
+    newFile: !uuid 'f7b74efaf7a859bba4980b295e359be4e233b62e'
+    oldFile: !uuid '2a2f4b183c1e2e328fab5361b1386ff581d0dee1'
+  /Channel/ChannelUtility/Tsl/ModbusMatchItem.cs:
+    newFile: !uuid '4b25f68087f3eee236a7d0e0cf13dfd681760dd2'
+    oldFile: !uuid 'b7c5d82a88ca108fcd18a3e246a3e31364e26afd'
+  /Channel/ChannelUtility/Tsl/TslModel.cs:
+    newFile: !uuid '1821e3db1a4dad89197a74e465dc83ed48d75ad0'
+    oldFile: !uuid '597dceee146459763810dad72f533c4d883469a4'
+  /Channel/GB28181Channel:
+    newFile: !uuid '9d43f59370f43fa7d2a533918bdc5a168b27f0b8'
+    oldFile: !uuid '367bfc922949ddfea5222f6e81450bf799fe2cc5'
+  /Channel/GB28181Channel/GB28181:
+    newFile: !uuid '937c02fde8635aab78862896118de5878e1142e2'
+    oldFile: !uuid '55db87c2737d186d2b14ab3346e6acd48e65a669'
+  /Channel/GB28181Channel/GB28181/DTO:
+    newFile: !uuid 'a31b85857515223cbae2b47fda1b6d63f05f626f'
+    oldFile: !uuid '6a6b37d24e37099d69faa662395799f5a96a98de'
+  /Channel/GB28181Channel/GB28181/DTO/TalkParams.cs:
+    newFile: !uuid 'e619f302d72c56ec532fea9040004ebe7efa9200'
+    oldFile: null
+  /Channel/GB28181Channel/GB28181/Enum:
+    newFile: !uuid '06ac1c03dc8f625ddd664e327777449ec46cfa05'
+    oldFile: !uuid '7b4519ba3a75d87432c1d9ec2a65df594e29a4c8'
+  /Channel/GB28181Channel/GB28181/Enum/TalkDirection.cs:
+    newFile: !uuid '123feb1d502a09266324af8d79dc7c228504194a'
+    oldFile: null
+  /Channel/GB28181Channel/GB28181/Event:
+    newFile: !uuid '23f55297fdf95312d34f79e872cc44940da35614'
+    oldFile: !uuid '6eff82bc12e51d70ff17674320cf4ec78e766592'
+  /Channel/GB28181Channel/GB28181/Event/TalkEventArgs.cs:
+    newFile: !uuid 'c0e0e98075a10e98c38d69cd37edf5f9c2d509d8'
+    oldFile: null
+  /Channel/GB28181Channel/GB28181/GB28181Server.cs:
+    newFile: !uuid 'fd4acac87278122d72017800bffe2a1df1aa6273'
+    oldFile: !uuid '9c14404bde74b2119ca14561a1fec456832f049a'
+  /Channel/GB28181Channel/GB28181/GB28181Util.cs:
+    newFile: !uuid 'fecad7c803c8246c1f5bb06ff60777f092a35ae5'
+    oldFile: !uuid 'a1f1bfd4c4681c60d7a2ce82e8a440366047bf1d'
+  /Channel/GB28181Channel/GB28181Option.cs:
+    newFile: !uuid 'b5f54353f7dc69f643d8963e48193ab998c88d6c'
+    oldFile: !uuid '0736a845145e5988d6e822972c1e8135a710cb52'
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid '2efbe273c433a779cda824264806025bd9016511'
+    oldFile: !uuid '32f55e356f749ee57740b1ba473e639e86631f36'
+  /Channel/GB28181Channel/appsettings.json:
+    newFile: !uuid 'd25b60f66f8ad7afe280feac24e2057ddb2c3c46'
+    oldFile: !uuid 'f88e836200bde6bd04b186566030f6ddf66b2345'
+  /Common:
+    newFile: !uuid 'f5513c8e7464cad640f983e4a9ba93e79fd73569'
+    oldFile: !uuid 'f14514cffe71234ebc82d8f8782adbb40cf3f123'
+  /Common/EventBus:
+    newFile: !uuid 'a8ef4ffdd1c2274158cdc41f6f45df20e67842e8'
+    oldFile: !uuid '19e14b11738b232fc0312fa7c13359be48ab6d0c'
+  /Common/EventBus/NatsScope.cs:
+    newFile: !uuid 'fc81c8819c487f50f37b0e0a115a709f1b964982'
+    oldFile: !uuid '3db3b6e54d0a6a079d714f08789876100f0f540c'
+  /IOT_Skill.zip:
+    newFile: !uuid '92d8e15f5c969c049e07379641a6a9ef2c9cedf6'
+    oldFile: null
+  /Modules:
+    newFile: !uuid '0775429c5e76194c5007c0b1216529ce3b4e8fde'
+    oldFile: !uuid '81f6d120d16794eddc3326e0ee09fe27699fb37b'
+  /Modules/IoTService:
+    newFile: !uuid 'fcf0f754c7ebc4abee6f66120a1a48d8c66e1b0f'
+    oldFile: !uuid 'a10ae7a264792e3ab65f9b7416877fcb39759e5a'
+  /Modules/IoTService/Controller:
+    newFile: !uuid '7b95a21a9cb4d08b4ac3a2eb084fb3207b1803b6'
+    oldFile: !uuid '6ec5dff073cb84d202e2dace374b6db696ef04c0'
+  /Modules/IoTService/Controller/HttpSync.cs:
+    newFile: !uuid '7c2f5e3d78ee934553ee58b0bb21c6a1afb0e6fe'
+    oldFile: !uuid '69fa7c0c4f5e8dad8e41b78db0afcb2cb6ee607a'
+  /Modules/IoTService/TslExtensions.cs:
+    newFile: !uuid '3f291556357f8c503b3c90eb6bd692d87e8fff4b'
+    oldFile: !uuid '8107b3d7777368d77690dbecf98cd5f928baacd8'
+  /Modules/MonitorService:
+    newFile: !uuid '82fe741453ba036e27d75f00f4b43d36d60a2cd3'
+    oldFile: !uuid 'a2915c370295b5bd86196fa887fd51a711348646'
+  /Modules/MonitorService/PluginConfig.cs:
+    newFile: !uuid '411903cd23f2c1c85c0de35d709cc33b30606448'
+    oldFile: !uuid '67f99fad05db56e2ea684cbee5cdbcc3f0344020'
+  /MyAccess.Sqlite:
+    newFile: !uuid '46d5502403e4e40fb2c02f13ae901c146d0b0276'
+    oldFile: !uuid '69db7a384d69b167c9ec474db454d517a9dfb867'
+  /MyAccess.Sqlite/MyAccess.Sqlite.csproj:
+    newFile: !uuid '069b18b135905ee061a01713334f42b4c4afad26'
+    oldFile: !uuid 'fa4ba088350fbab8e62a6b18daf69a1fb42fe623'
+gitCommitId: !uuid 'a63edd24521b3521a8d54fb5cde4d4188bcdbd33'
 renames: {
   }
-revisionId: 220
+revisionId: 221
