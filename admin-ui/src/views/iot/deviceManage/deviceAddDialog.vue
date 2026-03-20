@@ -166,7 +166,7 @@ export default {
       this.deviceAddFrom.MesProductInfo = null;
     },
     async InitMesProduct(mesProdId) {
-      if (mesProdId == "1") {
+      if (mesProdId == null || mesProdId == "1" || mesProdId == "") {
         this.deviceAddFrom.MesProductInfo = { "Id": "1", "ProductName": "物联设备" };
         return;
       }

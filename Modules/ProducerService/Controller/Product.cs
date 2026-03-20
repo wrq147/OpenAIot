@@ -7,6 +7,7 @@ using System;
 using TemplateAction.Core;
 using TemplateAction.Route;
 using System.Threading.Tasks;
+
 namespace ProducerService.Controller
 {
     /// <summary>
@@ -84,7 +85,7 @@ namespace ProducerService.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<DefaultAjaxResult<MZ_Product>> Info(string id)
+        public async Task<DefaultAjaxResult<MZ_Product>> Info(string id = "")
         {
             return (await _productBLL.Info(id)).ToAjaxResult();
         }

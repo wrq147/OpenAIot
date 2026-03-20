@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -243,6 +244,7 @@ namespace GB28181Channel.GB28181
         {
             var channelId = requestContext.ChannelId;
             var deviceId = requestContext.DeviceId;
+            var requestCmd = requestContext.CommandType;
 
             var device = _deviceStorage.GetDevice(deviceId);
             if (device == null)
@@ -257,66 +259,116 @@ namespace GB28181Channel.GB28181
             }
             try
             {
-                if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                if (requestCmd == "Play")
                 {
-                    // 解析设备返回的SDP
-                    if (!string.IsNullOrEmpty(resp.Body))
+                    if (resp.Status == SIPResponseStatusCodesEnum.Ok)
                     {
-                        var sdp = SDP.ParseSDPDescription(resp.Body);
-                        var media = sdp.Media.FirstOrDefault();
-                        if (media != null)
+                        // 解析设备返回的SDP
+                        if (!string.IsNullOrEmpty(resp.Body))
                         {
-                            Console.WriteLine($"[主动拉流成功] 设备={deviceId} 通道={channelId} 远程RTP端口={media.Port}");
-
-                            // 更新通道会话状态
-                            channelInfo.SessionStatus = StreamState.Playing;
-                            channelInfo.RemoteRtpPort = media.Port;
-
-                            // 触发点播成功事件
-                            await OnStreamPlayed(new StreamPlayEventArgs
+                            var sdp = SDP.ParseSDPDescription(resp.Body);
+                            var media = sdp.Media.FirstOrDefault();
+                            if (media != null)
                             {
-                                Params = new PlaybackParams
-                                {
-                                    ChannelId = channelId,
-                                    DeviceId = deviceId,
-                                    RemoteIp = remoteEP.Address.ToString(),
-                                    RemoteRtpPort = media.Port,
-                                    Ssrc = channelInfo.Ssrc,
-                                    IsLive = true
-                                },
-                                IsSuccess = true,
-                                SessionId = resp.Header.CallId,
-                                Message = "主动拉流成功"
-                            });
+                                Console.WriteLine($"[主动拉流成功] 设备={deviceId} 通道={channelId} 远程RTP端口={media.Port}");
 
+                                // 更新通道会话状态
+                                channelInfo.SessionStatus = StreamState.Playing;
+                                channelInfo.RemoteRtpPort = media.Port;
+
+                                // 触发点播成功事件
+                                await OnStreamPlayed(new StreamPlayEventArgs
+                                {
+                                    Params = new PlaybackParams
+                                    {
+                                        ChannelId = channelId,
+                                        DeviceId = deviceId,
+                                        RemoteIp = remoteEP.Address.ToString(),
+                                        RemoteRtpPort = media.Port,
+                                        Ssrc = channelInfo.Ssrc,
+                                        IsLive = true
+                                    },
+                                    IsSuccess = true,
+                                    SessionId = resp.Header.CallId,
+                                    Message = "主动拉流成功"
+                                });
+
+                                var ackReq = CreateAckRequest(resp, remoteEP);
+                                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                                await _sipTransport.SendRequestAsync(dstEnd, ackReq);
+                            }
+
+                        }
+                    }
+                    else if ((int)resp.Status >= 400)
+                    {
+                        // 拉流失败
+                        Console.WriteLine($"[主动拉流失败] 设备={deviceId} 通道={channelId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+
+                        // 更新通道会话状态
+                        channelInfo.SessionStatus = StreamState.Failed;
+
+                        // 触发点播失败事件
+                        await OnStreamPlayed(new StreamPlayEventArgs
+                        {
+                            Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
+                            IsSuccess = false,
+                            SessionId = resp.Header.CallId,
+                            Message = $"主动拉流失败: {resp.ReasonPhrase}"
+                        });
+                    }
+                    else if (resp.Status == SIPResponseStatusCodesEnum.Trying || resp.Status == SIPResponseStatusCodesEnum.Ringing)
+                    {
+                        // 临时响应，仅记录日志
+                        Console.WriteLine($"[主动拉流中] 设备={deviceId} 通道={channelId} 状态码={resp.Status}");
+                    }
+                }
+                else if (requestCmd == "Talk")
+                {
+                    var talkParams = requestContext.ExtraData as TalkParams;
+                    if (talkParams == null) return;
+
+                    if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                    {
+                        // 解析设备返回的音频SDP
+                        if (!string.IsNullOrEmpty(resp.Body))
+                        {
+                            var sdp = SDP.ParseSDPDescription(resp.Body);
+                            var audioMedia = sdp.Media.FirstOrDefault(m => m.Media == SDPMediaTypesEnum.audio);
+
+                            Console.WriteLine($"[语音对讲成功] 设备={talkParams.DeviceId} 会话={talkParams.SessionId} 远程RTP端口={audioMedia?.Port ?? 0}");
+
+                            // 发送ACK确认
                             var ackReq = CreateAckRequest(resp, remoteEP);
                             var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
                             await _sipTransport.SendRequestAsync(dstEnd, ackReq);
+
+                            // 触发对讲开始事件
+                            await OnTalkStarted(new TalkEventArgs
+                            {
+                                Params = talkParams,
+                                IsSuccess = true,
+                                SessionId = resp.Header.CallId,
+                                Message = "语音对讲已建立"
+                            });
                         }
                     }
-                }
-                else if ((int)resp.Status >= 400)
-                {
-                    // 拉流失败
-                    Console.WriteLine($"[主动拉流失败] 设备={deviceId} 通道={channelId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
-
-                    // 更新通道会话状态
-                    channelInfo.SessionStatus = StreamState.Failed;
-
-                    // 触发点播失败事件
-                    await OnStreamPlayed(new StreamPlayEventArgs
+                    else if ((int)resp.Status >= 400)
                     {
-                        Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
-                        IsSuccess = false,
-                        SessionId = resp.Header.CallId,
-                        Message = $"主动拉流失败: {resp.ReasonPhrase}"
-                    });
+                        Console.WriteLine($"[语音对讲失败] 设备={talkParams.DeviceId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+
+                        // 触发对讲失败事件
+                        await OnTalkStarted(new TalkEventArgs
+                        {
+                            Params = talkParams,
+                            IsSuccess = false,
+                            SessionId = resp.Header.CallId,
+                            Message = $"对讲失败: {resp.ReasonPhrase}"
+                        });
+                    }
+
                 }
-                else if (resp.Status == SIPResponseStatusCodesEnum.Trying || resp.Status == SIPResponseStatusCodesEnum.Ringing)
-                {
-                    // 临时响应，仅记录日志
-                    Console.WriteLine($"[主动拉流中] 设备={deviceId} 通道={channelId} 状态码={resp.Status}");
-                }
+
             }
             catch (Exception ex)
             {
@@ -339,10 +391,26 @@ namespace GB28181Channel.GB28181
         {
             try
             {
-                if (resp.Status == SIPResponseStatusCodesEnum.Ok && !string.IsNullOrEmpty(resp.Body))
+                if (resp.Body?.Contains("audio") == true)
                 {
-                    Console.WriteLine($"[设备主动推流响应] {remoteEP} SDP={resp.Body.Substring(0, Math.Min(100, resp.Body.Length))}...");
+                    if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                    {
+                        Console.WriteLine($"[设备主动对讲] 来自{remoteEP} 会话={resp.Header.CallId}");
+
+                        // 可以在这里处理设备主动发起的对讲请求
+                        // 例如：发送ACK、记录对讲状态、触发事件等
+                        var ackReq = CreateAckRequest(resp, remoteEP);
+                        await _sipTransport.SendRequestAsync(remoteEP, ackReq);
+                    }
                 }
+                else
+                {
+                    if (resp.Status == SIPResponseStatusCodesEnum.Ok && !string.IsNullOrEmpty(resp.Body))
+                    {
+                        Console.WriteLine($"[设备主动推流响应] {remoteEP} SDP={resp.Body.Substring(0, Math.Min(100, resp.Body.Length))}...");
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -397,6 +465,7 @@ namespace GB28181Channel.GB28181
         {
             var channelId = requestContext.ChannelId;
             var deviceId = requestContext.DeviceId;
+            var requestCmd = requestContext.CommandType;
             var device = _deviceStorage.GetDevice(deviceId);
             if (device == null)
             {
@@ -410,35 +479,68 @@ namespace GB28181Channel.GB28181
             }
             try
             {
-                if (resp.Status == SIPResponseStatusCodesEnum.Ok)
+                if (requestCmd == "Play")
                 {
-                    Console.WriteLine($"[停止拉流成功] 设备={deviceId} 通道={channelId}");
-
-                    // 更新通道会话状态
-                    channelInfo.SessionStatus = StreamState.Stopped;
-
-                    // 触发停止推流事件
-                    await OnStreamPlayed(new StreamPlayEventArgs
+                    if (resp.Status == SIPResponseStatusCodesEnum.Ok)
                     {
-                        Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
-                        IsSuccess = false,
-                        SessionId = resp.Header.CallId,
-                        Message = "停止拉流成功"
-                    });
+                        Console.WriteLine($"[停止拉流成功] 设备={deviceId} 通道={channelId}");
+
+                        // 更新通道会话状态
+                        channelInfo.SessionStatus = StreamState.Stopped;
+
+                        // 触发停止推流事件
+                        await OnStreamPlayed(new StreamPlayEventArgs
+                        {
+                            Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
+                            IsSuccess = false,
+                            SessionId = resp.Header.CallId,
+                            Message = "停止拉流成功"
+                        });
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[停止拉流失败] 设备={deviceId} 通道={channelId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+
+                        // 触发停止推流失败事件
+                        await OnStreamPlayed(new StreamPlayEventArgs
+                        {
+                            Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
+                            IsSuccess = false,
+                            SessionId = resp.Header.CallId,
+                            Message = $"停止拉流失败: {resp.ReasonPhrase}"
+                        });
+                    }
                 }
-                else
+                else if (requestCmd == "Talk")
                 {
-                    Console.WriteLine($"[停止拉流失败] 设备={deviceId} 通道={channelId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
-
-                    // 触发停止推流失败事件
-                    await OnStreamPlayed(new StreamPlayEventArgs
+                    var sessionId = resp.Header.CallId;
+                    if (resp.Status == SIPResponseStatusCodesEnum.Ok)
                     {
-                        Params = new PlaybackParams { ChannelId = channelId, DeviceId = deviceId, Ssrc = channelInfo.Ssrc },
-                        IsSuccess = false,
-                        SessionId = resp.Header.CallId,
-                        Message = $"停止拉流失败: {resp.ReasonPhrase}"
-                    });
+                        Console.WriteLine($"[停止对讲成功] 设备={deviceId} 会话={sessionId}");
+
+                        // 触发对讲停止事件
+                        await OnTalkStopped(new TalkEventArgs
+                        {
+                            Params = new TalkParams { DeviceId = deviceId, SessionId = sessionId },
+                            IsSuccess = true,
+                            SessionId = sessionId,
+                            Message = "语音对讲已停止"
+                        });
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[停止对讲失败] 设备={deviceId} 状态码={resp.Status} 原因={resp.ReasonPhrase}");
+
+                        await OnTalkStopped(new TalkEventArgs
+                        {
+                            Params = new TalkParams { DeviceId = deviceId, SessionId = sessionId },
+                            IsSuccess = false,
+                            SessionId = sessionId,
+                            Message = $"停止对讲失败: {resp.ReasonPhrase}"
+                        });
+                    }
                 }
+
             }
             catch (Exception ex)
             {
@@ -1063,6 +1165,50 @@ namespace GB28181Channel.GB28181
                 return false;
             }
         }
+
+        public async Task<bool> StopTalk(TalkParams talkParams)
+        {
+            if (talkParams == null || string.IsNullOrEmpty(talkParams.DeviceId) || string.IsNullOrEmpty(talkParams.SessionId))
+            {
+                throw new ArgumentException("对讲参数无效");
+            }
+
+            var device = _deviceStorage.GetDevice(talkParams.DeviceId);
+            if (device == null)
+            {
+                Console.WriteLine($"[停止对讲] 设备{talkParams.DeviceId}不存在");
+                return false;
+            }
+
+            try
+            {
+                // 构造BYE请求
+                var byeRequest = CreateTalkByeRequest(device, talkParams);
+
+                // 保存请求上下文
+                _requestContextMap.TryAdd(talkParams.SessionId, new RequestContext
+                {
+                    RequestType = nameof(SIPMethodsEnum.BYE),
+                    CommandType = "Talk",
+                    DeviceId = talkParams.DeviceId,
+                    ChannelId = talkParams.ChannelId,
+                    RequestTime = DateTime.Now
+                });
+
+                // 发送BYE请求
+                var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
+                await _sipTransport.SendRequestAsync(dstEnd, byeRequest);
+
+                Console.WriteLine($"[停止对讲] 请求已发送：设备={talkParams.DeviceId} 会话={talkParams.SessionId}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[停止对讲] 发送失败：{ex.Message}");
+                return false;
+            }
+        }
+
         /// <summary>
         /// 获取设备通道的预置位列表
         /// </summary>
@@ -1205,6 +1351,7 @@ namespace GB28181Channel.GB28181
             _requestContextMap.TryAdd(sessionId, new RequestContext
             {
                 RequestType = nameof(SIPMethodsEnum.INVITE),
+                CommandType = "Play",
                 DeviceId = deviceId,
                 ChannelId = channelId,
                 RequestTime = DateTime.Now
@@ -1265,6 +1412,7 @@ namespace GB28181Channel.GB28181
             _requestContextMap.TryAdd(sessionId, new RequestContext
             {
                 RequestType = nameof(SIPMethodsEnum.BYE),
+                CommandType = "Play",
                 DeviceId = deviceId,
                 ChannelId = channelId,
                 RequestTime = DateTime.Now
@@ -1359,6 +1507,37 @@ namespace GB28181Channel.GB28181
             return inviteRequest;
         }
 
+        /// <summary>
+        /// 构造对讲BYE请求
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="talkParams"></param>
+        /// <returns></returns>
+        private SIPRequest CreateTalkByeRequest(DeviceInfo device, TalkParams talkParams)
+        {
+            var toUri = new SIPURI(talkParams.ChannelId, $"{device.DeviceIp}:{device.DevicePort}", null, SIPSchemesEnum.sip);
+            var fromUri = new SIPURI(_serverId, $"{_serverIp}:{_sipPort}", null, SIPSchemesEnum.sip);
+
+            var byeRequest = new SIPRequest(SIPMethodsEnum.BYE, toUri);
+            byeRequest.Header = new SIPHeader();
+
+            // 复用对讲会话ID
+            byeRequest.Header.CallId = talkParams.SessionId;
+            byeRequest.Header.From = new SIPFromHeader(null, fromUri, talkParams.SessionId);
+            byeRequest.Header.To = new SIPToHeader(null, toUri, null);
+            byeRequest.Header.CSeq = GB28181Util.GenerateCSeq();
+            byeRequest.Header.CSeqMethod = SIPMethodsEnum.BYE;
+            byeRequest.Header.MaxForwards = 70;
+
+            // Via头
+            string viaBranch = $"z9hG4bK-{Guid.NewGuid():N}";
+            var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, device.TransportProtocol);
+            byeRequest.Header.Vias.Via.Add(viaHeader);
+
+            byeRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+
+            return byeRequest;
+        }
         /// <summary>
         /// 创建SIP MESSAGE请求
         /// </summary>
@@ -1514,6 +1693,31 @@ namespace GB28181Channel.GB28181
             if (PTZEventOk != null)
             {
                 await PTZEventOk(this, e);
+            }
+        }
+        /// <summary>
+        /// 触发对讲开始事件
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        protected virtual async Task OnTalkStarted(TalkEventArgs e)
+        {
+            if (TalkStarted != null)
+            {
+                await TalkStarted(this, e);
+            }
+        }
+
+        /// <summary>
+        /// 触发对讲停止事件
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        protected virtual async Task OnTalkStopped(TalkEventArgs e)
+        {
+            if (TalkStopped != null)
+            {
+                await TalkStopped(this, e);
             }
         }
 
