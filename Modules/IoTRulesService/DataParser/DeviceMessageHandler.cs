@@ -576,6 +576,7 @@ namespace IoTRulesService.DataParser
                                 }
                             }
 
+          
                             //确认属性返回
                             var allnneList = deviceCahce.GetStartReadAll(rdmsg.DeviceId);
                             if (allnneList != null)

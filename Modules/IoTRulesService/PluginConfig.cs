@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
+using MonitorService.Util;
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace IoTRulesService
             services.AddSingleton<MessageRunner>();
             services.AddSingleton<PackParser>();
             services.AddSingleton<DeviceMessageHandler>();
+            services.AddSingleton<TimerConcurrentJob>();
             services.AddRuleflow();
         }
 

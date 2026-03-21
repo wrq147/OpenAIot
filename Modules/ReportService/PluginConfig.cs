@@ -37,6 +37,8 @@ namespace ReportService
             services.AddDAL<PrintDataDAL>();
             services.AddDAL<ReportWarnDAL>();
             services.AddDAL<ReportGroupDAL>();
+            services.AddSingleton<TimerShareConcurrentJob>();
+            services.AddSingleton<TimerWarnConcurrentJob>();
         }
         protected override void Configure(ITAApplication app, PluginObject plg)
         {

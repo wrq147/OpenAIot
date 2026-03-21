@@ -338,7 +338,7 @@ namespace IoTRulesService.Business
             }
             catch (Exception ex)
             {
-                _provider.GetService<ILoggerFactory>().CreateLogger<RuleBLL>().LogError(ex.Message);
+                _provider.GetService<ILoggerFactory>().CreateLogger<RuleBLL>().LogError(ex.Message + ex.StackTrace);
                 return null;
             }
 

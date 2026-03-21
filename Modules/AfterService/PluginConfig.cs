@@ -40,6 +40,7 @@ namespace AfterService
             services.AddDAL<RoomDAL>();
             services.AddDAL<RoomDeviceDAL>();
             services.AddDAL<AfterActionDAL>();
+            services.AddSingleton<PlanConcurrentJob>();
 
         }
         private DA_Table tb3;

@@ -29,6 +29,7 @@ namespace WeiXinService
             services.AddSingleton<WxExecutor>();
             services.AddSingleton<CorpWxSyncThread>();
             services.AddSingleton<WeiXinConfig>();
+            services.AddSingleton<TimerConcurrentJob>();
         }
         protected override void Configure(ITAApplication app, PluginObject plg)
         {
