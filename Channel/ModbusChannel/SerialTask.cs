@@ -98,7 +98,7 @@ namespace ModbusChannel
                 }
             }
         }
-
+        private int _recvTimeout = 5000;
         private async Task StartRecv(CancellationToken cancellationToken)
         {
             try
@@ -116,7 +116,7 @@ namespace ModbusChannel
                         _readBuffer,
                         0,
                         _readBuffer.Length,
-                        100,  // 超时100毫秒
+                        _recvTimeout,  // 超时时间
                         cancellationToken
                     );
 
@@ -133,6 +133,7 @@ namespace ModbusChannel
 
                     if (bytesReadLen > 0)
                     {
+        
                         // 处理接收到的数据
                         byte[] tmpbytes;
                         if (_lastBytes != null && _lastBytes.Length > 0)
@@ -149,14 +150,17 @@ namespace ModbusChannel
                             tmpbytes = new byte[bytesReadLen];
                             Buffer.BlockCopy(_readBuffer, 0, tmpbytes, 0, bytesReadLen);
                         }
+
                         if (iscs)
                         {
                             await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty, true);
                             _lastBytes = null;
+                            _recvTimeout = 5000;
                         }
                         else
                         {
                             _lastBytes = tmpbytes;
+                            _recvTimeout = 100;
                         }
                     }
                     else
@@ -165,6 +169,7 @@ namespace ModbusChannel
                         {
                             await _eventBus.PublishRawUp(_item.dtuid, _lastBytes, string.Empty, true);
                             _lastBytes = null;
+                            _recvTimeout = 5000;
                         }
                     }
                 }
