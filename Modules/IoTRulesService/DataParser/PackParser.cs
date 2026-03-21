@@ -737,349 +737,353 @@ namespace IoTRulesService.DataParser
 
         public async Task rawDataTo(RawUpDataMessage datamsg, bool sendconn = true)
         {
-            List<ModbusMatch> newmmlist = null;
-            //获取物模型，防止在线设备未添加
-            var ret = await TslCache.GetTslModelByDtuId(datamsg.DeviceId, sendconn, _provider);
-            if (ret == null)
+            try
             {
-                await Print(datamsg.DeviceId, "设备上报消息", "尝试初始化失败，请绑定设备编码后重启您的设备");
-                return;
-            }
-            if (ret.Status == "0")
-            {
-                if (datamsg.Data.Length > 4096)
+                List<ModbusMatch> newmmlist = null;
+                //获取物模型，防止在线设备未添加
+                var ret = await TslCache.GetTslModelByDtuId(datamsg.DeviceId, sendconn, _provider);
+                if (ret == null)
                 {
-                    await Print(datamsg.DeviceId, "设备上报消息", "因数据超过4096字节，无法在控制台显示");
+                    await Print(datamsg.DeviceId, "设备上报消息", "尝试初始化失败，请绑定设备编码后重启您的设备");
+                    return;
                 }
-                else
+                if (ret.Status == "0")
                 {
-                    await Print(datamsg.DeviceId, "设备上报消息", FastBufferHelper.ByteToHexStr(datamsg.Data));
-                }
-            }
-            if (ret.Model == null)
-            {
-                await Print(datamsg.DeviceId, "设备上报消息", "物模型不存在");
-                return;
-            }
-            var tsl = ret.Model;
-            string productId = ret.ProductId;
-            bool isCute = false;
-            FastReader lastReader = BytesToReader(datamsg.Data, datamsg.DeviceId);
-            while (!lastReader.EndOfBuffer)
-            {
-                Dictionary<string, object> propsDict = null;
-                if (lastReader.Length > 5 && tsl.modbus != null)
-                {
-                    int mmIdx = -1;
-                    bool needcrc = true;
-                    bool iscc = true;
-                    if (tsl.modbus.Mode == "TCP")
+                    if (datamsg.Data.Length > 4096)
                     {
-                        needcrc = false;
-                        mmIdx = lastReader.ReadUInt16BE();
-                        lastReader.ReadUInt16BE();
-                        int mmlen = lastReader.ReadUInt16BE();
-                        if (lastReader.Length < (mmlen + 4))
-                        {
-                            lastReader.MergeRead();
-                            iscc = false;
-                        }
+                        await Print(datamsg.DeviceId, "设备上报消息", "因数据超过4096字节，无法在控制台显示");
                     }
-
-                    if (iscc == true)
+                    else
                     {
-                        byte slaveAddress = lastReader.ReadByte();
-                        byte funcByte = lastReader.ReadByte();
-                        if (funcByte == 5 || funcByte == 6 || funcByte == 15 || funcByte == 16)
+                        await Print(datamsg.DeviceId, "设备上报消息", FastBufferHelper.ByteToHexStr(datamsg.Data));
+                    }
+                }
+                if (ret.Model == null)
+                {
+                    await Print(datamsg.DeviceId, "设备上报消息", "物模型不存在");
+                    return;
+                }
+                var tsl = ret.Model;
+                string productId = ret.ProductId;
+                bool isCute = false;
+                FastReader lastReader = BytesToReader(datamsg.Data, datamsg.DeviceId);
+                while (!lastReader.EndOfBuffer)
+                {
+                    Dictionary<string, object> propsDict = null;
+                    if (lastReader.Length > 5 && tsl.modbus != null)
+                    {
+                        int mmIdx = -1;
+                        bool needcrc = true;
+                        bool iscc = true;
+                        if (tsl.modbus.Mode == "TCP")
                         {
-                            #region 解释modbus写回复
-                            if (lastReader.Length >= 8)
-                            {
-                                ushort startAddress = lastReader.ReadUInt16BE();
-                                lastReader.ReadBytes(2);
-                                bool crcrs = true;
-                                if (needcrc)
-                                {
-                                    ushort u = lastReader.ReadUInt16LE();
-                                    ushort crc;
-                                    if (tsl.modbus.Mode == "RTU")
-                                    {
-                                        crc = FastBufferHelper.CalcCRC16(lastReader.ToArray(), 0, 6);
-                                    }
-                                    else
-                                    {
-                                        crc = FastBufferHelper.CalcLRC(lastReader.ToArray(), 0, 6);
-                                    }
-                                    if (u != crc)
-                                    {
-                                        crcrs = false;
-                                    }
-                                }
-                                if (crcrs)
-                                {
-                                    string callkey = "Func#" + slaveAddress + "#" + funcByte + "#" + startAddress + "#" + datamsg.prefix;
-                                    await PushReply(datamsg.DeviceId, "ok", callkey);
-                                    if (newmmlist == null)
-                                    {
-                                        newmmlist = new List<ModbusMatch>();
-                                    }
-                                    newmmlist.Add(new ModbusMatch()
-                                    {
-                                        SlaveId = slaveAddress,
-                                        Name = "Func",
-                                        FuncCode = funcByte,
-                                        StartAddress = startAddress
-                                    });
-                                }
-                                else
-                                {
-                                    lastReader.Reset();
-                                }
-                            }
-                            else
+                            needcrc = false;
+                            mmIdx = lastReader.ReadUInt16BE();
+                            lastReader.ReadUInt16BE();
+                            int mmlen = lastReader.ReadUInt16BE();
+                            if (lastReader.Length < (mmlen + 4))
                             {
                                 lastReader.MergeRead();
+                                iscc = false;
                             }
-                            #endregion
                         }
-                        else if (funcByte > 0 && funcByte < 7)
+
+                        if (iscc == true)
                         {
-                            byte bdlen = lastReader.ReadByte();
-
-                            //校验长度
-                            if ((lastReader.Length - 5) >= bdlen)
+                            byte slaveAddress = lastReader.ReadByte();
+                            byte funcByte = lastReader.ReadByte();
+                            if (funcByte == 5 || funcByte == 6 || funcByte == 15 || funcByte == 16)
                             {
-                                var body = new FastReader(lastReader.ReadBytes(bdlen));
-                                int tcount = lastReader.Position + 1;
-
-                                bool crcrs = true;
-                                if (needcrc)
+                                #region 解释modbus写回复
+                                if (lastReader.Length >= 8)
                                 {
-                                    ushort u = lastReader.ReadUInt16LE();
-                                    ushort crc;
-                                    if (tsl.modbus.Mode == "RTU")
+                                    ushort startAddress = lastReader.ReadUInt16BE();
+                                    lastReader.ReadBytes(2);
+                                    bool crcrs = true;
+                                    if (needcrc)
                                     {
-                                        crc = FastBufferHelper.CalcCRC16(lastReader.ToArray(), 0, tcount);
+                                        ushort u = lastReader.ReadUInt16LE();
+                                        ushort crc;
+                                        if (tsl.modbus.Mode == "RTU")
+                                        {
+                                            crc = FastBufferHelper.CalcCRC16(lastReader.ToArray(), 0, 6);
+                                        }
+                                        else
+                                        {
+                                            crc = FastBufferHelper.CalcLRC(lastReader.ToArray(), 0, 6);
+                                        }
+                                        if (u != crc)
+                                        {
+                                            crcrs = false;
+                                        }
                                     }
-                                    else
+                                    if (crcrs)
                                     {
-                                        crc = FastBufferHelper.CalcLRC(lastReader.ToArray(), 0, tcount);
-                                    }
-                                    //校验码验证
-                                    if (u != crc)
-                                    {
-                                        crcrs = false;
-                                    }
-                                }
-
-                                if (crcrs)
-                                {
-                                    propsDict = new Dictionary<string, object>();
-
-                                    #region 开始解释modbus读回复
-                                    if (mmIdx >= 0 && mmIdx < tsl.modbus.Matches.Count)
-                                    {
+                                        string callkey = "Func#" + slaveAddress + "#" + funcByte + "#" + startAddress + "#" + datamsg.prefix;
+                                        await PushReply(datamsg.DeviceId, "ok", callkey);
                                         if (newmmlist == null)
                                         {
                                             newmmlist = new List<ModbusMatch>();
                                         }
-                                        newmmlist.Add(tsl.modbus.Matches[mmIdx]);
+                                        newmmlist.Add(new ModbusMatch()
+                                        {
+                                            SlaveId = slaveAddress,
+                                            Name = "Func",
+                                            FuncCode = funcByte,
+                                            StartAddress = startAddress
+                                        });
                                     }
                                     else
                                     {
-                                        newmmlist = tsl.modbus.Matches.Where(x => x.SlaveId == slaveAddress && x.FuncCode == funcByte && x.GetByteLength() == bdlen).ToList();
-                                    }
-
-                                    if (newmmlist == null || newmmlist.Count == 0)
-                                    {
                                         lastReader.Reset();
-                                        await Print(datamsg.DeviceId, "设备上报消息", $"modbus无匹配规则:{FastBufferHelper.ByteToHexStr(lastReader.ReadToEnd())}");
-                                        return;
                                     }
+                                }
+                                else
+                                {
+                                    lastReader.MergeRead();
+                                }
+                                #endregion
+                            }
+                            else if (funcByte > 0 && funcByte < 7)
+                            {
+                                byte bdlen = lastReader.ReadByte();
+                                //校验长度
+                                if ((lastReader.Length - 5) >= bdlen)
+                                {
+                                    var body = new FastReader(lastReader.ReadBytes(bdlen));
+                                    int tcount = lastReader.Position + 1;
 
-                                    foreach (var matchItem in newmmlist)
+                                    bool crcrs = true;
+                                    if (needcrc)
                                     {
-                                        body.Reset();
-                                        foreach (var prop in matchItem.Items)
+                                        ushort u = lastReader.ReadUInt16LE();
+                                        ushort crc;
+                                        if (tsl.modbus.Mode == "RTU")
                                         {
-                                            if (prop.NumRegister == "b")
+                                            crc = FastBufferHelper.CalcCRC16(lastReader.ToArray(), 0, tcount);
+                                        }
+                                        else
+                                        {
+                                            crc = FastBufferHelper.CalcLRC(lastReader.ToArray(), 0, tcount);
+                                        }
+                                        //校验码验证
+                                        if (u != crc)
+                                        {
+                                            crcrs = false;
+                                        }
+                                    }
+                                    if (crcrs)
+                                    {
+                                        propsDict = new Dictionary<string, object>();
+                                        #region 开始解释modbus读回复
+                                        if (mmIdx >= 0 && mmIdx < tsl.modbus.Matches.Count)
+                                        {
+                                            if (newmmlist == null)
                                             {
-                                                int tmpbit = body.ReadBit();
-                                                if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                {
-                                                    if (propsDict.ContainsKey(prop.PropertyCode))
-                                                    {
-                                                        propsDict[prop.PropertyCode] = tmpbit;
-                                                    }
-                                                    else
-                                                    {
-                                                        propsDict.Add(prop.PropertyCode, tmpbit);
-                                                    }
-                                                }
+                                                newmmlist = new List<ModbusMatch>();
                                             }
-                                            else
+                                            newmmlist.Add(tsl.modbus.Matches[mmIdx]);
+                                        }
+                                        else
+                                        {
+                                            newmmlist = tsl.modbus.Matches.Where(x => x.SlaveId == slaveAddress && x.FuncCode == funcByte && x.GetByteLength() == bdlen).ToList();
+                                        }
+
+                                        if (newmmlist == null || newmmlist.Count == 0)
+                                        {
+                                            lastReader.Reset();
+                                            await Print(datamsg.DeviceId, "设备上报消息", $"modbus无匹配规则:{FastBufferHelper.ByteToHexStr(lastReader.ReadToEnd())}");
+                                            return;
+                                        }
+
+                                        foreach (var matchItem in newmmlist)
+                                        {
+                                            body.Reset();
+                                            foreach (var prop in matchItem.Items)
                                             {
-                                                if (prop.ByteOrder == "C")
+                                                if (prop.NumRegister == "b")
                                                 {
-                                                    byte[] tmpb = body.ReadBytes(prop.GetRegisterLen());
+                                                    int tmpbit = body.ReadBit();
                                                     if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                     {
                                                         if (propsDict.ContainsKey(prop.PropertyCode))
                                                         {
-                                                            propsDict[prop.PropertyCode] = ASCIIEncoding.ASCII.GetString(tmpb);
+                                                            propsDict[prop.PropertyCode] = tmpbit;
                                                         }
                                                         else
                                                         {
-                                                            propsDict.Add(prop.PropertyCode, ASCIIEncoding.ASCII.GetString(tmpb));
+                                                            propsDict.Add(prop.PropertyCode, tmpbit);
                                                         }
-
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    int datalen = prop.GetRegisterLen();
-                                                    if (datalen == 1)
+                                                    if (prop.ByteOrder == "C")
                                                     {
-                                                        byte tmpb = body.ReadByte();
+                                                        byte[] tmpb = body.ReadBytes(prop.GetRegisterLen());
                                                         if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                         {
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
-                                                                propsDict[prop.PropertyCode] = tmpb;
+                                                                propsDict[prop.PropertyCode] = ASCIIEncoding.ASCII.GetString(tmpb);
                                                             }
                                                             else
                                                             {
-                                                                propsDict.Add(prop.PropertyCode, tmpb);
+                                                                propsDict.Add(prop.PropertyCode, ASCIIEncoding.ASCII.GetString(tmpb));
                                                             }
 
                                                         }
                                                     }
-                                                    else if (datalen == 2)
+                                                    else
                                                     {
-                                                        short tmps;
-                                                        if (prop.ByteOrder == "H")
+                                                        int datalen = prop.GetRegisterLen();
+                                                        if (datalen == 1)
                                                         {
-                                                            tmps = body.ReadInt16BE();
-                                                        }
-                                                        else
-                                                        {
-                                                            tmps = body.ReadInt16LE();
-                                                        }
-                                                        if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                        {
-                                                            if (propsDict.ContainsKey(prop.PropertyCode))
+                                                            byte tmpb = body.ReadByte();
+                                                            if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                             {
-                                                                propsDict[prop.PropertyCode] = tmps;
+                                                                if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                {
+                                                                    propsDict[prop.PropertyCode] = tmpb;
+                                                                }
+                                                                else
+                                                                {
+                                                                    propsDict.Add(prop.PropertyCode, tmpb);
+                                                                }
+
+                                                            }
+                                                        }
+                                                        else if (datalen == 2)
+                                                        {
+                                                            short tmps;
+                                                            if (prop.ByteOrder == "H")
+                                                            {
+                                                                tmps = body.ReadInt16BE();
                                                             }
                                                             else
                                                             {
-                                                                propsDict.Add(prop.PropertyCode, tmps);
+                                                                tmps = body.ReadInt16LE();
                                                             }
-
-                                                        }
-                                                    }
-                                                    else if (datalen == 4)
-                                                    {
-                                                        int tmpi;
-                                                        switch (prop.ByteOrder)
-                                                        {
-                                                            case "L":
-                                                                tmpi = body.ReadInt32LE();
-                                                                break;
-                                                            case "CDAB":
-                                                                tmpi = body.ReadInt32CDAB();
-                                                                break;
-                                                            case "BADC":
-                                                                tmpi = body.ReadInt32BADC();
-                                                                break;
-                                                            default:
-                                                                tmpi = body.ReadInt32BE();
-                                                                break;
-                                                        }
-
-                                                        if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                        {
-                                                            if (!string.IsNullOrEmpty(datamsg.prefix))
+                                                            if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                             {
-                                                                var prpitem = tsl.properties.Where(x => x.code == prop.PropertyCode).FirstOrDefault();
-                                                                if (prpitem == null)
+                                                                if (propsDict.ContainsKey(prop.PropertyCode))
                                                                 {
-                                                                    continue;
+                                                                    propsDict[prop.PropertyCode] = tmps;
                                                                 }
-                                                                if (!string.IsNullOrEmpty(prpitem.prefixcode) && prpitem.prefixcode != datamsg.prefix)
+                                                                else
                                                                 {
-                                                                    continue;
+                                                                    propsDict.Add(prop.PropertyCode, tmps);
                                                                 }
+
                                                             }
-                                                            if (propsDict.ContainsKey(prop.PropertyCode))
+                                                        }
+                                                        else if (datalen == 4)
+                                                        {
+                                                            int tmpi;
+                                                            switch (prop.ByteOrder)
                                                             {
-                                                                propsDict[prop.PropertyCode] = tmpi;
-                                                            }
-                                                            else
-                                                            {
-                                                                propsDict.Add(prop.PropertyCode, tmpi);
+                                                                case "L":
+                                                                    tmpi = body.ReadInt32LE();
+                                                                    break;
+                                                                case "CDAB":
+                                                                    tmpi = body.ReadInt32CDAB();
+                                                                    break;
+                                                                case "BADC":
+                                                                    tmpi = body.ReadInt32BADC();
+                                                                    break;
+                                                                default:
+                                                                    tmpi = body.ReadInt32BE();
+                                                                    break;
                                                             }
 
+                                                            if (!string.IsNullOrEmpty(prop.PropertyCode))
+                                                            {
+                                                                if (!string.IsNullOrEmpty(datamsg.prefix))
+                                                                {
+                                                                    var prpitem = tsl.properties.Where(x => x.code == prop.PropertyCode).FirstOrDefault();
+                                                                    if (prpitem == null)
+                                                                    {
+                                                                        continue;
+                                                                    }
+                                                                    if (!string.IsNullOrEmpty(prpitem.prefixcode) && prpitem.prefixcode != datamsg.prefix)
+                                                                    {
+                                                                        continue;
+                                                                    }
+                                                                }
+                                                                if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                {
+                                                                    propsDict[prop.PropertyCode] = tmpi;
+                                                                }
+                                                                else
+                                                                {
+                                                                    propsDict.Add(prop.PropertyCode, tmpi);
+                                                                }
+
+                                                            }
                                                         }
                                                     }
                                                 }
+
+
                                             }
-
-
                                         }
+
+                                        #endregion
+
+
                                     }
-
-                                    #endregion
-
-
+                                    else
+                                    {
+                                        lastReader.Reset();
+                                    }
                                 }
                                 else
                                 {
-                                    lastReader.Reset();
+                                    lastReader.MergeRead();
                                 }
                             }
                             else
                             {
-                                lastReader.MergeRead();
+                                lastReader.Reset();
                             }
                         }
-                        else
+
+                    }
+
+                    //自定义解释
+                    await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeId);
+                    if (lastReader.Position > -1)
+                    {
+                        //有剩余数据包，则下个循环处理
+                        if (!lastReader.EndOfBuffer)
                         {
-                            lastReader.Reset();
+                            lastReader = lastReader.CopyTo(lastReader.Position + 1);
+                            isCute = true;
                         }
                     }
-
-                }
-
-                //自定义解释
-                await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeId);
-                if (lastReader.Position > -1)
-                {
-                    //有剩余数据包，则下个循环处理
-                    if (!lastReader.EndOfBuffer)
+                    else
                     {
-                        lastReader = lastReader.CopyTo(lastReader.Position + 1);
-                        isCute = true;
+                        if (lastReader.IsMergeRead || isCute)
+                        {
+                            //保存下次使用
+                            SaveFastReader(datamsg.DeviceId, lastReader);
+                        }
+                        if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
+                        {
+                            await DownModbusMatch(datamsg.NodeId, newmmlist);
+                        }
+                        return;
                     }
                 }
-                else
+
+                if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
                 {
-                    if (lastReader.IsMergeRead || isCute)
-                    {
-                        //保存下次使用
-                        SaveFastReader(datamsg.DeviceId, lastReader);
-                    }
-                    if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
-                    {
-                        await DownModbusMatch(datamsg.NodeId, newmmlist);
-                    }
-                    return;
+                    await DownModbusMatch(datamsg.NodeId, newmmlist);
                 }
             }
-
-            if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
+            catch (Exception ex)
             {
-                await DownModbusMatch(datamsg.NodeId, newmmlist);
+                await Print(datamsg.DeviceId, "rawDataTo异常", ex.Message);
             }
         }
         public async Task<RawDataMessage> toRawData(BaseDeviceMessage msg, TslReturn ret)

@@ -1,17 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.IO.Ports;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using ChannelUtility;
-using System.Collections.Generic;
+﻿using ChannelUtility;
 using ChannelUtility.Buffers;
+using ChannelUtility.Config;
 using ChannelUtility.Message;
 using ChannelUtility.Redis;
-using ChannelUtility.Config;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Ports;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ModbusChannel
 {
@@ -74,7 +75,6 @@ namespace ModbusChannel
         private ConcurrentDictionary<byte, long> _childrenTime = new ConcurrentDictionary<byte, long>();
         private byte[] _readBuffer = new byte[2048];
         private byte[] _lastBytes;
-        private long _lastByteTime = 0;
         private bool _needclose = false;
         private async Task<int> ReadWithTimeout(Stream stream, byte[] buffer, int offset, int count, int timeoutMs, CancellationToken cancellationToken)
         {
@@ -103,7 +103,6 @@ namespace ModbusChannel
         {
             try
             {
-                int consecutiveTimeouts = 0; // 连续超时计数器
                 while (!_isAborted && !cancellationToken.IsCancellationRequested)
                 {
                     if (_port == null || !_port.IsOpen)
@@ -111,12 +110,13 @@ namespace ModbusChannel
                         Console.WriteLine($"{_item.dtuid}串口已关闭，退出监听");
                         break;
                     }
+                    bool iscs = false;
                     int bytesReadLen = await ReadWithTimeout(
                         _port.BaseStream,
                         _readBuffer,
                         0,
                         _readBuffer.Length,
-                        12000,  // 超时12秒
+                        100,  // 超时100毫秒
                         cancellationToken
                     );
 
@@ -128,35 +128,18 @@ namespace ModbusChannel
                     }
                     else if (bytesReadLen == -1)
                     {
-                        consecutiveTimeouts++;
-                        Console.WriteLine($"串口{_item.dtuid}读取超时（{consecutiveTimeouts}次）");
-
-                        // 达到最大连续超时次数，判定为连接中断
-                        if (consecutiveTimeouts >= 3)
-                        {
-                            Console.WriteLine($"{_item.dtuid}连续超时次数达到阈值，判定连接中断");
-                            break;
-                        }
-                        continue;
-                    }
-                    else
-                    {
-                        // 读取到数据：重置超时计数器
-                        consecutiveTimeouts = 0;
+                        iscs = true;
                     }
 
                     if (bytesReadLen > 0)
                     {
-                        var curttt = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
                         // 处理接收到的数据
                         byte[] tmpbytes;
-
-                        if (_lastBytes != null && _lastBytes.Length > 0 && (curttt - _lastByteTime) < 200)
+                        if (_lastBytes != null && _lastBytes.Length > 0)
                         {
                             // 计算总长度并直接创建目标数组
                             int totalLength = _lastBytes.Length + bytesReadLen;
                             tmpbytes = new byte[totalLength];
-
                             // 一次完成两段数据复制
                             Buffer.BlockCopy(_lastBytes, 0, tmpbytes, 0, _lastBytes.Length);
                             Buffer.BlockCopy(_readBuffer, 0, tmpbytes, _lastBytes.Length, bytesReadLen);
@@ -166,16 +149,24 @@ namespace ModbusChannel
                             tmpbytes = new byte[bytesReadLen];
                             Buffer.BlockCopy(_readBuffer, 0, tmpbytes, 0, bytesReadLen);
                         }
-                        if (tmpbytes.Length <= 5)
+                        if (iscs)
                         {
-                            _lastByteTime = curttt;
-                            _lastBytes = tmpbytes;
-                            continue;
+                            await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty, true);
+                            _lastBytes = null;
                         }
-                        await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty, true);
-                        _lastBytes = null;
+                        else
+                        {
+                            _lastBytes = tmpbytes;
+                        }
                     }
-
+                    else
+                    {
+                        if (_lastBytes != null && _lastBytes.Length > 0)
+                        {
+                            await _eventBus.PublishRawUp(_item.dtuid, _lastBytes, string.Empty, true);
+                            _lastBytes = null;
+                        }
+                    }
                 }
             }
             catch (Exception ex)

@@ -328,7 +328,6 @@ namespace IoTRulesService.DataParser
                             {
                                 model = await TslCache.GetTslModel(rs.ProductId, redis, _provider);
                             }
-
                             var deviceCahce = _provider.GetService<DeviceCache>();
                             //获取所有旧属性数据
                             var allDict = await deviceCahce.GetDevice(rdmsg.DeviceId);
@@ -368,7 +367,6 @@ namespace IoTRulesService.DataParser
                                 }
                                 return;
                             }
-
                             //触发计算当前属性
                             if (string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
                             {
