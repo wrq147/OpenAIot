@@ -2,64 +2,37 @@
 branches: {
   }
 fileChange:
+  /AirJointUI:
+    newFile: !uuid 'cf0f31a269d346a77cec4311bc87956d300ab244'
+    oldFile: !uuid '9ea420a195d60c52fd0cda11e1ce555bb52f6d56'
+  /AirJointUI/ViewModels:
+    newFile: !uuid '3e2c7790524602435ff698e001a94a14a260d7b3'
+    oldFile: !uuid 'd78a7fbd6fae1d2f9f70b92ceaa5031e9f3d4cc1'
+  /AirJointUI/ViewModels/IndexViewModel.cs:
+    newFile: !uuid '82b035990b6279dfe21a5942b80bc4fe7b413db1'
+    oldFile: !uuid 'd95c01d663fa71f78d29d8e813a8e89129e5491c'
+  /App:
+    newFile: !uuid '34f6fce30d1a0dffcd3ac118955a777b8d0a1850'
+    oldFile: !uuid '2d3658dbe83a34b1e1dc2165f4e6023ba8dedadf'
+  /App/App.csproj:
+    newFile: !uuid '93e2da943489be053ff7731a1612f158d79d5737'
+    oldFile: !uuid '819350df48d8c321a2e116238490d36b24cbfdbc'
   /Modules:
-    newFile: !uuid '4b565ae5a6726bd9b55acd09b46228b13969b129'
-    oldFile: !uuid '5e7b3ecd5cd9479ab2c20168563288809c02e57e'
-  /Modules/IoTRulesService:
-    newFile: !uuid '7a430e68e94f03fbf340e9d83447f31106aa7a9c'
-    oldFile: !uuid 'def663c769a31e853fc709a92714eb2e02ffdeb9'
-  /Modules/IoTRulesService/DataParser:
-    newFile: !uuid '26364125605badd552ea4532b6621704409b75ac'
-    oldFile: !uuid '6f18e73110274cc3aa76da7e75e5a33560b8a89c'
-  /Modules/IoTRulesService/DataParser/DeviceMessageHandler.cs:
-    newFile: !uuid '77b1a22b888ab45b9584e07145c0a0ab0e492413'
-    oldFile: !uuid '19e012125c2511a11464a236a1951be878f41e77'
-  /admin-ui:
-    newFile: !uuid '0b744a9d063e73b00fe5ec655e5bde1c52d8a8a9'
-    oldFile: !uuid '70ab1d366d436a029e8467c996daebc97df68f97'
-  /admin-ui/src:
-    newFile: !uuid '8f50b2568055664ff4ad28a189e6c435016e8aa1'
-    oldFile: !uuid 'fa1ee77e4ab65c540ca6d710481f1e8efcc4e789'
-  /admin-ui/src/views:
-    newFile: !uuid 'b71b3e79f489f3028312cdc89cab528b76475e01'
-    oldFile: !uuid '0dfc44d7520b73a2ec6f97b91386fa336e499aee'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '77c923ac35e1274593ee5cc672cad5d55fcf8440'
-    oldFile: !uuid '8b5bd6d2cd86cda0e621121b6ca6f8c9a1d3b17c'
-  /admin-ui/src/views/iot/deviceManage:
-    newFile: !uuid 'd4319052b0b81f0154533e8d37671671e906b3ef'
-    oldFile: !uuid '7b4f83fc7ffd9fe2703d58b40a419ee33ddcfd54'
-  /admin-ui/src/views/iot/deviceManage/topicList.vue:
-    newFile: !uuid '99645eaf581682128029343a576cc80a42ad90f6'
-    oldFile: !uuid '87719e43643336d2a82f094bb843d0e6d132a6bf'
-  /admin-ui/src/views/iot/rulesEngine:
-    newFile: !uuid 'eed28da226f768428900bf47264c6308f806fbbd'
-    oldFile: !uuid 'efcbdaa8c231214e6e362a0fd05810d6a42073c2'
-  /admin-ui/src/views/iot/rulesEngine/add.vue:
-    newFile: !uuid '1f3bf19b78cc10113a0d3f36ecd465364302b0c0'
-    oldFile: !uuid '93404677b9eca781f622293ec91028fc79668246'
-  /admin-ui/src/views/iot/rulesEngine/selectDeviceWay.vue:
-    newFile: !uuid 'd39dd3a393ca25754c4b4e9a7ea26e02e3f19c45'
-    oldFile: !uuid '4c65e28ca484e48d176f70fcbb01dff2fa9b72f0'
-  /admin-ui/src/views/iot/rulesFlowable:
-    newFile: !uuid 'a7c39a91153c065aa49c2e63af40d8abd5125261'
-    oldFile: !uuid 'a802a0a984cbf9693971dfb4da0d9f553482f929'
-  /admin-ui/src/views/iot/rulesFlowable/common:
-    newFile: !uuid 'edb3b637e18e6a16ffc24e77cf7422287042e495'
-    oldFile: !uuid 'a56e0d382aa99877976b9e0c131696df657e3b45'
-  /admin-ui/src/views/iot/rulesFlowable/common/process:
-    newFile: !uuid '0ff6fee007c3b35fdba82cf61b0d83da8f032530'
-    oldFile: !uuid '481f4b69aee6dd147e64e06a219c0d6780a354c4'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config:
-    newFile: !uuid '2763f2d0364be2b6f3af3f2273b51ea7d839d97b'
-    oldFile: !uuid '7aa7317d28c09738cbc6b36f48de3f770a1c937d'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config/ConditionGroupItemConfig.vue:
-    newFile: !uuid 'deee5a9c32d9b32f3445c49faf82b66d27e0eff8'
-    oldFile: !uuid '2f5aeb0a50f449dace38deb84ff4fbe5de8fb383'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/config/RedirectNodeConfig.vue:
-    newFile: !uuid 'e26f360cd7fba3432af39e325b1ea1320dd3d580'
-    oldFile: !uuid 'b90ce60d566660f688bef61e4cf2706441b1349d'
-gitCommitId: !uuid '10841791c3d5c71ac16acd25617264ffa8ce1066'
+    newFile: !uuid 'ba7f5ac0c8aea2453ae0cabc501d9dadc2f5b2ce'
+    oldFile: !uuid '4b565ae5a6726bd9b55acd09b46228b13969b129'
+  /Modules/AfterService:
+    newFile: !uuid '9dd4648fc60f1475040d551dff256e0b63473c2c'
+    oldFile: !uuid 'faacf64cfecbaa5bb9a5350264513e3c268dc706'
+  /Modules/AfterService/Controller:
+    newFile: !uuid '093437427cc55ab840f8a1e7c1b9c5e7b4713647'
+    oldFile: !uuid 'c1e9065ad4b2bfb51ec2383a88826e0ff4779998'
+  /Modules/AfterService/Controller/HttpSync.cs:
+    newFile: !uuid 'd2f52a835497b8bc8b8a056e7742da8b5b50ec7b'
+    oldFile: !uuid 'c3691d33bb4a345bd3d58b234d94af80eedabcfb'
+  /悟空云开发者接口.doc:
+    newFile: !uuid 'd9e9741c8d4544b2a594552057f01de626c672a8'
+    oldFile: !uuid '2c36585773f40334309a85dddf4a358ea5b86b22'
+gitCommitId: !uuid 'cd6df84ef621f06c7b496c8ebb0f0d95b2c600c1'
 renames: {
   }
-revisionId: 227
+revisionId: 228
