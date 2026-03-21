@@ -2,19 +2,49 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid 'e4890f27c86e4f8fa017560093aeb1117947a846'
-    oldFile: !uuid '91f7e43c5088e0e7077175892cab064dc51d09c8'
-  /Channel/GB28181Channel:
-    newFile: !uuid '814c9f3e026a08104a3839c6e623c1d2d5982a22'
-    oldFile: !uuid '565a3ac86490eb293f540e97fb15fe6eb0a1529e'
-  /Channel/GB28181Channel/GB28181:
-    newFile: !uuid 'bd357cce1d745818c2c1f5f02632cf67e22f7897'
-    oldFile: !uuid '4c7ff2ce428ff049d1ac04a9c3c65235414360eb'
-  /Channel/GB28181Channel/GB28181/GB28181Server.cs:
-    newFile: !uuid 'f15eef0121bfa8d907e2e9963cf5e172b20541f7'
-    oldFile: !uuid 'ee453dde10727d953999f5abbb99551716a5c0b0'
-gitCommitId: !uuid 'b212a1d0b956ad33329e85e62b989892a21448d3'
+  /IOT_Skill.zip:
+    newFile: null
+    oldFile: !uuid '92d8e15f5c969c049e07379641a6a9ef2c9cedf6'
+  /Modules:
+    newFile: !uuid 'b53148eb21a1005db8bba0a7c4c10511193c9b2b'
+    oldFile: !uuid '1218a1a5c4c92b28e57fb8dd4e7e79e33c01daa4'
+  /Modules/AfterService:
+    newFile: !uuid 'faacf64cfecbaa5bb9a5350264513e3c268dc706'
+    oldFile: !uuid '2dfd1a0217031f69dfa761f4a35fff0aa008e06d'
+  /Modules/AfterService/PluginConfig.cs:
+    newFile: !uuid '45c7e4b36f9271efd773675cf20d13628d076083'
+    oldFile: !uuid '09655a3ab15a8dcb186f5ed8743fbfd4caa29f8b'
+  /Modules/IoTRulesService:
+    newFile: !uuid '6396418f6b438818de03bec90a37eca0ba81e6f5'
+    oldFile: !uuid '448bbd4872c6e1424ee79e1a2945db74ad91a8e5'
+  /Modules/IoTRulesService/Business:
+    newFile: !uuid '88d74f6c1be602f3d521de7efde255a2f8479760'
+    oldFile: !uuid '1fa64a0c8127e1bb33f802eab7d496c548c2b35d'
+  /Modules/IoTRulesService/Business/RuleBLL.cs:
+    newFile: !uuid '5f7c25ab988700370eeea9312fdb68cd973ddac5'
+    oldFile: !uuid 'cf385fca56be7710931c232ee7529fec15663307'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid '97f1d82bad9daf595126f8b1121efebc5d6448ff'
+    oldFile: !uuid '262dcc138f88ae8c803aa4ae87bc424618577473'
+  /Modules/IoTRulesService/DataParser/DeviceMessageHandler.cs:
+    newFile: !uuid 'ab5e68e36c9a030f8d320479f4cb2e267bb6049b'
+    oldFile: !uuid 'c66b0ddff94ce01b1b4828273ddc96591e64fbec'
+  /Modules/IoTRulesService/PluginConfig.cs:
+    newFile: !uuid '13673915217af1f007819f5f30fcd69b6311254b'
+    oldFile: !uuid '0954d05baf55489660ec8d410a5c2d6161a5dac7'
+  /Modules/ReportService:
+    newFile: !uuid '48bf64ec4db28103ac772acd57e0659fd8cb7a58'
+    oldFile: !uuid 'aacd718c323eebf02182a371dc4c2d896dffa9b1'
+  /Modules/ReportService/PluginConfig.cs:
+    newFile: !uuid '4f0f153ab40d46576ebeadcc2f341a4024f7a47a'
+    oldFile: !uuid '625c650f70f82048a86647e1a38f50036a34e3e3'
+  /Modules/WeiXinService:
+    newFile: !uuid '1b06e62b5bc7e89195a2563bef3bddb4a3395ea3'
+    oldFile: !uuid '6e6bcec7e98a27fe34c11931b5fab0bf4e61f230'
+  /Modules/WeiXinService/PluginConfig.cs:
+    newFile: !uuid '5d96ebf861a195aa5b13c61713dcd9ac37ef19ad'
+    oldFile: !uuid 'e179f293d7487fbfe0e82a7b7db2831cc04aea29'
+gitCommitId: !uuid '388fff8de714b1767e05858fb0aefdc7b7deb726'
 renames: {
   }
-revisionId: 223
+revisionId: 224
