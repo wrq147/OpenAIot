@@ -291,7 +291,7 @@ export default {
         enumArr.push({ "key": item.name, "value": item.code });
       });
 
-      if (this.$store.state.rulesFlowable.rulesDesign.TriggerWay == 0&&this.$store.state.rulesFlowable.rulesDesign.TopicMsg.value=='ReadPropertyReply') {
+      if (this.$store.state.rulesFlowable.rulesDesign.TriggerWay == 0&&this.$store.state.rulesFlowable.rulesDesign.TopicMsg.value=='PropReply') {
         this.compareItems["$prop"] = enumArr;
         conditionItems.push({
           code: "$prop",

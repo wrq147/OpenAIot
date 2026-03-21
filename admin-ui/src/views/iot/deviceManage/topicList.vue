@@ -60,7 +60,7 @@
             Info: '平台向设备发送功能指定或回复消息'
           }],
           msgData:[
-            {Type:'ReadPropertyReply',Content:'',Info:'设备属性上报'},
+            {Type:'PropReply',Content:'',Info:'设备属性上报'},
             {Type:'Bind',Content:'',Info:'协议发布时下发的固件升级消息'},
             {Type:'BindReply',Content:'',Info:'固件升级消息的回复'},
             {Type:'QueryICCID',Content:'',Info:'请求查询ICCID'},

@@ -1024,6 +1024,7 @@ namespace IoTRulesService.DataParser
             {
                 triggerMsg = rs.MsgType + "#" + ((DeviceEventMessage)rs).EventId;
             }
+
             var ruleCahce = _provider.GetService<RuleCache>();
             var ruleList = await ruleCahce.SelectByTriggers(productPath, devicePath, triggerMsg);
             ruleList.Sort((x, y) =>
@@ -1046,6 +1047,7 @@ namespace IoTRulesService.DataParser
                     initdata.Add(StreamData.Create(new Dictionary<string, object>(), nowTime));
                     break;
             }
+    
             foreach (var rule in ruleList)
             {
                 //禁止递归触发规则
@@ -1099,7 +1101,6 @@ namespace IoTRulesService.DataParser
                         }
                     }
                 }
-
                 var executor = await _provider.GetService<RuleExecutorBuilder>().Build(rule.RuleJson);
                 var context = executor.CreateContext(rs, rule.Id.Value, newparams);
                 context.IsDebug = ruleCahce.IsDebug(rule.Id.Value);

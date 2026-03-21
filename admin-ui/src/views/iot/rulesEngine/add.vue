@@ -212,7 +212,7 @@ export default {
         { value: "Online", label: "设备在线", icon: "el-icon-check" },
         // { value: "Upgrade", label: "更新固件" },
         {
-          value: "ReadPropertyReply",
+          value: "PropReply",
           label: "属性上报",
           icon: "el-icon-upload2",
         },

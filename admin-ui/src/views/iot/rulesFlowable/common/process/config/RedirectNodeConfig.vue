@@ -33,7 +33,7 @@
             <div class="delete_con" @click="config.TargetDtuIdsList.splice(inx, 1)">-</div>
           </div>
       </div>
-      <div class="params_con" v-if="topicMsgValue == 'ReadPropertyReply'||topicMsgValue == 'Event'">
+      <div class="params_con" v-if="topicMsgValue == 'PropReply'||topicMsgValue == 'Event'">
         <el-button type="primary" @click="addIdentifier"
           >+ 添加转换标识符</el-button
         >
@@ -157,7 +157,7 @@ export default {
       this.productChange(this.config.ProductId);
     }
 
-    if (this.topicMsgValue == "ReadPropertyReply") {
+    if (this.topicMsgValue == "PropReply") {
       this.paramsOptions = this.rulesProductAttr;
     }
     if (this.topicMsgValue == "Event") {
@@ -194,7 +194,7 @@ export default {
       //选择协议后
       if (this.choiceMap.get(val)) {
         let modelObj = this.choiceMap.get(val);
-        if (this.topicMsgValue == "ReadPropertyReply") {
+        if (this.topicMsgValue == "PropReply") {
           this.afterParamsOptions = modelObj.properties;
         }
         if (this.topicMsgValue == "Event") {
@@ -203,7 +203,7 @@ export default {
       } else {
         productInfo({ id: val }).then((rsp) => {
           let modelObj = JSON.parse(rsp.data.ModelTSL);
-          if (this.topicMsgValue == "ReadPropertyReply") {
+          if (this.topicMsgValue == "PropReply") {
             this.afterParamsOptions = modelObj.properties;
           }
           if (this.topicMsgValue == "Event") {
