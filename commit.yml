@@ -2,16 +2,64 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid 'f15c801b3a1db26c53856bd3f2a7174a6d126a9d'
-    oldFile: !uuid 'ab62fe3ce88b9cba0c2cf9059ddc191f52d63516'
-  /Channel/ModbusChannel:
-    newFile: !uuid '0b2a2e7e71bbb56d8a7ab7c8ec46cc7cde7d0fc8'
-    oldFile: !uuid 'b364caf51d52134670e3f713ca55f7494d66ebde'
-  /Channel/ModbusChannel/SerialTask.cs:
-    newFile: !uuid 'fc21bd703f660aa21f4e201540bbb4b5c9db6ccd'
-    oldFile: !uuid 'e191eda806b3b574397ad1f8776e967f16e19159'
-gitCommitId: !uuid '940541490692170ce2dcfeb1a2fb4f22feb06404'
+  /Modules:
+    newFile: !uuid '4b565ae5a6726bd9b55acd09b46228b13969b129'
+    oldFile: !uuid '5e7b3ecd5cd9479ab2c20168563288809c02e57e'
+  /Modules/IoTRulesService:
+    newFile: !uuid '7a430e68e94f03fbf340e9d83447f31106aa7a9c'
+    oldFile: !uuid 'def663c769a31e853fc709a92714eb2e02ffdeb9'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid '26364125605badd552ea4532b6621704409b75ac'
+    oldFile: !uuid '6f18e73110274cc3aa76da7e75e5a33560b8a89c'
+  /Modules/IoTRulesService/DataParser/DeviceMessageHandler.cs:
+    newFile: !uuid '77b1a22b888ab45b9584e07145c0a0ab0e492413'
+    oldFile: !uuid '19e012125c2511a11464a236a1951be878f41e77'
+  /admin-ui:
+    newFile: !uuid '0b744a9d063e73b00fe5ec655e5bde1c52d8a8a9'
+    oldFile: !uuid '70ab1d366d436a029e8467c996daebc97df68f97'
+  /admin-ui/src:
+    newFile: !uuid '8f50b2568055664ff4ad28a189e6c435016e8aa1'
+    oldFile: !uuid 'fa1ee77e4ab65c540ca6d710481f1e8efcc4e789'
+  /admin-ui/src/views:
+    newFile: !uuid 'b71b3e79f489f3028312cdc89cab528b76475e01'
+    oldFile: !uuid '0dfc44d7520b73a2ec6f97b91386fa336e499aee'
+  /admin-ui/src/views/iot:
+    newFile: !uuid '77c923ac35e1274593ee5cc672cad5d55fcf8440'
+    oldFile: !uuid '8b5bd6d2cd86cda0e621121b6ca6f8c9a1d3b17c'
+  /admin-ui/src/views/iot/deviceManage:
+    newFile: !uuid 'd4319052b0b81f0154533e8d37671671e906b3ef'
+    oldFile: !uuid '7b4f83fc7ffd9fe2703d58b40a419ee33ddcfd54'
+  /admin-ui/src/views/iot/deviceManage/topicList.vue:
+    newFile: !uuid '99645eaf581682128029343a576cc80a42ad90f6'
+    oldFile: !uuid '87719e43643336d2a82f094bb843d0e6d132a6bf'
+  /admin-ui/src/views/iot/rulesEngine:
+    newFile: !uuid 'eed28da226f768428900bf47264c6308f806fbbd'
+    oldFile: !uuid 'efcbdaa8c231214e6e362a0fd05810d6a42073c2'
+  /admin-ui/src/views/iot/rulesEngine/add.vue:
+    newFile: !uuid '1f3bf19b78cc10113a0d3f36ecd465364302b0c0'
+    oldFile: !uuid '93404677b9eca781f622293ec91028fc79668246'
+  /admin-ui/src/views/iot/rulesEngine/selectDeviceWay.vue:
+    newFile: !uuid 'd39dd3a393ca25754c4b4e9a7ea26e02e3f19c45'
+    oldFile: !uuid '4c65e28ca484e48d176f70fcbb01dff2fa9b72f0'
+  /admin-ui/src/views/iot/rulesFlowable:
+    newFile: !uuid 'a7c39a91153c065aa49c2e63af40d8abd5125261'
+    oldFile: !uuid 'a802a0a984cbf9693971dfb4da0d9f553482f929'
+  /admin-ui/src/views/iot/rulesFlowable/common:
+    newFile: !uuid 'edb3b637e18e6a16ffc24e77cf7422287042e495'
+    oldFile: !uuid 'a56e0d382aa99877976b9e0c131696df657e3b45'
+  /admin-ui/src/views/iot/rulesFlowable/common/process:
+    newFile: !uuid '0ff6fee007c3b35fdba82cf61b0d83da8f032530'
+    oldFile: !uuid '481f4b69aee6dd147e64e06a219c0d6780a354c4'
+  /admin-ui/src/views/iot/rulesFlowable/common/process/config:
+    newFile: !uuid '2763f2d0364be2b6f3af3f2273b51ea7d839d97b'
+    oldFile: !uuid '7aa7317d28c09738cbc6b36f48de3f770a1c937d'
+  /admin-ui/src/views/iot/rulesFlowable/common/process/config/ConditionGroupItemConfig.vue:
+    newFile: !uuid 'deee5a9c32d9b32f3445c49faf82b66d27e0eff8'
+    oldFile: !uuid '2f5aeb0a50f449dace38deb84ff4fbe5de8fb383'
+  /admin-ui/src/views/iot/rulesFlowable/common/process/config/RedirectNodeConfig.vue:
+    newFile: !uuid 'e26f360cd7fba3432af39e325b1ea1320dd3d580'
+    oldFile: !uuid 'b90ce60d566660f688bef61e4cf2706441b1349d'
+gitCommitId: !uuid '10841791c3d5c71ac16acd25617264ffa8ce1066'
 renames: {
   }
-revisionId: 226
+revisionId: 227
