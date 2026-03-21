@@ -1,17 +1,18 @@
 ﻿using AfterService.Business;
 using AfterService.Model;
-using DeveloperService;
-using System.Threading.Tasks;
-using TemplateAction.Core;
-using TemplateAction.Route;
-using Common;
-using TemplateAction.Label;
-using DeveloperService.Model;
 using AuthService;
+using Common;
 using Common.Share;
-using System.Collections.Generic;
+using DeveloperService;
+using DeveloperService.Model;
+using InfluxDB.Client.Api.Domain;
 using IoTService.Business;
 using IoTService.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using TemplateAction.Core;
+using TemplateAction.Label;
+using TemplateAction.Route;
 
 
 namespace AfterService.Controller
@@ -85,6 +86,20 @@ namespace AfterService.Controller
             return this.Success(await kfDeviceBLL.SelectMyDevices(user));
         }
 
+
+        /// <summary>
+        /// 客户设备列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ShareCheck]
+        public async Task<DefaultAjaxResult<PageObject<Out_KfDevice>>> ListPage(In_KFDevListPage query)
+        {
+            var user = _develper.ToUserInfo();
+            var kfDeviceBLL = this.ServiceProvider.GetService<KFDeviceBLL>();
+            return this.Success(await kfDeviceBLL.ListPage(query, user, null));
+        }
         /// <summary>
         /// 查询房间列表
         /// </summary>

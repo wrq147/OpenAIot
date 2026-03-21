@@ -399,7 +399,6 @@ namespace AirJointUI.ViewModels
             DeviceCount = string.Format(I18NExt.Translate("DeviceTag"), tmpcc.ToString());
         }
         private bool isNeedPage = false;
-        private bool isMulti = false;
         private List<DeviceItem> _tmpiptlist;
         private async Task InitInput(List<DeviceItem> alllist)
         {
@@ -476,7 +475,6 @@ namespace AirJointUI.ViewModels
                 if (proprs.code == 0 && proprs.data != null)
                 {
                     int realisx = 0;
-                    isMulti = proprs.data.Count > 8;
                     for (int x = 0; x < proprs.data.Count; x++)
                     {
                         var propitem = proprs.data[x];
@@ -540,7 +538,7 @@ namespace AirJointUI.ViewModels
         {
             FunExe_In exei = new FunExe_In();
             exei.Number = number;
-            exei.FunctionId = isMulti ? "startMulti" : "starMachine";
+            exei.FunctionId = "startMulti";
             exei.Inputs = new Dictionary<string, object>();
             var rs = await DeviceApi.ExeFunc(exei);
             return rs.code == 0;
@@ -549,7 +547,7 @@ namespace AirJointUI.ViewModels
         {
             FunExe_In exei = new FunExe_In();
             exei.Number = number;
-            exei.FunctionId = isMulti ? "stopMulti" : "stopmachine";
+            exei.FunctionId = "stopMulti";
             exei.Inputs = new Dictionary<string, object>();
             var rs = await DeviceApi.ExeFunc(exei);
             return rs.code == 0;
