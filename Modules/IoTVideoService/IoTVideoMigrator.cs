@@ -59,7 +59,7 @@ namespace IoTVideoService
 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("视频源Id")
 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
 .WithColumn("Position").AsString(50).WithColumnDescription("视频源位置")
-.WithColumn("VideoType").AsByte().WithColumnDescription("摄像头类型:0为固定地址,1为GB28181设备，2为GB28181通道，3为Onvif设备")
+.WithColumn("VideoType").AsByte().WithColumnDescription("摄像头类型:0为固定地址,1为GB28181设备，2为通道，3为Onvif设备")
 .WithColumn("VideoKey").AsString(128).Unique().WithColumnDescription("ZLMediaKit的视频Key")
 .WithColumn("PullAddr").AsString(255).WithColumnDescription("拉流地址")
 .WithColumn("UserName").AsString(50).Indexed().WithColumnDescription("用户名")

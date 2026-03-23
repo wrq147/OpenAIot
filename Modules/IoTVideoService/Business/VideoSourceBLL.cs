@@ -114,11 +114,31 @@ namespace IoTVideoService.Business
             data.VideoKey = null;
             data.OrgId = null;
 
-            if ((old.VideoType == 0 || old.VideoType == 3) && !string.IsNullOrEmpty(data.PullAddr) && old.PullAddr != data.PullAddr && !string.IsNullOrEmpty(old.NodeId))
+            if ((old.VideoType == 0 || old.VideoType == 3) && !string.IsNullOrEmpty(old.NodeId))
             {
-                //更新拉流
-                old.PullAddr = data.PullAddr;
-                await DownUpVideoItemMessage(old.NodeId, old);
+                bool candownVideoItem = false;
+                if (old.PullAddr != data.PullAddr)
+                {
+                    old.PullAddr = data.PullAddr;
+                    candownVideoItem = true;
+                }
+
+                if (old.UserName != data.UserName)
+                {
+                    old.UserName = data.UserName;
+                    candownVideoItem = true;
+                }
+
+                if (old.UserPwd != data.UserPwd)
+                {
+                    old.UserPwd = data.UserPwd;
+                    candownVideoItem = true;
+                }
+
+                if (candownVideoItem)
+                {
+                    await DownUpVideoItemMessage(old.NodeId, old);
+                }
             }
             return BusResponse<int>.Success(await videoSourceDAL.Update(data));
         }
@@ -197,6 +217,7 @@ namespace IoTVideoService.Business
             cpitem.PullAddr = source.PullAddr;
             cpitem.PushKey = source.VideoKey;
             cpitem.UserName = source.UserName;
+            cpitem.Password = source.UserPwd;
             AIConfig aiConfig;
             if (string.IsNullOrEmpty(source.AITasks))
             {
@@ -287,11 +308,11 @@ namespace IoTVideoService.Business
                 }
             }
         }
-        public virtual async Task InitChannels(string userName, string nodeId, List<ChannelData> channels)
+        public virtual async Task InitChannels(string userName, int videoType, string nodeId, List<ChannelData> channels)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
             await videoSourceDAL.Delete(x => x.VideoType == 2 && x.UserName == userName);
-            var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == 1 && x.UserName == userName)).FirstOrDefault();
+            var parentSource = (await videoSourceDAL.SelectList(x => x.VideoType == videoType && x.UserName == userName)).FirstOrDefault();
             if (parentSource == null)
             {
                 return;
@@ -366,6 +387,20 @@ namespace IoTVideoService.Business
                     tsource.Id = tlist[0].Id;
                     await videoSourceDAL.Update(tsource);
                     await DownUpVideoItemMessage(msg.DeviceId, tlist[0]);
+                }
+            }
+            else if (msg.VideoType == 3)
+            {
+                tlist = await videoSourceDAL.SelectList(x => x.VideoType == 3 && x.VideoKey == tkey);
+                if (tlist.Count > 0)
+                {
+                    var titem = tlist[0];
+                    MZ_VideoSource tsource = new MZ_VideoSource();
+                    tsource.NodeId = msg.DeviceId;
+                    tsource.Id = titem.Id;
+                    await videoSourceDAL.Update(tsource);
+
+                    await DownUpVideoItemMessage(msg.DeviceId, titem);
                 }
             }
             else

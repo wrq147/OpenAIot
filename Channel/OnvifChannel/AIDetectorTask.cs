@@ -5,7 +5,8 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-namespace FixVideoChannel
+
+namespace OnvifChannel
 {
     public static class AIDetectorTask
     {
@@ -92,7 +93,7 @@ namespace FixVideoChannel
         /// <param name="motionRatio"></param>
         /// <param name="listener"></param>
         /// <param name="data"></param>
-        public static void Detect(VideoData videoData, int width, int height, float motionRatio, IVideoDeviceEventListener listener, byte[] data)
+        public static void Detect(VideoData videoData, int width, int height, float motionRatio, OnvifDeviceEventListener listener, byte[] data)
         {
             _ = Task.Run(() =>
             {

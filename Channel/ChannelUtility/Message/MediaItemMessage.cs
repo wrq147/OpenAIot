@@ -22,7 +22,7 @@ namespace ChannelUtility.Message
         /// </summary>
         public string Id { get; set; }
         /// <summary>
-        /// 拉流地址
+        /// 拉流地址或摄像头Ip
         /// </summary>
         public string PullAddr { get; set; }
         /// <summary>
@@ -33,6 +33,10 @@ namespace ChannelUtility.Message
         /// 用户名
         /// </summary>
         public string UserName { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
     }
     public class AIConfig
     {

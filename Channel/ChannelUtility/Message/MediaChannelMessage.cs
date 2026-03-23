@@ -13,6 +13,7 @@ namespace ChannelUtility.Message
             MsgType = "MediaCH";
         }
         public List<ChannelData> Channels { get; set; }
+        public int VideoType { get; set; }
         public string UserName { get; set; }
     }
     public class ChannelData

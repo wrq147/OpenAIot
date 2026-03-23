@@ -641,12 +641,13 @@ namespace ChannelUtility
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
         }
-        public async void PublishMediaChannels(string username, List<ChannelData> channelDatas)
+        public async void PublishMediaChannels(string username, int videoType, List<ChannelData> channelDatas)
         {
             MediaChannelMessage msg = new MediaChannelMessage();
             msg.DeviceId = this._nodeId;
             msg.ProductId = string.Empty;
             msg.UserName = username;
+            msg.VideoType = videoType;
             msg.Channels = channelDatas;
 
             await _bus.PublishAsync(new NatsMsg<string>()

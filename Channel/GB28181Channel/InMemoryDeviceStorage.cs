@@ -166,7 +166,7 @@ namespace GB28181Channel
             }
             var channelIds = channels.Select(x => x.ChannelId).ToList();
             var channelNames = channels.Select(x => x.ChannelName).ToList();
-            eventBus.PublishMediaChannels(deviceId, dataList);
+            eventBus.PublishMediaChannels(deviceId, 1, dataList);
             return true;
         }
 

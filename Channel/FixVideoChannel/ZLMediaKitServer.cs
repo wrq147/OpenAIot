@@ -410,10 +410,9 @@ namespace FixVideoChannel
         }
         public void AddPullProxy(VideoData data)
         {
-            if (_players.ContainsKey(data.Item.Id))
-            {
-                return;
-            }
+            //尝试删除旧的播放器
+            RemovePullProxy(data.Item.Id);
+
             //创建播放器
             MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
             FrameContext context = new FrameContext();
@@ -536,7 +535,7 @@ namespace FixVideoChannel
                     {
                         CallbackHelper.FreeInstancePtr(contextPtr);
                     }
-          
+
                 }
                 mk_player.MkPlayerRelease(tmpt);
             }

@@ -96,7 +96,7 @@ namespace IoTVideoService
                 case "MediaCH":
                     {
                         MediaChannelMessage mcmsg = (MediaChannelMessage)msg;
-                        await _provider.GetService<VideoSourceBLL>().InitChannels(mcmsg.UserName, mcmsg.DeviceId, mcmsg.Channels);
+                        await _provider.GetService<VideoSourceBLL>().InitChannels(mcmsg.UserName, mcmsg.VideoType, mcmsg.DeviceId, mcmsg.Channels);
                     }
                     break;
                 case "MediaUser":
