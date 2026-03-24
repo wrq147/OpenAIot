@@ -2,24 +2,24 @@
 using ChannelUtility.Message;
 using Microsoft.Extensions.DependencyInjection;
 using Onvif.Core.Client.Camera;
-using Onvif.Core.Client.Camera.Requests;
-using Onvif.Core.Client.Common;
-using Onvif.Core.Client.Device;
-using Onvif.Core.Client.Media;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using ZLMediaKit;
 
 namespace OnvifChannel
 {
     public unsafe class ZLMediaKitServer
     {
+        private ConcurrentDictionary<string, RecordContext> _recordContexts = new ConcurrentDictionary<string, RecordContext>();
+        private ConcurrentDictionary<string, MkPlayerT> _players;
+        // Player 相关回调委托
+        private ZLMediaKit.OnMkPlayEvent _onPlayDelegate;
+        private ZLMediaKit.OnMkPlayEvent _onShutdownDelegate;
+
+
         private ZLMediaKit.OnMkFrameOut _onParseFrameDelegate;
         private ZLMediaKit.OnMkDecode _onDecodeFrameDelegate;
         private ZLMediaKit.Delegates.Func_int___IntPtr___IntPtr _onMediaNotFoundDelegate;
@@ -39,19 +39,25 @@ namespace OnvifChannel
         private OnvifDeviceEventListener _listener;
         private OnvifOption _option;
         private ConcurrentDictionary<string, Account> _cameraAccountDict;
-        private ConcurrentDictionary<string, string> _IdToKeys;
+        private ConcurrentDictionary<string, string> _keyToId;
+        private ConcurrentDictionary<string, VideoData> _videoItems;
         private ConcurrentDictionary<string, FrameContext> _contextMap;
         private ConcurrentDictionary<string, IntPtr> _contextPtrMap;
-        private ConcurrentDictionary<string, VideoData> _videoKeyItems;
+
         private static readonly Lazy<ZLMediaKitServer> _instance = new Lazy<ZLMediaKitServer>(() => new ZLMediaKitServer());
         public static ZLMediaKitServer Instance => _instance.Value;
         private ZLMediaKitServer()
         {
+            _players = new ConcurrentDictionary<string, MkPlayerT>();
+            // Player 回调
+            _onPlayDelegate = OnPlay;
+            _onShutdownDelegate = OnShutdown;
+
+            _keyToId = new ConcurrentDictionary<string, string>();
             _cameraAccountDict = new ConcurrentDictionary<string, Account>();
-            _IdToKeys = new ConcurrentDictionary<string, string>();
             _contextMap = new ConcurrentDictionary<string, FrameContext>();
             _contextPtrMap = new ConcurrentDictionary<string, IntPtr>();
-            _videoKeyItems = new ConcurrentDictionary<string, VideoData>();
+            _videoItems = new ConcurrentDictionary<string, VideoData>();
 
             _onParseFrameDelegate = OnParseFrame;
             _onDecodeFrameDelegate = OnDecodeFrame;
@@ -95,7 +101,7 @@ namespace OnvifChannel
             }
             try
             {
-                if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
+                if (_videoItems.TryGetValue(context.VideoId, out VideoData item))
                 {
                     if (item.Configs != null && item.Configs.Count > 0 && context.VideoDecoder != null)
                     {
@@ -144,7 +150,7 @@ namespace OnvifChannel
                 }
 
 
-                if (_videoKeyItems.TryGetValue(context.VideoKey, out VideoData item))
+                if (_videoItems.TryGetValue(context.VideoId, out VideoData item))
                 {
                     if (context.Motion == null)
                     {
@@ -218,176 +224,40 @@ namespace OnvifChannel
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
             MkMediaSourceT mediaSourceT = (MkMediaSourceT)senderPtr;
-            string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT).ToLower();
-            if (regist == 1)
+            string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT);
+            if (_keyToId.TryGetValue(streamId, out string tmpid))
             {
-                if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
+                if (_videoItems.TryGetValue(tmpid, out VideoData item))
                 {
-                    _mediaDict.AddOrUpdate(streamId, _ => playbackParams, (x, y) => playbackParams);
-                    var storage = _provider.GetService<IDeviceStorage>();
-                    var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                    var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
-                    if (channelInfo == null)
+                    if (regist == 1)
                     {
-                        return;
-                    }
-                    if (_contextMap.ContainsKey(channelInfo.PushKey))
-                    {
-                        return;
-                    }
-
-                    FrameContext context = new FrameContext();
-                    context.SourceMedia = mediaSourceT;
-                    IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
-                    context.VideoKey = channelInfo.PushKey;
-                    context.DeviceId = channelInfo.DeviceId;
-                    context.ChannelId = channelInfo.ChannelId;
-                    _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
-                    _contextMap.TryAdd(context.VideoKey, context);
-
-                    //创建实时拉流
-                    MkIniT option = mk_util.MkIniCreate();
-                    mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
-                    mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
-                    mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
-                    mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
-                    mk_util.MkIniSetOptionInt(option, "auto_close", 0);
-
-                    context.Media = mk_media.MkMediaCreate2("__defaultVhost__", "live", context.VideoKey, 0, option);
-                    mk_util.MkIniRelease(option);
-
-                    int trackCount = mk_events_objects.MkMediaSourceGetTrackCount(mediaSourceT);
-                    for (int i = 0; i < trackCount; i++)
-                    {
-                        MkTrackT mkTrack = mk_events_objects.MkMediaSourceGetTrack(mediaSourceT, i);
-                        if (mkTrack == null) { continue; }
-
-                        if (mk_track.MkTrackIsVideo(mkTrack) > 0)
+                        _listener.OnEventOnline(item.Item);
+                        if (_recordContexts.TryGetValue(streamId, out RecordContext tmprec))
                         {
-
-                            int codec_id = mk_track.MkTrackCodecId(mkTrack);
-                            int width = mk_track.MkTrackVideoWidth(mkTrack);
-                            int height = mk_track.MkTrackVideoHeight(mkTrack);
-                            float tfps = mk_track.MkTrackVideoFps(mkTrack);
-                            int bit_rate = mk_track.MkTrackBitRate(mkTrack);
-                            mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
-
-                            MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
-                            context.VideoDecoder = mkDecoder;
-                            context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
-
-                            mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
-                            mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
-
-                        }
-                        else
-                        {
-                            mk_media.MkMediaInitTrack(context.Media, mkTrack);
+                            var rs = mk_recorder.MkRecorderStart(tmprec.Msg.SaveType, "__defaultVhost__", "live", tmprec.Msg.StreamId, null, 0);
+                            if (rs == 1)
+                            {
+                                tmprec.Callback.Invoke(true, string.Empty);
+                            }
+                            else
+                            {
+                                tmprec.Callback.Invoke(false, "录像失败");
+                            }
                         }
                     }
-                    mk_media.MkMediaInitComplete(context.Media);
-                }
-                else
-                {
-                    if (_recordContexts.TryRemove(streamId, out RecordContext tmprec))
+                    else
                     {
-                        var rs = mk_recorder.MkRecorderStart(tmprec.Msg.SaveType, "__defaultVhost__", "live", tmprec.Msg.StreamId, null, 0);
-                        if (rs == 1)
-                        {
-                            tmprec.Callback.Invoke(true, string.Empty);
-                        }
-                        else
-                        {
-                            tmprec.Callback.Invoke(false, "录像失败");
-                        }
+                        _listener.OnEventOffline(item.Item);
                     }
                 }
             }
-            else
-            {
-                if (_mediaDict.TryGetValue(streamId, out var playbackParams))
-                {
-                    _mediaDict.TryRemove(streamId, out PlaybackParams ch);
-                    var storage = _provider.GetService<IDeviceStorage>();
-                    var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                    var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
-                    if (channelInfo == null)
-                    {
-                        return;
-                    }
-
-                    if (_contextMap.TryRemove(channelInfo.PushKey, out FrameContext context))
-                    {
-                        context.CanParse = false;
-                        Thread.Sleep(200);
-                        if (context.Swscale != null)
-                        {
-                            mk_transcode.MkSwscaleRelease(context.Swscale);
-                            context.Swscale = null;
-                        }
-                        if (context.VideoDecoder != null)
-                        {
-                            mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
-                            context.VideoDecoder = null;
-                        }
-                        if (context.Media != null)
-                        {
-                            mk_media.MkMediaRelease(context.Media);
-                            context.Media = null;
-                        }
-                        FrameBufferPool.ClearCache(channelInfo.PushKey);
-                    }
-                    if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
-                    {
-                        CallbackHelper.FreeInstancePtr(contextPtr);
-                    }
-                }
-
-            }
+           
         }
 
         private void On_mk_media_publish(IntPtr url,
                               IntPtr invoker,
                               IntPtr sock)
         {
-            var url_info = (MkMediaInfoT)url;
-            var rawStreamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            var streamId = rawStreamId.ToLower();
-            bool enablePublish = false;
-            if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
-            {
-                enablePublish = true;
-            }
-            else
-            {
-                if (_mediaDict.ContainsKey(streamId))
-                {
-                    enablePublish = true;
-                }
-            }
-            if (enablePublish)
-            {
-                MkIniT toption = mk_util.MkIniCreate();
-                mk_util.MkIniSetOptionInt(toption, "enable_mp4", 0);
-                mk_util.MkIniSetOptionInt(toption, "enable_audio", 1);
-                mk_util.MkIniSetOptionInt(toption, "enable_fmp4", 0);
-                mk_util.MkIniSetOptionInt(toption, "enable_ts", 0);
-                mk_util.MkIniSetOptionInt(toption, "enable_hls", 0);
-                mk_util.MkIniSetOptionInt(toption, "enable_rtsp", 1);
-                mk_util.MkIniSetOptionInt(toption, "enable_rtmp", 0);
-                mk_util.MkIniSetOptionInt(toption, "add_mute_audio", 0);
-                mk_util.MkIniSetOptionInt(toption, "auto_close", 0);
-                mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, null, toption);
-                mk_util.MkIniRelease(toption);
-            }
-            else
-            {
-                mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, "无发布权限，中断推流", null);
-            }
         }
         private void On_mk_media_play(IntPtr url,
                                IntPtr invoker,
@@ -401,12 +271,6 @@ namespace OnvifChannel
                 return;
             }
             var streamId = mk_events_objects.MkMediaInfoGetStream(url_info);
-            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-            var channelInfo = storage.GetChannelFrom(streamId);
-            if (channelInfo == null)
-            {
-                return;
-            }
             mk_events_objects.MkAuthInvokerDo((MkAuthInvokerT)invoker, null);
         }
 
@@ -444,28 +308,17 @@ namespace OnvifChannel
             var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
             var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
             var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
-            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-            var channelInfo = storage.GetChannelFrom(stream);
-            if (channelInfo == null)
-            {
-                return;
-            }
-            var device = storage.GetDevice(channelInfo.DeviceId);
-            if (device == null)
-            {
-                return;
-            }
-            if (device.VideoData == null || device.VideoData.Item == null)
-            {
-                return;
-            }
-            _ = _listener.OnSendRecordFile(device.VideoData.Item.Id, stream, fileName, fileSize, startTime, timeLen, channelInfo.StorageWay, 0);
 
-            if (channelInfo.StorageWay == 1)
+            if (_recordContexts.TryGetValue(stream, out RecordContext tmprec))
             {
-                string upfilePosition = $"{stream}/{startTime.ToString("yyyy-MM-dd")}/{fileName}";
-                _provider.GetService<MinioHelper>().UploadFile(filePath, upfilePosition);
+                _ = _listener.OnSendRecordFile(tmprec.Msg.DeviceId, stream, fileName, fileSize, startTime, timeLen, tmprec.StorageWay, 0);
+                if (tmprec.StorageWay == 1)
+                {
+                    string upfilePosition = $"{stream}/{startTime.ToString("yyyy-MM-dd")}/{fileName}";
+                    _provider.GetService<MinioHelper>().UploadFile(filePath, upfilePosition);
+                }
             }
+
         }
         private void On_mk_record_hls(IntPtr hlsPtr)
         {
@@ -477,47 +330,38 @@ namespace OnvifChannel
             var fileSize = mk_events_objects.MkRecordInfoGetFileSize(sender);
             var startTime = mk_events_objects.MkRecordInfoGetStartTime(sender);
             var timeLen = mk_events_objects.MkRecordInfoGetTimeLen(sender);
-            InMemoryDeviceStorage storage = (InMemoryDeviceStorage)_provider.GetService<IDeviceStorage>();
-            var channelInfo = storage.GetChannelFrom(stream);
-            if (channelInfo == null)
-            {
-                return;
-            }
-            var device = storage.GetDevice(channelInfo.DeviceId);
-            if (device == null)
-            {
-                return;
-            }
-            if (device.VideoData == null || device.VideoData.Item == null)
-            {
-                return;
-            }
 
-            var storageWay = channelInfo.StorageWay;
-            var videoId = device.VideoData.Item.Id;
-            var archiveTimer = new System.Timers.Timer(1000);
-            archiveTimer.AutoReset = false;
-            archiveTimer.Elapsed += (senderTimer, e) =>
+            if (_recordContexts.TryGetValue(stream, out RecordContext tmprec))
             {
-                try
+                var videoId = tmprec.Msg.DeviceId;
+                var storageWay = tmprec.StorageWay;
+                var archiveTimer = new System.Timers.Timer(1000);
+                archiveTimer.AutoReset = false;
+                archiveTimer.Elapsed += (senderTimer, e) =>
                 {
-                    string sliceDir = Path.GetDirectoryName(filePath);
-                    string vodM3u8Path = Path.Combine(sliceDir, "vod.m3u8");
-                    bool isVodArchived = File.Exists(vodM3u8Path);
-                    if (isVodArchived)
+                    try
                     {
-                        _ = _listener.OnSendRecordFile(videoId, stream, fileName, fileSize, startTime, timeLen, storageWay, 1);
+                        string sliceDir = Path.GetDirectoryName(filePath);
+                        string vodM3u8Path = Path.Combine(sliceDir, "vod.m3u8");
+                        bool isVodArchived = File.Exists(vodM3u8Path);
+                        if (isVodArchived)
+                        {
+                            _ = _listener.OnSendRecordFile(videoId, stream, fileName, fileSize, startTime, timeLen, storageWay, 1);
+                        }
                     }
-                }
-                finally
-                {
-                    // 立即停止并销毁定时器，防止内存泄漏
-                    archiveTimer.Stop();
-                    archiveTimer.Dispose();
-                }
-            };
-            archiveTimer.Start();
+                    finally
+                    {
+                        // 立即停止并销毁定时器，防止内存泄漏
+                        archiveTimer.Stop();
+                        archiveTimer.Dispose();
+                    }
+                };
+                archiveTimer.Start();
+
+            }
         }
+
+
         private void On_mk_flow_report(IntPtr url,
                                       ulong total_bytes,
                                       ulong total_seconds,
@@ -526,51 +370,119 @@ namespace OnvifChannel
         {
 
         }
-        public void UpdateCamera(VideoData data)
+
+        private void OnPlay(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
         {
-            RemoveCamera(data.Item.Id);
+            FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            for (int i = 0; i < track_count; i++)
+            {
+                if (i >= tracks.Length)
+                {
+                    continue;
+                }
+                MkTrackT mkTrack = (MkTrackT)tracks[i];
+
+                if (mk_track.MkTrackIsVideo(mkTrack) > 0)
+                {
+                    int codec_id = mk_track.MkTrackCodecId(mkTrack);
+                    int width = mk_track.MkTrackVideoWidth(mkTrack);
+                    int height = mk_track.MkTrackVideoHeight(mkTrack);
+                    float tfps = mk_track.MkTrackVideoFps(mkTrack);
+                    int bit_rate = mk_track.MkTrackBitRate(mkTrack);
+                    mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
+
+                    MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
+                    context.VideoDecoder = mkDecoder;
+                    context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
+
+                    mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, user_data);
+                    mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, user_data);
+
+                }
+                else
+                {
+                    mk_media.MkMediaInitTrack(context.Media, mkTrack);
+                }
+            }
+
+            mk_media.MkMediaInitComplete(context.Media);
+        }
+        private void OnShutdown(IntPtr user_data, int err_code, string err_msg, IntPtr[] tracks, int track_count)
+        {
+            FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
+            context.CanParse = false;
+            Thread.Sleep(200);
+            if (context.Swscale != null)
+            {
+                mk_transcode.MkSwscaleRelease(context.Swscale);
+                context.Swscale = null;
+            }
+            if (context.VideoDecoder != null)
+            {
+                mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
+                context.VideoDecoder = null;
+            }
+
+        }
+        public MyCamera AddAccount(VideoData data)
+        {
             Account account = new Account(data.Item.PullAddr, data.Item.UserName, data.Item.Password);
             _cameraAccountDict.TryAdd(data.Item.Id, account);
             var camera = MyCamera.Create(account, ex =>
             {
                 Console.WriteLine(ex.Message);
             });
-
-            var profiles = camera.Media.GetProfilesAsync().Result;
-
-
-            var eventBus = _provider.GetService<ClientBusProxy>();
-            foreach (var profile in profiles.Profiles)
+            return camera;
+        }
+        public MyCamera GetCamera(string videoId)
+        {
+            if (_videoItems.TryGetValue(videoId, out var videodata))
             {
-                //var streamSetup = new StreamSetup
-                //{
-                //    // 流类型：单播（最常用）
-                //    Stream = StreamType.RTPUnicast,
-                //    Transport = new Transport
-                //    {
-                //        Protocol = TransportProtocol.RTSP,
-                //    }
-                //};
-                //var streamUri = await this.Media.GetStreamUriAsync(streamSetup, profile.token);
-                //Console.WriteLine($"RTSP流地址：{streamUri.Uri}");
+                if (_cameraAccountDict.TryGetValue(videodata.Item.Id, out var tmpacc))
+                {
+                    return MyCamera.Get(tmpacc);
+                }
             }
-            _IdToKeys.TryAdd(data.Item.Id, data.Item.PushKey);
+            return null;
+        }
+        public void UpdateCamera(VideoData data)
+        {
 
             FrameContext context = new FrameContext();
             context.VideoKey = data.Item.PushKey;
+            context.VideoId = data.Item.Id;
             IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
             _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
             _contextMap.TryAdd(context.VideoKey, context);
-            _videoKeyItems.TryAdd(data.Item.PushKey, data);
+            //创建播放器
+            MkPlayerT mkPlayer = mk_player.MkPlayerCreate();
 
+            mk_player.MkPlayerSetOnResult(mkPlayer, _onPlayDelegate, contextPtr);
+            mk_player.MkPlayerSetOnShutdown(mkPlayer, _onShutdownDelegate, contextPtr);
+            _keyToId.TryAdd(data.Item.PushKey, data.Item.Id);
+            _players.TryAdd(data.Item.Id, mkPlayer);
+
+            MkIniT option = mk_util.MkIniCreate();
+            mk_util.MkIniSetOptionInt(option, "enable_mp4", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_audio", 1);
+            mk_util.MkIniSetOptionInt(option, "enable_fmp4", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_ts", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_hls", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_rtsp", 0);
+            mk_util.MkIniSetOptionInt(option, "enable_rtmp", 1);
+            mk_util.MkIniSetOptionInt(option, "add_mute_audio", 0);
+            mk_util.MkIniSetOptionInt(option, "auto_close", 0);
+            context.Media = mk_media.MkMediaCreate2("__defaultVhost__", "live", context.VideoKey, 0, option);
+            mk_util.MkIniRelease(option);
+            mk_player.MkPlayerPlay(mkPlayer, data.url);
         }
         public void RemoveCamera(string id)
         {
             if (_cameraAccountDict.TryRemove(id, out Account tmpCameraAccount))
             {
-                if (_IdToKeys.TryRemove(id, out string tkey))
+                if (_videoItems.TryRemove(id, out VideoData tmpdata))
                 {
-                    if (_contextMap.TryRemove(tkey, out FrameContext handle))
+                    if (_contextMap.TryRemove(tmpdata.Item.PushKey, out FrameContext handle))
                     {
                         handle.CanParse = false;
                         Thread.Sleep(200);
@@ -579,16 +491,84 @@ namespace OnvifChannel
                             mk_media.MkMediaRelease(handle.Media);
                             handle.Media = null;
                         }
-                        FrameBufferPool.ClearCache(tkey);
+                        FrameBufferPool.ClearCache(tmpdata.Item.PushKey);
                     }
-                    _videoKeyItems.TryRemove(tkey, out VideoData tmpval);
-                    if (_contextPtrMap.TryRemove(tkey, out IntPtr contextPtr))
+                    if (_contextPtrMap.TryRemove(tmpdata.Item.PushKey, out IntPtr contextPtr))
                     {
                         CallbackHelper.FreeInstancePtr(contextPtr);
                     }
+                    _keyToId.Remove(tmpdata.Item.PushKey, out string tmpvvv);
                 }
+
                 MyCamera.ReleaseCamera(tmpCameraAccount);
             }
+        }
+
+        public void UpdateAIDraw(string videoId, List<BoxItem> boxList, bool needUpdate)
+        {
+            if (_videoItems.TryGetValue(videoId, out VideoData tmpval))
+            {
+                if (needUpdate)
+                {
+                    tmpval.NeedUp = true;
+                }
+                else
+                {
+                    tmpval.BoxList = boxList;
+                }
+            }
+        }
+        public void RecorderStart(MediaRecordStartMessage msg, int retrycount, Action<bool, string> cb)
+        {
+            var mediaSource = mk_events_objects.MkMediaSourceFind2("rtmp", "__defaultVhost__", "live", msg.StreamId, 0);
+            if (mediaSource == null)
+            {
+                RecordContext recordContext = new RecordContext();
+                recordContext.StorageWay = msg.Storage;
+                recordContext.Msg = msg;
+                recordContext.Callback = cb;
+                _recordContexts.AddOrUpdate(msg.StreamId, recordContext, (s, r) => recordContext);
+
+                _provider.GetService<ClientBusProxy>().PublishMediaNotFound(msg.StreamId, 0);
+                return;
+            }
+            if (msg.Storage == 0)
+            {
+                var rs = mk_recorder.MkRecorderStart(msg.SaveType, "__defaultVhost__", "live", msg.StreamId, null, 0);
+                if (rs == 1)
+                {
+                    cb.Invoke(true, string.Empty);
+                }
+                else
+                {
+                    if (retrycount > 0)
+                    {
+                        cb.Invoke(false, "未知原因");
+                        return;
+                    }
+                    Thread.Sleep(100);
+                    RecorderStart(msg, retrycount + 1, cb);
+                }
+            }
+            else
+            {
+                cb.Invoke(false, "存储方式不支持");
+            }
+        }
+        public void RecorderStop(MediaRecordStopMessage msg, Action<bool, string> cb)
+        {
+            bool isSuccess = false;
+            string reason = string.Empty;
+            var rs = mk_recorder.MkRecorderStop(msg.SaveType, "__defaultVhost__", "live", msg.StreamId);
+            if (rs == 1)
+            {
+                isSuccess = true;
+            }
+            else
+            {
+                reason = "关闭录像失败";
+            }
+            cb.Invoke(isSuccess, reason);
         }
         public void Start(OnvifOption option, IServiceProvider provider, OnvifDeviceEventListener listener)
         {
@@ -639,9 +619,21 @@ namespace OnvifChannel
                 MkEvents.MkEventsListen(_mkEvents);
             }
         }
+
+        public void Stop()
+        {
+            mk_common.MkStopAllServer();
+            FrameBufferPool.ClearAllCache();
+        }
+
     }
 
-
+    public class RecordContext
+    {
+        public byte StorageWay { get; set; }
+        public MediaRecordStartMessage Msg { get; set; }
+        public Action<bool, string> Callback { get; set; }
+    }
     public class VideoData
     {
         private List<BoxItem> _boxList;
@@ -657,11 +649,14 @@ namespace OnvifChannel
         public int CoolDownMs { get; set; }
         public List<AIConfigData> Configs { get; set; }
         public bool NeedUp { get; set; }
+        public string token { get; set; }
+        public string url { get; set; }
     }
 
     public class FrameContext
     {
         public bool CanParse { get; set; } = true;
+        public string VideoId { get; set; }
         public string VideoKey { get; set; }
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }

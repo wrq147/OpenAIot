@@ -4,6 +4,8 @@ using Common.Share;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using Microsoft.Extensions.Options;
+using NPOI.SS.Formula.Functions;
+using System.Threading.Channels;
 using TemplateAction.Core;
 
 namespace IoTVideoService.Business
@@ -18,7 +20,7 @@ namespace IoTVideoService.Business
         public async Task<BusResponse<string>> ControlPTZ(In_PtzControlParam data)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == data.SourceId && x.VideoType == 1)).FirstOrDefault();
+            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == data.SourceId)).FirstOrDefault();
             if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
             {
                 return BusResponse<string>.Error(111, "视频源未注册");
@@ -60,23 +62,41 @@ namespace IoTVideoService.Business
         public async Task<List<Out_VideoChannel>> GetChannelList(string sid)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
-            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sid && x.VideoType == 1)).FirstOrDefault();
-            if (videoSource == null || string.IsNullOrEmpty(videoSource.NodeId))
+            var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sid)).FirstOrDefault();
+            if (videoSource == null)
             {
                 return new List<Out_VideoChannel>();
             }
-            var channelSourceList = await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoType == 2);
-            List<Out_VideoChannel> rtlist = new List<Out_VideoChannel>();
-            foreach (var channel in channelSourceList)
+
+            if (videoSource.VideoType == 1)
             {
+                if (string.IsNullOrEmpty(videoSource.NodeId))
+                {
+                    return new List<Out_VideoChannel>();
+                }
+                var channelSourceList = await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoType == 2);
+                List<Out_VideoChannel> rtlist = new List<Out_VideoChannel>();
+                foreach (var channel in channelSourceList)
+                {
+                    rtlist.Add(new Out_VideoChannel()
+                    {
+                        VideoKey = channel.VideoKey,
+                        ChannelName = channel.Position
+                    });
+                }
+
+                return rtlist;
+            }
+            else
+            {
+                List<Out_VideoChannel> rtlist = new List<Out_VideoChannel>();
                 rtlist.Add(new Out_VideoChannel()
                 {
-                    VideoKey = channel.VideoKey,
-                    ChannelName = channel.Position
+                    VideoKey = videoSource.VideoKey,
+                    ChannelName = "主通道"
                 });
+                return rtlist;
             }
-
-            return rtlist;
         }
         public async Task<Dictionary<string, string>> GetPlayUrlDict(string sId, string type)
         {

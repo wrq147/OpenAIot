@@ -122,7 +122,6 @@ namespace ChannelUtility
                         {
                             rs.MessageId = msg.ReplyTo;
                         }
-
                         if (OnSubProductMessage != null)
                         {
                             await OnSubProductMessage(rs).ConfigureAwait(false);
@@ -130,7 +129,7 @@ namespace ChannelUtility
                     }
                     catch (Exception ex)
                     {
-                        Console.Write(ex.Message);
+                        Console.WriteLine(ex.Message);
                     }
 
                 }

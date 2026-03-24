@@ -473,7 +473,7 @@
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoType">
             <summary>
-            摄像头类型:0为固定地址,1为GB28181设备，2为GB28181通道，3为Onvif设备
+            摄像头类型:0为固定地址,1为GB28181设备，2为通道，3为Onvif设备
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.VideoKey">

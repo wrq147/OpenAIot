@@ -8,8 +8,6 @@ using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Options;
 using MyAccess.DB.Builder.WhereToSql;
-using NodaTime;
-using NPOI.HPSF;
 using Quartz;
 using System;
 using System.Collections.Generic;

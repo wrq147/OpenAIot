@@ -227,6 +227,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:AfterService.Controller.HttpSync.ListPage(AfterService.Model.In_KFDevListPage)">
+            <summary>
+            客户设备列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
         <member name="M:AfterService.Controller.HttpSync.RoomList">
             <summary>
             查询房间列表

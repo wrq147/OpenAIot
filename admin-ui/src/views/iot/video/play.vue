@@ -33,8 +33,8 @@
                             </div>
                         </div>
 
-                        <!-- PTZ控制区域 - 仅GB28181设备显示 -->
-                        <div v-if="videoSource.VideoType === 1" class="ptz-controls">
+                        <!-- PTZ控制区域 -->
+                        <div v-if="videoSource.VideoType === 1 || videoSource.VideoType === 3" class="ptz-controls">
                             <div style="line-height: 24px;font-size: 14px;">PTZ云台控制</div>
 
                             <!-- 新增：通道选择下拉框 -->
@@ -151,7 +151,7 @@ export default {
             if (this.videoSource.VideoType == 0) {
                 await this.initVideo(this.videoSource.Id, null);
             }
-            else if (this.videoSource.VideoType == 1) {
+            else {
                 await this.loadChannelList();
             }
             this.loading = false;

@@ -56,7 +56,6 @@ namespace IoTRulesService.DataParser
             get { return _provider; }
         }
         private ConcurrentDictionary<string, CacheJsEngine> _scriptEngine = new ConcurrentDictionary<string, CacheJsEngine>();
-        private NatsScope _busScope;
         private IotRedisHelper _iotRedis;
         private ILogger<PackParser> _log;
         public class CacheJsEngine
@@ -64,10 +63,9 @@ namespace IoTRulesService.DataParser
             public Engine Engine { get; set; }
             public string Script { get; set; }
         }
-        public PackParser(ITAServiceProvider provider, NatsScope busScope, IotRedisHelper iotRedis, ILoggerFactory logFactory)
+        public PackParser(ITAServiceProvider provider, IotRedisHelper iotRedis, ILoggerFactory logFactory)
         {
             _provider = provider;
-            _busScope = busScope;
             _iotRedis = iotRedis;
             _log = logFactory.CreateLogger<PackParser>();
         }
@@ -157,8 +155,9 @@ namespace IoTRulesService.DataParser
             }
             else
             {
+                var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-                await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+                await bus.PublishAsync(new NatsMsg<string>()
                 {
                     Subject = msgId,
                     Data = msgbody
@@ -242,7 +241,8 @@ namespace IoTRulesService.DataParser
             List<string> data = new List<string>();
             data.Add("newfun/" + devId);
             data.Add(cmd);
-            await _busScope.Bus.PublishAsync(new NatsMsg<List<string>>()
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<List<string>>()
             {
                 Subject = "MqttNotice.Msg",
                 Data = data
@@ -317,7 +317,8 @@ namespace IoTRulesService.DataParser
             List<string> data = new List<string>();
             data.Add("console/" + devId);
             data.Add(tip + ":" + System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.SerializeOptions));
-            await _busScope.Bus.PublishAsync(new NatsMsg<List<string>>()
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<List<string>>()
             {
                 Subject = "MqttNotice.Msg",
                 Data = data
@@ -337,8 +338,8 @@ namespace IoTRulesService.DataParser
             {
                 msgId = await _iotRedis.ListLeftPopAsync<string>($"DeviceMsgId:{deviceId}").ConfigureAwait(false);
             }
-
-            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = msgId,
                 Data = value
@@ -351,7 +352,8 @@ namespace IoTRulesService.DataParser
             try
             {
                 var requestTimeout = TimeSpan.FromSeconds(8);
-                await foreach (var msg in _busScope.Bus.SubscribeAsync(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
+                var bus = _provider.GetService<NatsScope>().Bus;
+                await foreach (var msg in bus.SubscribeAsync(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
@@ -422,16 +424,16 @@ namespace IoTRulesService.DataParser
             }
         }
 
-        public async Task DownModbusMatch(string nodeguid, List<ModbusMatch> list)
+        public async Task DownModbusMatch(string deviceId, string nodeguid, List<ModbusMatch> list)
         {
             ModbusMatchMessage msg = new ModbusMatchMessage();
-            msg.DeviceId = string.Empty;
+            msg.DeviceId = deviceId;
             msg.ProductId = string.Empty;
             msg.MatchList = list;
-            var bus = _provider.GetService<NatsScope>().Bus;
-            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
 
-            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = "node." + nodeguid,
                 Data = msgbody
@@ -472,9 +474,10 @@ namespace IoTRulesService.DataParser
                 {
                     return;
                 }
-                var bus = _provider.GetService<NatsScope>().Bus;
+
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(rawdata, JsonMessageSerializerConfig.DefaultOptions);
-                await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+                var bus = _provider.GetService<NatsScope>().Bus;
+                await bus.PublishAsync(new NatsMsg<string>()
                 {
                     Subject = "node." + tnodeguid,
                     Data = msgbody
@@ -494,7 +497,7 @@ namespace IoTRulesService.DataParser
                 var bus = _provider.GetService<NatsScope>().Bus;
                 string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
 
-                await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+                await bus.PublishAsync(new NatsMsg<string>()
                 {
                     Subject = "node." + tnodeguid,
                     Data = msgbody
@@ -530,7 +533,8 @@ namespace IoTRulesService.DataParser
             msg.Outputs = outputs;
             msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = msgId,
                 Data = msgbody
@@ -555,7 +559,8 @@ namespace IoTRulesService.DataParser
             msg.Reason = reason;
 
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);
-            await _busScope.Bus.PublishAsync(new NatsMsg<string>()
+            var bus = _provider.GetService<NatsScope>().Bus;
+            await bus.PublishAsync(new NatsMsg<string>()
             {
                 Subject = msgId,
                 Data = msgbody
@@ -1070,7 +1075,7 @@ namespace IoTRulesService.DataParser
                         }
                         if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
                         {
-                            await DownModbusMatch(datamsg.NodeId, newmmlist);
+                            await DownModbusMatch(datamsg.DeviceId, datamsg.NodeId, newmmlist);
                         }
                         return;
                     }
@@ -1078,7 +1083,7 @@ namespace IoTRulesService.DataParser
 
                 if (newmmlist != null && newmmlist.Count > 0 && datamsg.IsReturn)
                 {
-                    await DownModbusMatch(datamsg.NodeId, newmmlist);
+                    await DownModbusMatch(datamsg.DeviceId, datamsg.NodeId, newmmlist);
                 }
             }
             catch (Exception ex)

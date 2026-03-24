@@ -56,7 +56,6 @@ namespace ModbusChannel
                     {
                         _childrenTime.AddOrUpdate(mm.SlaveId, curttt, (k, v) => curttt);
                     }
-                    _autoResetEvent.Set();
                 }
                 if (data != null && data.Length > 0)
                 {
@@ -156,6 +155,7 @@ namespace ModbusChannel
                             await _eventBus.PublishRawUp(_item.dtuid, tmpbytes, string.Empty, true);
                             _lastBytes = null;
                             _recvTimeout = 5000;
+                            _autoResetEvent.Set();
                         }
                         else
                         {
@@ -170,6 +170,7 @@ namespace ModbusChannel
                             await _eventBus.PublishRawUp(_item.dtuid, _lastBytes, string.Empty, true);
                             _lastBytes = null;
                             _recvTimeout = 5000;
+                            _autoResetEvent.Set();
                         }
                     }
                 }

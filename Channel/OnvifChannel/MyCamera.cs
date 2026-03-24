@@ -14,7 +14,7 @@ namespace OnvifChannel
 {
     public class MyCamera(Account account)
     {
-        private static IDictionary<Account, Camera> Cameras { get; set; } = new Dictionary<Account, Camera>();
+        private static IDictionary<Account, MyCamera> Cameras { get; set; } = new Dictionary<Account, MyCamera>();
 
         private static readonly object s_Locker = new();
         public static void ReleaseCamera(Account account)
@@ -29,22 +29,22 @@ namespace OnvifChannel
                 Monitor.Exit(s_Locker);
             }
         }
-        public static Camera Create(Account account, Action<Exception> exception)
+        public static MyCamera Create(Account account, Action<Exception> exception)
         {
             return CreateAsync(account, exception).Result;
         }
 
-        public static async Task<Camera> CreateAsync(Account account, Action<Exception> exception)
+        public static async Task<MyCamera> CreateAsync(Account account, Action<Exception> exception)
         {
             bool usable;
-            if (!Cameras.TryGetValue(account, out Camera camera))
+            if (!Cameras.TryGetValue(account, out MyCamera camera))
             {
                 Monitor.Enter(s_Locker);
                 try
                 {
                     if (!Cameras.TryGetValue(account, out camera))
                     {
-                        camera = new Camera(account);
+                        camera = new MyCamera(account);
                         Cameras.Add(account, camera);
                         camera.LastUse = System.DateTime.UtcNow;
                     }
@@ -58,7 +58,29 @@ namespace OnvifChannel
             // todo Do we need update LastUse?
             return usable ? camera : null;
         }
-
+        public static MyCamera Get(Account account)
+        {
+            if (!Cameras.TryGetValue(account, out MyCamera camera))
+            {
+                Monitor.Enter(s_Locker);
+                try
+                {
+                    if (Cameras.TryGetValue(account, out camera))
+                    {
+                        return camera;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(s_Locker);
+                }
+            }
+            return camera;
+        }
         public AutoFocusMode FocusMode { get; set; }
 
         public System.DateTime LastUse { get; set; }
