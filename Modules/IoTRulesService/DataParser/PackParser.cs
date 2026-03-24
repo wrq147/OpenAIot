@@ -903,7 +903,7 @@ namespace IoTRulesService.DataParser
                                             {
                                                 if (prop.NumRegister == "b")
                                                 {
-                                                    int tmpbit = body.ReadBit();
+                                                    int tmpbit = body.ReadBitLE();
                                                     if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                     {
                                                         if (propsDict.ContainsKey(prop.PropertyCode))

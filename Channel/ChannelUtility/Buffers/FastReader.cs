@@ -445,6 +445,32 @@ namespace ChannelUtility.Buffers
             return false;
         }
 
+        public int ReadBitLE()
+        {
+            if (!CanReadBits(1))
+                throw new InvalidOperationException("没有足够的位可读取");
+
+            // 下一个要操作的字节索引
+            int currentByteIndex = Position + 1;
+
+            if (_bitPosition == -1)
+            {
+                _bitPosition = 0;
+                return _buffer[currentByteIndex] & 1;
+            }
+
+            if (_bitPosition >= 7)
+            {
+                Position++;
+                currentByteIndex = Position + 1;
+                _bitPosition = 0;
+                return _buffer[currentByteIndex] & 1;
+            }
+
+            _bitPosition++;
+            return (_buffer[currentByteIndex] >> _bitPosition) & 1;
+        }
+
         /// <summary>
         /// 读取指定数量的位（1-32），返回整数（高位在前）
         /// </summary>
