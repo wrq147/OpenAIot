@@ -23,9 +23,10 @@
       <div class="filter-bar">
         <div style="margin-bottom: 10px;">
           <span style="font-size: 12px; color: #666;">选择通道：</span>
-          <el-select v-model="selectedVideoKey" placeholder="请选择通道" style="width: 280px;" @change="loadRecordFileList">
+          <el-select v-model="selectedChannel" value-key="VideoKey" placeholder="请选择通道" style="width: 280px;"
+            @change="loadRecordFileList">
             <el-option v-for="channel in channelList" :key="channel.VideoKey" :label="channel.ChannelName"
-              :value="channel.VideoKey"></el-option>
+              :value="channel"></el-option>
           </el-select>
         </div>
         <div style="margin-bottom: 10px;">
@@ -93,16 +94,14 @@ export default {
       dateRange: null,
       // 2. 新增：通道相关数据
       channelList: [],          // 通道列表（从接口获取）
-      selectedVideoKey: ''      // 当前选中的通道videoKey
+      selectedChannel: null
     }
   },
   methods: {
     async InitVideo(id, t) {
       this.VideoId = id;
       this.VideoType = t;
-      if (this.VideoType == 1) {
-        await this.loadChannelList();
-      }
+      await this.loadChannelList();
       this.currentPage = 1;
       await this.loadRecordFileList();
     },
@@ -112,8 +111,8 @@ export default {
         this.channelList = res.data || [];
 
         // 可选：默认选中第一个通道（若需要）
-        if (this.channelList.length > 0 && !this.selectedVideoKey) {
-          this.selectedVideoKey = this.channelList[0].VideoKey;
+        if (this.channelList.length > 0 && this.selectedChannel == null) {
+          this.selectedChannel = this.channelList[0];
         }
       } catch (error) {
         this.$message.error('加载通道列表失败');
@@ -122,13 +121,13 @@ export default {
       }
     },
 
-    // 加载录像文件列表（修改：使用选中的selectedVideoKey）
+    // 加载录像文件列表
     async loadRecordFileList() {
       this.loading = true;
       try {
         const res = await recordFileList({
           VideoId: this.VideoId,
-          VideoKey: this.VideoType == 1 ? this.selectedVideoKey : undefined,
+          VideoKey: this.selectedChannel != null ? this.selectedChannel.VideoKey : undefined,
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           beginTime: this.dateRange ? this.dateRange[0] : undefined,

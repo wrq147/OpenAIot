@@ -7,6 +7,10 @@ namespace IoTService.Models
     public class In_ProductListPage : BaseQueryParam
     {
         /// <summary>
+        /// 是否包含系统协议
+        /// </summary>
+        public bool? WithSys { get; set; }
+        /// <summary>
         /// 过滤组织（前端不用传）
         /// </summary>
         public long? OrgId { get; set; }

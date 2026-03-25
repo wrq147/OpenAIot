@@ -230,8 +230,8 @@ export default {
     getproductList(pageSize, key) {
       let query = {
         Name: key,
-        // pageSize:pageSize,
-        pageNum: 1
+        pageNum: 1,
+        WithSys:true
       }
       productList(query).then(async response => {
         if (response.code == 0) {

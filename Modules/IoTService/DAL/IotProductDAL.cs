@@ -25,8 +25,16 @@ namespace IoTService.DAL
         }
         public virtual async Task<PageObject<MZ_IotProduct>> SelectWithClassPage(In_ProductListPage query)
         {
-            return await new SqlBuilder(help).Query<MZ_IotProduct>().Append("select p.createId,p.updateId,p.create_time,p.update_time,p.Id,p.OrgId,p.Name,p.PhotoUrl,p.Remark,p.ClassifiedId,p.NetworkWay,p.NoticeWay,p.Status,p.PhysicsWay,p.Version,p.PublicTime,c.Name as ClassName from mz_iot_product p left join mz_iot_class c on p.ClassifiedId = c.Id where p.OrgId=")
-                .AppendParam(query.OrgId)
+            string torgcondi = string.Empty;
+            if (query.WithSys == true)
+            {
+                torgcondi = "(p.OrgId=0 or p.OrgId=" + query.OrgId + ")";
+            }
+            else
+            {
+                torgcondi = "p.OrgId=" + query.OrgId;
+            }
+            return await new SqlBuilder(help).Query<MZ_IotProduct>().Append("select p.createId,p.updateId,p.create_time,p.update_time,p.Id,p.OrgId,p.Name,p.PhotoUrl,p.Remark,p.ClassifiedId,p.NetworkWay,p.NoticeWay,p.Status,p.PhysicsWay,p.Version,p.PublicTime,c.Name as ClassName from mz_iot_product p left join mz_iot_class c on p.ClassifiedId = c.Id where ").Append(torgcondi)
             .Then(query.Name != null, sql =>
             {
                 sql.Append(" and p.Name like ").AppendParam("%" + query.Name.SqlLikeFilter() + "%");

@@ -1464,6 +1464,11 @@
             设备的批次编号
             </summary>
         </member>
+        <member name="P:IoTService.Models.In_ProductListPage.WithSys">
+            <summary>
+            是否包含系统协议
+            </summary>
+        </member>
         <member name="P:IoTService.Models.In_ProductListPage.OrgId">
             <summary>
             过滤组织（前端不用传）

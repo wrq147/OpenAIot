@@ -47,7 +47,41 @@ namespace IotService.Migrations
             Execute.Sql("DROP VIEW IF EXISTS mz_iot_product_v;");
             Execute.Sql("CREATE VIEW mz_iot_product_v as select p.*,c.Path from mz_iot_product p left join mz_iot_class c on p.ClassifiedId=c.Id");
 
-
+            Insert.IntoTable("mz_iot_class").Row(new
+            {
+                Id = "1",
+                OrgId = 0,
+                Name = "其它类别",
+                PhotoUrl = string.Empty,
+                Sort = 0,
+                Remark = string.Empty,
+                ParentId = string.Empty,
+                Path = "1,"
+            });
+            Insert.IntoTable("mz_iot_product").Row(new
+            {
+                Id = "1",
+                OrgId = 0,
+                Name = "其它协议",
+                PhotoUrl = string.Empty,
+                Remark = string.Empty,
+                ClassifiedId = "1",
+                NetworkWay = string.Empty,
+                Status = "1",
+                PhysicsWay = string.Empty,
+                NoticeWay = string.Empty,
+                InterScripts = string.Empty,
+                StorageConfig = "{\"enable\":\"0\"}",
+                ModelTSL = "{\"tags\":[],\"properties\":[],\"functions\":[],\"events\":[]}",
+                Version = 0,
+                PublicTime = DateTime.Now,
+                MonitorReportToken = string.Empty,
+                TSLUpdated = DateTime.Now,
+                createId = 2,
+                create_time = DateTime.Now,
+                updateId = 2,
+                update_time = DateTime.Now
+            });
 
 
             Create.Table("mz_iot_device").WithDescription("Iot设备")

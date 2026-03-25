@@ -11,7 +11,7 @@
                         <div class="video-player" ref="videoContainer" v-loading="loading">
                             <div ref="devPlayer"></div>
                             <!-- 预置位控制 -->
-                            <div class="preset-controls"
+                            <div class="preset-controls"  v-if="videoSource.VideoType === 1 || videoSource.VideoType === 3"
                                 style="margin-top:20px;border-top:1px solid #eee;padding-top:5px;">
                                 <h4>预置位管理</h4>
                                 <!-- 仅保留设置预置位功能 -->
