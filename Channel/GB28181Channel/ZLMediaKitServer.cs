@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -19,7 +20,6 @@ namespace GB28181Channel
 {
     public unsafe class ZLMediaKitServer
     {
-        private static readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
         private IServiceProvider _provider;
         private GB28181Option _option;
         private GB28181DeviceEventListener _listener;
@@ -97,7 +97,7 @@ namespace GB28181Channel
                 {
                     if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0 && context.VideoDecoder != null)
                     {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
                         return;
                     }
                 }
@@ -220,9 +220,8 @@ namespace GB28181Channel
             string streamId = mk_events_objects.MkMediaSourceGetStream(mediaSourceT).ToLower();
             if (regist == 1)
             {
-                if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
+                if (_mediaDict.TryGetValue(streamId, out var playbackParams))
                 {
-                    _mediaDict.AddOrUpdate(streamId, _ => playbackParams, (x, y) => playbackParams);
                     var storage = _provider.GetService<IDeviceStorage>();
                     var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
                     var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
@@ -236,6 +235,7 @@ namespace GB28181Channel
                     }
 
                     FrameContext context = new FrameContext();
+                    context.StreamId = streamId;
                     context.SourceMedia = mediaSourceT;
                     IntPtr contextPtr = CallbackHelper.WrapInstanceToIntPtr(context);
                     context.VideoKey = channelInfo.PushKey;
@@ -264,7 +264,7 @@ namespace GB28181Channel
                     {
                         MkTrackT mkTrack = mk_events_objects.MkMediaSourceGetTrack(mediaSourceT, i);
                         if (mkTrack == null) { continue; }
-
+                        mk_media.MkMediaInitTrack(context.Media, mkTrack);
                         if (mk_track.MkTrackIsVideo(mkTrack) > 0)
                         {
 
@@ -282,10 +282,6 @@ namespace GB28181Channel
                             mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
                             mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
 
-                        }
-                        else
-                        {
-                            mk_media.MkMediaInitTrack(context.Media, mkTrack);
                         }
                     }
                     mk_media.MkMediaInitComplete(context.Media);
@@ -308,42 +304,50 @@ namespace GB28181Channel
             }
             else
             {
-                if (_mediaDict.TryGetValue(streamId, out var playbackParams))
+                if (_mediaDict.TryRemove(streamId, out PlaybackParams ch))
                 {
-                    _mediaDict.TryRemove(streamId, out PlaybackParams ch);
                     var storage = _provider.GetService<IDeviceStorage>();
-                    var channelList = storage.GetChannelsByDeviceId(playbackParams.DeviceId);
-                    var channelInfo = channelList.Where(x => x.ChannelId == playbackParams.ChannelId).FirstOrDefault();
+                    var channelList = storage.GetChannelsByDeviceId(ch.DeviceId);
+                    var channelInfo = channelList.Where(x => x.ChannelId == ch.ChannelId).FirstOrDefault();
                     if (channelInfo == null)
                     {
                         return;
                     }
 
-                    if (_contextMap.TryRemove(channelInfo.PushKey, out FrameContext context))
+                    if (_contextMap.TryGetValue(channelInfo.PushKey, out FrameContext context))
                     {
-                        context.CanParse = false;
-                        Thread.Sleep(200);
-                        if (context.Swscale != null)
+                        if (context.StreamId == streamId)
                         {
-                            mk_transcode.MkSwscaleRelease(context.Swscale);
-                            context.Swscale = null;
+                            _contextMap.TryRemove(channelInfo.PushKey, out var tmpsss);
+                            context.CanParse = false;
+                            Thread.Sleep(200);
+                            if (context.Swscale != null)
+                            {
+                                mk_transcode.MkSwscaleRelease(context.Swscale);
+                                context.Swscale = null;
+                            }
+                            if (context.VideoDecoder != null)
+                            {
+                                mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
+                                context.VideoDecoder = null;
+                            }
+                            if (context.Media != null)
+                            {
+                                mk_media.MkMediaRelease(context.Media);
+                                context.Media = null;
+                            }
+                            FrameBufferPool.ClearCache(channelInfo.PushKey);
+
+
+                            if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
+                            {
+                                CallbackHelper.FreeInstancePtr(contextPtr);
+                            }
+                            _ = _server.StopActiveStream(ch.DeviceId, ch.ChannelId);
                         }
-                        if (context.VideoDecoder != null)
-                        {
-                            mk_transcode.MkDecoderRelease(context.VideoDecoder, 1);
-                            context.VideoDecoder = null;
-                        }
-                        if (context.Media != null)
-                        {
-                            mk_media.MkMediaRelease(context.Media);
-                            context.Media = null;
-                        }
-                        FrameBufferPool.ClearCache(channelInfo.PushKey);
+                      
                     }
-                    if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
-                    {
-                        CallbackHelper.FreeInstancePtr(contextPtr);
-                    }
+
                 }
 
             }
@@ -366,16 +370,9 @@ namespace GB28181Channel
             var rawStreamId = mk_events_objects.MkMediaInfoGetStream(url_info);
             var streamId = rawStreamId.ToLower();
             bool enablePublish = false;
-            if (_cache.TryGetValue<PlaybackParams>(streamId, out var playbackParams))
+            if (_mediaDict.ContainsKey(streamId))
             {
                 enablePublish = true;
-            }
-            else
-            {
-                if (_mediaDict.ContainsKey(streamId))
-                {
-                    enablePublish = true;
-                }
             }
             if (enablePublish)
             {
@@ -536,7 +533,7 @@ namespace GB28181Channel
         public void BindSsrc(StreamPlayEventArgs e)
         {
             string streamId = int.Parse(e.Params.Ssrc.Substring(1)).ToString("x");
-            _cache.Set(streamId, e.Params, TimeSpan.FromSeconds(60));
+            _mediaDict.TryAdd(streamId, e.Params);
         }
 
         private ConcurrentDictionary<string, RecordContext> _recordContexts = new ConcurrentDictionary<string, RecordContext>();
@@ -690,6 +687,7 @@ namespace GB28181Channel
     }
     public class FrameContext
     {
+        public string StreamId { get; set; }
         public bool CanParse { get; set; } = true;
         public MkMediaSourceT SourceMedia { get; set; }
         public string VideoKey { get; set; }
