@@ -21,6 +21,6 @@ namespace IoTVideoService.Models
         /// <summary>
         /// 预置位ID
         /// </summary>
-        public byte? PresetId { get; set; }
+        public string PresetId { get; set; }
     }
 }

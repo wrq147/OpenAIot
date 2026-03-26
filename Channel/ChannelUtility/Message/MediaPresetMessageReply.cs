@@ -24,7 +24,7 @@ namespace ChannelUtility.Message
         /// <summary>
         /// 预置位ID
         /// </summary>
-        public int PresetId { get; set; }
+        public string PresetId { get; set; }
 
         /// <summary>
         /// 预置位名称

@@ -141,7 +141,7 @@ namespace GB28181Channel
                         MessageId = ptzMessage.MessageId,
                         CommandType = ptzMessage.CommandType,
                         Speed = ptzMessage.Speed,
-                        PresetId = ptzMessage.PresetId
+                        PresetId = byte.Parse(ptzMessage.PresetId)
                     });
                 }
                 else if (msg is MediaPresetMessage presetMessage)

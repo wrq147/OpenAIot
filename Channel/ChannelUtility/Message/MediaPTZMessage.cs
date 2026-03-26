@@ -18,7 +18,7 @@ namespace ChannelUtility.Message
         /// <summary>
         /// 预置位ID(仅预置位指令有效)
         /// </summary>
-        public byte? PresetId { get; set; }
+        public string PresetId { get; set; }
         public MediaPTZMessage()
         {
             MsgType = "MediaPTZ";

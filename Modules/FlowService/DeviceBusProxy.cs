@@ -5,6 +5,7 @@ using Common.Share;
 using FlowService.Model;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -103,11 +104,12 @@ namespace FlowService
 
         private async Task<FunctionInvokeMessageReply> WaitDown(Out_FlowDevice device, FunctionInvokeMessage msg)
         {
+            INatsSub<FunctionInvokeMessageReply> resSub = null;
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
                 var requestTimeout = TimeSpan.FromSeconds(8);
-                await using var resSub = await bus.SubscribeCoreAsync(msg.MessageId, null, DefalutNatsJsonSerializer<FunctionInvokeMessageReply>.Default, new NatsSubOpts
+                resSub = await bus.SubscribeCoreAsync(msg.MessageId, null, DefalutNatsJsonSerializer<FunctionInvokeMessageReply>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
@@ -130,7 +132,13 @@ namespace FlowService
                 _log.LogError(ex.Message);
                 return null;
             }
-
+            finally
+            {
+                if (resSub != null)
+                {
+                    await resSub.DisposeAsync();
+                }
+            }
         }
 
         /// <summary>

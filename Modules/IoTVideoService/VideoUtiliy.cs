@@ -18,10 +18,11 @@ namespace IoTVideoService
         }
         public static async Task<T> PublicWait<T>(this NatsScope scope, string nodeId, BaseDeviceMessage msg) where T : class
         {
+            INatsSub<T> resSub = null;
             try
             {
                 var requestTimeout = TimeSpan.FromSeconds(8);
-                await using var resSub = await scope.Bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
+                resSub = await scope.Bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
@@ -40,7 +41,15 @@ namespace IoTVideoService
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return null;
+            }
+            finally
+            {
+                if (resSub != null)
+                {
+                    await resSub.DisposeAsync();
+                }
             }
         }
     }

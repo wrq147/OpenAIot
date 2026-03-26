@@ -72,7 +72,7 @@ namespace GB28181Channel.GB28181
                     var presetIdNode = itemNode.Element("PresetID");
                     if (presetIdNode != null && int.TryParse(presetIdNode.Value, out int presetId))
                     {
-                        presetInfo.PresetId = presetId;
+                        presetInfo.PresetId = presetId.ToString();
                     }
                     else
                     {

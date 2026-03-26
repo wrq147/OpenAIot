@@ -251,7 +251,7 @@ namespace OnvifChannel
                     }
                 }
             }
-           
+
         }
 
         private void On_mk_media_publish(IntPtr url,
@@ -434,16 +434,16 @@ namespace OnvifChannel
             });
             return camera;
         }
-        public MyCamera GetCamera(string videoId)
+        public (MyCamera, VideoData) GetCamera(string videoId)
         {
             if (_videoItems.TryGetValue(videoId, out var videodata))
             {
                 if (_cameraAccountDict.TryGetValue(videodata.Item.Id, out var tmpacc))
                 {
-                    return MyCamera.Get(tmpacc);
+                    return (MyCamera.Get(tmpacc), videodata);
                 }
             }
-            return null;
+            return (null, null);
         }
         public void UpdateCamera(VideoData data)
         {

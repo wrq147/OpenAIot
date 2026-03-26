@@ -21,9 +21,9 @@
 
                                 <!-- 已保存预置位列表 - 改造：点击标签调用，关闭按钮删除 -->
                                 <div class="preset-list" style="margin-top:15px;">
-                                    <el-tag v-for="id in presetList" :key="id" closable @close="delPreset(id)"
-                                        @click="callPreset(id)" style="margin:5px; cursor: pointer;" effect="dark">
-                                        预置位{{ id }}
+                                    <el-tag v-for="presetitem in presetList" :key="presetitem.PresetId" closable @close="delPreset(presetitem.PresetId)"
+                                        @click="callPreset(presetitem.PresetId)" style="margin:5px; cursor: pointer;" effect="dark">
+                                        预置位{{ presetitem.PresetName }}
                                     </el-tag>
                                     <div v-if="presetList.length === 0"
                                         style="color:#999; font-size:12px; margin-top:8px;">

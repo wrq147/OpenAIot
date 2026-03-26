@@ -5,8 +5,10 @@ using Onvif.Core.Client.Camera;
 using Onvif.Core.Client.Common;
 using Onvif.Core.Client.Device;
 using Onvif.Core.Client.Media;
+using Onvif.Core.Client.Ptz;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Text;
@@ -112,7 +114,7 @@ namespace OnvifChannel
                         return;
                     }
                     videoData.token = firstPro.token;
-               
+
                     var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                     var streamSetup = new StreamSetup
                     {
@@ -129,13 +131,130 @@ namespace OnvifChannel
                 }
                 else if (msg is MediaPTZMessage ptzMessage)
                 {
-                    var camera = ZLMediaKitServer.Instance.GetCamera(ptzMessage.DeviceId);
-                    if (camera != null)
+                    var (camera, videodata) = ZLMediaKitServer.Instance.GetCamera(ptzMessage.DeviceId);
+                    if (camera != null && videodata != null)
                     {
+                        if (ptzMessage.CommandType == PTZCommandType.Iris)
+                        {
+                        }
+                        else if (ptzMessage.CommandType == PTZCommandType.Focus)
+                        {
+                        }
+                        else if (ptzMessage.CommandType == PTZCommandType.PresetSet)
+                        {
+                            await camera.Ptz.SetPresetAsync(new SetPresetRequest(videodata.token, ptzMessage.PresetId, ptzMessage.PresetId));
+                        }
+                        else if (ptzMessage.CommandType == PTZCommandType.PresetGoto)
+                        {
+                            await camera.Ptz.GotoPresetAsync(videodata.token, ptzMessage.PresetId, new PTZSpeed()
+                            {
+                                PanTilt = new Vector2D { x = ptzMessage.Speed, y = ptzMessage.Speed },
+                                Zoom = new Vector1D { x = ptzMessage.Speed }
+                            });
+                        }
+                        else if (ptzMessage.CommandType == PTZCommandType.PresetClear)
+                        {
+                            await camera.Ptz.RemovePresetAsync(videodata.token, ptzMessage.PresetId);
+                        }
+                        else
+                        {
+                            float pan = 0;   // 水平：右+ 左-
+                            float tilt = 0;  // 垂直：上+ 下-
+                            float zoom = 0;  // 变焦：拉远+ 拉近-
+
+                            // 核心：自定义枚举 → Onvif 方向映射
+                            switch (ptzMessage.CommandType)
+                            {
+                                case PTZCommandType.Halt:
+                                    // 停止：直接发送全0相对移动
+                                    pan = 0;
+                                    tilt = 0;
+                                    zoom = 0;
+                                    break;
+
+                                case PTZCommandType.Right:
+                                    pan = ptzMessage.Speed;
+                                    break;
+                                case PTZCommandType.Left:
+                                    pan = -ptzMessage.Speed;
+                                    break;
+
+                                case PTZCommandType.Up:
+                                    tilt = ptzMessage.Speed;
+                                    break;
+                                case PTZCommandType.Down:
+                                    tilt = -ptzMessage.Speed;
+                                    break;
+
+                                case PTZCommandType.RightUp:
+                                    pan = ptzMessage.Speed;
+                                    tilt = ptzMessage.Speed;
+                                    break;
+                                case PTZCommandType.LeftUp:
+                                    pan = -ptzMessage.Speed;
+                                    tilt = ptzMessage.Speed;
+                                    break;
+                                case PTZCommandType.LeftDown:
+                                    pan = -ptzMessage.Speed;
+                                    tilt = -ptzMessage.Speed;
+                                    break;
+                                case PTZCommandType.RightDown:
+                                    pan = ptzMessage.Speed;
+                                    tilt = -ptzMessage.Speed;
+                                    break;
+
+                                case PTZCommandType.Zoom:
+                                    zoom = ptzMessage.Speed;
+                                    break;
+                            }
+
+                            await camera.Ptz.RelativeMoveAsync(videodata.token, new PTZVector()
+                            {
+                                PanTilt = new Vector2D
+                                {
+                                    x = pan,
+                                    y = tilt
+                                },
+                                Zoom = new Vector1D
+                                {
+                                    x = zoom
+                                }
+                            }, new PTZSpeed()
+                            {
+                                PanTilt = new Vector2D { x = ptzMessage.Speed, y = ptzMessage.Speed },
+                                Zoom = new Vector1D { x = ptzMessage.Speed }
+                            });
+                        }
+
+                        var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                        await eventBus.PublishMediaPTZReply(ptzMessage.MessageId, videodata.Item.Id, true, string.Empty);
                     }
+                    else
+                    {
+                        var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                        await eventBus.PublishMediaPTZReply(ptzMessage.MessageId, ptzMessage.DeviceId, false, "摄像头不存在");
+                    }
+
                 }
                 else if (msg is MediaPresetMessage presetMessage)
                 {
+                    var (camera, videodata) = ZLMediaKitServer.Instance.GetCamera(presetMessage.DeviceId);
+                    if (camera != null && videodata != null)
+                    {
+                        var rs = await camera.Ptz.GetPresetsAsync(videodata.token);
+                        List<PresetInfo> prlist = new List<PresetInfo>();
+                        foreach (var preset in rs.Preset)
+                        {
+                            prlist.Add(new PresetInfo()
+                            {
+                                PresetId = preset.token,
+                                PresetName = preset.Name,
+                                DeviceId = presetMessage.DeviceId
+                            });
+                        }
+                        var eventBus = _serviceProvider.GetService<ClientBusProxy>();
+                        await eventBus.PublishMediaPresetReply(presetMessage.MessageId, presetMessage.DeviceId, presetMessage.UserName, prlist);
+                    }
 
                 }
                 else if (msg is MediaRecordStartMessage startRec)

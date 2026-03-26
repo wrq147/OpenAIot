@@ -13,6 +13,7 @@ using Jint.Runtime;
 using Jint.Runtime.Interop;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -175,6 +176,7 @@ namespace IoTRulesService.DataParser
         }
         private async Task<T> WaitDownPackage<I, T>(I msg) where I : BaseDeviceMessage where T : BaseUpDeviceMessage
         {
+            INatsSub<T> resSub = null;
             try
             {
                 TslReturn ret = null;
@@ -190,7 +192,7 @@ namespace IoTRulesService.DataParser
 
                 var bus = _provider.GetService<NatsScope>().Bus;
                 var requestTimeout = TimeSpan.FromSeconds(8);
-                await using var resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
+                resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
@@ -216,6 +218,13 @@ namespace IoTRulesService.DataParser
             {
                 _log.LogError(ex.Message);
                 return null;
+            }
+            finally
+            {
+                if (resSub != null)
+                {
+                    await resSub.DisposeAsync();
+                }
             }
         }
         public async Task<ReadPropertyMessageReply> PublicWaitReadProperty(ReadPropertyMessage msg)
@@ -392,11 +401,12 @@ namespace IoTRulesService.DataParser
             }
 
             await _iotRedis.ListRightPushAsync($"DeviceMsgId:{deviceId}", msgId);
+            INatsSub<string> resSub = null;
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
                 var requestTimeout = TimeSpan.FromSeconds(8);
-                await using var resSub = await bus.SubscribeCoreAsync<string>(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
+                resSub = await bus.SubscribeCoreAsync<string>(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
@@ -421,6 +431,13 @@ namespace IoTRulesService.DataParser
                 await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 _log.LogError(ex.Message);
                 return null;
+            }
+            finally
+            {
+                if (resSub != null)
+                {
+                    await resSub.DisposeAsync();
+                }
             }
         }
 

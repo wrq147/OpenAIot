@@ -116,11 +116,12 @@ namespace IoTService
 
         private async Task<T> WaitDown<I, T>(I msg) where I : BaseDeviceMessage where T : BaseUpDeviceMessage
         {
+            INatsSub<T> resSub = null;
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
                 var requestTimeout = TimeSpan.FromSeconds(8);
-                await using var resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
+                resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
                     Timeout = requestTimeout,
@@ -142,6 +143,13 @@ namespace IoTService
             {
                 _log.LogError(ex.Message);
                 return null;
+            }
+            finally
+            {
+                if (resSub != null)
+                {
+                    await resSub.DisposeAsync();
+                }
             }
         }
 
