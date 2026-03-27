@@ -55,22 +55,7 @@ namespace IoTAIService.AIProject.Items
         {
             float tThreshold = config.GetFloat("threshold", 0.8f);
             float tIOU = config.GetFloat("iou_threshold", 0.2f);
-            List<BoxItem> tmpboxs = new List<BoxItem>();
-            var tbbx = _provider.GetService<YoloFaceDetectRunner>().Predict(image, tThreshold, tIOU);
-            for (int i = 0; i < tbbx.Count; i++)
-            {
-                var titem = tbbx[i];
-                tmpboxs.Add(new BoxItem()
-                {
-                    x1 = titem.X1,
-                    x2 = titem.X2,
-                    y1 = titem.Y1,
-                    y2 = titem.Y2,
-                    score = titem.Confidence,
-                    label = titem.Label,
-                    color = "#67C23A"
-                });
-            }
+            var tmpboxs = _provider.GetService<YoloFaceDetectRunner>().Predict(image, tThreshold, tIOU);
             return tmpboxs;
         }
 

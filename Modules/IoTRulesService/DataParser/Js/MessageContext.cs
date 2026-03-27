@@ -52,11 +52,6 @@ namespace IoTRulesService.DataParser.Js
             var res = _client.Print(_msg.DeviceId, "下发解释", msg);
         }
     
-        public long Now()
-        {
-            DateTimeOffset dto = new DateTimeOffset(DateTime.Now);
-            return dto.ToUnixTimeMilliseconds();
-        }
 
         /// <summary>
         /// 获取当前设备的所有属性信息

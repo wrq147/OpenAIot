@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChannelUtility.Message
 {
-    public class AIDetectResponseMessage: BaseDeviceMessage
+    public class AIDetectResponseMessage : BaseDeviceMessage
     {
         public AIDetectResponseMessage()
         {
@@ -15,6 +15,9 @@ namespace ChannelUtility.Message
         public List<BoxItem> BoxList { get; set; }
         public bool NeedConf { get; set; }
     }
+    /// <summary>
+    /// 检测框
+    /// </summary>
     public class BoxItem
     {
         public float x1 { get; set; }
@@ -24,5 +27,15 @@ namespace ChannelUtility.Message
         public float score { get; set; }
         public string label { get; set; }
         public string color { get; set; }
+        /// <summary>
+        /// 关键点
+        /// </summary>
+        public List<KeyPoint> points { get; set; }
+    }
+    public class KeyPoint
+    {
+        public float x { get; set; }
+        public float y { get; set; }
+        public float score { get; set; }
     }
 }

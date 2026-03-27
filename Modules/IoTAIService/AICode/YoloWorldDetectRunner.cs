@@ -1,4 +1,5 @@
-﻿using Microsoft.ML.OnnxRuntime;
+﻿using ChannelUtility.Message;
+using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -26,7 +27,7 @@ namespace IoTAIService.AICode
             _session = new InferenceSession(modelPath, sessionOptions);
         }
 
-        public List<YoloDetectionResult> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)
+        public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)
         {
             int originalWidth = image.Width;
             int originalHeight = image.Height;
@@ -115,9 +116,9 @@ namespace IoTAIService.AICode
         /// <param name="gain"></param>
         /// <param name="classes"></param>
         /// <returns></returns>
-        private List<YoloDetectionResult> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, float gain, List<string> classes)
+        private List<BoxItem> PostprocessOutput(Tensor<float> output, float confidenceThreshold, float iouThreshold, int originalWidth, int originalHeight, float gain, List<string> classes)
         {
-            var results = new List<YoloDetectionResult>();
+            var results = new List<BoxItem>();
             int numClasses = classes.Count;
             int numBoxes = output.Dimensions[2]; // 输出维度：[1, 4 + num_classes, num_boxes]
 
@@ -172,14 +173,15 @@ namespace IoTAIService.AICode
                 x2 = Math.Clamp(x2, 0, originalWidth);
                 y2 = Math.Clamp(y2, 0, originalHeight);
 
-                results.Add(new YoloDetectionResult
+                results.Add(new BoxItem
                 {
-                    Label = classes[maxClassIdx],
-                    Confidence = maxConf,
-                    X1 = (int)x1,
-                    Y1 = (int)y1,
-                    X2 = (int)x2,
-                    Y2 = (int)y2
+                    label = classes[maxClassIdx],
+                    score = maxConf,
+                    x1 = (int)x1,
+                    y1 = (int)y1,
+                    x2 = (int)x2,
+                    y2 = (int)y2,
+                    color = "#FF0000"
                 });
             }
 
@@ -193,14 +195,14 @@ namespace IoTAIService.AICode
         /// <param name="detections">检测结果列表</param>
         /// <param name="iouThreshold">IOU阈值</param>
         /// <returns>去重后的检测结果</returns>
-        private List<YoloDetectionResult> ApplyNMS(List<YoloDetectionResult> detections, float iouThreshold)
+        private List<BoxItem> ApplyNMS(List<BoxItem> detections, float iouThreshold)
         {
-            var finalDetections = new List<YoloDetectionResult>();
+            var finalDetections = new List<BoxItem>();
             // 按类别分组处理
-            foreach (var group in detections.GroupBy(d => d.Label))
+            foreach (var group in detections.GroupBy(d => d.label))
             {
                 // 按置信度降序排序
-                var sortedDetections = group.OrderByDescending(d => d.Confidence).ToList();
+                var sortedDetections = group.OrderByDescending(d => d.score).ToList();
                 while (sortedDetections.Count > 0)
                 {
                     var best = sortedDetections[0];
@@ -221,19 +223,19 @@ namespace IoTAIService.AICode
         /// <summary>
         /// 计算两个检测框的IOU（交并比）
         /// </summary>
-        private float CalculateIOU(YoloDetectionResult a, YoloDetectionResult b)
+        private float CalculateIOU(BoxItem a, BoxItem b)
         {
-            float intersectX1 = Math.Max(a.X1, b.X1);
-            float intersectY1 = Math.Max(a.Y1, b.Y1);
-            float intersectX2 = Math.Min(a.X2, b.X2);
-            float intersectY2 = Math.Min(a.Y2, b.Y2);
+            float intersectX1 = Math.Max(a.x1, b.x1);
+            float intersectY1 = Math.Max(a.y1, b.y1);
+            float intersectX2 = Math.Min(a.x2, b.x2);
+            float intersectY2 = Math.Min(a.y2, b.y2);
 
             if (intersectX1 >= intersectX2 || intersectY1 >= intersectY2)
                 return 0;
 
             float intersectArea = (intersectX2 - intersectX1) * (intersectY2 - intersectY1);
-            float areaA = (a.X2 - a.X1) * (a.Y2 - a.Y1);
-            float areaB = (b.X2 - b.X1) * (b.Y2 - b.Y1);
+            float areaA = (a.x2 - a.x1) * (a.y2 - a.y1);
+            float areaB = (b.x2 - b.x1) * (b.y2 - b.y1);
 
             return intersectArea / (areaA + areaB - intersectArea);
         }

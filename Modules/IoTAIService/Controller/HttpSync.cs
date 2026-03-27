@@ -74,11 +74,11 @@ namespace IoTAIService.Controller
                         {
                             tlist.Add(new Out_FaceBox()
                             {
-                                X1 = titem.X1,
-                                X2 = titem.X2,
-                                Y1 = titem.Y1,
-                                Y2 = titem.Y2,
-                                Score = titem.Confidence
+                                X1 = titem.x1,
+                                X2 = titem.x2,
+                                Y1 = titem.y1,
+                                Y2 = titem.y2,
+                                Score = titem.score
                             });
                         }
                     }
@@ -102,11 +102,11 @@ namespace IoTAIService.Controller
                 {
                     tlist.Add(new Out_FaceBox()
                     {
-                        X1 = titem.X1,
-                        X2 = titem.X2,
-                        Y1 = titem.Y1,
-                        Y2 = titem.Y2,
-                        Score = titem.Confidence
+                        X1 = titem.x1,
+                        X2 = titem.x2,
+                        Y1 = titem.y1,
+                        Y2 = titem.y2,
+                        Score = titem.score
                     });
                 }
                 return this.Success(tlist);
@@ -150,7 +150,7 @@ namespace IoTAIService.Controller
                         var milBLL = _provider.GetService<MilvusBLL>();
                         foreach (var titem in tbbx)
                         {
-                            var tmpimg = originalImage.CropByBox(titem.X1, titem.X2, titem.Y1, titem.Y2);
+                            var tmpimg = originalImage.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
                             var tmpstn = faceSTNRunner.Predict(tmpimg);
                             var recogdata = faceRecogRunner.PredictTensor(tmpstn);
                             var tmpfls = recogdata.ToArray<float>();
@@ -181,7 +181,7 @@ namespace IoTAIService.Controller
                 var milBLL = _provider.GetService<MilvusBLL>();
                 foreach (var titem in tbbx)
                 {
-                    var tmpimg = originalImage.CropByBox(titem.X1, titem.X2, titem.Y1, titem.Y2);
+                    var tmpimg = originalImage.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
                     Tensor<float> recogdata;
                     if (data.EnableSTN == true)
                     {

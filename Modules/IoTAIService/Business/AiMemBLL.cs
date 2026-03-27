@@ -153,7 +153,7 @@ namespace IoTAIService.Business
                 {
                     var faceRecogRunner = _provider.GetService<FaceRecogRunner>();
                     var milBLL = _provider.GetService<MilvusBLL>();
-                    var tmpimg = originalImage.CropByBox(tbbx[0].X1, tbbx[0].X2, tbbx[0].Y1, tbbx[0].Y2);
+                    var tmpimg = originalImage.CropByBox(tbbx[0].x1, tbbx[0].x2, tbbx[0].y1, tbbx[0].y2);
                     var faceSTNRunner = _provider.GetService<FaceSTNRunner>();
                     var tmpstn = faceSTNRunner.Predict(tmpimg);
 

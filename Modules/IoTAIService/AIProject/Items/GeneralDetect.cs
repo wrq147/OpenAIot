@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using TemplateAction.Label;
 
 namespace IoTAIService.AIProject.Items
 {
@@ -34,14 +33,6 @@ namespace IoTAIService.AIProject.Items
                 Remark = "通用检测能够根据描述性文本检测图像中的任何物体。",
                 ParamList = new List<AIProjectParam>()
                 {
-                    new AIProjectParam()
-                    {
-                        name="开启高精度",
-                        code="is_hight",
-                        type="boolean",
-                        defval=false,
-                        help="是否启用高精度模型，需要GPU"
-                    },
                     new AIProjectParam()
                     {
                         name="检测阈值",
@@ -91,22 +82,12 @@ namespace IoTAIService.AIProject.Items
                 tclasses = new List<string>();
                 tclasses.Add("图片特征");
             }
-            var tfeature = ConvertListToDenseTensor(feature);
-            List<YoloDetectionResult> tbbx = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
-            List<BoxItem> boxes = new List<BoxItem>();
-            foreach (var tbx in tbbx)
+            if (tclasses == null)
             {
-                boxes.Add(new BoxItem()
-                {
-                    x1 = tbx.X1,
-                    x2 = tbx.X2,
-                    y1 = tbx.Y1,
-                    y2 = tbx.Y2,
-                    label = tbx.Label,
-                    color = "#ff0000",
-                    score = tbx.Confidence
-                });
+                return new List<BoxItem>();
             }
+            var tfeature = ConvertListToDenseTensor(feature);
+            List<BoxItem> boxes = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
             return boxes;
         }
         private DenseTensor<float> ConvertListToDenseTensor(List<object> data)

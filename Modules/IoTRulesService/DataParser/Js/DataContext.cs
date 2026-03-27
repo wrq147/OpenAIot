@@ -167,11 +167,6 @@ namespace IoTRulesService.DataParser.Js
         {
             var res = _client.Print(_deviceId, "上报解释", msg);
         }
-        public long Now()
-        {
-            DateTimeOffset dto = new DateTimeOffset(DateTime.Now);
-            return dto.ToUnixTimeMilliseconds();
-        }
         /// <summary>
         /// 回复消息Id
         /// </summary>
