@@ -15,7 +15,7 @@ using TemplateAction.Core;
 namespace IoTAIService.AIProject.Items
 {
     /// <summary>
-    /// 通用推理项目
+    /// 入侵告警
     /// </summary>
     public class GeneralTrigger : IInfer
     {
@@ -29,14 +29,8 @@ namespace IoTAIService.AIProject.Items
             var directList = config.Get<List<object>>("direct");
             var directStrList = directList.Select(x => (string)x).ToList();
 
-            #region 通用物体跟踪
-            var tracker = videoData.GetItem<ByteTrack>("gen_track");
-            if (tracker == null)
-            {
-                tracker = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
-            }
-            (var tracklist, var addlist) = tracker.Update(boxes);
-            #endregion
+            var tracklist = videoData.TrackList;
+            var addlist = videoData.AddTrackList;
 
             var regionList = videoData.GetItem<List<MonitoringRegion>>("gen_region");
             if (regionList == null)
@@ -109,8 +103,7 @@ namespace IoTAIService.AIProject.Items
             }
             else
             {
-                var adddets = addlist.Select(x => x.CurrentDetection);
-                foreach (var track in tracklist)
+                foreach (var track in addlist)
                 {
                     bool rightDir = true;
                     if (directStrList.Count > 0)
@@ -118,13 +111,12 @@ namespace IoTAIService.AIProject.Items
                         var curDir = track.GetMovementDirection().ToString();
                         rightDir = directStrList.Contains(curDir);
                     }
-                    if (rightDir && !track.IsSend && (DateTime.Now - track.CreatedOn).TotalSeconds > stayTime)
+                    if (rightDir && (DateTime.Now - track.CreatedOn).TotalSeconds > stayTime)
                     {
                         var tmpimg = image.CropByBox(track.CurrentDetection.x1, track.CurrentDetection.x2, track.CurrentDetection.y1, track.CurrentDetection.y2);
                         Dictionary<string, object> outputs = new Dictionary<string, object>();
                         outputs.Add("item_img", tmpimg.ToBase64String(JpegFormat.Instance));
                         await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "ItemIn", outputs);
-                        track.IsSend = true;
                     }
                 }
             }
@@ -157,10 +149,10 @@ namespace IoTAIService.AIProject.Items
             var redis = provider.GetService<GeneralRedisHelper>();
             await redis.HashSetAsync("AI-Items", tkey, new AIProjectInfo()
             {
-                Name = "通用推理",
+                Name = "入侵告警",
                 Code = tkey,
                 Stage = "Infer",
-                Remark = "通过物体跟踪，触发物体入侵事件。",
+                Remark = "通过跟踪检测物，触发物体入侵告警事件。",
                 ParamList = new List<AIProjectParam>()
                 {
                     new AIProjectParam()

@@ -157,7 +157,8 @@ namespace IoTAIService.AIProject
                             await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
                         }
                         videoData.SetInt("total_box_count", boxlist.Count);
-
+                        // 更新跟踪器
+                        videoData.UpdateByteTrack(boxlist);
 
                         //处理事件
                         foreach (var config in videoConfigs)

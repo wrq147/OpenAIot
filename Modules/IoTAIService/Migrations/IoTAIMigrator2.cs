@@ -57,7 +57,20 @@ namespace IoTAIService.Migrations
                 CodeGroup = 731,
                 OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"抓拍图\",\"code\":\"item_img\",\"type\":\"file\",\"bodyType\":\"base64\"}]}",
                 CodeType = 2,
-                Sort = 1
+                Sort = 2
+            });
+
+
+            this.Execute.Sql("delete FROM mz_iot_code where Id=10005");
+            Insert.IntoTable("mz_iot_code").Row(new
+            {
+                Id = 10005,
+                Name = "告警动作",
+                Code = "Behavior",
+                CodeGroup = 731,
+                OptionData = "{\"SilenceTime\":0,\"description\":\"\",\"outputs\":[{\"name\":\"动作名称\",\"code\":\"ac_name\",\"type\":\"string\"}]}",
+                CodeType = 2,
+                Sort = 3
             });
         }
 

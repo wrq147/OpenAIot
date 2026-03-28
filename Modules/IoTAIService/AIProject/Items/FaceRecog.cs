@@ -22,10 +22,12 @@ namespace IoTAIService.AIProject.Items
 
         public async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
-            var tboxlist = boxes.Where(x => x.label == "人脸").ToList();
-            var facenum = tboxlist.Count;
             var aiCache = _provider.GetService<AICache>();
             var videoData = aiCache.GetVideoCache(req.DeviceId);
+            var tracklist = videoData.TrackList.Where(x => x.CurrentDetection.label == "人脸").ToList();
+            var addlist = videoData.AddTrackList.Where(x => x.CurrentDetection.label == "人脸").ToList();
+
+            var facenum = tracklist.Count;
             int lastFaceNum = videoData.GetInt("face_num", -1);
             var aiBusProxy = _provider.GetService<AIBusProxy>();
             if (lastFaceNum != facenum || lastFaceNum == -1)
@@ -38,16 +40,7 @@ namespace IoTAIService.AIProject.Items
 
             videoData.SetInt("face_num", facenum);
 
-            #region 跟踪人脸框
-            var tracker = videoData.GetItem<ByteTrack>("face_track");
-            if (tracker == null)
-            {
-                tracker = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
-            }
-            (var tracklist, var addlist) = tracker.Update(tboxlist);
-            #endregion
-
-            if (facenum > 0 && addlist.Count > 0)
+            if (addlist.Count > 0)
             {
                 var nowtime = DateTime.Now;
                 var tmplist = await _provider.GetService<AiHouseDAL>().SelectList(x => x.OrgId == config.OrgId);
@@ -133,21 +126,6 @@ namespace IoTAIService.AIProject.Items
                 }
             }
 
-            if (addlist.Count > 0)
-            {
-                //存储视频关键帧
-                var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
-                if ((DateTime.Now - tmpkeyTime).TotalSeconds > 60)
-                {
-                    var fileHelper = _provider.GetService<FileHelper>();
-                    var turl = await fileHelper.UploadRgb24File(image);
-                    if (!string.IsNullOrEmpty(turl))
-                    {
-                        videoData.SetDateTime("LastKeyTime", DateTime.Now);
-                        await aiBusProxy.SendMediaKey(req.DeviceId, req.VideoKey, "人员闯入", turl);
-                    }
-                }
-            }
         }
 
         public async Task Init(ITAServiceProvider provider)

@@ -1,7 +1,9 @@
 ﻿using ChannelUtility.Message;
 using Common;
+using IoTAIService.AICode;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TemplateAction.Core;
 
 namespace IoTAIService
@@ -83,6 +85,17 @@ namespace IoTAIService
             public void SetItem<T>(string key, T val) where T : class
             {
                 _videoData[key] = val;
+            }
+            public List<Track> TrackList { get; set; }
+            public List<Track> AddTrackList { get; set; }
+            private ByteTrack _track;
+            public void UpdateByteTrack(List<BoxItem> boxes)
+            {
+                if (_track == null)
+                {
+                    _track = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
+                }
+                (TrackList, AddTrackList) = _track.Update(boxes);
             }
         }
     }

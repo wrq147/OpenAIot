@@ -101,7 +101,6 @@ namespace IoTAIService.AICode
         private readonly Queue<Vector2> _positionHistory = new Queue<Vector2>(capacity: 5);
         private const float _minSpeedThreshold = 0.1f; // 最小速度阈值（过滤静止）
         public DateTime CreatedOn { get; set; }
-        public bool IsSend { get; set; }
         public int Id { get; set; } // 唯一跟踪ID
         public BoxItem CurrentDetection { get; set; } // 当前检测框
         public KalmanFilter Kf { get; set; } // 卡尔曼滤波器
@@ -118,7 +117,6 @@ namespace IoTAIService.AICode
             TimeSinceUpdate = 0;
             _positionHistory.Enqueue(tmpcenter);
             CreatedOn = DateTime.Now;
-            IsSend = false;
         }
 
         // 更新轨迹

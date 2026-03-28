@@ -25,6 +25,11 @@ namespace IoTAIService.AIProject.Items
             string tkey = "Behavior";
             provider.GetService<AIProjectManager>().RegInfer(tkey, this);
             var redis = provider.GetService<GeneralRedisHelper>();
+            Dictionary<string, string> tmpbetypes = new Dictionary<string, string>();
+            for (int i = 0; i < PoseC3DRunner.NTU120_Actions_Chinese.Length; i++)
+            {
+                tmpbetypes.Add(PoseC3DRunner.NTU120_Actions_Chinese[i], i.ToString());
+            }
             await redis.HashSetAsync("AI-Items", tkey, new AIProjectInfo()
             {
                 Name = "行为分析",
@@ -37,139 +42,62 @@ namespace IoTAIService.AIProject.Items
                     {
                         name="告警行为",
                         code="be_type",
-                        type="type",
-                        help="设置触发的检测区域"
-                    }
+                        type="enum",
+                        elements=tmpbetypes,
+                        multi=true,
+                        defval=Array.Empty<string>(),
+                        help="限制触发事件的行为"
+                    },
+                    new AIProjectParam()
+                    {
+                        name="行为阈值",
+                        code="threshold",
+                        type="float",
+                        defval=0.8f,
+                        min=0,
+                        max=1,
+                        help="0~1的区间值,值越小,对行为的判断越模糊"
+                    },
                 }
             });
         }
 
         public async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
+            float tThreshold = config.GetFloat("threshold", 0.8f);
             var aiCache = _provider.GetService<AICache>();
             var videoData = aiCache.GetVideoCache(req.DeviceId);
             var aiBusProxy = _provider.GetService<AIBusProxy>();
-            var stayTime = config.GetFloat("stay_time", 5);
-            var directList = config.Get<List<object>>("direct");
-            var directStrList = directList.Select(x => (string)x).ToList();
 
-            #region 通用物体跟踪
-            var tracker = videoData.GetItem<ByteTrack>("gen_track");
-            if (tracker == null)
+            var tracklist = videoData.TrackList;
+            var addlist = videoData.AddTrackList;
+            //姿势识别
+            Dictionary<int, List<BoxItem>> trackHistorys = videoData.GetItem<Dictionary<int, List<BoxItem>>>("track_his");
+            if (trackHistorys == null)
             {
-                tracker = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
+                trackHistorys = new Dictionary<int, List<BoxItem>>();
+                videoData.SetItem("track_his", trackHistorys);
             }
-            (var tracklist, var addlist) = tracker.Update(boxes);
-            #endregion
-
-            var regionList = videoData.GetItem<List<MonitoringRegion>>("gen_region");
-            if (regionList == null)
+            var posec3d = _provider.GetService<PoseC3DRunner>();
+            foreach (var trackItem in tracklist)
             {
-                regionList = new List<MonitoringRegion>();
-                var zonelist = config.Get<List<object>>("inv_zone");
-                if (zonelist != null && zonelist.Count > 0)
+                List<BoxItem> tmpboxlist;
+                if (!trackHistorys.TryGetValue(trackItem.Id, out tmpboxlist))
                 {
-                    int i = 1;
-                    foreach (var tmpzone in zonelist)
-                    {
-                        dynamic tmpobj = tmpzone as ExpandoObject;
-                        if (tmpobj != null)
-                        {
-                            if (tmpobj.type == "Rectangle")
-                            {
-                                var tmppoints = tmpobj.points as List<object>;
-                                dynamic startPoint = tmppoints[0] as ExpandoObject;
-                                dynamic endPoint = tmppoints[1] as ExpandoObject;
-                                regionList.Add(MonitoringRegion.CreateRectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y, string.Empty, $"矩形区域{i}"));
-                            }
-                            else if (tmpobj.type == "Polygon")
-                            {
-                                var tmppoints = tmpobj.points as List<object>;
-                                var vectPoints = new List<System.Numerics.Vector2>();
-                                foreach (var tmppoint in tmppoints)
-                                {
-                                    dynamic tmppp = tmppoint as ExpandoObject;
-                                    vectPoints.Add(new System.Numerics.Vector2() { X = tmppp.x, Y = tmppp.y });
-                                }
-                                regionList.Add(MonitoringRegion.CreatePolygon(vectPoints, string.Empty, $"多边形区域{i}"));
-                            }
-
-                        }
-                        ++i;
-                    }
+                    tmpboxlist = new List<BoxItem>();
+                    trackHistorys[trackItem.Id] = tmpboxlist;
                 }
-                videoData.SetItem("gen_region", regionList);
-            }
-
-            if (regionList.Count > 0)
-            {
-                //区域入侵检测
-                foreach (var trackItem in tracklist)
+                tmpboxlist.Add(trackItem.CurrentDetection);
+                if (tmpboxlist.Count >= 48)
                 {
-                    foreach (var tmpregion in regionList)
+                    (int classId, string className, float score) = posec3d.Process(tmpboxlist);
+                    if (score >= tThreshold)
                     {
-                        var status = trackItem.UpdateRegionStatus(tmpregion);
-                        if (status == RegionStatus.Inside || status == RegionStatus.Entered)
-                        {
-                            var stayInfo = trackItem.GetRegionStay(tmpregion.Id);
-                            bool rightDir = true;
-                            if (directStrList.Count > 0)
-                            {
-                                var curDir = trackItem.GetMovementDirection().ToString();
-                                rightDir = directStrList.Contains(curDir);
-                            }
-                            if (rightDir && stayInfo != null && !stayInfo.IsSend && (DateTime.Now - stayInfo.EnterTime.Value).TotalSeconds > stayTime)
-                            {
-                                var tmpimg = image.CropByBox(trackItem.CurrentDetection.x1, trackItem.CurrentDetection.x2, trackItem.CurrentDetection.y1, trackItem.CurrentDetection.y2);
-                                Dictionary<string, object> outputs = new Dictionary<string, object>();
-                                outputs.Add("item_img", tmpimg.ToBase64String(JpegFormat.Instance));
-                                await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "ItemIn", outputs);
-                                stayInfo.IsSend = true;
-                                break;
-                            }
-                        }
+
                     }
+                    tmpboxlist.RemoveRange(0, 8);
                 }
             }
-            else
-            {
-                var adddets = addlist.Select(x => x.CurrentDetection);
-                foreach (var track in tracklist)
-                {
-                    bool rightDir = true;
-                    if (directStrList.Count > 0)
-                    {
-                        var curDir = track.GetMovementDirection().ToString();
-                        rightDir = directStrList.Contains(curDir);
-                    }
-                    if (rightDir && !track.IsSend && (DateTime.Now - track.CreatedOn).TotalSeconds > stayTime)
-                    {
-                        var tmpimg = image.CropByBox(track.CurrentDetection.x1, track.CurrentDetection.x2, track.CurrentDetection.y1, track.CurrentDetection.y2);
-                        Dictionary<string, object> outputs = new Dictionary<string, object>();
-                        outputs.Add("item_img", tmpimg.ToBase64String(JpegFormat.Instance));
-                        await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "ItemIn", outputs);
-                        track.IsSend = true;
-                    }
-                }
-            }
-
-
-            //存储视频关键帧
-            if (addlist.Count > 0)
-            {
-                var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
-                if ((DateTime.Now - tmpkeyTime).TotalSeconds > 60)
-                {
-                    var fileHelper = _provider.GetService<FileHelper>();
-                    var turl = await fileHelper.UploadRgb24File(image);
-                    if (!string.IsNullOrEmpty(turl))
-                    {
-                        videoData.SetDateTime("LastKeyTime", DateTime.Now);
-                        await aiBusProxy.SendMediaKey(req.DeviceId, req.VideoKey, "物体闯入", turl);
-                    }
-                }
-            }
-
 
         }
 
