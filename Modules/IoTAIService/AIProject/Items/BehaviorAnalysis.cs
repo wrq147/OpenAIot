@@ -65,6 +65,7 @@ namespace IoTAIService.AIProject.Items
         public async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
             float tThreshold = config.GetFloat("threshold", 0.8f);
+            List<object> tLimit = config.Get<List<object>>("be_type");
             var aiCache = _provider.GetService<AICache>();
             var videoData = aiCache.GetVideoCache(req.DeviceId);
             var aiBusProxy = _provider.GetService<AIBusProxy>();
@@ -77,6 +78,15 @@ namespace IoTAIService.AIProject.Items
             {
                 trackHistorys = new Dictionary<int, List<BoxItem>>();
                 videoData.SetItem("track_his", trackHistorys);
+            }
+            //删除无用历史
+            var tkeys = trackHistorys.Keys;
+            foreach (var hisKey in tkeys)
+            {
+                if (!tracklist.Exists(x => x.Id == hisKey))
+                {
+                    trackHistorys.Remove(hisKey);
+                }
             }
             var posec3d = _provider.GetService<PoseC3DRunner>();
             foreach (var trackItem in tracklist)
@@ -93,6 +103,27 @@ namespace IoTAIService.AIProject.Items
                     (int classId, string className, float score) = posec3d.Process(tmpboxlist);
                     if (score >= tThreshold)
                     {
+                        bool cansend = false;
+                        if (tLimit != null)
+                        {
+                            foreach (var tlimit in tLimit)
+                            {
+                                if (classId == (int)tlimit)
+                                {
+                                    cansend = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cansend = true;
+                        }
+                        if (cansend)
+                        {
+                            Dictionary<string, object> outputs = new Dictionary<string, object>();
+                            outputs.Add("ac_name", className);
+                            await aiBusProxy.SendEvent(string.Empty, req.DeviceId, "Behavior", outputs);
+                        }
 
                     }
                     tmpboxlist.RemoveRange(0, 8);
