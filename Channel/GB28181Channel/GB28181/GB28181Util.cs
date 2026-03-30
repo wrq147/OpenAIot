@@ -330,16 +330,14 @@ namespace GB28181Channel.GB28181
                 Connection = new SDPConnectionInformation(IPAddress.Parse(serverIp)),
                 Media = new List<SDPMediaAnnouncement>()
             };
-            sdp.AddExtra($"y={ssrc}");
+
             var videoFormats = new List<SDPAudioVideoMediaFormat>();
             videoFormats.Add(new SDPAudioVideoMediaFormat(SDPMediaTypesEnum.data, 96, "PS/90000"));
-            videoFormats.Add(new SDPAudioVideoMediaFormat(SDPMediaTypesEnum.data, 97, "MPEG4/90000"));
-            videoFormats.Add(new SDPAudioVideoMediaFormat(SDPMediaTypesEnum.data, 98, "H264/90000"));
             var videoMedia = new SDPMediaAnnouncement(SDPMediaTypesEnum.video, rtpPort, videoFormats);
             videoMedia.MediaStreamStatus = MediaStreamStatusEnum.RecvOnly;
             sdp.Media.Add(videoMedia);
 
-            return sdp.ToString();
+            return sdp.ToString() + $"y={ssrc}\r\n";
         }
 
 

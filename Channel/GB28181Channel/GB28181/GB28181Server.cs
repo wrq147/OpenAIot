@@ -168,9 +168,6 @@ namespace GB28181Channel.GB28181
                     case SIPMethodsEnum.MESSAGE:
                         await HandleMessage(req, remoteEP);
                         break;
-                    case SIPMethodsEnum.INVITE:
-                        await HandleInvite(req, remoteEP);
-                        break;
                     case SIPMethodsEnum.BYE:
                         await HandleBye(req, remoteEP);
                         break;
@@ -929,69 +926,6 @@ namespace GB28181Channel.GB28181
         }
 
         /// <summary>
-        /// 处理点播请求
-        /// </summary>
-        private async Task HandleInvite(SIPRequest req, SIPEndPoint remoteEP)
-        {
-            var channelId = req.Header.To.ToURI.User;
-            Console.WriteLine($"[点播请求] {channelId} @ {remoteEP}");
-
-            try
-            {
-                var sdp = SDP.ParseSDPDescription(req.Body);
-                var rtpPort = sdp.Media.First().Port;
-
-                var playbackParams = new PlaybackParams
-                {
-                    ChannelId = channelId,
-                    DeviceId = channelId.Substring(0, 20),
-                    RemoteIp = remoteEP.Address.ToString(),
-                    RemoteRtpPort = rtpPort,
-                    IsLive = true
-                };
-
-                // 回复100 Trying
-                var tryingResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Trying, "Trying");
-                await _sipTransport.SendResponseAsync(tryingResp);
-
-                // 生成SDP（通过IMediaHandler扩展）
-                var ssrc = GB28181Util.GetPlaySsrc(_serverId);
-                var sdpResp = GB28181Util.BuildGB28181SDP(_serverId, _serverIp, playbackParams.RemoteRtpPort, ssrc);
-
-                // 回复200 OK
-                var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
-                okResp.Body = sdpResp;
-                okResp.Header.ContentType = "application/sdp";
-                await _sipTransport.SendResponseAsync(okResp);
-
-                // 触发点播事件
-                await OnStreamPlayed(new StreamPlayEventArgs
-                {
-                    Params = playbackParams,
-                    IsSuccess = true,
-                    SessionId = req.Header.CallId,
-                    Message = "点播成功"
-                });
-
-                Console.WriteLine($"[点播成功] {channelId} SessionID: {req.Header.CallId} RTP端口：{playbackParams.RemoteRtpPort}");
-            }
-            catch (Exception ex)
-            {
-                var errorResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.BadRequest, "Invite failed");
-                await _sipTransport.SendResponseAsync(errorResp);
-
-                await OnStreamPlayed(new StreamPlayEventArgs
-                {
-                    Params = new PlaybackParams { ChannelId = channelId },
-                    IsSuccess = false,
-                    Message = $"点播失败：{ex.Message}"
-                });
-
-                Console.WriteLine($"[点播失败] {channelId}：{ex.Message}");
-            }
-        }
-
-        /// <summary>
         /// 处理停止推流
         /// </summary>
         private async Task HandleBye(SIPRequest req, SIPEndPoint remoteEP)
@@ -1508,7 +1442,7 @@ namespace GB28181Channel.GB28181
 
             // SDP体
             inviteRequest.Body = sdp;
-            inviteRequest.Header.ContentType = "APPLICATION/SDP";
+            inviteRequest.Header.ContentType = "application/sdp";
             inviteRequest.Header.ContentLength = inviteRequest.BodyBuffer.Length;
             inviteRequest.Header.UserAgent = GetVersionHeader(device.ProtocolVersion);
 
@@ -1607,7 +1541,7 @@ namespace GB28181Channel.GB28181
 
             // 携带SDP
             inviteRequest.Body = sdp;
-            inviteRequest.Header.ContentType = "APPLICATION/SDP";
+            inviteRequest.Header.ContentType = "application/sdp";
             inviteRequest.Header.ContentLength = inviteRequest.BodyBuffer.Length;
             inviteRequest.Header.UserAgent = GetVersionHeader(device.ProtocolVersion);
             return inviteRequest;
