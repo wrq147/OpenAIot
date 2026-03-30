@@ -18,6 +18,7 @@ namespace GB28181Channel.GB28181.DTO
         public string DeviceId { get; set; }
         public DateTime InviteTime { get; set; }
         public StreamState SessionStatus { get; set; }
+        public string SessionId { get; set; }
         public string Ssrc { get; set; }
         public int RemoteRtpPort { get; set; }
         public string ChannelId { get; set; }

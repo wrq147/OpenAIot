@@ -274,7 +274,7 @@ namespace GB28181Channel.GB28181
                                 // 更新通道会话状态
                                 channelInfo.SessionStatus = StreamState.Playing;
                                 channelInfo.RemoteRtpPort = media.Port;
-
+                                channelInfo.SessionId = resp.Header.CallId;
                                 // 触发点播成功事件
                                 await OnStreamPlayed(new StreamPlayEventArgs
                                 {
@@ -799,8 +799,9 @@ namespace GB28181Channel.GB28181
             if (needRegDevice || device == null)
             {
                 // 通知设备重新注册：返回401 Unauthorized响应，携带认证挑战
-                var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Need re-register");
-                await _sipTransport.SendResponseAsync(unauthorizedResp);
+                var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.NotFound, "Not Found");
+                resp.Header.Allow = null;
+                await _sipTransport.SendResponseAsync(resp);
                 Console.WriteLine($"[心跳检测] {deviceId} @ {remoteEP} 未注册，要求重新注册");
             }
             else
@@ -932,6 +933,8 @@ namespace GB28181Channel.GB28181
         {
             var channelId = req.Header.From.FromURI.User;
             var sessionId = req.Header.CallId;
+            var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
+            await _sipTransport.SendResponseAsync(resp);
             string devId = channelId.Substring(0, 20);
             var device = _deviceStorage.GetDevice(devId);
             if (device == null)
@@ -945,8 +948,7 @@ namespace GB28181Channel.GB28181
                 return;
             }
 
-            var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
-            await _sipTransport.SendResponseAsync(resp);
+
 
             await OnStreamPlayed(new StreamPlayEventArgs
             {
@@ -1334,7 +1336,11 @@ namespace GB28181Channel.GB28181
             {
                 return false;
             }
-            string sessionId = Guid.NewGuid().ToString("N");
+            if (string.IsNullOrEmpty(channelInfo.SessionId))
+            {
+                return false;
+            }
+            string sessionId = channelInfo.SessionId;
             // 构造BYE请求
             var toUri = new SIPURI(channelId, $"{device.DeviceIp}:{device.DevicePort}", null, SIPSchemesEnum.sip);
             var fromUri = new SIPURI(_serverId, $"{_serverIp}:{_sipPort}", null, SIPSchemesEnum.sip);
