@@ -3,24 +3,24 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '4a0311f7458bc039a9653a0dd5fc025f5779d7d0'
-    oldFile: !uuid '323a72930b41dacc8c2afe07e5dd4616823dbe87'
+    newFile: !uuid 'd9becf2763ddb60e2f872387d9a8bf27b50b037d'
+    oldFile: !uuid '4a0311f7458bc039a9653a0dd5fc025f5779d7d0'
   /Channel/GB28181Channel:
-    newFile: !uuid 'b874a3f14270677ba310deb4e492ca9466fd4205'
-    oldFile: !uuid '64fb8ade92af0a42d1b3a80448f68ea5444f197c'
+    newFile: !uuid 'cfc706c942e29bb737206b8c2345a4c36ba7b327'
+    oldFile: !uuid 'b874a3f14270677ba310deb4e492ca9466fd4205'
   /Channel/GB28181Channel/GB28181:
-    newFile: !uuid '9db45ec0fed2c7af46f948a1cee0248bff70f10a'
-    oldFile: !uuid 'fb89293f9c310e46f24ba52852224e2225aa30e0'
+    newFile: !uuid 'a09425b1d5c507798ce7a2e3f532fd5bba701432'
+    oldFile: !uuid '9db45ec0fed2c7af46f948a1cee0248bff70f10a'
+  /Channel/GB28181Channel/GB28181/DTO:
+    newFile: !uuid 'e2378aeebd9056bd3675f0ed3de31974ef211625'
+    oldFile: !uuid 'a31b85857515223cbae2b47fda1b6d63f05f626f'
+  /Channel/GB28181Channel/GB28181/DTO/ChannelInfo.cs:
+    newFile: !uuid 'eeb2ac88be901745d3ee23f9879be66263b666ec'
+    oldFile: !uuid '045583626cc5189005eeb1890dd8e66a33c21bc4'
   /Channel/GB28181Channel/GB28181/GB28181Server.cs:
-    newFile: !uuid 'e4e65b3d9a80121320221eee4d3f97a16b6f637e'
-    oldFile: !uuid '7ad8626b54859616eb7c527047983e146ee184a8'
-  /Channel/GB28181Channel/GB28181/GB28181Util.cs:
-    newFile: !uuid '926e30a177a053c8f5a4d13bb97baa0cf648bd48'
-    oldFile: !uuid '21e2b1e5edbca28f73728b3e6be6c34987c55f40'
-  /Channel/GB28181Channel/appsettings.json:
-    newFile: !uuid '1374066b545661246015e0d2272ab0b8afc59d5c'
-    oldFile: !uuid 'd5c59ac2b835cdfcf46de8a4f09982d43c37b9b7'
-gitCommitId: !uuid '1fada0da6f457e477c842a4d9fb75d7f41fc8691'
+    newFile: !uuid '6e1096dd3a67a305b73b9a13d882a4b2f8d12773'
+    oldFile: !uuid 'e4e65b3d9a80121320221eee4d3f97a16b6f637e'
+gitCommitId: !uuid 'cd5ac524d59fbefaf28bcb36debddc2308028e6b'
 renames: {
   }
-revisionId: 240
+revisionId: 241
