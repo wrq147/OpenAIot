@@ -275,6 +275,7 @@ namespace GB28181Channel.GB28181
                                 channelInfo.SessionStatus = StreamState.Playing;
                                 channelInfo.RemoteRtpPort = media.Port;
                                 channelInfo.SessionId = resp.Header.CallId;
+                                channelInfo.ToTags = resp.Header.To.ToTag;
                                 // 触发点播成功事件
                                 await OnStreamPlayed(new StreamPlayEventArgs
                                 {
@@ -1351,7 +1352,7 @@ namespace GB28181Channel.GB28181
             byeRequest.Header.Vias.Via.Add(viaHeader);
             byeRequest.Header.CallId = sessionId;
             byeRequest.Header.From = new SIPFromHeader(null, fromUri, sessionId);
-            byeRequest.Header.To = new SIPToHeader(null, toUri, null);
+            byeRequest.Header.To = new SIPToHeader(null, toUri, channelInfo.ToTags);
             byeRequest.Header.CSeq = GB28181Util.GenerateCSeq();
             byeRequest.Header.CSeqMethod = SIPMethodsEnum.BYE;
             byeRequest.Header.MaxForwards = 70;
