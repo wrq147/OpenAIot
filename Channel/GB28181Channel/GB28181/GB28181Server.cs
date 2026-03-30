@@ -2,6 +2,7 @@
 using GB28181Channel.GB28181.Enum;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
+using Org.BouncyCastle.Tls;
 using SIPSorcery.Net;
 using SIPSorcery.SIP;
 using System;
@@ -36,7 +37,6 @@ namespace GB28181Channel.GB28181
         private readonly IDeviceStorage _deviceStorage;
         private readonly ConcurrentDictionary<string, DateTime> _heartbeatMap = new ConcurrentDictionary<string, DateTime>();
         private readonly System.Timers.Timer _heartbeatTimer;
-        private readonly GB28181Version _protocolVersion;
         private readonly string _serverId;
         private readonly int _sipPort;
         private readonly string _serverIp;
@@ -58,18 +58,15 @@ namespace GB28181Channel.GB28181
         /// <param name="serverIp">服务器IP</param>
         /// <param name="sipPort">SIP端口（UDP/TCP共用）</param>
         /// <param name="serverId">服务器ID</param>
-        /// <param name="protocolVersion">GB28181协议版本</param>
         /// <param name="deviceStorage">设备存储接口</param>
         /// <param name="mediaHandler">媒体处理接口</param>
         /// <param name="transportProtocol">SIP传输协议（默认：同时使用UDP+TCP）</param>
-        public GB28181Server(string serverIp, int sipPort, string serverId,
-                             GB28181Version protocolVersion, IDeviceStorage deviceStorage,
+        public GB28181Server(string serverIp, int sipPort, string serverId, IDeviceStorage deviceStorage,
                              SIPTransportProtocol transportProtocol = SIPTransportProtocol.Both)
         {
             _serverIp = serverIp ?? throw new ArgumentNullException(nameof(serverIp));
             _sipPort = sipPort;
             _serverId = serverId ?? throw new ArgumentNullException(nameof(serverId));
-            _protocolVersion = protocolVersion;
             _deviceStorage = deviceStorage ?? throw new ArgumentNullException(nameof(deviceStorage));
             _transportProtocol = transportProtocol;
 
@@ -133,7 +130,7 @@ namespace GB28181Channel.GB28181
                     _ => "未知"
                 };
 
-                Console.WriteLine($"监听地址：{_serverIp}:{_sipPort} | 传输协议：{protocolDesc} | GB28181版本：{_protocolVersion}");
+                Console.WriteLine($"监听地址：{_serverIp}:{_sipPort} | 传输协议：{protocolDesc}");
                 Console.WriteLine($"心跳超时：{_heartbeatTimeout}秒");
             }
             catch (Exception ex)
@@ -142,7 +139,15 @@ namespace GB28181Channel.GB28181
                 throw;
             }
         }
-
+        private string GetVersionHeader(GB28181Version version)
+        {
+            return version switch
+            {
+                GB28181Version.V2022 => "X-GB28181-Version: 2022",
+                GB28181Version.V2016 => "X-GB28181-Version: 2016",
+                _ => "X-GB28181-Version: 2011"
+            };
+        }
         /// <summary>
         /// 处理所有SIP请求（UDP/TCP通用）
         /// </summary>
@@ -290,7 +295,7 @@ namespace GB28181Channel.GB28181
                                     Message = "主动拉流成功"
                                 });
 
-                                var ackReq = CreateAckRequest(resp, remoteEP);
+                                var ackReq = CreateAckRequest(resp, remoteEP, device.ProtocolVersion);
                                 var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
                                 await _sipTransport.SendRequestAsync(dstEnd, ackReq);
                             }
@@ -336,7 +341,7 @@ namespace GB28181Channel.GB28181
                             Console.WriteLine($"[语音对讲成功] 设备={talkParams.DeviceId} 会话={talkParams.SessionId} 远程RTP端口={audioMedia?.Port ?? 0}");
 
                             // 发送ACK确认
-                            var ackReq = CreateAckRequest(resp, remoteEP);
+                            var ackReq = CreateAckRequest(resp, remoteEP, device.ProtocolVersion);
                             var dstEnd = new SIPEndPoint(device.TransportProtocol, IPAddress.Parse(device.DeviceIp), device.DevicePort);
                             await _sipTransport.SendRequestAsync(dstEnd, ackReq);
 
@@ -540,7 +545,7 @@ namespace GB28181Channel.GB28181
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        private async Task<AuthResult> HandleAuth(SIPRequest req)
+        private async Task<AuthResult> HandleAuth(SIPRequest req, GB28181Version version)
         {
             AuthResult rs = new AuthResult();
             rs.IsSuccess = false;
@@ -550,15 +555,16 @@ namespace GB28181Channel.GB28181
             {
                 // 无认证信息，返回401 Unauthorized，发起认证挑战
                 var challengeResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "Unauthorized");
-                // 构造WWW-Authenticate头（SIP Digest认证标准）
-                var nonce = Guid.NewGuid().ToString("N"); // 随机挑战值
-                var realm = _serverId; // 认证域，通常用服务器ID
+                // 构造WWW-Authenticate头
+                string nonce = Guid.NewGuid().ToString("N");
+                var realm = _serverId.Substring(0, 10); // 认证域，通常用服务器ID
                 var sipDigest = new SIPAuthorisationDigest(SIPAuthorisationHeadersEnum.WWWAuthenticate, DigestAlgorithmsEnum.MD5);
-                sipDigest.Qop = "auth";
+                sipDigest.Response = string.Empty;
                 sipDigest.Nonce = nonce;
                 sipDigest.Realm = realm;
                 challengeResp.Header.AuthenticationHeaders = new List<SIPAuthenticationHeader> { new SIPAuthenticationHeader(sipDigest) };
 
+                challengeResp.Header.UserAgent = GetVersionHeader(version);
                 await _sipTransport.SendResponseAsync(challengeResp);
                 Console.WriteLine($"[认证挑战] {deviceId}：发送401认证请求");
                 return rs;
@@ -606,6 +612,25 @@ namespace GB28181Channel.GB28181
             }
         }
         /// <summary>
+        /// 检测设备GB版本（2016/2022）
+        /// </summary>
+        private GB28181Version DetectDeviceGBVersion(SIPRequest req)
+        {
+            // 从UserAgent识别
+            if (!string.IsNullOrEmpty(req.Header.UserAgent))
+            {
+                if (req.Header.UserAgent.Contains("2022"))
+                    return GB28181Version.V2022;
+                if (req.Header.UserAgent.Contains("2016"))
+                    return GB28181Version.V2016;
+            }
+            // 从Contact/Expires辅助判断
+            if (req.Header.Expires == 3600)
+                return GB28181Version.V2022;
+            // 默认2016
+            return GB28181Version.V2016;
+        }
+        /// <summary>
         /// 处理设备注册
         /// </summary>
         private async Task HandleRegister(SIPRequest req, SIPEndPoint remoteEP)
@@ -621,8 +646,8 @@ namespace GB28181Channel.GB28181
                     await HandleDeviceUnregister(deviceId, remoteEP, req);
                     return;
                 }
-
-                var authRs = await HandleAuth(req);
+                var protocolVersion = DetectDeviceGBVersion(req);
+                var authRs = await HandleAuth(req, protocolVersion);
                 if (!authRs.IsSuccess)
                 {
                     return;
@@ -648,7 +673,7 @@ namespace GB28181Channel.GB28181
                     DevicePort = remoteEP.Port,
                     RegisterTime = DateTime.Now,
                     LastHeartbeatTime = DateTime.Now,
-                    ProtocolVersion = _protocolVersion,
+                    ProtocolVersion = protocolVersion,
                     TransportProtocol = remoteEP.Protocol,
                 };
 
@@ -660,8 +685,8 @@ namespace GB28181Channel.GB28181
                 _heartbeatMap.AddOrUpdate(deviceId, DateTime.Now, (key, oldValue) => DateTime.Now);
 
                 var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "OK");
-                okResp.Header.Expires = _protocolVersion == GB28181Version.V2016 ? 3600 : 7200;
-                okResp.Header.UserAgent = "X-GB28181-Version: " + _protocolVersion.ToString();
+                okResp.Header.Expires = protocolVersion == GB28181Version.V2016 ? 3600 : 7200;
+                okResp.Header.UserAgent = GetVersionHeader(protocolVersion);
                 await _sipTransport.SendResponseAsync(okResp);
 
                 await OnDeviceRegistered(new DeviceRegisteredEventArgs
@@ -689,15 +714,17 @@ namespace GB28181Channel.GB28181
         {
             try
             {
-                var authRs = await HandleAuth(req);
+                var protocolVersion = DetectDeviceGBVersion(req);
+                var authRs = await HandleAuth(req, protocolVersion);
                 if (!authRs.IsSuccess)
                 {
                     return;
                 }
+
                 // 回复200 OK确认注销
                 var okResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Ok, "Unregistered successfully");
                 okResp.Header.Expires = 0; // 明确标识注销
-                okResp.Header.UserAgent = "X-GB28181-Version: " + _protocolVersion.ToString();
+                okResp.Header.UserAgent = GetVersionHeader(protocolVersion);
                 await _sipTransport.SendResponseAsync(okResp);
 
                 // 触发注销事件
@@ -910,7 +937,7 @@ namespace GB28181Channel.GB28181
             Console.WriteLine($"[点播请求] {channelId} @ {remoteEP}");
 
             try
-            {  
+            {
                 var sdp = SDP.ParseSDPDescription(req.Body);
                 var rtpPort = sdp.Media.First().Port;
 
@@ -963,7 +990,7 @@ namespace GB28181Channel.GB28181
                 Console.WriteLine($"[点播失败] {channelId}：{ex.Message}");
             }
         }
-   
+
         /// <summary>
         /// 处理停止推流
         /// </summary>
@@ -1222,7 +1249,7 @@ namespace GB28181Channel.GB28181
                     device.DeviceIp,
                     device.DevicePort,
                     presetQueryXml,
-                    device.TransportProtocol);
+                    device.TransportProtocol, device.ProtocolVersion);
 
                 // 保存请求上下文（携带预置位查询参数）
                 _requestContextMap.TryAdd(tsnid, new RequestContext
@@ -1269,7 +1296,7 @@ namespace GB28181Channel.GB28181
                 }
 
                 var controlXml = GB28181Util.GeneratePTZControlXml(@params);
-                var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceIp, device.DevicePort, controlXml, device.TransportProtocol);
+                var sipRequest = CreateSIPMessageRequest(device.DeviceId, device.DeviceIp, device.DevicePort, controlXml, device.TransportProtocol, device.ProtocolVersion);
 
                 // 保存请求上下文
                 _requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
@@ -1419,14 +1446,14 @@ namespace GB28181Channel.GB28181
         public async Task SendCatalogQuery(DeviceInfo device)
         {
             // 1. 构造符合GB28181标准的Catalog查询XML
-            var catalogXml = GB28181Util.GenerateCatalogQueryXml(device.DeviceId, _protocolVersion);
+            var catalogXml = GB28181Util.GenerateCatalogQueryXml(device.DeviceId, device.ProtocolVersion);
 
             // 2. 创建SIP MESSAGE请求
             var sipRequest = CreateSIPMessageRequest(
                 device.DeviceId,
                 device.DeviceIp,
                 device.DevicePort,
-                catalogXml, device.TransportProtocol);
+                catalogXml, device.TransportProtocol, device.ProtocolVersion);
 
             //// 保存请求上下文
             //_requestContextMap.TryAdd(sipRequest.Header.CallId, new RequestContext
@@ -1483,7 +1510,7 @@ namespace GB28181Channel.GB28181
             inviteRequest.Body = sdp;
             inviteRequest.Header.ContentType = "APPLICATION/SDP";
             inviteRequest.Header.ContentLength = inviteRequest.BodyBuffer.Length;
-            inviteRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+            inviteRequest.Header.UserAgent = GetVersionHeader(device.ProtocolVersion);
 
             return inviteRequest;
         }
@@ -1515,14 +1542,14 @@ namespace GB28181Channel.GB28181
             var viaHeader = new SIPViaHeader(_serverIp, _sipPort, viaBranch, device.TransportProtocol);
             byeRequest.Header.Vias.Via.Add(viaHeader);
 
-            byeRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+            byeRequest.Header.UserAgent = GetVersionHeader(device.ProtocolVersion);
 
             return byeRequest;
         }
         /// <summary>
         /// 创建SIP MESSAGE请求
         /// </summary>
-        private SIPRequest CreateSIPMessageRequest(string deviceId, string deviceIp, int devicePort, string body, SIPProtocolsEnum protocol)
+        private SIPRequest CreateSIPMessageRequest(string deviceId, string deviceIp, int devicePort, string body, SIPProtocolsEnum protocol, GB28181Version gbVersion)
         {
             var toUri = new SIPURI(deviceId, $"{deviceIp}:{devicePort}", null, SIPSchemesEnum.sip);
             var fromUri = new SIPURI(_serverId, $"{_serverIp}:{_sipPort}", null, SIPSchemesEnum.sip);
@@ -1541,7 +1568,7 @@ namespace GB28181Channel.GB28181
             request.Header.CSeq = GB28181Util.GenerateCSeq();
             request.Header.CSeqMethod = SIPMethodsEnum.MESSAGE;
             request.Header.MaxForwards = 70;
-            request.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+            request.Header.UserAgent = GetVersionHeader(gbVersion);
             request.Header.Contact = new List<SIPContactHeader>()
             {
                 new SIPContactHeader(null, fromUri)
@@ -1582,7 +1609,7 @@ namespace GB28181Channel.GB28181
             inviteRequest.Body = sdp;
             inviteRequest.Header.ContentType = "APPLICATION/SDP";
             inviteRequest.Header.ContentLength = inviteRequest.BodyBuffer.Length;
-            inviteRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+            inviteRequest.Header.UserAgent = GetVersionHeader(device.ProtocolVersion);
             return inviteRequest;
         }
         /// <summary>
@@ -1590,7 +1617,7 @@ namespace GB28181Channel.GB28181
         /// </summary>
         /// <param name="inviteResp">INVITE响应</param>
         /// <param name="remoteEP">设备端点</param>
-        private SIPRequest CreateAckRequest(SIPResponse inviteResp, SIPEndPoint remoteEP)
+        private SIPRequest CreateAckRequest(SIPResponse inviteResp, SIPEndPoint remoteEP, GB28181Version gbversion)
         {
             // 1. 构造ACK请求，必须复用INVITE响应的核心头域
             var ackRequest = new SIPRequest(SIPMethodsEnum.ACK, inviteResp.Header.To.ToURI);
@@ -1608,7 +1635,7 @@ namespace GB28181Channel.GB28181
 
             // 3. 其他必要头域
             ackRequest.Header.MaxForwards = 70;
-            ackRequest.Header.UserAgent = $"X-GB28181-Version: {_protocolVersion}";
+            ackRequest.Header.UserAgent = GetVersionHeader(gbversion);
 
             return ackRequest;
         }

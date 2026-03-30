@@ -44,7 +44,7 @@ namespace GB28181Channel
             {
                 protocol = SIPTransportProtocol.TcpOnly;
             }
-            _server = new GB28181Server(_option.sip_ip, _option.sip_port, _option.sip_service_id, GB28181Version.V2016, _storage, protocol);
+            _server = new GB28181Server(_option.sip_ip, _option.sip_port, _option.sip_service_id, _storage, protocol);
             _server.DeviceRegistered += _deviceEventListener.OnDeviceRegistered;
             _server.DeviceOffline += _deviceEventListener.OnDeviceOffline;
             _server.StreamPlayed += _deviceEventListener.OnStreamPlay;

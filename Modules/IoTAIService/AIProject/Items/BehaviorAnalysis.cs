@@ -89,6 +89,7 @@ namespace IoTAIService.AIProject.Items
                 }
             }
             var posec3d = _provider.GetService<PoseC3DRunner>();
+            string className = string.Empty;
             foreach (var trackItem in tracklist)
             {
                 List<BoxItem> tmpboxlist;
@@ -100,7 +101,7 @@ namespace IoTAIService.AIProject.Items
                 tmpboxlist.Add(trackItem.CurrentDetection);
                 if (tmpboxlist.Count >= 48)
                 {
-                    (int classId, string className, float score) = posec3d.Process(tmpboxlist);
+                    (int classId, className, float score) = posec3d.Process(tmpboxlist);
                     if (score >= tThreshold)
                     {
                         bool cansend = false;
@@ -126,10 +127,26 @@ namespace IoTAIService.AIProject.Items
                         }
 
                     }
-                    tmpboxlist.RemoveRange(0, 8);
+                    tmpboxlist.RemoveRange(0, 10);
                 }
             }
 
+
+            //存储视频关键帧
+            if (!string.IsNullOrEmpty(className))
+            {
+                var tmpkeyTime = videoData.GetDateTime("LastKeyTime", DateTime.Now.AddHours(-1));
+                if ((DateTime.Now - tmpkeyTime).TotalSeconds > 60)
+                {
+                    var fileHelper = _provider.GetService<FileHelper>();
+                    var turl = await fileHelper.UploadRgb24File(image);
+                    if (!string.IsNullOrEmpty(turl))
+                    {
+                        videoData.SetDateTime("LastKeyTime", DateTime.Now);
+                        await aiBusProxy.SendMediaKey(req.DeviceId, req.VideoKey, $"检测到视频动作'{className}'", turl);
+                    }
+                }
+            }
         }
 
     }

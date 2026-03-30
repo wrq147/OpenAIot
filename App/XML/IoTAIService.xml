@@ -529,6 +529,16 @@
             运动方向枚举（8个主方向）
             </summary>
         </member>
+        <member name="M:IoTAIService.AICode.PoseC3DRunner.ArgMax(System.Single[])">
+            <summary>
+            取数组最大值索引
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.PoseC3DRunner.DrawGaussian(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Single)">
+            <summary>
+            向 Tensor 指定位置绘制高斯热图
+            </summary>
+        </member>
         <member name="M:IoTAIService.AICode.YoloFaceDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
             <summary>
             图像预处理：缩放、归一化等
@@ -549,7 +559,7 @@
             <param name="gain"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTAIService.AICode.YoloFaceDetectRunner.ApplyNMS(System.Collections.Generic.List{IoTAIService.AICode.YoloDetectionResult},System.Single)">
+        <member name="M:IoTAIService.AICode.YoloFaceDetectRunner.ApplyNMS(System.Collections.Generic.List{ChannelUtility.Message.BoxItem},System.Single)">
             <summary>
             非极大值抑制（NMS）：去除重叠的高置信度框
             </summary>
@@ -557,10 +567,29 @@
             <param name="iouThreshold">IOU阈值</param>
             <returns>去重后的检测结果</returns>
         </member>
-        <member name="M:IoTAIService.AICode.YoloFaceDetectRunner.CalculateIOU(IoTAIService.AICode.YoloDetectionResult,IoTAIService.AICode.YoloDetectionResult)">
+        <member name="M:IoTAIService.AICode.YoloFaceDetectRunner.CalculateIOU(ChannelUtility.Message.BoxItem,ChannelUtility.Message.BoxItem)">
             <summary>
             计算两个检测框的IOU（交并比）
             </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloPoseDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
+            <summary>
+            图像预处理：缩放、归一化等
+            </summary>
+            <param name="input"></param>
+            <param name="gain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.YoloPoseDetectRunner.PostprocessOutput(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Single,System.Int32,System.Int32,System.Single)">
+            <summary>
+            后处理：解析模型输出，过滤低置信度结果，执行NMS，还原检测框到原图坐标
+            </summary>
+            <param name="output"></param>
+            <param name="confidenceThreshold"></param>
+            <param name="originalWidth"></param>
+            <param name="originalHeight"></param>
+            <param name="gain"></param>
+            <returns></returns>
         </member>
         <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
             <summary>
@@ -583,7 +612,7 @@
             <param name="classes"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.ApplyNMS(System.Collections.Generic.List{IoTAIService.AICode.YoloDetectionResult},System.Single)">
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.ApplyNMS(System.Collections.Generic.List{ChannelUtility.Message.BoxItem},System.Single)">
             <summary>
             非极大值抑制（NMS）：去除重叠的高置信度框
             </summary>
@@ -591,7 +620,7 @@
             <param name="iouThreshold">IOU阈值</param>
             <returns>去重后的检测结果</returns>
         </member>
-        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.CalculateIOU(IoTAIService.AICode.YoloDetectionResult,IoTAIService.AICode.YoloDetectionResult)">
+        <member name="M:IoTAIService.AICode.YoloWorldDetectRunner.CalculateIOU(ChannelUtility.Message.BoxItem,ChannelUtility.Message.BoxItem)">
             <summary>
             计算两个检测框的IOU（交并比）
             </summary>
@@ -651,6 +680,11 @@
             是否多选
             </summary>
         </member>
+        <member name="T:IoTAIService.AIProject.Items.BehaviorAnalysis">
+            <summary>
+            行为分析
+            </summary>
+        </member>
         <member name="T:IoTAIService.AIProject.Items.GeneralDetect">
             <summary>
             通用检测项目
@@ -658,7 +692,12 @@
         </member>
         <member name="T:IoTAIService.AIProject.Items.GeneralTrigger">
             <summary>
-            通用推理项目
+            入侵告警
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AIProject.Items.PoseDetect">
+            <summary>
+            人体姿势检测
             </summary>
         </member>
         <member name="T:IoTAIService.Controller.Clip">
