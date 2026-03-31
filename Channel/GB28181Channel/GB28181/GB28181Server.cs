@@ -785,10 +785,8 @@ namespace GB28181Channel.GB28181
             if (needRegDevice || device == null)
             {
                 // 通知设备重新注册：返回401 Unauthorized响应，携带认证挑战
-                var resp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.NotFound, "Not Found");
-                resp.Header.Allow = null;
-                await _sipTransport.SendResponseAsync(resp);
                 Console.WriteLine($"[心跳检测] {deviceId} @ {remoteEP} 未注册，要求重新注册");
+                return;
             }
             else
             {

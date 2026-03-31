@@ -388,7 +388,7 @@ namespace GB28181Channel
             }
             else
             {
-                mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, "无发布权限，中断推流", null);
+                mk_events_objects.MkPublishAuthInvokerDo2((MkPublishAuthInvokerT)invoker, "无发布权限", null);
             }
         }
         private void On_mk_media_play(IntPtr url,
