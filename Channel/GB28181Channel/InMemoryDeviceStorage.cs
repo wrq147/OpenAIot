@@ -4,13 +4,10 @@ using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 namespace GB28181Channel
 {
@@ -22,10 +19,12 @@ namespace GB28181Channel
         private readonly ConcurrentDictionary<string, List<ChannelInfo>> _channels = new ConcurrentDictionary<string, List<ChannelInfo>>();
 
         private IServiceProvider _serviceProvider;
+        private object _locker = new object();
         public InMemoryDeviceStorage(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
+     
         public ChannelInfo GetChannelFrom(string streamId)
         {
             int tsidx = streamId.IndexOf('_');
@@ -117,6 +116,7 @@ namespace GB28181Channel
                 }
 
             }
+
             return true;
         }
 
@@ -128,6 +128,7 @@ namespace GB28181Channel
             currentDevice.VideoData = data;
             _keyToDeviceIds.AddOrUpdate(data.Item.PushKey, _ => deviceId, (_, existingChannels) => deviceId);
             _dtuIdToDeviceIds.AddOrUpdate(data.Item.Id, _ => deviceId, (_, existingChannels) => deviceId);
+
             return true;
         }
         public DeviceInfo GetDevice(string deviceId)
@@ -167,9 +168,12 @@ namespace GB28181Channel
             var channelIds = channels.Select(x => x.ChannelId).ToList();
             var channelNames = channels.Select(x => x.ChannelName).ToList();
             eventBus.PublishMediaChannels(deviceId, 1, dataList);
+
             return true;
         }
-
+        public void UpdateChannel(ChannelInfo channel)
+        {
+        }
         public List<ChannelInfo> GetChannelsByDeviceId(string deviceId)
         {
             // 获取并返回拷贝，避免外部修改内部集合

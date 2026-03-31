@@ -1,14 +1,11 @@
-﻿using ChannelUtility;
-using ChannelUtility.Message;
+﻿using ChannelUtility.Message;
 using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -345,7 +342,7 @@ namespace GB28181Channel
                             }
                             _ = _server.StopActiveStream(ch.DeviceId, ch.ChannelId);
                         }
-                      
+
                     }
 
                 }

@@ -65,5 +65,8 @@ namespace GB28181Channel.GB28181.Interface
         /// <param name="deviceId">设备ID</param>
         /// <returns>通道列表</returns>
         List<ChannelInfo> GetChannelsByDeviceId(string deviceId);
+
+        void UpdateChannel(ChannelInfo channel);
+
     }
 }

@@ -17,7 +17,6 @@ namespace GB28181Channel.GB28181.DTO
         public VideoData VideoData { get; set; }
         public List<PresetInfo> PresetList { get; set; }
         public string DeviceId { get; set; }
-        public string Password { get; set; }
         public string DeviceIp { get; set; }
         public int DevicePort { get; set; }
         public DateTime RegisterTime { get; set; }

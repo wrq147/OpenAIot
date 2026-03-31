@@ -2,7 +2,6 @@
 using GB28181Channel.GB28181.Enum;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
-using Org.BouncyCastle.Tls;
 using SIPSorcery.Net;
 using SIPSorcery.SIP;
 using System;
@@ -276,6 +275,8 @@ namespace GB28181Channel.GB28181
                                 channelInfo.RemoteRtpPort = media.Port;
                                 channelInfo.SessionId = resp.Header.CallId;
                                 channelInfo.ToTags = resp.Header.To.ToTag;
+
+                                _deviceStorage.UpdateChannel(channelInfo);
                                 // 触发点播成功事件
                                 await OnStreamPlayed(new StreamPlayEventArgs
                                 {
@@ -574,15 +575,7 @@ namespace GB28181Channel.GB28181
                 var response = authHeader.SIPDigest.Response;
 
                 var curDevice = _deviceStorage.GetDevice(deviceId);
-                string tpassword;
-                if (curDevice == null || string.IsNullOrEmpty(curDevice.Password))
-                {
-                    tpassword = await _deviceStorage.GetDevicePassword(deviceId);
-                }
-                else
-                {
-                    tpassword = curDevice.Password;
-                }
+                string tpassword = await _deviceStorage.GetDevicePassword(deviceId);
                 rs.Password = tpassword;
                 if (string.IsNullOrEmpty(tpassword))
                 {
@@ -654,19 +647,11 @@ namespace GB28181Channel.GB28181
                 {
                     return;
                 }
-                var oldDevice = _deviceStorage.GetDevice(deviceId);
-                if (oldDevice != null)
-                {
-                    var unauthorizedResp = SIPResponse.GetResponse(req, SIPResponseStatusCodesEnum.Unauthorised, "The device has been registered");
-                    await _sipTransport.SendResponseAsync(unauthorizedResp);
-                    Console.WriteLine($"[注册失败]：{deviceId}已被注册");
-                    return;
-                }
+
                 // 密码验证通过，完成注册流程
                 var deviceInfo = new DeviceInfo
                 {
                     DeviceId = deviceId,
-                    Password = authRs.Password,
                     DeviceIp = remoteEP.Address.ToString(),
                     DevicePort = remoteEP.Port,
                     RegisterTime = DateTime.Now,
