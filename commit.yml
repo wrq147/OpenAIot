@@ -3,24 +3,36 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid 'b5da66b6888cabc72fd02a24e8b27dc36fc53505'
-    oldFile: !uuid 'd9becf2763ddb60e2f872387d9a8bf27b50b037d'
+    newFile: !uuid '305c2c06e02f5398746f0954127ea3f9dfe5fe61'
+    oldFile: !uuid 'b5da66b6888cabc72fd02a24e8b27dc36fc53505'
   /Channel/GB28181Channel:
-    newFile: !uuid 'd68a2b96ce9b9eb2b82509c69afd6405cda1fc7d'
-    oldFile: !uuid 'cfc706c942e29bb737206b8c2345a4c36ba7b327'
+    newFile: !uuid 'c6102c662ea6bfb3e00e753c0150427cf4f5c1d5'
+    oldFile: !uuid 'd68a2b96ce9b9eb2b82509c69afd6405cda1fc7d'
   /Channel/GB28181Channel/GB28181:
-    newFile: !uuid '0ba8d9b3cf3bde3a558c67994ac3d3b2a5fd8ea8'
-    oldFile: !uuid 'a09425b1d5c507798ce7a2e3f532fd5bba701432'
+    newFile: !uuid '74b9b381b9d65d2a444295973db711ee8bbae273'
+    oldFile: !uuid '0ba8d9b3cf3bde3a558c67994ac3d3b2a5fd8ea8'
   /Channel/GB28181Channel/GB28181/DTO:
-    newFile: !uuid 'a053b8a35e05db2ced6376778778a4b645f4177b'
-    oldFile: !uuid 'e2378aeebd9056bd3675f0ed3de31974ef211625'
-  /Channel/GB28181Channel/GB28181/DTO/ChannelInfo.cs:
-    newFile: !uuid 'a5c7cd87ca414447635fdec90c50eba6c1bfc345'
-    oldFile: !uuid 'eeb2ac88be901745d3ee23f9879be66263b666ec'
+    newFile: !uuid '3ac8389817cd4f26ffc0c28a55535618ec4f37d7'
+    oldFile: !uuid 'a053b8a35e05db2ced6376778778a4b645f4177b'
+  /Channel/GB28181Channel/GB28181/DTO/DeviceInfo.cs:
+    newFile: !uuid '45f0899f7f66b88ac88de27ec3f76246cae1f60f'
+    oldFile: !uuid '13c5ca4af781bed59b68637fa76d2de232a20644'
   /Channel/GB28181Channel/GB28181/GB28181Server.cs:
-    newFile: !uuid '204bf1d143a983f469e1f340b3d4b83c82bc70a2'
-    oldFile: !uuid '6e1096dd3a67a305b73b9a13d882a4b2f8d12773'
-gitCommitId: !uuid '2a5a136cb32816ae9bf5c75ab79f7c461e8b34c0'
+    newFile: !uuid 'cebd3d031f88c705986b27502a118c5b5dd9b448'
+    oldFile: !uuid '204bf1d143a983f469e1f340b3d4b83c82bc70a2'
+  /Channel/GB28181Channel/GB28181/Interface:
+    newFile: !uuid 'c299caafed5dd83ffeda6100ac7ddbe4db991972'
+    oldFile: !uuid 'ad4d24a01dd44d6a8e1afdae79300fd3802cbf6c'
+  /Channel/GB28181Channel/GB28181/Interface/IDeviceStorage.cs:
+    newFile: !uuid 'dcf42988c8b98948f255bd41d8527625d74bf7cf'
+    oldFile: !uuid 'f5bfa9a775878d544109b4d64df8fca42123bf6a'
+  /Channel/GB28181Channel/InMemoryDeviceStorage.cs:
+    newFile: !uuid '5e6616a5382a92efb76b451020a5010bfade0ca3'
+    oldFile: !uuid '108224f6f9c18453bc0a71d7e2ffb901ff94acb7'
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid '7bd360f55d3aac07540207147121caf5ff897dab'
+    oldFile: !uuid 'e96b2fc557d615bd50cf531557c89ae7c591a20d'
+gitCommitId: !uuid '401c6ff4f28df8f6472b3744f37cbdcdaa78f31c'
 renames: {
   }
-revisionId: 242
+revisionId: 243
