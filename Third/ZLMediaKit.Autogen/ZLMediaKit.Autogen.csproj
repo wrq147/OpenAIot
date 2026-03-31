@@ -32,6 +32,10 @@
 		  <Link>libconvert.so</Link>
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="ZLMediaLibs\Linux\x64\libmotion.so">
+		  <Link>libmotion.so</Link>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
     <None Update="ZLMediaLibs\Windows\x64\avcodec-59.dll">
 		<Link>avcodec-59.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -87,7 +91,11 @@
 	  <None Update="ZLMediaLibs\Windows\x64\convert.dll">
 		  <Link>convert.dll</Link>
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None> 
+	  </None>
+	  <None Update="ZLMediaLibs\Windows\x64\motion.dll">
+		  <Link>motion.dll</Link>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ZLMediaLibs\Linux\arm\" />

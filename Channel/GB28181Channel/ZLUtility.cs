@@ -43,7 +43,10 @@ namespace GB28181Channel
                     yuvData = ConvertRgb24ToNV12_Native(rgb24Data, width, height, alignedLinesize);
                     yuvLineSizes = new int[2] { width, width };
                     return true;
-
+                case AVPixelFormat.AV_PIX_FMT_YUVJ420P:
+                    yuvData = ConvertRgb24ToYuv420P_Native(rgb24Data, width, height, alignedLinesize);
+                    yuvLineSizes = new int[3] { width, width / 2, width / 2 };
+                    return true;
                 default:
                     return false;
             }
@@ -125,11 +128,19 @@ namespace GB28181Channel
     public enum AVPixelFormat
     {
         AV_PIX_FMT_NONE = -1,
-        AV_PIX_FMT_YUV420P = 0,
-        AV_PIX_FMT_YUV422P = 4,
-        AV_PIX_FMT_YUV444P = 5,
+        AV_PIX_FMT_YUV420P,   // 0
+        AV_PIX_FMT_YUYV422,   // 1
+        AV_PIX_FMT_RGB24,     // 2
+        AV_PIX_FMT_BGR24,     // 3
+        AV_PIX_FMT_YUV422P,   // 4
+        AV_PIX_FMT_YUV444P,   // 5
+        AV_PIX_FMT_YUV410P,   // 6
+        AV_PIX_FMT_YUV411P,   // 7
+        AV_PIX_FMT_GRAY8,     // 8
+        AV_PIX_FMT_MONOWHITE, // 9
+        AV_PIX_FMT_MONOBLACK, //10
+        AV_PIX_FMT_PAL8,      //11
+        AV_PIX_FMT_YUVJ420P,  //12
         AV_PIX_FMT_NV12 = 23,
-        AV_PIX_FMT_RGB24 = 2,
-        AV_PIX_FMT_BGR24 = 3
     }
 }

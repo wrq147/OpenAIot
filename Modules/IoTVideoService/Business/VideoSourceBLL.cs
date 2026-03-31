@@ -109,24 +109,30 @@ namespace IoTVideoService.Business
             data.VideoKey = null;
             data.OrgId = null;
 
-            if ((old.VideoType == 0 || old.VideoType == 3) && !string.IsNullOrEmpty(old.NodeId))
+            if (!string.IsNullOrEmpty(old.NodeId))
             {
                 bool candownVideoItem = false;
-                if (old.PullAddr != data.PullAddr)
+                if (data.PullAddr != null && old.PullAddr != data.PullAddr)
                 {
                     old.PullAddr = data.PullAddr;
                     candownVideoItem = true;
                 }
 
-                if (old.UserName != data.UserName)
+                if (data.UserName != null && old.UserName != data.UserName)
                 {
                     old.UserName = data.UserName;
                     candownVideoItem = true;
                 }
 
-                if (old.UserPwd != data.UserPwd)
+                if (data.UserPwd != null && old.UserPwd != data.UserPwd)
                 {
                     old.UserPwd = data.UserPwd;
+                    candownVideoItem = true;
+                }
+
+                if (data.AITasks != null && old.AITasks != data.AITasks)
+                {
+                    old.AITasks = data.AITasks;
                     candownVideoItem = true;
                 }
 

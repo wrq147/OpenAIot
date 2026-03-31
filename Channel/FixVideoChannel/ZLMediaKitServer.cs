@@ -97,7 +97,7 @@ namespace FixVideoChannel
                 {
                     if (item.Configs != null && item.Configs.Count > 0 && context.VideoDecoder != null)
                     {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
                         return;
                     }
                 }
