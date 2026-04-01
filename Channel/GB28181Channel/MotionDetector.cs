@@ -29,12 +29,12 @@ namespace GB28181Channel
             if (_lastY == null || _lastY.Length != width * height)
             {
                 _lastY = new byte[width * height];
-                CheckMotion.ExtractY(rgb24, _lastY, width, height);
+                LibConvert.ExtractY(rgb24, _lastY, width, height);
                 return (false, 0);
             }
 
             float ratio = 0;
-            int ret = CheckMotion.CheckBlockMotion(
+            int ret = LibConvert.CheckBlockMotion(
                 _lastY,
                 rgb24,
                 width,
@@ -46,7 +46,7 @@ namespace GB28181Channel
                 ref ratio
             );
 
-            CheckMotion.ExtractY(rgb24, _lastY, width, height);
+            LibConvert.ExtractY(rgb24, _lastY, width, height);
 
             bool isMotion = ret == 1;
             if (isMotion)

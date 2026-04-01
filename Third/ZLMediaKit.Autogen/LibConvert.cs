@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ZLMediaKit.Autogen
 {
-    public unsafe static class Rgb24ToYUV
+    public unsafe static class LibConvert
     {
 
         // RGB24转NV12
@@ -43,5 +43,22 @@ namespace ZLMediaKit.Autogen
             int width,
             int height,
             int rgb_stride);
+
+
+        [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int CheckBlockMotion(
+    byte[] last_y,
+    byte[] curr_rgb24,
+    int width,
+    int height,
+    int block_size,
+    int diff_thresh,
+    float ratio_thresh,
+    int min_blocks,
+    ref float out_ratio
+);
+
+        [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ExtractY(byte[] rgb24, byte[] out_y, int width, int height);
     }
 }

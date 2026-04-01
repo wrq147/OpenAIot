@@ -115,7 +115,6 @@ namespace GB28181Channel
                 }
                 listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
             });
-
         }
         public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
         {

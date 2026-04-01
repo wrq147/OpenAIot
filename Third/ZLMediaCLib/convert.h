@@ -49,6 +49,27 @@ API void rgb24_to_yuv444p(
     int rgb_stride
 );
 
+// 从RGB24提取Y分量
+API void ExtractY(
+    const uint8_t* rgb24,
+    uint8_t* out_y,
+    int width,
+    int height
+);
+
+// 检测块级运动
+API int CheckBlockMotion(
+    const uint8_t* last_y,
+    const uint8_t* curr_rgb24,
+    int width,
+    int height,
+    int block_size,
+    int diff_thresh,
+    float ratio_thresh,
+    int min_blocks,
+    float* out_ratio
+);
+
 #ifdef __cplusplus
 }
 #endif

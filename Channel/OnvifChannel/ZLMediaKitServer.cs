@@ -105,7 +105,7 @@ namespace OnvifChannel
                 {
                     if (item.Configs != null && item.Configs.Count > 0 && context.VideoDecoder != null)
                     {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 0, 0);
+                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
                         return;
                     }
                 }
@@ -134,7 +134,11 @@ namespace OnvifChannel
                 return;
             }
 
-            byte[] rgb24 = FrameBufferPool.GetRgb24Buffer(context.VideoKey, w, h);
+            const int pixelSize = 3;
+            int rawLineSize = w * pixelSize;
+            int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
+            int totalSize = alignedLineSize * h;
+            byte[] rgb24 = new byte[totalSize];
             try
             {
                 if (context.Swscale == null)
@@ -166,47 +170,46 @@ namespace OnvifChannel
                         AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
                     }
 
-                    // 执行绘制
                     var tmpboxlist = item.BoxList;
                     if (tmpboxlist != null && tmpboxlist.Count > 0)
                     {
                         AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                     }
 
-
                     byte[] yuvData;
                     int[] yuvLineSizes;
-                    int alignedLineSize = (w * 3 + 31) & ~31;
-
                     if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                     {
                         return;
                     }
+
                     if (yuvLineSizes == null || yuvLineSizes.Length != 3)
                     {
                         Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
                         return;
                     }
 
-                    unsafe
+
+                    context.YuvQueue.Enqueue(new YuvFrame
                     {
-                        // 3. 固定托管YUV数组，防止GC回收/移动
-                        fixed (byte* pYuvBase = yuvData)
+                        YuvData = yuvData,
+                        LineSizes = yuvLineSizes,
+                        Pts = lpts,
+                        Width = w,
+                        Height = h
+                    });
+
+                    context.FrameSemaphore.Release();
+
+                    // 启动编码线程（只启动一次）
+                    if (context.EncodeThread == null)
+                    {
+                        context.EncodeThread = new Thread(EncodeLoop)
                         {
-                            // 4. 构建3个平面的指针数组（对应 C 层 const char* yuv[3]）
-                            IntPtr[] yuvPlanes = new IntPtr[3];
-                            // Y平面：起始地址
-                            yuvPlanes[0] = (IntPtr)pYuvBase;
-                            // U平面：Y平面后偏移 w*h 字节
-                            yuvPlanes[1] = (IntPtr)(pYuvBase + w * h);
-                            // V平面：U平面后偏移 (w/2)*(h/2) 字节
-                            yuvPlanes[2] = (IntPtr)(pYuvBase + w * h + (w / 2) * (h / 2));
-                            if (context.Media == null)
-                            {
-                                return;
-                            }
-                            mk_media.MkMediaInputYuv(context.Media, yuvPlanes, yuvLineSizes, (ulong)lpts);
-                        }
+                            IsBackground = true,
+                            Priority = ThreadPriority.AboveNormal
+                        };
+                        context.EncodeThread.Start(context);
                     }
 
                 }
@@ -215,11 +218,47 @@ namespace OnvifChannel
             {
                 Console.WriteLine(ex.Message);
             }
-            finally
+  
+        }
+
+        private void EncodeLoop(object state)
+        {
+            var context = (FrameContext)state;
+            while (context.CanParse)
             {
-                FrameBufferPool.ReturnRgb24Buffer(context.VideoKey, rgb24);
+                context.FrameSemaphore.Wait(1000);
+                if (!context.CanParse)
+                    break;
+                if (context.YuvQueue.TryDequeue(out var frame))
+                {
+                    try
+                    {
+                        unsafe
+                        {
+                            fixed (byte* pYuv = frame.YuvData)
+                            {
+                                IntPtr[] planes = new IntPtr[3];
+                                planes[0] = (IntPtr)pYuv;
+                                planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
+                                planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
+
+                                // 真正耗时的调用，放在独立线程
+                                mk_media.MkMediaInputYuv(
+                                    context.Media,
+                                    planes,
+                                    frame.LineSizes,
+                                    (ulong)frame.Pts);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"编码异常: {ex.Message}");
+                    }
+                }
             }
         }
+
 
         private void On_mk_media_changed(int regist, IntPtr senderPtr)
         {
@@ -491,7 +530,8 @@ namespace OnvifChannel
                             mk_media.MkMediaRelease(handle.Media);
                             handle.Media = null;
                         }
-                        FrameBufferPool.ClearCache(tmpdata.Item.PushKey);
+                        handle.FrameSemaphore.Release();
+                        handle.EncodeThread = null;
                     }
                     if (_contextPtrMap.TryRemove(tmpdata.Item.PushKey, out IntPtr contextPtr))
                     {
@@ -623,7 +663,6 @@ namespace OnvifChannel
         public void Stop()
         {
             mk_common.MkStopAllServer();
-            FrameBufferPool.ClearAllCache();
         }
 
     }
@@ -655,6 +694,9 @@ namespace OnvifChannel
 
     public class FrameContext
     {
+        public SemaphoreSlim FrameSemaphore { get; set; } = new SemaphoreSlim(0);
+        public ConcurrentQueue<YuvFrame> YuvQueue { get; set; } = new ConcurrentQueue<YuvFrame>();
+        public Thread EncodeThread { get; set; }
         public bool CanParse { get; set; } = true;
         public string VideoId { get; set; }
         public string VideoKey { get; set; }
@@ -665,7 +707,14 @@ namespace OnvifChannel
         // 上次触发时间
         public long LastTriggerTime { get; set; } = 0;
     }
-
+    public class YuvFrame
+    {
+        public byte[] YuvData { get; set; }
+        public int[] LineSizes { get; set; }
+        public long Pts { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+    }
 
     public static class CallbackHelper
     {

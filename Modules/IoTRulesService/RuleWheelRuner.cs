@@ -3,12 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using TemplateAction.Cache;
-using TemplateAction.Common;
 using TemplateAction.Core;
 
 namespace IoTRulesService
@@ -39,11 +34,11 @@ namespace IoTRulesService
             }
 
         }
-        public void PushConcurrentTask(string key, Func<Task> ac)
+        public void PushConcurrentTask(string key, Action ac)
         {
             PushConcurrentTask(key, ac, TimeSpan.Zero);
         }
-        public void PushConcurrentTask(string key, Func<Task> ac, TimeSpan ts)
+        public void PushConcurrentTask(string key, Action ac, TimeSpan ts)
         {
             int curidx = Math.Abs(key.GetHashCode() % _schedulers.Count);
             _schedulers[curidx].NewTimeout(new RuleTask(ac), ts);
@@ -52,14 +47,14 @@ namespace IoTRulesService
 
     public class RuleTask : TimerTask
     {
-        private Func<Task> _ac;
-        public RuleTask(Func<Task> ac)
+        private Action _ac;
+        public RuleTask(Action ac)
         {
             _ac = ac;
         }
         public void Run(IWheelTimeout timeout)
         {
-            TAAsyncHelper.RunSync(_ac);
+            _ac();
         }
     }
 }

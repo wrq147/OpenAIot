@@ -60,7 +60,7 @@ namespace FixVideoChannel
             fixed (byte* pRgb = rgb24Data)
             fixed (byte* pYuv = yuv420p)
             {
-                Rgb24ToYUV.rgb24_to_yuv420p(pRgb, pYuv, width, height, alignedLinesize);
+                ZLMediaKit.Autogen.LibConvert.rgb24_to_yuv420p(pRgb, pYuv, width, height, alignedLinesize);
             }
 
             return yuv420p;
@@ -78,7 +78,7 @@ namespace FixVideoChannel
             fixed (byte* pRgb = rgb24Data)
             fixed (byte* pYuv = yuv422p)
             {
-                Rgb24ToYUV.rgb24_to_yuv422p(pRgb, pYuv, width, height, alignedLinesize);
+                ZLMediaKit.Autogen.LibConvert.rgb24_to_yuv422p(pRgb, pYuv, width, height, alignedLinesize);
             }
 
             return yuv422p;
@@ -95,7 +95,7 @@ namespace FixVideoChannel
             fixed (byte* pRgb = rgb24Data)
             fixed (byte* pYuv = yuv444p)
             {
-                Rgb24ToYUV.rgb24_to_yuv444p(pRgb, pYuv, width, height, alignedLinesize);
+                ZLMediaKit.Autogen.LibConvert.rgb24_to_yuv444p(pRgb, pYuv, width, height, alignedLinesize);
             }
 
             return yuv444p;
@@ -112,7 +112,7 @@ namespace FixVideoChannel
             fixed (byte* pRgb = rgb24Data)
             fixed (byte* pNv12 = nv12)
             {
-                Rgb24ToYUV.rgb24_to_nv12(pRgb, pNv12, width, height, alignedLinesize);
+                ZLMediaKit.Autogen.LibConvert.rgb24_to_nv12(pRgb, pNv12, width, height, alignedLinesize);
             }
 
             return nv12;

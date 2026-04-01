@@ -722,13 +722,14 @@
             <param name="reason"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.Tsl.TslModel,System.String)">
+        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.Tsl.TslModel,System.String,System.Action{System.Byte[]})">
             <summary>
             解释自定义数据包
             </summary>
             <param name="msg"></param>
             <param name="model"></param>
             <param name="script"></param>
+            <param name="callback"></param>
             <returns></returns>
         </member>
         <member name="M:IoTRulesService.DataParser.PackParser.ParseFunc(System.String,ChannelUtility.Message.FunctionInvokeMessage,ChannelUtility.Tsl.TslModel,System.String)">

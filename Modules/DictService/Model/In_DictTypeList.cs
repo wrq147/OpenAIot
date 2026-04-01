@@ -1,6 +1,6 @@
 ﻿using Common.Share;
 
-namespace AuthService
+namespace DictService.Model
 {
     public class In_DictTypeList : BaseQueryParam
     {
