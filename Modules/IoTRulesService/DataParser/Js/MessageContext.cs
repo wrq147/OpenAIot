@@ -188,36 +188,7 @@ namespace IoTRulesService.DataParser.Js
             }
             return null;
         }
-        /// <summary>
-        /// 等待回复消息（不发送）
-        /// </summary>
-        /// <param name="msgId"></param>
-        /// <returns></returns>
-        public string Wait(string msgId)
-        {
-            var res = _client.WaitOnly(_msg.DeviceId, msgId);
-            return res.Result;
-        }
-        /// <summary>
-        /// 直接推送数据并返回复的消息
-        /// </summary>
-        /// <param name="msgId">消息标识</param>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
-        public string PublicWait(string msgId, byte[] bytes)
-        {
-            var res = _client.PublicWait(_msg.DeviceId, msgId, async () =>
-            {
-                RawDataMessage rawdata = new RawDataMessage();
-                rawdata.Data = bytes;
-                rawdata.DeviceId = _msg.DeviceId;
-                rawdata.MessageId = msgId;
-                rawdata.ProductId = _msg.ProductId;
-                rawdata.prefix = this._prefix;
-                await _client.PublicMessage(rawdata, null);
-            });
-            return res.Result;
-        }
+     
         /// <summary>
         /// 直接推送数据
         /// </summary>
@@ -232,41 +203,6 @@ namespace IoTRulesService.DataParser.Js
             rawdata.prefix = this._prefix;
             var res = _client.PublicMessage(rawdata, null);
             res.Wait();
-        }
-
-        /// <summary>
-        /// 推送字符串数据并返回复的消息
-        /// </summary>
-        /// <param name="msgId"></param>
-        /// <param name="input"></param>
-        /// <param name="hex">是否为hex字符串</param>
-        /// <returns></returns>
-        public string PublicStrWait(string msgId, string input, bool hex = false)
-        {
-            if (hex)
-            {
-                var bytesource = FastBufferHelper.StrToToHex(input);
-                if (msgId == null)
-                {
-                    var tmpfr = new FastReader(bytesource);
-                    if (tmpfr.Length >= 8)
-                    {
-                        byte slaveAddress = tmpfr.ReadByte();
-                        byte funcByte = tmpfr.ReadByte();
-                        if (funcByte == 5 || funcByte == 6 || funcByte == 15 || funcByte == 16)
-                        {
-                            ushort startAddress = tmpfr.ReadUInt16BE();
-                            msgId = "Func#" + slaveAddress + "#" + funcByte + "#" + startAddress + "#" + this._prefix;
-                        }
-                    }
-                }
-
-                return PublicWait(msgId, bytesource);
-            }
-            else
-            {
-                return PublicWait(msgId, Encoding.UTF8.GetBytes(input));
-            }
         }
 
         /// <summary>

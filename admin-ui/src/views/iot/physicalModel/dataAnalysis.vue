@@ -397,31 +397,13 @@ export default {
          * @returns {ModbusInfo} 返回Modbus信息
          */
         GetModbusInfo():ModbusInfo;
-        /**
-          * 等待回复消息（不发送）
-          * @param {String} msgId - 消息标识
-          * @returns {String} 回复的数据
-          */
-        Wait(msgId:String):String;
-         /**
-         * 直接推送数据并返回复的消息
-         * @param {String} msgId - 消息标识
-         * @param {ArrayBuffer} bytes - 推送的字节数组
-         * @returns {String} 推送数据返回
-         */
-        PublicWait(msgId:String,bytes:ArrayBuffer):String;
+
         /**
          * 直接推送数据
          * @param {ArrayBuffer} bytes - 推送的字节数组
          */
         Public(bytes:ArrayBuffer):void;
-        /**
-         * 推送字符串数据并返回复的消息
-         * @param {String} msgId - 消息Id
-         * @param {String} input - 输入字符串
-         * @param {Boolean} hex - 是否为hex字符串
-         */
-         PublicStrWait(msgId:String,input:String,hex:Boolean):String;
+
         /**
          * 推送字符串数据
          * @param {String} input - 输入字符串

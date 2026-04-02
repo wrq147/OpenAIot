@@ -472,6 +472,30 @@
             <param name="inputs"></param>
             <returns></returns>
         </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.Wait(System.String)">
+            <summary>
+            等待回复消息（不发送）
+            </summary>
+            <param name="msgId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.PublicWait(System.String,System.Byte[])">
+            <summary>
+            直接推送数据并返回复的消息
+            </summary>
+            <param name="msgId">消息标识</param>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.FuncMessageContext.PublicStrWait(System.String,System.String,System.Boolean)">
+            <summary>
+            推送字符串数据并返回复的消息
+            </summary>
+            <param name="msgId"></param>
+            <param name="input"></param>
+            <param name="hex">是否为hex字符串</param>
+            <returns></returns>
+        </member>
         <member name="M:IoTRulesService.DataParser.Js.MessageContext.ToJson(System.Object)">
             <summary>
             对象转JSON字符串
@@ -548,35 +572,11 @@
             <param name="tag"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.Js.MessageContext.Wait(System.String)">
-            <summary>
-            等待回复消息（不发送）
-            </summary>
-            <param name="msgId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicWait(System.String,System.Byte[])">
-            <summary>
-            直接推送数据并返回复的消息
-            </summary>
-            <param name="msgId">消息标识</param>
-            <param name="bytes"></param>
-            <returns></returns>
-        </member>
         <member name="M:IoTRulesService.DataParser.Js.MessageContext.Public(System.Byte[])">
             <summary>
             直接推送数据
             </summary>
             <param name="bytes"></param>
-        </member>
-        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicStrWait(System.String,System.String,System.Boolean)">
-            <summary>
-            推送字符串数据并返回复的消息
-            </summary>
-            <param name="msgId"></param>
-            <param name="input"></param>
-            <param name="hex">是否为hex字符串</param>
-            <returns></returns>
         </member>
         <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicStr(System.String,System.Boolean)">
             <summary>
@@ -722,14 +722,13 @@
             <param name="reason"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.Tsl.TslModel,System.String,System.Action{System.Byte[]})">
+        <member name="M:IoTRulesService.DataParser.PackParser.ParseCustom(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.Tsl.TslModel,System.String)">
             <summary>
             解释自定义数据包
             </summary>
             <param name="msg"></param>
             <param name="model"></param>
             <param name="script"></param>
-            <param name="callback"></param>
             <returns></returns>
         </member>
         <member name="M:IoTRulesService.DataParser.PackParser.ParseFunc(System.String,ChannelUtility.Message.FunctionInvokeMessage,ChannelUtility.Tsl.TslModel,System.String)">

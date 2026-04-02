@@ -502,11 +502,7 @@ namespace IoTRulesService.DataParser
             }
 
 
-            await this.toRawData(msg, ret, ToRawResult).ConfigureAwait(false);
-
-        }
-        private void ToRawResult(RawDataMessage newmsg, BaseDeviceMessage msg)
-        {
+            var newmsg = await this.toRawData(msg, ret).ConfigureAwait(false);
             if (newmsg != null)
             {
                 _provider.GetService<RuleWheelRuner>().PushConcurrentTask(newmsg.DeviceId, async () =>
@@ -536,7 +532,9 @@ namespace IoTRulesService.DataParser
                     });
                 }
             }
+
         }
+
         /// <summary>
         /// 发送设备功能回复给事件总线
         /// </summary>
@@ -598,48 +596,42 @@ namespace IoTRulesService.DataParser
         /// <param name="msg"></param>
         /// <param name="model"></param>
         /// <param name="script"></param>
-        /// <param name="callback"></param>
         /// <returns></returns>
-        private void ParseCustom(BaseDeviceMessage msg, TslModel model, string script, Action<byte[]> callback)
+        private byte[] ParseCustom(BaseDeviceMessage msg, TslModel model, string script)
         {
             if (!string.IsNullOrEmpty(script))
             {
                 var context = new MessageContext(msg, this, model, null);
-                _provider.GetService<ScriptRuner>().PushConcurrentTask(msg.DeviceId,() =>
+                try
                 {
-                    try
+                    var jsEngine = this.GetJsEngine(msg.DeviceId, script);
+                    var tmp = jsEngine.Invoke("toRawData", JsValue.FromObject(jsEngine, context));
+                    if (tmp.IsNull())
                     {
-                        var jsEngine = this.GetJsEngine(msg.DeviceId, script);
-                        var tmp = jsEngine.Invoke("toRawData", JsValue.FromObject(jsEngine, context));
-                        if (tmp.IsNull())
-                        {
-                            callback(null);
-                            return;
-                        }
-                        var payload = tmp.As<ObjectWrapper>().Target as FastWriter;
-                        if (payload == null)
-                        {
-                            callback(null);
-                            return;
-                        }
-                        callback(payload.ToArray());
+                        return null;
                     }
-                    catch (JavaScriptException ex)
+                    var payload = tmp.As<ObjectWrapper>().Target as FastWriter;
+                    if (payload == null)
                     {
-                        var location = ex.Location;
-                        _ = Print(msg.DeviceId, "toRawData执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message));
-                        callback(null);
+                        return null;
                     }
-                    catch (Exception ex)
-                    {
-                        _ = Print(msg.DeviceId, "toRawData异常", "脚本未知错误" + ex.Message);
-                        callback(null);
-                    }
-                });
+                    return payload.ToArray();
+                }
+                catch (JavaScriptException ex)
+                {
+                    var location = ex.Location;
+                    Print(msg.DeviceId, "toRawData执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message)).ConfigureAwait(false);
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Print(msg.DeviceId, "toRawData异常", "脚本未知错误" + ex.Message).ConfigureAwait(false);
+                    return null;
+                }
             }
             else
             {
-                callback(null);
+                return null;
             }
         }
 
@@ -691,7 +683,7 @@ namespace IoTRulesService.DataParser
         /// <param name="codeprefix"></param>
         /// <param name="nodeGuid"></param>
         /// <returns></returns>
-        private async Task<bool> PushCustom(string productId, string deviceId, IDictionary<string, object> properties, FastReader input, string script, TslModel model, string codeprefix, string nodeGuid)
+        private bool PushCustom(string productId, string deviceId, IDictionary<string, object> properties, FastReader input, string script, TslModel model, string codeprefix, string nodeGuid)
         {
             ReadPropertyMessageReply msg = null;
             if (properties != null && properties.Count > 0)
@@ -710,7 +702,7 @@ namespace IoTRulesService.DataParser
             {
                 if (msg != null)
                 {
-                    await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
+                    _provider.GetService<DeviceMessageHandler>().ExeMessage(msg).ConfigureAwait(false);
                     return true;
                 }
                 else
@@ -721,18 +713,15 @@ namespace IoTRulesService.DataParser
             try
             {
                 var datacontext = new DataContext(msg, input, productId, deviceId, this, model, codeprefix, nodeGuid);
-                var func = await Task.Run(() =>
-                {
-                    var jsEngine = this.GetJsEngine(deviceId, script);
-                    var context = JsValue.FromObject(jsEngine, datacontext);
-                    return jsEngine.Invoke("rawDataTo", context);
-                });
+                var jsEngine = this.GetJsEngine(deviceId, script);
+                var context = JsValue.FromObject(jsEngine, datacontext);
+                var func = jsEngine.Invoke("rawDataTo", context);
 
                 if (func.IsNull())
                 {
                     if (msg != null)
                     {
-                        await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
+                        _provider.GetService<DeviceMessageHandler>().ExeMessage(msg).ConfigureAwait(false);
                         return true;
                     }
                     else
@@ -745,7 +734,7 @@ namespace IoTRulesService.DataParser
                 {
                     if (msg != null)
                     {
-                        await _provider.GetService<DeviceMessageHandler>().ExeMessage(msg);
+                        _provider.GetService<DeviceMessageHandler>().ExeMessage(msg).ConfigureAwait(false);
                         return true;
                     }
                     else
@@ -758,18 +747,18 @@ namespace IoTRulesService.DataParser
                 {
                     return true;
                 }
-                await _provider.GetService<DeviceMessageHandler>().ExeMessage(newmsg);
+                _provider.GetService<DeviceMessageHandler>().ExeMessage(newmsg).ConfigureAwait(false);
                 return true;
             }
             catch (JavaScriptException ex)
             {
                 var location = ex.Location;
-                await Print(deviceId, "rawDataTo执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message));
+                Print(deviceId, "rawDataTo执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message)).ConfigureAwait(false);
                 return false;
             }
             catch (Exception ex)
             {
-                await Print(deviceId, "rawDataTo异常", "脚本未知错误" + ex.Message);
+                Print(deviceId, "rawDataTo异常", "脚本未知错误" + ex.Message).ConfigureAwait(false);
                 return false;
             }
         }
@@ -1090,7 +1079,7 @@ namespace IoTRulesService.DataParser
                     }
 
                     //自定义解释
-                    await PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeId);
+                    PushCustom(productId, datamsg.DeviceId, propsDict, lastReader, ret.script, tsl, datamsg.prefix, datamsg.NodeId);
                     if (lastReader.Position > -1)
                     {
                         //有剩余数据包，则下个循环处理
@@ -1125,7 +1114,7 @@ namespace IoTRulesService.DataParser
                 await Print(datamsg.DeviceId, "rawDataTo异常", ex.Message);
             }
         }
-        public async Task toRawData(BaseDeviceMessage msg, TslReturn ret, Action<RawDataMessage, BaseDeviceMessage> callback)
+        public async Task<RawDataMessage> toRawData(BaseDeviceMessage msg, TslReturn ret)
         {
 
             if (msg is ModbusMessage modbusMessage)
@@ -1167,13 +1156,13 @@ namespace IoTRulesService.DataParser
                 }
 
                 rawdata.Data = data;
-                callback(rawdata, msg);
+                return rawdata;
             }
             else if (msg is ReadPropertyMessage proMsg)
             {
                 if (proMsg.Properties == null)
                 {
-                    return;
+                    return null;
                 }
                 var hs = proMsg.Properties.ToHashSet();
                 List<ModbusMatch> retmmList = new List<ModbusMatch>();
@@ -1198,20 +1187,16 @@ namespace IoTRulesService.DataParser
 
                 if (retmmList.Count == 0)
                 {
-                    ParseCustom(msg, ret.Model, ret.script, rs =>
+                    RawDataMessage rawdata = new RawDataMessage();
+                    rawdata.DeviceId = msg.DeviceId;
+                    rawdata.MessageId = msg.MessageId;
+                    rawdata.ProductId = msg.ProductId;
+                    rawdata.Data = ParseCustom(msg, ret.Model, ret.script);
+                    if (rawdata.Data == null)
                     {
-                        RawDataMessage rawdata = new RawDataMessage();
-                        rawdata.DeviceId = msg.DeviceId;
-                        rawdata.MessageId = msg.MessageId;
-                        rawdata.ProductId = msg.ProductId;
-                        rawdata.Data = rs;
-                        if (rawdata.Data == null)
-                        {
-                            callback(null, msg);
-                            return;
-                        }
-                        callback(rawdata, msg);
-                    });
+                        return null;
+                    }
+                    return rawdata;
                 }
                 else
                 {
@@ -1234,7 +1219,7 @@ namespace IoTRulesService.DataParser
                         }
                         await this.PublicMessage(rawdata, ret);
                     }
-                    callback(null, msg);
+                    return null;
                 }
             }
             else if (msg is FunctionInvokeMessage funcMessage)
@@ -1275,8 +1260,7 @@ namespace IoTRulesService.DataParser
                     {
                         await this.Print(funcMessage.DeviceId, "modbus异常", funEx.Message);
                         await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, false, null, funEx.Message, funcMessage.MessageId);
-                        callback(null, msg);
-                        return;
+                        return null;
                     }
                     if (rawdata.Data != null && !string.IsNullOrEmpty(msg.MessageId))
                     {
@@ -1301,13 +1285,11 @@ namespace IoTRulesService.DataParser
                         }
 
                         await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, null, string.Empty, funcMessage.MessageId);
-                        callback(null, msg);
-                        return;
+                        return null;
                     }
                     else
                     {
-                        callback(rawdata, msg);
-                        return;
+                        return rawdata;
                     }
                 }
                 else if (funModel.downway == 2)
@@ -1315,8 +1297,7 @@ namespace IoTRulesService.DataParser
                     var mmidx = ret.Model.modbus.Matches.FindIndex(x => x.Name == funModel.downdata);
                     if (mmidx == -1)
                     {
-                        callback(null, msg);
-                        return;
+                        return null;
                     }
                     var mm = ret.Model.modbus.Matches[mmidx];
                     try
@@ -1327,12 +1308,10 @@ namespace IoTRulesService.DataParser
                     {
                         await this.Print(funcMessage.DeviceId, "modbus异常", funEx.Message);
                         await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, false, null, funEx.Message, funcMessage.MessageId);
-                        callback(null, msg);
-                        return;
+                        return null;
                     }
                     await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, null, string.Empty, funcMessage.MessageId);
-                    callback(rawdata, msg);
-                    return;
+                    return rawdata;
                 }
                 else if (funModel.downway == 3)
                 {
@@ -1348,14 +1327,12 @@ namespace IoTRulesService.DataParser
                     if (rt == null)
                     {
                         await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, false, null, "直接读属性执行失败", funcMessage.MessageId);
-                        callback(null, msg);
-                        return;
+                        return null;
                     }
                     else
                     {
                         await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, rt.Properties, string.Empty, funcMessage.MessageId);
-                        callback(null, msg);
-                        return;
+                        return null;
                     }
                 }
                 else if (funModel.downway == 4)
@@ -1365,36 +1342,30 @@ namespace IoTRulesService.DataParser
                         var context = new FuncMessageContext(msg, this, ret.Model, rawdata.prefix);
                         LiteGraphParser.Instance.Run(context, funModel.downdata);
                     });
-                    callback(null, msg);
-                    return;
+                    return null;
                 }
                 else
                 {
                     await ParseFunc(funModel.downdata, funcMessage, ret.Model, rawdata.prefix);
-                    callback(null, msg);
-                    return;
+                    return null;
                 }
             }
             else
             {
-                ParseCustom(msg, ret.Model, ret.script, data =>
+                var data = ParseCustom(msg, ret.Model, ret.script);
+                if (data != null)
                 {
-                    if (data != null)
-                    {
-                        RawDataMessage rawdata = new RawDataMessage();
-                        rawdata.DeviceId = msg.DeviceId;
-                        rawdata.MessageId = msg.MessageId;
-                        rawdata.ProductId = msg.ProductId;
-                        rawdata.Data = data;
-                        callback(rawdata, msg);
-                        return;
-                    }
-                    else
-                    {
-                        callback(null, msg);
-                        return;
-                    }
-                });
+                    RawDataMessage rawdata = new RawDataMessage();
+                    rawdata.DeviceId = msg.DeviceId;
+                    rawdata.MessageId = msg.MessageId;
+                    rawdata.ProductId = msg.ProductId;
+                    rawdata.Data = data;
+                    return rawdata;
+                }
+                else
+                {
+                    return null;
+                }
 
             }
         }

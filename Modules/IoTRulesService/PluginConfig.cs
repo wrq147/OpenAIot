@@ -39,7 +39,6 @@ namespace IoTRulesService
             services.AddSingleton<RuleCache>();
             services.AddSingleton<DeviceCache>();
             services.AddSingleton<RuleWheelRuner>();
-            services.AddSingleton<ScriptRuner>();
             services.AddSingleton<MessageRunner>();
             services.AddSingleton<PackParser>();
             services.AddSingleton<DeviceMessageHandler>();
