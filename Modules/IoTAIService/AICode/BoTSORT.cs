@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using TemplateAction.Core;
 
 namespace IoTAIService.AICode
 {
-    #region 1. 基础矩阵/向量结构体
+    #region 基础矩阵/向量结构体
     /// <summary>
     /// 3x3矩阵（GMC单应性矩阵专用）
     /// </summary>
@@ -730,7 +731,7 @@ namespace IoTAIService.AICode
     }
     #endregion
 
-    #region 2. 配置类
+    #region 配置类
     /// <summary>
     /// BoT-SORT核心配置
     /// </summary>
@@ -761,116 +762,10 @@ namespace IoTAIService.AICode
     }
     #endregion
 
-    #region 3. ReID接口
-    /// <summary>
-    /// ReID特征提取接口（标准化对接OSNet）
-    /// </summary>
-    public interface IReIDExtractor
-    {
-        /// <summary>
-        /// 从图像ROI中提取ReID特征
-        /// </summary>
-        /// <param name="image">原始图像</param>
-        /// <param name="roi">目标检测框（x1,y1,x2,y2）</param>
-        /// <returns>归一化的特征向量（OSNet默认512维）</returns>
-        float[] ExtractFeature(Image<Rgba32> image, RectangleF roi);
 
-        /// <summary>
-        /// 计算两个特征的余弦相似度
-        /// </summary>
-        /// <param name="feat1">特征1</param>
-        /// <param name="feat2">特征2</param>
-        /// <returns>相似度（0-1）</returns>
-        float CalculateCosineSimilarity(float[] feat1, float[] feat2);
-    }
+  
 
-    /// <summary>
-    /// OSNet ReID提取器基类（预留ONNX Runtime对接）
-    /// </summary>
-    public abstract class OSNetReIDExtractor : IReIDExtractor
-    {
-        protected readonly BoTSORTConfig _config;
-        protected readonly int _inputWidth = 128; // OSNet默认输入尺寸
-        protected readonly int _inputHeight = 256;
-
-        public OSNetReIDExtractor(BoTSORTConfig config)
-        {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
-        }
-
-        /// <summary>
-        /// 加载OSNet ONNX模型
-        /// </summary>
-        /// <param name="onnxModelPath">模型路径</param>
-        public abstract void LoadModel(string onnxModelPath);
-
-        /// <summary>
-        /// 预处理ROI图像（OSNet要求：归一化、Resize、通道转换等）
-        /// </summary>
-        protected abstract float[] Preprocess(Image<Rgba32> roiImage);
-
-        /// <summary>
-        /// 推理OSNet模型获取特征
-        /// </summary>
-        protected abstract float[] Inference(float[] inputTensor);
-
-        /// <summary>
-        /// 特征归一化（L2归一化）
-        /// </summary>
-        protected float[] NormalizeFeature(float[] feature)
-        {
-            if (feature == null || feature.Length == 0)
-                return new float[_config.ReIDFeatureDim];
-
-            float norm = (float)Math.Sqrt(feature.Sum(x => x * x) + 1e-6f);
-            return feature.Select(x => x / norm).ToArray();
-        }
-
-        public abstract float[] ExtractFeature(Image<Rgba32> image, RectangleF roi);
-
-        public float CalculateCosineSimilarity(float[] feat1, float[] feat2)
-        {
-            if (feat1 == null || feat2 == null || feat1.Length != feat2.Length)
-                return 0f;
-
-            float dotProduct = 0f;
-            for (int i = 0; i < feat1.Length; i++)
-            {
-                dotProduct += feat1[i] * feat2[i];
-            }
-            // 余弦相似度范围限制在0-1
-            return Math.Max(0, Math.Min(1, dotProduct));
-        }
-    }
-    #endregion
-
-    #region 4. BoTDetection类
-    /// <summary>
-    /// 检测信息实体（含ReID特征）
-    /// </summary>
-    public class BoTDetection
-    {
-        public BoTDetection() { }
-
-        public BoTDetection(float x1, float y1, float x2, float y2, float confidence, string classId)
-        {
-            this.Box = new BoxItem
-            {
-                x1 = Math.Min(x1, x2),
-                y1 = Math.Min(y1, y2),
-                x2 = Math.Max(x1, x2),
-                y2 = Math.Max(y1, y2),
-                score = confidence,
-                label = classId
-            };
-        }
-        public BoxItem Box { get; set; }
-        // ReID特征
-        public float[] ReIDFeature { get; set; }
-    }
-    #endregion
-
-    #region 5. 卡尔曼滤波类
+    #region 卡尔曼滤波类
     /// <summary>
     /// 8维卡尔曼滤波（BoT-SORT标准，无MathNet依赖）
     /// 状态向量：[x, y, a, h, vx, vy, va, vh]
@@ -938,14 +833,14 @@ namespace IoTAIService.AICode
         /// 初始化状态（从检测框）
         /// </summary>
         /// <param name="detection">检测框</param>
-        public void Initialize(BoTDetection detection)
+        public void Initialize(BoxItem detection)
         {
             if (detection == null) throw new ArgumentNullException(nameof(detection));
-            var tcenter = detection.Box.GetCenter();
+            var tcenter = detection.GetCenter();
             _x[0] = tcenter.X;       // x
             _x[1] = tcenter.Y;       // y
-            _x[2] = detection.Box.AspectRatio();    // a（宽高比）
-            _x[3] = detection.Box.Height();         // h（高度）
+            _x[2] = detection.AspectRatio();    // a（宽高比）
+            _x[3] = detection.Height();         // h（高度）
             _x[4] = 0; // vx
             _x[5] = 0; // vy
             _x[6] = 0; // va
@@ -969,17 +864,17 @@ namespace IoTAIService.AICode
         /// 更新状态（基于观测值）
         /// </summary>
         /// <param name="detection">检测框</param>
-        public void Update(BoTDetection detection)
+        public void Update(BoxItem detection)
         {
             if (detection == null) throw new ArgumentNullException(nameof(detection));
-            var tcenter = detection.Box.GetCenter();
+            var tcenter = detection.GetCenter();
             // 构建观测向量 [x, y, a, h]
             float[] z = new[]
             {
                 tcenter.X,
                 tcenter.Y,
-                detection.Box.AspectRatio(),
-                detection.Box.Height()
+                detection.AspectRatio(),
+                detection.Height()
             };
 
             // 计算残差 y = z - H*x
@@ -1066,7 +961,7 @@ namespace IoTAIService.AICode
     }
     #endregion
 
-    #region 6. BoTTrack类
+    #region BoTTrack类
     /// <summary>
     /// 跟踪轨迹实体
     /// </summary>
@@ -1078,14 +973,14 @@ namespace IoTAIService.AICode
         public IReIDExtractor ReIDExtractor { get; }
 
         // 轨迹状态
-        public BoTDetection LastDetection { get; private set; }
+        public BoxItem LastDetection { get; private set; }
         public float[] LastReIDFeature { get; private set; }
         public int TimeSinceUpdate { get; private set; }
         public int LostFrames { get; private set; }
         public bool IsActive => TimeSinceUpdate < Config.TrackBuffer;
         public bool IsLost => LostFrames > Config.MaxLostFrames;
 
-        public BoTTrack(int trackId, BoTDetection detection, BoTSORTConfig config, IReIDExtractor reidExtractor)
+        public BoTTrack(int trackId, BoxItem detection, BoTSORTConfig config, IReIDExtractor reidExtractor)
         {
             if (detection == null) throw new ArgumentNullException(nameof(detection));
             if (config == null) throw new ArgumentNullException(nameof(config));
@@ -1098,7 +993,7 @@ namespace IoTAIService.AICode
             Kf.Initialize(detection);
 
             LastDetection = detection;
-            LastReIDFeature = detection.ReIDFeature;
+            LastReIDFeature = detection.ReID;
             TimeSinceUpdate = 0;
             LostFrames = 0;
         }
@@ -1117,13 +1012,13 @@ namespace IoTAIService.AICode
         /// 更新轨迹
         /// </summary>
         /// <param name="detection">新检测框</param>
-        public void Update(BoTDetection detection)
+        public void Update(BoxItem detection)
         {
             if (detection == null) throw new ArgumentNullException(nameof(detection));
 
             Kf.Update(detection);
             LastDetection = detection;
-            LastReIDFeature = detection.ReIDFeature;
+            LastReIDFeature = detection.ReID;
             TimeSinceUpdate = 0;
             LostFrames = 0;
         }
@@ -1131,9 +1026,8 @@ namespace IoTAIService.AICode
         /// <summary>
         /// 获取运动补偿后的预测框
         /// </summary>
-        /// <param name="homography">单应性矩阵（GMC）</param>
         /// <returns>预测检测框</returns>
-        public BoTDetection GetCompensatedPrediction(Matrix3x3? homography = null)
+        public BoxItem GetCompensatedPrediction(Matrix3x3? homography = null)
         {
             var pred = Kf.GetPredictedState();
             float x = pred[0], y = pred[1], a = pred[2], h = pred[3];
@@ -1157,22 +1051,19 @@ namespace IoTAIService.AICode
             // 计算预测框坐标
             float w = a * h;
 
-            return new BoTDetection
+            return new BoxItem
             {
-                Box = new BoxItem
-                {
-                    x1 = x - w / 2,
-                    y1 = y - h / 2,
-                    x2 = x + w / 2,
-                    y2 = y + h / 2,
-                },
-                ReIDFeature = LastReIDFeature
+                x1 = x - w / 2,
+                y1 = y - h / 2,
+                x2 = x + w / 2,
+                y2 = y + h / 2,
+                ReID = LastReIDFeature
             };
         }
     }
     #endregion
 
-    #region 7. 全局运动补偿（GMC）
+    #region 全局运动补偿（GMC）
     /// <summary>
     /// 全局运动补偿（基于ORB特征+单应性矩阵）
     /// </summary>
@@ -1191,7 +1082,7 @@ namespace IoTAIService.AICode
         /// <param name="prevFrame">上一帧</param>
         /// <param name="currFrame">当前帧</param>
         /// <returns>单应性矩阵（单位矩阵表示估计失败）</returns>
-        public Matrix3x3 EstimateHomography(Image<Rgba32> prevFrame, Image<Rgba32> currFrame)
+        public Matrix3x3 EstimateHomography(Image<Rgb24> prevFrame, Image<Rgb24> currFrame)
         {
             if (!_config.EnableGMC || prevFrame == null || currFrame == null)
                 return Matrix3x3.Identity;
@@ -1215,7 +1106,7 @@ namespace IoTAIService.AICode
         /// <summary>
         /// 提取ORB特征点（对接OpenCVSharp实现）
         /// </summary>
-        private (List<Vector2>, List<Vector2>) ExtractORBFeatures(Image<Rgba32> prev, Image<Rgba32> curr)
+        private (List<Vector2>, List<Vector2>) ExtractORBFeatures(Image<Rgb24> prev, Image<Rgb24> curr)
         {
             // 占位实现：实际需对接OpenCV
             return (new List<Vector2>(), new List<Vector2>());
@@ -1232,7 +1123,7 @@ namespace IoTAIService.AICode
     }
     #endregion
 
-    #region 8. BoT-SORT核心跟踪器
+    #region BoT-SORT核心跟踪器
     /// <summary>
     /// BoT-SORT核心跟踪器（完整实现）
     /// </summary>
@@ -1243,12 +1134,12 @@ namespace IoTAIService.AICode
         private readonly GlobalMotionCompensator _gmc;
         private readonly List<BoTTrack> _tracks = new List<BoTTrack>();
         private int _nextTrackId = 0;
-        private Image<Rgba32> _prevFrame;
+        private Image<Rgb24> _prevFrame;
 
-        public BoTSORTTracker(BoTSORTConfig config, IReIDExtractor reidExtractor)
+        public BoTSORTTracker(BoTSORTConfig config, ITAServiceProvider provider)
         {
             _config = config ?? new BoTSORTConfig();
-            _reidExtractor = reidExtractor ?? throw new ArgumentNullException(nameof(reidExtractor));
+            _reidExtractor = provider.GetService<MobileCLIP2VisionRunner>();
             _gmc = new GlobalMotionCompensator(_config);
         }
 
@@ -1258,10 +1149,10 @@ namespace IoTAIService.AICode
         /// <param name="currFrame">当前帧图像</param>
         /// <param name="detections">原始检测框（无ReID特征）</param>
         /// <returns>跟踪结果</returns>
-        public List<BoTTrack> Update(Image<Rgba32> currFrame, List<BoTDetection> detections)
+        public List<BoTTrack> Update(Image<Rgb24> currFrame, List<BoxItem> detections)
         {
             if (currFrame == null) throw new ArgumentNullException(nameof(currFrame));
-            if (detections == null) detections = new List<BoTDetection>();
+            if (detections == null) detections = new List<BoxItem>();
 
             // 1. 预处理检测框：提取ReID特征
             var processedDetections = ProcessDetections(currFrame, detections);
@@ -1277,11 +1168,11 @@ namespace IoTAIService.AICode
 
             // 4. 拆分高低置信度检测框
             var highConfDets = processedDetections
-                .Where(d => d.Box.score >= _config.TrackThresh)
+                .Where(d => d.score >= _config.TrackThresh)
                 .ToList();
 
             var lowConfDets = processedDetections
-                .Where(d => d.Box.score >= _config.TrackLowThresh && d.Box.score < _config.TrackThresh)
+                .Where(d => d.score >= _config.TrackLowThresh && d.score < _config.TrackThresh)
                 .ToList();
 
             // 5. 第一阶段匹配：高置信度框 + 活跃轨迹
@@ -1312,17 +1203,16 @@ namespace IoTAIService.AICode
         /// <summary>
         /// 预处理检测框：提取ReID特征
         /// </summary>
-        private List<BoTDetection> ProcessDetections(Image<Rgba32> frame, List<BoTDetection> detections)
+        private List<BoxItem> ProcessDetections(Image<Rgb24> frame, List<BoxItem> detections)
         {
-            var result = new List<BoTDetection>();
+            var result = new List<BoxItem>();
             foreach (var det in detections)
             {
-                if (det == null || det.Box.score < _config.TrackLowThresh)
+                if (det == null || det.score < _config.TrackLowThresh)
                     continue;
 
-                // 提取ReID特征（OSNet）
-                var roi = new RectangleF(det.Box.x1, det.Box.y1, det.Box.Width(), det.Box.Height());
-                det.ReIDFeature = _reidExtractor.ExtractFeature(frame, roi);
+                // 提取ReID特征
+                det.ReID = _reidExtractor.ExtractFeature(frame, det);
                 result.Add(det);
             }
             return result;
@@ -1331,11 +1221,11 @@ namespace IoTAIService.AICode
         /// <summary>
         /// IoU+ReID融合匹配
         /// </summary>
-        private (List<BoTTrack> matchedTracks, List<BoTDetection> unmatchedDets)
-            FusedMatching(List<BoTDetection> detections, List<BoTTrack> tracks, Matrix3x3 homography, bool isLowConf)
+        private (List<BoTTrack> matchedTracks, List<BoxItem> unmatchedDets)
+            FusedMatching(List<BoxItem> detections, List<BoTTrack> tracks, Matrix3x3 homography, bool isLowConf)
         {
             var matchedTracks = new List<BoTTrack>();
-            var unmatchedDets = new List<BoTDetection>(detections);
+            var unmatchedDets = new List<BoxItem>(detections);
             var matchThresh = isLowConf ? _config.LowConfMatchThresh : _config.MatchThresh;
 
             foreach (var det in detections.ToList())
@@ -1356,9 +1246,9 @@ namespace IoTAIService.AICode
 
                     // 2. 计算ReID相似度
                     float reidSim = 0;
-                    if (track.LastReIDFeature != null && det.ReIDFeature != null)
+                    if (track.LastReIDFeature != null && det.ReID != null)
                     {
-                        reidSim = _reidExtractor.CalculateCosineSimilarity(track.LastReIDFeature, det.ReIDFeature);
+                        reidSim = _reidExtractor.CosineSimilarity(track.LastReIDFeature, det.ReID);
                     }
 
                     // 3. 融合得分：lambda*ReID + (1-lambda)*IoU
@@ -1385,27 +1275,27 @@ namespace IoTAIService.AICode
         /// <summary>
         /// 计算IoU（交并比）
         /// </summary>
-        private float CalculateIoU(BoTDetection a, BoTDetection b)
+        private float CalculateIoU(BoxItem a, BoxItem b)
         {
             if (a == null || b == null) return 0;
 
-            var x1 = Math.Max(a.Box.x1, b.Box.x1);
-            var y1 = Math.Max(a.Box.y1, b.Box.y1);
-            var x2 = Math.Min(a.Box.x2, b.Box.x2);
-            var y2 = Math.Min(a.Box.y2, b.Box.y2);
+            var x1 = Math.Max(a.x1, b.x1);
+            var y1 = Math.Max(a.y1, b.y1);
+            var x2 = Math.Min(a.x2, b.x2);
+            var y2 = Math.Min(a.y2, b.y2);
 
             var intersection = Math.Max(0, x2 - x1) * Math.Max(0, y2 - y1);
             if (intersection == 0)
                 return 0;
 
-            var union = a.Box.GetArea() + b.Box.GetArea() - intersection;
+            var union = a.GetArea() + b.GetArea() - intersection;
             return union > 0 ? intersection / union : 0;
         }
 
         /// <summary>
         /// 更新匹配的轨迹
         /// </summary>
-        private void UpdateMatchedTracks(List<BoTTrack> matchedTracks, List<BoTDetection> detections)
+        private void UpdateMatchedTracks(List<BoTTrack> matchedTracks, List<BoxItem> detections)
         {
             foreach (var track in matchedTracks)
             {
@@ -1427,11 +1317,11 @@ namespace IoTAIService.AICode
         /// <summary>
         /// 创建新轨迹
         /// </summary>
-        private void CreateNewTracks(List<BoTDetection> detections)
+        private void CreateNewTracks(List<BoxItem> detections)
         {
             foreach (var det in detections)
             {
-                if (det == null || det.Box.score < _config.NewTrackThresh)
+                if (det == null || det.score < _config.NewTrackThresh)
                     continue;
 
                 _tracks.Add(new BoTTrack(_nextTrackId++, det, _config, _reidExtractor));
@@ -1461,137 +1351,24 @@ namespace IoTAIService.AICode
     }
     #endregion
 
-    #region 9. OSNet对接示例
-    /// <summary>
-    /// OSNet ReID提取器（ONNX Runtime实现）
-    /// </summary>
-    public class OSNetReIDExtractorONNX : OSNetReIDExtractor
-    {
-        private IntPtr _onnxSession; // ONNX Runtime会话句柄
-        private bool _isInitialized = false;
-
-        public OSNetReIDExtractorONNX(BoTSORTConfig config) : base(config)
-        {
-        }
-
-        public override void LoadModel(string onnxModelPath)
-        {
-            if (string.IsNullOrEmpty(onnxModelPath) || !System.IO.File.Exists(onnxModelPath))
-                throw new System.IO.FileNotFoundException("OSNet模型文件不存在", onnxModelPath);
-
-            // 实际实现：初始化ONNX Runtime会话
-            _isInitialized = true;
-        }
-
-        protected override float[] Preprocess(Image<Rgba32> roiImage)
-        {
-            if (!_isInitialized)
-                throw new InvalidOperationException("OSNet模型未初始化");
-            if (roiImage == null)
-                return new float[_inputWidth * _inputHeight * 3];
-
-            // OSNet预处理流程占位实现
-            return new float[_inputWidth * _inputHeight * 3];
-        }
-
-        protected override float[] Inference(float[] inputTensor)
-        {
-            if (!_isInitialized)
-                throw new InvalidOperationException("OSNet模型未初始化");
-            if (inputTensor == null)
-                return new float[_config.ReIDFeatureDim];
-
-            // ONNX推理占位实现
-            return NormalizeFeature(new float[_config.ReIDFeatureDim]);
-        }
-
-        public override float[] ExtractFeature(Image<Rgba32> image, RectangleF roi)
-        {
-            if (image == null || roi.Width <= 0 || roi.Height <= 0)
-                return new float[_config.ReIDFeatureDim];
-
-            // 裁剪ROI
-            Rectangle cropRect = RectangleFToRectangle(roi, image.Width, image.Height);
-            using var roiImage = image.Clone(ctx => ctx.Crop(cropRect));
-
-            // 预处理
-            var input = Preprocess(roiImage);
-
-            // 推理
-            var feature = Inference(input);
-
-            // 归一化
-            return NormalizeFeature(feature);
-        }
-        /// <summary>
-        /// 工具方法：将RectangleF安全转换为Rectangle（适配ImageSharp）
-        /// </summary>
-        /// <param name="fRect">浮点矩形</param>
-        /// <param name="imageWidth">图像宽度（用于边界检查）</param>
-        /// <param name="imageHeight">图像高度（用于边界检查）</param>
-        /// <returns>整数矩形（确保在图像范围内，无负坐标）</returns>
-        private Rectangle RectangleFToRectangle(RectangleF fRect, int imageWidth, int imageHeight)
-        {
-            // 1. 四舍五入到整数（比直接强制转换更准确）
-            int x = (int)Math.Round(fRect.X);
-            int y = (int)Math.Round(fRect.Y);
-            int width = (int)Math.Round(fRect.Width);
-            int height = (int)Math.Round(fRect.Height);
-
-            // 2. 边界检查：确保坐标非负，且不超出图像范围
-            x = Math.Max(0, x);
-            y = Math.Max(0, y);
-            width = Math.Max(1, width); // 至少1像素宽
-            height = Math.Max(1, height); // 至少1像素高
-            x = Math.Min(x, imageWidth - width); // 避免右边界超出
-            y = Math.Min(y, imageHeight - height); // 避免下边界超出
-
-            return new Rectangle(x, y, width, height);
-        }
-    }
-    #endregion
-
-    #region 10. 使用示例
+    #region 使用示例
     public class UsageExample
     {
         public static void Run()
         {
             try
             {
-                // 1. 配置跟踪器
+                // 配置跟踪器
                 var config = new BoTSORTConfig
                 {
                     TrackThresh = 0.5f,
                     ReIDFeatureDim = 512,
-                    EnableGMC = true
+                    EnableGMC = false
                 };
 
-                // 2. 初始化OSNet ReID提取器
-                var reidExtractor = new OSNetReIDExtractorONNX(config);
-                reidExtractor.LoadModel("osnet_x0_25_msmt17.onnx"); // 替换为实际模型路径
+                // 初始化BoT-SORT跟踪器
+                using var tracker = new BoTSORTTracker(config,null);
 
-                // 3. 初始化BoT-SORT跟踪器
-                using var tracker = new BoTSORTTracker(config, reidExtractor);
-
-                // 4. 逐帧处理（示例）
-                using var frame1 = Image.Load<Rgba32>("frame1.jpg");
-                var detections1 = new List<BoTDetection>
-                {
-                    new BoTDetection(100, 200, 300, 400, 0.95f, "行人")
-                };
-
-                // 更新跟踪器
-                var tracks1 = tracker.Update(frame1, detections1);
-
-
-                // 处理下一帧
-                using var frame2 = Image.Load<Rgba32>("frame2.jpg");
-                var detections2 = new List<BoTDetection>
-                {
-                    new BoTDetection(105, 205, 305, 405, 0.90f, "行人")
-                };
-
-                var tracks2 = tracker.Update(frame2, detections2);
 
             }
             catch (Exception ex)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ChannelUtility.Message
@@ -31,6 +32,11 @@ namespace ChannelUtility.Message
         /// 关键点
         /// </summary>
         public List<KeyPoint> points { get; set; }
+        /// <summary>
+        /// 特征ID
+        /// </summary>
+        [JsonIgnore]
+        public float[] ReID { get; set; }
     }
     public class KeyPoint
     {
