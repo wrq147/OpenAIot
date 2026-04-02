@@ -278,7 +278,7 @@ namespace IoTRulesService.DataParser.Js
         /// <param name="input"></param>
         /// <param name="hex">是否为hex字符串</param>
         /// <returns></returns>
-        public string PublicStrWait(string msgId, string input, bool hex = false)
+        public override string PublicStrWait(string msgId, string input, bool hex = false)
         {
             if (hex)
             {

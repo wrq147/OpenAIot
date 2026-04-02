@@ -96,28 +96,19 @@ function toRawData(context) {
   let curmsg = context.Message();
   if (curmsg.MsgType == ""Bind"") {
     let modbusInfo= context.GetModbusInfo();
-    let xxrs= context.PublicStrWait(""OkMSG"",""AT*UART=""+modbusInfo.BaudRate+"",""+modbusInfo.DataBits+"",""+modbusInfo.Parity+"",""+modbusInfo.StopBits+"",0#"", false);
-    if(xxrs==""ok""){
-      context.PublicStr(""AT*QRYCMD=123456#"",false);
-      let tarr = context.CreateModbusHex(false);
-      if (tarr.length > 0) {
-        context.PublicStr(""AT*QRYTIME=""+(modbusInfo.PollTime/1000)+""#"", false);
-        context.PublicStr(""AT*QRYTIME=""+(modbusInfo.PollTime/1000)+""#"", false);
-        for(var idx=0;idx<tarr.length;idx++){
-            if(idx<20){
-              context.PublicStr(""AT*QRYCMD"" + idx + ""="" + tarr[idx] + ""#"",false);
-            }
-        }
-  
-      }
-      context.ConfirmReply(curmsg.MessageId,context.CreateBindReply())
+    context.PublicStr(""AT*UART=""+modbusInfo.BaudRate+"",""+modbusInfo.DataBits+"",""+modbusInfo.Parity+"",""+modbusInfo.StopBits+"",0#"", false);
+    context.PublicStr(""AT*QRYCMD=123456#"",false);
+    let tarr = context.CreateModbusHex(false);
+    if (tarr.length > 0) {
+       context.PublicStr(""AT*QRYTIME=""+(modbusInfo.PollTime/1000)+""#"", false);
+       context.PublicStr(""AT*QRYTIME=""+(modbusInfo.PollTime/1000)+""#"", false);
+       for(var idx=0;idx<tarr.length;idx++){
+           if(idx<20){
+             context.PublicStr(""AT*QRYCMD"" + idx + ""="" + tarr[idx] + ""#"",false);
+           }
+       }
     }
-    else{
-      let errBind=context.CreateBindReply();
-      errBind.IsSuccess=false;
-      errBind.Reason=""无返回"";
-      context.ConfirmReply(curmsg.MessageId,errBind);
-    }
+    context.ConfirmReply(curmsg.MessageId,context.CreateBindReply())
 
     return context.Payload();
   }
@@ -183,49 +174,29 @@ function toRawData(context) {
   let curmsg = context.Message();
   if (curmsg.MsgType == ""Bind"") {
     let modbusInfo = context.GetModbusInfo();
-    let xxrs = context.PublicStrWait(""rs485"", ""config,set,rs485,"" + modbusInfo.BaudRate + "","" + modbusInfo.DataBits + "","" + modbusInfo.Parity + "","" + modbusInfo.StopBits + "",200,0\r\n"", false);
-    if (xxrs != null && xxrs.indexOf(""ok"") == 0) {
-      let tarr = context.CreateModbusHex(false);
-      if (tarr.length > 0) {
-        let autopollcmd = ""config,set,autopoll,rs485,2000,"" + modbusInfo.PollTime + "",1"";
-        for (var idx = 0; idx < tarr.length; idx++) {
-          autopollcmd = autopollcmd + "","" + tarr[idx];
-        }
-        autopollcmd = autopollcmd + ""\r\n"";
-        xxrs = context.PublicStrWait(""autopoll"", autopollcmd, false);
-      }
-      else {
-        xxrs = ""ok"";
-      }
-      if (xxrs != null && xxrs.indexOf(""ok"") == 0) {
-
-        xxrs = context.PublicStrWait(""location"", ""config,set,location,1,1,300,1,0,1\r\n"", false);
-        if (xxrs != null && xxrs.indexOf(""ok"") == 0) {
-          xxrs = context.PublicStrWait(""save"", ""config,set,save\r\n"", false);
-          if (xxrs != null && xxrs.indexOf(""ok"") == 0) {
-            context.ConfirmReply(curmsg.MessageId, context.CreateBindReply());
-            return context.Payload();
-          }
-        }
-
-      }
+    context.PublicStr(""config,set,rs485,"" + modbusInfo.BaudRate + "","" + modbusInfo.DataBits + "","" + modbusInfo.Parity + "","" + modbusInfo.StopBits + "",200,0\r\n"", false);
+    let tarr = context.CreateModbusHex(false);
+    if (tarr.length > 0) {
+       let autopollcmd = ""config,set,autopoll,rs485,2000,"" + modbusInfo.PollTime + "",1"";
+       for (var idx = 0; idx < tarr.length; idx++) {
+           autopollcmd = autopollcmd + "","" + tarr[idx];
+       }
+       autopollcmd = autopollcmd + ""\r\n"";
+       context.PublicStr(autopollcmd, false);
     }
-    let errBind = context.CreateBindReply();
-    errBind.IsSuccess = false;
-    errBind.Reason = ""绑定失败"";
-    context.ConfirmReply(curmsg.MessageId, errBind);
 
+    context.PublicStr(""config,set,location,1,1,300,1,0,1\r\n"", false);
+    context.PublicStr(""config,set,save\r\n"", false);
+    context.ConfirmReply(curmsg.MessageId, context.CreateBindReply());
     return context.Payload();
   }
   else if (curmsg.MsgType == ""QueryICCID"") {
-    let tmprsss = context.PublicStrWait(""iccid"", ""config,get,iccid\r\n"", false);
-    if (tmprsss != null && tmprsss.indexOf(""ok"") == 0) {
-      let aarr = tmprsss.split("","");
-      let tmprs = aarr[aarr.length - 1].replace(/\r\n/g, """");
-      let replyccid = context.CreateICCIDReply();
-      replyccid.iccid = tmprs;
-      context.ConfirmReply(null, replyccid);
-    }
+    let tmprsss = context.PublicStr(""config,get,iccid\r\n"", false);
+    let aarr = tmprsss.split("","");
+    let tmprs = aarr[aarr.length - 1].replace(/\r\n/g, """");
+    let replyccid = context.CreateICCIDReply();
+    replyccid.iccid = tmprs;
+    context.ConfirmReply(null, replyccid);
     return context.Payload();
   }
   return null;

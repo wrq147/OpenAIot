@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace IoTRulesService.DataParser.Js
 {
@@ -232,6 +233,18 @@ namespace IoTRulesService.DataParser.Js
             var res = _client.ConfirmReply(msgId, msg);
             res.Wait();
         }
-
+        /// <summary>
+        /// 已弃用
+        /// </summary>
+        /// <param name="msgId"></param>
+        /// <param name="input"></param>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        public virtual string PublicStrWait(string msgId, string input, bool hex = false)
+        {
+            this.PublicStr(input, hex);
+            Thread.Sleep(100);
+            return "ok";
+        }
     }
 }
