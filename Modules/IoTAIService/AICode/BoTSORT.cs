@@ -10,7 +10,7 @@ using System.Numerics;
 
 namespace IoTAIService.AICode
 {
-    #region 1. 基础矩阵/向量结构体（替代MathNet）
+    #region 1. 基础矩阵/向量结构体
     /// <summary>
     /// 3x3矩阵（GMC单应性矩阵专用）
     /// </summary>

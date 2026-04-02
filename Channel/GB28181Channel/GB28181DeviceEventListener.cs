@@ -101,7 +101,6 @@ namespace GB28181Channel
                     videoData.CoolDownMs = upItemResponse.Config.CoolDownMs;
                     videoData.MotionRatio = upItemResponse.Config.MotionRatio;
 
-
                     storage.UpdateDeviceMediaInfo(upItemResponse.Item.UserName, videoData);
                     var newdevice = storage.GetDevice(upItemResponse.Item.UserName);
                     if (newdevice == null)

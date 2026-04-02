@@ -33,14 +33,17 @@ namespace IoTAIService.AICode
             _H.M33 = 0;
             _H.M44 = 0;
 
-            _Q = Matrix4x4.CreateScale(0.01f);
-            _R = Matrix4x4.CreateScale(0.1f);
+            _Q = Matrix4x4.CreateScale(0.1f);
+            _R = Matrix4x4.CreateScale(1.0f);
 
             _x = Vector4.Zero;
             // 协方差矩阵初始化
-            _P = Matrix4x4.Identity * 1000;
+            _P = Matrix4x4.Identity * 10;
         }
-
+        public void InitState(Vector2 pos)
+        {
+            _x = new Vector4(pos.X, pos.Y, 0, 0);
+        }
         /// <summary>
         /// 预测下一帧状态
         /// </summary>
@@ -113,7 +116,11 @@ namespace IoTAIService.AICode
             CurrentDetection = detection;
             Kf = new KalmanFilter();
             var tmpcenter = detection.GetCenter();
+
+            Kf.InitState(tmpcenter);
+            Kf.Predict();
             Kf.Update(tmpcenter);
+
             TimeSinceUpdate = 0;
             _positionHistory.Enqueue(tmpcenter);
             CreatedOn = DateTime.Now;
@@ -304,16 +311,14 @@ namespace IoTAIService.AICode
     public class ByteTrack
     {
         private readonly float _trackThresh; // 高置信度阈值（默认0.5）
-        private readonly float _trackLowThresh; // 低置信度阈值（默认0.1）
-        private readonly float _matchThresh; // IoU匹配阈值（默认0.8）
+        private readonly float _matchThresh; // IoU匹配阈值（默认0.3）
         private readonly List<Track> _tracks = new List<Track>();
         private int _nextTrackId = 0;
 
         // 构造函数（可自定义参数）
-        public ByteTrack(float trackThresh = 0.5f, float trackLowThresh = 0.1f, float matchThresh = 0.8f)
+        public ByteTrack(float trackThresh = 0.5f, float matchThresh = 0.3f)
         {
             _trackThresh = trackThresh;
-            _trackLowThresh = trackLowThresh;
             _matchThresh = matchThresh;
         }
 
@@ -328,13 +333,14 @@ namespace IoTAIService.AICode
 
             // 2. 拆分检测框：高置信度（用于初始匹配）、低置信度（用于补充匹配）
             var highConfDets = detections.Where(d => d.score >= _trackThresh).ToList();
-            var lowConfDets = detections.Where(d => d.score >= _trackLowThresh && d.score < _trackThresh).ToList();
+            var lowConfDets = detections.Where(d => d.score < _trackThresh).ToList();
+            var activeTracks = _tracks.Where(t => t.IsActive).ToList();
 
             // 3. 第一步匹配：高置信度框 vs 现有轨迹（IoU匹配）
-            var (matchedTracks, unmatchedHighDets) = Match(highConfDets, _tracks, _matchThresh);
+            var (matchedTracks, unmatchedHighDets) = Match(highConfDets, activeTracks, _matchThresh);
 
             // 4. 第二步匹配：低置信度框 vs 未匹配的轨迹（补充IoU匹配）
-            var unmatchedTracks = _tracks.Where(t => !matchedTracks.Contains(t)).ToList();
+            var unmatchedTracks = activeTracks.Where(t => !matchedTracks.Contains(t)).ToList();
             var (supplementedTracks, _) = Match(lowConfDets, unmatchedTracks, _matchThresh * 0.5f); // 低置信度匹配阈值降低
 
             // 5. 更新匹配到的轨迹
@@ -360,7 +366,7 @@ namespace IoTAIService.AICode
             _tracks.RemoveAll(track => !track.IsActive);
 
             // 返回当前活跃的轨迹
-            return (_tracks.Where(t => t.IsActive).ToList(), newTracks);
+            return (_tracks.ToList(), newTracks);
         }
 
         // IoU匹配核心逻辑
@@ -380,7 +386,8 @@ namespace IoTAIService.AICode
                 {
                     if (matchedTracks.Contains(track) || !string.Equals(track.CurrentDetection.label, det.label)) continue;
 
-                    var iou = CalculateIoU(det, track.CurrentDetection);
+                    var predBox = CreatePredictBox(track);
+                    var iou = CalculateIoU(det, predBox);
                     if (iou > maxIoU && iou >= iouThresh)
                     {
                         maxIoU = iou;
@@ -397,7 +404,24 @@ namespace IoTAIService.AICode
 
             return (matchedTracks, unmatchedDetections);
         }
+    
+        private BoxItem CreatePredictBox(Track track)
+        {
+            var center = track.Kf.GetPredictedCenter();
+            var det = track.CurrentDetection;
+            float w = det.x2 - det.x1;
+            float h = det.y2 - det.y1;
 
+            return new BoxItem
+            {
+                x1 = center.X - w / 2,
+                y1 = center.Y - h / 2,
+                x2 = center.X + w / 2,
+                y2 = center.Y + h / 2,
+                label = det.label,
+                score = det.score
+            };
+        }
         // 计算两个检测框的IoU（交并比）
         private float CalculateIoU(BoxItem a, BoxItem b)
         {

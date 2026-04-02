@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GB28181Channel.GB28181.DTO
@@ -14,7 +15,12 @@ namespace GB28181Channel.GB28181.DTO
     /// </summary>
     public class DeviceInfo
     {
-        public VideoData VideoData { get; set; }
+        private VideoData _videoData;
+        public VideoData VideoData
+        {
+            get => Volatile.Read(ref _videoData);
+            set => Volatile.Write(ref _videoData, value);
+        }
         public List<PresetInfo> PresetList { get; set; }
         public string DeviceId { get; set; }
         public string DeviceIp { get; set; }

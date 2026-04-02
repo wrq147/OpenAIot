@@ -161,17 +161,23 @@ namespace OnvifChannel
                         context.Motion = new MotionDetector();
                     }
 
-                    context.Motion.CoolDownMs = item.CoolDownMs;
                     context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
-                    // 执行AI检测
-                    var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                    if (isMotionDetected || item.NeedUp)
-                    {
-                        AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
-                    }
 
                     var tmpboxlist = item.BoxList;
-                    if (tmpboxlist != null && tmpboxlist.Count > 0)
+                    bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
+                    long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+                    if (now - context.LastTriggerTime >= item.CoolDownMs)
+                    {
+                        context.LastTriggerTime = now;
+                        // 执行AI检测
+                        var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
+                        if (isMotionDetected || item.NeedUp || needDraw)
+                        {
+                            AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
+                        }
+                    }
+
+                    if (needDraw)
                     {
                         AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                     }
@@ -218,7 +224,7 @@ namespace OnvifChannel
             {
                 Console.WriteLine(ex.Message);
             }
-  
+
         }
 
         private void EncodeLoop(object state)

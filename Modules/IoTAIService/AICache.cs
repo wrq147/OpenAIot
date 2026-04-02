@@ -93,7 +93,7 @@ namespace IoTAIService
             {
                 if (_track == null)
                 {
-                    _track = new ByteTrack(trackThresh: 0.5f, trackLowThresh: 0.1f, matchThresh: 0.8f);
+                    _track = new ByteTrack();
                 }
                 (TrackList, AddTrackList) = _track.Update(boxes);
             }

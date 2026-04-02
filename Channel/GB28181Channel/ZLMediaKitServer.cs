@@ -153,18 +153,27 @@ namespace GB28181Channel
                 {
                     context.Motion = new MotionDetector();
                 }
-
-                context.Motion.CoolDownMs = device.VideoData.CoolDownMs;
-                context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
-                // 执行AI检测
-                var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                if (isMotionDetected || device.VideoData.NeedUp)
+                if (device.VideoData == null)
                 {
-                    AIDetectorTask.Detect(device.VideoData, w, h, motionRatio, _listener, rgb24);
+                    return;
+                }
+                context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
+                var tmpboxlist = device.VideoData.BoxList;
+                bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
+                long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+                if (now - context.LastTriggerTime >= device.VideoData.CoolDownMs)
+                {
+                    context.LastTriggerTime = now;
+                    // 执行AI检测
+                    var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
+                    if (isMotionDetected || device.VideoData.NeedUp || needDraw)
+                    {
+                        AIDetectorTask.Detect(device.VideoData, w, h, motionRatio, _listener, rgb24);
+                    }
                 }
 
-                var tmpboxlist = device.VideoData.BoxList;
-                if (tmpboxlist != null && tmpboxlist.Count > 0)
+
+                if (needDraw)
                 {
                     AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                 }
@@ -720,6 +729,7 @@ namespace GB28181Channel
     }
     public class FrameContext
     {
+        public long LastTriggerTime { get; set; }
         public SemaphoreSlim FrameSemaphore { get; set; } = new SemaphoreSlim(0);
         public ConcurrentQueue<YuvFrame> YuvQueue { get; set; } = new ConcurrentQueue<YuvFrame>();
         public Thread EncodeThread { get; set; }

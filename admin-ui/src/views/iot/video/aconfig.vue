@@ -6,7 +6,7 @@
       <!-- 检测间隔 -->
       <div class="detection-config-card">
         <div class="config-card-header">
-          <span class="config-card-title">检测间隔参数配置</span>
+          <span class="config-card-title">全局参数配置</span>
         </div>
         <div class="config-card-body">
           <el-form :inline="true" :model="configForm" class="detection-form">
@@ -20,7 +20,7 @@
               </el-tooltip>
             </el-form-item>
             <el-form-item label="冷却时间" prop="CoolDownMs" class="form-item">
-              <el-input-number v-model="configForm.CoolDownMs" :min="300" :max="99999" :step="100"
+              <el-input-number v-model="configForm.CoolDownMs" :min="200" :max="99999" :step="100"
                 placeholder="请输入100-99999之间的数值" class="input-number">
               </el-input-number>
               <span style="margin-left:5px;">毫秒</span>

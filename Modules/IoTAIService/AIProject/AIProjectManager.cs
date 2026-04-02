@@ -153,7 +153,8 @@ namespace IoTAIService.AIProject
                         }
                         var videoData = aiCache.GetVideoCache(detectReq.DeviceId);
                         var totalBoxCount = videoData.GetInt("total_box_count");
-                        if (totalBoxCount != 0 || boxlist.Count != 0)
+                        bool needback = totalBoxCount != 0 || boxlist.Count != 0;
+                        if (needback)
                         {
                             //回复画框
                             await DownAIDetectResponse(detectReq.NodeId, detectReq.DeviceId, boxlist);
@@ -162,14 +163,18 @@ namespace IoTAIService.AIProject
                         // 更新跟踪器
                         videoData.UpdateByteTrack(boxlist);
 
-                        //处理事件
-                        foreach (var config in videoConfigs)
+                        if (needback)
                         {
-                            if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
+                            //处理事件
+                            foreach (var config in videoConfigs)
                             {
-                                await tmpinfer.Execute(detectReq, image, config, boxlist);
+                                if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
+                                {
+                                    await tmpinfer.Execute(detectReq, image, config, boxlist);
+                                }
                             }
                         }
+
                     }
 
                 }

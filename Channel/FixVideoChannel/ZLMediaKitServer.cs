@@ -152,17 +152,23 @@ namespace FixVideoChannel
                         context.Motion = new MotionDetector();
                     }
 
-                    context.Motion.CoolDownMs = item.CoolDownMs;
+                    var tmpboxlist = item.BoxList;
+                    bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
                     context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
-                    // 执行AI检测
-                    var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                    if (isMotionDetected || item.NeedUp)
+                    long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+                    if (now - context.LastTriggerTime >= item.CoolDownMs)
                     {
-                        AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
+                        context.LastTriggerTime = now;
+                        // 执行AI检测
+                        var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
+                        if (isMotionDetected || item.NeedUp || needDraw)
+                        {
+                            AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
+                        }
                     }
 
-                    var tmpboxlist = item.BoxList;
-                    if (tmpboxlist != null && tmpboxlist.Count > 0)
+
+                    if (needDraw)
                     {
                         AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                     }
