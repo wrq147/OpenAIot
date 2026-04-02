@@ -14,8 +14,8 @@ namespace IoTAIService.AICode
     public class MobileCLIP2VisionRunner : IReIDExtractor
     {
         private readonly InferenceSession _session;
-        private const int InputWidth = 224;
-        private const int InputHeight = 224;
+        private const int InputWidth = 256;
+        private const int InputHeight = 256;
         public MobileCLIP2VisionRunner()
         {
             string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "MobileCLIP2Vision.onnx";
@@ -36,7 +36,7 @@ namespace IoTAIService.AICode
         public float[] OutputEmbeddings(Image<Rgb24> image)
         {
             image.Mutate(x => x.Resize(InputWidth, InputHeight));
-            // 创建张量 [1, 3, 224, 224]
+            // 创建张量 [1, 3, 256, 256]
             var tensor = new DenseTensor<float>(new[] { 1, 3, InputHeight, InputWidth });
 
             for (int y = 0; y < InputHeight; y++)
@@ -52,7 +52,7 @@ namespace IoTAIService.AICode
             }
 
             // ====================== 2. ONNX 推理 ======================
-            var inputs = new[] { NamedOnnxValue.CreateFromTensor("img_tensor", tensor) };
+            var inputs = new[] { NamedOnnxValue.CreateFromTensor("pixel_values", tensor) };
             using var results = _session.Run(inputs);
             float[] embeddings = results.First().AsTensor<float>().ToArray();
 

@@ -200,58 +200,6 @@
             BoT-SORT核心配置
             </summary>
         </member>
-        <member name="T:IoTAIService.AICode.IReIDExtractor">
-            <summary>
-            ReID特征提取接口（标准化对接OSNet）
-            </summary>
-        </member>
-        <member name="M:IoTAIService.AICode.IReIDExtractor.ExtractFeature(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32},SixLabors.ImageSharp.RectangleF)">
-            <summary>
-            从图像ROI中提取ReID特征
-            </summary>
-            <param name="image">原始图像</param>
-            <param name="roi">目标检测框（x1,y1,x2,y2）</param>
-            <returns>归一化的特征向量（OSNet默认512维）</returns>
-        </member>
-        <member name="M:IoTAIService.AICode.IReIDExtractor.CalculateCosineSimilarity(System.Single[],System.Single[])">
-            <summary>
-            计算两个特征的余弦相似度
-            </summary>
-            <param name="feat1">特征1</param>
-            <param name="feat2">特征2</param>
-            <returns>相似度（0-1）</returns>
-        </member>
-        <member name="T:IoTAIService.AICode.OSNetReIDExtractor">
-            <summary>
-            OSNet ReID提取器基类（预留ONNX Runtime对接）
-            </summary>
-        </member>
-        <member name="M:IoTAIService.AICode.OSNetReIDExtractor.LoadModel(System.String)">
-            <summary>
-            加载OSNet ONNX模型
-            </summary>
-            <param name="onnxModelPath">模型路径</param>
-        </member>
-        <member name="M:IoTAIService.AICode.OSNetReIDExtractor.Preprocess(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32})">
-            <summary>
-            预处理ROI图像（OSNet要求：归一化、Resize、通道转换等）
-            </summary>
-        </member>
-        <member name="M:IoTAIService.AICode.OSNetReIDExtractor.Inference(System.Single[])">
-            <summary>
-            推理OSNet模型获取特征
-            </summary>
-        </member>
-        <member name="M:IoTAIService.AICode.OSNetReIDExtractor.NormalizeFeature(System.Single[])">
-            <summary>
-            特征归一化（L2归一化）
-            </summary>
-        </member>
-        <member name="T:IoTAIService.AICode.BoTDetection">
-            <summary>
-            检测信息实体（含ReID特征）
-            </summary>
-        </member>
         <member name="T:IoTAIService.AICode.BoTKalmanFilter">
             <summary>
             8维卡尔曼滤波（BoT-SORT标准，无MathNet依赖）
@@ -264,7 +212,7 @@
             初始化卡尔曼滤波矩阵
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTKalmanFilter.Initialize(IoTAIService.AICode.BoTDetection)">
+        <member name="M:IoTAIService.AICode.BoTKalmanFilter.Initialize(ChannelUtility.Message.BoxItem)">
             <summary>
             初始化状态（从检测框）
             </summary>
@@ -275,7 +223,7 @@
             预测下一状态
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTKalmanFilter.Update(IoTAIService.AICode.BoTDetection)">
+        <member name="M:IoTAIService.AICode.BoTKalmanFilter.Update(ChannelUtility.Message.BoxItem)">
             <summary>
             更新状态（基于观测值）
             </summary>
@@ -297,7 +245,7 @@
             预测轨迹
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTTrack.Update(IoTAIService.AICode.BoTDetection)">
+        <member name="M:IoTAIService.AICode.BoTTrack.Update(ChannelUtility.Message.BoxItem)">
             <summary>
             更新轨迹
             </summary>
@@ -307,7 +255,6 @@
             <summary>
             获取运动补偿后的预测框
             </summary>
-            <param name="homography">单应性矩阵（GMC）</param>
             <returns>预测检测框</returns>
         </member>
         <member name="T:IoTAIService.AICode.GlobalMotionCompensator">
@@ -315,7 +262,7 @@
             全局运动补偿（基于ORB特征+单应性矩阵）
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.GlobalMotionCompensator.EstimateHomography(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32},SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32})">
+        <member name="M:IoTAIService.AICode.GlobalMotionCompensator.EstimateHomography(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24})">
             <summary>
             估计相机运动（单应性矩阵）
             </summary>
@@ -323,7 +270,7 @@
             <param name="currFrame">当前帧</param>
             <returns>单应性矩阵（单位矩阵表示估计失败）</returns>
         </member>
-        <member name="M:IoTAIService.AICode.GlobalMotionCompensator.ExtractORBFeatures(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32},SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32})">
+        <member name="M:IoTAIService.AICode.GlobalMotionCompensator.ExtractORBFeatures(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24})">
             <summary>
             提取ORB特征点（对接OpenCVSharp实现）
             </summary>
@@ -338,7 +285,7 @@
             BoT-SORT核心跟踪器（完整实现）
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTSORTTracker.Update(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32},System.Collections.Generic.List{IoTAIService.AICode.BoTDetection})">
+        <member name="M:IoTAIService.AICode.BoTSORTTracker.Update(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Collections.Generic.List{ChannelUtility.Message.BoxItem})">
             <summary>
             更新跟踪器（核心方法）
             </summary>
@@ -346,27 +293,27 @@
             <param name="detections">原始检测框（无ReID特征）</param>
             <returns>跟踪结果</returns>
         </member>
-        <member name="M:IoTAIService.AICode.BoTSORTTracker.ProcessDetections(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32},System.Collections.Generic.List{IoTAIService.AICode.BoTDetection})">
+        <member name="M:IoTAIService.AICode.BoTSORTTracker.ProcessDetections(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Collections.Generic.List{ChannelUtility.Message.BoxItem})">
             <summary>
             预处理检测框：提取ReID特征
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTSORTTracker.FusedMatching(System.Collections.Generic.List{IoTAIService.AICode.BoTDetection},System.Collections.Generic.List{IoTAIService.AICode.BoTTrack},IoTAIService.AICode.Matrix3x3,System.Boolean)">
+        <member name="M:IoTAIService.AICode.BoTSORTTracker.FusedMatching(System.Collections.Generic.List{ChannelUtility.Message.BoxItem},System.Collections.Generic.List{IoTAIService.AICode.BoTTrack},IoTAIService.AICode.Matrix3x3,System.Boolean)">
             <summary>
             IoU+ReID融合匹配
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTSORTTracker.CalculateIoU(IoTAIService.AICode.BoTDetection,IoTAIService.AICode.BoTDetection)">
+        <member name="M:IoTAIService.AICode.BoTSORTTracker.CalculateIoU(ChannelUtility.Message.BoxItem,ChannelUtility.Message.BoxItem)">
             <summary>
             计算IoU（交并比）
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTSORTTracker.UpdateMatchedTracks(System.Collections.Generic.List{IoTAIService.AICode.BoTTrack},System.Collections.Generic.List{IoTAIService.AICode.BoTDetection})">
+        <member name="M:IoTAIService.AICode.BoTSORTTracker.UpdateMatchedTracks(System.Collections.Generic.List{IoTAIService.AICode.BoTTrack},System.Collections.Generic.List{ChannelUtility.Message.BoxItem})">
             <summary>
             更新匹配的轨迹
             </summary>
         </member>
-        <member name="M:IoTAIService.AICode.BoTSORTTracker.CreateNewTracks(System.Collections.Generic.List{IoTAIService.AICode.BoTDetection})">
+        <member name="M:IoTAIService.AICode.BoTSORTTracker.CreateNewTracks(System.Collections.Generic.List{ChannelUtility.Message.BoxItem})">
             <summary>
             创建新轨迹
             </summary>
@@ -380,20 +327,6 @@
             <summary>
             释放资源
             </summary>
-        </member>
-        <member name="T:IoTAIService.AICode.OSNetReIDExtractorONNX">
-            <summary>
-            OSNet ReID提取器（ONNX Runtime实现）
-            </summary>
-        </member>
-        <member name="M:IoTAIService.AICode.OSNetReIDExtractorONNX.RectangleFToRectangle(SixLabors.ImageSharp.RectangleF,System.Int32,System.Int32)">
-            <summary>
-            工具方法：将RectangleF安全转换为Rectangle（适配ImageSharp）
-            </summary>
-            <param name="fRect">浮点矩形</param>
-            <param name="imageWidth">图像宽度（用于边界检查）</param>
-            <param name="imageHeight">图像高度（用于边界检查）</param>
-            <returns>整数矩形（确保在图像范围内，无负坐标）</returns>
         </member>
         <member name="M:IoTAIService.AICode.BoxItemExtensions.Width(ChannelUtility.Message.BoxItem)">
             <summary>
@@ -479,6 +412,44 @@
         <member name="T:IoTAIService.AICode.ExecutionProviderType">
             <summary>
             执行提供者类型
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AICode.IReIDExtractor">
+            <summary>
+            ReID特征提取接口（标准化对接OSNet）
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.IReIDExtractor.ExtractFeature(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},ChannelUtility.Message.BoxItem)">
+            <summary>
+            从图像ROI中提取ReID特征
+            </summary>
+            <param name="image">原始图像</param>
+            <param name="roi">目标检测框（x1,y1,x2,y2）</param>
+            <returns>归一化的特征向量（OSNet默认512维）</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.IReIDExtractor.CosineSimilarity(System.Single[],System.Single[])">
+            <summary>
+            计算两个特征的余弦相似度
+            </summary>
+            <param name="feat1">特征1</param>
+            <param name="feat2">特征2</param>
+            <returns>相似度（0-1）</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.MobileCLIP2VisionRunner.OutputEmbeddings(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24})">
+            <summary>
+            输出图片特征
+            </summary>
+            <param name="image"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.MobileCLIP2VisionRunner.L2Normalize(System.Single[])">
+            <summary>
+            L2归一化（MobileCLIP2 强制要求，否则余弦相似度无效）
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.MobileCLIP2VisionRunner.CosineSimilarity(System.Single[],System.Single[])">
+            <summary>
+            计算两个特征的余弦相似度
             </summary>
         </member>
         <member name="T:IoTAIService.AICode.RegionType">

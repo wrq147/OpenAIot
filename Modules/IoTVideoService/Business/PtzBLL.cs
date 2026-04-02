@@ -31,7 +31,7 @@ namespace IoTVideoService.Business
             msg.ProductId = string.Empty;
             msg.MessageId = Guid.NewGuid().ToString("N");
             msg.UserName = videoSource.UserName;
-            msg.VideoKey = videoSource.VideoKey;
+            msg.VideoKey = data.VideoKey;
             if (data.Cmd < 0)
             {
                 msg.CommandType = (PTZCommandType)Math.Abs(data.Cmd);
