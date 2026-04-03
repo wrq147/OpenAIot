@@ -251,8 +251,8 @@ namespace IoTRulesService.DataParser.Js
         /// 直接推送数据并返回复的消息
         /// </summary>
         /// <param name="ac">结果回调函数</param>
-        /// <param name="msgId"></param>
-        /// <param name="bytes"></param>
+        /// <param name="msgId">消息标识</param>
+        /// <param name="bytes">推送的字节数组</param>
         public void PublicCallback(Action<string> ac, string msgId, byte[] bytes)
         {
             Task.Run(() =>
@@ -276,9 +276,9 @@ namespace IoTRulesService.DataParser.Js
         /// 推送字符串数据并返回复的消息
         /// </summary>
         /// <param name="ac">结果回调函数</param>
-        /// <param name="msgId"></param>
-        /// <param name="input"></param>
-        /// <param name="hex"></param>
+        /// <param name="msgId">消息标识</param>
+        /// <param name="input">输入字符串</param>
+        /// <param name="hex">是否为hex字符串</param>
         public void PublicStrCallback(Action<string> ac, string msgId, string input, bool hex = false)
         {
             if (hex)

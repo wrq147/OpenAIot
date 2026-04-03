@@ -592,6 +592,32 @@
             <param name="msgId"></param>
             <param name="msg"></param>
         </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicStrWait(System.String,System.String,System.Boolean)">
+            <summary>
+            已弃用
+            </summary>
+            <param name="msgId"></param>
+            <param name="input"></param>
+            <param name="hex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicCallback(System.Action{System.String},System.String,System.Byte[])">
+            <summary>
+            直接推送数据并返回复的消息
+            </summary>
+            <param name="ac">结果回调函数</param>
+            <param name="msgId">消息标识</param>
+            <param name="bytes">推送的字节数组</param>
+        </member>
+        <member name="M:IoTRulesService.DataParser.Js.MessageContext.PublicStrCallback(System.Action{System.String},System.String,System.String,System.Boolean)">
+            <summary>
+            推送字符串数据并返回复的消息
+            </summary>
+            <param name="ac">结果回调函数</param>
+            <param name="msgId">消息标识</param>
+            <param name="input">输入字符串</param>
+            <param name="hex">是否为hex字符串</param>
+        </member>
         <member name="M:IoTRulesService.DataParser.MessageRunner.ParseExe(System.String,System.String)">
             <summary>
             单线程处理所有的消息

@@ -69,10 +69,7 @@ namespace IoTRulesService.DataParser
             _iotRedis = iotRedis;
             _log = logFactory.CreateLogger<PackParser>();
         }
-        public bool ReleaseJsEngine(string deviceId)
-        {
-            return _scriptEngine.TryRemove(deviceId,out CacheJsEngine tmp);
-        }
+
         private Engine GetJsEngine(string deviceId, string script)
         {
             var tmpcache = _scriptEngine.GetOrAdd(deviceId, (k) =>

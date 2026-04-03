@@ -265,9 +265,6 @@ namespace IoTRulesService.DataParser
                             device.LastOnline = DateTime.Now;
                             await deviceDAL.Update(device, x => x.DeviceId == rs.DeviceId);
 
-                            //释放脚本引擎
-                            _provider.GetService<PackParser>().ReleaseJsEngine(rs.DeviceId);
-
                             var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
                             if (devicelist.Count > 0)
                             {
