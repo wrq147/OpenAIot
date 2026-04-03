@@ -2,25 +2,31 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid 'fe0e2cea990850a398362448c4068255ec430aae'
-    oldFile: !uuid '54959a05346131d4bb4691937298b970b7ecb2c3'
-  /App/App.csproj:
-    newFile: !uuid '93e2da943489be053ff7731a1612f158d79d5737'
-    oldFile: !uuid '819350df48d8c321a2e116238490d36b24cbfdbc'
+  /Channel:
+    newFile: !uuid '8cbdd1680ace845a9b021938c91725555b95fefe'
+    oldFile: !uuid '8a6de09c81c60e19c8f8bfab963fb0990e978640'
+  /Channel/GB28181Channel:
+    newFile: !uuid '726471c892526c087eca5f11ec26db5d83dcb267'
+    oldFile: !uuid '1039279aa8885b41388f7ae1e870a4fb52974f2e'
+  /Channel/GB28181Channel/GB28181DeviceEventListener.cs:
+    newFile: !uuid '02bfca1bace2b4c31c54f2dee6e2e6cf61ca1ef8'
+    oldFile: !uuid '9b37e7e3f74fe53947f49bd232d7ec73bbf63cc3'
   /Modules:
-    newFile: !uuid 'b82673201f43400bcfbc387bfe6da26bf3cb1ec6'
-    oldFile: !uuid '05ae35373070a6302d41329c7bb4861ffe732dbf'
-  /Modules/IoTRulesService:
-    newFile: !uuid '0fc51d2b6628d54b4d5bd6d6ff0160716f949fff'
-    oldFile: !uuid '15429293693c5e2cfd4ce880e1dfb6a1c0524304'
-  /Modules/IoTRulesService/DataParser:
-    newFile: !uuid '1f0369de1452dfdb9161c664c2ce4fe2e2eb4cc3'
-    oldFile: !uuid 'b4c4c28e94d23b61c0c13b7ae239d3bcef09b701'
-  /Modules/IoTRulesService/DataParser/PackParser.cs:
-    newFile: !uuid 'c072e02f80fcd12a37c5310af8c34f7a91c36339'
-    oldFile: !uuid '0c6c351fbac01ad6298924a018fffd985c961030'
-gitCommitId: !uuid 'f98da296b82993bda640f1162f34c79fab11d0b0'
+    newFile: !uuid '5aa02463ade36f71da21a03e6d8807d51b25c745'
+    oldFile: !uuid 'b82673201f43400bcfbc387bfe6da26bf3cb1ec6'
+  /Modules/IoTAIService:
+    newFile: !uuid '51d3c550df620021dd086ef3e87e06836de921b8'
+    oldFile: !uuid '27ceec03d9446e796308551c53286ac16b61f7c6'
+  /Modules/IoTAIService/AICode:
+    newFile: !uuid '238e9ca4be5250e1c31d3fd2f1f991b349a2c709'
+    oldFile: !uuid '5514942159a967503610147245e8e62f0298fcee'
+  /Modules/IoTAIService/AICode/YoloPoseDetectRunner.cs:
+    newFile: !uuid '3e2f1befcf0dd43a71e3376acb37b6659c8cea6c'
+    oldFile: !uuid '7060fc93a56a27422ca3e07fd2d1d56217c8d6d1'
+  /Modules/IoTAIService/IoTAIService.csproj:
+    newFile: !uuid '338d7022e4fddac331332085f32feb2b843a0088'
+    oldFile: !uuid '148603144b367c3a5e52307b3e9ca49418fdc7a6'
+gitCommitId: !uuid '0a4265d488729f964bc8f0721395c43c89f3724d'
 renames: {
   }
-revisionId: 254
+revisionId: 255
