@@ -644,28 +644,28 @@ namespace IoTRulesService.DataParser
         /// <param name="model"></param>
         /// <param name="funprefix"></param>
         /// <returns></returns>
-        private async Task ParseFunc(string funcScript, FunctionInvokeMessage msg, TslModel model, string funprefix)
+        private void ParseFunc(string funcScript, FunctionInvokeMessage msg, TslModel model, string funprefix)
         {
             var context = new FuncMessageContext(msg, this, model, funprefix);
             try
             {
-                _ = Task.Run(() =>
+                Task.Run(() =>
                 {
                     var jsEngine = new Engine(option =>
                     {
                         option.LimitRecursion(5).TimeoutInterval(TimeSpan.FromMinutes(10));
                     });
                     jsEngine.Execute(funcScript).Invoke("exeFunc", JsValue.FromObject(jsEngine, context));
-                });
+                }).ConfigureAwait(false);
             }
             catch (JavaScriptException ex)
             {
                 var location = ex.Location;
-                await Print(msg.DeviceId, "exeFunc执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message));
+                Print(msg.DeviceId, "exeFunc执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await Print(msg.DeviceId, "exeFunc异常", "脚本未知错误" + ex.Message);
+                Print(msg.DeviceId, "exeFunc异常", "脚本未知错误" + ex.Message).ConfigureAwait(false);
             }
         }
 
@@ -1346,7 +1346,7 @@ namespace IoTRulesService.DataParser
                 }
                 else
                 {
-                    await ParseFunc(funModel.downdata, funcMessage, ret.Model, rawdata.prefix);
+                    ParseFunc(funModel.downdata, funcMessage, ret.Model, rawdata.prefix);
                     return null;
                 }
             }
