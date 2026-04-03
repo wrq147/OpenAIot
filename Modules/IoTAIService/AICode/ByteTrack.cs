@@ -8,88 +8,6 @@ using System.Numerics;
 namespace IoTAIService.AICode
 {
 
-    /// <summary>
-    /// 卡尔曼滤波类（ByteTrack核心依赖）
-    /// </summary>
-    public class KalmanFilter
-    {
-        private const float dt = 1.0f / 10.0f; // 帧间隔
-        private readonly Matrix4x4 _F; // 状态转移矩阵
-        private readonly Matrix4x4 _H; // 观测矩阵
-        private readonly Matrix4x4 _Q; // 过程噪声
-        private readonly Matrix4x4 _R; // 观测噪声
-
-        private Vector4 _x; // 状态向量 [x, y, vx, vy]
-        private Matrix4x4 _P; // 协方差矩阵
-
-        public KalmanFilter()
-        {
-            _F = Matrix4x4.Identity;
-            _F.M13 = dt;
-            _F.M24 = dt;
-
-            // 观测矩阵初始化
-            _H = Matrix4x4.Identity;
-            _H.M33 = 0;
-            _H.M44 = 0;
-
-            _Q = Matrix4x4.CreateScale(0.1f);
-            _R = Matrix4x4.CreateScale(1.0f);
-
-            _x = Vector4.Zero;
-            // 协方差矩阵初始化
-            _P = Matrix4x4.Identity * 10;
-        }
-        public void InitState(Vector2 pos)
-        {
-            _x = new Vector4(pos.X, pos.Y, 0, 0);
-        }
-        /// <summary>
-        /// 预测下一帧状态
-        /// </summary>
-        public void Predict()
-        {
-            // 状态预测：x = F * x
-            _x = Vector4.Transform(_x, _F);
-            // 协方差预测：P = F * P * F^T + Q
-            _P = _F * _P * Matrix4x4.Transpose(_F) + _Q;
-        }
-
-        /// <summary>
-        /// 更新观测值
-        /// </summary>
-        /// <param name="measurement"></param>
-        public void Update(Vector2 measurement)
-        {
-            var z = new Vector4(measurement.X, measurement.Y, 0, 0);
-            var y = z - Vector4.Transform(_x, _H);
-            var S = _H * _P * Matrix4x4.Transpose(_H) + _R;
-
-            // 修复5：矩阵求逆兼容（处理奇异矩阵）
-            Matrix4x4 invS;
-            if (!Matrix4x4.Invert(S, out invS))
-            {
-                invS = Matrix4x4.Identity; // 求逆失败时用单位矩阵兜底
-            }
-
-            var K = _P * Matrix4x4.Transpose(_H) * invS;
-
-            _x = _x + Vector4.Transform(y, K);
-            _P = (Matrix4x4.Identity - K * _H) * _P;
-        }
-
-        /// <summary>
-        /// 获取预测的边界框中心
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 GetPredictedCenter() => new Vector2(_x.X, _x.Y);
-
-        /// <summary>
-        /// 获取速度向量 [vx, vy]
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 GetVelocity() => new Vector2(_x.Z, _x.W);
-    }
     public class RegionStayInfo
     {
         public DateTime? EnterTime { get; set; }
@@ -115,14 +33,13 @@ namespace IoTAIService.AICode
             Id = id;
             CurrentDetection = detection;
             Kf = new KalmanFilter();
-            var tmpcenter = detection.GetCenter();
 
-            Kf.InitState(tmpcenter);
+            Kf.InitState(detection);
             Kf.Predict();
-            Kf.Update(tmpcenter);
+            Kf.Update(detection);
 
             TimeSinceUpdate = 0;
-            _positionHistory.Enqueue(tmpcenter);
+            _positionHistory.Enqueue(detection.GetCenter());
             CreatedOn = DateTime.Now;
         }
 
@@ -130,11 +47,10 @@ namespace IoTAIService.AICode
         public void Update(BoxItem detection)
         {
             CurrentDetection = detection;
-            var center = detection.GetCenter();
-            Kf.Update(center);
+            Kf.Update(detection);
 
             // 更新位置历史
-            _positionHistory.Enqueue(center);
+            _positionHistory.Enqueue(detection.GetCenter());
             if (_positionHistory.Count > 5) // 只保留最近5帧
                 _positionHistory.Dequeue();
 
@@ -219,7 +135,7 @@ namespace IoTAIService.AICode
             if (!region.IsActive) return RegionStatus.Outside;
 
             // 获取目标当前中心位置
-            Vector2 currentPos = Kf.GetPredictedCenter();
+            Vector2 currentPos = CurrentDetection.GetCenter();
             bool isInRegion = region.ContainsPoint(currentPos);
 
             // 获取上一帧的区域状态（默认外部）
@@ -386,7 +302,7 @@ namespace IoTAIService.AICode
                 {
                     if (matchedTracks.Contains(track) || !string.Equals(track.CurrentDetection.label, det.label)) continue;
 
-                    var predBox = CreatePredictBox(track);
+                    var predBox = track.Kf.GetPredictedBox();
                     var iou = CalculateIoU(det, predBox);
                     if (iou > maxIoU && iou >= iouThresh)
                     {
@@ -405,23 +321,6 @@ namespace IoTAIService.AICode
             return (matchedTracks, unmatchedDetections);
         }
     
-        private BoxItem CreatePredictBox(Track track)
-        {
-            var center = track.Kf.GetPredictedCenter();
-            var det = track.CurrentDetection;
-            float w = det.x2 - det.x1;
-            float h = det.y2 - det.y1;
-
-            return new BoxItem
-            {
-                x1 = center.X - w / 2,
-                y1 = center.Y - h / 2,
-                x2 = center.X + w / 2,
-                y2 = center.Y + h / 2,
-                label = det.label,
-                score = det.score
-            };
-        }
         // 计算两个检测框的IoU（交并比）
         private float CalculateIoU(BoxItem a, BoxItem b)
         {
