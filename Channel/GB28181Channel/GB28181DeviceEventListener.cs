@@ -140,7 +140,7 @@ namespace GB28181Channel
                         MessageId = ptzMessage.MessageId,
                         CommandType = ptzMessage.CommandType,
                         Speed = ptzMessage.Speed,
-                        PresetId = byte.Parse(ptzMessage.PresetId)
+                        PresetId = (byte?)(ptzMessage.PresetId != null ? byte.Parse(ptzMessage.PresetId) : 0)
                     });
                 }
                 else if (msg is MediaPresetMessage presetMessage)
@@ -211,11 +211,11 @@ namespace GB28181Channel
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-     
+
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace GB28181Channel
                 var eventBus = _serviceProvider.GetService<ClientBusProxy>();
                 eventBus.PublishMediaNotFound(e.Device.DeviceId, 1);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -268,7 +268,7 @@ namespace GB28181Channel
             {
                 Console.WriteLine(ex.Message);
             }
-      
+
         }
         public async Task OnPresetListReceived(object? sender, PresetListReceivedEventArgs e)
         {
@@ -288,7 +288,7 @@ namespace GB28181Channel
                 await eventBus.PublishMediaPresetReply(e.MessageId, device.VideoData.Item.Id, e.DeviceId, device.PresetList);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -333,7 +333,7 @@ namespace GB28181Channel
             {
                 Console.WriteLine(ex.Message);
             }
-   
+
         }
     }
 }

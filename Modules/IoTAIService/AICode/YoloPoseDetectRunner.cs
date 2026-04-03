@@ -182,6 +182,7 @@ namespace IoTAIService.AICode
                     y1 = (int)y1,
                     x2 = (int)x2,
                     y2 = (int)y2,
+                    color = "#097C28",
                     points = keypoints
                 });
             }
