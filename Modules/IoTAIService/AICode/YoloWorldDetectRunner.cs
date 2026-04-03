@@ -1,4 +1,5 @@
 ﻿using ChannelUtility.Message;
+using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp;
@@ -20,10 +21,11 @@ namespace IoTAIService.AICode
 
         public YoloWorldDetectRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloWorld.onnx";
             // 初始化ONNX推理会话
             var sessionOptions = new SessionOptions();
             AIUtility.TryEnableGpu(sessionOptions);
+            string modelName = "YoloWorld.onnx";
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
             _session = new InferenceSession(modelPath, sessionOptions);
         }
 

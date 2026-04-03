@@ -15,7 +15,6 @@
 	  <PackageReference Include="pythonnet" Version="3.0.5" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="AIModel\" />
 	  <Folder Include="AIScript\" />
 	</ItemGroup>
 	<ItemGroup>
@@ -48,7 +47,13 @@
 	  <None Update="AIModel\YoloFace.onnx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="AIModel\YoloFaceS.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="AIModel\YoloPose.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="AIModel\YoloPoseS.onnx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="AIModel\YoloWorld.onnx">

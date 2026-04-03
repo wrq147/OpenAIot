@@ -1,4 +1,6 @@
 ﻿using ChannelUtility.Message;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp;
@@ -18,10 +20,15 @@ namespace IoTAIService.AICode
 
         public YoloPoseDetectRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloPose.onnx";
             // 初始化ONNX推理会话
             var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
+            var provider = AIUtility.TryEnableGpu(sessionOptions);
+            string modelName = "YoloPose.onnx";
+            if (provider != ExecutionProviderType.CPU)
+            {
+                modelName = "YoloPoseS.onnx";
+            }
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
             _session = new InferenceSession(modelPath, sessionOptions);
         }
 

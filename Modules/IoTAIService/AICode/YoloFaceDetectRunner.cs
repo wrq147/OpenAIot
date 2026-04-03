@@ -1,6 +1,8 @@
 ﻿using ChannelUtility.Message;
+using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using Quartz.Impl.AdoJobStore.Common;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -18,10 +20,14 @@ namespace IoTAIService.AICode
 
         public YoloFaceDetectRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "YoloFace.onnx";
-            // 初始化ONNX推理会话
             var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
+            var provider = AIUtility.TryEnableGpu(sessionOptions);
+            string modelName = "YoloFace.onnx";
+            if (provider != ExecutionProviderType.CPU)
+            {
+                modelName = "YoloFaceS.onnx";
+            }
+            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
             _session = new InferenceSession(modelPath, sessionOptions);
         }
         public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold = 0.8f, float iouThreshold = 0.45f)
