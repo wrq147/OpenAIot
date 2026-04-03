@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace IoTRulesService.DataParser.Js
 {
@@ -52,7 +53,7 @@ namespace IoTRulesService.DataParser.Js
         {
             var res = _client.Print(_msg.DeviceId, "下发解释", msg);
         }
-    
+
 
         /// <summary>
         /// 获取当前设备的所有属性信息
@@ -189,7 +190,7 @@ namespace IoTRulesService.DataParser.Js
             }
             return null;
         }
-     
+
         /// <summary>
         /// 直接推送数据
         /// </summary>
@@ -202,8 +203,7 @@ namespace IoTRulesService.DataParser.Js
             rawdata.MessageId = string.Empty;
             rawdata.ProductId = _msg.ProductId;
             rawdata.prefix = this._prefix;
-            var res = _client.PublicMessage(rawdata, null);
-            res.Wait();
+            _client.PublicMessage(rawdata, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -245,6 +245,66 @@ namespace IoTRulesService.DataParser.Js
             this.PublicStr(input, hex);
             Thread.Sleep(100);
             return "ok";
+        }
+
+        /// <summary>
+        /// 直接推送数据并返回复的消息
+        /// </summary>
+        /// <param name="ac">结果回调函数</param>
+        /// <param name="msgId"></param>
+        /// <param name="bytes"></param>
+        public void PublicCallback(Action<string> ac, string msgId, byte[] bytes)
+        {
+            Task.Run(() =>
+            {
+                var res = _client.PublicWait(_msg.DeviceId, msgId, async () =>
+                {
+                    RawDataMessage rawdata = new RawDataMessage();
+                    rawdata.Data = bytes;
+                    rawdata.DeviceId = _msg.DeviceId;
+                    rawdata.MessageId = msgId;
+                    rawdata.ProductId = _msg.ProductId;
+                    rawdata.prefix = this._prefix;
+                    await _client.PublicMessage(rawdata, null);
+                });
+                ac(res.Result);
+            });
+        }
+
+
+        /// <summary>
+        /// 推送字符串数据并返回复的消息
+        /// </summary>
+        /// <param name="ac">结果回调函数</param>
+        /// <param name="msgId"></param>
+        /// <param name="input"></param>
+        /// <param name="hex"></param>
+        public void PublicStrCallback(Action<string> ac, string msgId, string input, bool hex = false)
+        {
+            if (hex)
+            {
+                var bytesource = FastBufferHelper.StrToToHex(input);
+                if (msgId == null)
+                {
+                    var tmpfr = new FastReader(bytesource);
+                    if (tmpfr.Length >= 8)
+                    {
+                        byte slaveAddress = tmpfr.ReadByte();
+                        byte funcByte = tmpfr.ReadByte();
+                        if (funcByte == 5 || funcByte == 6 || funcByte == 15 || funcByte == 16)
+                        {
+                            ushort startAddress = tmpfr.ReadUInt16BE();
+                            msgId = "Func#" + slaveAddress + "#" + funcByte + "#" + startAddress + "#" + this._prefix;
+                        }
+                    }
+                }
+
+                PublicCallback(ac, msgId, bytesource);
+            }
+            else
+            {
+                PublicCallback(ac, msgId, Encoding.UTF8.GetBytes(input));
+            }
         }
     }
 }

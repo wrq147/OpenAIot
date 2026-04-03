@@ -27,7 +27,6 @@ namespace TemplateAction.Cache
         // The bucket to which the timeout was added
         internal HashedWheelBucket _bucket;
 
-
         internal HashedWheelTimeout(HashedWheelTimer timer, TimerTask task, long deadline)
         {
             this._timer = timer;

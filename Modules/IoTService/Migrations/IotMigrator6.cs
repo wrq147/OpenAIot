@@ -131,7 +131,7 @@ function toRawData(context) {
                 Remark = "银尔达",
                 KeyWords = "银尔达 DTU",
                 ScriptContent = @"
-
+var cmdarr = [];
 /**
  * 原数据转平台消息
  * @param {DataContext} context
@@ -149,6 +149,14 @@ function rawDataTo(context) {
         for (let i = 3; i < tmparr.length; i++) {
           tmpreturnval = tmpreturnval + "","" + tmparr[i];
         }
+      }
+      let reqcmd = cmdarr.pop();
+      if (reqcmd == ""iccid"") {
+        let aarr = replyccid.split("","");
+        let tmprs = aarr[aarr.length - 1].replace(/\r\n/g, """");
+        let replyccid = context.CreateICCIDReply();
+        replyccid.iccid = tmprs;
+        context.ConfirmReply(null, replyccid);
       }
       context.ReplyMsgId(tmparr[1], tmpreturnval);
       return null;
@@ -173,30 +181,35 @@ function rawDataTo(context) {
 function toRawData(context) {
   let curmsg = context.Message();
   if (curmsg.MsgType == ""Bind"") {
+    cmdarr.length = 0;
     let modbusInfo = context.GetModbusInfo();
+    cmdarr.push(""configset"");
     context.PublicStr(""config,set,rs485,"" + modbusInfo.BaudRate + "","" + modbusInfo.DataBits + "","" + modbusInfo.Parity + "","" + modbusInfo.StopBits + "",200,0\r\n"", false);
+
     let tarr = context.CreateModbusHex(false);
     if (tarr.length > 0) {
-       let autopollcmd = ""config,set,autopoll,rs485,2000,"" + modbusInfo.PollTime + "",1"";
-       for (var idx = 0; idx < tarr.length; idx++) {
-           autopollcmd = autopollcmd + "","" + tarr[idx];
-       }
-       autopollcmd = autopollcmd + ""\r\n"";
-       context.PublicStr(autopollcmd, false);
+      let autopollcmd = ""config,set,autopoll,rs485,2000,"" + modbusInfo.PollTime + "",1"";
+      for (var idx = 0; idx < tarr.length; idx++) {
+        autopollcmd = autopollcmd + "","" + tarr[idx];
+      }
+      autopollcmd = autopollcmd + ""\r\n"";
+      cmdarr.push(""autopoll"");
+      context.PublicStr(autopollcmd, false);
     }
 
+    cmdarr.push(""location"");
     context.PublicStr(""config,set,location,1,1,300,1,0,1\r\n"", false);
+
+    cmdarr.push(""save"");
     context.PublicStr(""config,set,save\r\n"", false);
+
     context.ConfirmReply(curmsg.MessageId, context.CreateBindReply());
     return context.Payload();
   }
   else if (curmsg.MsgType == ""QueryICCID"") {
-    let tmprsss = context.PublicStr(""config,get,iccid\r\n"", false);
-    let aarr = tmprsss.split("","");
-    let tmprs = aarr[aarr.length - 1].replace(/\r\n/g, """");
-    let replyccid = context.CreateICCIDReply();
-    replyccid.iccid = tmprs;
-    context.ConfirmReply(null, replyccid);
+    cmdarr.length = 0;
+    cmdarr.push(""iccid"");
+    context.PublicStr(""config,get,iccid\r\n"", false);
     return context.Payload();
   }
   return null;

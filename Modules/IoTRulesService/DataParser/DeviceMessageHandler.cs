@@ -14,6 +14,7 @@ using IoTService.DAL;
 using IoTService.Models;
 using Jint;
 using Microsoft.Extensions.Logging;
+using NPOI.SS.Formula.Atp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -263,6 +264,9 @@ namespace IoTRulesService.DataParser
                             device.Online = 0;
                             device.LastOnline = DateTime.Now;
                             await deviceDAL.Update(device, x => x.DeviceId == rs.DeviceId);
+
+                            //释放脚本引擎
+                            _provider.GetService<PackParser>().ReleaseJsEngine(rs.DeviceId);
 
                             var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
                             if (devicelist.Count > 0)

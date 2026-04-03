@@ -414,6 +414,21 @@ export default {
          * 发送确认回复包
          */
         ConfirmReply(msgId:String,msg:BaseUpDeviceMessage):void;
+          /**
+           * 直接推送数据并返回复的消息
+           * @param {Function} ac - 结果回调函数
+           * @param {String} msgId - 消息标识
+           * @param {ArrayBuffer} bytes - 推送的字节数组
+           */
+           PublicCallback(ac:Function,msgId:String,bytes:ArrayBuffer):void;
+           /**
+           * 推送字符串数据并返回复的消息
+           * @param {Function} ac - 结果回调函数
+           * @param {String} msgId - 消息Id
+           * @param {String} input - 输入字符串
+           * @param {Boolean} hex - 是否为hex字符串
+           */
+           PublicStrCallback(ac:Function,msgId:String,input:String,hex:Boolean):void;
       }
 
       declare class FastReader
