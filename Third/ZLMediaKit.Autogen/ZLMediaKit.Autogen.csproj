@@ -24,6 +24,9 @@
     <None Remove="ZLMediaLibs\Windows\x64\zlmediakit.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="HZK16">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ZLMediaLibs\Linux\x64\libmk_api.so">
 		<Link>libmk_api.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

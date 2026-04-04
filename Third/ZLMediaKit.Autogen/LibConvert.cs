@@ -60,5 +60,18 @@ namespace ZLMediaKit.Autogen
 
         [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ExtractY(byte[] rgb24, byte[] out_y, int width, int height);
+
+        [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void yuv_render(
+            IntPtr data,        // YUV 数据指针数组 [Y, U, V]
+            IntPtr yuvLineSizes,   // 行宽数组 [Y行宽, U行宽, V行宽]
+            int w,                // 画面宽度
+            int h,                // 画面高度
+            int pix_fmt,          // 像素格式（用上面常量）
+            int x1, int y1,       // 矩形左上角
+            int x2, int y2,       // 矩形右下角
+            byte r, byte g, byte b,// 框颜色 RGB
+            [MarshalAs(UnmanagedType.LPStr)] string label // 中文标签
+        );
     }
 }

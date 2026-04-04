@@ -121,6 +121,7 @@ namespace GB28181Channel
             int w = mk_transcode.MkGetAvFrameWidth(avFrame);
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
+
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
             if (context == null || string.IsNullOrEmpty(context.VideoKey))
             {
@@ -139,12 +140,9 @@ namespace GB28181Channel
                     return;
                 }
 
-                unsafe
+                fixed (byte* pRgb = rgb24)
                 {
-                    fixed (byte* pRgb = rgb24)
-                    {
-                        mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
-                    }
+                    mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
                 }
                 var storage = _provider.GetService<IDeviceStorage>();
                 var device = storage.GetDevice(context.DeviceId);
@@ -172,18 +170,31 @@ namespace GB28181Channel
                     }
                 }
 
+                IntPtr[] yuvData = mk_transcode.MkGetAvFrameData(avFrame, w, h);
+                int[] yuvLineSizes = mk_transcode.MkGetAvFrameLineSize(avFrame);
 
                 if (needDraw)
                 {
-                    AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
+
+                    AIDetectorTask.Draw(yuvData, yuvLineSizes, pixFmt, w, h, tmpboxlist);
+
+                    //byte[] yuvData;
+                    //if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                    //{
+                    //    return;
+                    //}
+
+                    //fixed (byte* pYuv = yuvData)
+                    //{
+                    //    IntPtr[] planes = new IntPtr[3];
+                    //    planes[0] = (IntPtr)pYuv;
+                    //    planes[1] = (IntPtr)(pYuv + w * h);
+                    //    planes[2] = (IntPtr)(pYuv + w * h + (w / 2) * (h / 2));
+                    //}
                 }
 
-                byte[] yuvData;
-                int[] yuvLineSizes;
-                if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
-                {
-                    return;
-                }
+
+
 
                 if (yuvLineSizes == null || yuvLineSizes.Length != 3)
                 {
@@ -231,23 +242,12 @@ namespace GB28181Channel
                 {
                     try
                     {
-                        unsafe
-                        {
-                            fixed (byte* pYuv = frame.YuvData)
-                            {
-                                IntPtr[] planes = new IntPtr[3];
-                                planes[0] = (IntPtr)pYuv;
-                                planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
-                                planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
-
-                                // 真正耗时的调用，放在独立线程
-                                mk_media.MkMediaInputYuv(
-                                    context.Media,
-                                    planes,
-                                    frame.LineSizes,
-                                    (ulong)frame.Pts);
-                            }
-                        }
+                        // 真正耗时的调用，放在独立线程
+                        mk_media.MkMediaInputYuv(
+                            context.Media,
+                            frame.YuvData,
+                            frame.LineSizes,
+                            (ulong)frame.Pts);
                     }
                     catch (Exception ex)
                     {
@@ -746,7 +746,7 @@ namespace GB28181Channel
     }
     public class YuvFrame
     {
-        public byte[] YuvData { get; set; }
+        public IntPtr[] YuvData { get; set; }
         public int[] LineSizes { get; set; }
         public long Pts { get; set; }
         public int Width { get; set; }

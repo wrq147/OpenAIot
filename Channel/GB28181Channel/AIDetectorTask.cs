@@ -11,6 +11,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using ZLMediaKit.Autogen;
 
 namespace GB28181Channel
 {
@@ -116,16 +117,14 @@ namespace GB28181Channel
                 listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
             });
         }
-        public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
+        public static void Draw(IntPtr[] rgbFrame, int[] yuvLineSizes, int pixFmt, int width, int height, List<BoxItem> boxs)
         {
             var tmpboxArr = boxs;
             if (tmpboxArr.Count == 0)
             {
                 return;
             }
-            using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
 
-            // 遍历所有检测框
             foreach (var box in tmpboxArr)
             {
                 // 1. 坐标校验与裁剪（防止越界）
@@ -133,28 +132,60 @@ namespace GB28181Channel
                 int y1 = (int)Math.Max(0, box.y1);
                 int x2 = (int)Math.Min(width - 1, box.x2);
                 int y2 = (int)Math.Min(height - 1, box.y2);
-
-                // 跳过无效框
-                if (x1 >= x2 || y1 >= y2)
-                {
-                    continue;
-                }
-
-                // 2. 获取当前框的颜色
-                Color color = Color.Parse(box.color);
-                Rgb24 boxColor = color.ToPixel<Rgb24>();
-
-                // 3. 绘制矩形边框
-                int lineWidth = 2;
-                DrawRectangle(image, x1, y1, x2, y2, boxColor, lineWidth);
-
-                // 4. 绘制标签背景和文字
-                string labelText = $"{box.label} {box.score:F2}";
-                DrawLabel(image, x1, y1, labelText, boxColor);
+                HexToRgb(box.color, out byte r, out byte g, out byte b);
+                LibConvert.yuv_render(rgbFrame, yuvLineSizes, width, height, pixFmt, x1, y1, x2, y2, r, g, b, box.label);
             }
 
-            // 将绘制后的图像数据写回rgbFrame
-            image.CopyPixelDataTo(rgbFrame);
+
+
+            //using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
+
+            //// 遍历所有检测框
+            //foreach (var box in tmpboxArr)
+            //{
+            //    // 1. 坐标校验与裁剪（防止越界）
+            //    int x1 = (int)Math.Max(0, box.x1);
+            //    int y1 = (int)Math.Max(0, box.y1);
+            //    int x2 = (int)Math.Min(width - 1, box.x2);
+            //    int y2 = (int)Math.Min(height - 1, box.y2);
+
+            //    // 跳过无效框
+            //    if (x1 >= x2 || y1 >= y2)
+            //    {
+            //        continue;
+            //    }
+
+            //    // 2. 获取当前框的颜色
+            //    Color color = Color.Parse(box.color);
+            //    Rgb24 boxColor = color.ToPixel<Rgb24>();
+
+            //    // 3. 绘制矩形边框
+            //    int lineWidth = 2;
+            //    DrawRectangle(image, x1, y1, x2, y2, boxColor, lineWidth);
+
+            //    // 4. 绘制标签背景和文字
+            //    string labelText = $"{box.label} {box.score:F2}";
+            //    DrawLabel(image, x1, y1, labelText, boxColor);
+            //}
+
+            //// 将绘制后的图像数据写回rgbFrame
+            //image.CopyPixelDataTo(rgbFrame);
+        }
+        /// <summary>
+        /// 将 #ff0000 格式颜色转为 byte r, byte g, byte b
+        /// </summary>
+        private static void HexToRgb(string hex, out byte r, out byte g, out byte b)
+        {
+            // 去掉 # 号
+            hex = hex.TrimStart('#');
+
+            // 转成整数
+            int color = Convert.ToInt32(hex, 16);
+
+            // 拆分 RGB
+            r = (byte)((color >> 16) & 0xFF);
+            g = (byte)((color >> 8) & 0xFF);
+            b = (byte)(color & 0xFF);
         }
         /// <summary>
         /// 绘制矩形边框

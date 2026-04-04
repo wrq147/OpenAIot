@@ -2,6 +2,7 @@
 #define CONVERT_H
 
 #include <stdint.h>
+typedef uint8_t byte;
 
 #if defined(_WIN32)
 #   define API __declspec(dllexport)
@@ -69,6 +70,8 @@ API int CheckBlockMotion(
     int min_blocks,
     float* out_ratio
 );
+
+API void yuv_render(byte** data, int* yuvLineSizes, int w, int h, int pix_fmt,int x1, int y1, int x2, int y2,byte r, byte g, byte b, const char* label);
 
 #ifdef __cplusplus
 }
