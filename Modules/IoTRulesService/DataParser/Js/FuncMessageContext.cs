@@ -146,7 +146,7 @@ namespace IoTRulesService.DataParser.Js
                 timer.Enabled = false;
                 try
                 {
-                    ac();//调用方法
+                    ac();
                 }
                 catch { }
                 _localVal.Value = 0;

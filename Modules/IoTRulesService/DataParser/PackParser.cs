@@ -505,31 +505,25 @@ namespace IoTRulesService.DataParser
             var newmsg = await this.toRawData(msg, ret).ConfigureAwait(false);
             if (newmsg != null)
             {
-                _provider.GetService<RuleWheelRuner>().PushConcurrentTask(newmsg.DeviceId, async () =>
+                string tnodeguid = GetNodeGuid(msg.DeviceId);
+                if (tnodeguid == null)
                 {
-                    string tnodeguid = GetNodeGuid(msg.DeviceId);
-                    if (tnodeguid == null)
-                    {
-                        return;
-                    }
-                    var bus = _provider.GetService<NatsScope>().Bus;
-                    string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
+                    return;
+                }
+                var bus = _provider.GetService<NatsScope>().Bus;
+                string msgbody = System.Text.Json.JsonSerializer.Serialize(newmsg, JsonMessageSerializerConfig.DefaultOptions);
 
-                    await bus.PublishAsync(new NatsMsg<string>()
-                    {
-                        Subject = "node." + tnodeguid,
-                        Data = msgbody
-                    }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
-                });
+                await bus.PublishAsync(new NatsMsg<string>()
+                {
+                    Subject = "node." + tnodeguid,
+                    Data = msgbody
+                }, DefalutNatsJsonSerializer<string>.Default).ConfigureAwait(false);
             }
             else
             {
                 if (msg is DeviceBindMessage bindMessage)
                 {
-                    _provider.GetService<RuleWheelRuner>().PushConcurrentTask(newmsg.DeviceId, async () =>
-                    {
-                        await this.ConfirmBindReply(bindMessage.ProductId, bindMessage.DeviceId, true, bindMessage.MessageId).ConfigureAwait(false);
-                    });
+                    await this.ConfirmBindReply(bindMessage.ProductId, bindMessage.DeviceId, true, bindMessage.MessageId).ConfigureAwait(false);
                 }
             }
 

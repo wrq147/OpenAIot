@@ -2,6 +2,7 @@
 using ChannelUtility.Buffers;
 using ChannelUtility.Message;
 using ChannelUtility.Tsl;
+using TemplateAction.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -267,7 +268,11 @@ namespace IoTRulesService.DataParser.Js
                     rawdata.prefix = this._prefix;
                     await _client.PublicMessage(rawdata, null);
                 });
-                ac(res.Result);
+                _client.Provider.GetService<RuleWheelRuner>().PushConcurrentTask(_msg.DeviceId, () =>
+                {
+                    ac(res.Result);
+                });
+         
             });
         }
 
