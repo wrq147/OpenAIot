@@ -2,67 +2,25 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid 'a6b03f99308055129315bc597eb1c4ab5db7795b'
-    oldFile: !uuid '8cbdd1680ace845a9b021938c91725555b95fefe'
-  /Channel/GB28181Channel:
-    newFile: !uuid '66825c14dcbed63e10715852c0d96261b7de74de'
-    oldFile: !uuid '726471c892526c087eca5f11ec26db5d83dcb267'
-  /Channel/GB28181Channel/AIDetectorTask.cs:
-    newFile: !uuid 'e8c90c6c5744ede90783aa79e7e64e057d50f17d'
-    oldFile: !uuid '5733bdb79eb166c84c2cad8326d29ef621d957fd'
-  /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '52353d2045d5618ae7f7dba3ae5bda76617a7381'
-    oldFile: !uuid 'bc4eb1aea251e1b4744ebd4cf16931ac0aaa59a5'
-  /Third:
-    newFile: !uuid 'a70d066efed611f88963042096362273d72b8558'
-    oldFile: !uuid '7f9bb2ad2eb8f51809a7447aa6d7528b12d978ad'
-  /Third/ZLMediaCLib:
-    newFile: !uuid 'b8696ab5695cf3ebef409d5623bd7bb5e11ae848'
-    oldFile: !uuid 'f30afe5e3df7703c7f0a959a00f9e80d63fc29bd'
-  /Third/ZLMediaCLib/convert.c:
-    newFile: !uuid 'd957ac8496bb0f405e7b91756d5803a9fe0724d3'
-    oldFile: !uuid 'e6d2f67679246ca01307aa8ef37f797edc00ec01'
-  /Third/ZLMediaCLib/convert.h:
-    newFile: !uuid 'c5023b5e91535e6440bf3c4308aa6129e9f82472'
-    oldFile: !uuid 'af420c20c093686c11fa4fac3e56369ba6b36c77'
-  /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '13f04cd1514d526c79bc77b10b7e06d167b4684d'
-    oldFile: !uuid '15de634f8a62a1f014ca5cdbc7445f31b80f862f'
-  /Third/ZLMediaKit.Autogen/HZK16:
-    newFile: !uuid 'eff886fbc26e3251cc63bca3f4ed56c023cad9b6'
+  /Modules:
+    newFile: !uuid '5e6d8594e2017a07a1bcd8361c85e8548028e3a2'
+    oldFile: !uuid 'e357742bcf5cbfeff437cb064a546911ec1a7955'
+  /Modules/IoTAIService:
+    newFile: !uuid '16f2e5c41bff8b27120bb3347ee06288583c89fe'
+    oldFile: !uuid 'b2b8e1c3d5dd1769ce6176ce1e4bc375dfda0819'
+  /Modules/IoTAIService/AIModel:
+    newFile: !uuid 'a97ee23de977fe17d1d73c4bc09a29b3e51ebfa6'
+    oldFile: !uuid '8a8dc61d07b32d0dbf944d7e8cda87c490a41e9d'
+  /Modules/IoTAIService/AIModel/AIModel.rar:
+    newFile: !uuid '860905a34db64648af7fa964e0ec8909a5070323'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/LibConvert.cs:
-    newFile: !uuid 'da39c9705af57d4f29a2315ba37b05898b5a5ab9'
-    oldFile: !uuid '48532fc7be30a6b372fbc4b74753eb72bcbf7b02'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
-    newFile: !uuid 'd130ae40886afe0b561df089bf125f5aa6381fca'
-    oldFile: !uuid 'efc3e796b1075aef44b4f61463699cc0f89320f0'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
-    newFile: !uuid 'accc494622a7f52ecd0809f26e99d7443a57dc31'
-    oldFile: !uuid 'f8165f2f85d6e1f0a98cedba64d0512194cdfd57'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: !uuid '54010d4e91c39d7cfef193714949dc2b37ce4d42'
-    oldFile: !uuid '223b4d5148884a4c21c75df3810f4d58b271e151'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
-    newFile: !uuid 'dd8c1070e528b60c1629d9272bee3403f29e559f'
-    oldFile: !uuid 'df6699af49873c71362360a8739ca4826d9c18fd'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
-    newFile: !uuid 'ef93f99fcd03b564761570bec089314120f6eea8'
-    oldFile: !uuid 'ddbb2ba34da9fcf7b0ee0d0d3fad0793875a7fff'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libconvert.so:
-    newFile: !uuid 'af7fb7032f695cf98028fa2720505cc736137136'
-    oldFile: !uuid '1f03d096e21bbffd89e77e6a19855c94d5eedfd1'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
-    newFile: !uuid '428baf977d41141e42cf5a817877043a768b4e13'
-    oldFile: !uuid '6142a390640e20da99998e899573e25b4941fa45'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
-    newFile: !uuid '7db320d719d806d5456dae9f298a85b0aac4cf45'
-    oldFile: !uuid '5471b4b12c89382615541bd83b949df07b3fc020'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/convert.dll:
-    newFile: !uuid 'adfcc94f52425585b86444122f39f8ca07241990'
-    oldFile: !uuid '5e6b11dbd4d80f0d998db797d1f56da749cd8c95'
-gitCommitId: !uuid '9186d6535ac7e12c4257c57ed2381c62e3fc34fc'
+  /Modules/IoTAIService/AIModel/YoloFaceS.onnx:
+    newFile: null
+    oldFile: !uuid '039cabd4e06cfa54e4d235d5e4f5285b3dc8d675'
+  /Modules/IoTAIService/AIModel/YoloPoseS.onnx:
+    newFile: null
+    oldFile: !uuid '5aa525615f873c6728410e63f5cbcede58d01a32'
+gitCommitId: !uuid 'f920b23fa8a94d333807f6c6fa3f803d3e09bbe9'
 renames: {
   }
-revisionId: 259
+revisionId: 260
