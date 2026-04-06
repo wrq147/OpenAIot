@@ -1,9 +1,32 @@
 !revision
 branches: {
   }
-fileChange: {
-  }
-gitCommitId: !uuid '66573a465dab0b159f302ff9f12926ff7172b346'
+fileChange:
+  /Modules:
+    newFile: !uuid '5e6d8594e2017a07a1bcd8361c85e8548028e3a2'
+    oldFile: !uuid '7e3f1bcf9d20d49d4cb59abcd73e28762c033672'
+  /Modules/IoTAIService:
+    newFile: !uuid '16f2e5c41bff8b27120bb3347ee06288583c89fe'
+    oldFile: !uuid '3c00de2fb46a88d731fa9f98748cfc13a2e21c68'
+  /Modules/IoTAIService/AIModel:
+    newFile: !uuid 'a97ee23de977fe17d1d73c4bc09a29b3e51ebfa6'
+    oldFile: !uuid 'db540f8e8707e58b19d23ea61ea17117d13eac73'
+  /Modules/IoTAIService/AIModel/AIModel.rar:
+    newFile: !uuid '860905a34db64648af7fa964e0ec8909a5070323'
+    oldFile: null
+  /Modules/IoTAIService/AIModel/MobileCLIP2Vision.onnx:
+    newFile: !uuid '28b75363b3db13183ed3241210a004ab3f3fdc87'
+    oldFile: null
+  /Third:
+    newFile: !uuid 'd5a45c72951c07cb6de164014aa0dc4b463f72a5'
+    oldFile: !uuid '93a7bfb6d8db6b91a534f968cfd92e8aa067b8ef'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid '2b9003589d6eb92e72d4cffa2bc226fb08eaa611'
+    oldFile: !uuid '7de95e9b70e2a0afc126354c9ab9dbe656997327'
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
+    newFile: !uuid '0e36f2cdee5fb26bc4e81d9299e762fc5c858637'
+    oldFile: !uuid 'bdf28182cb95dc8d6e90257a243994deda48a83c'
+gitCommitId: !uuid 'ae07382ffcdc79857a0bdb647be6a4b2e43e30c4'
 renames: {
   }
-revisionId: 264
+revisionId: 265
