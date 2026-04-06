@@ -139,92 +139,85 @@ namespace OnvifChannel
             int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
             int totalSize = alignedLineSize * h;
             byte[] rgb24 = new byte[totalSize];
+            if (context.Swscale == null)
+            {
+                return;
+            }
+
+
+            if (!_videoItems.TryGetValue(context.VideoId, out VideoData item))
+            {
+                return;
+            }
+
+            unsafe
+            {
+                fixed (byte* pRgb = rgb24)
+                {
+                    mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                }
+            }
+            var tmpboxlist = item.BoxList;
+            bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
             try
             {
-                if (context.Swscale == null)
+
+                if (needDraw)
+                {
+                    AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
+                }
+
+                byte[] yuvData;
+                int[] yuvLineSizes;
+                if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
                 {
                     return;
                 }
-                unsafe
+
+                if (yuvLineSizes == null || yuvLineSizes.Length != 3)
                 {
-                    fixed (byte* pRgb = rgb24)
-                    {
-                        mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
-                    }
+                    Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
+                    return;
                 }
 
 
-                if (_videoItems.TryGetValue(context.VideoId, out VideoData item))
+                context.YuvQueue.Enqueue(new YuvFrame
                 {
-                    if (context.Motion == null)
+                    YuvData = yuvData,
+                    LineSizes = yuvLineSizes,
+                    Pts = lpts,
+                    Width = w,
+                    Height = h
+                });
+
+                context.FrameSemaphore.Release();
+
+                // 启动编码线程（只启动一次）
+                if (context.EncodeThread == null)
+                {
+                    context.EncodeThread = new Thread(EncodeLoop)
                     {
-                        context.Motion = new MotionDetector();
-                    }
-
-                    context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
-
-                    var tmpboxlist = item.BoxList;
-                    bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
-                    long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
-                    if (now - context.LastTriggerTime >= item.CoolDownMs)
-                    {
-                        context.LastTriggerTime = now;
-                        // 执行AI检测
-                        var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                        if (isMotionDetected || item.NeedUp || needDraw)
-                        {
-                            AIDetectorTask.Detect(item, w, h, motionRatio, _listener, rgb24);
-                        }
-                    }
-
-                    if (needDraw)
-                    {
-                        AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
-                    }
-
-                    byte[] yuvData;
-                    int[] yuvLineSizes;
-                    if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
-                    {
-                        return;
-                    }
-
-                    if (yuvLineSizes == null || yuvLineSizes.Length != 3)
-                    {
-                        Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
-                        return;
-                    }
-
-
-                    context.YuvQueue.Enqueue(new YuvFrame
-                    {
-                        YuvData = yuvData,
-                        LineSizes = yuvLineSizes,
-                        Pts = lpts,
-                        Width = w,
-                        Height = h
-                    });
-
-                    context.FrameSemaphore.Release();
-
-                    // 启动编码线程（只启动一次）
-                    if (context.EncodeThread == null)
-                    {
-                        context.EncodeThread = new Thread(EncodeLoop)
-                        {
-                            IsBackground = true,
-                            Priority = ThreadPriority.AboveNormal
-                        };
-                        context.EncodeThread.Start(context);
-                    }
-
+                        IsBackground = true,
+                        Priority = ThreadPriority.AboveNormal
+                    };
+                    context.EncodeThread.Start(context);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+            finally
+            {
+                long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+                if (now - context.LastTriggerTime >= item.CoolDownMs)
+                {
+                    context.LastTriggerTime = now;
+                    context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
+                    AIDetectorTask.Detect(item, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
+                }
 
+            }
         }
 
         private void EncodeLoop(object state)
@@ -700,6 +693,7 @@ namespace OnvifChannel
 
     public class FrameContext
     {
+        public ByteArrayPool Pool { get; set; } = new ByteArrayPool();
         public SemaphoreSlim FrameSemaphore { get; set; } = new SemaphoreSlim(0);
         public ConcurrentQueue<YuvFrame> YuvQueue { get; set; } = new ConcurrentQueue<YuvFrame>();
         public Thread EncodeThread { get; set; }
@@ -709,7 +703,7 @@ namespace OnvifChannel
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
-        public MotionDetector Motion { get; set; }
+        public MotionDetector Motion { get; set; } = new MotionDetector();
         // 上次触发时间
         public long LastTriggerTime { get; set; } = 0;
     }

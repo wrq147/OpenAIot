@@ -246,6 +246,7 @@ int CheckBlockMotion(
 }
 
 
+#define CHAR_SCALE 4
 
 #define FMT_YUV420P      0
 #define FMT_YUVJ420P    12
@@ -346,13 +347,44 @@ static void draw_fill(byte* y, byte* u, byte* v, int ys, int us, int w, int h, i
 }
 
 static void draw_cn(byte* y, int ys, int x, int y_pos, byte q, byte w, byte Y) {
+    if (y == NULL || ys <= 0) return;
+
     byte buf[32];
     if (hzk16_get(q, w, buf) != 0) return;
+
+    // 逐行绘制 16x16 汉字（放大版）
     for (int row = 0; row < 16; row++) {
         byte b1 = buf[row * 2];
         byte b2 = buf[row * 2 + 1];
-        for (int i = 0; i < 8; i++) if (b1 & (0x80 >> i)) y[(y_pos + row) * ys + x + i] = Y;
-        for (int i = 0; i < 8; i++) if (b2 & (0x80 >> i)) y[(y_pos + row) * ys + x + 8 + i] = Y;
+
+        // 左边 8 点
+        for (int i = 0; i < 8; i++) {
+            if (b1 & (0x80 >> i)) {
+                // 放大绘制像素块
+                for (int dy = 0; dy < CHAR_SCALE; dy++) {
+                    for (int dx = 0; dx < CHAR_SCALE; dx++) {
+                        int px = x + i * CHAR_SCALE + dx;
+                        int py = y_pos + row * CHAR_SCALE + dy;
+                        if (px >= 0 && px < ys && py >= 0 && py < ys * 16)
+                            y[py * ys + px] = Y;
+                    }
+                }
+            }
+        }
+
+        // 右边 8 点
+        for (int i = 0; i < 8; i++) {
+            if (b2 & (0x80 >> i)) {
+                for (int dy = 0; dy < CHAR_SCALE; dy++) {
+                    for (int dx = 0; dx < CHAR_SCALE; dx++) {
+                        int px = x + (8 + i) * CHAR_SCALE + dx;
+                        int py = y_pos + row * CHAR_SCALE + dy;
+                        if (px >= 0 && px < ys && py >= 0 && py < ys * 16)
+                            y[py * ys + px] = Y;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -362,7 +394,7 @@ static void draw_text(byte* y, int ys, int x, int y_pos, const char* label, byte
     int ox = x;
     for (int i = 0; gb[i] && gb[i + 1]; i += 2) {
         draw_cn(y, ys, ox, y_pos, gb[i], gb[i + 1], Y);
-        ox += 16;
+        ox += 16 * CHAR_SCALE;  // 字间距也放大
     }
 }
 
@@ -390,9 +422,11 @@ void yuv_render(byte** data, int* yuvLineSizes, int w, int h, int pix_fmt,
     // 标签背景与文字
     int tx = x1 + 2;
     int ty = y1 - 22;
-    int bh = 20;
+    if (ty < 0) ty = 0;
+
+    int bh = 20 * CHAR_SCALE;
     int label_len = (int)strlen(label);
-    int bw = 16 * label_len + 8;
+    int bw = 16 * CHAR_SCALE * label_len + 8 * CHAR_SCALE;
 
     draw_fill(y, u, v, ys, us, w, h, pix_fmt, tx, ty, tx + bw, ty + bh, Y, U, V);
     draw_rect(y, u, v, ys, us, w, h, pix_fmt, tx, ty, tx + bw, ty + bh, Y, U, V);

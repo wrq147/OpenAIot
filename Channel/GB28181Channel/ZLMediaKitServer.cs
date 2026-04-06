@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SixLabors.ImageSharp.ColorSpaces;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -128,81 +129,48 @@ namespace GB28181Channel
                 return;
             }
 
+            if (context.Swscale == null)
+            {
+                return;
+            }
+
+            var storage = _provider.GetService<IDeviceStorage>();
+            var device = storage.GetDevice(context.DeviceId);
+
+            if (device.VideoData == null)
+            {
+                return;
+            }
+
             const int pixelSize = 3;
             int rawLineSize = w * pixelSize;
             int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
             int totalSize = alignedLineSize * h;
-            byte[] rgb24 = new byte[totalSize];
+            byte[] rgb24 = context.Pool.Rent(totalSize);
+            fixed (byte* pRgb = rgb24)
+            {
+                mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+            }
+            var tmpboxlist = device.VideoData.BoxList;
+            bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
             try
             {
-                if (context.Swscale == null)
-                {
-                    return;
-                }
-
-                fixed (byte* pRgb = rgb24)
-                {
-                    mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
-                }
-                var storage = _provider.GetService<IDeviceStorage>();
-                var device = storage.GetDevice(context.DeviceId);
-
-                if (context.Motion == null)
-                {
-                    context.Motion = new MotionDetector();
-                }
-                if (device.VideoData == null)
-                {
-                    return;
-                }
-                context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
-                var tmpboxlist = device.VideoData.BoxList;
-                bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
-                long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
-                if (now - context.LastTriggerTime >= device.VideoData.CoolDownMs)
-                {
-                    context.LastTriggerTime = now;
-                    // 执行AI检测
-                    var (isMotionDetected, motionRatio) = context.Motion.IsMotionKeyframe(rgb24, w, h);
-                    if (isMotionDetected || device.VideoData.NeedUp || needDraw)
-                    {
-                        AIDetectorTask.Detect(device.VideoData, w, h, motionRatio, _listener, rgb24);
-                    }
-                }
-
-                IntPtr yuvPtr = mk_transcode.MkGetAvFrameData(avFrame, w, h);
-                IntPtr[] yuvData = mk_transcode.MkDataToArr(yuvPtr);
-                IntPtr lineSizePtr = mk_transcode.MkGetAvFrameLineSize(avFrame);
-                int[] yuvLineSizes = mk_transcode.MkSizePtrToArr(lineSizePtr);
                 if (needDraw)
                 {
-
-                    AIDetectorTask.Draw(yuvPtr, lineSizePtr, pixFmt, w, h, tmpboxlist);
-
-                    //byte[] yuvData;
-                    //if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
-                    //{
-                    //    return;
-                    //}
-
-                    //fixed (byte* pYuv = yuvData)
-                    //{
-                    //    IntPtr[] planes = new IntPtr[3];
-                    //    planes[0] = (IntPtr)pYuv;
-                    //    planes[1] = (IntPtr)(pYuv + w * h);
-                    //    planes[2] = (IntPtr)(pYuv + w * h + (w / 2) * (h / 2));
-                    //}
+                    AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
                 }
-
-
-
+                byte[] yuvData;
+                int[] yuvLineSizes;
+                if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
+                {
+                    return;
+                }
 
                 if (yuvLineSizes == null || yuvLineSizes.Length != 3)
                 {
                     Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
                     return;
                 }
-
 
                 context.YuvQueue.Enqueue(new YuvFrame
                 {
@@ -225,10 +193,22 @@ namespace GB28181Channel
                     };
                     context.EncodeThread.Start(context);
                 }
+
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                long now = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+                if (now - context.LastTriggerTime >= device.VideoData.CoolDownMs)
+                {
+                    context.LastTriggerTime = now;
+                    context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
+                    AIDetectorTask.Detect(device.VideoData, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
+                }
             }
         }
         private void EncodeLoop(object state)
@@ -243,12 +223,23 @@ namespace GB28181Channel
                 {
                     try
                     {
-                        // 真正耗时的调用，放在独立线程
-                        mk_media.MkMediaInputYuv(
-                            context.Media,
-                            frame.YuvData,
-                            frame.LineSizes,
-                            (ulong)frame.Pts);
+                        unsafe
+                        {
+                            fixed (byte* pYuv = frame.YuvData)
+                            {
+                                IntPtr[] planes = new IntPtr[3];
+                                planes[0] = (IntPtr)pYuv;
+                                planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
+                                planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
+
+                                // 真正耗时的调用，放在独立线程
+                                mk_media.MkMediaInputYuv(
+                                    context.Media,
+                                    planes,
+                                    frame.LineSizes,
+                                    (ulong)frame.Pts);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -384,8 +375,7 @@ namespace GB28181Channel
                             {
                                 CallbackHelper.FreeInstancePtr(contextPtr);
                             }
-                            context.FrameSemaphore.Release();
-                            context.EncodeThread = null;
+
                             _ = _server.StopActiveStream(ch.DeviceId, ch.ChannelId);
                         }
 
@@ -730,10 +720,11 @@ namespace GB28181Channel
     }
     public class FrameContext
     {
-        public long LastTriggerTime { get; set; }
+        public ByteArrayPool Pool { get; set; } = new ByteArrayPool();
         public SemaphoreSlim FrameSemaphore { get; set; } = new SemaphoreSlim(0);
         public ConcurrentQueue<YuvFrame> YuvQueue { get; set; } = new ConcurrentQueue<YuvFrame>();
         public Thread EncodeThread { get; set; }
+        public long LastTriggerTime { get; set; }
         public string StreamId { get; set; }
         public bool CanParse { get; set; } = true;
         public MkMediaSourceT SourceMedia { get; set; }
@@ -743,11 +734,11 @@ namespace GB28181Channel
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
-        public MotionDetector Motion { get; set; }
+        public MotionDetector Motion { get; set; } = new MotionDetector();
     }
     public class YuvFrame
     {
-        public IntPtr[] YuvData { get; set; }
+        public byte[] YuvData { get; set; }
         public int[] LineSizes { get; set; }
         public long Pts { get; set; }
         public int Width { get; set; }

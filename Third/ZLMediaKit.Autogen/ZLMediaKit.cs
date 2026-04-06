@@ -5,6 +5,7 @@
 // </auto-generated>
 // ----------------------------------------------------------------------------
 using System;
+using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -9964,7 +9965,7 @@ namespace ZLMediaKit
             internal static extern IntPtr MkGetAvFrameData(IntPtr frame);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_set_av_frame_data", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern void MkSetAvFrameData(IntPtr frame, byte* data, int plane);
+            internal static extern void MkSetAvFrameData(IntPtr frame, IntPtr data, int plane);
 
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_get_av_frame_line_size", CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr MkGetAvFrameLineSize(IntPtr frame);
@@ -10336,14 +10337,15 @@ namespace ZLMediaKit
         }
         public static IntPtr[] MkDataToArr(IntPtr dataPtr)
         {
-            IntPtr[] planes = new IntPtr[3];
-            planes[0] = Marshal.ReadIntPtr(dataPtr, 0 * IntPtr.Size);
-            planes[1] = Marshal.ReadIntPtr(dataPtr, 1 * IntPtr.Size);
-            planes[2] = Marshal.ReadIntPtr(dataPtr, 2 * IntPtr.Size);
-            return planes;
+            IntPtr[] yuvData = new IntPtr[3];
+            yuvData[0] = Marshal.ReadIntPtr(dataPtr, 0 * IntPtr.Size);
+            yuvData[1] = Marshal.ReadIntPtr(dataPtr, 1 * IntPtr.Size);
+            yuvData[2] = Marshal.ReadIntPtr(dataPtr, 2 * IntPtr.Size);
+
+            return yuvData;
         }
 
-        public static void MkSetAvFrameData(global::ZLMediaKit.AVFrame frame, byte* data, int plane)
+        public static void MkSetAvFrameData(global::ZLMediaKit.AVFrame frame, IntPtr data, int plane)
         {
             var __arg0 = frame is null ? IntPtr.Zero : frame.__Instance;
             __Internal.MkSetAvFrameData(__arg0, data, plane);

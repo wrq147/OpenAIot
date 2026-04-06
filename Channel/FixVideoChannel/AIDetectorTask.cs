@@ -16,10 +16,10 @@ namespace FixVideoChannel
         // 静态构造函数：初始化全局字体（仅在类第一次被使用时执行）
         static AIDetectorTask()
         {
-            _globalDefaultFont = GetFontByFamilyName("SimSun", 12) // 宋体（Windows）
-                                    ?? GetFontByFamilyName("PingFang SC", 12) // 苹方（macOS）
-                                    ?? GetFontByFamilyName("Noto Sans CJK SC", 12) // 思源黑体（Linux）
-                                    ?? SystemFonts.Families.FirstOrDefault().CreateFont(12);
+            _globalDefaultFont = GetFontByFamilyName("SimSun", 24) // 宋体（Windows）
+                                    ?? GetFontByFamilyName("PingFang SC", 24) // 苹方（macOS）
+                                    ?? GetFontByFamilyName("Noto Sans CJK SC", 24) // 思源黑体（Linux）
+                                    ?? SystemFonts.Families.FirstOrDefault().CreateFont(24);
         }
 
         /// <summary>
@@ -83,32 +83,48 @@ namespace FixVideoChannel
                 return null;
             }
         }
+
         /// <summary>
         /// AI检测
         /// </summary>
         /// <param name="videoData"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        /// <param name="motionRatio"></param>
         /// <param name="listener"></param>
         /// <param name="data"></param>
-        public static void Detect(VideoData videoData, int width, int height, float motionRatio, IVideoDeviceEventListener listener, byte[] data)
+        /// <param name="needDraw"></param>
+        /// <param name="motion"></param>
+        /// <param name="pool"></param>
+        public static void Detect(VideoData videoData, int width, int height, IVideoDeviceEventListener listener, byte[] data, bool needDraw, MotionDetector motion, ByteArrayPool pool)
         {
             _ = Task.Run(() =>
             {
-                if (listener == null)
+                try
                 {
-                    return;
-                }
+                    var (isMotionDetected, motionRatio) = motion.IsMotionKeyframe(data, width, height);
+                    if (isMotionDetected || videoData.NeedUp || needDraw)
+                    {
+                        if (listener == null)
+                        {
+                            return;
+                        }
 
-                byte[] pressData = FastJpgCompress(data, width, height);
-                List<AIConfigData> configs = null;
-                if (videoData.NeedUp)
-                {
-                    configs = videoData.Configs;
-                    videoData.NeedUp = false;
+                        byte[] pressData = FastJpgCompress(data, width, height);
+                        List<AIConfigData> configs = null;
+                        if (videoData.NeedUp)
+                        {
+                            configs = videoData.Configs;
+                            videoData.NeedUp = false;
+                        }
+                        listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
+                    }
+
                 }
-                listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
+                finally
+                {
+                    pool.Return(data);
+                }
+   
             });
 
         }
