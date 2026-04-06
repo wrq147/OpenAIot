@@ -1,26 +1,9 @@
 !revision
 branches: {
   }
-fileChange:
-  /.gitignore:
-    newFile: !uuid '7ebbb966626bbfa12ce35911385da880ea8fb0e3'
-    oldFile: !uuid '8ecc8bda98d8f3f4da31776b409f83e1bfd91171'
-  /Modules:
-    newFile: !uuid '7e3f1bcf9d20d49d4cb59abcd73e28762c033672'
-    oldFile: !uuid '5e6d8594e2017a07a1bcd8361c85e8548028e3a2'
-  /Modules/IoTAIService:
-    newFile: !uuid '3c00de2fb46a88d731fa9f98748cfc13a2e21c68'
-    oldFile: !uuid '16f2e5c41bff8b27120bb3347ee06288583c89fe'
-  /Modules/IoTAIService/AIModel:
-    newFile: !uuid 'db540f8e8707e58b19d23ea61ea17117d13eac73'
-    oldFile: !uuid 'a97ee23de977fe17d1d73c4bc09a29b3e51ebfa6'
-  /Modules/IoTAIService/AIModel/AIModel.rar:
-    newFile: null
-    oldFile: !uuid '860905a34db64648af7fa964e0ec8909a5070323'
-  /Modules/IoTAIService/AIModel/MobileCLIP2Vision.onnx:
-    newFile: null
-    oldFile: !uuid '28b75363b3db13183ed3241210a004ab3f3fdc87'
-gitCommitId: !uuid '885bfa835b79570833eddaaee7fad6b14d73830a'
+fileChange: {
+  }
+gitCommitId: !uuid '66573a465dab0b159f302ff9f12926ff7172b346'
 renames: {
   }
-revisionId: 263
+revisionId: 264
