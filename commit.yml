@@ -2,25 +2,46 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid '5e6d8594e2017a07a1bcd8361c85e8548028e3a2'
-    oldFile: !uuid 'e357742bcf5cbfeff437cb064a546911ec1a7955'
-  /Modules/IoTAIService:
-    newFile: !uuid '16f2e5c41bff8b27120bb3347ee06288583c89fe'
-    oldFile: !uuid 'b2b8e1c3d5dd1769ce6176ce1e4bc375dfda0819'
-  /Modules/IoTAIService/AIModel:
-    newFile: !uuid 'a97ee23de977fe17d1d73c4bc09a29b3e51ebfa6'
-    oldFile: !uuid '8a8dc61d07b32d0dbf944d7e8cda87c490a41e9d'
-  /Modules/IoTAIService/AIModel/AIModel.rar:
-    newFile: !uuid '860905a34db64648af7fa964e0ec8909a5070323'
+  /Channel:
+    newFile: !uuid 'f7e6f0ee0a35b94a904060b56f0b1b6c20a99214'
+    oldFile: !uuid 'a6b03f99308055129315bc597eb1c4ab5db7795b'
+  /Channel/GB28181Channel:
+    newFile: !uuid 'dbf4aebbee79aba3552732c8e0399d913d35a0a5'
+    oldFile: !uuid '66825c14dcbed63e10715852c0d96261b7de74de'
+  /Channel/GB28181Channel/AIDetectorTask.cs:
+    newFile: !uuid 'e5cfbf8709894487fd4c994d0426d05380981eb5'
+    oldFile: !uuid 'e8c90c6c5744ede90783aa79e7e64e057d50f17d'
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid '38e123a9cdeef546bc94994f470cc7736c53abe8'
+    oldFile: !uuid '52353d2045d5618ae7f7dba3ae5bda76617a7381'
+  /Third:
+    newFile: !uuid 'fb8708553d43cec1b3568e0a5326903de6149416'
+    oldFile: !uuid 'a70d066efed611f88963042096362273d72b8558'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid 'dc99a7e1db5373f7e0f9fb1ce2ab6666279a21e9'
+    oldFile: !uuid '13f04cd1514d526c79bc77b10b7e06d167b4684d'
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
+    newFile: !uuid '0420bc7eb233864f288ee7ad15253f20ab563ef4'
+    oldFile: !uuid 'accc494622a7f52ecd0809f26e99d7443a57dc31'
+  /admin-ui:
+    newFile: !uuid 'a6f488d84de8224dc4260ef51cf0ffd1b5b4eb33'
+    oldFile: !uuid 'e5d88dffd08bbce85ef406e09d546d8ea9bd5448'
+  /admin-ui/src:
+    newFile: !uuid '1566a55167516de7a5ed28564251a66fb80bef70'
+    oldFile: !uuid '4167d0b698a14ecc98fc6bdfcb49e7b290e7d9ba'
+  /admin-ui/src/views:
+    newFile: !uuid '87a707bec588b2878584ad9a29dd912626aac96a'
+    oldFile: !uuid '9b4f85c5513ffb7428f921c1bd080a5bbb9639bb'
+  /admin-ui/src/views/iot:
+    newFile: !uuid 'afc48c6944b540ec2c55dc6f01febcf3bcf92f7b'
+    oldFile: !uuid '9eac5574307604ae82b42044629787f9da0ef6db'
+  /admin-ui/src/views/iot/debug:
+    newFile: !uuid '09bb7303a9462171b4cdf154c187970b55a170d2'
     oldFile: null
-  /Modules/IoTAIService/AIModel/YoloFaceS.onnx:
-    newFile: null
-    oldFile: !uuid '039cabd4e06cfa54e4d235d5e4f5285b3dc8d675'
-  /Modules/IoTAIService/AIModel/YoloPoseS.onnx:
-    newFile: null
-    oldFile: !uuid '5aa525615f873c6728410e63f5cbcede58d01a32'
-gitCommitId: !uuid 'f920b23fa8a94d333807f6c6fa3f803d3e09bbe9'
+  /admin-ui/src/views/iot/debug/console.vue:
+    newFile: !uuid '0e9669f62f854b23a0d63d86116226f591f1b92c'
+    oldFile: null
+gitCommitId: !uuid '01ae88da6faedd982763d1d78472ec809ff53b0d'
 renames: {
   }
-revisionId: 260
+revisionId: 261
