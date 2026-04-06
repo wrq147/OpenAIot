@@ -10341,7 +10341,6 @@ namespace ZLMediaKit
             yuvData[0] = Marshal.ReadIntPtr(dataPtr, 0 * IntPtr.Size);
             yuvData[1] = Marshal.ReadIntPtr(dataPtr, 1 * IntPtr.Size);
             yuvData[2] = Marshal.ReadIntPtr(dataPtr, 2 * IntPtr.Size);
-
             return yuvData;
         }
 
