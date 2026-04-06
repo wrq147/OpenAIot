@@ -2,88 +2,25 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '1df6d9be99237f0ed40b11cd1bd12460a9483b0d'
-    oldFile: !uuid 'f7e6f0ee0a35b94a904060b56f0b1b6c20a99214'
-  /Channel/FixVideoChannel:
-    newFile: !uuid '055503642b28ee2647cd1ea743dd0ad27231609f'
-    oldFile: !uuid '410c2ddc5cf55086e4fc2032c10d45e54b371960'
-  /Channel/FixVideoChannel/AIDetectorTask.cs:
-    newFile: !uuid '23a8250ed6a82006e2df9800dbb3355032026231'
-    oldFile: !uuid '1c37891db5acdaa60c8989ac1a545bcc19d0751b'
-  /Channel/FixVideoChannel/ByteArrayPool.cs:
-    newFile: !uuid 'db9263b90ed363e8b30e1b450f76e501488f4e4b'
-    oldFile: null
-  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '96377c42423793ba4ec458715579ed7d241662f0'
-    oldFile: !uuid '66893f6ecd31fbcb88513fae5fce6ad3430aa6a9'
-  /Channel/GB28181Channel:
-    newFile: !uuid '128ed51bd2fd417a722e1b70423124f91b406248'
-    oldFile: !uuid 'dbf4aebbee79aba3552732c8e0399d913d35a0a5'
-  /Channel/GB28181Channel/AIDetectorTask.cs:
-    newFile: !uuid '59f14f83e20795b41326610d3d61b23b7d9a3074'
-    oldFile: !uuid 'e5cfbf8709894487fd4c994d0426d05380981eb5'
-  /Channel/GB28181Channel/ByteArrayPool.cs:
-    newFile: !uuid 'f93c1f0e9728c766928c5c9d6b8a87dd7dd4a159'
-    oldFile: null
-  /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '583c356830b09cd8e5b237c8ea0127fba1ada287'
-    oldFile: !uuid '38e123a9cdeef546bc94994f470cc7736c53abe8'
-  /Channel/OnvifChannel:
-    newFile: !uuid '25e26ff4970715ea2ae943a1af12589594d49c23'
-    oldFile: !uuid '796f3efadc963c2f7eeec36ec310cc23bddc834e'
-  /Channel/OnvifChannel/AIDetectorTask.cs:
-    newFile: !uuid 'e40b79a922ccdc42197018b11e6af67bc7cfc615'
-    oldFile: !uuid 'c938b3861f1e634277c1e015991070872e491323'
-  /Channel/OnvifChannel/ByteArrayPool.cs:
-    newFile: !uuid '5e56dc08ed76ac70b5f2211c58f956201f58befc'
-    oldFile: null
-  /Channel/OnvifChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '1a1cb11d6aee308e0808e43db069d8809d9cd3d3'
-    oldFile: !uuid 'e08364bff779b8c10aa3f847e042435ee9b42209'
-  /README.md:
-    newFile: !uuid '868ca332deddbe37be74c1174f76c207fdbce2a7'
-    oldFile: null
-  /Third:
-    newFile: !uuid '93a7bfb6d8db6b91a534f968cfd92e8aa067b8ef'
-    oldFile: !uuid 'fb8708553d43cec1b3568e0a5326903de6149416'
-  /Third/ZLMediaCLib:
-    newFile: !uuid '3b3ff760321b0ccc405c7ae447a85e527e4a9030'
-    oldFile: !uuid 'b8696ab5695cf3ebef409d5623bd7bb5e11ae848'
-  /Third/ZLMediaCLib/convert.c:
-    newFile: !uuid 'b3937e572f4a02a8de01e5aae22ca8dc2ddfba29'
-    oldFile: !uuid 'd957ac8496bb0f405e7b91756d5803a9fe0724d3'
-  /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '7de95e9b70e2a0afc126354c9ab9dbe656997327'
-    oldFile: !uuid 'dc99a7e1db5373f7e0f9fb1ce2ab6666279a21e9'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
-    newFile: !uuid 'bdf28182cb95dc8d6e90257a243994deda48a83c'
-    oldFile: !uuid '0420bc7eb233864f288ee7ad15253f20ab563ef4'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: !uuid '0d3f14fbc81ffe3c41d5364a15c5fcc51a25c52a'
-    oldFile: !uuid '54010d4e91c39d7cfef193714949dc2b37ce4d42'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
-    newFile: !uuid 'd2366ac6e65d6363c7661400c361de5d59c3f1a4'
-    oldFile: !uuid 'dd8c1070e528b60c1629d9272bee3403f29e559f'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
-    newFile: !uuid '05533694df13d1d2c25c8b7b6cc04b9e254aa082'
-    oldFile: !uuid 'ef93f99fcd03b564761570bec089314120f6eea8'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libconvert.so:
-    newFile: !uuid '250f1fc76c696d796dab463828a34a366fb0f261'
-    oldFile: !uuid 'af7fb7032f695cf98028fa2720505cc736137136'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
-    newFile: !uuid '0f5d83b3f7648df6380139b7b6f7db9ae694e05c'
-    oldFile: !uuid '428baf977d41141e42cf5a817877043a768b4e13'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
-    newFile: !uuid '9dc29777fd391777292c3711821d9c274aad9c6a'
-    oldFile: !uuid '7db320d719d806d5456dae9f298a85b0aac4cf45'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/convert.dll:
-    newFile: !uuid '4d7195de64a30490b3b5f7075979fb8c19e69263'
-    oldFile: !uuid 'adfcc94f52425585b86444122f39f8ca07241990'
-  /使用说明.md:
+  /.gitignore:
+    newFile: !uuid '7ebbb966626bbfa12ce35911385da880ea8fb0e3'
+    oldFile: !uuid '8ecc8bda98d8f3f4da31776b409f83e1bfd91171'
+  /Modules:
+    newFile: !uuid '7e3f1bcf9d20d49d4cb59abcd73e28762c033672'
+    oldFile: !uuid '5e6d8594e2017a07a1bcd8361c85e8548028e3a2'
+  /Modules/IoTAIService:
+    newFile: !uuid '3c00de2fb46a88d731fa9f98748cfc13a2e21c68'
+    oldFile: !uuid '16f2e5c41bff8b27120bb3347ee06288583c89fe'
+  /Modules/IoTAIService/AIModel:
+    newFile: !uuid 'db540f8e8707e58b19d23ea61ea17117d13eac73'
+    oldFile: !uuid 'a97ee23de977fe17d1d73c4bc09a29b3e51ebfa6'
+  /Modules/IoTAIService/AIModel/AIModel.rar:
     newFile: null
-    oldFile: !uuid '868ca332deddbe37be74c1174f76c207fdbce2a7'
-gitCommitId: !uuid '747852699ad2d84622c20e100044f43bd37b33e5'
-renames:
-  /README.md: /使用说明.md
-revisionId: 262
+    oldFile: !uuid '860905a34db64648af7fa964e0ec8909a5070323'
+  /Modules/IoTAIService/AIModel/MobileCLIP2Vision.onnx:
+    newFile: null
+    oldFile: !uuid '28b75363b3db13183ed3241210a004ab3f3fdc87'
+gitCommitId: !uuid '885bfa835b79570833eddaaee7fad6b14d73830a'
+renames: {
+  }
+revisionId: 263
