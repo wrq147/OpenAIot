@@ -170,13 +170,14 @@ namespace GB28181Channel
                     }
                 }
 
-                IntPtr[] yuvData = mk_transcode.MkGetAvFrameData(avFrame, w, h);
-                int[] yuvLineSizes = mk_transcode.MkGetAvFrameLineSize(avFrame);
-
+                IntPtr yuvPtr = mk_transcode.MkGetAvFrameData(avFrame, w, h);
+                IntPtr[] yuvData = mk_transcode.MkDataToArr(yuvPtr);
+                IntPtr lineSizePtr = mk_transcode.MkGetAvFrameLineSize(avFrame);
+                int[] yuvLineSizes = mk_transcode.MkSizePtrToArr(lineSizePtr);
                 if (needDraw)
                 {
 
-                    AIDetectorTask.Draw(yuvData, yuvLineSizes, pixFmt, w, h, tmpboxlist);
+                    AIDetectorTask.Draw(yuvPtr, lineSizePtr, pixFmt, w, h, tmpboxlist);
 
                     //byte[] yuvData;
                     //if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))

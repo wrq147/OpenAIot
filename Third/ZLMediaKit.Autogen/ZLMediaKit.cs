@@ -10327,11 +10327,15 @@ namespace ZLMediaKit
         }
 
         /// <summary>//////////////////////////////////////////////////////////////////////////////////////////</summary>
-        public static IntPtr[] MkGetAvFrameData(global::ZLMediaKit.AVFrame frame, int w, int h)
+        public static IntPtr MkGetAvFrameData(global::ZLMediaKit.AVFrame frame, int w, int h)
         {
             var __arg0 = frame is null ? IntPtr.Zero : frame.__Instance;
             IntPtr dataPtr = __Internal.MkGetAvFrameData(__arg0);
 
+            return dataPtr;
+        }
+        public static IntPtr[] MkDataToArr(IntPtr dataPtr)
+        {
             IntPtr[] planes = new IntPtr[3];
             planes[0] = Marshal.ReadIntPtr(dataPtr, 0 * IntPtr.Size);
             planes[1] = Marshal.ReadIntPtr(dataPtr, 1 * IntPtr.Size);
@@ -10345,17 +10349,20 @@ namespace ZLMediaKit
             __Internal.MkSetAvFrameData(__arg0, data, plane);
         }
 
-        public static int[] MkGetAvFrameLineSize(global::ZLMediaKit.AVFrame frame)
+        public static IntPtr MkGetAvFrameLineSize(global::ZLMediaKit.AVFrame frame)
         {
             var __arg0 = frame is null ? IntPtr.Zero : frame.__Instance;
             var lineSizePtr = __Internal.MkGetAvFrameLineSize(__arg0);
+            return lineSizePtr;
+        }
+        public static int[] MkSizePtrToArr(IntPtr lineSizePtr)
+        {
             int[] yuvLineSizes = new int[3];
             yuvLineSizes[0] = Marshal.ReadInt32(lineSizePtr, 0 * sizeof(int)); // Y stride
             yuvLineSizes[1] = Marshal.ReadInt32(lineSizePtr, 1 * sizeof(int)); // U stride
             yuvLineSizes[2] = Marshal.ReadInt32(lineSizePtr, 2 * sizeof(int)); // V stride
             return yuvLineSizes;
         }
-
         public static void MkSetAvFrameLineSize(global::ZLMediaKit.AVFrame frame, int line_size, int plane)
         {
             var __arg0 = frame is null ? IntPtr.Zero : frame.__Instance;
