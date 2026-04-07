@@ -109,74 +109,43 @@ namespace GB28181Channel
         {
             _ = Task.Run(() =>
             {
-                try
+                // 执行AI检测
+                var (isMotionDetected, motionRatio) = motion.IsMotionKeyframe(data, width, height);
+                if (isMotionDetected || videoData.NeedUp || needDraw)
                 {
-                    // 执行AI检测
-                    var (isMotionDetected, motionRatio) = motion.IsMotionKeyframe(data, width, height);
-                    if (isMotionDetected || videoData.NeedUp || needDraw)
+                    if (listener == null)
                     {
-                        if (listener == null)
-                        {
-                            return;
-                        }
-                        byte[] pressData = FastJpgCompress(data, width, height);
-                        List<AIConfigData> configs = null;
-                        if (videoData.NeedUp)
-                        {
-                            configs = videoData.Configs;
-                            videoData.NeedUp = false;
-                        }
-                        listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
+                        return;
                     }
+                    byte[] pressData = FastJpgCompress(data, width, height);
+                    List<AIConfigData> configs = null;
+                    if (videoData.NeedUp)
+                    {
+                        configs = videoData.Configs;
+                        videoData.NeedUp = false;
+                    }
+                    listener.OnSendAIDetectRequest(videoData.Item.Id, videoData.Item.PushKey, motionRatio, pressData, width, height, configs, 1);
                 }
-                finally
-                {
-                    pool.Return(data);
-                }
-
 
             });
         }
-        public static void Draw(byte[] rgbFrame, int width, int height, List<BoxItem> boxs)
+        public static void Draw(IntPtr rgbFrame, IntPtr yuvLineSizes, int pixfmt, int width, int height, List<BoxItem> boxs)
         {
             var tmpboxArr = boxs;
             if (tmpboxArr.Count == 0)
             {
                 return;
             }
-
-            using var image = Image.LoadPixelData<Rgb24>(rgbFrame, width, height);
-
-            // 遍历所有检测框
             foreach (var box in tmpboxArr)
             {
-                // 1. 坐标校验与裁剪（防止越界）
                 int x1 = (int)Math.Max(0, box.x1);
                 int y1 = (int)Math.Max(0, box.y1);
                 int x2 = (int)Math.Min(width - 1, box.x2);
                 int y2 = (int)Math.Min(height - 1, box.y2);
 
-                // 跳过无效框
-                if (x1 >= x2 || y1 >= y2)
-                {
-                    continue;
-                }
-
-                // 2. 获取当前框的颜色
-                Color color = Color.Parse(box.color);
-                Rgb24 boxColor = color.ToPixel<Rgb24>();
-
-                // 3. 绘制矩形边框
-                int lineWidth = 2;
-                DrawRectangle(image, x1, y1, x2, y2, boxColor, lineWidth);
-
-                // 4. 绘制标签背景和文字
-                string labelText = $"{box.label} {box.score:F2}";
-                DrawLabel(image, x1, y1, labelText, boxColor);
+                HexToRgb(box.color, out byte r, out byte g, out byte b);
+                LibConvert.yuv_render(rgbFrame, yuvLineSizes, width, height, pixfmt, x1, y1, x2, y2, r, g, b, box.label);
             }
-
-            // 将绘制后的图像数据写回rgbFrame
-            image.CopyPixelDataTo(rgbFrame);
         }
         /// <summary>
         /// 将 #ff0000 格式颜色转为 byte r, byte g, byte b
@@ -194,83 +163,6 @@ namespace GB28181Channel
             g = (byte)((color >> 8) & 0xFF);
             b = (byte)(color & 0xFF);
         }
-        /// <summary>
-        /// 绘制矩形边框
-        /// </summary>
-        private static void DrawRectangle(Image<Rgb24> image, int x1, int y1, int x2, int y2, Rgb24 color, int lineWidth)
-        {
-            int width = image.Width;
-            int height = image.Height;
 
-            // 绘制上边框
-            for (int y = y1; y < y1 + lineWidth && y < height; y++)
-            {
-                for (int x = x1; x <= x2 && x < width; x++)
-                {
-                    image[x, y] = color;
-                }
-            }
-
-            // 绘制下边框
-            for (int y = y2 - lineWidth + 1; y <= y2 && y < height; y++)
-            {
-                for (int x = x1; x <= x2 && x < width; x++)
-                {
-                    image[x, y] = color;
-                }
-            }
-
-            // 绘制左边框
-            for (int x = x1; x < x1 + lineWidth && x < width; x++)
-            {
-                for (int y = y1; y <= y2 && y < height; y++)
-                {
-                    image[x, y] = color;
-                }
-            }
-
-            // 绘制右边框
-            for (int x = x2 - lineWidth + 1; x <= x2 && x < width; x++)
-            {
-                for (int y = y1; y <= y2 && y < height; y++)
-                {
-                    image[x, y] = color;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 绘制标签（背景框+文字）
-        /// </summary>
-        private static void DrawLabel(Image<Rgb24> image, int x, int y, string text, Rgb24 color)
-        {
-            if (string.IsNullOrEmpty(text)) return;
-
-            int width = image.Width;
-            int height = image.Height;
-
-            // 计算文字尺寸（使用全局默认字体）
-            var textOptions = new TextOptions(_globalDefaultFont);
-            var textSize = TextMeasurer.MeasureSize(text, textOptions);
-
-            // 标签内边距
-            int paddingX = 4;
-            int paddingY = 2;
-            int labelWidth = (int)Math.Ceiling(textSize.Width) + 2 * paddingX;
-            int labelHeight = (int)Math.Ceiling(textSize.Height) + 2 * paddingY;
-
-            // 标签坐标（防止越界，向上偏移避免遮挡检测框）
-            int labelX = Math.Max(0, x);
-            int labelY = Math.Max(0, y - labelHeight);
-            int labelX2 = Math.Min(width - 1, labelX + labelWidth);
-            int labelY2 = Math.Min(height - 1, labelY + labelHeight);
-
-            // 绘制标签背景（半透明）
-            var backgroundBrush = new SolidBrush(Color.FromRgb(color.R, color.G, color.B).WithAlpha(128)); // 50%透明度
-            image.Mutate(ctx => ctx.Fill(backgroundBrush, new RectangleF(labelX, labelY, labelX2 - labelX, labelY2 - labelY)));
-
-            // 绘制文字（使用全局白色画刷，替代Brushes.White）
-            image.Mutate(ctx => ctx.DrawText(text, _globalDefaultFont, _whiteBrush, new PointF(labelX + paddingX, labelY + paddingY)));
-        }
     }
 }

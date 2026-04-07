@@ -1,4 +1,5 @@
 ﻿using ChannelUtility.Message;
+using CommunityToolkit.HighPerformance;
 using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Event;
@@ -14,11 +15,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZLMediaKit;
+using ZLMediaKit.Autogen;
 
 namespace GB28181Channel
 {
@@ -142,46 +145,58 @@ namespace GB28181Channel
                 return;
             }
 
-            const int pixelSize = 3;
-            int rawLineSize = w * pixelSize;
-            int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
-            int totalSize = alignedLineSize * h;
-            byte[] rgb24 = context.Pool.Rent(totalSize);
-            fixed (byte* pRgb = rgb24)
-            {
-                mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
-            }
+
             var tmpboxlist = device.VideoData.BoxList;
             bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
             try
             {
+
+
+                int ySize = w * h;
+                int uSize = (w / 2) * (h / 2);
+                int vSize = (w / 2) * (h / 2);
+                int totalSize = ySize + uSize + vSize;
+
+                IntPtr yuvPtr = mk_transcode.MkGetAvFrameData(avFrame);
+                IntPtr yuvLineSizesPtr = mk_transcode.MkGetAvFrameLineSize(avFrame);
+
+                IntPtr[] yuvData = new IntPtr[3];
+                yuvData[0] = Marshal.ReadIntPtr(yuvPtr, 0 * IntPtr.Size);
+                yuvData[1] = Marshal.ReadIntPtr(yuvPtr, 1 * IntPtr.Size);
+                yuvData[2] = Marshal.ReadIntPtr(yuvPtr, 2 * IntPtr.Size);
+
+                // 分配托管数组（拷贝后完全由C#管理）
+                byte[] managedYuvBuffer = context.Pool.Rent(totalSize);
+                // 拷贝数据
+                Marshal.Copy(yuvData[0], managedYuvBuffer, 0, ySize);
+                Marshal.Copy(yuvData[1], managedYuvBuffer, ySize, uSize);
+                Marshal.Copy(yuvData[2], managedYuvBuffer, ySize + uSize, vSize);
+
                 if (needDraw)
                 {
-                    AIDetectorTask.Draw(rgb24, w, h, tmpboxlist);
-                }
-                byte[] yuvData;
-                int[] yuvLineSizes;
-                if (!ZLUtility.ConvertRgb24ToTargetYuv(rgb24, w, h, alignedLineSize, (AVPixelFormat)pixFmt, out yuvData, out yuvLineSizes))
-                {
-                    return;
+                    fixed (byte* p = managedYuvBuffer)
+                    {
+                        byte** ppYuv = stackalloc byte*[3];
+                        ppYuv[0] = p;
+                        ppYuv[1] = p + w * h;
+                        ppYuv[2] = p + w * h + (w / 2) * (h / 2);
+
+                        IntPtr ptr = (IntPtr)p;
+                        AIDetectorTask.Draw((IntPtr)ppYuv, yuvLineSizesPtr, pixFmt, w, h, tmpboxlist);
+                    }
                 }
 
-                if (yuvLineSizes == null || yuvLineSizes.Length != 3)
-                {
-                    Console.WriteLine("行大小数组长度错误，必须为3（Y/U/V）");
-                    return;
-                }
-
+                int[] yuvLineSizes = mk_transcode.MkSizePtrToArr(yuvLineSizesPtr);
                 context.YuvQueue.Enqueue(new YuvFrame
                 {
-                    YuvData = yuvData,
+                    YuvData = managedYuvBuffer,
                     LineSizes = yuvLineSizes,
                     Pts = lpts,
                     Width = w,
                     Height = h
                 });
 
-                context.FrameSemaphore.Release();
+                context.FrameEvent.Set();
 
                 // 启动编码线程（只启动一次）
                 if (context.EncodeThread == null)
@@ -206,6 +221,15 @@ namespace GB28181Channel
                 if (now - context.LastTriggerTime >= device.VideoData.CoolDownMs)
                 {
                     context.LastTriggerTime = now;
+                    const int pixelSize = 3;
+                    int rawLineSize = w * pixelSize;
+                    int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
+                    int totalSize = alignedLineSize * h;
+                    byte[] rgb24 = new byte[totalSize];
+                    fixed (byte* pRgb = rgb24)
+                    {
+                        mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                    }
                     context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
                     AIDetectorTask.Detect(device.VideoData, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
                 }
@@ -216,34 +240,32 @@ namespace GB28181Channel
             var context = (FrameContext)state;
             while (context.CanParse)
             {
-                context.FrameSemaphore.Wait(1000);
-                if (!context.CanParse)
-                    break;
-                if (context.YuvQueue.TryDequeue(out var frame))
+                context.FrameEvent.WaitOne(1000);
+                while (context.YuvQueue.TryDequeue(out var frame))
                 {
                     try
                     {
-                        unsafe
+                        IntPtr[] planes = new IntPtr[3];
+                        fixed (byte* pYuv = frame.YuvData)
                         {
-                            fixed (byte* pYuv = frame.YuvData)
-                            {
-                                IntPtr[] planes = new IntPtr[3];
-                                planes[0] = (IntPtr)pYuv;
-                                planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
-                                planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
-
-                                // 真正耗时的调用，放在独立线程
-                                mk_media.MkMediaInputYuv(
-                                    context.Media,
-                                    planes,
-                                    frame.LineSizes,
-                                    (ulong)frame.Pts);
-                            }
+                            planes[0] = (IntPtr)pYuv;
+                            planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
+                            planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
                         }
+                        // 真正耗时的调用，放在独立线程
+                        mk_media.MkMediaInputYuv(
+                            context.Media,
+                            planes,
+                            frame.LineSizes,
+                            (ulong)frame.Pts);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"编码异常: {ex.Message}");
+                    }
+                    finally
+                    {
+                        context.Pool.Return(frame.YuvData);
                     }
                 }
             }
@@ -375,7 +397,7 @@ namespace GB28181Channel
                             {
                                 CallbackHelper.FreeInstancePtr(contextPtr);
                             }
-
+                            context.FrameEvent.Set();
                             _ = _server.StopActiveStream(ch.DeviceId, ch.ChannelId);
                         }
 
@@ -721,7 +743,7 @@ namespace GB28181Channel
     public class FrameContext
     {
         public ByteArrayPool Pool { get; set; } = new ByteArrayPool();
-        public SemaphoreSlim FrameSemaphore { get; set; } = new SemaphoreSlim(0);
+        public AutoResetEvent FrameEvent { get; set; } = new AutoResetEvent(false);
         public ConcurrentQueue<YuvFrame> YuvQueue { get; set; } = new ConcurrentQueue<YuvFrame>();
         public Thread EncodeThread { get; set; }
         public long LastTriggerTime { get; set; }

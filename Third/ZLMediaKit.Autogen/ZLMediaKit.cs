@@ -10328,7 +10328,7 @@ namespace ZLMediaKit
         }
 
         /// <summary>//////////////////////////////////////////////////////////////////////////////////////////</summary>
-        public static IntPtr MkGetAvFrameData(global::ZLMediaKit.AVFrame frame, int w, int h)
+        public static IntPtr MkGetAvFrameData(global::ZLMediaKit.AVFrame frame)
         {
             var __arg0 = frame is null ? IntPtr.Zero : frame.__Instance;
             IntPtr dataPtr = __Internal.MkGetAvFrameData(__arg0);

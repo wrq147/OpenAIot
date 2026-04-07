@@ -338,13 +338,6 @@ static void draw_rect(byte* y, byte* u, byte* v, int ys, int us, int w, int h, i
     for (i = y1; i <= y2; i++) draw_pt(y, u, v, ys, us, w, h, fmt, x2, i, Y, U, V);
 }
 
-static void draw_fill(byte* y, byte* u, byte* v, int ys, int us, int w, int h, int fmt,
-    int x1, int y1, int x2, int y2, byte Y, byte U, byte V) {
-    int yy, x;
-    for (yy = y1; yy <= y2; yy++)
-        for (x = x1; x <= x2; x++)
-            draw_pt(y, u, v, ys, us, w, h, fmt, x, yy, Y, U, V);
-}
 
 static void draw_cn(byte* y, int ys, int x, int y_pos, byte q, byte w, byte Y) {
     if (y == NULL || ys <= 0) return;
@@ -424,11 +417,6 @@ void yuv_render(byte** data, int* yuvLineSizes, int w, int h, int pix_fmt,
     int ty = y1 - 22;
     if (ty < 0) ty = 0;
 
-    int bh = 20 * CHAR_SCALE;
-    int label_len = (int)strlen(label);
-    int bw = 16 * CHAR_SCALE * label_len + 8 * CHAR_SCALE;
 
-    draw_fill(y, u, v, ys, us, w, h, pix_fmt, tx, ty, tx + bw, ty + bh, Y, U, V);
-    draw_rect(y, u, v, ys, us, w, h, pix_fmt, tx, ty, tx + bw, ty + bh, Y, U, V);
     draw_text(y, ys, tx + 4, ty + 3, label, 235);
 }
