@@ -3,159 +3,151 @@ branches: {
   }
 fileChange:
   /Third:
-    newFile: !uuid '1bf1e36c78c0637b38307e99696477a992b048a2'
-    oldFile: !uuid '3651532300bdaa85a93f929eba71e99dcf8718af'
+    newFile: !uuid 'd6e9bd93eb0fe41109533c83ac1640366911b092'
+    oldFile: !uuid '1bf1e36c78c0637b38307e99696477a992b048a2'
   /Third/ZLMediaKit.Autogen:
-    newFile: !uuid '93066a7a7aef75b9496f5fbbd559085aff35ba08'
-    oldFile: !uuid '6869d78f903f9139609b53143666fb82affac0e3'
-  /Third/ZLMediaKit.Autogen/LibConvert.cs:
-    newFile: !uuid '2586f3c7d1784e07904e5c57e85dd8d3e71fd264'
-    oldFile: !uuid 'da39c9705af57d4f29a2315ba37b05898b5a5ab9'
-  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
-    newFile: !uuid '87a764fc0b61e6fe44c02518f3867e89cb99199b'
-    oldFile: !uuid 'd130ae40886afe0b561df089bf125f5aa6381fca'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
-    newFile: null
-    oldFile: !uuid '967981f0e19fa485830c14af4ffd876586620836'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
-    newFile: null
-    oldFile: !uuid 'a38d4d4efebad29ad41bfd037da6f2b6a2520695'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
-    newFile: null
-    oldFile: !uuid '55e57ca7524b08d27faee70c9bc61f1e9280c7f5'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libconvert.so:
-    newFile: null
-    oldFile: !uuid '5adf5e4f49e2ef4818c8b26077cce0f41eeca918'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libmk_api.so:
-    newFile: null
-    oldFile: !uuid '2230ff4dfe136ecef4ca171a1233275208e829b0'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
-    newFile: null
-    oldFile: !uuid '05895b4bc3813bcaaf127932e212f0cb0960615c'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
-    newFile: null
-    oldFile: !uuid '66b1fc773ee0f3d50d70caa4c9d9fec7a06f6ac4'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avcodec-59.dll:
-    newFile: null
-    oldFile: !uuid 'a0e98ca6b059a5f70794e431b9c282c51c5d2036'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avdevice-59.dll:
-    newFile: null
-    oldFile: !uuid 'f3bb4adf2e718bf1306afd1b1967fe5ddfe3b27f'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avfilter-8.dll:
-    newFile: null
-    oldFile: !uuid '89065f67826576dd7cb80c445792ac25747b4a9f'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avformat-59.dll:
-    newFile: null
-    oldFile: !uuid '387710e8198e05a96d485436051eeb1eb2bbf157'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avutil-57.dll:
-    newFile: null
-    oldFile: !uuid 'bcf29311b8ed174eaf49efc96f47ab30c0dc3dad'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/convert.dll:
-    newFile: null
-    oldFile: !uuid 'f40adea7a7d8511b089dbcf9d0a37cbb425bd194'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/libcrypto-3-x64.dll:
-    newFile: null
-    oldFile: !uuid '9be8d3b2c821bea34d122b0c0e147d8f2256750c'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/libssl-3-x64.dll:
-    newFile: null
-    oldFile: !uuid 'f6d8bdc934f8159f574c4d6af54aff79d71e0713'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/mk_api.dll:
-    newFile: null
-    oldFile: !uuid '24062d7b40749189d743e96fbc1b1aff0fa36316'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/postproc-56.dll:
-    newFile: null
-    oldFile: !uuid 'a0adbbd1d997232bc9be75f1ebf33d51f9c5b4d6'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/srtp2.dll:
-    newFile: null
-    oldFile: !uuid '35ebe5fb9c34c3b226a64e0f217b00615fc9bcf5'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swresample-4.dll:
-    newFile: null
-    oldFile: !uuid '39f5f64ce21534b16ebbabe37e74a8217624b027'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swscale-6.dll:
-    newFile: null
-    oldFile: !uuid 'c4820f81a495913c828e7338046eeeede982ace1'
-  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/x264.dll:
-    newFile: null
-    oldFile: !uuid '91ba8ab52526405d6aa36122bf4a94f7ac21bff4'
+    newFile: !uuid '89f49a067375d6d1722eac634c20de844bdef24c'
+    oldFile: !uuid '93066a7a7aef75b9496f5fbbd559085aff35ba08'
   /Third/ZLMediaKit.Autogen/runtimes:
-    newFile: !uuid '1cf9bacec95c89abf2075d2db1d1dcdf2058c7ee'
-    oldFile: null
+    newFile: !uuid '241832505be7b5f2f86a51296339b0ed59a27762'
+    oldFile: !uuid '1cf9bacec95c89abf2075d2db1d1dcdf2058c7ee'
   /Third/ZLMediaKit.Autogen/runtimes/linux-arm64:
+    newFile: !uuid '959a384fffe391ab79011f2d5d15981b9af8794c'
+    oldFile: !uuid '8c0243e7c007c312e65a8651e9da1206688522ff'
+  /Third/ZLMediaKit.Autogen/runtimes/linux-arm64/libconvert.so:
+    newFile: null
+    oldFile: !uuid '14a4f5573ca8dbdd9369da190ca27f0f79bc0495'
+  /Third/ZLMediaKit.Autogen/runtimes/linux-arm64/native:
     newFile: !uuid '8c0243e7c007c312e65a8651e9da1206688522ff'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/linux-arm64/libconvert.so:
+  /Third/ZLMediaKit.Autogen/runtimes/linux-arm64/native/libconvert.so:
     newFile: !uuid '14a4f5573ca8dbdd9369da190ca27f0f79bc0495'
     oldFile: null
   /Third/ZLMediaKit.Autogen/runtimes/linux-x64:
+    newFile: !uuid '61615835a3a12a7187b333e008e3f6f0d22dc42e'
+    oldFile: !uuid '55e57ca7524b08d27faee70c9bc61f1e9280c7f5'
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libconvert.so:
+    newFile: null
+    oldFile: !uuid '5adf5e4f49e2ef4818c8b26077cce0f41eeca918'
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libmk_api.so:
+    newFile: null
+    oldFile: !uuid '2230ff4dfe136ecef4ca171a1233275208e829b0'
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/native:
     newFile: !uuid '55e57ca7524b08d27faee70c9bc61f1e9280c7f5'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libconvert.so:
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/native/libconvert.so:
     newFile: !uuid '5adf5e4f49e2ef4818c8b26077cce0f41eeca918'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libmk_api.so:
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/native/libmk_api.so:
     newFile: !uuid '2230ff4dfe136ecef4ca171a1233275208e829b0'
     oldFile: null
   /Third/ZLMediaKit.Autogen/runtimes/win-x64:
+    newFile: !uuid 'a3d0e5f14478cac8b3b2c6125d1efa7d402710ce'
+    oldFile: !uuid '66b1fc773ee0f3d50d70caa4c9d9fec7a06f6ac4'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avcodec-59.dll:
+    newFile: null
+    oldFile: !uuid 'a0e98ca6b059a5f70794e431b9c282c51c5d2036'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avdevice-59.dll:
+    newFile: null
+    oldFile: !uuid 'f3bb4adf2e718bf1306afd1b1967fe5ddfe3b27f'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avfilter-8.dll:
+    newFile: null
+    oldFile: !uuid '89065f67826576dd7cb80c445792ac25747b4a9f'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avformat-59.dll:
+    newFile: null
+    oldFile: !uuid '387710e8198e05a96d485436051eeb1eb2bbf157'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avutil-57.dll:
+    newFile: null
+    oldFile: !uuid 'bcf29311b8ed174eaf49efc96f47ab30c0dc3dad'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/convert.dll:
+    newFile: null
+    oldFile: !uuid 'f40adea7a7d8511b089dbcf9d0a37cbb425bd194'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/libcrypto-3-x64.dll:
+    newFile: null
+    oldFile: !uuid '9be8d3b2c821bea34d122b0c0e147d8f2256750c'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/libssl-3-x64.dll:
+    newFile: null
+    oldFile: !uuid 'f6d8bdc934f8159f574c4d6af54aff79d71e0713'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/mk_api.dll:
+    newFile: null
+    oldFile: !uuid '24062d7b40749189d743e96fbc1b1aff0fa36316'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native:
     newFile: !uuid '66b1fc773ee0f3d50d70caa4c9d9fec7a06f6ac4'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avcodec-59.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avcodec-59.dll:
     newFile: !uuid 'a0e98ca6b059a5f70794e431b9c282c51c5d2036'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avdevice-59.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avdevice-59.dll:
     newFile: !uuid 'f3bb4adf2e718bf1306afd1b1967fe5ddfe3b27f'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avfilter-8.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avfilter-8.dll:
     newFile: !uuid '89065f67826576dd7cb80c445792ac25747b4a9f'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avformat-59.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avformat-59.dll:
     newFile: !uuid '387710e8198e05a96d485436051eeb1eb2bbf157'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avutil-57.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avutil-57.dll:
     newFile: !uuid 'bcf29311b8ed174eaf49efc96f47ab30c0dc3dad'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/convert.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/convert.dll:
     newFile: !uuid 'f40adea7a7d8511b089dbcf9d0a37cbb425bd194'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/libcrypto-3-x64.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/libcrypto-3-x64.dll:
     newFile: !uuid '9be8d3b2c821bea34d122b0c0e147d8f2256750c'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/libssl-3-x64.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/libssl-3-x64.dll:
     newFile: !uuid 'f6d8bdc934f8159f574c4d6af54aff79d71e0713'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/mk_api.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/mk_api.dll:
     newFile: !uuid '24062d7b40749189d743e96fbc1b1aff0fa36316'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/postproc-56.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/postproc-56.dll:
     newFile: !uuid 'a0adbbd1d997232bc9be75f1ebf33d51f9c5b4d6'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/srtp2.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/srtp2.dll:
     newFile: !uuid '35ebe5fb9c34c3b226a64e0f217b00615fc9bcf5'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/swresample-4.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/swresample-4.dll:
     newFile: !uuid '39f5f64ce21534b16ebbabe37e74a8217624b027'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/swscale-6.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/swscale-6.dll:
     newFile: !uuid 'c4820f81a495913c828e7338046eeeede982ace1'
     oldFile: null
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/x264.dll:
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/x264.dll:
     newFile: !uuid '91ba8ab52526405d6aa36122bf4a94f7ac21bff4'
     oldFile: null
-gitCommitId: !uuid '7b085b3724e13b60b8eeb3cebd464988544f4266'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/postproc-56.dll:
+    newFile: null
+    oldFile: !uuid 'a0adbbd1d997232bc9be75f1ebf33d51f9c5b4d6'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/srtp2.dll:
+    newFile: null
+    oldFile: !uuid '35ebe5fb9c34c3b226a64e0f217b00615fc9bcf5'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/swresample-4.dll:
+    newFile: null
+    oldFile: !uuid '39f5f64ce21534b16ebbabe37e74a8217624b027'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/swscale-6.dll:
+    newFile: null
+    oldFile: !uuid 'c4820f81a495913c828e7338046eeeede982ace1'
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/x264.dll:
+    newFile: null
+    oldFile: !uuid '91ba8ab52526405d6aa36122bf4a94f7ac21bff4'
+gitCommitId: !uuid '2c80c3b0e97812a348c84736c5f017be76e7e960'
 renames:
-  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libconvert.so: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libconvert.so
-  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libmk_api.so: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libmk_api.so
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avcodec-59.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avcodec-59.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avdevice-59.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avdevice-59.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avfilter-8.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avfilter-8.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avformat-59.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avformat-59.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/avutil-57.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/avutil-57.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/convert.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/convert.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/libcrypto-3-x64.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/libcrypto-3-x64.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/libssl-3-x64.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/libssl-3-x64.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/mk_api.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/mk_api.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/postproc-56.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/postproc-56.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/srtp2.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/srtp2.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/swresample-4.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swresample-4.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/swscale-6.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/swscale-6.dll
-  /Third/ZLMediaKit.Autogen/runtimes/win-x64/x264.dll: /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/x264.dll
-revisionId: 270
+  /Third/ZLMediaKit.Autogen/runtimes/linux-arm64/native/libconvert.so: /Third/ZLMediaKit.Autogen/runtimes/linux-arm64/libconvert.so
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/native/libconvert.so: /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libconvert.so
+  /Third/ZLMediaKit.Autogen/runtimes/linux-x64/native/libmk_api.so: /Third/ZLMediaKit.Autogen/runtimes/linux-x64/libmk_api.so
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avcodec-59.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/avcodec-59.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avdevice-59.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/avdevice-59.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avfilter-8.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/avfilter-8.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avformat-59.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/avformat-59.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/avutil-57.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/avutil-57.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/convert.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/convert.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/libcrypto-3-x64.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/libcrypto-3-x64.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/libssl-3-x64.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/libssl-3-x64.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/mk_api.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/mk_api.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/postproc-56.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/postproc-56.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/srtp2.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/srtp2.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/swresample-4.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/swresample-4.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/swscale-6.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/swscale-6.dll
+  /Third/ZLMediaKit.Autogen/runtimes/win-x64/native/x264.dll: /Third/ZLMediaKit.Autogen/runtimes/win-x64/x264.dll
+revisionId: 271
