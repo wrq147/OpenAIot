@@ -344,6 +344,28 @@ namespace ChannelUtility.Buffers
                 ptr);
         }
 
+        /// <summary>
+        /// 读取 64 位有符号整数（小端）
+        /// </summary>
+        public Int64 ReadInt64LE()
+        {
+            this.NextBitPosition();
+            int ptr = Position + 1;
+            Position += 8;
+            return FastBufferHelper.ReadInt64LE(_buffer, ptr);
+        }
+
+        /// <summary>
+        /// 读取 64 位有符号整数（大端）
+        /// </summary>
+        public Int64 ReadInt64BE()
+        {
+            this.NextBitPosition();
+            int ptr = Position + 1;
+            Position += 8;
+            return FastBufferHelper.ReadInt64BE(_buffer, ptr);
+        }
+     
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _buffer

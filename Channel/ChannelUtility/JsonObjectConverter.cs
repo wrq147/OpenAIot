@@ -97,6 +97,18 @@ namespace ChannelUtility
                 writer.WriteNullValue();
                 return;
             }
+
+            if (value is ExpandoObject expandoObj)
+            {
+                writer.WriteStartObject();
+                foreach (var (key, val) in (IDictionary<string, object?>)expandoObj)
+                {
+                    writer.WritePropertyName(key);
+                    JsonSerializer.Serialize(writer, val, options);
+                }
+                writer.WriteEndObject();
+                return;
+            }
             JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }
     }

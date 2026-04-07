@@ -404,7 +404,31 @@ int offset)
                 (buffer[offset] << 16) |
                 (buffer[offset + 1] << 24));
         }
+        // 64位小端有符号
+        public static long ReadInt64LE(byte[] buffer, int offset)
+        {
+            return (long)buffer[offset]
+                   | (long)buffer[offset + 1] << 8
+                   | (long)buffer[offset + 2] << 16
+                   | (long)buffer[offset + 3] << 24
+                   | (long)buffer[offset + 4] << 32
+                   | (long)buffer[offset + 5] << 40
+                   | (long)buffer[offset + 6] << 48
+                   | (long)buffer[offset + 7] << 56;
+        }
 
+        // 64位大端有符号
+        public static long ReadInt64BE(byte[] buffer, int offset)
+        {
+            return (long)buffer[offset] << 56
+                   | (long)buffer[offset + 1] << 48
+                   | (long)buffer[offset + 2] << 40
+                   | (long)buffer[offset + 3] << 32
+                   | (long)buffer[offset + 4] << 24
+                   | (long)buffer[offset + 5] << 16
+                   | (long)buffer[offset + 6] << 8
+                   | buffer[offset + 7];
+        }
         /// <summary>
         /// Write an <see cref="System.Int32"/> to the given byte array
         /// starting from the specified offset, 

@@ -47,7 +47,7 @@
           </el-form-item>
           <el-form-item :label="inx == 0 ? '字节序' : ''" prop="ByteOrder">
             <el-select v-model="ite.ByteOrder" placeholder="请选择字节序" style="width:160px" @change="byteOrderChange($event,inx)">
-              <el-option v-for="item in ByteOrderList" :key="item.value" :label="item.label" :value="item.value" v-show="(item.value != 'CDAB' && item.value != 'BADC') || ite.NumRegister > 3"></el-option>
+              <el-option v-for="item in ByteOrderList" :key="item.value" :label="item.label" :value="item.value" v-show="(item.value != 'CDAB' && item.value != 'BADC') || ite.NumRegister == '4'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="inx == 0 ? '数据长度' : ''" prop="NumRegister">
@@ -167,6 +167,7 @@ export default {
         { label: "8位", value: "1" },
         { label: "16位", value: "2" },
         { label: "32位", value: "4" },
+        { label: "64位", value: "8" },
       ],
       xuhaoArr:[]
     };

@@ -923,128 +923,141 @@ namespace IoTRulesService.DataParser
                                             body.Reset();
                                             foreach (var prop in matchItem.Items)
                                             {
-                                                if (prop.NumRegister == "b")
+                                                if (!string.IsNullOrEmpty(prop.PropertyCode))
                                                 {
-                                                    int tmpbit = body.ReadBitLE();
-                                                    if (!string.IsNullOrEmpty(prop.PropertyCode))
+                                                    if (!string.IsNullOrEmpty(datamsg.prefix))
                                                     {
-                                                        if (propsDict.ContainsKey(prop.PropertyCode))
+                                                        var prpitem = tsl.properties.Where(x => x.code == prop.PropertyCode).FirstOrDefault();
+                                                        if (prpitem == null)
                                                         {
-                                                            propsDict[prop.PropertyCode] = tmpbit;
+                                                            continue;
+                                                        }
+                                                        if (!string.IsNullOrEmpty(prpitem.prefixcode) && prpitem.prefixcode != datamsg.prefix)
+                                                        {
+                                                            continue;
+                                                        }
+
+
+                                                        if (prop.NumRegister == "b")
+                                                        {
+                                                            int tmpbit = body.ReadBitLE();
+                                                            if (propsDict.ContainsKey(prop.PropertyCode))
+                                                            {
+                                                                propsDict[prop.PropertyCode] = tmpbit;
+                                                            }
+                                                            else
+                                                            {
+                                                                propsDict.Add(prop.PropertyCode, tmpbit);
+                                                            }
                                                         }
                                                         else
                                                         {
-                                                            propsDict.Add(prop.PropertyCode, tmpbit);
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (prop.ByteOrder == "C")
-                                                    {
-                                                        byte[] tmpb = body.ReadBytes(prop.GetRegisterLen());
-                                                        if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                        {
-                                                            if (propsDict.ContainsKey(prop.PropertyCode))
+                                                            if (prop.ByteOrder == "C")
                                                             {
-                                                                propsDict[prop.PropertyCode] = ASCIIEncoding.ASCII.GetString(tmpb);
+                                                                byte[] tmpb = body.ReadBytes(prop.GetRegisterLen());
+                                                                if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                {
+                                                                    propsDict[prop.PropertyCode] = ASCIIEncoding.ASCII.GetString(tmpb);
+                                                                }
+                                                                else
+                                                                {
+                                                                    propsDict.Add(prop.PropertyCode, ASCIIEncoding.ASCII.GetString(tmpb));
+                                                                }
                                                             }
                                                             else
                                                             {
-                                                                propsDict.Add(prop.PropertyCode, ASCIIEncoding.ASCII.GetString(tmpb));
-                                                            }
-
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        int datalen = prop.GetRegisterLen();
-                                                        if (datalen == 1)
-                                                        {
-                                                            byte tmpb = body.ReadByte();
-                                                            if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                            {
-                                                                if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                int datalen = prop.GetRegisterLen();
+                                                                if (datalen == 1)
                                                                 {
-                                                                    propsDict[prop.PropertyCode] = tmpb;
-                                                                }
-                                                                else
-                                                                {
-                                                                    propsDict.Add(prop.PropertyCode, tmpb);
-                                                                }
-
-                                                            }
-                                                        }
-                                                        else if (datalen == 2)
-                                                        {
-                                                            short tmps;
-                                                            if (prop.ByteOrder == "H")
-                                                            {
-                                                                tmps = body.ReadInt16BE();
-                                                            }
-                                                            else
-                                                            {
-                                                                tmps = body.ReadInt16LE();
-                                                            }
-                                                            if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                            {
-                                                                if (propsDict.ContainsKey(prop.PropertyCode))
-                                                                {
-                                                                    propsDict[prop.PropertyCode] = tmps;
-                                                                }
-                                                                else
-                                                                {
-                                                                    propsDict.Add(prop.PropertyCode, tmps);
-                                                                }
-
-                                                            }
-                                                        }
-                                                        else if (datalen == 4)
-                                                        {
-                                                            int tmpi;
-                                                            switch (prop.ByteOrder)
-                                                            {
-                                                                case "L":
-                                                                    tmpi = body.ReadInt32LE();
-                                                                    break;
-                                                                case "CDAB":
-                                                                    tmpi = body.ReadInt32CDAB();
-                                                                    break;
-                                                                case "BADC":
-                                                                    tmpi = body.ReadInt32BADC();
-                                                                    break;
-                                                                default:
-                                                                    tmpi = body.ReadInt32BE();
-                                                                    break;
-                                                            }
-
-                                                            if (!string.IsNullOrEmpty(prop.PropertyCode))
-                                                            {
-                                                                if (!string.IsNullOrEmpty(datamsg.prefix))
-                                                                {
-                                                                    var prpitem = tsl.properties.Where(x => x.code == prop.PropertyCode).FirstOrDefault();
-                                                                    if (prpitem == null)
+                                                                    byte tmpb = body.ReadByte();
+                                                                    if (propsDict.ContainsKey(prop.PropertyCode))
                                                                     {
-                                                                        continue;
+                                                                        propsDict[prop.PropertyCode] = tmpb;
                                                                     }
-                                                                    if (!string.IsNullOrEmpty(prpitem.prefixcode) && prpitem.prefixcode != datamsg.prefix)
+                                                                    else
                                                                     {
-                                                                        continue;
+                                                                        propsDict.Add(prop.PropertyCode, tmpb);
+                                                                    }
+
+                                                                }
+                                                                else if (datalen == 2)
+                                                                {
+                                                                    short tmps;
+                                                                    if (prop.ByteOrder == "H")
+                                                                    {
+                                                                        tmps = body.ReadInt16BE();
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        tmps = body.ReadInt16LE();
+                                                                    }
+                                                                    if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                    {
+                                                                        propsDict[prop.PropertyCode] = tmps;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        propsDict.Add(prop.PropertyCode, tmps);
                                                                     }
                                                                 }
-                                                                if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                else if (datalen == 4)
                                                                 {
-                                                                    propsDict[prop.PropertyCode] = tmpi;
-                                                                }
-                                                                else
-                                                                {
-                                                                    propsDict.Add(prop.PropertyCode, tmpi);
-                                                                }
+                                                                    int tmpi;
+                                                                    switch (prop.ByteOrder)
+                                                                    {
+                                                                        case "L":
+                                                                            tmpi = body.ReadInt32LE();
+                                                                            break;
+                                                                        case "CDAB":
+                                                                            tmpi = body.ReadInt32CDAB();
+                                                                            break;
+                                                                        case "BADC":
+                                                                            tmpi = body.ReadInt32BADC();
+                                                                            break;
+                                                                        default:
+                                                                            tmpi = body.ReadInt32BE();
+                                                                            break;
+                                                                    }
 
+                                                                    if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                    {
+                                                                        propsDict[prop.PropertyCode] = tmpi;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        propsDict.Add(prop.PropertyCode, tmpi);
+                                                                    }
+
+                                                                }
+                                                                else if (datalen == 8)
+                                                                {
+                                                                    long tmpi;
+                                                                    switch (prop.ByteOrder)
+                                                                    {
+                                                                        case "L":
+                                                                            tmpi = body.ReadInt64LE();
+                                                                            break;
+                                                                        default:
+                                                                            tmpi = body.ReadInt64BE();
+                                                                            break;
+                                                                    }
+                                                                    if (propsDict.ContainsKey(prop.PropertyCode))
+                                                                    {
+                                                                        propsDict[prop.PropertyCode] = tmpi;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        propsDict.Add(prop.PropertyCode, tmpi);
+                                                                    }
+
+                                                                }
                                                             }
                                                         }
+
+
                                                     }
                                                 }
+
 
 
                                             }
