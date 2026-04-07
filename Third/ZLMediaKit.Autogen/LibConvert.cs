@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace ZLMediaKit.Autogen
 {
     public unsafe static class LibConvert
     {
-
+     
         // RGB24转NV12
         [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
         public static extern void rgb24_to_nv12(

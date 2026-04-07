@@ -15,84 +15,59 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Libs\**" />
-    <EmbeddedResource Remove="Libs\**" />
-    <None Remove="Libs\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="ZLMediaLibs\Windows\x64\ext-codec.lib" />
-    <None Remove="ZLMediaLibs\Windows\x64\zlmediakit.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="HZK16">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Linux\x64\libmk_api.so">
-		<Link>libmk_api.so</Link>
+    <None Update="runtimes\linux-arm64\libconvert.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	  <None Update="ZLMediaLibs\Linux\x64\libconvert.so">
-		  <Link>libconvert.so</Link>
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-    <None Update="ZLMediaLibs\Windows\x64\avcodec-59.dll">
-		<Link>avcodec-59.dll</Link>
+    <None Update="runtimes\linux-x64\libconvert.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avdevice-59.dll">
-		<Link>avdevice-59.dll</Link>
+    <None Update="runtimes\linux-x64\libmk_api.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avfilter-8.dll">
-		<Link>avfilter-8.dll</Link>
+    <None Update="runtimes\win-x64\avcodec-59.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avformat-59.dll">
-		<Link>avformat-59.dll</Link>
+    <None Update="runtimes\win-x64\avdevice-59.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\avutil-57.dll">
-		<Link>avutil-57.dll</Link>
+    <None Update="runtimes\win-x64\avfilter-8.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\libcrypto-3-x64.dll">
-		<Link>libcrypto-3-x64.dll</Link>
+    <None Update="runtimes\win-x64\avformat-59.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\libssl-3-x64.dll">
-		<Link>libssl-3-x64.dll</Link>
+    <None Update="runtimes\win-x64\avutil-57.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\mk_api.dll">
-		<Link>mk_api.dll</Link>
+    <None Update="runtimes\win-x64\convert.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\postproc-56.dll">
-		<Link>postproc-56.dll</Link>
+    <None Update="runtimes\win-x64\libcrypto-3-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\srtp2.dll">
-		<Link>srtp2.dll</Link>
+    <None Update="runtimes\win-x64\libssl-3-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\swresample-4.dll">
-		<Link>swresample-4.dll</Link>
+    <None Update="runtimes\win-x64\mk_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\swscale-6.dll">
-		<Link>swscale-6.dll</Link>
+    <None Update="runtimes\win-x64\postproc-56.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ZLMediaLibs\Windows\x64\x264.dll">
-		<Link>x264.dll</Link>
+    <None Update="runtimes\win-x64\srtp2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	  <None Update="ZLMediaLibs\Windows\x64\convert.dll">
-		  <Link>convert.dll</Link>
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ZLMediaLibs\Linux\arm\" />
+    <None Update="runtimes\win-x64\swresample-4.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\swscale-6.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\x264.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
