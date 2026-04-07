@@ -2,25 +2,82 @@
 branches: {
   }
 fileChange:
-  /.gitignore:
-    newFile: !uuid '2530e60a1eae6c8d7ac2175e86793283a76eb353'
-    oldFile: !uuid '7ebbb966626bbfa12ce35911385da880ea8fb0e3'
-  /Modules:
-    newFile: !uuid '7e3f1bcf9d20d49d4cb59abcd73e28762c033672'
-    oldFile: !uuid '5e6d8594e2017a07a1bcd8361c85e8548028e3a2'
-  /Modules/IoTAIService:
-    newFile: !uuid '3c00de2fb46a88d731fa9f98748cfc13a2e21c68'
-    oldFile: !uuid '16f2e5c41bff8b27120bb3347ee06288583c89fe'
-  /Modules/IoTAIService/AIModel:
-    newFile: !uuid 'db540f8e8707e58b19d23ea61ea17117d13eac73'
-    oldFile: !uuid 'a97ee23de977fe17d1d73c4bc09a29b3e51ebfa6'
-  /Modules/IoTAIService/AIModel/AIModel.rar:
-    newFile: null
-    oldFile: !uuid '860905a34db64648af7fa964e0ec8909a5070323'
-  /Modules/IoTAIService/AIModel/MobileCLIP2Vision.onnx:
-    newFile: null
-    oldFile: !uuid '28b75363b3db13183ed3241210a004ab3f3fdc87'
-gitCommitId: !uuid 'b2828d117a37332cc3c5d391e3d49c9bece6495a'
+  /Channel:
+    newFile: !uuid '2c42b85093c0da2bb00eae2fcec52c497af7f612'
+    oldFile: !uuid '1df6d9be99237f0ed40b11cd1bd12460a9483b0d'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '2415d9a190fa38524a0ede543be4f96fe927aa9a'
+    oldFile: !uuid '055503642b28ee2647cd1ea743dd0ad27231609f'
+  /Channel/FixVideoChannel/AIDetectorTask.cs:
+    newFile: !uuid 'bd8321a79c70e02faf479c0d264c18dc4e404c6e'
+    oldFile: !uuid '23a8250ed6a82006e2df9800dbb3355032026231'
+  /Channel/FixVideoChannel/ByteArrayPool.cs:
+    newFile: !uuid '10b2a0259c3e9ac6e71946113aa05fe6bb576d77'
+    oldFile: !uuid 'db9263b90ed363e8b30e1b450f76e501488f4e4b'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid 'a035e6f175daa538d7fdc2c2858f03ce2003a2d9'
+    oldFile: !uuid '96377c42423793ba4ec458715579ed7d241662f0'
+  /Channel/GB28181Channel:
+    newFile: !uuid 'a6c2d63a8cdad053d8141b2f2e29f34be112bdf8'
+    oldFile: !uuid '128ed51bd2fd417a722e1b70423124f91b406248'
+  /Channel/GB28181Channel/AIDetectorTask.cs:
+    newFile: !uuid '7e3a6a2f0fa2d9d105b7f68198e6360532f3756d'
+    oldFile: !uuid '59f14f83e20795b41326610d3d61b23b7d9a3074'
+  /Channel/GB28181Channel/ByteArrayPool.cs:
+    newFile: !uuid 'd4d3aae2658fcd5f94db12fcd8f3a6d5c44c402f'
+    oldFile: !uuid 'f93c1f0e9728c766928c5c9d6b8a87dd7dd4a159'
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid 'e09dbc430c8c354f1274ea0b61e9ed2c67624750'
+    oldFile: !uuid '583c356830b09cd8e5b237c8ea0127fba1ada287'
+  /Channel/OnvifChannel:
+    newFile: !uuid '640988d5439daa53e3e3b6346fe6eb27e58b5ed5'
+    oldFile: !uuid '25e26ff4970715ea2ae943a1af12589594d49c23'
+  /Channel/OnvifChannel/AIDetectorTask.cs:
+    newFile: !uuid '5c952eabe6754194f85991efe031a431080d53e2'
+    oldFile: !uuid 'e40b79a922ccdc42197018b11e6af67bc7cfc615'
+  /Channel/OnvifChannel/ByteArrayPool.cs:
+    newFile: !uuid 'df40363d79763d1db3e150b281fb523209c14214'
+    oldFile: !uuid '5e56dc08ed76ac70b5f2211c58f956201f58befc'
+  /Channel/OnvifChannel/ZLMediaKitServer.cs:
+    newFile: !uuid 'ac2dc2c919777214fcab7e585981b0360784e853'
+    oldFile: !uuid '1a1cb11d6aee308e0808e43db069d8809d9cd3d3'
+  /Third:
+    newFile: !uuid '3651532300bdaa85a93f929eba71e99dcf8718af'
+    oldFile: !uuid 'd5a45c72951c07cb6de164014aa0dc4b463f72a5'
+  /Third/ZLMediaCLib:
+    newFile: !uuid '66364c5a7fb43167f8a0149547666bc060f12865'
+    oldFile: !uuid '3b3ff760321b0ccc405c7ae447a85e527e4a9030'
+  /Third/ZLMediaCLib/convert.c:
+    newFile: !uuid 'f2f98d0b250f4ce774a52f13bbc581b2fc40776e'
+    oldFile: !uuid 'b3937e572f4a02a8de01e5aae22ca8dc2ddfba29'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid '6869d78f903f9139609b53143666fb82affac0e3'
+    oldFile: !uuid '2b9003589d6eb92e72d4cffa2bc226fb08eaa611'
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.cs:
+    newFile: !uuid 'be73e7f41229578b7860df597da59873d4c157ce'
+    oldFile: !uuid '0e36f2cdee5fb26bc4e81d9299e762fc5c858637'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid '967981f0e19fa485830c14af4ffd876586620836'
+    oldFile: !uuid '0d3f14fbc81ffe3c41d5364a15c5fcc51a25c52a'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux:
+    newFile: !uuid 'a38d4d4efebad29ad41bfd037da6f2b6a2520695'
+    oldFile: !uuid 'd2366ac6e65d6363c7661400c361de5d59c3f1a4'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64:
+    newFile: !uuid '55e57ca7524b08d27faee70c9bc61f1e9280c7f5'
+    oldFile: !uuid '05533694df13d1d2c25c8b7b6cc04b9e254aa082'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Linux/x64/libconvert.so:
+    newFile: !uuid '5adf5e4f49e2ef4818c8b26077cce0f41eeca918'
+    oldFile: !uuid '250f1fc76c696d796dab463828a34a366fb0f261'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows:
+    newFile: !uuid '05895b4bc3813bcaaf127932e212f0cb0960615c'
+    oldFile: !uuid '0f5d83b3f7648df6380139b7b6f7db9ae694e05c'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64:
+    newFile: !uuid '66b1fc773ee0f3d50d70caa4c9d9fec7a06f6ac4'
+    oldFile: !uuid '9dc29777fd391777292c3711821d9c274aad9c6a'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/Windows/x64/convert.dll:
+    newFile: !uuid 'f40adea7a7d8511b089dbcf9d0a37cbb425bd194'
+    oldFile: !uuid '4d7195de64a30490b3b5f7075979fb8c19e69263'
+gitCommitId: !uuid 'c2b4758b4582af267d2191798e2506985d0d8aec'
 renames: {
   }
-revisionId: 266
+revisionId: 267
