@@ -3,66 +3,18 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '4d33f989a2f212d7a947386ee9e9f346eb5f8718'
-    oldFile: !uuid '2c42b85093c0da2bb00eae2fcec52c497af7f612'
+    newFile: !uuid 'b01a0e8e4427149e315ccdbff50da59e6a52569d'
+    oldFile: !uuid '4d33f989a2f212d7a947386ee9e9f346eb5f8718'
   /Channel/ChannelUtility:
-    newFile: !uuid '20661fb6f84d1c106feaea5029b4ed9afbe88491'
-    oldFile: !uuid '37a7a194922c9d1f76beafda7232457e81b2d2c7'
-  /Channel/ChannelUtility/Buffers:
-    newFile: !uuid '43b3d092b9058d0976bc99232937bd2083d46e0e'
-    oldFile: !uuid '520e23752ce624177326d2513adc9e4427ae975b'
-  /Channel/ChannelUtility/Buffers/FastBufferHelper.cs:
-    newFile: !uuid '53a1b6ba1d5ae1cb9812a15feac33bbdb4dee740'
-    oldFile: !uuid '21dc1f9aaf61f95dd6de706dcf25cc46ff25dc4d'
-  /Channel/ChannelUtility/Buffers/FastReader.cs:
-    newFile: !uuid '8b03c65e29517adeeefabd2e7f6dcae0951719c8'
-    oldFile: !uuid '16ccfc5d4175ed38d130f9e1efeaba067d23cdf9'
-  /Channel/ChannelUtility/JsonObjectConverter.cs:
-    newFile: !uuid '23a1ee3ac35ce69c3fb4220056e3305c85875b04'
-    oldFile: !uuid '0e215875b9ce51acbffe57a2bdcb19ead3648786'
-  /Common:
-    newFile: !uuid '061a9b14043157bc58f34024e9dcb0eacfb850d9'
-    oldFile: !uuid 'f5513c8e7464cad640f983e4a9ba93e79fd73569'
-  /Common/Json:
-    newFile: !uuid '5705fe688d11f9592dc364324e01428c35b3fe13'
-    oldFile: !uuid '50ed90869864a883cc0a03b4b38babd93dadff72'
-  /Common/Json/MyObjectConverter.cs:
-    newFile: !uuid '813af80c98932698574b2f2dfa8f43f642198619'
-    oldFile: !uuid 'f3cd891878b7a13a71ae776a3cc5f66441d495db'
-  /Modules:
-    newFile: !uuid '440a9969832ef37bddc16343875bb2de401bd432'
-    oldFile: !uuid '7e3f1bcf9d20d49d4cb59abcd73e28762c033672'
-  /Modules/IoTRulesService:
-    newFile: !uuid '0410629ef568ab326f74e86bf893de5bda454894'
-    oldFile: !uuid 'b73b38023cb9972d7190d3866d3c1d2973646ff4'
-  /Modules/IoTRulesService/DataParser:
-    newFile: !uuid '7e758f99cc84535d1d82f01cb6fcc6cf8ea4f1b8'
-    oldFile: !uuid '9cee73c858ba1064da7b9515f3fb7c486f522451'
-  /Modules/IoTRulesService/DataParser/PackParser.cs:
-    newFile: !uuid '55630bb30d646429169c61dd016e3b888740cabc'
-    oldFile: !uuid '1f1f22d946ae8bb74bfaf432965875d47900ab94'
-  /admin-ui:
-    newFile: !uuid '6b8810b41c101ae12afdff019142387d727b058b'
-    oldFile: !uuid 'a6f488d84de8224dc4260ef51cf0ffd1b5b4eb33'
-  /admin-ui/src:
-    newFile: !uuid '64c0b539c78b6d10a8a9345983ac573f83b43799'
-    oldFile: !uuid '1566a55167516de7a5ed28564251a66fb80bef70'
-  /admin-ui/src/views:
-    newFile: !uuid '9d28def720026eb60162493e3bec3093a7024e78'
-    oldFile: !uuid '87a707bec588b2878584ad9a29dd912626aac96a'
-  /admin-ui/src/views/iot:
-    newFile: !uuid 'e9912f126b675778a94b5d9caa4fe24d4619ded9'
-    oldFile: !uuid 'afc48c6944b540ec2c55dc6f01febcf3bcf92f7b'
-  /admin-ui/src/views/iot/physicalModel:
-    newFile: !uuid '22f3a5f27d69c53a2c3f62d072091cc8fe7856e4'
-    oldFile: !uuid '9f59c1c885c725bc4bff30860abe05201c77ca9e'
-  /admin-ui/src/views/iot/physicalModel/components:
-    newFile: !uuid '8dfc6943304ecd761941f742da376ec857f1be1d'
-    oldFile: !uuid 'b7d2df78f68e366ed88bfcfceca84f9cb0c62691'
-  /admin-ui/src/views/iot/physicalModel/components/modbusRules.vue:
-    newFile: !uuid 'c24113f3b9550b86d2ee8b4e5ca16b80e394c122'
-    oldFile: !uuid '3990973605ba5c755201445ce97d4ae52573e9b6'
-gitCommitId: !uuid '1b462e1871a6bb59d692cdd7e55f7444787375c8'
+    newFile: !uuid 'a60df89b1f755ccb3b5745f7661ddcee727b148b'
+    oldFile: !uuid '20661fb6f84d1c106feaea5029b4ed9afbe88491'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid 'be3494e7c9ad3490907cf2fb861012369b2c3ac5'
+    oldFile: !uuid 'b53f9502a5c0642da03a121cd88ef30c12596a94'
+  /Channel/ChannelUtility/Tsl/FloatOption.cs:
+    newFile: !uuid '9df75c000862cca17505a4b0a0d3bc1255c98a63'
+    oldFile: !uuid '25a835b22073f1f32533f99f4dbfbb195acf93bb'
+gitCommitId: !uuid '9db5c7f5541be4fd1de59e43b273980f2de605ef'
 renames: {
   }
-revisionId: 268
+revisionId: 269
