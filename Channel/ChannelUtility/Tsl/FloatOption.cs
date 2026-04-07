@@ -53,22 +53,39 @@ namespace ChannelUtility.Tsl
             if (decimals < 1) decimals = 1;
             if (decimals > 8) decimals = 8;
             double val;
-            if (input is string sinput)
+            switch (input)
             {
-                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(sinput);
-                val = BitConverter.ToDouble(bytes);
-            }
-            else if (input is float finput)
-            {
-                val = finput;
-            }
-            else if (input is double dbinput)
-            {
-                val = dbinput;
-            }
-            else
-            {
-                val = Convert.ToDouble(input);
+                case string sinput:
+                    {
+                        byte[] bytes = ASCIIEncoding.ASCII.GetBytes(sinput);
+                        val = BitConverter.ToDouble(bytes);
+                    }
+                    break;
+                case float finput:
+                    {
+                        val = finput;
+                    }
+                    break;
+                case double dbinput:
+                    {
+                        val = dbinput;
+                    }
+                    break;
+                case int iinput:
+                    {
+                        byte[] bytes = BitConverter.GetBytes(iinput);
+                        val = BitConverter.ToSingle(bytes);
+                    }
+                    break;
+                case long linput:
+                    {
+                        byte[] bytes = BitConverter.GetBytes(linput);
+                        val = BitConverter.ToDouble(bytes);
+                    }
+                    break;
+                default:
+                    val = Convert.ToDouble(input);
+                    break;
             }
             val = spacing + val * (multiple == 0 ? 1.0 : multiple);
             val = Math.Min(max, Math.Max(min, val));
