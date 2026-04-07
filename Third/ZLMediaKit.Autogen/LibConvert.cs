@@ -7,7 +7,30 @@ namespace ZLMediaKit.Autogen
 {
     public unsafe static class LibConvert
     {
-     
+        private static readonly string NativeBasePath = Path.Combine("ZLMediaLibs");
+        static LibConvert()
+        {
+
+            string os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "win" : RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "linux" : "osx";
+
+            string arch = RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X86 => "x86",
+                Architecture.X64 => "x64",
+                Architecture.Arm => "arm",
+                Architecture.Arm64 => "arm64",
+                _ => "x64"
+            };
+            string nativeDir = Path.Combine(NativeBasePath, $"{os}-{arch}");
+
+            // 3. 把目录加入 PATH（系统会自动搜索这里）
+            string path = Environment.GetEnvironmentVariable("PATH") ?? "";
+            if (!path.Contains(nativeDir))
+            {
+                Environment.SetEnvironmentVariable("PATH", $"{nativeDir};{path}");
+            }
+        }
+    
         // RGB24转NV12
         [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
         public static extern void rgb24_to_nv12(

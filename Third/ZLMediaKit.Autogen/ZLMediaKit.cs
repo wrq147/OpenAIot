@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 using System;
 using System.Buffers;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -4027,6 +4028,29 @@ namespace ZLMediaKit
 
     public unsafe partial class mk_util
     {
+        private static readonly string NativeBasePath = Path.Combine("ZLMediaLibs");
+        static mk_util()
+        {
+
+            string os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "win" : RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "linux" : "osx";
+
+            string arch = RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X86 => "x86",
+                Architecture.X64 => "x64",
+                Architecture.Arm => "arm",
+                Architecture.Arm64 => "arm64",
+                _ => "x64"
+            };
+            string nativeDir = Path.Combine(NativeBasePath, $"{os}-{arch}");
+
+            // 3. 把目录加入 PATH（系统会自动搜索这里）
+            string path = Environment.GetEnvironmentVariable("PATH") ?? "";
+            if (!path.Contains(nativeDir))
+            {
+                Environment.SetEnvironmentVariable("PATH", $"{nativeDir};{path}");
+            }
+        }
         public partial struct __Internal
         {
             [SuppressUnmanagedCodeSecurity, DllImport("mk_api", EntryPoint = "mk_free", CallingConvention = CallingConvention.Cdecl)]
