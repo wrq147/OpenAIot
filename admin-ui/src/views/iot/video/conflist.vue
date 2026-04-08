@@ -24,48 +24,14 @@
                             </div>
                         </el-row>
 
-                        <el-table v-loading="loading" :data="sourceList" class="data_table" :header-cell-style="cellSty"
+                        <el-table v-loading="loading" :data="configList" class="data_table" :header-cell-style="cellSty"
                             style="width:100%" :fit="true">
-                            <el-table-column label="通讯编码" align="center" width="200" :show-overflow-tooltip="true">
-                                <template slot-scope="scope">
-                                    <el-link @click.stop="handleAdd(scope.row)">{{ scope.row.Id }}</el-link>
-                                </template>
+                            <el-table-column label="策略编号" prop="Id" align="center" width="200">
                             </el-table-column>
-                            <el-table-column label="安装位置" prop="Position" width="260" :show-overflow-tooltip="true" />
-                            <el-table-column label="视频类型" align="center" width="120">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.VideoType == 0">固定地址</span>
-                                    <span v-else-if="scope.row.VideoType == 1">GB28181设备</span>
-                                    <span v-else-if="scope.row.VideoType == 2">通道</span>
-                                    <span v-else-if="scope.row.VideoType==3">Onvif设备</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="视频Key" align="center" prop="VideoKey" width="260"
-                                :show-overflow-tooltip="true" />
-                            <el-table-column label="视频信息">
-                                <template slot-scope="scope">
-                                    <div v-if="scope.row.VideoType == 0">
-                                        <div>推流地址：{{ scope.row.PullAddr }}</div>
-                                    </div>
-                                    <div v-else-if="scope.row.VideoType == 1">
-                                        <div>设备SIP：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
-                                    </div>
-                                    <div v-else-if="scope.row.VideoType == 3">
-                                        <div>设备用户名：{{ scope.row.UserName }},密码：{{ scope.row.UserPwd }}</div>
-                                    </div>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="视频状态" align="center" width="100">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.NodeId!=''">已注册</span>
-                                    <span v-else>未注册</span>
-                                </template>
-                            </el-table-column>
+                            <el-table-column label="策略名称" prop="Name" width="260" />
                             <el-table-column label="操作" align="center" fixed="right" class-name="small-padding"
                                 width="250">
                                 <template slot-scope="scope">
-                                    <el-button type="text" icon="el-icon-video-play"
-                                        @click="handlePlay(scope.row)">播放</el-button>
                                     <el-button type="text" icon="el-icon-edit"
                                         @click="handleAdd(scope.row)">编辑</el-button>
                                     <el-button type="text" icon="el-icon-delete" style="color:red"
@@ -79,23 +45,19 @@
                 </el-col>
             </el-row>
         </div>
-        <!-- 新增/编辑视频源弹窗 -->
-        <addvsource ref="addVideo" @ResetList="getList" />
-        <!-- 视频播放弹窗 -->
-        <play ref="videoPlay" />
+
+        <confadd ref="addConfig" />
     </div>
 </template>
 
 <script>
-import { videoSourceList,removeVideoSource } from "@/api/rules/video";
+import { removeVideoConfig,videoConfigList } from "@/api/rules/video";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
-import addvsource from './addvsource.vue'
-import play from './play.vue'
+import confadd from './confadd.vue'
 
 export default {
     components: {
-        addvsource,
-        play
+        confadd
     },
     mixins: [resizeTableCon],
     data() {
@@ -108,7 +70,7 @@ export default {
                 Key: ''
             },
             total: 0,
-            sourceList: [],
+            configList: [],
         }
     },
     created() {
@@ -117,7 +79,7 @@ export default {
     methods: {
         getList() {
             this.loading = true;
-            videoSourceList(this.queryParams).then(response => {
+            videoConfigList(this.queryParams).then(response => {
                 this.sourceList = response.data.List;
                 this.total = response.data.Total;
                 this.loading = false;
@@ -136,10 +98,10 @@ export default {
         /** 新增按钮操作 */
         handleAdd(data) {
             if (data == '') {
-                this.$refs.addVideo.showDlg(null);
+                this.$refs.addConfig.showDlg(null);
             }
             else {
-                this.$refs.addVideo.showDlg(data.Id);
+                this.$refs.addConfig.showDlg(data.Id);
             }
         },
         /** 删除按钮操作 */
@@ -149,15 +111,12 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                removeVideoSource({ id: row.Id }).then(res => {
+                removeVideoConfig({ id: row.Id }).then(res => {
                     this.$message.success('删除成功!')
                     this.getList()
                 })
             }).catch(() => { })
         },
-        handlePlay(row) {
-            this.$refs.videoPlay.showDlg(row);
-        }
     }
 }
 </script>

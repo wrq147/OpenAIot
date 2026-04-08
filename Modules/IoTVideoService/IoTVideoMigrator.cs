@@ -9,6 +9,7 @@ namespace IoTVideoService
         public override void Up()
         {
             this.Execute.Sql("delete FROM mz_menu where menu_id=4502");
+            this.Execute.Sql("delete FROM mz_menu where menu_id=4503");
             Insert.IntoTable("mz_menu").Row(new
             {
                 menu_id = 4502,
@@ -19,7 +20,7 @@ namespace IoTVideoService
                 component = "iot/video/list",
                 query = string.Empty,
                 is_frame = 0,
-                is_cache = 0,
+                is_cache = 1,
                 menu_type = "C",
                 visible = "0",
                 status = "0",
@@ -40,11 +41,32 @@ namespace IoTVideoService
                 component = "iot/video/recordlist",
                 query = string.Empty,
                 is_frame = 0,
-                is_cache = 0,
+                is_cache = 1,
                 menu_type = "C",
                 visible = "0",
                 status = "0",
                 perms = "/IoTVideoService/Record/ListPage",
+                icon = "haocaiguanli",
+                scope = 0,
+                create_time = DateTime.Now,
+                update_time = DateTime.Now,
+                createId = 0,
+                updateId = 0
+            }).Row(new
+            {
+                menu_id = 4504,
+                menu_name = "视频策略",
+                parent_id = 4000,
+                order_num = 16,
+                path = "video/conflist",
+                component = "iot/video/conflist",
+                query = string.Empty,
+                is_frame = 0,
+                is_cache = 1,
+                menu_type = "C",
+                visible = "0",
+                status = "0",
+                perms = "/IoTVideoService/Conf/ListPage",
                 icon = "haocaiguanli",
                 scope = 0,
                 create_time = DateTime.Now,
@@ -64,10 +86,19 @@ namespace IoTVideoService
 .WithColumn("PullAddr").AsString(255).WithColumnDescription("拉流地址")
 .WithColumn("UserName").AsString(50).Indexed().WithColumnDescription("用户名")
 .WithColumn("UserPwd").AsString(50).WithColumnDescription("密码")
-.WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")
+.WithColumn("ConfigId").AsString(128).Indexed().Nullable().WithColumnDescription("视频策略Id")
 .WithColumn("NodeId").AsString(50).Indexed().WithColumnDescription("服务器节点Id");
 
 
+            Execute.Sql("DROP TABLE IF EXISTS mz_iot_video_config");
+            Create.Table("mz_iot_video_config").WithDescription("视频策略表")
+            .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("策略Id")
+            .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
+            .WithColumn("Name").AsString(50).WithColumnDescription("策略名称")
+            .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务");
+
+
+            Execute.Sql("DROP TABLE IF EXISTS mz_iot_record");
             Create.Table("mz_iot_record").WithDescription("录像计划")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
                 .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
@@ -86,7 +117,7 @@ namespace IoTVideoService
                 .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                 .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
-
+            Execute.Sql("DROP TABLE IF EXISTS mz_iot_recordlog");
             Create.Table("mz_iot_recordlog").WithDescription("录像计划的执行日志")
         .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
         .WithColumn("PlanId").AsString(128).WithColumnDescription("关联录像计划ID")
@@ -108,7 +139,7 @@ namespace IoTVideoService
 .OnColumn("LogType").Ascending()
 .WithOptions().NonClustered();
 
-
+            Execute.Sql("DROP TABLE IF EXISTS mz_iot_record_file");
             Create.Table("mz_iot_record_file").WithDescription("录像播放文件信息")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
                 .WithColumn("FileDate").AsDateTime().WithColumnDescription("记录的日期")
@@ -130,7 +161,7 @@ namespace IoTVideoService
 .WithOptions().NonClustered();
 
 
-
+            Execute.Sql("DROP TABLE IF EXISTS mz_iot_record_key");
             Create.Table("mz_iot_record_key").WithDescription("录像播放文件的关键帧")
                 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("Id")
                 .WithColumn("VideoKey").AsString(128).Indexed().WithColumnDescription("ZLMediaKit的视频Key")

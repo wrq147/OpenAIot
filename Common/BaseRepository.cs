@@ -39,7 +39,7 @@ namespace Common
                 return this.help;
             }
         }
-        public virtual async Task<PageObject<T>> SelectPage(Expression<Func<T, bool>> expression, BaseQueryParam query, string orderby)
+        public virtual async Task<PageObject<T>> SelectPage(Expression<Func<T, bool>> expression, BaseQueryParam query, string orderby, string fields = "")
         {
             string tmporder = query.GetOrderBy(orderby);
             using (DbHelp db = GetUsingDbHelp())
@@ -48,7 +48,7 @@ namespace Common
                 {
                     if (query.showAll)
                     {
-                        var tlist = await new SqlBuilder(db).Query<T>().Where(expression).ToPageAsync(query.pageNum, query.pageSize, tmporder);
+                        var tlist = await new SqlBuilder(db).Query<T>().Where(expression, fields).ToPageAsync(query.pageNum, query.pageSize, tmporder);
                         return new PageObject<T>()
                         {
                             List = tlist,
@@ -58,7 +58,7 @@ namespace Common
                     else
                     {
                         RefAsync<int> total = 0;
-                        var tlist = await new SqlBuilder(db).Query<T>().Where(expression).ToPageAsync(query.pageNum, query.pageSize, total, tmporder);
+                        var tlist = await new SqlBuilder(db).Query<T>().Where(expression, fields).ToPageAsync(query.pageNum, query.pageSize, total, tmporder);
                         return new PageObject<T>()
                         {
                             List = tlist,
@@ -68,7 +68,7 @@ namespace Common
                 }
                 else
                 {
-                    var tlist = await SelectList(expression, tmporder);
+                    var tlist = await SelectList(expression, tmporder, fields);
                     return new PageObject<T>()
                     {
                         List = tlist,
@@ -87,11 +87,11 @@ namespace Common
         /// <param name="total">返回的总数量</param>
         /// <param name="orderby"></param>
         /// <returns></returns>
-        public virtual async Task<List<T>> SelectPage(Expression<Func<T, bool>> expression, int page, int size, RefAsync<int> total, string orderby)
+        public virtual async Task<List<T>> SelectPage(Expression<Func<T, bool>> expression, int page, int size, RefAsync<int> total, string orderby, string fields = "")
         {
             using (DbHelp db = GetUsingDbHelp())
             {
-                return await new SqlBuilder(db).Query<T>().Where(expression).ToPageAsync(page, size, total, orderby);
+                return await new SqlBuilder(db).Query<T>().Where(expression, fields).ToPageAsync(page, size, total, orderby);
             }
         }
         /// <summary>

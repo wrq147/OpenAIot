@@ -1,6 +1,6 @@
 <template>
   <!-- AI配置中心弹窗 -->
-  <el-dialog v-if="visible" title="AI项目配置中心" :visible.sync="visible" width="90%" append-to-body
+  <el-dialog v-if="visible" title="视频策略" :visible.sync="visible" width="90%" append-to-body
     :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog" top="2vh">
     <div class="ai-config-container" v-loading="allloading">
       <!-- 检测间隔 -->
@@ -363,7 +363,7 @@
 
 <script>
 import CollapseText from '@/components/CollapseText/index.vue';
-import { getAIProjectList, getVideoDetail, editVideoSource } from "@/api/rules/video";
+import { getAIProjectList, getVideoConfig, addVideoConfig,editVideoConfig } from "@/api/rules/video";
 import { generateFeature } from "@/api/ai/clip";
 import { drawBoxs } from "@/api/ai/proj";
 export default {
@@ -387,7 +387,7 @@ export default {
       configuredProjects: [],
       allProjects: [],
       configForm: { "MotionRatio": 0.001, "CoolDownMs": 300, "Tasks": [] },
-      projectId: null,
+      configId: null,
       paramConfigDialog: {
         clipmode: 'text',
         clipText: '',
@@ -436,7 +436,7 @@ export default {
   },
   methods: {
     async showDlg(id) {
-      this.projectId = id;
+      this.configId = id;
       this.visible = true;
       this.allloading = true;
       await this.initData(id);
@@ -604,7 +604,7 @@ export default {
           return rest;
         });
         this.configForm.Tasks = submitData;
-        await editVideoSource({ "Id": this.projectId, "AITasks": JSON.stringify(this.configForm) })
+        await editVideoSource({ "Id": this.configId, "AITasks": JSON.stringify(this.configForm) })
         this.$message.success({
           message: '参数配置保存成功！',
           duration: 1500

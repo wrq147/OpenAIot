@@ -46,7 +46,6 @@ namespace IoTVideoService.Business
             var snowflake = _provider.GetService<SnowflakeHelper>();
             data.OrgId = user.OrgId;
             data.NodeId = string.Empty;
-            data.AITasks ??= string.Empty;
             data.UserName ??= string.Empty;
             data.UserPwd ??= string.Empty;
 
@@ -130,15 +129,15 @@ namespace IoTVideoService.Business
                     candownVideoItem = true;
                 }
 
-                if (data.AITasks != null && old.AITasks != data.AITasks)
+                if (data.ConfigId != null && old.ConfigId != data.ConfigId)
                 {
-                    old.AITasks = data.AITasks;
+                    old.ConfigId = data.ConfigId;
                     candownVideoItem = true;
                 }
 
                 if (candownVideoItem)
                 {
-                    await DownUpVideoItemMessage(old.NodeId, old);
+                    await DownUpVideoItemMessage(old.NodeId, old, await _GetAIData(old.ConfigId));
                 }
             }
             return BusResponse<int>.Success(await videoSourceDAL.Update(data));
@@ -211,7 +210,7 @@ namespace IoTVideoService.Business
             }
         }
 
-        private async Task DownUpVideoItemMessage(string nodeId, MZ_VideoSource source)
+        private async Task DownUpVideoItemMessage(string nodeId, MZ_VideoSource source, string aidata)
         {
             VideoCaptureItem cpitem = new VideoCaptureItem();
             cpitem.Id = source.Id;
@@ -220,7 +219,7 @@ namespace IoTVideoService.Business
             cpitem.UserName = source.UserName;
             cpitem.Password = source.UserPwd;
             AIConfig aiConfig;
-            if (string.IsNullOrEmpty(source.AITasks))
+            if (string.IsNullOrEmpty(aidata))
             {
                 aiConfig = new AIConfig();
                 aiConfig.MotionRatio = 0.08f;
@@ -229,7 +228,7 @@ namespace IoTVideoService.Business
             }
             else
             {
-                aiConfig = System.Text.Json.JsonSerializer.Deserialize<AIConfig>(source.AITasks, MyDefaultTextJsonConfig.DefaultOptions);
+                aiConfig = System.Text.Json.JsonSerializer.Deserialize<AIConfig>(aidata, MyDefaultTextJsonConfig.DefaultOptions);
             }
 
             if (aiConfig != null)
@@ -331,7 +330,6 @@ namespace IoTVideoService.Business
                 videoSource.PullAddr = string.Empty;
                 videoSource.UserName = userName;
                 videoSource.UserPwd = string.Empty;
-                videoSource.AITasks = string.Empty;
                 videoSource.NodeId = nodeId;
                 channelSources.Add(videoSource);
             }
@@ -357,7 +355,19 @@ namespace IoTVideoService.Business
             }
         }
 
-
+        private async Task<string> _GetAIData(string configId)
+        {
+            string aidata = string.Empty;
+            if (!string.IsNullOrEmpty(configId))
+            {
+                var configData = await _provider.GetService<VideoConfigDAL>().Select(configId);
+                if (configData != null)
+                {
+                    aidata = configData.AITasks;
+                }
+            }
+            return aidata;
+        }
         public virtual async Task CollectVideo(MediaNotFoundMessage msg)
         {
             var videoSourceDAL = _provider.GetService<VideoSourceDAL>();
@@ -375,7 +385,7 @@ namespace IoTVideoService.Business
                     tsource.Id = titem.Id;
                     await videoSourceDAL.Update(tsource);
 
-                    await DownUpVideoItemMessage(msg.DeviceId, titem);
+                    await DownUpVideoItemMessage(msg.DeviceId, titem, await _GetAIData(titem.ConfigId));
                 }
             }
             else if (msg.VideoType == 1)
@@ -387,7 +397,8 @@ namespace IoTVideoService.Business
                     tsource.NodeId = msg.DeviceId;
                     tsource.Id = tlist[0].Id;
                     await videoSourceDAL.Update(tsource);
-                    await DownUpVideoItemMessage(msg.DeviceId, tlist[0]);
+
+                    await DownUpVideoItemMessage(msg.DeviceId, tlist[0], await _GetAIData(tlist[0].ConfigId));
                 }
             }
             else if (msg.VideoType == 3)
@@ -401,7 +412,7 @@ namespace IoTVideoService.Business
                     tsource.Id = titem.Id;
                     await videoSourceDAL.Update(tsource);
 
-                    await DownUpVideoItemMessage(msg.DeviceId, titem);
+                    await DownUpVideoItemMessage(msg.DeviceId, titem, await _GetAIData(titem.ConfigId));
                 }
             }
             else

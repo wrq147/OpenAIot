@@ -5,6 +5,13 @@
       <el-form-item label="安装位置" prop="Position">
         <el-input v-model="sourceForm.Position" placeholder="请输入安装位置" />
       </el-form-item>
+      <el-form-item label="视频策略" prop="ConfigId">
+        <el-select v-model="sourceForm.ConfigId" filterable remote placeholder="请选择视频策略"
+          :remote-method="configRemoteMethod" :loading="configloading">
+          <el-option v-for="item in configOptions" :key="item.Id" :label="item.Name" :value="item.Id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="视频源类型">
         <el-radio-group :disabled="formId != null" v-model="sourceForm.VideoType">
           <el-radio :label="0">固定地址</el-radio>
@@ -47,7 +54,7 @@
   </el-dialog>
 </template>
 <script>
-import { addVideoSource, editVideoSource, getVideoDetail } from "@/api/rules/video";
+import { addVideoSource, editVideoSource, getVideoDetail, videoConfigList } from "@/api/rules/video";
 export default {
   data() {
     return {
@@ -61,18 +68,22 @@ export default {
           { required: true, message: "请输入视频源位置", trigger: "blur" },
         ]
       },
-      formId: null
+      formId: null,
+      configloading: false,
+      configOptions: []
     }
   },
   methods: {
     showDlg(tid) {
       this.formId = tid;
       this.dialogFlag = true;
+      this.configRemoteMethod("");
       if (this.formId == null) {
         this.title = "新增视频源";
         this.sourceForm = {
           Id: null,
           Position: '',
+          ConfigId: '',
           VideoType: 0,
           VideoKey: '',
           PullAddr: '',
@@ -85,6 +96,7 @@ export default {
           this.sourceForm = {
             id: tid,
             Position: res.data.Position,
+            ConfigId: res.data.ConfigId,
             VideoType: res.data.VideoType,
             VideoKey: res.data.VideoKey,
             PullAddr: res.data.PullAddr,
@@ -115,6 +127,13 @@ export default {
     },
     cancel() {
       this.dialogFlag = false;
+    },
+    async configRemoteMethod(query) {
+      this.configloading = true;
+      let res = await videoConfigList({ pageNum: 1, pageSize: 50, Key: query });
+      this.configOptions = res.data;
+      this.configOptions.push({"Name":"暂无策略","Id":""})
+      this.configloading = false;
     }
   }
 }

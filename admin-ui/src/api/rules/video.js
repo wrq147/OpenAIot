@@ -82,3 +82,44 @@ export function controlPTZ(data) {
         data: data
     })
 }
+
+
+export function videoConfigList(query) {
+    return request({
+        url: '/IoTVideoService/Conf/ListPage',
+        method: 'get',
+        params: query
+    })
+}
+
+export function addVideoConfig(data) {
+    return request({
+        url: '/IoTVideoService/Conf/Add',
+        method: 'post',
+        data: data
+    })
+}
+
+export function editVideoConfig(data) {
+    return request({
+        url: '/IoTVideoService/Conf/Edit',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getVideoConfig(query) {
+    return request({
+        url: '/IoTVideoService/Conf/Info',
+        method: 'get',
+        params: query
+    })
+}
+
+export function removeVideoConfig(query) {
+    return request({
+        url: '/IoTVideoService/Conf/Remove',
+        method: 'get',
+        params: query
+    })
+}

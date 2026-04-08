@@ -44,9 +44,9 @@ namespace IoTVideoService.Models
         /// </summary>
         public string UserPwd { get; set; }
         /// <summary>
-        /// AI检测任务
+        /// 视频策略Id
         /// </summary>
-        public string AITasks { get; set; }
+        public string ConfigId { get; set; }
         /// <summary>
         /// 服务器节点Id
         /// </summary>
