@@ -21,7 +21,7 @@ namespace GB28181Channel
         private readonly Timer _cleanTimer;
         private const int ReserveExtra = 10;
         private const int MinRetain = 2;
-        private static readonly TimeSpan CleanInterval = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan CleanInterval = TimeSpan.FromSeconds(10);
 
         public ByteArrayPool()
         {

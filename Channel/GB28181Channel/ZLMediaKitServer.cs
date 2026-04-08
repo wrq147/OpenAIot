@@ -140,7 +140,7 @@ namespace GB28181Channel
             var storage = _provider.GetService<IDeviceStorage>();
             var device = storage.GetDevice(context.DeviceId);
 
-            if (device.VideoData == null)
+            if (device == null || device.VideoData == null)
             {
                 return;
             }
