@@ -101,18 +101,7 @@ namespace OnvifChannel
             }
             try
             {
-                if (_videoItems.TryGetValue(context.VideoId, out VideoData item))
-                {
-                    if (item.Configs != null && item.Configs.Count > 0 && context.VideoDecoder != null)
-                    {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
-                        return;
-                    }
-                }
-                if (context.Media != null)
-                {
-                    mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                }
+                mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
             }
             catch (Exception e)
             {
@@ -216,21 +205,26 @@ namespace OnvifChannel
                 if (now - context.LastTriggerTime >= item.CoolDownMs)
                 {
                     context.LastTriggerTime = now;
-                    const int pixelSize = 3;
-                    int rawLineSize = w * pixelSize;
-                    int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
-                    int totalSize = alignedLineSize * h;
-                    byte[] rgb24 = new byte[totalSize];
 
-                    unsafe
+                    if (item.Configs != null && item.Configs.Count > 0)
                     {
-                        fixed (byte* pRgb = rgb24)
+                        const int pixelSize = 3;
+                        int rawLineSize = w * pixelSize;
+                        int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
+                        int totalSize = alignedLineSize * h;
+                        byte[] rgb24 = new byte[totalSize];
+
+                        unsafe
                         {
-                            mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                            fixed (byte* pRgb = rgb24)
+                            {
+                                mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                            }
                         }
+                        context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
+                        AIDetectorTask.Detect(item, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
                     }
-                    context.Motion.MotionBlockRatioThreshold = item.MotionRatio;
-                    AIDetectorTask.Detect(item, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
+
                 }
 
             }

@@ -1,4 +1,5 @@
-﻿using MyAccess.DB.Attr;
+﻿using Common.Share;
+using MyAccess.DB.Attr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace IoTVideoService.Models
     /// 视频策略
     /// </summary>
     [TableName("mz_iot_video_config")]
-    public class MZ_IotVideoConfig
+    public class MZ_IotVideoConfig : BaseEntity
     {
         /// <summary>
         /// 编号

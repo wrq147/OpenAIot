@@ -84,7 +84,7 @@
             数据库仓储
             </summary>
         </member>
-        <member name="M:Common.BaseRepository`1.SelectPage(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,MyAccess.Core.RefAsync{System.Int32},System.String)">
+        <member name="M:Common.BaseRepository`1.SelectPage(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,MyAccess.Core.RefAsync{System.Int32},System.String,System.String)">
             <summary>
             分页（返回全部数量）
             </summary>

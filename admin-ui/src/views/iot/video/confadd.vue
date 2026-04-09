@@ -3,6 +3,10 @@
   <el-dialog v-if="visible" title="视频策略" :visible.sync="visible" width="90%" append-to-body
     :close-on-click-modal="false" :destroy-on-close="true" class="ai-config-dialog" top="2vh">
     <div class="ai-config-container" v-loading="allloading">
+      <div class="config-name-row">
+        <span class="config-label">策略名称：</span>
+        <el-input v-model="configName" placeholder="请输入策略名称" size="small" class="config-name-input" />
+      </div>
       <!-- 检测间隔 -->
       <div class="detection-config-card">
         <div class="config-card-header">
@@ -363,7 +367,7 @@
 
 <script>
 import CollapseText from '@/components/CollapseText/index.vue';
-import { getAIProjectList, getVideoConfig, addVideoConfig,editVideoConfig } from "@/api/rules/video";
+import { getAIProjectList, getVideoConfig, addVideoConfig, editVideoConfig } from "@/api/rules/video";
 import { generateFeature } from "@/api/ai/clip";
 import { drawBoxs } from "@/api/ai/proj";
 export default {
@@ -386,6 +390,7 @@ export default {
       // 已配置项目列表
       configuredProjects: [],
       allProjects: [],
+      configName: "",
       configForm: { "MotionRatio": 0.001, "CoolDownMs": 300, "Tasks": [] },
       configId: null,
       paramConfigDialog: {
@@ -457,27 +462,31 @@ export default {
       }
       this.allProjects = tmparr;
       // 初始化已配置项
-      let cres = await getVideoDetail({ id: id });
-      let configarr = [];
-      if (cres.data.AITasks != null && cres.data.AITasks != "") {
-        this.configForm = JSON.parse(cres.data.AITasks);
-      }
-      if (this.configForm.Tasks.length > 0) {
-        for (let j = 0; j < this.configForm.Tasks.length; j++) {
-          let x = this.configForm.Tasks[j];
-          let prj = this.allProjects.find(item => item.Code == x.Code);
-          if (prj == null) {
-            continue;
-          }
-          x["Name"] = prj.Name;
-          x["Remark"] = prj.Remark;
-          x["ParamList"] = prj.ParamList || [];
-          // 初始化参数值
-          x["paramValues"] = x.paramValues || this.initParamValues(x["ParamList"]);
-          configarr.push(x);
+      if (id != null) {
+        let cres = await getVideoConfig({ id: id });
+        this.configName = cres.data.Name;
+        let configarr = [];
+        if (cres.data.AITasks != null && cres.data.AITasks != "") {
+          this.configForm = JSON.parse(cres.data.AITasks);
         }
+        if (this.configForm.Tasks.length > 0) {
+          for (let j = 0; j < this.configForm.Tasks.length; j++) {
+            let x = this.configForm.Tasks[j];
+            let prj = this.allProjects.find(item => item.Code == x.Code);
+            if (prj == null) {
+              continue;
+            }
+            x["Name"] = prj.Name;
+            x["Remark"] = prj.Remark;
+            x["ParamList"] = prj.ParamList || [];
+            // 初始化参数值
+            x["paramValues"] = x.paramValues || this.initParamValues(x["ParamList"]);
+            configarr.push(x);
+          }
+        }
+        this.configuredProjects = configarr;
       }
-      this.configuredProjects = configarr;
+
       // 重置状态
       this.selectedProjects = []
       this.optionalSearchText = ''
@@ -604,13 +613,19 @@ export default {
           return rest;
         });
         this.configForm.Tasks = submitData;
-        await editVideoSource({ "Id": this.configId, "AITasks": JSON.stringify(this.configForm) })
+        if (this.configId == null) {
+          await addVideoConfig({ "Name": this.configName, "AITasks": JSON.stringify(this.configForm) });
+        }
+        else {
+          await editVideoConfig({ "Id": this.configId, "Name": this.configName, "AITasks": JSON.stringify(this.configForm) })
+        }
         this.$message.success({
           message: '参数配置保存成功！',
           duration: 1500
         })
         this.visible = false
         this.confirmLoading = false
+        this.$emit("Save");
       } catch (error) {
         this.$message.error('参数配置保存失败，请重试！')
         this.confirmLoading = false
@@ -1175,12 +1190,34 @@ export default {
   flex-direction: column;
 }
 
+::v-deep .el-dialog__body {
+  padding-top: 10px;
+}
+
 /* 全局容器 */
 .ai-config-container {
   background-color: #f5f7fa;
   height: calc(85vh - 60px);
   display: flex;
   flex-direction: column;
+}
+
+.config-name-row {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  margin-top: 20px;
+}
+
+.config-label {
+  font-size: 14px;
+  color: #333;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.config-name-input {
+  width: 420px;
 }
 
 /* 检测参数配置 */

@@ -4,6 +4,41 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="M:IoTVideoService.Controller.Conf.ListPage(IoTVideoService.Models.In_VideoConfigPage)">
+            <summary>
+            获取策略分页列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Conf.Info(System.String)">
+            <summary>
+            获取指定策略信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Conf.Add(IoTVideoService.Models.MZ_IotVideoConfig)">
+            <summary>
+            添加策略
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Conf.Edit(IoTVideoService.Models.MZ_IotVideoConfig)">
+            <summary>
+            编辑策略
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTVideoService.Controller.Conf.Remove(System.String)">
+            <summary>
+            删除策略
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTVideoService.Controller.HttpSync.CallAction(TemplateAction.Core.TAAction,System.Object[])">
             <summary>
             校验开发者权限
@@ -456,6 +491,31 @@
             执行时间
             </summary>
         </member>
+        <member name="T:IoTVideoService.Models.MZ_IotVideoConfig">
+            <summary>
+            视频策略
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotVideoConfig.Id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotVideoConfig.OrgId">
+            <summary>
+            所属组织ID
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotVideoConfig.Name">
+            <summary>
+            策略名称
+            </summary>
+        </member>
+        <member name="P:IoTVideoService.Models.MZ_IotVideoConfig.AITasks">
+            <summary>
+            AI检测任务
+            </summary>
+        </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.Id">
             <summary>
             视频源Id
@@ -496,9 +556,9 @@
             注册密码
             </summary>
         </member>
-        <member name="P:IoTVideoService.Models.MZ_VideoSource.AITasks">
+        <member name="P:IoTVideoService.Models.MZ_VideoSource.ConfigId">
             <summary>
-            AI检测任务
+            视频策略Id
             </summary>
         </member>
         <member name="P:IoTVideoService.Models.MZ_VideoSource.NodeId">

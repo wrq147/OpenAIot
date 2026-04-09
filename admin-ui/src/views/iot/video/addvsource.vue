@@ -6,7 +6,7 @@
         <el-input v-model="sourceForm.Position" placeholder="请输入安装位置" />
       </el-form-item>
       <el-form-item label="视频策略" prop="ConfigId">
-        <el-select v-model="sourceForm.ConfigId" filterable remote placeholder="请选择视频策略"
+        <el-select style="width:320px;" v-model="sourceForm.ConfigId" filterable remote placeholder="请选择视频策略"
           :remote-method="configRemoteMethod" :loading="configloading">
           <el-option v-for="item in configOptions" :key="item.Id" :label="item.Name" :value="item.Id">
           </el-option>
@@ -131,7 +131,7 @@ export default {
     async configRemoteMethod(query) {
       this.configloading = true;
       let res = await videoConfigList({ pageNum: 1, pageSize: 50, Key: query });
-      this.configOptions = res.data;
+      this.configOptions = res.data.List;
       this.configOptions.push({"Name":"暂无策略","Id":""})
       this.configloading = false;
     }

@@ -1,27 +1,18 @@
 ﻿using ChannelUtility.Message;
-using CommunityToolkit.HighPerformance;
 using GB28181Channel.GB28181;
 using GB28181Channel.GB28181.DTO;
 using GB28181Channel.GB28181.Event;
 using GB28181Channel.GB28181.Interface;
 using Microsoft.Extensions.DependencyInjection;
-using SixLabors.ImageSharp.ColorSpaces;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
-using System.Buffers;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZLMediaKit;
-using ZLMediaKit.Autogen;
 
 namespace GB28181Channel
 {
@@ -96,20 +87,7 @@ namespace GB28181Channel
             }
             try
             {
-                var storage = _provider.GetService<IDeviceStorage>();
-                var device = storage.GetDevice(context.DeviceId);
-                if (device != null)
-                {
-                    if (device.VideoData != null && device.VideoData.Configs != null && device.VideoData.Configs.Count > 0 && context.VideoDecoder != null)
-                    {
-                        mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
-                        return;
-                    }
-                }
-                if (context.Media != null)
-                {
-                    mk_media.MkMediaInputFrame(context.Media, mkFrame);
-                }
+                mk_transcode.MkDecoderDecode(context.VideoDecoder, mkFrame, 1, 0);
             }
             catch (Exception e)
             {
@@ -150,8 +128,6 @@ namespace GB28181Channel
             bool needDraw = tmpboxlist != null && tmpboxlist.Count > 0;
             try
             {
-
-
                 int ySize = w * h;
                 int uSize = (w / 2) * (h / 2);
                 int vSize = (w / 2) * (h / 2);
@@ -221,17 +197,21 @@ namespace GB28181Channel
                 if (now - context.LastTriggerTime >= device.VideoData.CoolDownMs)
                 {
                     context.LastTriggerTime = now;
-                    const int pixelSize = 3;
-                    int rawLineSize = w * pixelSize;
-                    int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
-                    int totalSize = alignedLineSize * h;
-                    byte[] rgb24 = new byte[totalSize];
-                    fixed (byte* pRgb = rgb24)
+                    if(device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
                     {
-                        mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                        const int pixelSize = 3;
+                        int rawLineSize = w * pixelSize;
+                        int alignedLineSize = (rawLineSize + 32 - 1) & ~(32 - 1);
+                        int totalSize = alignedLineSize * h;
+                        byte[] rgb24 = new byte[totalSize];
+                        fixed (byte* pRgb = rgb24)
+                        {
+                            mk_transcode.MkSwscaleInputFrame(context.Swscale, pixFrame, pRgb);
+                        }
+                        context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
+                        AIDetectorTask.Detect(device.VideoData, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
                     }
-                    context.Motion.MotionBlockRatioThreshold = device.VideoData.MotionRatio;
-                    AIDetectorTask.Detect(device.VideoData, w, h, _listener, rgb24, needDraw, context.Motion, context.Pool);
+
                 }
             }
         }

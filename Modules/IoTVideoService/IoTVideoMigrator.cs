@@ -95,7 +95,11 @@ namespace IoTVideoService
             .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("策略Id")
             .WithColumn("OrgId").AsInt64().Indexed().WithColumnDescription("所属组织ID")
             .WithColumn("Name").AsString(50).WithColumnDescription("策略名称")
-            .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务");
+            .WithColumn("AITasks").AsString(20000).WithColumnDescription("AI检测任务")
+            .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
+            .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
+            .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
+            .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间"); ;
 
 
             Execute.Sql("DROP TABLE IF EXISTS mz_iot_record");

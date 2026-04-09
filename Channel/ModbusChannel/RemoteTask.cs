@@ -17,7 +17,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -27,7 +26,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static ChannelUtility.ClientBusProxy;
 
 namespace ModbusChannel
 {
@@ -288,25 +286,43 @@ namespace ModbusChannel
             }
             else if (ss.StartsWith("$readprops"))
             {
-                //读属性到云端
-                string[] uicmds = ss.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                string dtuid = uicmds[1];
-                var redis = _provider.GetService<GeneralRedisHelper>();
-                Dictionary<string, DevicePropertyValue> alldict = new Dictionary<string, DevicePropertyValue>();
-                if (dtuid == "all")
+                try
                 {
-                    List<string> keylist = await redis.KeysAsync("Device:*");
-                    foreach (string k in keylist)
+                    //读属性到云端
+                    string[] uicmds = ss.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                    string dtuid = uicmds[1];
+                    var redis = _provider.GetService<GeneralRedisHelper>();
+                    Dictionary<string, DevicePropertyValue> alldict = new Dictionary<string, DevicePropertyValue>();
+                    if (dtuid == "all")
                     {
-                        string tmpdtuid = k.Substring(7);
-                        var redisdict = await redis.HashGetAllAsync<string>("Device:" + tmpdtuid);
-                        if (tmpdtuid == "wky111" || tmpdtuid == "wky222" || tmpdtuid == "wky333")
+                        List<string> keylist = await redis.KeysAsync("Device:*");
+                        foreach (string k in keylist)
                         {
-                            if (redisdict.Keys.Any(x => x.Contains("RunState")))
+                            string tmpdtuid = k.Substring(7);
+                            var redisdict = await redis.HashGetAllAsync<string>("Device:" + tmpdtuid);
+                            if (tmpdtuid == "wky111" || tmpdtuid == "wky222" || tmpdtuid == "wky333")
                             {
-                                continue;
+                                if (redisdict.Keys.Any(x => x.Contains("RunState")))
+                                {
+                                    continue;
+                                }
+                            }
+                            if (redisdict != null && redisdict.Count > 0)
+                            {
+                                var dict = DevicePropertyValue.FromDictStr(redisdict);
+                                foreach (var pp in dict)
+                                {
+                                    if (!pp.Key.StartsWith("$"))
+                                    {
+                                        alldict.Add(tmpdtuid + "_" + pp.Key, pp.Value);
+                                    }
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        var redisdict = await redis.HashGetAllAsync<string>("Device:" + dtuid);
                         if (redisdict != null && redisdict.Count > 0)
                         {
                             var dict = DevicePropertyValue.FromDictStr(redisdict);
@@ -314,29 +330,19 @@ namespace ModbusChannel
                             {
                                 if (!pp.Key.StartsWith("$"))
                                 {
-                                    alldict.Add(tmpdtuid + "_" + pp.Key, pp.Value);
+                                    alldict.Add(dtuid + "_" + pp.Key, pp.Value);
                                 }
                             }
                         }
                     }
-                }
-                else
-                {
-                    var redisdict = await redis.HashGetAllAsync<string>("Device:" + dtuid);
-                    if (redisdict != null && redisdict.Count > 0)
-                    {
-                        var dict = DevicePropertyValue.FromDictStr(redisdict);
-                        foreach (var pp in dict)
-                        {
-                            if (!pp.Key.StartsWith("$"))
-                            {
-                                alldict.Add(dtuid + "_" + pp.Key, pp.Value);
-                            }
-                        }
-                    }
-                }
 
-                await UpMsg("$readprops " + System.Text.Json.JsonSerializer.Serialize(alldict, JsonMessageSerializerConfig.SerializeOptions));
+                    await UpMsg("$readprops " + System.Text.Json.JsonSerializer.Serialize(alldict, JsonMessageSerializerConfig.SerializeOptions));
+                }
+                catch(Exception ex)
+                {
+                    await UpMsg("更新异常：" + ex.Message + ex.StackTrace);
+                }
+               
             }
             else if (ss.StartsWith("$exefunc"))
             {
@@ -398,16 +404,23 @@ namespace ModbusChannel
         }
         private async Task MqttClient_MessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
-            //执行系统命令
-            string ss = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+            try
+            {
+                //执行系统命令
+                string ss = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
-            if (ss.StartsWith("$"))
-            {
-                await ExeSysCmd(ss);
+                if (ss.StartsWith("$"))
+                {
+                    await ExeSysCmd(ss);
+                }
+                else
+                {
+                    ServerDownCmd(ss);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                ServerDownCmd(ss);
+                Console.WriteLine(ex.ToString());
             }
         }
         private Process _process = null;

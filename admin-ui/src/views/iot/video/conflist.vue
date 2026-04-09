@@ -28,7 +28,19 @@
                             style="width:100%" :fit="true">
                             <el-table-column label="策略编号" prop="Id" align="center" width="200">
                             </el-table-column>
-                            <el-table-column label="策略名称" prop="Name" width="260" />
+                            <el-table-column label="策略名称" prop="Name" />
+                            <el-table-column label="创建人" prop="createName" align="center" />
+                            <el-table-column label="创建时间" align="center" prop="createTime">
+                                <template slot-scope="scope">
+                                    <span>{{ parseTime(scope.row.createTime) }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="修改人" prop="updateName" align="center" />
+                            <el-table-column label="修改时间" align="center" prop="updateTime">
+                                <template slot-scope="scope">
+                                    <span>{{ parseTime(scope.row.updateTime) }}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="操作" align="center" fixed="right" class-name="small-padding"
                                 width="250">
                                 <template slot-scope="scope">
@@ -46,12 +58,12 @@
             </el-row>
         </div>
 
-        <confadd ref="addConfig" />
+        <confadd ref="addConfig" @Save="getList" />
     </div>
 </template>
 
 <script>
-import { removeVideoConfig,videoConfigList } from "@/api/rules/video";
+import { removeVideoConfig, videoConfigList } from "@/api/rules/video";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 import confadd from './confadd.vue'
 
@@ -80,7 +92,7 @@ export default {
         getList() {
             this.loading = true;
             videoConfigList(this.queryParams).then(response => {
-                this.sourceList = response.data.List;
+                this.configList = response.data.List;
                 this.total = response.data.Total;
                 this.loading = false;
             })
@@ -116,7 +128,7 @@ export default {
                     this.getList()
                 })
             }).catch(() => { })
-        },
+        }
     }
 }
 </script>
