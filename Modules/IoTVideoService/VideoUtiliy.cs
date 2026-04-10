@@ -1,12 +1,62 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Common.EventBus;
+using IoTService;
+using IoTVideoService.Models;
 using NATS.Client.Core;
 
 namespace IoTVideoService
 {
     public static class VideoUtiliy
     {
+        public static async Task<List<T_ServerInfo>> GetVideoServers(this IotRedisHelper redis)
+        {
+            var tmplist = new List<T_ServerInfo>();
+            var tmpvideoDict = await redis.HashGetAllAsync<T_ServerInfo>("VideoServers:List");
+            if (tmpvideoDict != null)
+            {
+                foreach (var tmpkvp in tmpvideoDict)
+                {
+                    if (tmpkvp.Value.Expire >= DateTime.Now)
+                    {
+                        tmplist.Add(tmpkvp.Value);
+                    }
+                }
+            }
+            return tmplist;
+        }
+        public static async Task<List<T_ServerInfo>> GetGB28181Servers(this IotRedisHelper redis)
+        {
+            var tmplist = new List<T_ServerInfo>();
+            var tmpvideoDict = await redis.HashGetAllAsync<T_ServerInfo>("GB28181Servers:List");
+            if (tmpvideoDict != null)
+            {
+                foreach (var tmpkvp in tmpvideoDict)
+                {
+                    if (tmpkvp.Value.Expire >= DateTime.Now)
+                    {
+                        tmplist.Add(tmpkvp.Value);
+                    }
+                }
+            }
+            return tmplist;
+        }
+        public static async Task<List<T_ServerInfo>> GetOnvifServers(this IotRedisHelper redis)
+        {
+            var tmplist = new List<T_ServerInfo>();
+            var tmpvideoDict = await redis.HashGetAllAsync<T_ServerInfo>("OnvifServers:List");
+            if (tmpvideoDict != null)
+            {
+                foreach (var tmpkvp in tmpvideoDict)
+                {
+                    if (tmpkvp.Value.Expire >= DateTime.Now)
+                    {
+                        tmplist.Add(tmpkvp.Value);
+                    }
+                }
+            }
+            return tmplist;
+        }
         public static async Task Public(this NatsScope scope, string nodeId, BaseDeviceMessage msg)
         {
             string msgbody = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions);

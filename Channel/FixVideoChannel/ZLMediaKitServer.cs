@@ -627,7 +627,7 @@ namespace FixVideoChannel
                 };
                 mk_common.MkEnvInit(config);
 
-                mk_common.MkRtmpServerStart((ushort)_option.RTMPPort, 0);
+                mk_common.MkRtmpServerStart((ushort)_option.rtmp_port, 0);
                 mk_common.MkHttpServerStart((ushort)_option.http_port, 0);
 
                 _mkEvents = new MkEvents()

@@ -13,6 +13,10 @@ namespace OnvifChannel
         public string event_pass { get; set; }
         public string redis_conn { get; set; }
         public string node_id { get; set; }
+        /// <summary>
+        /// 服务器Ip
+        /// </summary>
+        public string server_ip { get; set; }
         public int rtp_port { get; set; }
         public int rtmp_port { get; set; }
         public int http_port { get; set; }

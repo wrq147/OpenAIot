@@ -30,7 +30,7 @@ namespace IoTAIService.AICode
             string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
             _session = new InferenceSession(modelPath, sessionOptions);
         }
-        public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold = 0.8f, float iouThreshold = 0.45f)
+        public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold = 0.7f, float iouThreshold = 0.45f)
         {
             int originalWidth = image.Width;
             int originalHeight = image.Height;

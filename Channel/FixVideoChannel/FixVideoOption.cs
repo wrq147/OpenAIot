@@ -15,9 +15,13 @@ namespace FixVideoChannel
         public string ai_conn { get; set; }
         public string node_id { get; set; }
         /// <summary>
+        /// 服务器Ip
+        /// </summary>
+        public string server_ip { get; set; }
+        /// <summary>
         /// ZLMediaKit的RTMP播放端口
         /// </summary>
-        public int RTMPPort { get; set; }
+        public int rtmp_port { get; set; }
         public int http_port { get; set; }
         public string minio_server { get; set; }
         public string minio_access { get; set; }

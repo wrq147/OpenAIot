@@ -3,6 +3,7 @@ using ChannelUtility.Message;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
+using IoTService;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
@@ -82,13 +83,13 @@ namespace IoTVideoService.Business
             {
                 if (source.VideoType == 0)
                 {
-                    var option = _provider.GetService<IOptions<VideoOption>>();
-                    if (option.Value.VideoServers == null || option.Value.VideoServers.Count == 0)
+                    var servers = await _provider.GetService<IotRedisHelper>().GetVideoServers();
+                    if (servers.Count == 0)
                     {
                         return BusResponse<string>.Error(211, "VideoOption配置错误");
                     }
-                    int pos = Math.Abs(source.Id.GetHashCode() % option.Value.VideoServers.Count);
-                    ServerInfo serverInfo = option.Value.VideoServers[pos];
+                    int pos = Math.Abs(source.Id.GetHashCode() % servers.Count);
+                    T_ServerInfo serverInfo = servers[pos];
                     nodeId = serverInfo.NodeId;
                 }
                 else if (source.VideoType == 1)
@@ -281,26 +282,31 @@ namespace IoTVideoService.Business
                 expression = expression.And(x => x.FileDate <= query.endTime);
             }
             var rsp = await _provider.GetService<RecordFileDAL>().SelectPage(expression, query, "StartTime desc");
+            var videoservers = await _provider.GetService<IotRedisHelper>().GetVideoServers();
+            var gb28181servers = await _provider.GetService<IotRedisHelper>().GetGB28181Servers();
+            var onvifservers = await _provider.GetService<IotRedisHelper>().GetOnvifServers();
             foreach (var item in rsp.List)
             {
-                item.PlayUrl = GeneratePlayUrl(item);
+                item.PlayUrl = GeneratePlayUrl(item, videoservers, gb28181servers, onvifservers);
             }
             return rsp;
         }
-        private string GeneratePlayUrl(MZ_IotRecordFile file)
+        private string GeneratePlayUrl(MZ_IotRecordFile file, List<T_ServerInfo> videoservers, List<T_ServerInfo> gb28181servers, List<T_ServerInfo> onvifservers)
         {
             if (file.StorageWay == 0)
             {
-                var option = _provider.GetService<IOptions<VideoOption>>();
-                if (option.Value.VideoServers.Count == 0 && option.Value.GB28181Servers.Count == 0)
+                if (videoservers.Count == 0 && gb28181servers.Count == 0 && onvifservers.Count == 0)
                 {
                     return string.Empty;
                 }
-
-                var curNode = option.Value.VideoServers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
+                var curNode = videoservers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
                 if (curNode == null)
                 {
-                    curNode = option.Value.GB28181Servers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
+                    curNode = gb28181servers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
+                    if (curNode == null)
+                    {
+                        curNode = onvifservers.Where(x => x.NodeId == file.NodeId).FirstOrDefault();
+                    }
                 }
                 if (curNode == null)
                 {

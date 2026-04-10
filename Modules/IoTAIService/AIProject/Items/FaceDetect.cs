@@ -33,7 +33,7 @@ namespace IoTAIService.AIProject.Items
                         name="人脸阈值",
                         code="threshold",
                         type="float",
-                        defval=0.8f,
+                        defval=0.7f,
                         min=0,
                         max=1,
                         help="0~1的区间值,值越小,对人脸的检测越模糊"
@@ -53,7 +53,7 @@ namespace IoTAIService.AIProject.Items
         }
         public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
         {
-            float tThreshold = config.GetFloat("threshold", 0.8f);
+            float tThreshold = config.GetFloat("threshold", 0.7f);
             float tIOU = config.GetFloat("iou_threshold", 0.2f);
             var tmpboxs = _provider.GetService<YoloFaceDetectRunner>().Predict(image, tThreshold, tIOU);
             return tmpboxs;

@@ -1,6 +1,7 @@
 ﻿using ChannelUtility.Message;
 using Common.EventBus;
 using Common.Share;
+using IoTService;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using Microsoft.Extensions.Options;
@@ -105,20 +106,20 @@ namespace IoTVideoService.Business
             var videoSource = (await videoSourceDAL.SelectList(x => x.Id == sId)).FirstOrDefault();
             if (videoSource.VideoType == 0)
             {
-                var option = _provider.GetService<IOptions<VideoOption>>();
-                if (option.Value.VideoServers.Count == 0)
+                var servers = await _provider.GetService<IotRedisHelper>().GetVideoServers();
+                if (servers.Count == 0)
                 {
                     return tdict;
                 }
-                ServerInfo serverInfo;
+                T_ServerInfo serverInfo;
                 if (string.IsNullOrEmpty(videoSource.NodeId))
                 {
-                    int pos = Math.Abs(videoSource.Id.GetHashCode() % option.Value.VideoServers.Count);
-                    serverInfo = option.Value.VideoServers[pos];
+                    int pos = Math.Abs(videoSource.Id.GetHashCode() % servers.Count);
+                    serverInfo = servers[pos];
                 }
                 else
                 {
-                    serverInfo = option.Value.VideoServers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
+                    serverInfo = servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
                 }
                 switch (type)
                 {
@@ -143,8 +144,8 @@ namespace IoTVideoService.Business
                 {
                     return tdict;
                 }
-                var option = _provider.GetService<IOptions<VideoOption>>();
-                if (option.Value.GB28181Servers.Count == 0)
+                var servers = await _provider.GetService<IotRedisHelper>().GetGB28181Servers();
+                if (servers.Count == 0)
                 {
                     return tdict;
                 }
@@ -152,7 +153,7 @@ namespace IoTVideoService.Business
                 {
                     return tdict;
                 }
-                ServerInfo serverInfo = option.Value.GB28181Servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
+                T_ServerInfo serverInfo = servers.Where(x => x.NodeId == videoSource.NodeId).FirstOrDefault();
                 var channelSourceList = (await videoSourceDAL.SelectList(x => x.UserName == videoSource.UserName && x.VideoType == 2)).ToList();
                 foreach (var channelSource in channelSourceList)
                 {

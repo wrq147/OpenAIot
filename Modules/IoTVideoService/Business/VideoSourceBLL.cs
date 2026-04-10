@@ -425,6 +425,7 @@ namespace IoTVideoService.Business
 
         public virtual async Task TimerClean()
         {
+            //清除过期录像文件
             var minDate = DateTime.Now.Date;
             var recordLogDAL = _provider.GetService<RecordLogDAL>();
             var recordDAL = _provider.GetService<RecordDAL>();
@@ -459,6 +460,48 @@ namespace IoTVideoService.Business
                     ++i;
                 }
                 records = await recordDAL.GetUnCleanRecords(minDate, 1000);
+            }
+
+
+            //清除过期视频服务节点
+            IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
+            var tmpvideoDict = await redis.HashGetAllAsync<T_ServerInfo>("VideoServers:List");
+            if (tmpvideoDict != null)
+            {
+                foreach (var tmpkvp in tmpvideoDict)
+                {
+                    if (tmpkvp.Value.Expire < DateTime.Now)
+                    {
+                        tmpvideoDict.Remove(tmpkvp.Key);
+                    }
+                }
+                await redis.HashSetAsync("VideoServers:List", tmpvideoDict);
+            }
+
+            var tmpgb28181Dict = await redis.HashGetAllAsync<T_ServerInfo>("GB28181Servers:List");
+            if (tmpgb28181Dict != null)
+            {
+                foreach (var tmpkvp in tmpgb28181Dict)
+                {
+                    if (tmpkvp.Value.Expire < DateTime.Now)
+                    {
+                        tmpgb28181Dict.Remove(tmpkvp.Key);
+                    }
+                }
+                await redis.HashSetAsync("GB28181Servers:List", tmpgb28181Dict);
+            }
+
+            var tmponvifDict = await redis.HashGetAllAsync<T_ServerInfo>("OnvifServers:List");
+            if (tmponvifDict != null)
+            {
+                foreach (var tmpkvp in tmponvifDict)
+                {
+                    if (tmpkvp.Value.Expire < DateTime.Now)
+                    {
+                        tmponvifDict.Remove(tmpkvp.Key);
+                    }
+                }
+                await redis.HashSetAsync("OnvifServers:List", tmponvifDict);
             }
         }
     }
