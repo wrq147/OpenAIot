@@ -191,17 +191,32 @@ namespace ChannelUtility
              });
 
 
-            if (!string.IsNullOrEmpty(_option.AIConn))
-            {
-                _ai_publisher = new PublisherSocket();
-                _ai_publisher.Bind(_option.AIConn);
-            }
-
 
             //发送节点上线
             await this.SendNodeOnline();
         }
-        private PublisherSocket _ai_publisher;
+        private PushSocket _ai_publisher;
+        private PushSocket GetPublisher()
+        {
+            if (!string.IsNullOrEmpty(_option.AIConn))
+            {
+                try
+                {
+                    if (_ai_publisher == null)
+                    {
+                        _ai_publisher = new PushSocket(_option.AIConn);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("AI推流连接异常：" + ex.Message);
+                    _ai_publisher = null;
+                }
+                return _ai_publisher;
+            }
+            return null;
+
+        }
         private async Task SendNodeOnline()
         {
             try
@@ -486,7 +501,8 @@ namespace ChannelUtility
                 Data = System.Text.Json.JsonSerializer.Serialize(msg, JsonMessageSerializerConfig.DefaultOptions)
             }, ChannelNatsJsonSerializer<string>.Default).ConfigureAwait(false);
 
-            if (_ai_publisher != null)
+            var publisher = GetPublisher();
+            if (publisher != null)
             {
                 await Task.Delay(100);
                 //清除AI处理数据
@@ -503,7 +519,7 @@ namespace ChannelUtility
 
                 var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
                 byte[] serializedData = MessagePackSerializer.Serialize(aireq, options);
-                _ai_publisher.SendFrame(serializedData);
+                publisher.SendFrame(serializedData);
             }
 
 
@@ -585,8 +601,11 @@ namespace ChannelUtility
             msg.DataType = dataType;
             var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
             byte[] serializedData = MessagePackSerializer.Serialize(msg, options);
-
-            _ai_publisher.SendFrame(serializedData);
+            var publisher = GetPublisher();
+            if (publisher != null)
+            {
+                publisher.SendFrame(serializedData);
+            }
         }
         public async Task<string> WaitPublishMediaUserVerify(string username)
         {

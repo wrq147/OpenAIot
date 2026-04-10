@@ -561,9 +561,9 @@
             AI任务线程数量（默认4）
             </summary>
         </member>
-        <member name="P:IoTAIService.IoTAIOption.FramePushConns">
+        <member name="P:IoTAIService.IoTAIOption.AIBind">
             <summary>
-            监听的帧发布源
+            绑定端口，等待所有发布端连接
             </summary>
         </member>
         <member name="P:IoTAIService.IoTAIOption.PythonHome">
@@ -769,9 +769,9 @@
             根据操作系统获取Python库文件的搜索规则
             </summary>
         </member>
-        <member name="M:IoTAIService.ReliableAISubscriber.InitializeConnectionPool">
+        <member name="F:IoTAIService.ReliableAISubscriber._receiveThread">
             <summary>
-            初始化连接池，为每个地址创建连接对象
+            接收线程
             </summary>
         </member>
         <member name="M:IoTAIService.ReliableAISubscriber.StartReceiving">
@@ -779,11 +779,10 @@
             启动所有订阅连接（每个连接一个独立线程）
             </summary>
         </member>
-        <member name="M:IoTAIService.ReliableAISubscriber.ReceiveLoop(IoTAIService.SubscriberConnection)">
+        <member name="M:IoTAIService.ReliableAISubscriber.ReceiveLoop">
             <summary>
-            单个连接的消息接收循环
+            消息接收循环
             </summary>
-            <param name="connection">当前连接</param>
         </member>
         <member name="M:IoTAIService.ReliableAISubscriber.Stop">
             <summary>
@@ -793,31 +792,6 @@
         <member name="M:IoTAIService.ReliableAISubscriber.Dispose">
             <summary>
             释放所有资源
-            </summary>
-        </member>
-        <member name="T:IoTAIService.SubscriberConnection">
-            <summary>
-            连接池项，封装单个订阅连接的信息
-            </summary>
-        </member>
-        <member name="P:IoTAIService.SubscriberConnection.Socket">
-            <summary>
-            订阅Socket
-            </summary>
-        </member>
-        <member name="P:IoTAIService.SubscriberConnection.Address">
-            <summary>
-            连接地址
-            </summary>
-        </member>
-        <member name="P:IoTAIService.SubscriberConnection.IsConnected">
-            <summary>
-            是否连接成功
-            </summary>
-        </member>
-        <member name="P:IoTAIService.SubscriberConnection.ReceiveThread">
-            <summary>
-            接收线程
             </summary>
         </member>
     </members>

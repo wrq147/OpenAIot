@@ -13,9 +13,9 @@ namespace IoTAIService
         /// </summary>
         public int runer_count { get; set; }
         /// <summary>
-        /// 监听的帧发布源
+        /// 绑定端口，等待所有发布端连接
         /// </summary>
-        public string[] FramePushConns { get; set; }
+        public string AIBind { get; set; }
         /// <summary>
         /// Python的根目录
         /// </summary>
