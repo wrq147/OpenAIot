@@ -2,19 +2,442 @@
 branches: {
   }
 fileChange:
+  /Channel:
+    newFile: !uuid 'cd9c224ccda5e66df3121a1693945ef9aadfa57d'
+    oldFile: !uuid 'fab1940ab8f355a4fa27ea4f17eb0ecdbda3101d'
+  /Channel/FixVideoChannel:
+    newFile: !uuid 'ebf29ef3ae5175d4ae71bf66a3ce06657876d320'
+    oldFile: !uuid '478d898ebb8744e1e2e416d6b5c2a68035a241e1'
+  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
+    newFile: !uuid '44b1cfb286b1b3c7c0a9f161cdad7185c44c0480'
+    oldFile: !uuid 'f02f061b3a770c1a79335cd065a48b0d603def74'
+  /Channel/GB28181Channel:
+    newFile: !uuid '923c7a39c25569c82229d3633f4babff1223fbdf'
+    oldFile: !uuid '1afa013dd2df1336b950213d8021ce4f28721586'
+  /Channel/GB28181Channel/ZLMediaKitServer.cs:
+    newFile: !uuid 'd505a630a6f811425a42b53b26e6d2885e707100'
+    oldFile: !uuid '43eab4d2e414edd9ebea7882346458c2cda9cd69'
+  /Channel/OnvifChannel:
+    newFile: !uuid 'e8edfdfeb028ce7af8ba5c2a4c9ea073ae52a2fc'
+    oldFile: !uuid '10ab7982a4e77dba9d2641bc403fc143b5d02e99'
+  /Channel/OnvifChannel/ZLMediaKitServer.cs:
+    newFile: !uuid '263b44a3d0ff5d369080d48b5750b4733196a566'
+    oldFile: !uuid '44723eac846cf182ce9a58ca87a7945d2ca9f192'
   /Modules:
-    newFile: !uuid '4b0845d76907687b713d1d5113bd44fd778530c2'
-    oldFile: !uuid 'e9544a44556290a738293111cba657277d2dd259'
+    newFile: !uuid 'e380ea74f747a2c79f429ed492135312a78e8855'
+    oldFile: !uuid '4b0845d76907687b713d1d5113bd44fd778530c2'
+  /Modules/IoTAIService:
+    newFile: !uuid '465f6775353b517aa5ecc64df05f789677c765bd'
+    oldFile: !uuid '935837006983e4f60f91e8c58f0cb62c03910900'
+  /Modules/IoTAIService/ReliableAISubscriber.cs:
+    newFile: !uuid '164d8d8cab4df82eb4671e8ea35ecf7c00b21b33'
+    oldFile: !uuid '6dd95b800e3ba235de1af025ad7476b1d02796c4'
   /Modules/IoTVideoService:
-    newFile: !uuid '77bfb4962abe5ce8dfafa9da516239091910b94e'
-    oldFile: !uuid '1be795433da9fa70da641a8a975adaeb1213e18c'
-  /Modules/IoTVideoService/Models:
-    newFile: !uuid 'ecc3327efb13f32cf3f1d6ce2f31daa95e0a2dc7'
-    oldFile: !uuid '2df799efefa4661e4eabc26659414ef62e0de2f8'
-  /Modules/IoTVideoService/Models/T_ServerInfo.cs:
-    newFile: !uuid '368e89a05161bffc919df6d84340bb37f1e49228'
+    newFile: !uuid 'e0caf7ef7aff387469c3cf65fb32f2d9ed882884'
+    oldFile: !uuid '77bfb4962abe5ce8dfafa9da516239091910b94e'
+  /Modules/IoTVideoService/Business:
+    newFile: !uuid 'af051d57d1ca27a4b4fb710e3b396a9f0c31f5d2'
+    oldFile: !uuid 'f89c88c2a496beef598f40a89badf588597f831f'
+  /Modules/IoTVideoService/Business/ConfigBLL.cs:
+    newFile: !uuid 'bf0e8f485e4be3a2625678b953f2504e80d1a371'
+    oldFile: !uuid 'c177a13186ab0698726c951842a258772e99c57a'
+  /Third:
+    newFile: !uuid '7d7533ba29d5aad30446a3d64118bd67dd580e39'
+    oldFile: !uuid '41bb309b74831b179e0de0b33d16e031661ffe70'
+  /Third/ZLMediaCLib:
+    newFile: !uuid '64e672269d82675ddf0eb15ee5680c99ea73703d'
+    oldFile: !uuid '66364c5a7fb43167f8a0149547666bc060f12865'
+  /Third/ZLMediaCLib/ff_h264_encoder.c:
+    newFile: !uuid 'ad1e2deee77e6ad02f824a9aafbe2200be2af754'
     oldFile: null
-gitCommitId: !uuid '31e935ad569dd5c32514fb97338d2c7f079e0daa'
+  /Third/ZLMediaCLib/include:
+    newFile: !uuid '957a07712b059ad13a7f30b91fdecd2032dd3e19'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec:
+    newFile: !uuid '4e6b20b19df33aa0baa0a403833e71c8847f7818'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/ac3_parser.h:
+    newFile: !uuid 'ff8cc4cf093116dd677a010aa1407ce6af81a25d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/adts_parser.h:
+    newFile: !uuid 'f85becd13138e4e80032097286bd3c5a294f8a6a'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/avcodec.h:
+    newFile: !uuid 'cb5c25bf631cb01f96fac8037da6fca276043d26'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/avdct.h:
+    newFile: !uuid '6411fab6f637fee80978029fbee26203911a9edf'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/avfft.h:
+    newFile: !uuid '0c0f9b8d8dae13c14a8cd91a1c4234b07821e916'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/bsf.h:
+    newFile: !uuid '69d91a16abf8765c475b2df9c5430ce9ca83a1ab'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/codec.h:
+    newFile: !uuid '03e8be90a2fedeffaa0e4b643e085c2aa216d074'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/codec_desc.h:
+    newFile: !uuid '126b52df47629c51816b510cf9ee5c67f6f0f498'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/codec_id.h:
+    newFile: !uuid '81fb316cff63213c6d0a31a8e57a2c12110740c0'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/codec_par.h:
+    newFile: !uuid '7660791a12e2aa44f6ea9a36bd3bc62c1511e48d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/d3d11va.h:
+    newFile: !uuid '6816b6c1e68494bc6d6f0b14cbd232bbcc714a05'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/defs.h:
+    newFile: !uuid '420a042b8ff458fa01d5443bdb37e4dde622e30c'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/dirac.h:
+    newFile: !uuid 'e6d9d346d9cc13c23092f5e1f4501d20157e1def'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/dv_profile.h:
+    newFile: !uuid '4365f1b4b1492b6e7ea9218697aa0f7b8f39722c'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/dxva2.h:
+    newFile: !uuid '22c93992f22284c7e2ac92c5bf23faa3df6e6272'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/jni.h:
+    newFile: !uuid 'dd99e92611322b5ac590daea689d920b358b272c'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/mediacodec.h:
+    newFile: !uuid '4c8545df03109a80da77976209d187e046a5e801'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/packet.h:
+    newFile: !uuid '404d520071ee139d762d10b3375b67265a591693'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/qsv.h:
+    newFile: !uuid 'b77158ec262920cfee3346de1f0f1cbce9157bfa'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/vdpau.h:
+    newFile: !uuid '3010094d93fe1a2c437d562b2465811a271447b8'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/version.h:
+    newFile: !uuid '376388c5bb7a083f091ea75465a55abe88364115'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/version_major.h:
+    newFile: !uuid '1e23ed5e03e3faa3658900bd373f6284ce9da225'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/videotoolbox.h:
+    newFile: !uuid 'af2db0d580932f1e2c04606e2f1a856468bafbf8'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/vorbis_parser.h:
+    newFile: !uuid '789932ac4922de0d0754226604802b0d1a8045c1'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavcodec/xvmc.h:
+    newFile: !uuid '52e70c0d77e336ad48e88d4b14eaef2804eb2a6d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil:
+    newFile: !uuid '11e786931e5babc13817ad50be428756344be7d7'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/adler32.h:
+    newFile: !uuid '232d07f5fe8220cd8ed80d9df3fa3a69b5ad7f90'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/aes.h:
+    newFile: !uuid 'd243286c860351bc34eabfee7bf6a023d5936d6b'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/aes_ctr.h:
+    newFile: !uuid '4e9fda7aca4ee3d8316ecc3db22373b78d47e63f'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/attributes.h:
+    newFile: !uuid '04c615c952c467f6061588606c695a548cd2e130'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/audio_fifo.h:
+    newFile: !uuid 'd1e4c856dc85026cd98139fc01f9c75118c3906d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/avassert.h:
+    newFile: !uuid '51e462bbae70725e5c634abc021fe626781c61e0'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/avconfig.h:
+    newFile: !uuid 'c289fbb551c1f89b72e8090b81139d8fb745af08'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/avstring.h:
+    newFile: !uuid 'fae446c3027449595a56d44375b5b9a6671c1005'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/avutil.h:
+    newFile: !uuid '64b68bdbd33cc21af61d3a0b784702189b26362f'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/base64.h:
+    newFile: !uuid '2954c12d4271c7411e117c120e24f13f2cf8744b'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/blowfish.h:
+    newFile: !uuid '9e289a40dabe535dc151a2345f49a753f3f640e2'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/bprint.h:
+    newFile: !uuid 'c09b1ac1e1aa77686780694e7f45c4ad59b7dc5d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/bswap.h:
+    newFile: !uuid '91cb79538dc2fb5979df88ce5e8279ec80170600'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/buffer.h:
+    newFile: !uuid 'e1ef5b7f07fc52f535c6c6f5db6ad2ab8dbb0729'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/camellia.h:
+    newFile: !uuid 'e674c9b9a478252ab86727f4a3ba62cc959e2b7d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/cast5.h:
+    newFile: !uuid 'ad5b347e685ed06d1170b75cad968b21b71ba4c0'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/channel_layout.h:
+    newFile: !uuid '4dd6614de9006947b7cc7907de569724485fc6d1'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/common.h:
+    newFile: !uuid 'fd1404be6cf3ea2c72c7a288c071f45b67c8474d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/cpu.h:
+    newFile: !uuid '9711e574c51417e2ea60f8ce2be524c269eccc73'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/crc.h:
+    newFile: !uuid '24a2e3caed0faa4268916f7122874a482d5a6707'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/csp.h:
+    newFile: !uuid '37544449c6d1a536b25780b69018ed49ddfb2228'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/des.h:
+    newFile: !uuid '4cf11f5bca47a18544e172bc1d4457a3ff7a1720'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/detection_bbox.h:
+    newFile: !uuid 'c20c204a54ebd687c058358f28f64ae5a9f3b197'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/dict.h:
+    newFile: !uuid '0d1afc6c64abc6015f67ac228a180e08e7de2490'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/display.h:
+    newFile: !uuid '31d8bef3611f224362a2486df210781695ab13df'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/dovi_meta.h:
+    newFile: !uuid '3d11e02bffc8781a6eaacb2e13abeb861e17ad07'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/downmix_info.h:
+    newFile: !uuid '221cf5bf9bafb86a64c253b5097b7dc2625e8fa2'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/encryption_info.h:
+    newFile: !uuid '8fe7ebfe43203f63e88c07c115e5c00c097fef1c'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/error.h:
+    newFile: !uuid '0d3269aa6da136e849faa7f810ae36748659a2e0'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/eval.h:
+    newFile: !uuid '57afc2d562f8a25dbeb9d6ee7e19a53ece1cdcf2'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/ffversion.h:
+    newFile: !uuid '2a51f3c86f262c4f82239bf52193e50123d5c7a6'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/fifo.h:
+    newFile: !uuid '4eed364afc5f33e89d98debd1bee3b4ab183107f'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/file.h:
+    newFile: !uuid '8ec210e783b85c06f5ca0411332447f4a477c757'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/film_grain_params.h:
+    newFile: !uuid 'f3bd0a4a6a3453d937bb2751c1072b526be420d0'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/frame.h:
+    newFile: !uuid '33fac2054cf10405fd25049ba1f2d06c9e85422a'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hash.h:
+    newFile: !uuid '94151ded7cbcaff9f5ea981988f7337b2740022e'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hdr_dynamic_metadata.h:
+    newFile: !uuid '2d72de56aecd858fa3cc1e54b3918a2ecad79108'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hdr_dynamic_vivid_metadata.h:
+    newFile: !uuid 'a34f83072cb05e8ead50df4073bcde5575c27519'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hmac.h:
+    newFile: !uuid 'ca4da6a689d9a32f6fa86b3875f4d12f9c5f0501'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext.h:
+    newFile: !uuid 'c18b7e1e8b316df116e57b0adfab97651f945a73'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_cuda.h:
+    newFile: !uuid 'cefbe0ceab616afe5c125537e138019e5fabc676'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_d3d11va.h:
+    newFile: !uuid '77d2d72f1b911f2c31c9528005ae9b8939591140'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_drm.h:
+    newFile: !uuid '42709f215ef9adc7d5eee2ea2574c198d8171534'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_dxva2.h:
+    newFile: !uuid 'e1b79bc0dee8c25657d63da619c9265b958a5520'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_mediacodec.h:
+    newFile: !uuid '101a9806d59e36f69151ca298c00543f4a503133'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_opencl.h:
+    newFile: !uuid 'ef54486c95f004aeccdd09404c6c3b4507924ff4'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_qsv.h:
+    newFile: !uuid 'b98d611cfc4039037f14b154ee6049f049b4de65'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_vaapi.h:
+    newFile: !uuid '0b2e071cb33533cc8e5db32c540591291392430c'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_vdpau.h:
+    newFile: !uuid '1b7ea1e443bdc4938416e1cd10c4263007e0c52d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_videotoolbox.h:
+    newFile: !uuid 'b6bdcf243dacb62485c6a3ba86a98f9e4257d1e7'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/hwcontext_vulkan.h:
+    newFile: !uuid 'df86c85b3ce2ee0e508e98a89d42ec9b8ee93d5b'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/imgutils.h:
+    newFile: !uuid 'be53335568fad0f82983b5c10d0cdeb2400fb316'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/intfloat.h:
+    newFile: !uuid 'fe3d7ec4a5b6f5f616c103aef5a5cf7ec01f8242'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/intreadwrite.h:
+    newFile: !uuid '4c8413a536868b9a272d1030a20d0d776880b1d8'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/lfg.h:
+    newFile: !uuid '2b669205d18995d12bd6689bd724fc33e07b803e'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/log.h:
+    newFile: !uuid 'ab7ceabe2234a7b23e0768e4adcdcbaf52bb8e36'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/lzo.h:
+    newFile: !uuid 'c03403992d5f68e7fa8e0e1240522366bb99eee4'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/macros.h:
+    newFile: !uuid '2a7567c3ea8fb3884437362e0643ed8135e6eec5'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/mastering_display_metadata.h:
+    newFile: !uuid 'c23b07c3cd80d9239138eb5589b7203c2e11ccb0'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/mathematics.h:
+    newFile: !uuid '64d4137a602748ba65bb7e9df906482634654022'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/md5.h:
+    newFile: !uuid 'fc2eabdb162ffd499d3ad2b6478acc03c35112c9'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/mem.h:
+    newFile: !uuid 'd91174196c9caab32a1b4d59a41cc5cea097b284'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/motion_vector.h:
+    newFile: !uuid 'ec295563889a0a79ab9a8de8c147292fab1bb7ee'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/murmur3.h:
+    newFile: !uuid 'd90bc2fcd131c56569aa6b38f2fd7acef46eb739'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/opt.h:
+    newFile: !uuid '461b5d3b6bb2ac93e7fc7286f9d3fce2acba6379'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/parseutils.h:
+    newFile: !uuid 'e66d24b76e5535579b87dd82e5768619158286ff'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/pixdesc.h:
+    newFile: !uuid 'f8a195ffcd6eb7a49225a96f7282430b22d8420c'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/pixelutils.h:
+    newFile: !uuid '7a997cde1c8afd3afbd6141a14f2066c396a4edc'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/pixfmt.h:
+    newFile: !uuid '2d3927cc3f641a39bcb325222f8799208ddd6678'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/random_seed.h:
+    newFile: !uuid '0462a048e048317b0150aa3b800171a96a668e45'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/rational.h:
+    newFile: !uuid '790f08952781bf21225ec2272b2b76829a03cb03'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/rc4.h:
+    newFile: !uuid '029cd2ad58b9dd3850c22703a60f73d6486da888'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/replaygain.h:
+    newFile: !uuid 'b49bf1a3d968620618665d237e88b48aa90d7a4d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/ripemd.h:
+    newFile: !uuid '9df9f905f3de63d696d5f846f8b5eeb7c170f098'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/samplefmt.h:
+    newFile: !uuid '1999c9bca62d35c2e9e8645f7d963890a985da46'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/sha.h:
+    newFile: !uuid '2e1220abd1215d7e6f3a25c3444715e324bbd268'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/sha512.h:
+    newFile: !uuid 'a4a3f23db30e2923834a73a4286bc04f8bd6b0b4'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/spherical.h:
+    newFile: !uuid 'cef759cf278bf8ac239746056c8daa16f923f43d'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/stereo3d.h:
+    newFile: !uuid 'd421aac2a26b12feb5ef94f5e5441832df556f48'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/tea.h:
+    newFile: !uuid 'dd929bdafdc42b00102ac4db2c38ca5afd607f55'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/threadmessage.h:
+    newFile: !uuid '42ce655f365ac4527b0b4bf223b82db902efdc41'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/time.h:
+    newFile: !uuid 'dc169b064a0d7d4659809da42e0a6942449fba39'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/timecode.h:
+    newFile: !uuid '060574a17203851aee45126f7ab1e0345e2f01fb'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/timestamp.h:
+    newFile: !uuid 'e082f01b40b332fc3bfec2ed86d65d2eaafe5d5e'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/tree.h:
+    newFile: !uuid 'bbb8fbb1262ed532669bceb1cc371287f776155f'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/twofish.h:
+    newFile: !uuid '813cfecdf8b81b70e324bf1cd08080f9704980b3'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/tx.h:
+    newFile: !uuid '3de2f7231b7458a88fece66352d3e07f292faeb7'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/uuid.h:
+    newFile: !uuid '4b5088911ca9a58757c5055cf8b65efb580be060'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/version.h:
+    newFile: !uuid '87178e9e9a21fe3f0b37d7b020d13ca123aea31e'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/video_enc_params.h:
+    newFile: !uuid 'fc0c3bc1a514f035bd5b8edec03e492bea93c007'
+    oldFile: null
+  /Third/ZLMediaCLib/include/libavutil/xtea.h:
+    newFile: !uuid '735427c109a15229f7750073b4591763d6ab60ca'
+    oldFile: null
+  /Third/ZLMediaCLib/lib:
+    newFile: !uuid 'f6025e0ac5e37c5603b0d1ed5f87f117ac48afe5'
+    oldFile: null
+  /Third/ZLMediaCLib/lib/avcodec.lib:
+    newFile: !uuid '678ed8765aa8833dfddefd8682428ea76e74b905'
+    oldFile: null
+  /Third/ZLMediaCLib/lib/avutil.lib:
+    newFile: !uuid '30e5260a6223a0a8b3ab37a848b4ceb64118ba07'
+    oldFile: null
+  /Third/ZLMediaCLib/编译说明.txt:
+    newFile: !uuid '7dbfd03b4856ffc3276b38c3fb86d9957b5a30cf'
+    oldFile: null
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid '9aec992cca05e4ab96569c09c80b2689640ef8e6'
+    oldFile: !uuid 'a80b976abb6600cc6839dbebc9446521ed96295f'
+  /Third/ZLMediaKit.Autogen/LibConvert.cs:
+    newFile: !uuid '3946fc1492009b239d358c6c09a780aa63681911'
+    oldFile: !uuid 'f0ff7a2d628349dc6c206aabbfecd1f5a24b0d58'
+  /Third/ZLMediaKit.Autogen/ZLMediaKit.Autogen.csproj:
+    newFile: !uuid '29de1aba0a5c3780b0027c0802d44a5ae620a5da'
+    oldFile: !uuid '1a38ebdb91c4ff0ee5dae4d981abc73d138ff5b5'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid '0cbab499ed78d9abd2eeee596b086abeb9f2ea33'
+    oldFile: !uuid '1cf9bacec95c89abf2075d2db1d1dcdf2058c7ee'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/win-x64:
+    newFile: !uuid '97f681a8cb3faedc189dc42565e34742acbac272'
+    oldFile: !uuid '66b1fc773ee0f3d50d70caa4c9d9fec7a06f6ac4'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/win-x64/ff_h264_encoder.dll:
+    newFile: !uuid '0519551b4cc174674acf484ad9598dbc5da9ea22'
+    oldFile: null
+gitCommitId: !uuid 'de65aa82016c5c3bc4030703e30d0041892fa672'
 renames: {
   }
-revisionId: 278
+revisionId: 279
