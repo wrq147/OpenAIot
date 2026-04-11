@@ -185,7 +185,6 @@ namespace GB28181Channel
                         LibConvert.ff_h264_free(ptr);
                     }
                     context.Pool.Return(managedYuvBuffer);
-                    return;
                 }
                 else
                 {
@@ -193,9 +192,7 @@ namespace GB28181Channel
                     {
                         YuvData = managedYuvBuffer,
                         LineSizes = yuvLineSizes,
-                        PixFmt = pixFmt,
                         Pts = lpts,
-                        Dts = dts,
                         Width = w,
                         Height = h
                     });
@@ -773,9 +770,7 @@ namespace GB28181Channel
     {
         public byte[] YuvData { get; set; }
         public int[] LineSizes { get; set; }
-        public int PixFmt { get; set; }
         public long Pts { get; set; }
-        public long Dts { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
     }

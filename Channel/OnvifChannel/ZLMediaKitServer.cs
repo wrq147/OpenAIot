@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ZLMediaKit;
+using ZLMediaKit.Autogen;
 
 namespace OnvifChannel
 {
@@ -117,6 +118,7 @@ namespace OnvifChannel
             int w = mk_transcode.MkGetAvFrameWidth(avFrame);
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
+            long dts = mk_transcode.MkGetAvFrameDts(avFrame);
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
             if (context == null || string.IsNullOrEmpty(context.VideoKey))
             {
@@ -172,28 +174,48 @@ namespace OnvifChannel
                 }
 
                 int[] yuvLineSizes = mk_transcode.MkSizePtrToArr(yuvLineSizesPtr);
-
-                context.YuvQueue.Enqueue(new YuvFrame
+                if (context.VideoEncoder != IntPtr.Zero)
                 {
-                    YuvData = managedYuvBuffer,
-                    LineSizes = yuvLineSizes,
-                    Pts = lpts,
-                    Width = w,
-                    Height = h
-                });
-
-                context.FrameEvent.Set();
-
-                // 启动编码线程（只启动一次）
-                if (context.EncodeThread == null)
-                {
-                    context.EncodeThread = new Thread(EncodeLoop)
+                    IntPtr[] planes = new IntPtr[3];
+                    fixed (byte* pYuv = managedYuvBuffer)
                     {
-                        IsBackground = true,
-                        Priority = ThreadPriority.AboveNormal
-                    };
-                    context.EncodeThread.Start(context);
+                        planes[0] = (IntPtr)pYuv;
+                        planes[1] = (IntPtr)(pYuv + w * h);
+                        planes[2] = (IntPtr)(pYuv + w * h + (w / 2) * (h / 2));
+                    }
+                    LibConvert.ff_h264_encode_frame(context.VideoEncoder, planes, yuvLineSizes, lpts, pixFmt, out IntPtr ptr, out int len);
+                    if (len > 0 && ptr != IntPtr.Zero)
+                    {
+                        mk_media.MkMediaInputH264(context.Media, ptr, len, (ulong)dts, (ulong)lpts);
+                        LibConvert.ff_h264_free(ptr);
+                    }
+                    context.Pool.Return(managedYuvBuffer);
                 }
+                else
+                {
+                    context.YuvQueue.Enqueue(new YuvFrame
+                    {
+                        YuvData = managedYuvBuffer,
+                        LineSizes = yuvLineSizes,
+                        Pts = lpts,
+                        Width = w,
+                        Height = h
+                    });
+
+                    context.FrameEvent.Set();
+
+                    // 启动编码线程（只启动一次）
+                    if (context.EncodeThread == null)
+                    {
+                        context.EncodeThread = new Thread(EncodeLoop)
+                        {
+                            IsBackground = true,
+                            Priority = ThreadPriority.AboveNormal
+                        };
+                        context.EncodeThread.Start(context);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -710,6 +732,7 @@ namespace OnvifChannel
         public string VideoKey { get; set; }
         public MkMediaT Media { get; set; }
         public MkDecoderT VideoDecoder { get; set; }
+        public IntPtr VideoEncoder { get; set; } = IntPtr.Zero;
         public MkSwscaleT Swscale { get; set; }
         public MotionDetector Motion { get; set; } = new MotionDetector();
         // 上次触发时间
