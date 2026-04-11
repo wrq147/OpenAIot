@@ -164,34 +164,55 @@ namespace GB28181Channel
                         IntPtr ptr = (IntPtr)p;
                         AIDetectorTask.Draw((IntPtr)ppYuv, yuvLineSizesPtr, pixFmt, w, h, tmpboxlist);
                     }
+
                 }
 
                 int[] yuvLineSizes = mk_transcode.MkSizePtrToArr(yuvLineSizesPtr);
-                context.YuvQueue.Enqueue(new YuvFrame
-                {
-                    YuvData = managedYuvBuffer,
-                    LineSizes = yuvLineSizes,
-                    PixFmt = pixFmt,
-                    Pts = lpts,
-                    Dts = dts,
-                    Width = w,
-                    Height = h
-                });
 
-                context.FrameEvent.Set();
-
-                // 启动编码线程（只启动一次）
-                if (context.EncodeThread == null)
+                if (context.VideoEncoder != IntPtr.Zero)
                 {
-                    context.EncodeThread = new Thread(EncodeLoop)
+                    IntPtr[] planes = new IntPtr[3];
+                    fixed (byte* pYuv = managedYuvBuffer)
                     {
-                        IsBackground = true,
-                        Priority = ThreadPriority.AboveNormal
-                    };
-                    context.EncodeThread.Start(context);
+                        planes[0] = (IntPtr)pYuv;
+                        planes[1] = (IntPtr)(pYuv + w * h);
+                        planes[2] = (IntPtr)(pYuv + w * h + (w / 2) * (h / 2));
+                    }
+                    LibConvert.ff_h264_encode_frame(context.VideoEncoder, planes, yuvLineSizes, lpts, pixFmt, out IntPtr ptr, out int len);
+                    if (len > 0 && ptr != IntPtr.Zero)
+                    {
+                        mk_media.MkMediaInputH264(context.Media, ptr, len, (ulong)dts, (ulong)lpts);
+                        LibConvert.ff_h264_free(ptr);
+                    }
+                    context.Pool.Return(managedYuvBuffer);
+                    return;
                 }
+                else
+                {
+                    context.YuvQueue.Enqueue(new YuvFrame
+                    {
+                        YuvData = managedYuvBuffer,
+                        LineSizes = yuvLineSizes,
+                        PixFmt = pixFmt,
+                        Pts = lpts,
+                        Dts = dts,
+                        Width = w,
+                        Height = h
+                    });
 
+                    context.FrameEvent.Set();
 
+                    // 启动编码线程（只启动一次）
+                    if (context.EncodeThread == null)
+                    {
+                        context.EncodeThread = new Thread(EncodeLoop)
+                        {
+                            IsBackground = true,
+                            Priority = ThreadPriority.AboveNormal
+                        };
+                        context.EncodeThread.Start(context);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -238,20 +259,7 @@ namespace GB28181Channel
                             planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
                             planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
                         }
-                        if (context.VideoEncoder != IntPtr.Zero)
-                        {
-                            LibConvert.ff_h264_encode_frame(context.VideoEncoder, planes, frame.LineSizes, frame.PixFmt, frame.Pts, out IntPtr ptr, out int len);
-                            if (len > 0 && ptr != IntPtr.Zero)
-                            {
-                                mk_media.MkMediaInputH264(context.Media, ptr, len, (ulong)frame.Dts, (ulong)frame.Pts);
-                                LibConvert.ff_h264_free(ptr);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            mk_media.MkMediaInputYuv(context.Media, planes, frame.LineSizes, (ulong)frame.Pts);
-                        }
+                        mk_media.MkMediaInputYuv(context.Media, planes, frame.LineSizes, (ulong)frame.Pts);
                     }
                     catch (Exception ex)
                     {

@@ -14,11 +14,13 @@
 #include <libavutil/avutil.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/error.h>
+#include <libswscale/swscale.h> 
 
 typedef struct {
 	AVCodecContext* ctx;
 	AVFrame* frame;
 	AVPacket* pkt;
+	struct SwsContext* sws_ctx;
 	int width;
 	int height;
 	int fps;
@@ -32,10 +34,12 @@ API void* ff_h264_encoder_create(int width, int height, int fps, int bitrate) {
 	h->width = width;
 	h->height = height;
 	h->fps = fps;
+	h->sws_ctx = NULL;
 
 	// 优先硬编码器
 	AVCodec* codec = NULL;
 	codec = avcodec_find_encoder_by_name("h264_nvenc");
+
 	if (!codec) codec = avcodec_find_encoder_by_name("h264_qsv");
 	if (!codec) codec = avcodec_find_encoder_by_name("h264_amf");
 	if (!codec) codec = avcodec_find_encoder_by_name("h264_vaapi");
@@ -48,7 +52,6 @@ API void* ff_h264_encoder_create(int width, int height, int fps, int bitrate) {
 	if (!codec) codec = avcodec_find_encoder_by_name("h264_mpi");
 	// macOS
 	if (!codec) codec = avcodec_find_encoder_by_name("h264_videotoolbox");
-
 	if (!codec) {
 		free(h);
 		return NULL;
@@ -65,19 +68,19 @@ API void* ff_h264_encoder_create(int width, int height, int fps, int bitrate) {
 	ctx->bit_rate = bitrate;
 	ctx->gop_size = fps;
 	ctx->max_b_frames = 0;
+	ctx->pix_fmt = AV_PIX_FMT_YUV420P;
 
-	av_opt_set(ctx->priv_data, "tune", "zerolatency", 0);
-	av_opt_set(ctx->priv_data, "preset", "fast", 0);
 
-	if (avcodec_open2(ctx, codec, NULL) < 0) {
+	int a = avcodec_open2(ctx, codec, NULL);
+	if (a < 0) {
 		avcodec_free_context(&ctx);
 		free(h);
 		return NULL;
 	}
-
 	AVFrame* frame = av_frame_alloc();
 	frame->width = width;
 	frame->height = height;
+	frame->format = AV_PIX_FMT_YUV420P;
 	av_frame_get_buffer(frame, 32);
 
 	h->ctx = ctx;
@@ -87,23 +90,45 @@ API void* ff_h264_encoder_create(int width, int height, int fps, int bitrate) {
 	return h;
 }
 
-// 编码一帧 YUV420p
-API int ff_h264_encode_frame(void* handle, const char* yuv[3], int linesize[3], int pix_fmt, int64_t pts, uint8_t** out_data, int* out_len) {
+
+API int ff_h264_encode_frame(void* handle, const char* yuv[3], int linesize[3], int64_t pts, int pix_fmt, uint8_t** out_data, int* out_len) {
 	EncoderHandle* h = (EncoderHandle*)handle;
-	h->ctx->pix_fmt = pix_fmt;
-	h->frame->format = pix_fmt;
+
 	*out_data = NULL;
 	*out_len = 0;
+	if (pix_fmt == 0 || pix_fmt == 12) {
+		av_image_copy(
+			h->frame->data,
+			h->frame->linesize,
+			(const uint8_t**)yuv,
+			linesize,
+			h->ctx->pix_fmt,
+			h->width,
+			h->height
+		);
+	}
+	else {
+		if (h->sws_ctx == NULL) {
+			h->sws_ctx = sws_getContext(
+				h->width, h->height, pix_fmt,
+				h->width, h->height, h->ctx->pix_fmt,
+				SWS_BILINEAR, NULL, NULL, NULL
+			);
+			if (!h->sws_ctx) {
+				printf("[ERROR] 像素格式转换初始化失败\n");
+				return 0;
+			}
+		}
+		sws_scale(
+			h->sws_ctx,
+			(const uint8_t**)yuv,
+			linesize,
+			0, h->height,
+			h->frame->data,
+			h->frame->linesize
+		);
+	}
 
-	av_image_copy(
-		h->frame->data,
-		h->frame->linesize,
-		(const uint8_t**)yuv,
-		linesize,
-		h->ctx->pix_fmt,
-		h->width,
-		h->height
-	);
 
 	h->frame->pts = pts;
 

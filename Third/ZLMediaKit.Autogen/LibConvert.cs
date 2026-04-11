@@ -102,7 +102,7 @@ namespace ZLMediaKit.Autogen
         public static extern IntPtr ff_h264_encoder_create(int width, int height, int fps, int bitrate);
 
         [DllImport("ff_h264_encoder", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ff_h264_encode_frame(IntPtr handle, IntPtr[] yuv, int[] linesize, int pix_fmt, long pts, out IntPtr out_data, out int out_len);
+        public static extern int ff_h264_encode_frame(IntPtr handle, IntPtr[] yuv, int[] linesize, long pts, int pix_fmt, out IntPtr out_data, out int out_len);
 
         [DllImport("ff_h264_encoder", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ff_h264_free(IntPtr data);
