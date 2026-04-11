@@ -30,7 +30,7 @@ namespace ZLMediaKit.Autogen
                 Environment.SetEnvironmentVariable("PATH", $"{nativeDir};{path}");
             }
         }
-    
+
         // RGB24转NV12
         [DllImport("convert", CallingConvention = CallingConvention.Cdecl)]
         public static extern void rgb24_to_nv12(
@@ -96,5 +96,18 @@ namespace ZLMediaKit.Autogen
             byte r, byte g, byte b,// 框颜色 RGB
             [MarshalAs(UnmanagedType.LPStr)] string label // 中文标签
         );
+
+
+        [DllImport("ff_h264_encoder", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr ff_h264_encoder_create(int width, int height, int fps, int bitrate);
+
+        [DllImport("ff_h264_encoder", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ff_h264_encode_frame(IntPtr handle, IntPtr[] yuv, int[] linesize, int pix_fmt, long pts, out IntPtr out_data, out int out_len);
+
+        [DllImport("ff_h264_encoder", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ff_h264_free(IntPtr data);
+
+        [DllImport("ff_h264_encoder", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ff_h264_encoder_destroy(IntPtr handle);
     }
 }

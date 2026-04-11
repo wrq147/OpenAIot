@@ -1,0 +1,10 @@
+windows下convert.c编译命令
+cl /LD /O2 /W4 convert.c /Fe:convert.dll
+
+windows下ff_h264_encoder.c编译命令
+cl /LD ff_h264_encoder.c /I include /link avcodec.lib avutil.lib /LIBPATH:lib /OUT:ff_h264_encoder.dll
+
+linux下convert.c编译命令
+gcc -shared -fPIC -O2 -Wall convert.c -o libconvert.so
+
+linux下ff_h264_encoder.c编译命令

@@ -8,11 +8,13 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZLMediaKit;
+using ZLMediaKit.Autogen;
 
 namespace GB28181Channel
 {
@@ -103,6 +105,7 @@ namespace GB28181Channel
             int w = mk_transcode.MkGetAvFrameWidth(avFrame);
             int h = mk_transcode.MkGetAvFrameHeight(avFrame);
             int pixFmt = mk_transcode.MkGetAvFrameFormat(avFrame);
+            long dts = mk_transcode.MkGetAvFrameDts(avFrame);
 
             FrameContext context = CallbackHelper.UnwrapIntPtrToInstance<FrameContext>(user_data);
             if (context == null || string.IsNullOrEmpty(context.VideoKey))
@@ -114,6 +117,7 @@ namespace GB28181Channel
             {
                 return;
             }
+
 
             var storage = _provider.GetService<IDeviceStorage>();
             var device = storage.GetDevice(context.DeviceId);
@@ -167,7 +171,9 @@ namespace GB28181Channel
                 {
                     YuvData = managedYuvBuffer,
                     LineSizes = yuvLineSizes,
+                    PixFmt = pixFmt,
                     Pts = lpts,
+                    Dts = dts,
                     Width = w,
                     Height = h
                 });
@@ -197,7 +203,7 @@ namespace GB28181Channel
                 if (now - context.LastTriggerTime >= device.VideoData.CoolDownMs)
                 {
                     context.LastTriggerTime = now;
-                    if(device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
+                    if (device.VideoData.Configs != null && device.VideoData.Configs.Count > 0)
                     {
                         const int pixelSize = 3;
                         int rawLineSize = w * pixelSize;
@@ -232,12 +238,20 @@ namespace GB28181Channel
                             planes[1] = (IntPtr)(pYuv + frame.Width * frame.Height);
                             planes[2] = (IntPtr)(pYuv + frame.Width * frame.Height + (frame.Width / 2) * (frame.Height / 2));
                         }
-                        // 真正耗时的调用，放在独立线程
-                        mk_media.MkMediaInputYuv(
-                            context.Media,
-                            planes,
-                            frame.LineSizes,
-                            (ulong)frame.Pts);
+                        if (context.VideoEncoder != IntPtr.Zero)
+                        {
+                            LibConvert.ff_h264_encode_frame(context.VideoEncoder, planes, frame.LineSizes, frame.PixFmt, frame.Pts, out IntPtr ptr, out int len);
+                            if (len > 0 && ptr != IntPtr.Zero)
+                            {
+                                mk_media.MkMediaInputH264(context.Media, ptr, len, (ulong)frame.Dts, (ulong)frame.Pts);
+                                LibConvert.ff_h264_free(ptr);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            mk_media.MkMediaInputYuv(context.Media, planes, frame.LineSizes, (ulong)frame.Pts);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -277,6 +291,7 @@ namespace GB28181Channel
                     context.VideoKey = channelInfo.PushKey;
                     context.DeviceId = channelInfo.DeviceId;
                     context.ChannelId = channelInfo.ChannelId;
+
                     _contextPtrMap.TryAdd(context.VideoKey, contextPtr);
                     _contextMap.TryAdd(context.VideoKey, context);
 
@@ -307,13 +322,16 @@ namespace GB28181Channel
                             int codec_id = mk_track.MkTrackCodecId(mkTrack);
                             int width = mk_track.MkTrackVideoWidth(mkTrack);
                             int height = mk_track.MkTrackVideoHeight(mkTrack);
-                            float tfps = mk_track.MkTrackVideoFps(mkTrack);
+                            int tfps = mk_track.MkTrackVideoFps(mkTrack);
                             int bit_rate = mk_track.MkTrackBitRate(mkTrack);
+
                             mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
 
                             MkDecoderT mkDecoder = mk_transcode.MkDecoderCreate(mkTrack, 0);
                             context.VideoDecoder = mkDecoder;
                             context.Swscale = mk_transcode.MkSwscaleCreate(2, 0, 0);
+                            context.VideoEncoder = LibConvert.ff_h264_encoder_create(width, height, tfps, bit_rate);
+
 
                             mk_transcode.MkDecoderSetCb(mkDecoder, _onDecodeFrameDelegate, contextPtr);
                             mk_track.MkTrackAddDelegate(mkTrack, _onParseFrameDelegate, contextPtr);
@@ -371,6 +389,10 @@ namespace GB28181Channel
                             {
                                 mk_media.MkMediaRelease(context.Media);
                                 context.Media = null;
+                            }
+                            if (context.VideoEncoder != IntPtr.Zero)
+                            {
+                                LibConvert.ff_h264_encoder_destroy(context.VideoEncoder);
                             }
 
                             if (_contextPtrMap.TryRemove(channelInfo.PushKey, out IntPtr contextPtr))
@@ -734,6 +756,7 @@ namespace GB28181Channel
         public string DeviceId { get; set; }
         public string ChannelId { get; set; }
         public MkMediaT Media { get; set; }
+        public IntPtr VideoEncoder { get; set; } = IntPtr.Zero;
         public MkDecoderT VideoDecoder { get; set; }
         public MkSwscaleT Swscale { get; set; }
         public MotionDetector Motion { get; set; } = new MotionDetector();
@@ -742,7 +765,9 @@ namespace GB28181Channel
     {
         public byte[] YuvData { get; set; }
         public int[] LineSizes { get; set; }
+        public int PixFmt { get; set; }
         public long Pts { get; set; }
+        public long Dts { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
     }

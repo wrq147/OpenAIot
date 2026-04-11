@@ -1,19 +1,11 @@
 ﻿using AuthService;
-using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
-using IoTService.DAL;
-using IoTService.Models;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using MyAccess.DB.Builder.WhereToSql;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace IoTVideoService.Business

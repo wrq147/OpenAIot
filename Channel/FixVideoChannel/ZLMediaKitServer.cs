@@ -409,7 +409,7 @@ namespace FixVideoChannel
                     int codec_id = mk_track.MkTrackCodecId(mkTrack);
                     int width = mk_track.MkTrackVideoWidth(mkTrack);
                     int height = mk_track.MkTrackVideoHeight(mkTrack);
-                    float tfps = mk_track.MkTrackVideoFps(mkTrack);
+                    int tfps = mk_track.MkTrackVideoFps(mkTrack);
                     int bit_rate = mk_track.MkTrackBitRate(mkTrack);
                     mk_media.MkMediaInitVideo(context.Media, codec_id, width, height, tfps, bit_rate);
 

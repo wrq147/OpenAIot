@@ -15,7 +15,7 @@ namespace IoTAIService
 {
     public class ReliableAISubscriber : IDisposable
     {
-        private readonly PullSocket _subSocket;
+        private PullSocket _subSocket;
         private readonly string _connectAddress;
         private CancellationTokenSource _cts;
         private ITAServiceProvider _provider;
@@ -29,8 +29,6 @@ namespace IoTAIService
             _provider = serviceProvider;
             _connectAddress = option.Value.AIBind;
             _cts = new CancellationTokenSource();
-
-            _subSocket = new PullSocket();
         }
 
 
@@ -39,6 +37,7 @@ namespace IoTAIService
         /// </summary>
         public void StartReceiving()
         {
+            _subSocket = new PullSocket();
             _subSocket.Bind(_connectAddress);
             _receiveThread = new Thread(() => ReceiveLoop());
             _receiveThread.IsBackground = true;

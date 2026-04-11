@@ -54,6 +54,9 @@
     <None Update="ZLMediaLibs\win-x64\convert.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="ZLMediaLibs\win-x64\ff_h264_encoder.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ZLMediaLibs\win-x64\libcrypto-3-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
