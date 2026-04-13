@@ -4,6 +4,11 @@
         <name>IoTVideoService</name>
     </assembly>
     <members>
+        <member name="M:IoTVideoService.ConsumConfigThread.Dispose">
+            <summary>
+            释放所有资源
+            </summary>
+        </member>
         <member name="M:IoTVideoService.Controller.Conf.ListPage(IoTVideoService.Models.In_VideoConfigPage)">
             <summary>
             获取策略分页列表

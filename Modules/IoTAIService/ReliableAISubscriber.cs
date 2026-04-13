@@ -88,9 +88,9 @@ namespace IoTAIService
         }
 
         /// <summary>
-        /// 停止所有订阅连接（优雅退出）
+        /// 释放所有资源
         /// </summary>
-        public void Stop()
+        public void Dispose()
         {
             // 取消所有线程的令牌
             _cts.Cancel();
@@ -100,14 +100,6 @@ namespace IoTAIService
                 _receiveThread.Join(TimeSpan.FromSeconds(5));
             }
             Console.WriteLine("订阅连接已停止");
-        }
-
-        /// <summary>
-        /// 释放所有资源
-        /// </summary>
-        public void Dispose()
-        {
-            Stop();
             _cts?.Dispose();
         }
 

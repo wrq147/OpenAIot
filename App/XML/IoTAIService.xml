@@ -784,11 +784,6 @@
             消息接收循环
             </summary>
         </member>
-        <member name="M:IoTAIService.ReliableAISubscriber.Stop">
-            <summary>
-            停止所有订阅连接（优雅退出）
-            </summary>
-        </member>
         <member name="M:IoTAIService.ReliableAISubscriber.Dispose">
             <summary>
             释放所有资源

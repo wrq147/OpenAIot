@@ -23,7 +23,7 @@ namespace AuthService.Migrators
                 component = "system/field/index",
                 query = string.Empty,
                 is_frame = 0,
-                is_cache = 1,
+                is_cache = 0,
                 menu_type = "C",
                 visible = "0",
                 status = "0",

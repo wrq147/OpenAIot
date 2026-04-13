@@ -1,6 +1,7 @@
 ﻿using ChannelUtility;
 using ChannelUtility.Message;
 using Common.EventBus;
+using Common.Json;
 using IoTService;
 using IoTVideoService.Models;
 using NATS.Client.Core;
@@ -9,6 +10,39 @@ namespace IoTVideoService
 {
     public static class VideoUtiliy
     {
+        public static async Task DownUpVideoItemMessage(this NatsScope scope, string nodeId, MZ_VideoSource source, string aidata)
+        {
+            VideoCaptureItem cpitem = new VideoCaptureItem();
+            cpitem.Id = source.Id;
+            cpitem.PullAddr = source.PullAddr;
+            cpitem.PushKey = source.VideoKey;
+            cpitem.UserName = source.UserName;
+            cpitem.Password = source.UserPwd;
+            AIConfig aiConfig;
+            if (string.IsNullOrEmpty(aidata))
+            {
+                aiConfig = new AIConfig();
+                aiConfig.MotionRatio = 0.08f;
+                aiConfig.CoolDownMs = 200;
+                aiConfig.Tasks = new List<AIDetectItem>();
+            }
+            else
+            {
+                aiConfig = System.Text.Json.JsonSerializer.Deserialize<AIConfig>(aidata, MyDefaultTextJsonConfig.DefaultOptions);
+            }
+
+            if (aiConfig != null)
+            {
+                aiConfig.OrgId = source.OrgId.Value;
+            }
+
+            MediaItemMessage msg = new MediaItemMessage();
+            msg.DeviceId = string.Empty;
+            msg.ProductId = string.Empty;
+            msg.Item = cpitem;
+            msg.Config = aiConfig;
+            await scope.Public(nodeId, msg);
+        }
         public static async Task<List<T_ServerInfo>> GetVideoServers(this IotRedisHelper redis)
         {
             var tmplist = new List<T_ServerInfo>();

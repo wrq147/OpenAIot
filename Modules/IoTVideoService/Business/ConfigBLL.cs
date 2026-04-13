@@ -1,6 +1,8 @@
 ﻿using AuthService;
+using Common.EventBus;
 using Common.IdGenerator;
 using Common.Share;
+using IoTService;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using MyAccess.DB.Builder.WhereToSql;
@@ -62,7 +64,22 @@ namespace IoTVideoService.Business
             }
             data.OrgId = null;
             data.SetUpdateBy(user);
-            return BusResponse<int>.Success(await _videoConfigDAL.Update(data));
+
+            int rs = await _videoConfigDAL.Update(data);
+            if (data.AITasks != null && old.AITasks != data.AITasks)
+            {
+                //通知AI配置变更
+                var nodeList = _provider.GetService<ServerBusProxy>().GetNodeList();
+                if (nodeList.Count > 0)
+                {
+                    int pos = Math.Abs(data.Id.GetHashCode() % nodeList.Count);
+                    await BusUtility.Dispatch("ConsumAI" + nodeList[pos], new
+                    {
+                        Id = data.Id
+                    });
+                }
+            }
+            return BusResponse<int>.Success(rs);
         }
         public virtual async Task<BusResponse<int>> Insert(MZ_IotVideoConfig data, IUserInfo user)
         {

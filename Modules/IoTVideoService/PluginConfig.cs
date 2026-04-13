@@ -2,12 +2,15 @@
 using Common;
 using Common.EventBus;
 using IoTRulesService.DataParser;
+using IoTService;
 using IoTService.Business;
+using IoTService.DAL;
 using IoTVideoService.Business;
 using IoTVideoService.DAL;
 using IoTVideoService.Models;
 using IoTVideoService.PlanUtil;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
 using MonitorService.Util;
@@ -36,6 +39,7 @@ namespace IoTVideoService
             services.AddDAL<VideoConfigDAL>();
 
             services.AddSingleton<PlanConcurrentJob>();
+            services.AddSingleton<ConsumConfigThread>();
             services.Configure<VideoOption>(config.GetSection("IoTVideoService"));
         }
         private ITAServiceProvider _provider;
@@ -73,6 +77,15 @@ namespace IoTVideoService
 
                 //初始化录像计划定时器
                 await PlanSchedule.InitScheduler(app.ServiceProvider);
+
+                _provider.GetService<ConsumConfigThread>().Start();
+            });
+
+            string tmpnodename = app.ServiceProvider.GetService<IOptions<IotOption>>().Value.node_name;
+
+            plg.RegisterBus("ConsumAI" + tmpnodename, async (bs) =>
+            {
+                app.ServiceProvider.GetService<ConsumConfigThread>().Push(bs.GetValue("Id"));
             });
 
             plg.RegisterQuartzTask();

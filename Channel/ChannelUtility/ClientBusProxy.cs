@@ -196,15 +196,21 @@ namespace ChannelUtility
             await this.SendNodeOnline();
         }
         private PushSocket _ai_publisher;
+        private readonly object _aiLock = new object();
         private PushSocket GetPublisher()
         {
             if (!string.IsNullOrEmpty(_option.AIConn))
             {
+                var tmpubli = _ai_publisher;
                 try
                 {
-                    if (_ai_publisher == null)
+                    if (tmpubli == null)
                     {
-                        _ai_publisher = new PushSocket(_option.AIConn);
+                        lock (_aiLock)
+                        {
+                            _ai_publisher = new PushSocket(_option.AIConn);
+                            tmpubli = _ai_publisher;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -212,7 +218,7 @@ namespace ChannelUtility
                     Console.WriteLine("AI推流连接异常：" + ex.Message);
                     _ai_publisher = null;
                 }
-                return _ai_publisher;
+                return tmpubli;
             }
             return null;
 
@@ -519,10 +525,22 @@ namespace ChannelUtility
 
                 var options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
                 byte[] serializedData = MessagePackSerializer.Serialize(aireq, options);
-                publisher.SendFrame(serializedData);
+                try
+                {
+                    publisher.SendFrame(serializedData);
+                }
+                catch
+                {
+                    lock (_aiLock)
+                    {
+                        if (_ai_publisher != null)
+                        {
+                            _ai_publisher.Dispose();
+                            _ai_publisher = null;
+                        }
+                    }
+                }
             }
-
-
         }
         public async Task PublishRawUp(string deviceId, byte[] data, string prefix, bool needReturn = false)
         {
@@ -604,7 +622,21 @@ namespace ChannelUtility
             var publisher = GetPublisher();
             if (publisher != null)
             {
-                publisher.SendFrame(serializedData);
+                try
+                {
+                    publisher.SendFrame(serializedData);
+                }
+                catch
+                {
+                    lock (_aiLock)
+                    {
+                        if (_ai_publisher != null)
+                        {
+                            _ai_publisher.Dispose();
+                            _ai_publisher = null;
+                        }
+                    }
+                }
             }
         }
         public async Task<string> WaitPublishMediaUserVerify(string username)
