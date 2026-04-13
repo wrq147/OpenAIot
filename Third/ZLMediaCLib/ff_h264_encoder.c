@@ -96,16 +96,15 @@ API int ff_h264_encode_frame(void* handle, const char* yuv[3], int linesize[3], 
 
 	*out_data = NULL;
 	*out_len = 0;
+
 	if (pix_fmt == 0 || pix_fmt == 12) {
-		av_image_copy(
-			h->frame->data,
-			h->frame->linesize,
-			(const uint8_t**)yuv,
-			linesize,
-			h->ctx->pix_fmt,
-			h->width,
-			h->height
-		);
+		av_frame_make_writable(h->frame);
+		h->frame->data[0] = (uint8_t*)yuv[0];
+		h->frame->data[1] = (uint8_t*)yuv[1];
+		h->frame->data[2] = (uint8_t*)yuv[2];
+		h->frame->linesize[0] = linesize[0];
+		h->frame->linesize[1] = linesize[1];
+		h->frame->linesize[2] = linesize[2];
 	}
 	else {
 		if (h->sws_ctx == NULL) {
@@ -128,8 +127,6 @@ API int ff_h264_encode_frame(void* handle, const char* yuv[3], int linesize[3], 
 			h->frame->linesize
 		);
 	}
-
-
 	h->frame->pts = pts;
 
 	int ret = avcodec_send_frame(h->ctx, h->frame);
