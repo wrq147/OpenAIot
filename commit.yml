@@ -2,28 +2,40 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '0b819228c3e2741ca2007e7ec3f2153d41882cd3'
-    oldFile: !uuid 'ec104671b7de9a6aef5ab19e6327d56b55e29289'
-  /Channel/FixVideoChannel:
-    newFile: !uuid 'fc89ae70f364455afa60610531bef5af11568d67'
-    oldFile: !uuid 'ebf29ef3ae5175d4ae71bf66a3ce06657876d320'
-  /Channel/FixVideoChannel/ZLMediaKitServer.cs:
-    newFile: !uuid '23889bb77ab7d1ac0a74cce368b7e88ea431b470'
-    oldFile: !uuid '44b1cfb286b1b3c7c0a9f161cdad7185c44c0480'
-  /Channel/GB28181Channel:
-    newFile: !uuid 'd2b4a0890e014307204ad8c769a4c37ec7e2b251'
-    oldFile: !uuid 'fbcb738bc3bfc773bd4f19075919cd51baf0bd56'
-  /Channel/GB28181Channel/ZLMediaKitServer.cs:
-    newFile: !uuid '5517a1e9881b1ebf56a04091649017a1be6d001e'
-    oldFile: !uuid 'f2e4041eeaad1a5612c4c24ed5517091a4a8c98c'
-  /Channel/OnvifChannel:
-    newFile: !uuid '798bb7cb15a0f7ac5c1e9901f95fc2913e2a2e11'
-    oldFile: !uuid 'e8edfdfeb028ce7af8ba5c2a4c9ea073ae52a2fc'
-  /Channel/OnvifChannel/ZLMediaKitServer.cs:
-    newFile: !uuid 'bcd200960f6bea8956e34e39c9bfe8e867d01a13'
-    oldFile: !uuid '263b44a3d0ff5d369080d48b5750b4733196a566'
-gitCommitId: !uuid '694edb0925059848cf70887c9943fdcea1ce2561'
+  /Third:
+    newFile: !uuid '5eb620819c8fd17802d2f600447a060e0c31ebba'
+    oldFile: !uuid '95425c8756779c0f2e32652b2442b77ac0d9b951'
+  /Third/ZLMediaCLib:
+    newFile: !uuid '9f1940c7483919b81beb7537d95aeddc4de389f3'
+    oldFile: !uuid 'b25a8c345f83da6f1be1a64bdd483c5cd10e5846'
+  /Third/ZLMediaCLib/ff_h264_encoder.c:
+    newFile: !uuid 'b4da3027dc797205bde4ac253ba790479ece091d'
+    oldFile: !uuid 'c4d68f44b994aeec5741e32899620c83cf9fb9af'
+  /Third/ZLMediaKit.Autogen:
+    newFile: !uuid '2f1e7eaa8070ab5c7e8eeae15488ec24450f3262'
+    oldFile: !uuid 'fb2be4677c6e16fc9b28dbc5942668ec7f75779f'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs:
+    newFile: !uuid 'b846698ef892c1abff50d0b6ed4824161dcb2d60'
+    oldFile: !uuid '3245e192e1944b2abdbc59168bb1b36059665d5e'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/linux-arm64:
+    newFile: !uuid '8c43effe89a2bde35c9ca872dbf96e5d1cdac739'
+    oldFile: !uuid '45eecd37d353f511bb543aeaf9b9051d74369a8a'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/linux-arm64/libff_h264_encoder.so:
+    newFile: !uuid 'de1c933de6de2a2f9c1bba3b1c7be852e92eec0b'
+    oldFile: !uuid '7fa6c1a89b26325a90228e54c8669495cac7c8b4'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/linux-x64:
+    newFile: !uuid '396e63cc7987986e1edf7ff1f9ada839ffaf2c57'
+    oldFile: !uuid 'ac4d713aa5e759bc2f3ff1ae3c6fe8265c7930f9'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/linux-x64/libff_h264_encoder.so:
+    newFile: !uuid '09d4db0eb4aeeeaaae6d6d4340006348f723becd'
+    oldFile: !uuid 'a83fbc0ebc9c6f703b4661ce35a2c78da7f4f890'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/win-x64:
+    newFile: !uuid 'b1d3897297c2c4f5fa273dc5b5d05f8b9a8d1683'
+    oldFile: !uuid '9d175221ec6f1d3ffefc060e740e0485822bb3d0'
+  /Third/ZLMediaKit.Autogen/ZLMediaLibs/win-x64/ff_h264_encoder.dll:
+    newFile: !uuid '04ced2a5a0066080b82e1d648ca2e14e93bca523'
+    oldFile: !uuid '64ca76fc8f12a81cc5ac4cd0db3c094dc915c39b'
+gitCommitId: !uuid '2776d163170b8529838d92af4b248cbc2ef8978e'
 renames: {
   }
-revisionId: 281
+revisionId: 282
