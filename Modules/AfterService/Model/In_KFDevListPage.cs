@@ -61,5 +61,9 @@ namespace AfterService.Model
         /// 运行状态
         /// </summary>
         public string DState { get; set; }
+        /// <summary>
+        /// 是否显示标签
+        /// </summary>
+        public bool? ShowTags { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AfterService.DAL;
+﻿using AfterService.Controller;
+using AfterService.DAL;
 using AfterService.Model;
 using AuthService;
 using AuthService.Business;
@@ -6,6 +7,7 @@ using AuthService.DAL;
 using AuthService.Model;
 using ChannelUtility.Tsl;
 using Common.Share;
+using IoTService.Business;
 using IoTService.DAL;
 using IoTService.Models;
 using NPOI.XSSF.UserModel;
@@ -166,6 +168,55 @@ namespace AfterService.Business
                 foreach (var item in tpageList.List)
                 {
                     item.HavWarn = warnList.Contains(item.Id);
+                }
+                if (query.ShowTags == true)
+                {
+                    var tagBLL = this._provider.GetService<IotTagBLL>();
+                    var productIds = tpageList.List.Select(x => x.ProductId).Distinct().ToList();
+                    var devIds = tpageList.List.Select(x => x.Id).ToList();
+                    if (productIds.Count > 0 && devIds.Count > 0)
+                    {
+                        //获取物联协议
+                        var productList = await this._provider.GetService<IotProductDAL>().SelectList(x => productIds.Contains(x.Id));
+                        //获取设备标签值
+                        var tagvalues = await this._provider.GetService<IotDeviceTagDAL>().SelectList(x => devIds.Contains(x.Id));
+
+                        foreach (var dev in tpageList.List)
+                        {
+                            var pro = productList.Where(x => x.Id == dev.ProductId).FirstOrDefault();
+                            var tagVals = tagvalues.Where(x => x.Id == dev.Id).ToDictionary(x => x.Code);
+                            if (pro != null)
+                            {
+                                dev.TagsView = new List<Out_TagItem>();
+                                var model = TslModel.CreateFrom(pro.ModelTSL);
+                                if (model != null)
+                                {
+                                    foreach (var tg in model.tags)
+                                    {
+                                        if (!tg.enable) continue;
+                                        if (tagVals.TryGetValue(tg.code, out MZ_IotDeviceTag tmpval))
+                                        {
+                                            var item = tagBLL.ToTagItem(dev.Id, tg, tmpval);
+                                            if (item != null)
+                                            {
+                                                dev.TagsView.Add(new Out_TagItem()
+                                                {
+                                                    Name = tg.name,
+                                                    DisplayValue = item.DisplayValue
+                                                });
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        }
+
+                    }
                 }
             }
 
