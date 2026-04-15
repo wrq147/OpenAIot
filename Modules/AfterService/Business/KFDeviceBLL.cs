@@ -165,9 +165,14 @@ namespace AfterService.Business
             if (ids.Count > 0)
             {
                 var warnList = await _provider.GetService<IotWarningDAL>().SelectWarningDeviceList(ids, user.OrgId);
+                var tmpcodeDict = await _provider.GetService<CodeBLL>().SelectAreaDict();
                 foreach (var item in tpageList.List)
                 {
                     item.HavWarn = warnList.Contains(item.Id);
+                    if (!string.IsNullOrEmpty(item.AreaCode))
+                    {
+                        item.AreaCodeName = tmpcodeDict.MultiToName(item.AreaCode);
+                    }
                 }
                 if (query.ShowTags == true)
                 {

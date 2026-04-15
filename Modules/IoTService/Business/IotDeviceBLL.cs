@@ -179,6 +179,17 @@ namespace IoTService.Business
             }
 
             var devpage = await _deviceDAL.SelectWithGroupPage(query, classPath, user);
+            if (devpage.List.Count > 0)
+            {
+                var tmpcodeDict = await _provider.GetService<CodeBLL>().SelectAreaDict();
+                foreach (var tmpdvv in devpage.List)
+                {
+                    if (!string.IsNullOrEmpty(tmpdvv.AreaCode))
+                    {
+                        tmpdvv.AreaCodeName = tmpcodeDict.MultiToName(tmpdvv.AreaCode);
+                    }
+                }
+            }
             if (query.ShowTags == true)
             {
                 var tagBLL = this._provider.GetService<IotTagBLL>();
