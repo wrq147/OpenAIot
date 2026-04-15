@@ -171,7 +171,18 @@ namespace AfterService.Business
                     item.HavWarn = warnList.Contains(item.Id);
                     if (!string.IsNullOrEmpty(item.AreaCode))
                     {
-                        item.AreaCodeName = tmpcodeDict.MultiToName(item.AreaCode);
+                        if (item.AreaCode.EndsWith("0000"))
+                        {
+                            item.AreaCodeName = tmpcodeDict.MultiToName(item.AreaCode);
+                        }
+                        else if (item.AreaCode.EndsWith("00"))
+                        {
+                            item.AreaCodeName = tmpcodeDict.MultiToName(item.AreaCode.Substring(0, 2) + "0000," + item.AreaCode);
+                        }
+                        else
+                        {
+                            item.AreaCodeName = tmpcodeDict.MultiToName(item.AreaCode.Substring(0, 2) + "0000," + item.AreaCode.Substring(0, 4) + "00," + item.AreaCode);
+                        }
                     }
                 }
                 if (query.ShowTags == true)

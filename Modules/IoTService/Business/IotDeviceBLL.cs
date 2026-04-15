@@ -182,11 +182,22 @@ namespace IoTService.Business
             if (devpage.List.Count > 0)
             {
                 var tmpcodeDict = await _provider.GetService<CodeBLL>().SelectAreaDict();
-                foreach (var tmpdvv in devpage.List)
+                foreach (var device in devpage.List)
                 {
-                    if (!string.IsNullOrEmpty(tmpdvv.AreaCode))
+                    if (!string.IsNullOrEmpty(device.AreaCode))
                     {
-                        tmpdvv.AreaCodeName = tmpcodeDict.MultiToName(tmpdvv.AreaCode);
+                        if (device.AreaCode.EndsWith("0000"))
+                        {
+                            device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode);
+                        }
+                        else if (device.AreaCode.EndsWith("00"))
+                        {
+                            device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode.Substring(0, 2) + "0000," + device.AreaCode);
+                        }
+                        else
+                        {
+                            device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode.Substring(0, 2) + "0000," + device.AreaCode.Substring(0, 4) + "00," + device.AreaCode);
+                        }
                     }
                 }
             }
@@ -261,7 +272,18 @@ namespace IoTService.Business
             if (!string.IsNullOrEmpty(device.AreaCode))
             {
                 var tmpcodeDict = await _provider.GetService<CodeBLL>().SelectAreaDict();
-                device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode);
+                if (device.AreaCode.EndsWith("0000"))
+                {
+                    device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode);
+                }
+                else if (device.AreaCode.EndsWith("00"))
+                {
+                    device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode.Substring(0, 2) + "0000," + device.AreaCode);
+                }
+                else
+                {
+                    device.AreaCodeName = tmpcodeDict.MultiToName(device.AreaCode.Substring(0, 2) + "0000," + device.AreaCode.Substring(0, 4) + "00," + device.AreaCode);
+                }
             }
 
             return device;
