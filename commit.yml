@@ -3,27 +3,27 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'f2f9770c91fae70e01fd9d76aac56f3d6bb1561a'
-    oldFile: !uuid 'b8e1588fe0e088099cb29a37e3249e184e779503'
+    newFile: !uuid '320a3be6ad68674b89b447fd24c9f7ca01406525'
+    oldFile: !uuid 'f2f9770c91fae70e01fd9d76aac56f3d6bb1561a'
   /Modules/AfterService:
-    newFile: !uuid 'e5ff838585d2eb0b505396f918df30b4a51e6daa'
-    oldFile: !uuid '783b0898403fc0fbb420b290651a8f3a18665514'
+    newFile: !uuid '3fbbddb401137203ddeee15d37718d48567e3684'
+    oldFile: !uuid 'e5ff838585d2eb0b505396f918df30b4a51e6daa'
   /Modules/AfterService/Business:
-    newFile: !uuid '30425c14d300014196139527b2dd9a875931b63d'
-    oldFile: !uuid 'fa96d903f000c0a6d4135d26117e61a46791f0b6'
+    newFile: !uuid 'c9c527af0f475d63caa0502e1d3baaab5a9c2128'
+    oldFile: !uuid '30425c14d300014196139527b2dd9a875931b63d'
   /Modules/AfterService/Business/KFDeviceBLL.cs:
-    newFile: !uuid '1a90af410f30479aa7c4d4c68bd8bab41f1f3bf0'
-    oldFile: !uuid '67249fd730776a7e5c8331fe179f9153edde2871'
+    newFile: !uuid '49e422e3e212494467d2ea93d4c14bde67e46a97'
+    oldFile: !uuid '1a90af410f30479aa7c4d4c68bd8bab41f1f3bf0'
   /Modules/IoTService:
-    newFile: !uuid '7f541182f44c713b980a14ce0a837735e44bb1b6'
-    oldFile: !uuid '1cbb6f0e743568fc7c03ea0600acc0e825ae4e88'
+    newFile: !uuid '1b1c8d17d8f5e31203bd49c60b0c87405c8b9972'
+    oldFile: !uuid '7f541182f44c713b980a14ce0a837735e44bb1b6'
   /Modules/IoTService/Business:
-    newFile: !uuid '41d234fd6628afcca4bc9aed48d58fcec3f41bc5'
-    oldFile: !uuid '9ba196bb2f1887862c46f68c6ea943572b3fb0d2'
+    newFile: !uuid 'c9223008bca3c0b014dcd32da7e7dc2aef2efa94'
+    oldFile: !uuid '41d234fd6628afcca4bc9aed48d58fcec3f41bc5'
   /Modules/IoTService/Business/IotDeviceBLL.cs:
-    newFile: !uuid 'b516299dec32976b66a2f6279bad24bfaf8c1df8'
-    oldFile: !uuid '918562ce12321a4900ec20a56ea333adf86a8b14'
-gitCommitId: !uuid '03892957a001952f47688a76bc623cc178288382'
+    newFile: !uuid '5c17839b0eb49e1e4e259897abf0e41769e08778'
+    oldFile: !uuid 'b516299dec32976b66a2f6279bad24bfaf8c1df8'
+gitCommitId: !uuid 'f8608f223f08071bc98206f1134b4e3ae335bee5'
 renames: {
   }
-revisionId: 285
+revisionId: 286
