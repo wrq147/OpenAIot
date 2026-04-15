@@ -3,24 +3,27 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'b8e1588fe0e088099cb29a37e3249e184e779503'
-    oldFile: !uuid '35af64d82b93342b686d7c2e696998aa9dfeca24'
+    newFile: !uuid 'f2f9770c91fae70e01fd9d76aac56f3d6bb1561a'
+    oldFile: !uuid 'b8e1588fe0e088099cb29a37e3249e184e779503'
   /Modules/AfterService:
-    newFile: !uuid '783b0898403fc0fbb420b290651a8f3a18665514'
-    oldFile: !uuid 'e68994fe45ccf16acf58191165776219741b0d94'
+    newFile: !uuid 'e5ff838585d2eb0b505396f918df30b4a51e6daa'
+    oldFile: !uuid '783b0898403fc0fbb420b290651a8f3a18665514'
   /Modules/AfterService/Business:
-    newFile: !uuid 'fa96d903f000c0a6d4135d26117e61a46791f0b6'
-    oldFile: !uuid '27eb2e875a2499bf12b05928f26d774b5ccffcc9'
+    newFile: !uuid '30425c14d300014196139527b2dd9a875931b63d'
+    oldFile: !uuid 'fa96d903f000c0a6d4135d26117e61a46791f0b6'
   /Modules/AfterService/Business/KFDeviceBLL.cs:
-    newFile: !uuid '67249fd730776a7e5c8331fe179f9153edde2871'
-    oldFile: !uuid '112f92ed2f6835c6720a84affd2d7bfab13436cf'
-  /Modules/AfterService/Model:
-    newFile: !uuid '04444ab5a8a8a7d6df96ad07a20067e8b114f330'
-    oldFile: !uuid 'ac30f67160c3206f6b60803bf838f620c2ccb86e'
-  /Modules/AfterService/Model/In_KFDevListPage.cs:
-    newFile: !uuid '67ef3032da4db049e6fcbcc270e24ce170c48b24'
-    oldFile: !uuid '6ddd53afe4ab6132718af6a334024ee9f8b21bc1'
-gitCommitId: !uuid '0810b1fb042c66103dcf6406377544410b0f5639'
+    newFile: !uuid '1a90af410f30479aa7c4d4c68bd8bab41f1f3bf0'
+    oldFile: !uuid '67249fd730776a7e5c8331fe179f9153edde2871'
+  /Modules/IoTService:
+    newFile: !uuid '7f541182f44c713b980a14ce0a837735e44bb1b6'
+    oldFile: !uuid '1cbb6f0e743568fc7c03ea0600acc0e825ae4e88'
+  /Modules/IoTService/Business:
+    newFile: !uuid '41d234fd6628afcca4bc9aed48d58fcec3f41bc5'
+    oldFile: !uuid '9ba196bb2f1887862c46f68c6ea943572b3fb0d2'
+  /Modules/IoTService/Business/IotDeviceBLL.cs:
+    newFile: !uuid 'b516299dec32976b66a2f6279bad24bfaf8c1df8'
+    oldFile: !uuid '918562ce12321a4900ec20a56ea333adf86a8b14'
+gitCommitId: !uuid '03892957a001952f47688a76bc623cc178288382'
 renames: {
   }
-revisionId: 284
+revisionId: 285
