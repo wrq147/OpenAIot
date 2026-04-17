@@ -1,9 +1,9 @@
 matplotlib>=3.10.8
-numpy>=2.4.2
+numpy>=2.0.2
 opencv_python>=4.13.0.90
 polars>=1.37.1
 PyYAML>=6.0.3
 scipy>=1.17.1
 torch>=2.6.0
 torchvision>=0.21.0
-transformers>=5.0.0
+transformers>=4.52.0
