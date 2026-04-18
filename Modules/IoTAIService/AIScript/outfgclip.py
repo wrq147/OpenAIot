@@ -12,6 +12,27 @@ from transformers import (
 )
 
 
+class FeatureAlignProjection(nn.Module):
+    def __init__(self, in_dim=768, out_dim=768, hidden_dim=1024):
+        super().__init__()
+        # 🔥 二层 MLP + 归一化
+        self.fc1 = nn.Linear(in_dim, hidden_dim)
+        self.norm1 = nn.LayerNorm(hidden_dim)
+        self.act = nn.GELU()  # 比ReLU更平滑
+
+        self.fc2 = nn.Linear(hidden_dim, out_dim, bias=True)
+
+    def forward(self, x):
+        # 第一层
+        x = self.fc1(x)
+        x = self.norm1(x)
+        x = self.act(x)
+
+        # 第二层
+        x = self.fc2(x)
+        return x
+
+
 def resize_short_edge(image, target_size=640):
     if isinstance(image, str):
         image = Image.open(image)
@@ -26,6 +47,7 @@ def resize_short_edge(image, target_size=640):
     resized_image = image.resize((new_width, new_height))
     return resized_image
 
+
 class CNCLIPFeatureExtractor:
     """中文CLIP特征提取器（支持Base64/字节数组输入）"""
 
@@ -35,7 +57,7 @@ class CNCLIPFeatureExtractor:
 
         # 加载模型
         current_dir = os.getcwd()
-        model_path = os.path.join(current_dir,"AIScript", "fgmodel")
+        model_path = os.path.join(current_dir, "AIScript", "fgmodel")
 
         try:
             self.fgmodel = AutoModelForCausalLM.from_pretrained(
@@ -48,7 +70,7 @@ class CNCLIPFeatureExtractor:
         except Exception as e:
             raise RuntimeError(f"模型加载失败: {str(e)}")
 
-    def get_text_features(self, text_list):
+    def get_text_features(self, text_list, alignModel):
         """批量提取文本特征"""
         if not isinstance(text_list, list) or len(text_list) == 0:
             raise ValueError("text_list必须是非空字符串列表")
@@ -60,6 +82,8 @@ class CNCLIPFeatureExtractor:
         with torch.no_grad():
             text_features = self.fgmodel.get_text_features(
                 **token_input, walk_type="box")
+            if alignModel is not None:
+                text_features = alignModel(text_features)
             text_features = torch.nn.functional.normalize(
                 text_features, dim=-1)
 
@@ -80,7 +104,7 @@ class CNCLIPFeatureExtractor:
         except Exception as e:
             raise RuntimeError(f"Base64图片解码失败: {str(e)}")
 
-    def get_image_features_from_base64(self, base64Str):
+    def get_image_features_from_base64(self, base64Str, alignModel):
         """
         批量提取Base64图片特征
         :param base64Str: Base64字符串
@@ -96,8 +120,10 @@ class CNCLIPFeatureExtractor:
         # 批量提取特征
         with torch.no_grad():
             image_features = self.fgmodel.get_image_features(**img_tensor)
-            image_features = torch.nn.functional.normalize(image_features, dim=-1)
-
+            if alignModel is not None:
+                image_features = alignModel(image_features)
+            image_features = torch.nn.functional.normalize(
+                image_features, dim=-1)
 
         return image_features.cpu().numpy()
 
@@ -106,7 +132,7 @@ global_extractor = CNCLIPFeatureExtractor()
 # 外部调用入口（支持Base64/文本输入）
 
 
-def execall(text_list=None, base64_img=None):
+def execall(text_list=None, base64_img=None, projStr="Detect"):
     """
     特征提取统一入口
     :param text_list: 文本列表（可为null）
@@ -119,14 +145,23 @@ def execall(text_list=None, base64_img=None):
     global global_extractor
     result = {}
 
+    align_model = None
+    if projStr == "Detect":
+        t_dir = os.getcwd()
+        align_path = os.path.join(
+            t_dir, "AIScript", "fgclip_to_wedetect_align.pth")
+        align_model = FeatureAlignProjection()
+        align_model.load_state_dict(torch.load(align_path))
+        align_model.eval()
+
     # 提取文本特征
     if text_list is not None and len(text_list) > 0:
         result["text_features"] = global_extractor.get_text_features(
-            text_list).tolist()
+            text_list, align_model).tolist()
 
     # 提取Base64图片特征
     if base64_img is not None:
         result["image_features"] = global_extractor.get_image_features_from_base64(
-            base64_img).tolist()
+            base64_img, align_model).tolist()
 
     return result

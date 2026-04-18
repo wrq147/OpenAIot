@@ -703,9 +703,9 @@ export default {
               return;
             }
             this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"] = tarr.join(',');
-            res = await generateFeature({ StrArr: tarr });
+            res = await generateFeature({ StrArr: tarr, ProjCoed: this.paramConfigDialog.currentRow.Code });
           } else if (this.paramConfigDialog.clipmode === "image") {
-            res = await generateFeature({ ImgStr: this.paramConfigDialog.clipImg });
+            res = await generateFeature({ ImgStr: this.paramConfigDialog.clipImg, ProjCoed: this.paramConfigDialog.currentRow.Code });
             this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"] = this.paramConfigDialog.clipImg;
           }
 

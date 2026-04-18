@@ -10,5 +10,9 @@ namespace IoTAIService.Models
     {
         public List<string> StrArr { get; set; }
         public string ImgStr { get; set; }
+        /// <summary>
+        /// 项目代码
+        /// </summary>
+        public string ProjCoed { get; set; }
     }
 }
