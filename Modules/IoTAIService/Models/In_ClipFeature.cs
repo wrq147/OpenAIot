@@ -9,6 +9,6 @@ namespace IoTAIService.Models
     public class In_ClipFeature
     {
         public List<string> StrArr { get; set; }
-        public List<string> ImgArr { get; set; }
+        public string ImgStr { get; set; }
     }
 }

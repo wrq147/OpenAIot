@@ -25,7 +25,7 @@ namespace IoTAIService.Controller
         public async Task<DefaultAjaxResult<List<List<float>>>> GenerateFeature(In_ClipFeature data)
         {
             PythonExe py = this.ServiceProvider.GetService<PythonExe>();
-            var rs = await py.GenerateCNClipFeature(data.StrArr, data.ImgArr);
+            var rs = await py.GenerateCNClipFeature(data.StrArr, data.ImgStr);
             return this.Success(rs);
         }
     }

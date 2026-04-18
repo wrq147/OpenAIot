@@ -40,7 +40,7 @@ namespace IoTAIService
             string pythonLibPath = null;
             foreach (var pattern in searchPatterns)
             {
-                var files = Directory.GetFiles(pythonRootDir, pattern, SearchOption.AllDirectories)
+                var files = Directory.GetFiles(pythonRootDir, pattern, SearchOption.TopDirectoryOnly)
                     .OrderByDescending(f => f.Length)
                                      .ToList();
 
@@ -107,9 +107,9 @@ namespace IoTAIService
                     using (Py.GIL())
                     {
                         dynamic sys = Py.Import("sys");
-                        string scriptDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIScript";
+                        string scriptDir = Directory.GetCurrentDirectory() + System.IO.Path.DirectorySeparatorChar + @"AIScript";
                         sys.path.append(scriptDir);
-                        _outclipModule = Py.Import("outclip");
+                        _outclipModule = Py.Import("outfgclip");
                     }
                 });
                 _isInitialized = true;
@@ -121,7 +121,7 @@ namespace IoTAIService
             }
         }
 
-        public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr, List<string> imgArr)
+        public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr,string imgStr)
         {
             return await Task.Run(async () =>
             {
@@ -130,7 +130,7 @@ namespace IoTAIService
                     try
                     {
                         PyList strPyList = null;
-                        PyList imgPyList = null;
+                        PyString imgPyStr = null;
                         if (strArr != null && strArr.Count > 0)
                         {
                             strPyList = new PyList();
@@ -139,18 +139,14 @@ namespace IoTAIService
                                 strPyList.Append(new PyString(str));
                             }
                         }
-                        if (imgArr != null && imgArr.Count > 0)
+                        if (!string.IsNullOrEmpty(imgStr))
                         {
-                            imgPyList = new PyList();
-                            foreach (string str in imgArr)
-                            {
-                                var base64Str = str.Replace("data:image/png;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");
-                                imgPyList.Append(new PyString(base64Str));
-                            }
+                            var base64Str = imgStr.Replace("data:image/png;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");
+                            imgPyStr = new PyString(base64Str);
                         }
 
                         // 执行Python函数并获取结果
-                        dynamic result = _outclipModule.execall(strPyList, imgPyList);
+                        dynamic result = _outclipModule.execall(strPyList, imgPyStr);
                         var pyDict = new PyDict(result);
                         List<List<float>> rs = null;
                         if (strPyList != null)
@@ -158,7 +154,7 @@ namespace IoTAIService
                             var txt_feat = pyDict.GetItem("text_features");
                             rs = Convert2DPyListTo2DList(txt_feat);
                         }
-                        if (imgPyList != null)
+                        if (imgPyStr != null)
                         {
                             var img_feat = pyDict.GetItem("image_features");
                             rs = Convert2DPyListTo2DList(img_feat);

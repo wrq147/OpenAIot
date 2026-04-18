@@ -705,7 +705,7 @@ export default {
             this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"] = tarr.join(',');
             res = await generateFeature({ StrArr: tarr });
           } else if (this.paramConfigDialog.clipmode === "image") {
-            res = await generateFeature({ ImgArr: [this.paramConfigDialog.clipImg] });
+            res = await generateFeature({ ImgStr: this.paramConfigDialog.clipImg });
             this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"] = this.paramConfigDialog.clipImg;
           }
 

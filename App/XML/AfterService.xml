@@ -583,6 +583,11 @@
             运行状态
             </summary>
         </member>
+        <member name="P:AfterService.Model.In_KFDevListPage.ShowTags">
+            <summary>
+            是否显示标签
+            </summary>
+        </member>
         <member name="P:AfterService.Model.In_PlaneDevList.Id">
             <summary>
             计划类型Id
