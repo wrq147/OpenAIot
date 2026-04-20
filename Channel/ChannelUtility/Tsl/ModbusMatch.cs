@@ -34,9 +34,9 @@ namespace ChannelUtility.Tsl
             int len = 0;
             foreach (var it in Items)
             {
-                len += (it.GetBitLen() + 7) / 8;
+                len += it.GetBitLen();
             }
-            return len;
+            return len / 8;
         }
         /// <summary>
         /// 计算总位数
