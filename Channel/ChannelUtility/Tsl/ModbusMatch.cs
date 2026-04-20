@@ -36,7 +36,7 @@ namespace ChannelUtility.Tsl
             {
                 len += it.GetBitLen();
             }
-            return len / 8;
+            return (len + 7) / 8;
         }
         /// <summary>
         /// 计算总位数
