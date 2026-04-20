@@ -2,73 +2,19 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '1839251d66194a3eadab1a37b05bb0eb5fbfe78e'
-    oldFile: !uuid 'a95e93a826d542137859cce723de21869d6d9f19'
-  /App/XML:
-    newFile: !uuid '31508f90f811cd80bed7a0c9813a3297765641ab'
-    oldFile: !uuid '2912615d5057a4df35370afe7b9dc835cd1851a1'
-  /App/XML/IoTAIService.xml:
-    newFile: !uuid '86eb362b8f12a391e787b98012fde33826482e14'
-    oldFile: !uuid 'cbe376a55d6997f8262a1fda8f8f8919a47e801c'
-  /Modules:
-    newFile: !uuid '178d5816a134cdb5814b3ab2fb6560db85e6b6bd'
-    oldFile: !uuid '0e74f51358d5729868a46440e9d4101969dfdaf5'
-  /Modules/IoTAIService:
-    newFile: !uuid 'd424b134997761cd3be54ad702bfce6cfd6df443'
-    oldFile: !uuid 'ce5c3141d3de5158224796580b38982cfce8dfe7'
-  /Modules/IoTAIService/AIScript:
-    newFile: !uuid '19b7bfb5331d047c8028106dc136b9b9e0dc6012'
-    oldFile: !uuid 'a33b5fb1c2e218ecac25fa431057f9e59230022c'
-  /Modules/IoTAIService/AIScript/outfgclip.py:
-    newFile: !uuid 'f746f685e74388b3f08d3a5cbef9104e417a90ce'
-    oldFile: !uuid '3c8ddfc2477ae13fba02c27ce2f0c0a455dc1c23'
-  /Modules/IoTAIService/Controller:
-    newFile: !uuid '303ba3a9331677641f20cb6aa93d382cfd937b87'
-    oldFile: !uuid 'bdac768ffe4e6363eab28fbcc82e135ac230cb18'
-  /Modules/IoTAIService/Controller/Clip.cs:
-    newFile: !uuid '4f1170986a5c9df17fe2b3c041e45e032d4c16f5'
-    oldFile: !uuid 'f7e74f2ebc718c6efce3f102c8057584e1b77e8f'
-  /Modules/IoTAIService/IoTAIService.csproj:
-    newFile: !uuid '7b8631bb262322499ff29c4f786eaa91b3f6f429'
-    oldFile: !uuid 'd2481885396e339a8ca8a9d0e26ae8f9f33dd95b'
-  /Modules/IoTAIService/Models:
-    newFile: !uuid '1a56cb0703d5dcdb8b68ce142b661ce5c53e6af7'
-    oldFile: !uuid '417d10b18bbc2bb4066d271dc6a6e0b9f578980e'
-  /Modules/IoTAIService/Models/In_ClipFeature.cs:
-    newFile: !uuid '863a758b4ceda72c37c51ece8a3cfe7bc346829f'
-    oldFile: !uuid 'f54d506b18b2946a715667d22dfca61f5b8856e4'
-  /Modules/IoTAIService/PythonExe.cs:
-    newFile: !uuid 'ed0dc45ca50b0a043713ed7d1739ce1caff5e894'
-    oldFile: !uuid 'e555f3246f6cfe25aa47aecf713be5a5bece5f84'
-  /admin-ui:
-    newFile: !uuid '875efb2f6f8babf681c6e94e94c9fffd0d02eac6'
-    oldFile: !uuid '740e97941d13a49affc441985e096c9c813d9216'
-  /admin-ui/src:
-    newFile: !uuid '8fa1891bd641ea2c55a85f36951d748b305071dc'
-    oldFile: !uuid 'ba994a5233435ce95cd62cfde9eafe2a1326e54d'
-  /admin-ui/src/views:
-    newFile: !uuid '181d83076760bc72f90ca6b852d9305c81970f37'
-    oldFile: !uuid '2d8bfe9c6df957ae08fb2b30807753bfd9ac2dac'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '8de6d82be37c754b4603bdfa5138ccf99c93609a'
-    oldFile: !uuid 'fccc0e3909244bc400143b04c78355c21675ca47'
-  /admin-ui/src/views/iot/physicalModel:
-    newFile: !uuid '4a7b2811b6410920cced0aa41b4bb9018f13acd6'
-    oldFile: !uuid '22f3a5f27d69c53a2c3f62d072091cc8fe7856e4'
-  /admin-ui/src/views/iot/physicalModel/components:
-    newFile: !uuid '7c3d7b21884551830fbdd6996514b57e5af060cb'
-    oldFile: !uuid '8dfc6943304ecd761941f742da376ec857f1be1d'
-  /admin-ui/src/views/iot/physicalModel/components/modbusRules.vue:
-    newFile: !uuid 'd2276b38b21fa3dc491b19195a7b64d7205a9f3f'
-    oldFile: !uuid 'c24113f3b9550b86d2ee8b4e5ca16b80e394c122'
-  /admin-ui/src/views/iot/video:
-    newFile: !uuid 'c509212a35572ccf33a5b7cfe7f39c700afe875b'
-    oldFile: !uuid 'ab28c0e16954b5b5955d78005c437236072c0270'
-  /admin-ui/src/views/iot/video/confadd.vue:
-    newFile: !uuid '9e93aae92e02226953ffc92a6a197d2fb7b24135'
-    oldFile: !uuid '646f935012a92b095624afa64caa88d200432c9d'
-gitCommitId: !uuid '88b2c3eabd7a958487b14a2b6de139a5a9c779e3'
+  /Channel:
+    newFile: !uuid 'd2e1b3e563f8b2f7bab991c66b96b8a00285941c'
+    oldFile: !uuid 'c4dd0bf7c6c324bddaf1e2b370c840a064b0401f'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'f6adebe1441929507dcef6978edf72b86c2a6656'
+    oldFile: !uuid 'ae80bbce9b989b23c125aa468ec85ec0645e74f5'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid 'e6bdedb6a24ce0dc954ae538f350e63840c27e5d'
+    oldFile: !uuid 'be3494e7c9ad3490907cf2fb861012369b2c3ac5'
+  /Channel/ChannelUtility/Tsl/ModbusMatch.cs:
+    newFile: !uuid 'c45117281e4dd531a27ea4d7be27698799918794'
+    oldFile: !uuid '93d3b033f6b18f14f47a21cda72aa0817b5f61a2'
+gitCommitId: !uuid '3eab83f4248e43f0db933a36ea397229e9dd54f9'
 renames: {
   }
-revisionId: 291
+revisionId: 292
