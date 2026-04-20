@@ -283,6 +283,27 @@
             向 Tensor 指定位置绘制高斯热图
             </summary>
         </member>
+        <member name="M:IoTAIService.AICode.WeDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
+            <summary>
+            图像预处理：缩放、归一化等
+            </summary>
+            <param name="input"></param>
+            <param name="gain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.WeDetectRunner.ApplyNMS(System.Collections.Generic.List{ChannelUtility.Message.BoxItem},System.Single)">
+            <summary>
+            非极大值抑制（NMS）：去除重叠的高置信度框
+            </summary>
+            <param name="detections">检测结果列表</param>
+            <param name="iouThreshold">IOU阈值</param>
+            <returns>去重后的检测结果</returns>
+        </member>
+        <member name="M:IoTAIService.AICode.WeDetectRunner.CalculateIOU(ChannelUtility.Message.BoxItem,ChannelUtility.Message.BoxItem)">
+            <summary>
+            计算两个检测框的IOU（交并比）
+            </summary>
+        </member>
         <member name="M:IoTAIService.AICode.YoloFaceDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
             <summary>
             图像预处理：缩放、归一化等
@@ -584,6 +605,16 @@
         <member name="P:IoTAIService.IoTAIOption.MilvusDatabase">
             <summary>
             Milvus数据库名称
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_ClipFeature.ProjCoed">
+            <summary>
+            项目代码
+            </summary>
+        </member>
+        <member name="P:IoTAIService.Models.In_ClipFeature.EnableCosCluster">
+            <summary>
+            是否使用余弦相似度聚类
             </summary>
         </member>
         <member name="P:IoTAIService.Models.In_FaceDetect.ImageBase64">

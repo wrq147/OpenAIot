@@ -51,10 +51,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="inx == 0 ? '数据长度' : ''" prop="NumRegister">
-            <template v-if="ite.ByteOrder == 'C'">
-              <el-input-number v-model="ite.NumRegister" style="width: 200px" controls-position="right" :min="1" :max="255"></el-input-number>
-            </template>
-            <template v-else>
+            <template>
               <el-select v-model="ite.NumRegister" style="width: 200px" placeholder="请选择数据长度">
                 <el-option v-for="item in NumRegisterList" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -184,7 +181,13 @@ export default {
               xunum=Number(this.matchesForm.StartAddress)
             }else{
               if(this.matchesItemsForm[i-1]&&this.matchesItemsForm[i-1].NumRegister){
-                xunum=this.xuhaoArr[i-1]+(Number(this.matchesItemsForm[i-1].NumRegister)/2)
+                let curreg = this.matchesItemsForm[i - 1].NumRegister;
+                if (curreg == 'b') {
+                  xunum = this.xuhaoArr[i - 1] + 0.0625;
+                }
+                else {
+                  xunum = this.xuhaoArr[i - 1] + (Number(curreg) / 2);
+                }
               }
             }
             this.xuhaoArr.push(xunum)

@@ -226,6 +226,11 @@
                   <i v-else class="el-icon-plus"
                     style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
                 </el-upload>
+
+                <div v-if="paramConfigDialog.clipmode === 'image'">
+                  关注图片内物品
+                  <el-switch v-model="paramConfigDialog.currentRow.paramValues[param.code + '-cos']"></el-switch>
+                </div>
               </div>
             </template>
 
@@ -703,9 +708,9 @@ export default {
               return;
             }
             this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-txt"] = tarr.join(',');
-            res = await generateFeature({ StrArr: tarr, ProjCoed: this.paramConfigDialog.currentRow.Code });
+            res = await generateFeature({ StrArr: tarr, ProjCoed: this.paramConfigDialog.currentRow.Code, EnableCosCluster: this.paramConfigDialog.currentRow.paramValues[clipParam.code + '-cos'] });
           } else if (this.paramConfigDialog.clipmode === "image") {
-            res = await generateFeature({ ImgStr: this.paramConfigDialog.clipImg, ProjCoed: this.paramConfigDialog.currentRow.Code });
+            res = await generateFeature({ ImgStr: this.paramConfigDialog.clipImg, ProjCoed: this.paramConfigDialog.currentRow.Code, EnableCosCluster: this.paramConfigDialog.currentRow.paramValues[clipParam.code + '-cos'] });
             this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"] = this.paramConfigDialog.clipImg;
           }
 
