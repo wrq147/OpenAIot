@@ -91,19 +91,19 @@ namespace IoTAIService
         }
 
         public void Init()
-        {
-            try
+        {               
+            //异步加载模块
+            Task.Run(() =>
             {
-                if (_isInitialized) return;
-                var aiOption = _provider.GetService<IOptions<IoTAIOption>>().Value;
-                if (string.IsNullOrEmpty(aiOption.PythonHome)) return;
-
-                Runtime.PythonDLL = AutoSetPythonDllPath(aiOption.PythonHome);
-                PythonEngine.Initialize();
-                _initThreadState = PythonEngine.BeginAllowThreads();
-                //异步加载模块
-                Task.Run(() =>
+                try
                 {
+                    if (_isInitialized) return;
+                    var aiOption = _provider.GetService<IOptions<IoTAIOption>>().Value;
+                    if (string.IsNullOrEmpty(aiOption.PythonHome)) return;
+
+                    Runtime.PythonDLL = AutoSetPythonDllPath(aiOption.PythonHome);
+                    PythonEngine.Initialize();
+                    _initThreadState = PythonEngine.BeginAllowThreads();
                     using (Py.GIL())
                     {
                         dynamic sys = Py.Import("sys");
@@ -111,14 +111,16 @@ namespace IoTAIService
                         sys.path.append(scriptDir);
                         _outclipModule = Py.Import("outfgclip");
                     }
-                });
-                _isInitialized = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Python引擎初始化失败:" + ex.Message);
-                _isInitialized = false;
-            }
+
+                    _isInitialized = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Python引擎初始化失败:" + ex.Message);
+                    _isInitialized = false;
+                }
+            });
+        
         }
 
         public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr, string imgStr, string projCode, bool enableCosCluster)

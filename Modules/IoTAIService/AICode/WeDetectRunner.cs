@@ -17,7 +17,6 @@ namespace IoTAIService.AICode
         private readonly InferenceSession _session;
         private readonly float[] _strides = new float[] { 8, 16, 32 };
         private readonly int[] _featSizes = new int[] { 80, 40, 20 };
-        private const int RegMax = 16;
         public WeDetectRunner()
         {
             // 初始化ONNX推理会话
@@ -204,31 +203,15 @@ namespace IoTAIService.AICode
          List<BoxItem> results, List<string> classes)
         {
             int numClasses = cls.Dimensions[1];
-            Span<float> regBuf = stackalloc float[4 * RegMax];
             Span<float> ltrb = stackalloc float[4];
-            float[] proj = Enumerable.Range(0, RegMax).Select(i => (float)i).ToArray();
             for (int y = 0; y < h; y++)
             {
                 for (int x = 0; x < w; x++)
                 {
-                    // 1. 获得 DFL 输出并 softmax
-                    for (int i = 0; i < 4 * RegMax; i++)
-                        regBuf[i] = reg[0, i, y, x];
-
-                    // 2. DFL 解码
-                    for (int i = 0; i < 4; i++)
-                    {
-                        float sum = 0;
-                        float val = 0;
-                        for (int j = 0; j < RegMax; j++)
-                        {
-                            float v = MathF.Exp(regBuf[i * RegMax + j]);
-                            sum += v;
-                            val += v * proj[j];
-                        }
-                        ltrb[i] = sum < 1e-8f ? 0 : val / sum * stride;
-                    }
-
+                    ltrb[0] = reg[0, 0, y, x] * stride;
+                    ltrb[1] = reg[0, 1, y, x] * stride;
+                    ltrb[2] = reg[0, 2, y, x] * stride;
+                    ltrb[3] = reg[0, 3, y, x] * stride;
 
 
                     float cx = x * stride + stride * 0.5f;

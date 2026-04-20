@@ -2,6 +2,7 @@
 using Common;
 using IoTAIService.AICode;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using NPOI.HPSF;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
@@ -77,17 +78,18 @@ namespace IoTAIService.AIProject.Items
                 string[] tarr = featureTxt.Split(",");
                 tclasses = tarr.ToList();
             }
-            if (!string.IsNullOrEmpty(featureImg))
-            {
-                tclasses = new List<string>();
-                tclasses.Add("图片特征");
-            }
+
+            var tfeature = ConvertListToDenseTensor(feature);
             if (tclasses == null)
             {
-                return new List<BoxItem>();
+                tclasses = new List<string>();
+                int numClasses = tfeature.Dimensions[1];
+                for (int i = 0; i < numClasses; i++)
+                {
+                    tclasses.Add($"图片对象{i + 1}");
+                }
             }
-            var tfeature = ConvertListToDenseTensor(feature);
-            List<BoxItem> boxes = _provider.GetService<YoloWorldDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
+            List<BoxItem> boxes = _provider.GetService<WeDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
             return boxes;
         }
         private DenseTensor<float> ConvertListToDenseTensor(List<object> data)

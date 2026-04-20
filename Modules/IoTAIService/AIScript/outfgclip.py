@@ -10,38 +10,45 @@ from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
 )
+import torch.nn.functional as F
 
+def cluster_by_cosine_similarity(features, threshold=0.35):
+    """
+    余弦相似度聚类
+    输出：[K, 768] 类别中心
+    """
 
-def cluster_by_cosine_similarity(features, threshold=0.3):
-    """
-    余弦相似度 > threshold 就归为一类
-    最后返回每类中心 [K, 768]
-    """
     n = features.shape[0]
     labels = torch.full((n,), -1, dtype=torch.int32, device=features.device)
     current_label = 0
 
+    # ==============================
+    # 1. 计算 真正的余弦相似度矩阵（修复点1）
+    # ==============================
+    norm = F.normalize(features, p=2, dim=-1)  # 先归一化
+    sim_matrix = torch.matmul(norm, norm.T)     # 真正余弦相似度矩阵
+
+    # ==============================
+    # 2. 正确聚类逻辑（修复点2）
+    # ==============================
     for i in range(n):
+        # 已经被分配 → 跳过（关键！）
         if labels[i] != -1:
             continue
-
-        # 计算当前特征与所有特征的余弦相似度
-        sims = torch.matmul(features[i:i+1], features.T).squeeze(0)  # [N]
-
-        # 相似度 > threshold 且未被分类的点
-        mask = (sims > threshold) & (labels == -1)
-
-        # 分配类别
+        
+        # 只取当前点的相似度
+        sim = sim_matrix[i]
+        # 只分配：满足阈值 + 还没标签的点
+        mask = (sim > threshold) & (labels == -1)
         labels[mask] = current_label
         current_label += 1
 
-    # 计算每个类的中心
+    # 计算类别中心
     unique_labels = torch.unique(labels)
     cluster_centers = []
-
     for lab in unique_labels:
         cluster_points = features[labels == lab]
-        center = cluster_points.mean(dim=0)  # 取类中心
+        center = cluster_points.mean(dim=0)
         cluster_centers.append(center)
 
     return torch.stack(cluster_centers)
@@ -91,8 +98,8 @@ class CNCLIPFeatureExtractor:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # 加载模型
-        current_dir = os.getcwd()
-        model_path = os.path.join(current_dir, "AIScript", "fgmodel")
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(current_dir, "fgmodel")
 
         try:
             self.fgmodel = AutoModelForCausalLM.from_pretrained(
@@ -154,20 +161,23 @@ class CNCLIPFeatureExtractor:
 
         # 批量提取特征
         with torch.no_grad():
-            image_features = self.fgmodel.get_image_features(**img_tensor)
+
             if enableCosCluster:
+                image_features = self.fgmodel.get_image_dense_feature(**img_tensor)
                 spatial_values = img_tensor["spatial_shapes"][0]
                 real_h = spatial_values[0].item()
                 real_w = spatial_values[1].item()
                 real_pixel_tokens_num = real_w*real_h
                 image_features = image_features[0][:real_pixel_tokens_num]
                 image_features = cluster_by_cosine_similarity(image_features)
+                print(image_features.shape)
+            else:
+                image_features = self.fgmodel.get_image_features(**img_tensor)
 
             if alignModel is not None:
                 image_features = alignModel(image_features)
             image_features = torch.nn.functional.normalize(
                 image_features, dim=-1)
-
         return image_features.cpu().numpy()
 
 
@@ -189,12 +199,12 @@ def execall(text_list=None, base64_img=None, projStr="Detect", enableCosCluster=
 
     global global_extractor
     result = {}
-    print(enableCosCluster)
+
     align_model = None
     if projStr == "Detect":
-        t_dir = os.getcwd()
+        t_dir = os.path.dirname(os.path.abspath(__file__))
         align_path = os.path.join(
-            t_dir, "AIScript", "fgclip_to_wedetect_align.pth")
+            t_dir, "fgclip_to_wedetect_align.pth")
         align_model = FeatureAlignProjection()
         align_model.load_state_dict(torch.load(align_path))
         align_model.eval()

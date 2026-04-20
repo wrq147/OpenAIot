@@ -36,6 +36,7 @@ namespace IoTAIService
             services.AddSingleton<YoloPoseDetectRunner>();
             services.AddSingleton<PoseC3DRunner>();
             services.AddSingleton<MobileCLIP2VisionRunner>();
+            services.AddSingleton<WeDetectRunner>();
             services.AddSingleton<AICache>();
             services.AddSingleton<AIProjectManager>();
             services.AddSingleton<PythonExe>();
