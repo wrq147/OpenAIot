@@ -3,18 +3,18 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid 'd2e1b3e563f8b2f7bab991c66b96b8a00285941c'
-    oldFile: !uuid 'c4dd0bf7c6c324bddaf1e2b370c840a064b0401f'
+    newFile: !uuid '265ddf82817c7ff5417b1255ffbb6e2fc45d1f5b'
+    oldFile: !uuid 'd2e1b3e563f8b2f7bab991c66b96b8a00285941c'
   /Channel/ChannelUtility:
-    newFile: !uuid 'f6adebe1441929507dcef6978edf72b86c2a6656'
-    oldFile: !uuid 'ae80bbce9b989b23c125aa468ec85ec0645e74f5'
+    newFile: !uuid 'a0e0ee4b81104aeab6079ef3c33f75a4f082d7de'
+    oldFile: !uuid 'f6adebe1441929507dcef6978edf72b86c2a6656'
   /Channel/ChannelUtility/Tsl:
-    newFile: !uuid 'e6bdedb6a24ce0dc954ae538f350e63840c27e5d'
-    oldFile: !uuid 'be3494e7c9ad3490907cf2fb861012369b2c3ac5'
+    newFile: !uuid '26d23399b6d3fadb62ab28e18e4fc1dbf9fb84cc'
+    oldFile: !uuid 'e6bdedb6a24ce0dc954ae538f350e63840c27e5d'
   /Channel/ChannelUtility/Tsl/ModbusMatch.cs:
-    newFile: !uuid 'c45117281e4dd531a27ea4d7be27698799918794'
-    oldFile: !uuid '93d3b033f6b18f14f47a21cda72aa0817b5f61a2'
-gitCommitId: !uuid '3eab83f4248e43f0db933a36ea397229e9dd54f9'
+    newFile: !uuid '8bb0c8472b07123a10333fc93811efe38ffd5e73'
+    oldFile: !uuid 'c45117281e4dd531a27ea4d7be27698799918794'
+gitCommitId: !uuid 'c9d213cff2e8fd19bd4d5687cd54b545eb8259f6'
 renames: {
   }
-revisionId: 292
+revisionId: 293
