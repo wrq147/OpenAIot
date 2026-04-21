@@ -24,29 +24,20 @@
             <el-form v-for="(ite, inx) in this.matchForm.Items" :key="inx" ref="matchesItemsForm" :model="ite"
                 label-position="top" :inline="true" class="matches_form2">
                 <el-form-item :label="inx == 0 ? '字节序' : ''" prop="ByteOrder">
-                    <el-select v-model="ite.ByteOrder" :disabled="matchForm.FuncCode == 5 || matchForm.FuncCode == 15"
+                    <el-select v-model="ite.ByteOrder"
                         style="width:100px" placeholder="请选择字节序">
                         <el-option v-for="item in ByteOrderList" :key="item.value" :label="item.label"
-                        v-show="(item.value!='CDAB'&&item.value!='BADC')||ite.NumRegister>3"
+                        v-show="(item.value!='CDAB'&&item.value!='BADC')||ite.NumRegister=='4'"
                             :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="inx == 0 ? '数据长度' : ''" prop="NumRegister">
-                    <template v-if="matchForm.FuncCode == 5 || matchForm.FuncCode == 15">
-                        <el-input-number v-model="ite.NumRegister" controls-position="right" style="width:100px"
-                            :disabled="true"></el-input-number>
-                    </template>
-                    <template v-else-if="ite.ByteOrder == 'C'">
-                        <el-input-number v-model="ite.NumRegister" controls-position="right" style="width:100px" :min="1"
-                            :max="255"></el-input-number>
-                    </template>
-                    <template v-else>
+                    <template>
                         <el-select v-model="ite.NumRegister" style="width:100px" placeholder="请选择数据长度">
                             <el-option v-for="item in NumRegisterList" :key="item.value" :label="item.label"
                                 :value="item.value"></el-option>
                         </el-select>
                     </template>
-
                 </el-form-item>
                 <el-form-item :label="inx == 0 ? '输入参数(线圈仅布尔型)' : ''" prop="PropertyCode">
                     <el-select v-model="ite.PropertyCode" style="width:160px" clearable placeholder="请选择对应的输入参数">
@@ -85,7 +76,7 @@ export default {
                 StartAddress: 0,
                 Items: [{
                     ByteOrder: "H",
-                    NumRegister: "2",
+                    NumRegister: "1",
                     PropertyCode: ""
                 }]
             },
@@ -108,7 +99,8 @@ export default {
                 { label: "1位", value: "b" },
                 { label: "8位", value: "1" },
                 { label: "16位", value: "2" },
-                { label: "32位", value: "4" }
+                { label: "32位", value: "4" },
+                { label: "64位", value: "8" },
             ],
         };
     },
@@ -144,7 +136,7 @@ export default {
         onCodeChange() {
             this.matchForm.Items = [{
                 ByteOrder: "H",
-                NumRegister: "2",
+                NumRegister: "1",
                 PropertyCode: ""
             }];
         },
@@ -156,7 +148,7 @@ export default {
             //数据提取规则增加
             this.matchForm.Items.push({
                 ByteOrder: "H", //字节序
-                NumRegister: "2", //数据长度
+                NumRegister: "1", //数据长度
                 PropertyCode: "" //对应的属性标识符
             });
         },
@@ -175,7 +167,6 @@ export default {
     .el-form-item .el-form-item__label {
         padding: 0;
     }
-    
 }
 .flex_con{
     display: flex;

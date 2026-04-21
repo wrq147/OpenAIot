@@ -532,7 +532,7 @@ namespace IoTService
                     {
                         //线圈数
                         writeBytes.WriteUInt16BE(Convert.ToUInt16(mm.Items.Count));
-                        byte bynum = Convert.ToByte(mm.Items.Count / 8 + 1);
+                        byte bynum = Convert.ToByte(mm.GetByteLength());
                         //字节数
                         writeBytes.WriteByte(bynum);
                         byte[] outbytes = new byte[bynum];
@@ -551,16 +551,12 @@ namespace IoTService
                                     bool rs = Convert.ToBoolean(rsobj);
                                     if (rs == true)
                                     {
-                                        if (i == 0)
-                                        {
-                                            outbytes[i] = 1;
-                                        }
-                                        else
-                                        {
-                                            outbytes[i] |= Convert.ToByte(1 << j);
-                                        }
+                                        outbytes[i] |= (byte)(1 << j);
                                     }
-
+                                    else
+                                    {
+                                        outbytes[i] &= (byte)~(1 << j);
+                                    }
                                 }
                                 else
                                 {
