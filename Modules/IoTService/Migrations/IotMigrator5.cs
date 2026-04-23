@@ -42,30 +42,8 @@ namespace IoTService.Migrations
                     .WithColumn("UnicomOption").AsString(500).Nullable().WithColumnDescription("Unicom联通卡接口配置");
 
 
-            this.Execute.Sql("delete FROM mz_menu where menu_id=4301");
+
             this.Execute.Sql("delete FROM mz_menu where menu_id=4302");
-            Insert.IntoTable("mz_menu").Row(new
-            {
-                menu_id = 4301,
-                menu_name = "第三方接入",
-                parent_id = 4000,
-                order_num = 1,
-                path = "config/index",
-                component = "iot/config/index",
-                query = string.Empty,
-                is_frame = 0,
-                is_cache = 0,
-                menu_type = "C",
-                visible = "0",
-                status = "0",
-                perms = "/IoTService/IotConfig/Update",
-                icon = "link",
-                scope = 0,
-                create_time = DateTime.Now,
-                update_time = DateTime.Now,
-                createId = 0,
-                updateId = 0
-            });
 
             Insert.IntoTable("mz_menu").Row(new
             {

@@ -40,16 +40,24 @@
               </el-button>
             </el-col>
             <el-col :span="1.5">
-              <el-button type="primary" plain v-hasPermi="['/IoTService/IotDevice/ListPage']" @click="openAddDevice">
+              <el-button type="primary" plain @click="openAddDevice">
                 <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
-                <span style="margin-left:6px">添加设备</span>
+                <span style="margin-left:6px">添加普通设备</span>
               </el-button>
             </el-col>
             <el-col :span="1.5">
-              <el-button type="primary" plain v-hasPermi="['/IoTService/IotDevice/ListPage']"
+              <el-button type="primary" plain
                 @click="openAddForwardDevice">
                 <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
                 <span style="margin-left:6px">添加转发设备</span>
+              </el-button>
+            </el-col>
+
+            <el-col :span="1.5">
+              <el-button type="primary" plain v-hasPermi="['/IoTService/IotDevice/AddVideo']"
+                @click="openAddVideoDevice">
+                <i class="zhongtaiiconfont zhongtai-icon-xinzeng"></i>
+                <span style="margin-left:6px">添加视频设备</span>
               </el-button>
             </el-col>
           </div>
@@ -99,6 +107,9 @@
                   <el-row>
                     <button style="margin-right:10px" @click="editRowData(its)"><i class="el-icon-edit"></i></button>
                   </el-row>
+                  <el-row v-if="/^VI_/.test(its.DeviceId)">
+                    <button style="margin-right:10px" @click="handlePlay(its.DeviceId)"><i class="el-icon-video-play"></i></button>
+                  </el-row>
                 </div>
               </div>
             </div>
@@ -118,6 +129,8 @@
           <el-table-column label="创建时间" align="center" prop="CreateOn" />
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180">
             <template slot-scope="scope">
+              <el-button v-if="/^VI_/.test(scope.row.DeviceId)" type="text" icon="el-icon-video-play" @click="handlePlay(scope.row.DeviceId)"
+                style="margin-right:5px">播放</el-button>
               <el-button type="text" icon="el-icon-edit" @click="editRowData(scope.row)"
                 style="margin-right:5px">编辑</el-button>
               <el-button type="text" icon="el-icon-delete" @click="deleteRowData(scope.row)"

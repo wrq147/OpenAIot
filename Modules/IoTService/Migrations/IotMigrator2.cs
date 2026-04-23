@@ -13,7 +13,7 @@ namespace IoTService.Migrations
             {
                 menu_id = 4207,
                 menu_name = "修改协议",
-                parent_id = 4000,
+                parent_id = 4205,
                 order_num = 4,
                 path = "physicalModel/productAdd/:id",
                 component = "iot/physicalModel/productAdd",
@@ -34,7 +34,7 @@ namespace IoTService.Migrations
             {
                 menu_id = 4208,
                 menu_name = "新增协议",
-                parent_id = 4000,
+                parent_id = 4205,
                 order_num = 5,
                 path = "physicalModel/productAddSteps",
                 component = "iot/physicalModel/productAddSteps",

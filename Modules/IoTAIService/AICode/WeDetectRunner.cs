@@ -208,18 +208,18 @@ namespace IoTAIService.AICode
             {
                 for (int x = 0; x < w; x++)
                 {
-                    ltrb[0] = reg[0, 0, y, x] * stride;
-                    ltrb[1] = reg[0, 1, y, x] * stride;
-                    ltrb[2] = reg[0, 2, y, x] * stride;
-                    ltrb[3] = reg[0, 3, y, x] * stride;
+                    float left = reg[0, 0, y, x];
+                    float top = reg[0, 1, y, x];
+                    float right = reg[0, 2, y, x];
+                    float bottom = reg[0, 3, y, x];
 
+                    float cx = (x + 0.5f) * stride;
+                    float cy = (y + 0.5f) * stride;
 
-                    float cx = x * stride + stride * 0.5f;
-                    float cy = y * stride + stride * 0.5f;
-                    float x1 = cx - ltrb[0];
-                    float y1 = cy - ltrb[1];
-                    float x2 = cx + ltrb[2];
-                    float y2 = cy + ltrb[3];
+                    float x1 = cx - left;
+                    float y1 = cy - top;
+                    float x2 = cx + right;
+                    float y2 = cy + bottom;
 
 
                     // 遍历所有类别得分

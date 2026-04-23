@@ -1,8 +1,8 @@
 <template>
-  <div style="padding:20px 20px 0 20px;" id="big_con" v-loading="loading">
-    <el-tabs tab-position="left" style="background-color: #fff;padding: 40px;">
-      <el-tab-pane label="物联卡接入">
+  <el-dialog title="物联卡接入配置" top="3vh" :visible.sync="dialogVisible" width="900px" destroy-on-close>
 
+    <div id="big_con" v-loading="loading">
+      <div style="margin-bottom: 15px;">
         <el-descriptions style="margin-left: 15px;" title="SimBoss卡配置" :column="1" border>
           <el-descriptions-item label-class-name="iot-setlabel">
             <template slot="label">
@@ -166,13 +166,16 @@
               inactive-text="禁止"></el-switch>
           </el-descriptions-item>
         </el-descriptions>
+      </div>
 
-        <div style="display: flex;align-items: center;justify-content: center;margin-top: 30px;">
-          <el-button type="primary" @click="SaveCardConfig">保存</el-button>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-  </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="SaveCardConfig">保存</el-button>
+      </div>
+    </div>
+  </el-dialog>
+
 </template>
 <script>
 import {
@@ -183,6 +186,7 @@ import {
 export default {
   data() {
     return {
+      dialogVisible: false,
       loading: true,
       cardform: {
         EnableAutoAdd: false,
@@ -222,37 +226,44 @@ export default {
       return this.cardform.SimBossOption.app_id == '' && this.cardform.YiDongOption.app_id == '' && this.cardform.SohanOption.app_id == '' && this.cardform.UnicomOption.app_id == '';
     }
   },
-  async created() {
-    this.loading = true;
-    let res = await getConfig();
-    if (res.data != null) {
-      this.cardform.EnableAutoAdd = res.data.EnableAutoAdd;
-      if (res.data.SimBossOption != null && res.data.SimBossOption != "") {
-        this.cardform.SimBossOption = JSON.parse(res.data.SimBossOption);
-      }
-      if (res.data.YiDongOption != null && res.data.YiDongOption != "") {
-        this.cardform.YiDongOption = JSON.parse(res.data.YiDongOption);
-        if (this.cardform.YiDongOption.enable_expire == null) {
-          this.cardform.YiDongOption.enable_expire = false;
-        }
-      }
-      if (res.data.SohanOption != null && res.data.SohanOption != "") {
-        this.cardform.SohanOption = JSON.parse(res.data.SohanOption);
-        if (this.cardform.SohanOption.enable_expire == null) {
-          this.cardform.SohanOption.enable_expire = false;
-        }
-      }
-      if (res.data.UnicomOption != null && res.data.UnicomOption != "") {
-        this.cardform.UnicomOption = JSON.parse(res.data.UnicomOption);
-        if (this.cardform.UnicomOption.enable_expire == null) {
-          this.cardform.UnicomOption.enable_expire = false;
-        }
-      }
-      console.info(this.cardform)
-    }
-    this.loading = false;
-  },
+
   methods: {
+    async openDialog() {
+      this.dialogVisible = true;
+      this.loading = true;
+      try {
+        let res = await getConfig();
+        if (res.data != null) {
+          this.cardform.EnableAutoAdd = res.data.EnableAutoAdd;
+          if (res.data.SimBossOption != null && res.data.SimBossOption != "") {
+            this.cardform.SimBossOption = JSON.parse(res.data.SimBossOption);
+          }
+          if (res.data.YiDongOption != null && res.data.YiDongOption != "") {
+            this.cardform.YiDongOption = JSON.parse(res.data.YiDongOption);
+            if (this.cardform.YiDongOption.enable_expire == null) {
+              this.cardform.YiDongOption.enable_expire = false;
+            }
+          }
+          if (res.data.SohanOption != null && res.data.SohanOption != "") {
+            this.cardform.SohanOption = JSON.parse(res.data.SohanOption);
+            if (this.cardform.SohanOption.enable_expire == null) {
+              this.cardform.SohanOption.enable_expire = false;
+            }
+          }
+          if (res.data.UnicomOption != null && res.data.UnicomOption != "") {
+            this.cardform.UnicomOption = JSON.parse(res.data.UnicomOption);
+            if (this.cardform.UnicomOption.enable_expire == null) {
+              this.cardform.UnicomOption.enable_expire = false;
+            }
+          }
+        }
+        this.loading = false;
+      } catch (error) {
+        this.$message.error("获取配置失败");
+      } finally {
+        this.loading = false;
+      }
+    },
     async SaveCardConfig() {
       const loading = this.$loading({
         lock: true,
@@ -265,6 +276,7 @@ export default {
       loading.close();
       if (res.code == 0) {
         this.$message.success("保存成功");
+        this.dialogVisible = false;
       }
       else {
         this.$message.error(res.message);
@@ -282,5 +294,8 @@ export default {
 
 .iot-setlabel {
   width: 240px;
+}
+.dialog-footer {
+  text-align: right;
 }
 </style>

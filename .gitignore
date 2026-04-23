@@ -464,3 +464,4 @@ influxdb
 /Modules/IoTAIService/AIModel/WeDetect.onnx
 /Modules/IoTAIService/AIScript/fgmodel
 /Modules/IoTAIService/AIModel/wedetect_feat_input.onnx
+/Third/ZLMediaKit.Autogen/ZLMediaLibs/linux-arm64/libmk_api.so

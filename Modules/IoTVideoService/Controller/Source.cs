@@ -49,7 +49,7 @@ namespace IoTVideoService.Controller
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<DefaultAjaxResult<int>> Add(MZ_VideoSource data)
+        public async Task<DefaultAjaxResult<string>> Add(MZ_VideoSource data)
         {
             return (await _videoSourceBLL.Insert(data, GetUser())).ToAjaxResult();
         }

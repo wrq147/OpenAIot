@@ -37,44 +37,47 @@ namespace IoTVideoService.Business
             var rsp = await _provider.GetService<VideoSourceDAL>().SelectPage(expression, query, string.Empty);
             return rsp;
         }
-        public virtual async Task<BusResponse<int>> Insert(MZ_VideoSource data, IUserInfo user)
+        public virtual async Task<BusResponse<string>> Insert(MZ_VideoSource data, IUserInfo user)
         {
             if (user.OrgId <= 0)
             {
-                return BusResponse<int>.Error(112, "非企业用户无法添加视频源");
+                return BusResponse<string>.Error(112, "非企业用户无法添加视频源");
             }
             var snowflake = _provider.GetService<SnowflakeHelper>();
             data.OrgId = user.OrgId;
             data.NodeId = string.Empty;
             data.UserName ??= string.Empty;
             data.UserPwd ??= string.Empty;
-
+            string tmpid = snowflake.NextId().ToString();
+            data.Id = "VI_" + tmpid;
+            data.VideoKey = tmpid;
             if (data.VideoType == 0)
             {
-                data.Id = "VI_" + snowflake.NextId();
-                data.VideoKey = MyAccess.Core.StringTool.GetGUID();
                 data.UserName = string.Empty;
                 data.UserPwd = string.Empty;
             }
             else if (data.VideoType == 1)
             {
-                string tmpid = snowflake.NextId().ToString();
-                data.Id = "VI_" + tmpid;
-                data.VideoKey = tmpid;
                 if (string.IsNullOrEmpty(data.UserName) || string.IsNullOrEmpty(data.UserPwd))
                 {
-                    return BusResponse<int>.Error(113, "GB28181设备用户名和密码不能为空");
+                    return BusResponse<string>.Error(113, "GB28181设备用户名和密码不能为空");
                 }
                 data.PullAddr = string.Empty;
             }
-            else if (data.VideoType == 2)
+            else if (data.VideoType == 3)
             {
-                data.UserPwd = string.Empty;
-                data.PullAddr = string.Empty;
+                if (string.IsNullOrEmpty(data.PullAddr) || string.IsNullOrEmpty(data.UserName) || string.IsNullOrEmpty(data.UserPwd))
+                {
+                    return BusResponse<string>.Error(113, "设备Ip、设备用户名和设备密码不能为空");
+                }
+            }
+            else
+            {
+                return BusResponse<string>.Error(112, "非企业用户无法添加视频源");
             }
 
-            int rs = await _provider.GetService<VideoSourceDAL>().Insert(data);
-            return BusResponse<int>.Success(rs);
+            await _provider.GetService<VideoSourceDAL>().Insert(data);
+            return BusResponse<string>.Success(data.Id);
         }
 
 
@@ -210,7 +213,7 @@ namespace IoTVideoService.Business
             }
         }
 
-   
+
         private async Task DownDelVideoItemMessage(string nodeId, string videoId)
         {
             MediaDelItemMessage msg = new MediaDelItemMessage();

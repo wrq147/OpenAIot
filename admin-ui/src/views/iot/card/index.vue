@@ -49,6 +49,9 @@
             <el-row :gutter="10" class="mb8 button_row">
               <div>
                 <el-col :span="1.5">
+                  <el-button type="primary" icon="el-icon-setting" plain @click="handleApi()">第三方接入</el-button>
+                </el-col>
+                <el-col :span="1.5">
                   <el-button type="info" @click="handleImport" plain v-hasPermi="['/IoTService/IotCard/ListPage']">
                     <i class="zhongtaiiconfont zhongtai-icon-daoru"></i>
                     <span style="margin-left: 6px">SimBoss卡导入</span>
@@ -66,6 +69,7 @@
                     <span style="margin-left: 6px">硕软卡导入</span>
                   </el-button>
                 </el-col>
+
                 <el-col :span="1.5">
                   <el-button type="success" plain :disabled="multiple" @click="handleRenew">
                     <span style="margin-left: 6px">批量续费</span>
@@ -306,6 +310,8 @@
         </div>
       </el-dialog>
     </div>
+
+    <configcard ref="addConfig" />
   </div>
 </template>
 
@@ -325,7 +331,11 @@ import {
 import { orgInfo } from "@/api/system/company";
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 import { getToken } from "@/utils/auth";
+import configcard from './configcard.vue'
 export default {
+  components: {
+    configcard
+  },
   name: "cardList",
   mixins: [resizeTableCon],
   data() {
@@ -803,6 +813,9 @@ export default {
           return;
         })
         .catch(() => { });
+    },
+    handleApi() {
+      this.$refs.addConfig.openDialog();
     }
   },
 };

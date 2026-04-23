@@ -16,11 +16,10 @@
                     placeholder="请输入起始地址"></el-input-number>
             </el-form-item>
         </el-form>
-        <div class="flex_con">
-            <div style="padding-left:20px;color:#97999C;font-size: 14px;margin-right:20px">写入数据</div>
-            <el-checkbox v-model="waitreturn">是否等待返回</el-checkbox>
+        <div class="flex_con" style="padding-left: 15;">
+            <el-checkbox v-model="waitreturn">是否等待数据返回</el-checkbox>
         </div>
-        <template>
+        <div style="padding-left:15px;">
             <el-form v-for="(ite, inx) in this.matchForm.Items" :key="inx" ref="matchesItemsForm" :model="ite"
                 label-position="top" :inline="true" class="matches_form2">
                 <el-form-item :label="inx == 0 ? '字节序' : ''" prop="ByteOrder">
@@ -52,7 +51,7 @@
             <div style="margin-left:20px;margin-top:10px" v-if="matchForm.FuncCode == 15 || matchForm.FuncCode == 16">
                 <el-button plain @click="addItemsFormList">+添加</el-button>
             </div>
-        </template>
+        </div>
 
     </div>
 </template>

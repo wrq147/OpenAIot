@@ -8,6 +8,30 @@ namespace IoTVideoService
     {
         public override void Up()
         {
+            this.Execute.Sql("delete FROM mz_menu where menu_id=4226");
+            Insert.IntoTable("mz_menu").Row(new
+            {
+                menu_id = 4226,
+                menu_name = "添加视频设备",
+                parent_id = 4206,
+                order_num = 1,
+                path = string.Empty,
+                component = string.Empty,
+                query = string.Empty,
+                is_frame = 0,
+                is_cache = 1,
+                menu_type = "F",
+                visible = "0",
+                status = "0",
+                perms = "/IoTService/IotDevice/AddVideo",
+                icon = "#",
+                scope = 0,
+                create_time = DateTime.Now,
+                update_time = DateTime.Now,
+                createId = 0,
+                updateId = 0
+            });
+
             this.Execute.Sql("delete FROM mz_menu where menu_id=4502");
             this.Execute.Sql("delete FROM mz_menu where menu_id=4503");
             Insert.IntoTable("mz_menu").Row(new

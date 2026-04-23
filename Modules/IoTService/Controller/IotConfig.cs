@@ -25,7 +25,7 @@ namespace IoTService.Controller
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        [About()]
+        [About("/IoTService/IotDevice/ListPage")]
         public async Task<DefaultAjaxResult<int>> Update(In_IotConfig data)
         {
             var user = GetUser();
