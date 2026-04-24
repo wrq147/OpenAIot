@@ -13,15 +13,11 @@ namespace IoTAIService.AICode
 {
     public class MobileCLIP2VisionRunner : IReIDExtractor
     {
-        private readonly InferenceSession _session;
         private const int InputWidth = 256;
         private const int InputHeight = 256;
         public MobileCLIP2VisionRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "MobileCLIP2Vision.onnx";
-            var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(modelPath, sessionOptions);
+
         }
         public float[] ExtractFeature(Image<Rgb24> image, BoxItem roi)
         {
@@ -35,29 +31,44 @@ namespace IoTAIService.AICode
         /// <returns></returns>
         public float[] OutputEmbeddings(Image<Rgb24> image)
         {
-            image.Mutate(x => x.Resize(InputWidth, InputHeight));
-            // 创建张量 [1, 3, 256, 256]
-            var tensor = new DenseTensor<float>(new[] { 1, 3, InputHeight, InputWidth });
-
-            for (int y = 0; y < InputHeight; y++)
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(MobileCLIP2VisionRunner), () =>
             {
-                for (int x = 0; x < InputWidth; x++)
-                {
-                    Rgb24 pixel = image[x, y];
+                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "MobileCLIP2Vision.onnx";
+                var sessionOptions = new SessionOptions();
+                AIUtility.TryEnableGpu(sessionOptions);
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                image.Mutate(x => x.Resize(InputWidth, InputHeight));
+                // 创建张量 [1, 3, 256, 256]
+                var tensor = new DenseTensor<float>(new[] { 1, 3, InputHeight, InputWidth });
 
-                    tensor[0, 0, y, x] = pixel.R / 255f;
-                    tensor[0, 1, y, x] = pixel.G / 255f;
-                    tensor[0, 2, y, x] = pixel.B / 255f;
+                for (int y = 0; y < InputHeight; y++)
+                {
+                    for (int x = 0; x < InputWidth; x++)
+                    {
+                        Rgb24 pixel = image[x, y];
+
+                        tensor[0, 0, y, x] = pixel.R / 255f;
+                        tensor[0, 1, y, x] = pixel.G / 255f;
+                        tensor[0, 2, y, x] = pixel.B / 255f;
+                    }
                 }
+
+                // ====================== 2. ONNX 推理 ======================
+                var inputs = new[] { NamedOnnxValue.CreateFromTensor("pixel_values", tensor) };
+                using var results = inferenceSession.Run(inputs);
+                float[] embeddings = results.First().AsTensor<float>().ToArray();
+
+                // ====================== 3. 官方必须：L2 归一化 ======================
+                return L2Normalize(embeddings);
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(MobileCLIP2VisionRunner), inferenceSession);
             }
 
-            // ====================== 2. ONNX 推理 ======================
-            var inputs = new[] { NamedOnnxValue.CreateFromTensor("pixel_values", tensor) };
-            using var results = _session.Run(inputs);
-            float[] embeddings = results.First().AsTensor<float>().ToArray();
-
-            // ====================== 3. 官方必须：L2 归一化 ======================
-            return L2Normalize(embeddings);
         }
         /// <summary>
         /// L2归一化（MobileCLIP2 强制要求，否则余弦相似度无效）

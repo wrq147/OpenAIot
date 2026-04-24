@@ -14,46 +14,55 @@ namespace IoTAIService.AICode
 {
     public class WeDetectRunner
     {
-        private readonly InferenceSession _session;
         private readonly float[] _strides = new float[] { 8, 16, 32 };
         private readonly int[] _featSizes = new int[] { 80, 40, 20 };
         public WeDetectRunner()
         {
-            // 初始化ONNX推理会话
-            var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
-            string modelName = "WeDetect.onnx";
-            string modelPath = Directory.GetCurrentDirectory() + System.IO.Path.DirectorySeparatorChar + @"AIModel" + System.IO.Path.DirectorySeparatorChar + modelName;
-            _session = new InferenceSession(modelPath, sessionOptions);
         }
 
         public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)
         {
-            int originalWidth = image.Width;
-            int originalHeight = image.Height;
-            float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
-            // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image, gain);
-            // 2. 准备输入
-            var inputs = new List<NamedOnnxValue> {    
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(WeDetectRunner), () =>
+            {
+                var sessionOptions = new SessionOptions();
+                AIUtility.TryEnableGpu(sessionOptions);
+                string modelName = "WeDetect.onnx";
+                string modelPath = Directory.GetCurrentDirectory() + System.IO.Path.DirectorySeparatorChar + @"AIModel" + System.IO.Path.DirectorySeparatorChar + modelName;
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                int originalWidth = image.Width;
+                int originalHeight = image.Height;
+                float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
+                // 1. 图像预处理（与训练时保持一致）
+                var inputTensor = PreprocessImage(image, gain);
+                // 2. 准备输入
+                var inputs = new List<NamedOnnxValue> {    
                 // 图片输入：假设已预处理为(1,3,640,640)的Tensor<float>
                  NamedOnnxValue.CreateFromTensor("image", inputTensor),
                 // 文本嵌入输入：传入转换后的Tensor<float>
                 NamedOnnxValue.CreateFromTensor("text_feats", classEmbeds)
             };
 
-            // 3. 执行推理
-            using var outputs = _session.Run(inputs);
-            var cls80 = outputs.First(o => o.Name == "cls_80").AsTensor<float>();
-            var reg80 = outputs.First(o => o.Name == "reg_80").AsTensor<float>();
-            var cls40 = outputs.First(o => o.Name == "cls_40").AsTensor<float>();
-            var reg40 = outputs.First(o => o.Name == "reg_40").AsTensor<float>();
-            var cls20 = outputs.First(o => o.Name == "cls_20").AsTensor<float>();
-            var reg20 = outputs.First(o => o.Name == "reg_20").AsTensor<float>();
-            // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(cls80, reg80, cls40, reg40, cls20, reg20, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain, classes);
+                // 3. 执行推理
+                using var outputs = inferenceSession.Run(inputs);
+                var cls80 = outputs.First(o => o.Name == "cls_80").AsTensor<float>();
+                var reg80 = outputs.First(o => o.Name == "reg_80").AsTensor<float>();
+                var cls40 = outputs.First(o => o.Name == "cls_40").AsTensor<float>();
+                var reg40 = outputs.First(o => o.Name == "reg_40").AsTensor<float>();
+                var cls20 = outputs.First(o => o.Name == "cls_20").AsTensor<float>();
+                var reg20 = outputs.First(o => o.Name == "reg_20").AsTensor<float>();
+                // 4. 后处理解析结果
+                var detectionResults = PostprocessOutput(cls80, reg80, cls40, reg40, cls20, reg20, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain, classes);
 
-            return detectionResults;
+                return detectionResults;
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(WeDetectRunner), inferenceSession);
+            }
+
         }
 
         /// <summary>
@@ -79,8 +88,8 @@ namespace IoTAIService.AICode
                     height: (int)resizedHeight,
                     sampler: KnownResamplers.Triangle));
             }
-            int top = (int)Math.Round(dh - 0.1f);
-            int left = (int)Math.Round(dw - 0.1f);
+            int top = (int)dh;
+            int left = (int)dw;
 
             // 7. 填充黑边（对齐cv2.copyMakeBorder）
             Image<Rgb24> paddedImg = new Image<Rgb24>(640, 640);
@@ -133,18 +142,14 @@ namespace IoTAIService.AICode
         }
         private void RestoreCoords(BoxItem box, int oriW, int oriH, float gain)
         {
-            float padX = (640 - oriW * gain) / 2f - 0.1f;
-            float padY = (640 - oriH * gain) / 2f - 0.1f;
+            float padX = (640 - oriW * gain) / 2f;
+            float padY = (640 - oriH * gain) / 2f;
 
-            float x1 = (box.x1 - padX) / gain;
-            float y1 = (box.y1 - padY) / gain;
-            float x2 = (box.x2 - padX) / gain;
-            float y2 = (box.y2 - padY) / gain;
 
-            x1 = Math.Clamp(x1, 0, oriW);
-            y1 = Math.Clamp(y1, 0, oriH);
-            x2 = Math.Clamp(x2, 0, oriW);
-            y2 = Math.Clamp(y2, 0, oriH);
+            box.x1 = Math.Clamp((box.x1 - padX) / gain, 0, oriW);
+            box.y1 = Math.Clamp((box.y1 - padY) / gain, 0, oriH);
+            box.x2 = Math.Clamp((box.x2 - padX) / gain, 0, oriW);
+            box.y2 = Math.Clamp((box.y2 - padY) / gain, 0, oriH);
         }
         /// <summary>
         /// 非极大值抑制（NMS）：去除重叠的高置信度框
@@ -203,15 +208,14 @@ namespace IoTAIService.AICode
          List<BoxItem> results, List<string> classes)
         {
             int numClasses = cls.Dimensions[1];
-            Span<float> ltrb = stackalloc float[4];
             for (int y = 0; y < h; y++)
             {
                 for (int x = 0; x < w; x++)
                 {
-                    float left = reg[0, 0, y, x];
-                    float top = reg[0, 1, y, x];
-                    float right = reg[0, 2, y, x];
-                    float bottom = reg[0, 3, y, x];
+                    float left = reg[0, 0, y, x] * stride;
+                    float top = reg[0, 1, y, x] * stride;
+                    float right = reg[0, 2, y, x] * stride;
+                    float bottom = reg[0, 3, y, x] * stride;
 
                     float cx = (x + 0.5f) * stride;
                     float cy = (y + 0.5f) * stride;

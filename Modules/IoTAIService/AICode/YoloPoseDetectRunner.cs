@@ -16,41 +16,51 @@ namespace IoTAIService.AICode
 {
     public class YoloPoseDetectRunner
     {
-        private readonly InferenceSession _session;
-
         public YoloPoseDetectRunner()
         {
-            // 初始化ONNX推理会话
-            var sessionOptions = new SessionOptions();
-            var provider = AIUtility.TryEnableGpu(sessionOptions);
-            string modelName = "YoloPose.onnx";
-            if (provider != ExecutionProviderType.CPU)
-            {
-                modelName = "YoloPoseS.onnx";
-            }
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
-            _session = new InferenceSession(modelPath, sessionOptions);
+
         }
 
         public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold)
         {
-            int originalWidth = image.Width;
-            int originalHeight = image.Height;
-            float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
-            // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image, gain);
-            // 2. 准备输入
-            var inputs = new List<NamedOnnxValue> {
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(YoloPoseDetectRunner), () =>
+            {
+                // 初始化ONNX推理会话
+                var sessionOptions = new SessionOptions();
+                var provider = AIUtility.TryEnableGpu(sessionOptions);
+                string modelName = "YoloPose.onnx";
+                if (provider != ExecutionProviderType.CPU)
+                {
+                    modelName = "YoloPoseS.onnx";
+                }
+                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                int originalWidth = image.Width;
+                int originalHeight = image.Height;
+                float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
+                // 1. 图像预处理（与训练时保持一致）
+                var inputTensor = PreprocessImage(image, gain);
+                // 2. 准备输入
+                var inputs = new List<NamedOnnxValue> {
                  NamedOnnxValue.CreateFromTensor("images", inputTensor),
             };
 
-            // 3. 执行推理
-            using var outputs = _session.Run(inputs);
-            var outputTensor = outputs.First().AsTensor<float>();
-            // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, originalWidth, originalHeight, gain);
+                // 3. 执行推理
+                using var outputs = inferenceSession.Run(inputs);
+                var outputTensor = outputs.First().AsTensor<float>();
+                // 4. 后处理解析结果
+                var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, originalWidth, originalHeight, gain);
 
-            return detectionResults;
+                return detectionResults;
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(YoloPoseDetectRunner), inferenceSession);
+            }
+
         }
         /// <summary>
         /// 图像预处理：缩放、归一化等

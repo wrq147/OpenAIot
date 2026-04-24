@@ -64,6 +64,7 @@ class FeatureAlignProjection(nn.Module):
 
         self.fc2 = nn.Linear(hidden_dim, out_dim, bias=True)
 
+
     def forward(self, x):
         # 第一层
         x = self.fc1(x)
@@ -73,6 +74,7 @@ class FeatureAlignProjection(nn.Module):
         # 第二层
         x = self.fc2(x)
         return x
+
 
 
 def resize_short_edge(image, target_size=640):

@@ -14,35 +14,45 @@ namespace IoTAIService.AICode
 {
     public class PoseC3DRunner
     {
-        private readonly InferenceSession _session;
-
         public PoseC3DRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "Posec3d.onnx";
-            // 初始化ONNX推理会话
-            var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(modelPath, sessionOptions);
+
         }
         public (int classId, string className, float score) Process(List<BoxItem> poseFrames, float minKpScore = 0.3f)
         {
-            Tensor<float> inputTensor = ConvertToPoseC3DTensor(poseFrames, minKpScore);
-            var inputs = new List<NamedOnnxValue> {
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(PoseC3DRunner), () =>
+            {
+                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "Posec3d.onnx";
+                // 初始化ONNX推理会话
+                var sessionOptions = new SessionOptions();
+                AIUtility.TryEnableGpu(sessionOptions);
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                Tensor<float> inputTensor = ConvertToPoseC3DTensor(poseFrames, minKpScore);
+                var inputs = new List<NamedOnnxValue> {
                  NamedOnnxValue.CreateFromTensor("input_tensor", inputTensor),
             };
 
-            // 执行推理
-            using var outputs = _session.Run(inputs);
-            var outputTensor = outputs.First().AsTensor<float>();
+                // 执行推理
+                using var outputs = inferenceSession.Run(inputs);
+                var outputTensor = outputs.First().AsTensor<float>();
 
-            // 输出是 [1,120]，取第 0 个 batch 的 120 维分数
-            float[] scores = outputTensor.Skip(0).Take(120).ToArray();
-            int classId = ArgMax(scores);
-            string className = GetNTU120ActionName(classId);
-            float score = scores[classId];
-            // 用 Sigmoid 把 score 压缩到 0~1
-            score = 1.0f / (1.0f + (float)Math.Exp(-score));
-            return (classId, className, score);
+                // 输出是 [1,120]，取第 0 个 batch 的 120 维分数
+                float[] scores = outputTensor.Skip(0).Take(120).ToArray();
+                int classId = ArgMax(scores);
+                string className = GetNTU120ActionName(classId);
+                float score = scores[classId];
+                // 用 Sigmoid 把 score 压缩到 0~1
+                score = 1.0f / (1.0f + (float)Math.Exp(-score));
+                return (classId, className, score);
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(PoseC3DRunner), inferenceSession);
+            }
+
         }
 
         /// <summary>

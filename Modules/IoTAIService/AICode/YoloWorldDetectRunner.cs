@@ -17,40 +17,50 @@ namespace IoTAIService.AICode
 
     public class YoloWorldDetectRunner
     {
-        private readonly InferenceSession _session;
-
         public YoloWorldDetectRunner()
         {
-            // 初始化ONNX推理会话
-            var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
-            string modelName = "YoloWorld.onnx";
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
-            _session = new InferenceSession(modelPath, sessionOptions);
+
         }
 
         public List<BoxItem> Predict(Image<Rgb24> image, float confidenceThreshold, float iouThreshold, DenseTensor<float> classEmbeds, List<string> classes)
         {
-            int originalWidth = image.Width;
-            int originalHeight = image.Height;
-            float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
-            // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image, gain);
-            // 2. 准备输入
-            var inputs = new List<NamedOnnxValue> {    
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(YoloWorldDetectRunner), () =>
+            {
+                // 初始化ONNX推理会话
+                var sessionOptions = new SessionOptions();
+                AIUtility.TryEnableGpu(sessionOptions);
+                string modelName = "YoloWorld.onnx";
+                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                int originalWidth = image.Width;
+                int originalHeight = image.Height;
+                float gain = Math.Min(640.0f / originalWidth, 640.0f / originalHeight);
+                // 1. 图像预处理（与训练时保持一致）
+                var inputTensor = PreprocessImage(image, gain);
+                // 2. 准备输入
+                var inputs = new List<NamedOnnxValue> {    
                 // 图片输入：假设已预处理为(1,3,640,640)的Tensor<float>
                  NamedOnnxValue.CreateFromTensor("images", inputTensor),
                 // 文本嵌入输入：传入转换后的Tensor<float>
                 NamedOnnxValue.CreateFromTensor("text_embeds", classEmbeds)
             };
 
-            // 3. 执行推理
-            using var outputs = _session.Run(inputs);
-            var outputTensor = outputs.First().AsTensor<float>();
-            // 4. 后处理解析结果
-            var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain, classes);
+                // 3. 执行推理
+                using var outputs = inferenceSession.Run(inputs);
+                var outputTensor = outputs.First().AsTensor<float>();
+                // 4. 后处理解析结果
+                var detectionResults = PostprocessOutput(outputTensor, confidenceThreshold, iouThreshold, originalWidth, originalHeight, gain, classes);
 
-            return detectionResults;
+                return detectionResults;
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(YoloWorldDetectRunner), inferenceSession);
+            }
+
         }
         /// <summary>
         /// 图像预处理：缩放、归一化等

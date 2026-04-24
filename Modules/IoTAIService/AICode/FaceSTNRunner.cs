@@ -12,30 +12,40 @@ namespace IoTAIService.AICode
 {
     public class FaceSTNRunner
     {
-        private readonly InferenceSession _session;
-
         public FaceSTNRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "FaceSTN.onnx";
-            var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(modelPath, sessionOptions);
+
         }
         public Tensor<float> Predict(Image<Rgb24> image)
         {
-            // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image);
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(FaceSTNRunner), () =>
+            {
+                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "FaceSTN.onnx";
+                var sessionOptions = new SessionOptions();
+                AIUtility.TryEnableGpu(sessionOptions);
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                // 1. 图像预处理（与训练时保持一致）
+                var inputTensor = PreprocessImage(image);
 
-            // 2. 准备输入
-            var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("input", inputTensor) };
+                // 2. 准备输入
+                var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("input", inputTensor) };
 
-            // 3. 执行推理
-            using var outputs = _session.Run(inputs);
+                // 3. 执行推理
+                using var outputs = inferenceSession.Run(inputs);
 
-            // 4. 解析输出
-            var txoutputs = outputs.First(o => o.Name == "output").AsTensor<float>();
+                // 4. 解析输出
+                var txoutputs = outputs.First(o => o.Name == "output").AsTensor<float>();
 
-            return txoutputs;
+                return txoutputs;
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(FaceSTNRunner), inferenceSession);
+            }
+
         }
         // 图像预处理：缩放、归一化等
         private Tensor<float> PreprocessImage(Image<Rgb24> input)

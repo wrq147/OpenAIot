@@ -13,29 +13,37 @@ namespace IoTAIService.AICode
 {
     public class FaceKeyPointsRunner
     {
-        private readonly InferenceSession _session;
-
-        public FaceKeyPointsRunner(IOptions<IoTAIOption> option)
+        public FaceKeyPointsRunner()
         {
-            string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "FaceKeyPoints.onnx";
-            var sessionOptions = new SessionOptions();
-            AIUtility.TryEnableGpu(sessionOptions);
-            _session = new InferenceSession(modelPath, sessionOptions);
         }
         public Tensor<float> Predict(Image<Rgb24> image)
         {
-            // 1. 图像预处理（与训练时保持一致）
-            var inputTensor = PreprocessImage(image);
+            var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(FaceKeyPointsRunner), () =>
+            {
+                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + "FaceKeyPoints.onnx";
+                var sessionOptions = new SessionOptions();
+                AIUtility.TryEnableGpu(sessionOptions);
+                return new InferenceSession(modelPath, sessionOptions);
+            });
+            try
+            {
+                // 1. 图像预处理（与训练时保持一致）
+                var inputTensor = PreprocessImage(image);
+                return PredictTensor(inputTensor, inferenceSession);
+            }
+            finally
+            {
+                InferenceSessionPool.Instance.ReleaseSession(nameof(FaceKeyPointsRunner), inferenceSession);
+            }
 
-            return PredictTensor(inputTensor);
         }
-        public Tensor<float> PredictTensor(Tensor<float> inputTensor)
+        public Tensor<float> PredictTensor(Tensor<float> inputTensor, InferenceSession session)
         {
             // 2. 准备输入
             var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("input", inputTensor) };
 
             // 3. 执行推理
-            using var outputs = _session.Run(inputs);
+            using var outputs = session.Run(inputs);
 
             // 4. 解析输出
             var txoutputs = outputs.First(o => o.Name == "output").AsTensor<float>();
