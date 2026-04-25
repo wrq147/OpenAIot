@@ -10,48 +10,6 @@ from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
 )
-import torch.nn.functional as F
-
-def cluster_by_cosine_similarity(features, threshold=0.35):
-    """
-    余弦相似度聚类
-    输出：[K, 768] 类别中心
-    """
-
-    n = features.shape[0]
-    labels = torch.full((n,), -1, dtype=torch.int32, device=features.device)
-    current_label = 0
-
-    # ==============================
-    # 1. 计算 真正的余弦相似度矩阵（修复点1）
-    # ==============================
-    norm = F.normalize(features, p=2, dim=-1)  # 先归一化
-    sim_matrix = torch.matmul(norm, norm.T)     # 真正余弦相似度矩阵
-
-    # ==============================
-    # 2. 正确聚类逻辑（修复点2）
-    # ==============================
-    for i in range(n):
-        # 已经被分配 → 跳过（关键！）
-        if labels[i] != -1:
-            continue
-        
-        # 只取当前点的相似度
-        sim = sim_matrix[i]
-        # 只分配：满足阈值 + 还没标签的点
-        mask = (sim > threshold) & (labels == -1)
-        labels[mask] = current_label
-        current_label += 1
-
-    # 计算类别中心
-    unique_labels = torch.unique(labels)
-    cluster_centers = []
-    for lab in unique_labels:
-        cluster_points = features[labels == lab]
-        center = cluster_points.mean(dim=0)
-        cluster_centers.append(center)
-
-    return torch.stack(cluster_centers)
 
 
 class FeatureAlignProjection(nn.Module):
@@ -148,7 +106,7 @@ class CNCLIPFeatureExtractor:
         except Exception as e:
             raise RuntimeError(f"Base64图片解码失败: {str(e)}")
 
-    def get_image_features_from_base64(self, base64Str, alignModel, enableCosCluster):
+    def get_image_features_from_base64(self, base64Str, alignModel):
         """
         批量提取Base64图片特征
         :param base64Str: Base64字符串
@@ -163,18 +121,7 @@ class CNCLIPFeatureExtractor:
 
         # 批量提取特征
         with torch.no_grad():
-
-            if enableCosCluster:
-                image_features = self.fgmodel.get_image_dense_feature(**img_tensor)
-                spatial_values = img_tensor["spatial_shapes"][0]
-                real_h = spatial_values[0].item()
-                real_w = spatial_values[1].item()
-                real_pixel_tokens_num = real_w*real_h
-                image_features = image_features[0][:real_pixel_tokens_num]
-                image_features = cluster_by_cosine_similarity(image_features)
-                print(image_features.shape)
-            else:
-                image_features = self.fgmodel.get_image_features(**img_tensor)
+            image_features = self.fgmodel.get_image_features(**img_tensor) 
 
             if alignModel is not None:
                 image_features = alignModel(image_features)
@@ -187,7 +134,7 @@ global_extractor = CNCLIPFeatureExtractor()
 # 外部调用入口（支持Base64/文本输入）
 
 
-def execall(text_list=None, base64_img=None, projStr="Detect", enableCosCluster=False):
+def execall(text_list=None, base64_img=None, projStr="Detect"):
     """
     特征提取统一入口
     :param text_list: 文本列表（可为null）
@@ -219,7 +166,7 @@ def execall(text_list=None, base64_img=None, projStr="Detect", enableCosCluster=
     # 提取Base64图片特征
     if base64_img is not None:
         result["image_features"] = global_extractor.get_image_features_from_base64(
-            base64_img, align_model, enableCosCluster).tolist()
+            base64_img, align_model).tolist()
 
     return result
 

@@ -80,14 +80,14 @@ namespace IoTAIService.AIProject.Items
             }
 
             var tfeature = ConvertListToDenseTensor(feature);
-            if (tclasses == null)
+            if (!string.IsNullOrEmpty(featureImg))
             {
                 tclasses = new List<string>();
-                int numClasses = tfeature.Dimensions[1];
-                for (int i = 0; i < numClasses; i++)
-                {
-                    tclasses.Add($"图片对象{i + 1}");
-                }
+                tclasses.Add("图片对象");
+            }
+            if (tclasses == null)
+            {
+                return new List<BoxItem>();
             }
             List<BoxItem> boxes = _provider.GetService<WeDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
             return boxes;

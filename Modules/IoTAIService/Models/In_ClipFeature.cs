@@ -14,9 +14,5 @@ namespace IoTAIService.Models
         /// 项目代码
         /// </summary>
         public string ProjCoed { get; set; }
-        /// <summary>
-        /// 是否使用余弦相似度聚类
-        /// </summary>
-        public bool EnableCosCluster { get; set; }
     }
 }

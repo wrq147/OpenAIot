@@ -612,11 +612,6 @@
             项目代码
             </summary>
         </member>
-        <member name="P:IoTAIService.Models.In_ClipFeature.EnableCosCluster">
-            <summary>
-            是否使用余弦相似度聚类
-            </summary>
-        </member>
         <member name="P:IoTAIService.Models.In_FaceDetect.ImageBase64">
             <summary>
             Base64图片

@@ -123,7 +123,7 @@ namespace IoTAIService
         
         }
 
-        public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr, string imgStr, string projCode, bool enableCosCluster)
+        public async Task<List<List<float>>> GenerateCNClipFeature(List<string> strArr, string imgStr, string projCode)
         {
             return await Task.Run(async () =>
             {
@@ -149,7 +149,7 @@ namespace IoTAIService
                         }
 
                         // 执行Python函数并获取结果
-                        dynamic result = _outclipModule.execall(strPyList, imgPyStr, projStr, enableCosCluster);
+                        dynamic result = _outclipModule.execall(strPyList, imgPyStr, projStr);
                         var pyDict = new PyDict(result);
                         List<List<float>> rs = null;
                         if (strPyList != null)
