@@ -117,7 +117,7 @@ class CNCLIPFeatureExtractor:
         img = self._decode_base64_to_image(base64Str)
         # 预处理 + 转换为tensor
         img_tensor = self.image_processor(
-            images=img, max_num_patches=1600, return_tensors="pt").to(self.device)
+            images=img, max_num_patches=256, return_tensors="pt").to(self.device)
 
         # 批量提取特征
         with torch.no_grad():

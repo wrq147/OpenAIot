@@ -164,12 +164,6 @@ namespace IoTRulesService.DataParser.Js
         public object Execute(string funId, IDictionary<string, object> inputs)
         {
             var curfun = FuncMessage();
-            string comparefun = curfun.DeviceId + "|" + funId;
-            if (!string.IsNullOrEmpty(curfun.SourceFunction) && curfun.SourceFunction == comparefun)
-            {
-                var tmpxxs = _client.Print(_msg.DeviceId, "功能调用异常", "无法死循环调用同一个功能");
-                return null;
-            }
             FunctionInvokeMessage msg = new FunctionInvokeMessage();
             msg.DeviceId = curfun.DeviceId;
             msg.ProductId = curfun.ProductId;
@@ -196,15 +190,7 @@ namespace IoTRulesService.DataParser.Js
         public object ExecuteOther(string deviceId, string funId, IDictionary<string, object> inputs)
         {
             var curfun = FuncMessage();
-            string comparefun = deviceId + "|" + funId;
-
-
-            if (!string.IsNullOrEmpty(curfun.SourceFunction) && curfun.SourceFunction == comparefun)
-            {
-                var tmpss = _client.Print(_msg.DeviceId, "功能调用异常", "无法死循环调用同一个功能");
-                return null;
-            }
-
+            string sourceFun = string.IsNullOrEmpty(curfun.SourceFunction) ? (curfun.DeviceId + "|" + curfun.FunctionId) : (curfun.SourceFunction);
             if (deviceId == this._msg.DeviceId)
             {
                 FunctionInvokeMessage msg = new FunctionInvokeMessage();
@@ -212,7 +198,7 @@ namespace IoTRulesService.DataParser.Js
                 msg.ProductId = this._msg.ProductId;
                 msg.FunctionId = funId;
                 msg.Inputs = inputs ?? new Dictionary<string, object>();
-                msg.SourceFunction = string.IsNullOrEmpty(curfun.SourceFunction) ? (curfun.DeviceId + "|" + curfun.FunctionId) : (curfun.SourceFunction);
+                msg.SourceFunction = sourceFun;
                 msg.MessageId = Guid.NewGuid().ToString("N");
 
                 var tmpres = _client.PublicWaitFuncReply(msg);
@@ -227,7 +213,7 @@ namespace IoTRulesService.DataParser.Js
             }
             else
             {
-                var tmpres = this._client.Provider.GetService<ServerBusProxy>().DownFunction(string.Empty, deviceId, funId, inputs ?? new Dictionary<string, object>());
+                var tmpres = this._client.Provider.GetService<ServerBusProxy>().DownFunction(string.Empty, deviceId, funId, inputs ?? new Dictionary<string, object>(), sourceFun);
                 var res = tmpres.Result;
                 if (!res.IsSuccess())
                 {

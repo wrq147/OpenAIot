@@ -209,6 +209,7 @@ namespace IoTService
         }
 
 
+
         /// <summary>
         /// 执行指定功能
         /// </summary>
@@ -216,14 +217,16 @@ namespace IoTService
         /// <param name="deviceId"></param>
         /// <param name="functionId"></param>
         /// <param name="inputs"></param>
+        /// <param name="sourceFun"></param>
         /// <returns></returns>
-        public async Task<BusResponse<IDictionary<string, object>>> DownFunction(string productId, string deviceId, string functionId, IDictionary<string, object> inputs)
+        public async Task<BusResponse<IDictionary<string, object>>> DownFunction(string productId, string deviceId, string functionId, IDictionary<string, object> inputs, string sourceFun = null)
         {
             FunctionInvokeMessage msg = new FunctionInvokeMessage();
             msg.DeviceId = deviceId;
             msg.ProductId = productId;
             msg.FunctionId = functionId;
             msg.Inputs = inputs;
+            msg.SourceFunction = sourceFun;
             msg.MessageId = MyAccess.Core.StringTool.GetGUID();
             var rs = await WaitDown<FunctionInvokeMessage, FunctionInvokeMessageReply>(msg);
             if (rs == null)

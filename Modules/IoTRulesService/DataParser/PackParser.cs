@@ -1231,6 +1231,12 @@ namespace IoTRulesService.DataParser
             }
             else if (msg is FunctionInvokeMessage funcMessage)
             {
+                string comparefun = funcMessage.DeviceId + "|" + funcMessage.FunctionId;
+                if (!string.IsNullOrEmpty(funcMessage.SourceFunction) && funcMessage.SourceFunction == comparefun)
+                {
+                    await this.Print(msg.DeviceId, "功能调用异常", $"无法死循环调用同一个功能{funcMessage.FunctionId}");
+                    return null;
+                }
                 RawDataMessage rawdata = new RawDataMessage();
                 rawdata.DeviceId = msg.DeviceId;
                 rawdata.MessageId = msg.MessageId;
