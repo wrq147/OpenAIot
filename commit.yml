@@ -2,256 +2,34 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '6c31a44201cd1d0a1571421c83b5d3240cf1215d'
-    oldFile: !uuid '65d5df0740eca27697b2ca3439afba3e7f70806b'
-  /App/App.csproj:
-    newFile: !uuid 'ac036c428e067b270ae492df0f33471ced203078'
-    oldFile: !uuid '93e2da943489be053ff7731a1612f158d79d5737'
-  /Channel:
-    newFile: !uuid 'b5428d687ff3664d647ab74dac6fa5f6b69992da'
-    oldFile: !uuid '265ddf82817c7ff5417b1255ffbb6e2fc45d1f5b'
-  /Channel/ChannelUtility:
-    newFile: !uuid 'fa325a22e418dfa8316c75877e55223b69ec81f2'
-    oldFile: !uuid 'a0e0ee4b81104aeab6079ef3c33f75a4f082d7de'
-  /Channel/ChannelUtility/ChannelUtility.csproj:
-    newFile: !uuid '9b1a9bea79e8db16908c50fa65ea66e79f10aa5f'
-    oldFile: !uuid '151db1de570fa6c76f0c64c30938cf3c3405d3c6'
-  /Channel/MqttChannel:
-    newFile: !uuid 'd05d8d33664e4cbcb9a230543786566f73dcc27b'
-    oldFile: !uuid 'c5caafd075d4f6171a57038b6fc78de4628f2c25'
-  /Channel/MqttChannel/MqttChannel.csproj:
-    newFile: !uuid '12496cdccf529478f34c02e844255417ed2ce238'
-    oldFile: !uuid 'a4755f66ab858f430062f9bbaa9b07a979ab40fb'
+  /Common:
+    newFile: !uuid '6da123a7e455a9ac4ff12a541bbe1281a095e2b1'
+    oldFile: !uuid '7352425075eb3e4ac44e00416772f09ed8c8511a'
+  /Common/Common.csproj:
+    newFile: !uuid '42269b1cab68064f0fa4ac287d262bc668774298'
+    oldFile: !uuid '658f472e946b1931caedd4c1d67ee9f8f7729d74'
   /Modules:
-    newFile: !uuid '2d739c93e95818462c7ddbc5874e57fcf30c4326'
-    oldFile: !uuid 'd76c99e15b9fd82e39498c5e0b17350fadf20cdb'
-  /Modules/AfterService:
-    newFile: !uuid '60f81e15017bd8d3f847ae16f91933184163e743'
-    oldFile: !uuid '3fbbddb401137203ddeee15d37718d48567e3684'
-  /Modules/AfterService/AfterService.csproj:
-    newFile: !uuid '4b0735bcc2a8683dafd363e9a717e3e565d2c3c4'
-    oldFile: !uuid '75bd889d8fa57c0094b36c942c6eac884b59f29a'
-  /Modules/AuthService:
-    newFile: !uuid 'e08d039cfaf6111475cc3c818476acf23cc52ed9'
-    oldFile: !uuid '9b8ca18be8f7872f6fa47d7bfbbaf93465a7c806'
-  /Modules/AuthService/AuthService.csproj:
-    newFile: !uuid '6f5da455f69c44c557af1c65a57d73c3f1e9eb31'
-    oldFile: !uuid '68a87593b632895c4ff3ca0f08d54b97817cc153'
-  /Modules/CRMService:
-    newFile: !uuid '41df4659d787f129a79a59897300a3f0277ecdf0'
-    oldFile: !uuid 'a29e588750b736bb89ead833f4cea5fb0e93dcc1'
-  /Modules/CRMService/CRMService.csproj:
-    newFile: !uuid '31d708723d18d24bb4fed8d2e98d22841f14afa3'
-    oldFile: !uuid '4f4635e87d452f8c53c61da2256669fc94e1648a'
-  /Modules/CardService:
-    newFile: !uuid 'a4c254ae78094a955ce1513a47143a8e253adeaa'
-    oldFile: !uuid '663a631e2fce2b31e61d2def3781bafa23b4a440'
-  /Modules/CardService/CardService.csproj:
-    newFile: !uuid '4895cd7e61d3e3d4684e06c3870174b01bc7367b'
-    oldFile: !uuid 'fd3f04030e842084441bb422d93ae41674001880'
-  /Modules/DeveloperService:
-    newFile: !uuid '80c6ad5f2ae1adf757c0fe68f8bc52ad7176e708'
-    oldFile: !uuid 'df7014b7f0b8d5ef94b34184ddb612c925834683'
-  /Modules/DeveloperService/DeveloperService.csproj:
-    newFile: !uuid '2806b3e92590c68f20da498ac7742cc335bfaec5'
-    oldFile: !uuid '9ce301e5497470cd3c57f83da7c92ea9276ecee5'
-  /Modules/DictService:
-    newFile: !uuid 'ee9a462f363ea355313dbcb2b0eda043fd4f59aa'
-    oldFile: !uuid '6bbcd0e83b3e59ccab75e846dead259a8522951c'
-  /Modules/DictService/DictService.csproj:
-    newFile: !uuid 'd1aaa75935ef0620aa6fd1da2fa67750a0d5264a'
-    oldFile: !uuid 'ea599dc6389440317aecf44ec4b90adb35c796c7'
-  /Modules/DiscussService:
-    newFile: !uuid 'f97f0af6690481e79a61d5c6282b930dbaaf9833'
-    oldFile: !uuid 'b808a40ce5a3c1da25b0595d998166df5f3047f1'
-  /Modules/DiscussService/DiscussService.csproj:
-    newFile: !uuid 'f30617d69f09b62a9090ee5e55d945ce0f5aef66'
-    oldFile: !uuid 'b2eaba1bdadd46a14133c3ae41de14740658265a'
-  /Modules/EfficiencyService:
-    newFile: !uuid '28fa7a82eb7e3b655b152881d418b6ae597e5c75'
-    oldFile: !uuid 'b332c2423467dd5778e2b66641b07f80a086689d'
-  /Modules/EfficiencyService/EfficiencyService.csproj:
-    newFile: !uuid 'd40297250d12c78c336768675dc7dcf6523817a4'
-    oldFile: !uuid '4892f731394fa784025d9ed63c53deded7b4c6c7'
-  /Modules/EmailService:
-    newFile: !uuid '5cc6b88b752da0d2623688a9cfd6d407db64100e'
-    oldFile: !uuid '1e369a672b508f7ee21c05e05351647b7d11e908'
-  /Modules/EmailService/EmailService.csproj:
-    newFile: !uuid 'bad476febf59ec3b72f2c1737f8d3a5552860bf7'
-    oldFile: !uuid '92609ee95996a9cb61004e937d29d27f050c21a2'
-  /Modules/FlowService:
-    newFile: !uuid '29cf3c8a553977d14badf77a00850fd6ae62fb4d'
-    oldFile: !uuid 'ea6aeaf8437dd09b8a7d4aa85245ad922091807a'
-  /Modules/FlowService/FlowService.csproj:
-    newFile: !uuid '688b7dcab61ec0d02bbcc0c507563329e8c51387'
-    oldFile: !uuid '11b4f5db155ed4f9c5f795f1d90e843a5bec0805'
+    newFile: !uuid '36fc2b7153ff060a2279c93327c274a541045535'
+    oldFile: !uuid '2d739c93e95818462c7ddbc5874e57fcf30c4326'
   /Modules/IoTAIService:
-    newFile: !uuid 'b10a3329bc399a53e583b7d6198b8ce376bc8684'
-    oldFile: !uuid '6698cbadb04d89ee240d699928082d0cca93ab39'
+    newFile: !uuid '80b34fe50d83e8a1728db6248a0bcb396fd194b0'
+    oldFile: !uuid 'b10a3329bc399a53e583b7d6198b8ce376bc8684'
+  /Modules/IoTAIService/AIScript:
+    newFile: !uuid 'bbc9b206f76f5e374dfafa307389ccf56d80e530'
+    oldFile: !uuid '7c408db595fea25338a038ecec350dfe198071f8'
+  /Modules/IoTAIService/AIScript/outfgclip.py:
+    newFile: !uuid '5b504f2445aad81d3d4174776bca8ffd4a8b561d'
+    oldFile: !uuid 'ef59e90673b54968a5b279daa8cdb740207b117f'
   /Modules/IoTAIService/IoTAIService.csproj:
-    newFile: !uuid '6384f41c209ff534d3d4bccc3b296c1f301109e2'
-    oldFile: !uuid '4a12b6cae27258846afcbd1eda47a1cb52674d42'
-  /Modules/IoTRulesService:
-    newFile: !uuid 'bf49546cb17c812640cbab3b974fde8dde3c5a22'
-    oldFile: !uuid '6831e298789fe5b991a967453b7344081d5b5cc3'
-  /Modules/IoTRulesService/IoTRulesService.csproj:
-    newFile: !uuid 'ba685fc3b7145cbc21c1103623b4850f1952623b'
-    oldFile: !uuid '94944a64c059606407186acd6bd70284977ccec8'
-  /Modules/IoTService:
-    newFile: !uuid 'd1f8dd8cba3552d77a46622550d058bbe2491423'
-    oldFile: !uuid '2fa8a51f86b51e5af1b6a34961cbd84f66397d1b'
-  /Modules/IoTService/IoTService.csproj:
-    newFile: !uuid 'c4cc4a943e854e5ed14fc8cc22e9c7e7587b0f89'
-    oldFile: !uuid '1265bccaf01dde181b5e52f0fd3589409e4aa527'
-  /Modules/IoTVideoService:
-    newFile: !uuid '85b9e998a152b42327ac129f712f8d584678d7ed'
-    oldFile: !uuid '2eda8c6c0ee93224bf1a11c1457a9d82b9a7ff25'
-  /Modules/IoTVideoService/IoTVideoService.csproj:
-    newFile: !uuid '5c900e4126b4eb91f02b11a6505826c2bf8beaae'
-    oldFile: !uuid '9d056256c74a525bfc05b9f9a84f0a2d241c9c1d'
-  /Modules/MESService:
-    newFile: !uuid '6e979ddda1d73f685956199b05fb3ef1bbebebce'
-    oldFile: !uuid '3e202d5ffe53c4e81541f413585b80782ef57897'
-  /Modules/MESService/MESService.csproj:
-    newFile: !uuid '9806247e3489144cbfd78ec41b543bf7bbf015f1'
-    oldFile: !uuid '8f1b2d142979299c60a76bd9cdbc1b237fbf47da'
-  /Modules/MessageService:
-    newFile: !uuid 'f3d97a0d3b9993e82596a781a4a43fdf3ae51f0f'
-    oldFile: !uuid 'f361af9f59fbec4b0b5d9222a48533ad83e0f87f'
-  /Modules/MessageService/MessageService.csproj:
-    newFile: !uuid '5238820f621d095a038c139f02ca803187ad710e'
-    oldFile: !uuid 'a82b5ab358c91fa0745f1c3ed8cf4ac761e374e4'
-  /Modules/MonitorService:
-    newFile: !uuid 'f1b9ce09885178cc0658ee6586dcc7c9012e7239'
-    oldFile: !uuid '3c8151e02760d1f6ccab0c87a4d4e48868c0a893'
-  /Modules/MonitorService/MonitorService.csproj:
-    newFile: !uuid '2488dae0bc34c73386f6521d13e0794689e25d9b'
-    oldFile: !uuid '30d79a2f851e4e2895aac569f4744ea566d9c062'
-  /Modules/MqttService:
-    newFile: !uuid '4b1b2babbac818938ef2f511b6014a41871c7da1'
-    oldFile: !uuid 'e4b094abcff66929a9798d32e773d3a0a583b1ed'
-  /Modules/MqttService/MqttService.csproj:
-    newFile: !uuid '172235b7581c7f36aa0d274d31edcc13cfc222d8'
-    oldFile: !uuid 'e7af1aee45d26f7270c964ae2d8858f1028ae7d1'
-  /Modules/PayService:
-    newFile: !uuid 'c5059f0b11ab4fbc6582425360b55c0e3b8f562d'
-    oldFile: !uuid '52681264d785e61143711aca3c5ac9d2816e69e1'
-  /Modules/PayService/PayService.csproj:
-    newFile: !uuid '4105becf06e829ce9f59bab9b4fe701b2d5292a8'
-    oldFile: !uuid 'e806386a364e92501a731b37cfc1590efe70a6c9'
-  /Modules/ProducerService:
-    newFile: !uuid '56cb961b3ed8bc4b492d8f617a8c40fe8602cae3'
-    oldFile: !uuid 'a2a42655cb6f288fce8a20df916acf1876521195'
-  /Modules/ProducerService/ProducerService.csproj:
-    newFile: !uuid '4db1a0229a7c297b2d890d936c78cfb1fba03b71'
-    oldFile: !uuid '6c9e184b17a2cc0600b8d1249188a455b3a8d5e7'
-  /Modules/ReportService:
-    newFile: !uuid 'b91a18ace758f972875fbbefed8e2dbb7e71885c'
-    oldFile: !uuid '542768dc4cc5ce62239cf74a281975e07705a7d4'
-  /Modules/ReportService/ReportService.csproj:
-    newFile: !uuid '39255b98601024225f7fd9e65e4f7eb39571dc08'
-    oldFile: !uuid 'c424606c8acd65c6fe19ccd96147b98f1071de6e'
-  /Modules/SMSService:
-    newFile: !uuid '3ce546125a9adad53bb22a1e97d180b310946dda'
-    oldFile: !uuid '0b368f17f79804b724f51e927b3491de53b7269f'
-  /Modules/SMSService/SMSService.csproj:
-    newFile: !uuid '124dfc0f25c713074ce4b710022f5491628592db'
-    oldFile: !uuid 'd679a1dadc7170e01822449c83aa42cd04f8ec92'
-  /Modules/SaleService:
-    newFile: !uuid '3b86e0a549445573da8627edaa7abbecd493540a'
-    oldFile: !uuid 'c6d3832536ce1e9292a6488454829de306def62b'
-  /Modules/SaleService/SaleService.csproj:
-    newFile: !uuid '6cd9bd7f40d6b3c1e8615e80658482d454b7693b'
-    oldFile: !uuid '6f3cf2fb89c605f3fdd38777d806a234097458b6'
-  /Modules/ShortLinkService:
-    newFile: !uuid '19b0fcde097be86d7ecb31cd03c8e52ca7bad8dd'
-    oldFile: !uuid '88551b5bec4a5b1c540539bdfefd5401ea8b0dad'
-  /Modules/ShortLinkService/ShortLinkService.csproj:
-    newFile: !uuid '95f5a5051524e69d91be8b4fe87a5dc0543e8b6a'
-    oldFile: !uuid '66d9339a0fd97aaa12b5cca999e4bca95821ecf3'
-  /Modules/StorageService:
-    newFile: !uuid 'f369ecc2b6bb309708c747446f7a0e6cf3384f1f'
-    oldFile: !uuid '7b6d3a4a97d8a566e78b903160f986de0e83f291'
-  /Modules/StorageService/StorageService.csproj:
-    newFile: !uuid '21edce40fbd85161236edfee0dde2e1f46cc68f9'
-    oldFile: !uuid '29b7a8e39604e939bca4c41264e38d846541c344'
-  /Modules/ThirdPartyService:
-    newFile: !uuid '0c7b76b1892a432854a1fd1e33a15295d7eb5c14'
-    oldFile: !uuid '4fb4f79f7c5052cfefd39773e428f5aaa5f01ae8'
-  /Modules/ThirdPartyService/ThirdPartyService.csproj:
-    newFile: !uuid '31dcfd39b9bf44efaac36a6c321b18aef0cfe4f1'
-    oldFile: !uuid '7764ef5d6ff22c7cec7295067cc1ffd9d96d103a'
-  /Modules/WeiXinService:
-    newFile: !uuid 'd638d6ac269000856a8e1687194e2a125582b4eb'
-    oldFile: !uuid '13c70dc2a57295d0895e2339d6a9dba2e8466af3'
-  /Modules/WeiXinService/WeiXinService.csproj:
-    newFile: !uuid 'e6ad929ba6a0fab2da7926260d00b07230fcca9c'
-    oldFile: !uuid '35d1fabce13d9249ba521abb3013608ec9d5263e'
-  /MyAccess:
-    newFile: !uuid 'c5b8c278b8aaf0c00e852edb55ba9ddbb6ee79b1'
-    oldFile: !uuid 'dffad1d0a77d0b28ac9e1d53cff5ec27a22e30d5'
-  /MyAccess.MSSql:
-    newFile: !uuid 'e180cab0fc71ba5fee878bdfe347d25ff120835b'
-    oldFile: !uuid '8deb0767603e82986959f1c7c50b1cbd331df427'
-  /MyAccess.MSSql/MyAccess.MSSql.csproj:
-    newFile: !uuid 'c2b2be86da8c63f225a203e46a44218d3f71dc40'
-    oldFile: !uuid 'bd5c5ed92a29dbd7d964f0ac6b8e3acc3930a646'
-  /MyAccess.MySql:
-    newFile: !uuid '26a87fccd00320557f7eb027eb06adf11c3f87d0'
-    oldFile: !uuid '52dd2845e652d42258a53a107c945de247a70874'
-  /MyAccess.MySql/MyAccess.MySql.csproj:
-    newFile: !uuid 'a21cb6632b7bb12c7f28770f1634a788d2444ee9'
-    oldFile: !uuid 'a05d65dd1c101e2e5b43a93ed3767a31bc7ba98e'
-  /MyAccess.Oracle:
-    newFile: !uuid '97007fd17b9c87cba9ae3b24d269cfaabf80c9df'
-    oldFile: !uuid '2acef21c41e3974e49729881810eaae6a6431afd'
-  /MyAccess.Oracle/MyAccess.Oracle.csproj:
-    newFile: !uuid 'f0cd7837b8ca4cf196cfda586ef7cb1ee87baf6c'
-    oldFile: !uuid '1fe2c65de9f65fe46eeb7db19a88af14f99e0fd5'
-  /MyAccess.Sqlite:
-    newFile: !uuid '5104b3d7e662d4cc4c3b9a77b4edd612886471f1'
-    oldFile: !uuid '46d5502403e4e40fb2c02f13ae901c146d0b0276'
-  /MyAccess.Sqlite/MyAccess.Sqlite.csproj:
-    newFile: !uuid '3f5b6a405c8ebd94a7ff8dd3b942be440e27790c'
-    oldFile: !uuid '069b18b135905ee061a01713334f42b4c4afad26'
-  /MyAccess/MyAccess.csproj:
-    newFile: !uuid '80dcf2f9bbff09b9291ad266904ef6954f191843'
-    oldFile: !uuid '549c3952f07420602d563059f30fc289e1d52d0e'
-  /TemplateAction:
-    newFile: !uuid '5842dfb311d65700e1944d5876dbbfc8a890d5f4'
-    oldFile: !uuid '6b59ab89d7a1477f27187953a5fcf5bdbea5367e'
-  /TemplateAction.NetCore:
-    newFile: !uuid '9bf93dafbf4c559c06aaedbc9916f52dd7858f3f'
-    oldFile: !uuid '87d8371d5828d00d43bf59bd556d25cdb3070b3f'
-  /TemplateAction.NetCore/TemplateAction.NetCore.csproj:
-    newFile: !uuid '952e6e6915e9c8195d92c733cee791e28dc26c77'
-    oldFile: !uuid '2829a6f49481ca2bf58e4a8018ec7a096a97aa8d'
-  /TemplateAction/TemplateAction.csproj:
-    newFile: !uuid 'db1b93a2923cd81fd703a202a958e1b7d1ea7ee9'
-    oldFile: !uuid '94f843299246bd7acd36eca4437e2cde47db8aef'
-  /Third:
-    newFile: !uuid 'c11ae2d89eed474c7aa6c79331141f6b8b63b6f3'
-    oldFile: !uuid '5eb620819c8fd17802d2f600447a060e0c31ebba'
-  /Third/FastTunnel.Core:
-    newFile: !uuid 'aba741912724519c5830ac1999b420f6e5e093ae'
-    oldFile: !uuid 'd5a531af8117196ddba8755a2f8c1e867611886a'
-  /Third/FastTunnel.Core.Client:
-    newFile: !uuid 'dd97f7a0726ec4eb6682b6f22b5f140e4b6d971d'
-    oldFile: !uuid 'c37539d94a07fc53a6177dcefff286503ddbeb77'
-  /Third/FastTunnel.Core.Client/FastTunnel.Core.Client.csproj:
-    newFile: !uuid 'bc8b0b3dc95a79d3ee303425954fe68f7a340a54'
-    oldFile: !uuid '5b34fe567184e21f3fe79f89a0bc5b411ad2a716'
-  /Third/FastTunnel.Core/FastTunnel.Core.csproj:
-    newFile: !uuid 'fa28f61157f4cdcac41036c885a6fe5a4a7be937'
-    oldFile: !uuid 'e7944d4965610d70d3fbf5e2168c40ac8ddba385'
-  /Third/FastTunnelServer:
-    newFile: !uuid '5d3de27ad6bc77b7d4df9a80058be4b2dd724107'
-    oldFile: !uuid '94c1b185b0a40401d948619b06855913755fa7be'
-  /Third/FastTunnelServer/FastTunnelServer.csproj:
-    newFile: !uuid '91a68ff5a44be8c6730f9046d56aec8bf1fdf305'
-    oldFile: !uuid '60eb0bbca2e40bc35885d229de29bd5a8593b381'
-gitCommitId: !uuid '26b894e74bd7003c68af7a8c738e34d94074d3cc'
+    newFile: !uuid 'cf6aacb3a8be27bf0cddcc14f4d0727b6d042894'
+    oldFile: !uuid '6384f41c209ff534d3d4bccc3b296c1f301109e2'
+  /Modules/IoTAIService/PluginConfig.cs:
+    newFile: !uuid '01906ed4a0d81de0142a6049b8603e637ec9d705'
+    oldFile: !uuid '8c92cb8e9b77da5a49565c03f32b0cca9f9cb9e3'
+  /Modules/IoTAIService/PythonExe.cs:
+    newFile: !uuid '5d4b9278f32238ebd984e7fc38c30928cb9b131a'
+    oldFile: !uuid '2e94e89f8e212ef6b05ff040f85dd06dbb3899b2'
+gitCommitId: !uuid '099ed2fe7a60a4897ba1a542ac832b3ae0f5f332'
 renames: {
   }
-revisionId: 300
+revisionId: 301
