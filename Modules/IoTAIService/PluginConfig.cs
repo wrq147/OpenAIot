@@ -1,16 +1,19 @@
 ﻿using Common;
 using Common.EventBus;
+using Common.FluentMigrator;
 using IoTAIService.AICode;
 using IoTAIService.AIProject;
 using IoTAIService.Business;
 using IoTAIService.DAL;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
-
+using CSnakes.Runtime;
+using System.IO;
 namespace IoTAIService
 {
     public class PluginConfig : TANetCorePluginConfig
@@ -18,7 +21,7 @@ namespace IoTAIService
         public override string[] DependOn => new string[] { "IoTRulesService", "DeveloperService" };
 
 
-        protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
+        protected override void ConfigureServices(IConfiguration config, TemplateAction.Core.IServiceCollection services)
         {
             var cs = config.GetSection("IoTAIService");
             services.Configure<IoTAIOption>(cs);
@@ -44,12 +47,20 @@ namespace IoTAIService
             services.AddSingleton<AIRedisHelper>();
             services.AddSingleton<ReliableAISubscriber>();
             services.AddSingleton<AITaskRuner>();
+
+            services.AddServices(s =>
+            {
+                var home = Path.Join(Environment.CurrentDirectory, "AIScript");
+                s.WithPython().WithHome(home).FromRedistributable().WithPipInstaller();
+
+            });
         }
         private ITAServiceProvider _provider;
 
         protected override async void Configure(ITAApplication app, PluginObject plg)
         {
             _provider = app.ServiceProvider;
+
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
                 var aiOption = app.ServiceProvider.GetService<IOptions<IoTAIOption>>();
@@ -75,13 +86,11 @@ namespace IoTAIService
                    }
                });
 
-                //初始化AI项目
-                app.ServiceProvider.GetService<PythonExe>().Init();
                 await app.ServiceProvider.GetService<AIProjectManager>().Init();
                 await app.ServiceProvider.GetService<AIBusProxy>().UpdateUpList();
             });
         }
 
-     
+
     }
 }

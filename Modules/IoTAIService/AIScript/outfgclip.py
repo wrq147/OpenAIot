@@ -10,7 +10,7 @@ from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
 )
-
+from typing import List
 
 class FeatureAlignProjection(nn.Module):
     def __init__(self, in_dim=768, out_dim=768, hidden_dim=1024):
@@ -134,7 +134,11 @@ global_extractor = CNCLIPFeatureExtractor()
 # 外部调用入口（支持Base64/文本输入）
 
 
-def execall(text_list=None, base64_img=None, projStr="Detect"):
+def execall(
+    text_list: List[str],
+    base64_img: str,
+    projStr: str
+) -> List[List[float]]:
     """
     特征提取统一入口
     :param text_list: 文本列表（可为null）

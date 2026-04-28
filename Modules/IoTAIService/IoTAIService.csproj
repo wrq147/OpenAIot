@@ -9,13 +9,10 @@
 		<DocumentationFile>..\..\App\XML\IoTAIService.xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
+	  <PackageReference Include="CSnakes.Runtime" Version="1.2.1" />
 	  <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.23.2" />
 	  <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.23.2" />
 	  <PackageReference Include="Milvus.Client" Version="2.3.0-preview.1" />
-	  <PackageReference Include="pythonnet" Version="3.0.5" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="AIScript\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Channel\ChannelUtility\ChannelUtility.csproj" />
@@ -70,6 +67,9 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
+		<None Update="AIScript\fgclip_to_wedetect_align.pth">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="AIScript\fgmodel\config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -97,7 +97,20 @@
 	  <None Update="AIScript\fgmodel\tokenizer_config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="AIScript\outfgclip.py">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="AIScript\requirements.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
-
+	<ItemGroup>
+		<AdditionalFiles Include="AIScript\*.py" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AdditionalFiles Update="AIScript\outfgclip.py">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </AdditionalFiles>
+	</ItemGroup>
 
 </Project>
