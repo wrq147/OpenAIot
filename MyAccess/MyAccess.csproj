@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Description>This is an ORM processing framework，The source address：https://gitee.com/mz-cn/MZFrame.
 HOW TO USE： new SqlBuilder(new MySqlHelp("conn")).AppendInsert(model, "table").Do&lt;DoExecSql&gt;().RowCount;</Description>
     <Authors>重新读取</Authors>
