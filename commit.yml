@@ -2,10 +2,28 @@
 branches: {
   }
 fileChange:
-  /MyAccess.DB 完整使用手册.docx:
-    newFile: null
-    oldFile: !uuid '961c0c8c4650265fbf843bf137ce06583f3024da'
-gitCommitId: !uuid '2e748a953fbeded00010f44c9078b53b68610f39'
+  /App:
+    newFile: !uuid 'eea1dffadb389f69c334b28df59e046a3389f4d8'
+    oldFile: !uuid '6c31a44201cd1d0a1571421c83b5d3240cf1215d'
+  /App/XML:
+    newFile: !uuid '52f72d605a84c7e491a78a325a83b2cf56a29224'
+    oldFile: !uuid 'b1a5d4b162c02ba909b64608b125e6aae660f0ab'
+  /App/XML/IoTAIService.xml:
+    newFile: !uuid 'fc96b2ee2d258f8f83aa937681a22c458300f764'
+    oldFile: !uuid 'ffc0e08fe2c4d8ee306698a80352400b60167bf7'
+  /App/XML/IoTService.xml:
+    newFile: !uuid '00e8b22a0bedba4601379c481b7b0d158f4a5421'
+    oldFile: !uuid 'a14eb9bbcac37dec2be7d019f6d735a46c969f70'
+  /Modules:
+    newFile: !uuid 'e8740353237882d31401979ec1d2931c53f5d986'
+    oldFile: !uuid '36fc2b7153ff060a2279c93327c274a541045535'
+  /Modules/IoTAIService:
+    newFile: !uuid '5285182c8b0b099755bb0051d676a7d1b3e38f85'
+    oldFile: !uuid '80b34fe50d83e8a1728db6248a0bcb396fd194b0'
+  /Modules/IoTAIService/PluginConfig.cs:
+    newFile: !uuid 'b825e8d58d8f72d1e3ad18bc32da13216dc68e3f'
+    oldFile: !uuid '01906ed4a0d81de0142a6049b8603e637ec9d705'
+gitCommitId: !uuid '40ea31b297c2fcd60386e5daf64944db8857acb2'
 renames: {
   }
-revisionId: 303
+revisionId: 304
