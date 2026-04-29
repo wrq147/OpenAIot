@@ -2,34 +2,13 @@
 branches: {
   }
 fileChange:
-  /Common:
-    newFile: !uuid '6da123a7e455a9ac4ff12a541bbe1281a095e2b1'
-    oldFile: !uuid '7352425075eb3e4ac44e00416772f09ed8c8511a'
-  /Common/Common.csproj:
-    newFile: !uuid '42269b1cab68064f0fa4ac287d262bc668774298'
-    oldFile: !uuid '658f472e946b1931caedd4c1d67ee9f8f7729d74'
-  /Modules:
-    newFile: !uuid '36fc2b7153ff060a2279c93327c274a541045535'
-    oldFile: !uuid '2d739c93e95818462c7ddbc5874e57fcf30c4326'
-  /Modules/IoTAIService:
-    newFile: !uuid '80b34fe50d83e8a1728db6248a0bcb396fd194b0'
-    oldFile: !uuid 'b10a3329bc399a53e583b7d6198b8ce376bc8684'
-  /Modules/IoTAIService/AIScript:
-    newFile: !uuid 'bbc9b206f76f5e374dfafa307389ccf56d80e530'
-    oldFile: !uuid '7c408db595fea25338a038ecec350dfe198071f8'
-  /Modules/IoTAIService/AIScript/outfgclip.py:
-    newFile: !uuid '5b504f2445aad81d3d4174776bca8ffd4a8b561d'
-    oldFile: !uuid 'ef59e90673b54968a5b279daa8cdb740207b117f'
-  /Modules/IoTAIService/IoTAIService.csproj:
-    newFile: !uuid 'cf6aacb3a8be27bf0cddcc14f4d0727b6d042894'
-    oldFile: !uuid '6384f41c209ff534d3d4bccc3b296c1f301109e2'
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid '01906ed4a0d81de0142a6049b8603e637ec9d705'
-    oldFile: !uuid '8c92cb8e9b77da5a49565c03f32b0cca9f9cb9e3'
-  /Modules/IoTAIService/PythonExe.cs:
-    newFile: !uuid '5d4b9278f32238ebd984e7fc38c30928cb9b131a'
-    oldFile: !uuid '2e94e89f8e212ef6b05ff040f85dd06dbb3899b2'
-gitCommitId: !uuid '099ed2fe7a60a4897ba1a542ac832b3ae0f5f332'
+  /MyAccess.DB 完整使用手册.docx:
+    newFile: !uuid '961c0c8c4650265fbf843bf137ce06583f3024da'
+    oldFile: null
+  /MyAccess.DB 完整使用手册.md:
+    newFile: !uuid 'b4bb74d31f09feee895ddf7467c0c2b801875883'
+    oldFile: null
+gitCommitId: !uuid '8a428b850b6132bcb36cdd9c572d6d117d7f25d5'
 renames: {
   }
-revisionId: 301
+revisionId: 302
