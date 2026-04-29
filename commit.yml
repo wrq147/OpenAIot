@@ -3,12 +3,9 @@ branches: {
   }
 fileChange:
   /MyAccess.DB 完整使用手册.docx:
-    newFile: !uuid '961c0c8c4650265fbf843bf137ce06583f3024da'
-    oldFile: null
-  /MyAccess.DB 完整使用手册.md:
-    newFile: !uuid 'b4bb74d31f09feee895ddf7467c0c2b801875883'
-    oldFile: null
-gitCommitId: !uuid '8a428b850b6132bcb36cdd9c572d6d117d7f25d5'
+    newFile: null
+    oldFile: !uuid '961c0c8c4650265fbf843bf137ce06583f3024da'
+gitCommitId: !uuid '2e748a953fbeded00010f44c9078b53b68610f39'
 renames: {
   }
-revisionId: 302
+revisionId: 303
