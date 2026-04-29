@@ -51,7 +51,7 @@ namespace IoTAIService
             services.AddServices(s =>
             {
                 var home = Path.Join(Environment.CurrentDirectory, "AIScript");
-                s.WithPython().WithHome(home).FromRedistributable().WithPipInstaller();
+                s.WithPython().WithHome(home).FromEnvironmentVariable("PYTHONHOME", "3.13").WithPipInstaller();
 
             });
         }

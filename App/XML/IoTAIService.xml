@@ -782,19 +782,6 @@
             真实姓名
             </summary>
         </member>
-        <member name="M:IoTAIService.PythonExe.AutoSetPythonDllPath(System.String)">
-            <summary>
-            从指定Python目录自动搜索并设置Python.Runtime的PythonDLL路径（跨平台）
-            </summary>
-            <param name="pythonRootDir">Python安装根目录（如 /usr/bin 或 C:\Python313）</param>
-            <returns>找到的Python库文件路径</returns>
-            <exception cref="T:System.IO.FileNotFoundException">未找到有效Python库文件时抛出</exception>
-        </member>
-        <member name="M:IoTAIService.PythonExe.GetPythonLibrarySearchRules">
-            <summary>
-            根据操作系统获取Python库文件的搜索规则
-            </summary>
-        </member>
         <member name="F:IoTAIService.ReliableAISubscriber._receiveThread">
             <summary>
             接收线程
@@ -813,6 +800,31 @@
         <member name="M:IoTAIService.ReliableAISubscriber.Dispose">
             <summary>
             释放所有资源
+            </summary>
+        </member>
+        <member name="T:CSnakes.Runtime.IOutfgclip">
+            <summary>
+            Represents functions of the Python module <c>outfgclip</c>.
+            </summary>
+        </member>
+        <member name="M:CSnakes.Runtime.IOutfgclip.ResizeShortEdge(CSnakes.Runtime.Python.PyObject,CSnakes.Runtime.Python.PyObject)">
+            <summary>
+            Invokes the Python function <c>resize_short_edge</c>:
+            <code><![CDATA[
+            def resize_short_edge(image, target_size=640): ...
+            ]]></code>
+            </summary>
+        </member>
+        <member name="M:CSnakes.Runtime.IOutfgclip.Execall(System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String)">
+            <summary>
+            Invokes the Python function <c>execall</c>:
+            <code><![CDATA[
+            def execall(
+                text_list: List[str],
+                base64_img: str,
+                projStr: str
+            ) -> List[List[float]]: ...
+            ]]></code>
             </summary>
         </member>
     </members>

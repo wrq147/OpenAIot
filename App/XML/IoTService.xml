@@ -2811,7 +2811,7 @@
             <param name="properties"></param>
             <returns></returns>
         </member>
-        <member name="M:IoTService.ServerBusProxy.DownFunction(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+        <member name="M:IoTService.ServerBusProxy.DownFunction(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
             <summary>
             执行指定功能
             </summary>
@@ -2819,6 +2819,7 @@
             <param name="deviceId"></param>
             <param name="functionId"></param>
             <param name="inputs"></param>
+            <param name="sourceFun"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.ServerBusProxy.DownSyncDevice(IoTService.Models.MZ_IotDevice,System.Int32)">
