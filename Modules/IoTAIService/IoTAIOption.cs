@@ -17,10 +17,6 @@ namespace IoTAIService
         /// </summary>
         public string AIBind { get; set; }
         /// <summary>
-        /// Python的根目录
-        /// </summary>
-        public string PythonHome { get; set; }
-        /// <summary>
         /// 是否初始化Milvus表
         /// </summary>
         public bool InitMilvus { get; set; }
