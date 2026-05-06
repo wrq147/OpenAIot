@@ -2,28 +2,13 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '0ba9db0bf97486ecc65f14d1dc806f6e1c19768c'
-    oldFile: !uuid 'eea1dffadb389f69c334b28df59e046a3389f4d8'
-  /App/appsettings.json:
-    newFile: !uuid 'ff792bb5b97f5ce4bb85cf82ddad597a44e676d9'
-    oldFile: !uuid '66fa2f1604b9af373a316425e2603b389c243924'
-  /Modules:
-    newFile: !uuid '9cb17915f00c5a0427e9990cce26c265122aeaea'
-    oldFile: !uuid 'e8740353237882d31401979ec1d2931c53f5d986'
-  /Modules/IoTAIService:
-    newFile: !uuid '66a77cc0fa23a1a0d87909a145c8a07acdd53d8d'
-    oldFile: !uuid '5285182c8b0b099755bb0051d676a7d1b3e38f85'
-  /Modules/IoTAIService/IoTAIOption.cs:
-    newFile: !uuid '7e13ff2e3dedcfc307f4925ec446b7634f3e7bfb'
-    oldFile: !uuid '4e49e3fb39e30789c0387585ebc0d172f0a2e36b'
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid '5d5f61ee8e02c83763ab577b72bde36967a2eeca'
-    oldFile: !uuid 'b825e8d58d8f72d1e3ad18bc32da13216dc68e3f'
-  /Modules/IoTAIService/PythonExe.cs:
-    newFile: !uuid 'ea9f9f72356d877be255ee3652d4ca0038747871'
-    oldFile: !uuid '5d4b9278f32238ebd984e7fc38c30928cb9b131a'
-gitCommitId: !uuid 'ed6a67a4618787f56b24db6a81b3932c4fc6bce3'
+  /MinIO 安装与配置指南.md:
+    newFile: !uuid '21fc2c949e69d1756de8aa505206c3759c2ee732'
+    oldFile: null
+  /minio文件服务器配置.txt:
+    newFile: null
+    oldFile: !uuid 'fa3644592f8c73777e118d48eb9e46f2e504f95d'
+gitCommitId: !uuid 'b7835a3bee6428b799048ae60a04a0fb94c8ad21'
 renames: {
   }
-revisionId: 305
+revisionId: 306
