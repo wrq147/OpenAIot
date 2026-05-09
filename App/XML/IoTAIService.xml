@@ -587,11 +587,6 @@
             绑定端口，等待所有发布端连接
             </summary>
         </member>
-        <member name="P:IoTAIService.IoTAIOption.PythonHome">
-            <summary>
-            Python的根目录
-            </summary>
-        </member>
         <member name="P:IoTAIService.IoTAIOption.InitMilvus">
             <summary>
             是否初始化Milvus表
