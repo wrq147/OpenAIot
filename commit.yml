@@ -2,13 +2,22 @@
 branches: {
   }
 fileChange:
-  /MinIO 安装与配置指南.md:
-    newFile: !uuid '21fc2c949e69d1756de8aa505206c3759c2ee732'
-    oldFile: null
-  /minio文件服务器配置.txt:
+  /App:
+    newFile: !uuid '06c55462311a55eaaeba102e28c9ad8dde52cd91'
+    oldFile: !uuid '0ba9db0bf97486ecc65f14d1dc806f6e1c19768c'
+  /App/XML:
+    newFile: !uuid '74b07f8febb3c395b710bb1a344cc7cc4b5b7816'
+    oldFile: !uuid '52f72d605a84c7e491a78a325a83b2cf56a29224'
+  /App/XML/IoTAIService.xml:
+    newFile: !uuid '7b177a87c15ccb78689b8031c7945bbf75bb8103'
+    oldFile: !uuid 'fc96b2ee2d258f8f83aa937681a22c458300f764'
+  /悟空云中心平台.doc:
     newFile: null
-    oldFile: !uuid 'fa3644592f8c73777e118d48eb9e46f2e504f95d'
-gitCommitId: !uuid 'b7835a3bee6428b799048ae60a04a0fb94c8ad21'
-renames: {
-  }
-revisionId: 306
+    oldFile: !uuid '105cd6f5ca1c2ea11803cfce551ff9e3c5996a98'
+  /悟空云中心平台.docx:
+    newFile: !uuid '1f41a41cb5fb8050bd0bfdef769d30a834463673'
+    oldFile: null
+gitCommitId: !uuid '3b41b4954d9c1abf18cf60674137a6ab76e77d66'
+renames:
+  /悟空云中心平台.docx: /悟空云中心平台.doc
+revisionId: 307
