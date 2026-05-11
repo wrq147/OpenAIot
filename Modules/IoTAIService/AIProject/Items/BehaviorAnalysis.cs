@@ -1,13 +1,9 @@
 ﻿using ChannelUtility.Message;
 using IoTAIService.AICode;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using Common;
@@ -16,10 +12,10 @@ namespace IoTAIService.AIProject.Items
     /// <summary>
     /// 行为分析
     /// </summary>
-    public class BehaviorAnalysis : IInfer
+    public class BehaviorAnalysis : Infer
     {
         private ITAServiceProvider _provider;
-        public async Task Init(ITAServiceProvider provider)
+        public override async Task Init(ITAServiceProvider provider)
         {
             _provider = provider;
             string tkey = "Behavior";
@@ -62,7 +58,7 @@ namespace IoTAIService.AIProject.Items
             });
         }
 
-        public async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
+        public override async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
             float tThreshold = config.GetFloat("threshold", 0.8f);
             List<object> tLimit = config.Get<List<object>>("be_type");

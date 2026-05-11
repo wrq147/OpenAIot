@@ -20,18 +20,18 @@ namespace IoTAIService.AIProject
     {
         private ITAServiceProvider _provider;
         private Dictionary<string, IDetect> _detects;
-        private Dictionary<string, IInfer> _infers;
+        private Dictionary<string, Infer> _infers;
         public AIProjectManager(ITAServiceProvider provider)
         {
             _provider = provider;
             _detects = new Dictionary<string, IDetect>();
-            _infers = new Dictionary<string, IInfer>();
+            _infers = new Dictionary<string, Infer>();
         }
         public void RegDetect(string name, IDetect det)
         {
             _detects.Add(name, det);
         }
-        public void RegInfer(string name, IInfer infer)
+        public void RegInfer(string name, Infer infer)
         {
             _infers.Add(name, infer);
         }
@@ -43,6 +43,7 @@ namespace IoTAIService.AIProject
             await new GeneralTrigger().Init(_provider);
             await new PoseDetect().Init(_provider);
             await new BehaviorAnalysis().Init(_provider);
+            await new ImageRecog().Init(_provider);
         }
 
         private async Task DownAIDetectResponse(string nodeid, string videoId, List<BoxItem> boxlist, bool needConf = false)
@@ -164,19 +165,17 @@ namespace IoTAIService.AIProject
                         // 更新跟踪器
                         videoData.UpdateByteTrack(boxlist);
 
-
-                        if (needback)
+                        //处理事件
+                        foreach (var config in videoConfigs)
                         {
-                            //处理事件
-                            foreach (var config in videoConfigs)
+                            if (_infers.TryGetValue(config.DetType, out Infer tmpinfer))
                             {
-                                if (_infers.TryGetValue(config.DetType, out IInfer tmpinfer))
+                                if (tmpinfer.JudgeExe(config, needback))
                                 {
                                     await tmpinfer.Execute(detectReq, image, config, boxlist);
                                 }
                             }
                         }
-
                     }
 
                 }

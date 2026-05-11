@@ -19,6 +19,17 @@ namespace IoTAIService.AICode
         {
 
         }
+        public float[] GetBase64Feature(string base64)
+        {
+            byte[] imageBytes = Convert.FromBase64String(base64);
+
+            using (var ms = new MemoryStream(imageBytes))
+            {
+                var tmpimg = SixLabors.ImageSharp.Image.Load<Rgb24>(ms);
+                return OutputEmbeddings(tmpimg);
+            }
+
+        }
         public float[] ExtractFeature(Image<Rgb24> image, BoxItem roi)
         {
             var tmpimg = image.CropByBox(roi.x1, roi.x2, roi.y1, roi.y2);

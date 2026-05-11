@@ -229,7 +229,20 @@
 
               </div>
             </template>
+            <template v-else-if="param.type === 'imgclip'">
+              <div style="width: 380px;">
+                <!-- 图片上传模式 -->
+                <el-upload action="#" :show-file-list="false"
+                  :before-upload="(file) => handleClipImageUpload(file)"
+                  :on-error="() => this.$message.error('目标图片上传失败')" accept="image/*">
+                  <img v-if="paramConfigDialog.clipImg" :src="paramConfigDialog.clipImg" alt="目标图片"
+                    style="width:128px;height:128px;display: block; object-fit: cover;">
+                  <i v-else class="el-icon-plus"
+                    style="font-size: 28px;width:128px;height:128px;line-height: 128px;text-align: center;border: 1px dashed #d9d9d9;"></i>
+                </el-upload>
 
+              </div>
+            </template>
             <!-- 参数类型：region（入侵区域配置）- 支持多区域 -->
             <template v-else-if="param.type === 'region'">
               <div style="width: 450px;">
@@ -369,7 +382,7 @@
 <script>
 import CollapseText from '@/components/CollapseText/index.vue';
 import { getAIProjectList, getVideoConfig, addVideoConfig, editVideoConfig } from "@/api/rules/video";
-import { generateFeature } from "@/api/ai/clip";
+import { generateFeature,generateImgFeature } from "@/api/ai/clip";
 import { drawBoxs } from "@/api/ai/proj";
 export default {
   name: 'AIConfigDialog',
@@ -650,6 +663,11 @@ export default {
         this.paramConfigDialog.clipImg = this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"];
       }
 
+      const imgclipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'imgclip');
+      if (imgclipParam) {
+        this.paramConfigDialog.clipImg = this.paramConfigDialog.currentRow.paramValues[imgclipParam.code + "-img"];
+      }
+
       // 初始化多区域参数
       const regionParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'region');
       if (regionParam) {
@@ -711,6 +729,20 @@ export default {
           }
 
           // 保存生成的特征向量
+          this.paramConfigDialog.currentRow.paramValues[clipParam.code] = res.data;
+          this.paramConfigDialog.generateTxt = "正在保存参数中...";
+        }
+
+        const imgclipParam = this.paramConfigDialog.currentRow.ParamList?.find(param => param.type === 'imgclip');
+        if (imgclipParam){
+          if (this.paramConfigDialog.clipmode === "image" && !this.paramConfigDialog.clipImg) {
+            this.$message.warning('请上传检测目标图片');
+            return;
+          }
+          this.paramConfigDialog.generateLoading = true;
+          this.paramConfigDialog.generateTxt = "正在生成特征向量，请稍候...";
+          let res = await generateImgFeature({ ImgStr: this.paramConfigDialog.clipImg });
+          this.paramConfigDialog.currentRow.paramValues[clipParam.code + "-img"] = this.paramConfigDialog.clipImg;
           this.paramConfigDialog.currentRow.paramValues[clipParam.code] = res.data;
           this.paramConfigDialog.generateTxt = "正在保存参数中...";
         }

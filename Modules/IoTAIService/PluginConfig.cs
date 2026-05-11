@@ -1,19 +1,20 @@
 ﻿using Common;
 using Common.EventBus;
 using Common.FluentMigrator;
+using CSnakes.Runtime;
 using IoTAIService.AICode;
 using IoTAIService.AIProject;
+using IoTAIService.AIProject.Items;
 using IoTAIService.Business;
 using IoTAIService.DAL;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
-using CSnakes.Runtime;
-using System.IO;
 namespace IoTAIService
 {
     public class PluginConfig : TANetCorePluginConfig
@@ -39,7 +40,6 @@ namespace IoTAIService
             services.AddSingleton<YoloPoseDetectRunner>();
             services.AddSingleton<PoseC3DRunner>();
             services.AddSingleton<MobileCLIP2VisionRunner>();
-            services.AddSingleton<WeDetectRunner>();
             services.AddSingleton<AICache>();
             services.AddSingleton<AIProjectManager>();
             services.AddSingleton<PythonExe>();

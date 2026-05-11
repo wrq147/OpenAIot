@@ -72,7 +72,7 @@ class CNCLIPFeatureExtractor:
         except Exception as e:
             raise RuntimeError(f"模型加载失败: {str(e)}")
 
-    def get_text_features(self, text_list, alignModel):
+    def get_text_features(self, text_list):
         """批量提取文本特征"""
         if not isinstance(text_list, list) or len(text_list) == 0:
             raise ValueError("text_list必须是非空字符串列表")
@@ -84,8 +84,6 @@ class CNCLIPFeatureExtractor:
         with torch.no_grad():
             text_features = self.fgmodel.get_text_features(
                 **token_input, walk_type="box")
-            if alignModel is not None:
-                text_features = alignModel(text_features)
             text_features = torch.nn.functional.normalize(
                 text_features, dim=-1)
 
@@ -106,7 +104,7 @@ class CNCLIPFeatureExtractor:
         except Exception as e:
             raise RuntimeError(f"Base64图片解码失败: {str(e)}")
 
-    def get_image_features_from_base64(self, base64Str, alignModel):
+    def get_image_features_from_base64(self, base64Str):
         """
         批量提取Base64图片特征
         :param base64Str: Base64字符串
@@ -123,8 +121,6 @@ class CNCLIPFeatureExtractor:
         with torch.no_grad():
             image_features = self.fgmodel.get_image_features(**img_tensor) 
 
-            if alignModel is not None:
-                image_features = alignModel(image_features)
             image_features = torch.nn.functional.normalize(
                 image_features, dim=-1)
         return image_features.cpu().numpy()
@@ -153,24 +149,16 @@ def execall(
     global global_extractor
     result = {}
 
-    align_model = None
-    if projStr == "Detect":
-        t_dir = os.path.dirname(os.path.abspath(__file__))
-        align_path = os.path.join(
-            t_dir, "fgclip_to_wedetect_align.pth")
-        align_model = FeatureAlignProjection()
-        align_model.load_state_dict(torch.load(align_path))
-        align_model.eval()
 
     # 提取文本特征
     if text_list is not None and len(text_list) > 0:
         result["text_features"] = global_extractor.get_text_features(
-            text_list, align_model).tolist()
+            text_list).tolist()
 
     # 提取Base64图片特征
     if base64_img is not None:
         result["image_features"] = global_extractor.get_image_features_from_base64(
-            base64_img, align_model).tolist()
+            base64_img).tolist()
 
     return result
 

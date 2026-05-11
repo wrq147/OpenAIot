@@ -17,10 +17,10 @@ namespace IoTAIService.AIProject.Items
     /// <summary>
     /// 入侵告警
     /// </summary>
-    public class GeneralTrigger : IInfer
+    public class GeneralTrigger : Infer
     {
         private ITAServiceProvider _provider;
-        public async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
+        public override async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
             var aiCache = _provider.GetService<AICache>();
             var videoData = aiCache.GetVideoCache(req.DeviceId);
@@ -141,7 +141,7 @@ namespace IoTAIService.AIProject.Items
 
         }
 
-        public async Task Init(ITAServiceProvider provider)
+        public override async Task Init(ITAServiceProvider provider)
         {
             _provider = provider;
             string tkey = "GeneralTrigger";
