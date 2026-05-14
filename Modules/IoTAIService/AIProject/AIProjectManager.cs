@@ -166,16 +166,17 @@ namespace IoTAIService.AIProject
                         videoData.UpdateByteTrack(boxlist);
 
                         //处理事件
-                        foreach (var config in videoConfigs)
+                        if (needback)
                         {
-                            if (_infers.TryGetValue(config.DetType, out Infer tmpinfer))
+                            foreach (var config in videoConfigs)
                             {
-                                if (tmpinfer.JudgeExe(config, needback))
+                                if (_infers.TryGetValue(config.DetType, out Infer tmpinfer))
                                 {
                                     await tmpinfer.Execute(detectReq, image, config, boxlist);
                                 }
                             }
                         }
+
                     }
 
                 }

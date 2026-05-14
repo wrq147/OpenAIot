@@ -1,6 +1,8 @@
 ﻿using ChannelUtility.Message;
 using Common;
+using IoTAIService.AICode;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using NPOI.SS.Formula.Functions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
@@ -15,18 +17,6 @@ namespace IoTAIService.AIProject.Items
     public class ImageRecog : Infer
     {
         private ITAServiceProvider _provider;
-        public override bool JudgeExe(AIConfigData config, bool needback)
-        {
-            bool tAllIn = config.GetBool("allin", false);
-            if (tAllIn)
-            {
-                return true;
-            }
-            else
-            {
-                return needback;
-            }
-        }
         public override async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
             bool tAllIn = config.GetBool("allin", false);
@@ -35,20 +25,23 @@ namespace IoTAIService.AIProject.Items
             var videoData = aiCache.GetVideoCache(req.DeviceId);
             var tracklist = videoData.TrackList;
             var addlist = videoData.AddTrackList;
-            var imgfeature = ConvertListToDenseTensor(feature);
+            var imgfeature = ConvertListToFloat(feature);
+
             if (tAllIn)
             {
-
+                var targetImgFeature = _provider.GetService<MobileCLIP2VisionRunner>().OutputEmbeddings(image);
+                float sim = CosineSimilarity(targetImgFeature, imgfeature);
             }
             else
             {
-                foreach (var trackItem in tracklist)
+                foreach (var trackItem in addlist)
                 {
-
+                    var targetImgFeature = _provider.GetService<MobileCLIP2VisionRunner>().ExtractFeature(image, trackItem.CurrentDetection);
+                    float sim = CosineSimilarity(targetImgFeature, imgfeature);
                 }
             }
         }
-        private DenseTensor<float> ConvertListToDenseTensor(List<object> data)
+        private float[] ConvertListToFloat(List<object> data)
         {
             // 空数据校验
             if (data == null || data.Count == 0)
@@ -61,10 +54,40 @@ namespace IoTAIService.AIProject.Items
             {
                 flatArray[index++] = Convert.ToSingle(row);
             }
+            return flatArray;
+        }
+        /// <summary>
+        /// 计算两个 float[] 特征向量的余弦相似度
+        /// 范围：[-1,1]，越接近1越相似
+        /// </summary>
+        public float CosineSimilarity(float[] vecA, float[] vecB)
+        {
+            // 长度必须一致
+            if (vecA == null || vecB == null || vecA.Length != vecB.Length)
+                return 0f;
 
-            // ---------------------- 创建DenseTensor ----------------------
-            var tensorShape = new int[] { 1, data.Count };
-            return new DenseTensor<float>(flatArray, tensorShape);
+            double dotProduct = 0.0;
+            double normA = 0.0;
+            double normB = 0.0;
+
+            for (int i = 0; i < vecA.Length; i++)
+            {
+                dotProduct += vecA[i] * vecB[i];
+                normA += vecA[i] * vecA[i];
+                normB += vecB[i] * vecB[i];
+            }
+
+            double magA = Math.Sqrt(normA);
+            double magB = Math.Sqrt(normB);
+
+            if (magA == 0 || magB == 0)
+                return 0f;
+
+            var cos = (float)(dotProduct / (magA * magB));
+
+            double score01 = (cos + 1.0) / 2.0;
+            // 限制边界防止浮点溢出
+            return (float)Math.Clamp(score01, 0.0, 1.0);
         }
         public override async Task Init(ITAServiceProvider provider)
         {

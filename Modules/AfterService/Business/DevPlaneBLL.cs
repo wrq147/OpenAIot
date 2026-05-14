@@ -269,7 +269,12 @@ namespace AfterService.Business
                         submitUserId = userlist[0];
                     }
                     MZ_AdminInfo submitUser = await userDAL.GetAdminById(submitUserId);
-
+                    if (submitUser == null)
+                    {
+                        submitUserId = 2;
+                        submitUser = await userDAL.GetAdminById(submitUserId);
+                        flowerr.Add("【" + dev.Name + "】设备负责人已不存在，暂由系统用户负责！");
+                    }
                     MZ_PlaneTask task = new MZ_PlaneTask();
                     task.Id = _snowflake.NextId().ToString();
                     task.OrgId = planeType.OrgId;

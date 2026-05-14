@@ -72,6 +72,8 @@ namespace IoTAIService.Migrations
                 CodeType = 2,
                 Sort = 3
             });
+
+
         }
 
         public override void Down()

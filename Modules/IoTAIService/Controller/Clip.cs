@@ -4,8 +4,6 @@ using Common;
 using Common.Share;
 using IoTAIService.AICode;
 using IoTAIService.Models;
-using NPOI.HSSF.Record.CF;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.Route;
-using static CSnakes.Runtime.Python.PyObjectImporters;
+
 namespace IoTAIService.Controller
 {
     /// <summary>

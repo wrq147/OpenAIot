@@ -14,10 +14,6 @@ namespace IoTAIService.AIProject.Items
     {
         public abstract Task Init(ITAServiceProvider provider);
 
-        public virtual bool JudgeExe(AIConfigData config, bool needback)
-        {
-            return needback;
-        }
         public abstract Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes);
     }
 }
