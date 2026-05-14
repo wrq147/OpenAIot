@@ -2,103 +2,70 @@
 branches: {
   }
 fileChange:
+  /Channel:
+    newFile: !uuid '3521c6765aaecd2e4496d5e097d23a9d31f4408e'
+    oldFile: !uuid 'b5428d687ff3664d647ab74dac6fa5f6b69992da'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '64ccb3e82f2ac3f475ac6b9915826fd5b0b74a19'
+    oldFile: !uuid 'fc89ae70f364455afa60610531bef5af11568d67'
+  /Channel/FixVideoChannel/MotionDetector.cs:
+    newFile: !uuid 'bdcea061b4a1e72079aa06ccb00fb76a6e56ef55'
+    oldFile: !uuid '02dab427f3b6c026438f66afaf6147bb0745aacb'
+  /Channel/GB28181Channel:
+    newFile: !uuid 'ded147e06328befbca268d2f73d46c2149c436e3'
+    oldFile: !uuid 'd2b4a0890e014307204ad8c769a4c37ec7e2b251'
+  /Channel/GB28181Channel/MotionDetector.cs:
+    newFile: !uuid '155d02a143134a70b10b2b77359805f223775573'
+    oldFile: !uuid '04e4fcf1a2d0e9a1eb648687c1e73455956bc8c6'
   /Modules:
-    newFile: !uuid 'dec2734c35b821e463867b9eab210a68bbfb94a9'
-    oldFile: !uuid '9cb17915f00c5a0427e9990cce26c265122aeaea'
+    newFile: !uuid '46da47a76e7d8ccdfca9a398688c119096bf2794'
+    oldFile: !uuid 'dec2734c35b821e463867b9eab210a68bbfb94a9'
+  /Modules/AfterService:
+    newFile: !uuid '9ce78a307a4fe5b35646217f77accd00cb986ec5'
+    oldFile: !uuid '60f81e15017bd8d3f847ae16f91933184163e743'
+  /Modules/AfterService/Business:
+    newFile: !uuid '4378ae3972f05f4319111b978c51eb66261983e6'
+    oldFile: !uuid 'c9c527af0f475d63caa0502e1d3baaab5a9c2128'
+  /Modules/AfterService/Business/DevPlaneBLL.cs:
+    newFile: !uuid '2944564cda4fe2689aade483b57f0a672ce53b75'
+    oldFile: !uuid 'ac7502297d45b50db4cf735406370b6d20390bac'
   /Modules/IoTAIService:
-    newFile: !uuid '033c33815252de44a6df25534b210bd7e5806b06'
-    oldFile: !uuid '66a77cc0fa23a1a0d87909a145c8a07acdd53d8d'
-  /Modules/IoTAIService/AICode:
-    newFile: !uuid '698f7a2dae8915158745957a31cfef53f9eec635'
-    oldFile: !uuid '5de2ead9514dc0d84a9b6614b3843ce5ef3d655d'
-  /Modules/IoTAIService/AICode/MobileCLIP2VisionRunner.cs:
-    newFile: !uuid '75469512018839be0e4e11eeafd01617cc404ac0'
-    oldFile: !uuid '2d09fcc3cdba071135ca31f37aac103ca2d83a41'
-  /Modules/IoTAIService/AICode/WeDetectRunner.cs:
-    newFile: null
-    oldFile: !uuid '8aeca54d41a8b5b2f0adc620792a8777b020ba70'
+    newFile: !uuid 'a8deab43572a1e2c4b0e71d7c2eb97a77c655c77'
+    oldFile: !uuid '033c33815252de44a6df25534b210bd7e5806b06'
   /Modules/IoTAIService/AIProject:
-    newFile: !uuid '32f1ced4e334440e83245cae2c7aafd80c779d5c'
-    oldFile: !uuid '057b15fa8fc49c4f32d4c11d336d3fca9e26d08b'
-  /Modules/IoTAIService/AIProject/AIProjectInfo.cs:
-    newFile: !uuid '50e7f4fd7a095cfa1fa66a76f5bef27e79fda36d'
-    oldFile: !uuid '143d4e2ad55f0a2b8748d80692841158ef204ef1'
+    newFile: !uuid '60732619e8711878d7ba3743922c50a04fd40379'
+    oldFile: !uuid '32f1ced4e334440e83245cae2c7aafd80c779d5c'
   /Modules/IoTAIService/AIProject/AIProjectManager.cs:
-    newFile: !uuid 'c9f6513b54399bf7352a55fac7afb855a79c24cf'
-    oldFile: !uuid '9d7da339a7ed50964904c2f3c4c96d5c6680654c'
+    newFile: !uuid 'c75a68167387473e6e72d5fe98c17a6dbb6e4b81'
+    oldFile: !uuid 'c9f6513b54399bf7352a55fac7afb855a79c24cf'
   /Modules/IoTAIService/AIProject/Items:
-    newFile: !uuid '663ba5598342d665cc03fe5d4a0b419fa6f7a32c'
-    oldFile: !uuid '5f6ae20e4382a4c3bae81b4a99943607e1a62871'
-  /Modules/IoTAIService/AIProject/Items/BehaviorAnalysis.cs:
-    newFile: !uuid '447686ca2e6f2677d8b64e343a84abbe93ef333a'
-    oldFile: !uuid '747f32a729dbe721d9f7a30a841ff1e0444474cb'
-  /Modules/IoTAIService/AIProject/Items/FaceRecog.cs:
-    newFile: !uuid '617510840f8b370adee747bf56590a2dac075d94'
-    oldFile: !uuid '3b53f8684da56474a9226e0ed3ae97a37473408e'
-  /Modules/IoTAIService/AIProject/Items/GeneralTrigger.cs:
-    newFile: !uuid 'ac59ca5076ce2dd0fd57ece159f21cfa94f07fa3'
-    oldFile: !uuid 'a76b48d4e09690453341efb6b5657c0f24cb5a29'
-  /Modules/IoTAIService/AIProject/Items/IInfer.cs:
-    newFile: null
-    oldFile: !uuid 'fa7d58a2c41b09ed11511518ec20bb43ac498565'
+    newFile: !uuid '36ce71ffede478ad623535b021815417631de54a'
+    oldFile: !uuid '663ba5598342d665cc03fe5d4a0b419fa6f7a32c'
   /Modules/IoTAIService/AIProject/Items/ImageRecog.cs:
-    newFile: !uuid '304fe236b95c449481bf501ff0dd509ec1178c92'
-    oldFile: null
+    newFile: !uuid 'f70481e155884988d7dd3f80f1d9a734d22bd03d'
+    oldFile: !uuid '304fe236b95c449481bf501ff0dd509ec1178c92'
   /Modules/IoTAIService/AIProject/Items/Infer.cs:
-    newFile: !uuid 'c42de7c7ee876ff0c1f5de76b0fb1eb8e3d9c49d'
-    oldFile: null
+    newFile: !uuid 'dc88213d45def19e4abf51b4430cd3052b336b0e'
+    oldFile: !uuid 'c42de7c7ee876ff0c1f5de76b0fb1eb8e3d9c49d'
   /Modules/IoTAIService/AIScript:
-    newFile: !uuid 'b8250c172c7c1af33fc1ef63ab9df5765e987917'
-    oldFile: !uuid 'bbc9b206f76f5e374dfafa307389ccf56d80e530'
-  /Modules/IoTAIService/AIScript/fgclip_to_wedetect_align.pth:
-    newFile: null
-    oldFile: !uuid '957d34d4c9356b14bf5b1edb3d79501a1f86c63b'
+    newFile: !uuid 'b40dfa635bfdb5a6b234f48714a9d454101504ae'
+    oldFile: !uuid 'b8250c172c7c1af33fc1ef63ab9df5765e987917'
   /Modules/IoTAIService/AIScript/outfgclip.py:
-    newFile: !uuid 'b90082fc0bce4d715df014114a4436f6c91882f6'
-    oldFile: !uuid '5b504f2445aad81d3d4174776bca8ffd4a8b561d'
+    newFile: !uuid 'b6700162e55b6dc154536f8b4b322931ad6c419e'
+    oldFile: !uuid 'b90082fc0bce4d715df014114a4436f6c91882f6'
   /Modules/IoTAIService/Controller:
-    newFile: !uuid '2b31c2796ad4fa3383cd36d1c49d761028557202'
-    oldFile: !uuid 'bdac768ffe4e6363eab28fbcc82e135ac230cb18'
+    newFile: !uuid 'e02f4fab7c31b89c36cecd88e5a2ffacfc160b23'
+    oldFile: !uuid '2b31c2796ad4fa3383cd36d1c49d761028557202'
   /Modules/IoTAIService/Controller/Clip.cs:
-    newFile: !uuid '0a5752aa08c5fdb5415fa8246f0be4de9465bf9d'
-    oldFile: !uuid 'f7e74f2ebc718c6efce3f102c8057584e1b77e8f'
-  /Modules/IoTAIService/Models:
-    newFile: !uuid 'd4397ab204406eb691e13ce3c3b8dca147d50663'
-    oldFile: !uuid '417d10b18bbc2bb4066d271dc6a6e0b9f578980e'
-  /Modules/IoTAIService/Models/In_ImgFeature.cs:
-    newFile: !uuid '273a5c359624db2da993ba01dae6eea6b085de61'
-    oldFile: null
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid '731b9b4f5968b6b4c09c0851d182007e328d7bc1'
-    oldFile: !uuid '5d5f61ee8e02c83763ab577b72bde36967a2eeca'
-  /admin-ui:
-    newFile: !uuid 'e73fb0c0a8546531bbc59fca94d3fa9f0c43aa38'
-    oldFile: !uuid '90462942a504ebd30b9de2f0fa84cc14b2a34c9e'
-  /admin-ui/src:
-    newFile: !uuid 'a69b12901e7ceb633e041c86990116a624239424'
-    oldFile: !uuid '429957aa9376ed890075a6b6ad668996f2cfcc29'
-  /admin-ui/src/api:
-    newFile: !uuid 'e0f4fc87ea20e965eb9603662d736064968551cb'
-    oldFile: !uuid 'fdcc0a2a264562a0f937cf9550a2cc578e58d9bf'
-  /admin-ui/src/api/ai:
-    newFile: !uuid '376ded14f103cee8decf125f2ff29717faa6f6b2'
-    oldFile: !uuid 'f573e68df166c7dd5c52a19685c82bb595aaeb0d'
-  /admin-ui/src/api/ai/clip.js:
-    newFile: !uuid 'b9a274428db6f29c1855ed9a6e36ad17dc035585'
-    oldFile: !uuid 'dbe555ba1d52d5ab803b410e1ed2648b7e5ba649'
-  /admin-ui/src/views:
-    newFile: !uuid '2fb622b48394169b8bc576378578c85b137f3449'
-    oldFile: !uuid '0ef51b6fccb100f3351bcdabdaeb18fb8f0ac58e'
-  /admin-ui/src/views/iot:
-    newFile: !uuid 'd939574a802b7548f86671ca23d582da715ac93f'
-    oldFile: !uuid '15652d9debc97b9ee34342ec6c0e264f809258a5'
-  /admin-ui/src/views/iot/video:
-    newFile: !uuid 'e41de8fb9b262192f59c54bd51add4aede1c1f65'
-    oldFile: !uuid '4c19cafac616cb8e9a2b63a7e76008e9a17e9ebc'
-  /admin-ui/src/views/iot/video/confadd.vue:
-    newFile: !uuid 'e24a94f5688cdb6b155c57006599abbfbdf19df1'
-    oldFile: !uuid 'd4f37a9aa199b400290d76394a82ef2d3d291a5e'
-gitCommitId: !uuid '85b48c8950bcbff4eb72d641d9831548885f110c'
+    newFile: !uuid 'e97463a608bcd92b39462bdd6c1fdba25a6dd76c'
+    oldFile: !uuid '0a5752aa08c5fdb5415fa8246f0be4de9465bf9d'
+  /Modules/IoTAIService/Migrations:
+    newFile: !uuid 'cd5dd84f962e3402e4fe16177adeb278b57f2051'
+    oldFile: !uuid '89d0d927db82bfa429c125d0821c99b9cd366166'
+  /Modules/IoTAIService/Migrations/IoTAIMigrator2.cs:
+    newFile: !uuid '070816d93f5ab61a3f174ce435157a45e7968f17'
+    oldFile: !uuid 'b33e5fb1ac9be13d4b12ea72bf09af3d9462b09f'
+gitCommitId: !uuid 'd772711b0d72cc710c03c49c54dc573b3d5c482a'
 renames: {
   }
-revisionId: 308
+revisionId: 309
