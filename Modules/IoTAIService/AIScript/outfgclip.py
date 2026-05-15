@@ -14,6 +14,10 @@ from transformers import (
 )
 from typing import List
 
+imgsize = 512
+featuresize = imgsize // 16
+maxnumpatches = featuresize * featuresize
+
 
 class AdaptedDetectHead(nn.Module):
     def __init__(self, hidden_dim=384):
@@ -120,28 +124,13 @@ class FeatureAlignProjection(nn.Module):
         return x
 
 
-def resize_short_edge(image, target_size=640):
-    if isinstance(image, str):
-        image = Image.open(image)
-    width, height = image.size
-    short_edge = min(width, height)
-
-    if short_edge >= target_size:
-        return image
-    scale = target_size / short_edge
-    new_width = int(width * scale)
-    new_height = int(height * scale)
-    resized_image = image.resize((new_width, new_height))
-    return resized_image
-
-
-def resize_and_pad(image, target_size=512, fill_color=(114, 114, 114)):
+def resize_and_pad(image, target_size=512):
     w, h = image.size
     scale = target_size / max(w, h)
     new_w = int(w * scale)
     new_h = int(h * scale)
     image = image.resize((new_w, new_h), Image.BILINEAR)
-    padded_img = Image.new("RGB", (target_size, target_size), fill_color)
+    padded_img = Image.new("RGB", (target_size, target_size), (114, 114, 114))
     paste_x = (target_size - new_w) // 2
     paste_y = (target_size - new_h) // 2
     padded_img.paste(image, (paste_x, paste_y))
@@ -176,9 +165,101 @@ class CNCLIPFeatureExtractor:
         except Exception as e:
             raise RuntimeError(f"模型加载失败: {str(e)}")
 
-    def get_detect_box(self, image_bytes, class_names, imgsize=512):
+    def get_detect_box(self, image_bytes, text_feat, center_thresh=0.8, iou_threshold=0.3):
         raw_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        raw_w, raw_h = raw_img.size
         pad_img, pad_x, pad_y, scale = resize_and_pad(raw_img, imgsize)
+        image_input = self.image_processor(
+            images=pad_img,
+            max_num_patches=maxnumpatches,
+            return_tensors="pt"
+        ).to(self.device)
+
+        with torch.no_grad():
+            dense_feature, last_hidden = self.fgmodel.get_image_dense_feature(
+                **image_input)
+
+            # 检测头前向
+            pred_box, pred_cls, pred_sim = self.dethead(
+                last_hidden, dense_feature, text_feat)
+            # 解析输出
+            pred_box = pred_box.squeeze(0).permute(1, 0)
+            pred_sim = pred_sim.flatten(2).permute(0, 2, 1).squeeze(0)
+
+            pred_cls_score = pred_cls.flatten()
+            pred_cls_idx = pred_sim.argmax(dim=-1)
+            pred_score = torch.sigmoid(pred_cls_score)  # 类别置信度
+
+        results = []
+        total_grid = featuresize * featuresize
+        for grid_idx in range(total_grid):
+            c_score = pred_score[grid_idx].item()
+
+            if c_score < center_thresh:
+                continue
+
+            box_tensor = pred_box[grid_idx]
+            dx = torch.sigmoid(box_tensor[0])
+            dy = torch.sigmoid(box_tensor[1])
+            bw = torch.sigmoid(box_tensor[2])
+            bh = torch.sigmoid(box_tensor[3])
+
+            gy = grid_idx // featuresize
+            gx = grid_idx % featuresize
+
+            cx = (gx + dx * 5 - 2.5)/featuresize
+            cy = (gy + dy * 5 - 2.5)/featuresize
+
+            # 映射到 padded 图尺度
+            cx_pad = cx * imgsize
+            cy_pad = cy * imgsize
+            bw_pad = bw * imgsize
+            bh_pad = bh * imgsize
+
+            # 去除padding偏移
+            cx_raw = cx_pad - pad_x
+            cy_raw = cy_pad - pad_y
+
+            # 还原原始原图尺度
+            cx_orig = cx_raw / scale
+            cy_orig = cy_raw / scale
+            w_orig = bw_pad / scale
+            h_orig = bh_pad / scale
+
+            # 转 x1y1x2y2
+            x1 = (cx_orig - w_orig / 2).cpu().item()
+            y1 = (cy_orig - h_orig / 2).cpu().item()
+            x2 = (cx_orig + w_orig / 2).cpu().item()
+            y2 = (cy_orig + h_orig / 2).cpu().item()
+
+            x1 = max(0.0, min(x1, raw_w))
+            y1 = max(0.0, min(y1, raw_h))
+            x2 = max(0.0, min(x2, raw_w))
+            y2 = max(0.0, min(y2, raw_h))
+            # 类别
+            cls_idx = pred_cls_idx[grid_idx]
+            results.append({
+                "box": [x1, y1, x2, y2],
+                "score": c_score,
+                "cls_idx": cls_idx.item()
+            })
+
+        if len(results) == 0:
+            return results
+
+        # 转成 NMS 需要的张量
+        boxes = torch.tensor([r["box"] for r in results],
+                             dtype=torch.float32).to(self.device)
+        scores = torch.tensor([r["score"] for r in results],
+                              dtype=torch.float32).to(self.device)
+
+        # 执行 NMS
+        keep_idx = nms(boxes[:, :4], scores, iou_threshold=iou_threshold)
+        keep_idx = keep_idx.cpu().numpy()
+
+        # 只保留 NMS 后的结果
+        results_nms = [results[i] for i in keep_idx]
+        return results_nms
 
     def get_text_features(self, text_list):
         """批量提取文本特征"""
@@ -207,8 +288,9 @@ class CNCLIPFeatureExtractor:
             # 解码Base64为字节数据
             img_bytes = base64.b64decode(base64_str)
             # 从字节数据加载图片（自动识别尺寸）
-            img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
-            return resize_short_edge(img)
+            raw_img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+            pad_img, pad_x, pad_y, scale = resize_and_pad(raw_img, imgsize)
+            return pad_img
         except Exception as e:
             raise RuntimeError(f"Base64图片解码失败: {str(e)}")
 
@@ -223,7 +305,7 @@ class CNCLIPFeatureExtractor:
         img = self._decode_base64_to_image(base64Str)
         # 预处理 + 转换为tensor
         img_tensor = self.image_processor(
-            images=img, max_num_patches=256, return_tensors="pt").to(self.device)
+            images=img, max_num_patches=maxnumpatches, return_tensors="pt").to(self.device)
 
         # 批量提取特征
         with torch.no_grad():
@@ -236,6 +318,13 @@ class CNCLIPFeatureExtractor:
 
 global_extractor = CNCLIPFeatureExtractor()
 # 外部调用入口（支持Base64/文本输入）
+
+
+def exedetect(image_bytes: bytes, text_feat: List[List[float]], thresh: float, iou_threshold:float) -> List[dict]:
+    global global_extractor
+    tmp_tensor = torch.tensor(text_feat)
+    tmp_tensor = tmp_tensor.unsqueeze(0)
+    return global_extractor.get_detect_box(image_bytes, tmp_tensor, thresh,iou_threshold)
 
 
 def execall(

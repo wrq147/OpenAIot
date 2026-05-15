@@ -11,6 +11,6 @@ namespace IoTAIService.AIProject.Items
 {
     public interface IDetect : IAIProject
     {
-        List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config);
+        List<BoxItem> GenerateBoxs(Image<Rgb24> image, byte[] rawBytes, AIConfigData config);
     }
 }

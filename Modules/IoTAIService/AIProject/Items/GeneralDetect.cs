@@ -65,7 +65,7 @@ namespace IoTAIService.AIProject.Items
             });
         }
 
-        public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
+        public List<BoxItem> GenerateBoxs(Image<Rgb24> image, byte[] rawBytes, AIConfigData config)
         {
             float tThreshold = config.GetFloat("threshold", 0.2f);
             float tIOU = config.GetFloat("iou_threshold", 0.2f);
@@ -79,7 +79,7 @@ namespace IoTAIService.AIProject.Items
                 tclasses = tarr.ToList();
             }
 
-            var tfeature = ConvertListToDenseTensor(feature);
+            var tfeature = ConvertListToFloatList(feature);
             if (!string.IsNullOrEmpty(featureImg))
             {
                 tclasses = new List<string>();
@@ -89,10 +89,12 @@ namespace IoTAIService.AIProject.Items
             {
                 return new List<BoxItem>();
             }
-            List<BoxItem> boxes = _provider.GetService<WeDetectRunner>().Predict(image, tThreshold, tIOU, tfeature, tclasses);
+            PythonExe py = _provider.GetService<PythonExe>();
+            List<BoxItem> boxes = py.GeneratePredictBoxs(rawBytes, tfeature, tclasses, tThreshold, tIOU);
             return boxes;
         }
-        private DenseTensor<float> ConvertListToDenseTensor(List<object> data)
+
+        private List<List<double>> ConvertListToFloatList(List<object> data)
         {
             // 空数据校验
             if (data == null || data.Count == 0)
@@ -100,30 +102,63 @@ namespace IoTAIService.AIProject.Items
                 throw new ArgumentException("输入数据不能为空", nameof(data));
             }
 
-            // 获取张量形状：行数（外层列表长度）、列数（第一个内层列表长度）
-            int rowCount = data.Count;
-            var tmplist = data[0] as List<object>;
-            int colCount = tmplist.Count;
+            // 初始化结果集合
+            List<List<double>> result = new List<List<double>>();
 
-
-            // 计算总元素数 = 批次 × 行数 × 列数
-            int totalElements = 1 * rowCount * colCount;
-            float[] flatArray = new float[totalElements];
-            int index = 0;
-            foreach (var row in data)
+            // 遍历每一行
+            foreach (var rowObj in data)
             {
-                var xxlist = row as List<object>;
-                foreach (var value in xxlist)
+                // 把外层 object 强转为内层 List<object>
+                if (rowObj is not List<object> rowList)
                 {
-                    var tt = value.GetType();
-                    flatArray[index++] = Convert.ToSingle(value);
+                    throw new InvalidCastException("数据格式错误，每行必须是 List<object> 类型");
                 }
+
+                // 转换当前行：object → float
+                List<double> floatRow = new List<double>();
+                foreach (var value in rowList)
+                {
+                    floatRow.Add(Convert.ToDouble(value));
+                }
+
+                // 添加到结果
+                result.Add(floatRow);
             }
 
-            // ---------------------- 第三步：创建三维DenseTensor ----------------------
-            // 张量形状：[batch, rowCount, colCount]（对应batch/文本长度/嵌入维度）
-            var tensorShape = new int[] { 1, rowCount, colCount };
-            return new DenseTensor<float>(flatArray, tensorShape);
+            return result;
         }
+        //private DenseTensor<float> ConvertListToDenseTensor(List<object> data)
+        //{
+        //    // 空数据校验
+        //    if (data == null || data.Count == 0)
+        //    {
+        //        throw new ArgumentException("输入数据不能为空", nameof(data));
+        //    }
+
+        //    // 获取张量形状：行数（外层列表长度）、列数（第一个内层列表长度）
+        //    int rowCount = data.Count;
+        //    var tmplist = data[0] as List<object>;
+        //    int colCount = tmplist.Count;
+
+
+        //    // 计算总元素数 = 批次 × 行数 × 列数
+        //    int totalElements = 1 * rowCount * colCount;
+        //    float[] flatArray = new float[totalElements];
+        //    int index = 0;
+        //    foreach (var row in data)
+        //    {
+        //        var xxlist = row as List<object>;
+        //        foreach (var value in xxlist)
+        //        {
+        //            var tt = value.GetType();
+        //            flatArray[index++] = Convert.ToSingle(value);
+        //        }
+        //    }
+
+        //    // ---------------------- 第三步：创建三维DenseTensor ----------------------
+        //    // 张量形状：[batch, rowCount, colCount]（对应batch/文本长度/嵌入维度）
+        //    var tensorShape = new int[] { 1, rowCount, colCount };
+        //    return new DenseTensor<float>(flatArray, tensorShape);
+        //}
     }
 }

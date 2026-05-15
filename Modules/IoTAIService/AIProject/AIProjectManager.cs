@@ -76,7 +76,7 @@ namespace IoTAIService.AIProject
                     AIConfigData config = new AIConfigData();
                     config.DetType = code;
                     config.DetParams = paramDict;
-                    var boxs = tmpdet.GenerateBoxs(rgbImage, config);
+                    var boxs = tmpdet.GenerateBoxs(rgbImage, byteArray, config);
                     List<BoxItem> items = new List<BoxItem>();
                     foreach (var itembox in boxs)
                     {
@@ -148,7 +148,7 @@ namespace IoTAIService.AIProject
                         {
                             if (_detects.TryGetValue(config.DetType, out IDetect tmpdet))
                             {
-                                var boxs = tmpdet.GenerateBoxs(image, config);
+                                var boxs = tmpdet.GenerateBoxs(image, frameData, config);
                                 boxlist.AddRange(boxs);
                             }
                         }

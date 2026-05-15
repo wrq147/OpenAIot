@@ -246,6 +246,7 @@ namespace AfterService.Business
         private async Task _createTask(MZ_PlaneType planeType, List<MZ_IotDevice> devlist, DeviceEventData data, DateTime triggerTime)
         {
             var userDAL = _provider.GetService<UserDAL>();
+            var deptDAL = _provider.GetService<DeptDAL>();
             DevPlaneTaskDAL taskDAL = _provider.GetService<DevPlaneTaskDAL>();
             List<MZ_PlaneTask> planTaskList = new List<MZ_PlaneTask>();
             List<string> flowerr = new List<string>();
@@ -269,12 +270,22 @@ namespace AfterService.Business
                         submitUserId = userlist[0];
                     }
                     MZ_AdminInfo submitUser = await userDAL.GetAdminById(submitUserId);
+                    long? deptId;
                     if (submitUser == null)
                     {
                         submitUserId = 2;
                         submitUser = await userDAL.GetAdminById(submitUserId);
+                        var topDept = await deptDAL.SelectRoot(planeType.OrgId.Value);
                         flowerr.Add("【" + dev.Name + "】设备负责人已不存在，暂由系统用户负责！");
+                        deptId = topDept.dept_id;
                     }
+                    else
+                    {
+                        deptId = submitUser.dept_id;
+                    }
+
+
+
                     MZ_PlaneTask task = new MZ_PlaneTask();
                     task.Id = _snowflake.NextId().ToString();
                     task.OrgId = planeType.OrgId;
@@ -284,7 +295,7 @@ namespace AfterService.Business
                     task.TaskStatus = 0;
                     task.TargetId = dev.Id;
                     task.NoticeCount = 0;
-                    task.DeptId = submitUser.dept_id;
+                    task.DeptId = deptId;
                     task.UserId = submitUserId;
                     task.StartOn = task.CreatedOn = triggerTime;
                     task.EndOn = planeType.PlaneDays == 0 ? task.StartOn.Value.Date.AddDays(1).AddTicks(-1) : task.StartOn.Value.Date.AddDays(planeType.PlaneDays.Value);

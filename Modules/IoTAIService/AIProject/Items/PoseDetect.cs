@@ -46,7 +46,7 @@ namespace IoTAIService.AIProject.Items
             });
         }
 
-        public List<BoxItem> GenerateBoxs(Image<Rgb24> image, AIConfigData config)
+        public List<BoxItem> GenerateBoxs(Image<Rgb24> image, byte[] rawBytes, AIConfigData config)
         {
             float tThreshold = config.GetFloat("threshold", 0.7f);
             List<BoxItem> boxes = _provider.GetService<YoloPoseDetectRunner>().Predict(image, tThreshold);
