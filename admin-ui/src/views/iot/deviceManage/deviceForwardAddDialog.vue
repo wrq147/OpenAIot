@@ -110,7 +110,6 @@ import { productList } from "@/api/rules/productModel";
 import { factoryProductListPost } from '@/api/factory/product'
 import { checkPermi } from "@/utils/permission";
 export default {
-  name: 'AdminUiDeviceAddDialog',
   components: {},
   props: {
     isProductDev: {

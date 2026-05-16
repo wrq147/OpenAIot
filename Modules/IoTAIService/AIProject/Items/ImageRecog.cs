@@ -1,8 +1,6 @@
 ﻿using ChannelUtility.Message;
 using Common;
 using IoTAIService.AICode;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using NPOI.SS.Formula.Functions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;

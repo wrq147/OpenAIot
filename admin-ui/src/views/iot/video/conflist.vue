@@ -132,3 +132,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+::v-deep .el-table::before {
+    height: 0px !important;
+}
+</style>

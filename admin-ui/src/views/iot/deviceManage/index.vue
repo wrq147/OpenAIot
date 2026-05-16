@@ -146,6 +146,7 @@
     </div>
     <deviceAddDialog ref="deviceAddDialog" @loadDeviceList="loadDeviceList"></deviceAddDialog>
     <deviceForwardAddDialog ref="deviceForwardAddDialog" @loadDeviceList="loadDeviceList"></deviceForwardAddDialog>
+    <deviceAddVideoDialog ref="deviceAddVideoDialog" @loadDeviceList="loadDeviceList"></deviceAddVideoDialog>
     <labelFilter ref="labelFilter" @finishLabelFilter="finishLabelFilter"></labelFilter>
     <!-- 设备导入对话框 -->
     <el-dialog :close-on-click-modal="false" :title="upload.title" :visible.sync="upload.open" width="400px"
@@ -185,11 +186,12 @@ import { getToken } from "@/utils/auth";
 
 import deviceAddDialog from './deviceAddDialog.vue';
 import deviceForwardAddDialog from './deviceForwardAddDialog.vue';
+import deviceAddVideoDialog from './deviceAddVideoDialog.vue';
 import labelFilter from './labelFilter.vue';
 import { getConfigKey } from "@/api/system/config.js";
 export default {
   mixins: [resizeTableCon],
-  components: { deviceAddDialog, labelFilter, deviceForwardAddDialog },
+  components: { deviceAddDialog, labelFilter, deviceForwardAddDialog,deviceAddVideoDialog },
   dicts: ["device_run"],
   data() {
     return {
@@ -357,6 +359,10 @@ export default {
     openAddForwardDevice() {
       //打开添加转发设备
       this.$refs.deviceForwardAddDialog.openAddDevice()
+    },
+    openAddVideoDevice() {
+      //打开添加转发设备
+      this.$refs.deviceAddVideoDialog.openAddDevice()
     },
     refreshData() {
       this.getDeviceList();

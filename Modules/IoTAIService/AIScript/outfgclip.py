@@ -147,7 +147,7 @@ class CNCLIPFeatureExtractor:
         # 加载模型
         current_dir = os.path.dirname(os.path.abspath(__file__))
         model_path = os.path.join(current_dir, "fgmodel")
-
+        dethead_path = os.path.join(current_dir, "dethead_yolo_best.pth")
         try:
             self.fgmodel = AutoModelForCausalLM.from_pretrained(
                 model_path, trust_remote_code=True)
@@ -157,8 +157,7 @@ class CNCLIPFeatureExtractor:
             self.fgmodel.eval()
 
             self.dethead = AdaptedDetectHead()
-            self.dethead.load_state_dict(torch.load(
-                "dethead_yolo_best.pth", map_location=self.device))
+            self.dethead.load_state_dict(torch.load(dethead_path, map_location=self.device))
             self.dethead.to(self.device).eval()
 
             print(f"模型加载成功，使用设备: {self.device}")

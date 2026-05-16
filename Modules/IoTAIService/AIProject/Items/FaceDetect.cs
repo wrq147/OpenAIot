@@ -25,7 +25,7 @@ namespace IoTAIService.AIProject.Items
                 Name = "人脸检测",
                 Code = tkey,
                 Stage = "Detect",
-                Remark = "检测定位人脸区域。",
+                Remark = "通用人脸检测，检测定位人脸区域。",
                 ParamList = new List<AIProjectParam>()
                 {
                     new AIProjectParam()

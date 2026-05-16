@@ -59,7 +59,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
           <el-row :gutter="10">
             <el-col :span="12">
               <el-form-item label="视频策略" prop="ConfigId">
@@ -70,9 +69,11 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="24">
               <el-form-item label="视频源类型">
-                <el-radio-group :disabled="formId != null" v-model="sourceForm.VideoType">
+                <el-radio-group v-model="sourceForm.VideoType">
                   <el-radio :label="0">固定地址</el-radio>
                   <el-radio :label="1">GB28181设备</el-radio>
                   <el-radio :label="3">Onvif设备</el-radio>
@@ -84,7 +85,7 @@
           <el-row :gutter="10" v-if="sourceForm.VideoType == 0">
             <el-col :span="24">
               <el-form-item label="拉流地址" prop="PullAddr">
-                <el-input v-model="sourceForm.PullAddr" placeholder="请输入拉流地址" />
+                <el-input v-model="sourceForm.PullAddr" placeholder="请输入拉流地址" style="width:320px;" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -164,7 +165,6 @@ import mapSelectCompt from "@/views/iot/deviceManage/mapSelectCompt";
 import { factoryProductListPost, factoryProductInfo } from '@/api/factory/product'
 import { checkPermi } from "@/utils/permission";
 export default {
-  name: 'AdminUiDeviceAddDialog',
   components: { mapSelectCompt },
   props: {
     isProductDev: {
