@@ -148,6 +148,7 @@ import deviceBasic from "./deviceBasic.vue"; //历史数据组件
 import deviceTagsInfo from "./deviceTagsInfo.vue"; //历史数据组件
 import DeviceLive from "./deviceLive.vue";
 import abnormalData from "./abnormalData.vue";
+import warnList from "../physicalModel/warnList.vue"
 import devicePlane from "./devicePlane.vue";
 import customFunc from "./customFunc.vue";
 import deviceOnlineDebug from "./deviceOnlineDebug.vue";
@@ -166,6 +167,7 @@ export default {
     devicePlane,
     customFunc,
     deviceOnlineDebug,
+    warnList
   },
   data() {
     return {
