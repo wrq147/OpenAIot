@@ -52,6 +52,12 @@
                     </el-button>
                   </el-upload>
                 </el-col>
+                <el-col :span="1.5">
+                  <el-button type="primary" plain @click="handleClsAdd" v-hasPermi="['/IoTService/IotClass/ListTree']">
+                    <i class="el-icon-folder"></i>
+                    <span style="margin-left:6px">协议分类</span>
+                  </el-button>
+                </el-col>
               </div>
               <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
             </el-row>
@@ -472,6 +478,9 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.$router.push({ path: "/iot/physicalModel/productAddSteps" });
+    },
+    handleClsAdd(){
+      this.$router.push({ path: "/iot/physicalModel/productClass" });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

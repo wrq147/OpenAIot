@@ -191,7 +191,7 @@ namespace IotService.Migrations
                 is_frame = 0,
                 is_cache = 0,
                 menu_type = "C",
-                visible = "0",
+                visible = "1",
                 status = "0",
                 perms = "/IoTService/IotClass/ListTree",
                 icon = "a-chanpinfenlei",

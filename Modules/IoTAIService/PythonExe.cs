@@ -74,8 +74,8 @@ namespace IoTAIService
                     base64Str = imgStr.Replace("data:image/png;base64,", "").Replace("data:image/jpg;base64,", "").Replace("data:image/jpeg;base64,", "");
                 }
 
-                var input = outfgclip.Execall(strArr, base64Str, projCode);
-                List<List<float>> rs = input.Select(row => row.Select(x => (float)x).ToList()).ToList();
+                var output = outfgclip.Execall(strArr, base64Str, projCode);
+                List<List<float>> rs = output.Select(row => row.Select(x => (float)x).ToList()).ToList();
                 if (rs == null)
                 {
                     return new List<List<float>>();
