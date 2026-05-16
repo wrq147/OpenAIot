@@ -293,11 +293,18 @@ namespace AuthService
                 }
 
                 List<MZ_Menu> cMenus = menu.children;
-                if (cMenus != null && cMenus.Count > 0 && "M".Equals(menu.menu_type))
+                if (cMenus != null && cMenus.Count > 0)
                 {
-                    router.alwaysShow = true;
-                    router.redirect = "noRedirect";
-                    router.children = BuildMenus(cMenus);
+                    if ("M".Equals(menu.menu_type))
+                    {
+                        router.alwaysShow = true;
+                        router.redirect = "noRedirect";
+                        router.children = BuildMenus(cMenus);
+                    }
+                    else
+                    {
+                        routers.AddRange(BuildMenus(cMenus));
+                    }
                 }
                 routers.Add(router);
             }

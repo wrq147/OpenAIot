@@ -228,58 +228,6 @@ export default {
       }
     });
   },
-  // 监听,当路由发生变化的时候执行
-  watch: {
-    $route(to, from) {
-      if (to.path == "/iot/deviceManage/deviceDetail") {
-        let pars = this.$route.query;
-        if (pars.id) {
-          this.id = pars.id;
-        }
-        if (pars.isCustom) {
-          this.canChangeDevice = false;
-        } else {
-          this.canChangeDevice = true;
-        }
-        // console.log(this.canChangeDevice,'canChangeDevicecanChangeDevicecanChangeDevice');
-        let activenavpath = "";
-        activenavpath = this.activeDevice;
-        this.activeDevice = "other";
-        if (activenavpath == "equipmentLocation") {
-          this.activeDevice = "equipmentLocation";
-          this.showMap = false;
-          this.$nextTick(async () => {
-            this.showMap = true;
-            await this.getDeviceInfos();
-            setTimeout(() => {
-              this.positionInfo = {};
-              let mds = JSON.parse(this.productInfos.ModelTSL);
-              let tags = mds.tags;
-              tags.map((row) => {
-                if (row.code == "position") {
-                  this.positionInfo = row;
-                  this.$forceUpdate();
-                }
-              });
-              this.init(this.deviceInfos.Lat, this.deviceInfos.Lng, "allmaptt");
-            }, 50);
-            this.$refs.devBasicInfo.loadData(); //加载编辑时需要的设备相关信息
-            if (this.ishasIot) {
-              this.getdeviceFuncList();
-            }
-          });
-        } else {
-          this.$nextTick(async () => {
-            await this.getDeviceInfos();
-            if (this.ishasIot) {
-              this.getdeviceFuncList();
-            }
-            this.deviceSelect(activenavpath, true);
-          });
-        }
-      }
-    },
-  },
   async mounted() {
     // sessionStorage.removeItem("map.key");
     let pars = this.$route.query;

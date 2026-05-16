@@ -191,14 +191,14 @@ export const constantRoutes = [{
         hidden: true
     },
     {
-        path: '/iot/deviceManage/deviceDetail',
+        path: '/iot/deviceManage',
         component: Layout,
         redirect: 'deviceDetail',
         hidden: true,
         children: [{
             path: '/iot/deviceManage/deviceDetail',
             component: (resolve) => require(['@/views/iot/deviceManage/deviceDetail'], resolve),
-            name: 'Index',
+            name: 'DeviceDetail',
             meta: { title: '设备详情', icon: 'dashboard', affix: false }
         }]
     }, {

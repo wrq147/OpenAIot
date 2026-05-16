@@ -63,7 +63,7 @@
             <el-col :span="12">
               <el-form-item label="视频策略" prop="ConfigId">
                 <el-select style="width:320px;" v-model="sourceForm.ConfigId" filterable remote placeholder="请选择视频策略"
-                  :remote-method="configRemoteMethod" :loading="configloading">
+                  :remote-method="configRemoteMethod" :loading="clloading">
                   <el-option v-for="item in configOptions" :key="item.Id" :label="item.Name" :value="item.Id">
                   </el-option>
                 </el-select>
@@ -175,6 +175,8 @@ export default {
   data() {
     return {
       MesProList: [],
+      clloading:false,
+      configOptions:[],
       mesloading: false,
       enableMes: false,
       deviceAddDialogTitle: '',
@@ -221,11 +223,11 @@ export default {
       this.deviceAddFrom.MesProductInfo = null;
     },
     async configRemoteMethod(query) {
-      this.configloading = true;
+      this.clloading = true;
       let res = await videoConfigList({ pageNum: 1, pageSize: 50, Key: query });
       this.configOptions = res.data.List;
       this.configOptions.push({ "Name": "暂无策略", "Id": "" })
-      this.configloading = false;
+      this.clloading = false;
     },
     async InitMesProduct(mesProdId) {
       if (mesProdId == null || mesProdId == "1" || mesProdId == "") {
