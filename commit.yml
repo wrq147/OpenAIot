@@ -2,43 +2,25 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid 'ddaea2e13cb171ca04524d0650adba2bc978e2de'
-    oldFile: !uuid 'b7bb8b85c8f1966f369ac4ba9b0ac5af8df3e45c'
-  /Modules/IoTAIService:
-    newFile: !uuid '591127b374310a18aa9c20d5f3ba7d232e4d4f7a'
-    oldFile: !uuid '8f432b3f3938af3356fdce99920792bf5abe265b'
-  /Modules/IoTAIService/PythonExe.cs:
-    newFile: !uuid '013c03a4564cd0c5c8e1158fa9378da26b77306d'
-    oldFile: !uuid '5ab24c54067a7c6d5eb8aaac3353f3f3f0884f10'
-  /Modules/IoTService:
-    newFile: !uuid 'dae38c0eb385eb3563e3750ef4cc1c7897b789a0'
-    oldFile: !uuid 'dc4e864655645c431f15f45831de82628f4c910c'
-  /Modules/IoTService/Migrations:
-    newFile: !uuid 'c22d301227cd8a5db8af688f81cf5f23035cccf1'
-    oldFile: !uuid 'd141483ce07673e00f69d02ea01102e10f7714cc'
-  /Modules/IoTService/Migrations/IotMigrator.cs:
-    newFile: !uuid '510ad69f62e68640ec48d0f91d19f03e0ab6f001'
-    oldFile: !uuid '234d2e7ea433812fd44c177ab7cf62a9c38440c3'
   /admin-ui:
-    newFile: !uuid 'eed069a82aed05cbc4ab7c5d5ce32f29a7dd4bad'
-    oldFile: !uuid 'ad5f88c1e5d0d4c238ae129c5a338957139803b9'
+    newFile: !uuid 'c749ad83006a8c261b6f870f8b0c56161692cce7'
+    oldFile: !uuid 'eed069a82aed05cbc4ab7c5d5ce32f29a7dd4bad'
   /admin-ui/src:
-    newFile: !uuid '795665cf69c85e476f12f23523c101336db7ce9b'
-    oldFile: !uuid 'e97eb731ff38fd436717e3a2a75efe64f1256b5b'
+    newFile: !uuid '3ab52e1c63560c4c4069c4ee1a5534f93bb9f0e4'
+    oldFile: !uuid '795665cf69c85e476f12f23523c101336db7ce9b'
   /admin-ui/src/views:
-    newFile: !uuid '898e7d12dee3b333866aa35baeaad1de27a5195e'
-    oldFile: !uuid '76ce67db8d9773c5cc5511bfda52885d53d25aef'
+    newFile: !uuid 'a4c2cc6ce5e497c056e24c4aec1e2cae2d624849'
+    oldFile: !uuid '898e7d12dee3b333866aa35baeaad1de27a5195e'
   /admin-ui/src/views/iot:
-    newFile: !uuid '8b728185ff55b213d6fc7d1dbd66ecacc74c0309'
-    oldFile: !uuid '7f4a9ac75ffc69da8e65c68f5a82fcd501db2871'
-  /admin-ui/src/views/iot/physicalModel:
-    newFile: !uuid '63dd5ef4a4b4d5a94f497135480f2f30462d0d5d'
-    oldFile: !uuid 'a00cdf58eace1af80a58e886fa03a2af98eed47c'
-  /admin-ui/src/views/iot/physicalModel/productList.vue:
-    newFile: !uuid '9ded645aa271f1058e2a8df7119f4f8459136b04'
-    oldFile: !uuid '50ce8a0d48e826403e5341d492178c980a7eb193'
-gitCommitId: !uuid 'ea8cdd0f1a1117bd96633dbcb8139399796dfa42'
+    newFile: !uuid 'aebcedf8026da9fdc4503f70ac60fb082939720a'
+    oldFile: !uuid '8b728185ff55b213d6fc7d1dbd66ecacc74c0309'
+  /admin-ui/src/views/iot/deviceManage:
+    newFile: !uuid 'f578ff34838fb8eb8fbe4a9cd918352751685b98'
+    oldFile: !uuid '8533772a3b68be6d70ebbc912f908fc7ce9cc43f'
+  /admin-ui/src/views/iot/deviceManage/deviceDetail.vue:
+    newFile: !uuid '77f5967306cfdef99d1c0f4f1ac76d978db688a1'
+    oldFile: !uuid '0b8d01ee2f1bc34e068429392c76963731c0710c'
+gitCommitId: !uuid '411bc64524dca2f22ce16731949252d99065c2e5'
 renames: {
   }
-revisionId: 314
+revisionId: 315
