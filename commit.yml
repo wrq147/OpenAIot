@@ -3,84 +3,15 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid '08a74d936abe015136accde835abe320cebcb0cb'
-    oldFile: !uuid 'ddaea2e13cb171ca04524d0650adba2bc978e2de'
-  /Modules/AuthService:
-    newFile: !uuid '7f285daacc27e4c95bddc3e77cc2067c2b231063'
-    oldFile: !uuid 'ed6844f24dfe7ea9306d34fd29043980fad27cb9'
-  /Modules/AuthService/Model:
-    newFile: !uuid '47a5deeec31b35b9bf3c512f7b54318e957cb11d'
-    oldFile: !uuid '3867b5e92c346342e3038f413c469886a5aebf2e'
-  /Modules/AuthService/Model/Data_ServerTokenInfo.cs:
-    newFile: !uuid '59360188cd004f0d99e216fd93002b7052010e75'
-    oldFile: !uuid '14c5909a8a208a2acce5cbc860b7863d9c919275'
-  /Modules/IoTAIService:
-    newFile: !uuid 'a0dc9cb0f0da836959ec81597a5ca136fc9f954b'
-    oldFile: !uuid '591127b374310a18aa9c20d5f3ba7d232e4d4f7a'
-  /Modules/IoTAIService/AIScript:
-    newFile: !uuid '31620e2a4f73f9e196ef276aa5dd2b51cd5128de'
-    oldFile: !uuid '3c2f688dd14e711206196c7ee18d3c4749580eb9'
-  /Modules/IoTAIService/AIScript/outfgclip.py:
-    newFile: !uuid 'da6a6d2415b37522097827102a523ce6270c3954'
-    oldFile: !uuid 'a4a10a39d423a3dae7f24ac02ad19d42a5200113'
+    newFile: !uuid '8e9f534b4e3901467f79372cef1bde8c829060e6'
+    oldFile: !uuid '08a74d936abe015136accde835abe320cebcb0cb'
   /Modules/PayService:
-    newFile: !uuid '0f8f35daf17234ebd5c30c27c557b6254e166078'
-    oldFile: !uuid 'c5059f0b11ab4fbc6582425360b55c0e3b8f562d'
-  /Modules/PayService/Business:
-    newFile: !uuid '6dc269a312ea3399b835d9f6764a0e1c088b0ae8'
-    oldFile: null
-  /Modules/PayService/Business/PayChannelBLL.cs:
-    newFile: !uuid 'c73ea307b89126359fda97e7155389a1efbe6c75'
-    oldFile: null
-  /Modules/PayService/Business/PayDetailBLL.cs:
-    newFile: !uuid 'a12e549fb9e2f2c008f1e853cbcc939d5f789b57'
-    oldFile: null
-  /Modules/PayService/Business/WalletBLL.cs:
-    newFile: !uuid '98e64d900f730003e5bad911a83f36cccbb21d62'
-    oldFile: null
-  /Modules/PayService/Controller:
-    newFile: !uuid 'bc98e199939a48b64e8bb5c4f2e184ccf2b340bf'
-    oldFile: null
-  /Modules/PayService/Controller/PayChannel.cs:
-    newFile: !uuid '77493434b7022bee90fefcbdf016cbc71a80f981'
-    oldFile: null
-  /Modules/PayService/Controller/PayDetail.cs:
-    newFile: !uuid 'f244764fbfb7393193ed9c5b6b9df37874028538'
-    oldFile: null
-  /Modules/PayService/Controller/Wallet.cs:
-    newFile: !uuid 'b06e6fdc031015ce2c17570a4473377f36c96e65'
-    oldFile: null
-  /Modules/PayService/DAL:
-    newFile: !uuid '27f58a1a9b199f2a9a9e72611dfe10c79dae2690'
-    oldFile: null
-  /Modules/PayService/DAL/PayChannelDAL.cs:
-    newFile: !uuid '49be58173ecb7198f10edd8238c8fdce9efd0437'
-    oldFile: null
-  /Modules/PayService/DAL/PayDetailDAL.cs:
-    newFile: !uuid 'd2b02184919866e45eacbfb99b4536fc38ab2afd'
-    oldFile: null
-  /Modules/PayService/DAL/WalletDAL.cs:
-    newFile: !uuid '11ee85f0c66a58d6f03b7dc2d42246b0c0d2f6bd'
-    oldFile: null
-  /Modules/PayService/Model:
-    newFile: !uuid '981080c5928dbf946bffe1fbe9060bd858a9bc1d'
-    oldFile: null
-  /Modules/PayService/Model/In_PayChannelList.cs:
-    newFile: !uuid '8a1151aeeca44d667c4a498916e0e143fed4be6b'
-    oldFile: null
-  /Modules/PayService/Model/In_PayDetailList.cs:
-    newFile: !uuid '6baa3aaca6acd39ab4fb4e190dfe09db7a09ce33'
-    oldFile: null
-  /Modules/PayService/Model/MZ_PayChannel.cs:
-    newFile: !uuid '937d65d8a6d2fbca84235b81e810bb034e287135'
-    oldFile: null
-  /Modules/PayService/Model/MZ_PayDetail.cs:
-    newFile: !uuid 'f6d86e349439593ed06cb814bafa508fd9d2c630'
-    oldFile: null
-  /Modules/PayService/Model/MZ_Wallet.cs:
-    newFile: !uuid '8b36edb1c2dc16b4985ecd703557ae5c8cd71791'
-    oldFile: null
-gitCommitId: !uuid 'c2f1d7bbdfce6f450f869914e9f54e61bdbfa5d5'
+    newFile: !uuid 'b2636e543648b9ef82925dafc105029d184f2064'
+    oldFile: !uuid '0f8f35daf17234ebd5c30c27c557b6254e166078'
+  /Modules/PayService/PluginConfig.cs:
+    newFile: !uuid '3529081f922137a79add0ccb4b639b8abe2d284b'
+    oldFile: !uuid 'e9a289d6489780118451536f16f8efa4a018fd19'
+gitCommitId: !uuid '08835ec140e6775300b887b9298e324ff3b8c744'
 renames: {
   }
-revisionId: 316
+revisionId: 317
