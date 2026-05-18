@@ -20,20 +20,24 @@ maxnumpatches = featuresize * featuresize
 
 
 class AdaptedDetectHead(nn.Module):
-    def __init__(self, hidden_dim=384):
+    def __init__(self):
         super().__init__()
-        self.hidden_dim = hidden_dim
         self.scale = nn.Parameter(torch.ones(1) * 0.5)
-
+        self.fc = nn.Sequential(
+            nn.Linear(768, 768),
+            nn.LayerNorm(768),
+            nn.GELU(),
+            nn.Linear(768, 768),
+        )
         self.box_head = nn.Sequential(
-            nn.Conv2d(768, hidden_dim, kernel_size=3, padding=1),
-            nn.BatchNorm2d(hidden_dim),
+            nn.Conv2d(768, 384, kernel_size=3, padding=1),
+            nn.BatchNorm2d(384),
             nn.GELU(),
-            nn.Conv2d(hidden_dim, hidden_dim, kernel_size=3,
-                      padding=1, groups=hidden_dim),
-            nn.BatchNorm2d(hidden_dim),
+            nn.Conv2d(384, 384, kernel_size=3,
+                      padding=1, groups=384),
+            nn.BatchNorm2d(384),
             nn.GELU(),
-            nn.Conv2d(hidden_dim, 4, kernel_size=1)
+            nn.Conv2d(384, 4, kernel_size=1)
         )
 
         self.cls_head = nn.Sequential(
@@ -46,6 +50,14 @@ class AdaptedDetectHead(nn.Module):
             nn.Conv2d(192, 1, kernel_size=1)
         )
 
+        self.blur_predictor = nn.Sequential(
+            nn.Linear(768, 192),
+            nn.LayerNorm(192),
+            nn.GELU(),
+            nn.Linear(192, 1),
+            nn.Sigmoid()
+        )
+
         gauss_kernel = torch.tensor([
             [1.0, 2.0, 1.0],
             [2.0, 4.0, 2.0],
@@ -53,38 +65,37 @@ class AdaptedDetectHead(nn.Module):
         ]) / 16.0
         self.register_buffer('gauss_kernel', gauss_kernel.view(1, 1, 3, 3))
 
-    def forward(self, last_hidden, dense_feat, text_feat):
+    def forward(self, last_hidden, text_feat):
         B = last_hidden.shape[0]
         featsize = int(last_hidden.shape[1] ** 0.5)  # 28
         N = text_feat.size(1)
 
         text_feat = F.normalize(text_feat, dim=-1)
-        img_dense_feat = F.normalize(dense_feat, dim=-1)
-
-        # [B, 784, 768] -> [B, 768, 28, 28]
-        img_feat = last_hidden.view(
-            B, featsize, featsize, -1).permute(0, 3, 1, 2).contiguous()
-
-        # -------------------------- 框回归 --------------------------
-        box = self.box_head(img_feat)  # [B,4,28,28]
-        box = box.flatten(2)           # [B,4,784]
-
-        # -------------------------- 核心：einsum 批量相似度 --------------------------
+        fc_img_feat = self.fc(last_hidden)
+        fc_img_feat = F.normalize(fc_img_feat, dim=-1)
 
         # cls_feat: [B,784,768]
         # text_feat: [B,30,768]
         # out:       [B,784,30]
-        cls_sim = torch.matmul(img_dense_feat, text_feat.transpose(-1, -2))
+        cls_sim = torch.matmul(fc_img_feat, text_feat.transpose(-1, -2))
         cls_sim = cls_sim / self.scale
         cls_btm = cls_sim.view(
-            # [B,n,28,28]
-            B, featsize, featsize, -1).permute(0, 3, 1, 2).contiguous()
+            B, featsize, featsize, -1).permute(0, 3, 1, 2).contiguous()  # [B,n,28,28]
         sim_max, _ = cls_sim.max(dim=-1)  # [B,784]
+
+        text_attended = torch.matmul(
+            F.softmax(cls_sim, dim=-1), text_feat)  # [B,784,768]
+
+        blur_alpha = self.blur_predictor(text_attended)  # [B,784,1]
+        blur_strength = blur_alpha.view(
+            B, 1, featsize, featsize)  # [B,1,28,28]
 
         sim_map = sim_max.view(B, 1, featsize, featsize)
         sim_smooth = F.conv2d(
             sim_map, self.gauss_kernel.to(sim_map.device), padding=1)
-        sim_max_smoothed = sim_smooth.flatten(1)
+
+        sim_final = blur_strength * sim_smooth + (1 - blur_strength) * sim_map
+        sim_max_smoothed = sim_final.flatten(1)
 
         sim_max_min = sim_max_smoothed.amin(dim=1, keepdim=True)
         sim_max_max = sim_max_smoothed.amax(dim=1, keepdim=True)
@@ -93,9 +104,12 @@ class AdaptedDetectHead(nn.Module):
 
         mask = sim_max.unsqueeze(-1)          # [B,784,1]
 
-        final_feat = img_dense_feat * mask  # [B, 784, 768]
+        final_feat = fc_img_feat * mask  # [B, 784, 768]
         final_feat = final_feat.permute(
             0, 2, 1).reshape(B, -1, featsize, featsize)
+
+        box = self.box_head(final_feat)  # [B,4,28,28]
+        box = box.flatten(2)           # [B,4,784]
 
         cls_map = self.cls_head(final_feat)
         cls_map = cls_map.flatten(2)
@@ -175,12 +189,10 @@ class CNCLIPFeatureExtractor:
         ).to(self.device)
 
         with torch.no_grad():
-            dense_feature, last_hidden = self.fgmodel.get_image_dense_feature(
-                **image_input)
+            last_hidden = self.fgmodel.get_vision_feature(**image_input)
 
             # 检测头前向
-            pred_box, pred_cls, pred_sim = self.dethead(
-                last_hidden, dense_feature, text_feat)
+            pred_box, pred_cls, pred_sim = self.dethead(last_hidden, text_feat)
             # 解析输出
             pred_box = pred_box.squeeze(0).permute(1, 0)
             pred_sim = pred_sim.flatten(2).permute(0, 2, 1).squeeze(0)

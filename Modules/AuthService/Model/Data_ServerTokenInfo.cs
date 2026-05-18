@@ -72,6 +72,7 @@ namespace AuthService
             _remoteScopeUrl = scopeUrl;
             _userAgent = userAgent;
         }
+
         /// <summary>
         /// 当前操作数据权限
         /// </summary>
