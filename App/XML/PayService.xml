@@ -4,5 +4,394 @@
         <name>PayService</name>
     </assembly>
     <members>
+        <member name="M:PayService.Business.PayChannelBLL.ListAsync(PayService.Model.In_PayChannelList,Common.Share.IUserInfo)">
+            <summary>
+            分页查询支付渠道
+            </summary>
+            <param name="query"></param>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PayService.Business.PayChannelBLL.InfoAsync(System.String)">
+            <summary>
+            获取单条支付渠道
+            </summary>
+            <param name="id">渠道ID</param>
+            <returns>支付渠道</returns>
+        </member>
+        <member name="M:PayService.Business.PayChannelBLL.AddAsync(PayService.Model.MZ_PayChannel)">
+            <summary>
+            新增支付渠道
+            </summary>
+            <param name="data">渠道信息</param>
+            <returns>业务响应</returns>
+        </member>
+        <member name="M:PayService.Business.PayChannelBLL.EditAsync(PayService.Model.MZ_PayChannel)">
+            <summary>
+            编辑支付渠道
+            </summary>
+            <param name="data">渠道信息</param>
+            <returns>业务响应</returns>
+        </member>
+        <member name="M:PayService.Business.PayDetailBLL.ListAsync(PayService.Model.In_PayDetailList,Common.Share.IUserInfo)">
+            <summary>
+            分页查询支付记录
+            </summary>
+            <param name="query">查询参数</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:PayService.Business.PayDetailBLL.InfoAsync(System.String)">
+            <summary>
+            获取单条支付记录
+            </summary>
+            <param name="id">记录ID</param>
+            <returns>支付记录</returns>
+        </member>
+        <member name="M:PayService.Business.PayDetailBLL.AddAsync(PayService.Model.MZ_PayDetail,Common.Share.IUserInfo)">
+            <summary>
+            新增支付记录
+            </summary>
+            <param name="data">支付记录信息</param>
+            <param name="user">当前用户</param>
+            <returns>业务响应</returns>
+        </member>
+        <member name="M:PayService.Business.PayDetailBLL.UpdateStatusAsync(System.String,System.Int32,System.String)">
+            <summary>
+            更新支付记录状态
+            </summary>
+            <param name="id">记录ID</param>
+            <param name="status">状态</param>
+            <param name="errorMsg">错误信息</param>
+            <returns>业务响应</returns>
+        </member>
+        <member name="M:PayService.Business.WalletBLL.GetWalletAsync(Common.Share.IUserInfo)">
+            <summary>
+            获取用户钱包信息
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:PayService.Business.WalletBLL.RechargeAsync(Common.Share.IUserInfo,System.Decimal)">
+            <summary>
+            充值钱包
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="amount">充值金额</param>
+            <returns>业务响应</returns>
+        </member>
+        <member name="T:PayService.Controller.PayChannel">
+            <summary>
+            支付渠道API
+            </summary>
+        </member>
+        <member name="M:PayService.Controller.PayChannel.List(PayService.Model.In_PayChannelList)">
+            <summary>
+            分页查询支付渠道
+            </summary>
+            <param name="query">查询参数</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:PayService.Controller.PayChannel.Info(System.String)">
+            <summary>
+            获取单条支付渠道
+            </summary>
+            <param name="id">渠道ID</param>
+            <returns>支付渠道</returns>
+        </member>
+        <member name="M:PayService.Controller.PayChannel.Add(PayService.Model.MZ_PayChannel)">
+            <summary>
+            新增支付渠道
+            </summary>
+            <param name="data">渠道信息</param>
+            <returns>新增结果</returns>
+        </member>
+        <member name="M:PayService.Controller.PayChannel.Edit(PayService.Model.MZ_PayChannel)">
+            <summary>
+            编辑支付渠道
+            </summary>
+            <param name="data">渠道信息</param>
+            <returns>编辑结果</returns>
+        </member>
+        <member name="T:PayService.Controller.PayDetail">
+            <summary>
+            支付记录API
+            </summary>
+        </member>
+        <member name="M:PayService.Controller.PayDetail.List(PayService.Model.In_PayDetailList)">
+            <summary>
+            分页查询支付记录
+            </summary>
+            <param name="query">查询参数</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:PayService.Controller.PayDetail.Info(System.String)">
+            <summary>
+            获取单条支付记录
+            </summary>
+            <param name="id">记录ID</param>
+            <returns>支付记录</returns>
+        </member>
+        <member name="M:PayService.Controller.PayDetail.Add(PayService.Model.MZ_PayDetail)">
+            <summary>
+            新增支付记录
+            </summary>
+            <param name="data">支付记录信息</param>
+            <returns>新增结果</returns>
+        </member>
+        <member name="M:PayService.Controller.PayDetail.UpdateStatus(System.String,System.Int32,System.String)">
+            <summary>
+            更新支付记录状态
+            </summary>
+            <param name="id">记录ID</param>
+            <param name="status">状态</param>
+            <param name="errorMsg">错误信息</param>
+            <returns>更新结果</returns>
+        </member>
+        <member name="T:PayService.Controller.Wallet">
+            <summary>
+            钱包API
+            </summary>
+        </member>
+        <member name="M:PayService.Controller.Wallet.GetMyWallet">
+            <summary>
+            获取当前用户钱包信息
+            </summary>
+            <returns>钱包信息</returns>
+        </member>
+        <member name="M:PayService.Controller.Wallet.Recharge(System.Decimal)">
+            <summary>
+            钱包充值
+            </summary>
+            <param name="amount">充值金额</param>
+            <returns>充值结果</returns>
+        </member>
+        <member name="T:PayService.DAL.PayChannelDAL">
+            <summary>
+            支付渠道DAL
+            </summary>
+        </member>
+        <member name="M:PayService.DAL.PayChannelDAL.ListAsync(PayService.Model.In_PayChannelList)">
+            <summary>
+            分页查询支付渠道
+            </summary>
+            <param name="query">查询参数</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:PayService.DAL.PayDetailDAL.ListAsync(PayService.Model.In_PayDetailList)">
+            <summary>
+            分页查询支付记录
+            </summary>
+            <param name="query">查询参数</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:PayService.DAL.WalletDAL.UpdateBalanceAsync(System.Int64,System.Decimal)">
+            <summary>
+            更新钱包余额（增量）
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="amount">变动金额（正数增加，负数减少）</param>
+            <returns>受影响行数</returns>
+        </member>
+        <member name="T:PayService.Model.In_PayChannelList">
+            <summary>
+            支付渠道列表查询入参
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayChannelList.Page">
+            <summary>
+            页码
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayChannelList.PageSize">
+            <summary>
+            页大小
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayChannelList.OrgId">
+            <summary>
+            所属企业ID（0表示系统渠道）
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayChannelList.ChannelLabel">
+            <summary>
+            渠道标识符（支付宝、微信）
+            </summary>
+        </member>
+        <member name="T:PayService.Model.In_PayDetailList">
+            <summary>
+            支付记录列表查询入参
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayDetailList.Page">
+            <summary>
+            页码
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayDetailList.PageSize">
+            <summary>
+            页大小
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayDetailList.OrgId">
+            <summary>
+            所属企业ID
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayDetailList.Status">
+            <summary>
+            支付状态（0未支付，1支付成功，2支付失败，3退款中，4退款失败，5退款成功）
+            </summary>
+        </member>
+        <member name="P:PayService.Model.In_PayDetailList.OrderId">
+            <summary>
+            订单ID
+            </summary>
+        </member>
+        <member name="T:PayService.Model.MZ_PayChannel">
+            <summary>
+            支付渠道表
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.Id">
+            <summary>
+            支付渠道ID
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.OrgId">
+            <summary>
+            所属企业Id,为0表示系统渠道
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.ChannelName">
+            <summary>
+            支付渠道名称
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.ChannelLabel">
+            <summary>
+            渠道标识符：支付宝、微信
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.AppId">
+            <summary>
+            商户的appid
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.PublicKey">
+            <summary>
+            支付公钥
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.MerchantPrivateKey">
+            <summary>
+            商户私钥
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.OtherConfig">
+            <summary>
+            其他配置
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.EncryptKey">
+            <summary>
+            存储加密的密钥
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayChannel.FeeRate">
+            <summary>
+            手续费率，按比例收取
+            </summary>
+        </member>
+        <member name="T:PayService.Model.MZ_PayDetail">
+            <summary>
+            统一交易记录表
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.Id">
+            <summary>
+            编码
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.OrgId">
+            <summary>
+            所属企业Id
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.PayUser">
+            <summary>
+            支付人
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.PayChannelId">
+            <summary>
+            支付渠道Id
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.OrderType">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.OrderId">
+            <summary>
+            订单Id
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.Status">
+            <summary>
+            0未支付，1支付成功，2支付失败，3退款中，4退款失败，5退款成功
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.PayAmount">
+            <summary>
+            支付金额
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.Fee">
+            <summary>
+            交易手续费
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.ErrorMsg">
+            <summary>
+            错误信息
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_PayDetail.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:PayService.Model.MZ_Wallet">
+            <summary>
+            钱包表
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_Wallet.Id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_Wallet.TotalBalance">
+            <summary>
+            钱包当前余额
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_Wallet.CurrencyCode">
+            <summary>
+            钱包货币类型，ISO 4217标准代码
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_Wallet.CreatedOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:PayService.Model.MZ_Wallet.UpdatedOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
     </members>
 </doc>

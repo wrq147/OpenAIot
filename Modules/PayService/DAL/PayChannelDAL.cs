@@ -33,19 +33,5 @@ namespace PayService.DAL
             var tmpSql = sql.Query<MZ_PayChannel>().Where(expression);
             return await tmpSql.GeneratePageObjectAsync(query, "Id desc");
         }
-
-        /// <summary>
-        /// 根据渠道标识符查询渠道
-        /// </summary>
-        /// <param name="orgId">企业ID</param>
-        /// <param name="channelLabel">渠道标识</param>
-        /// <returns>支付渠道信息</returns>
-        public virtual async Task<MZ_PayChannel> GetByLabelAsync(long orgId, string channelLabel)
-        {
-            SqlBuilder sql = new SqlBuilder(help);
-            return await sql.Query<MZ_PayChannel>()
-                .Where(a => a.OrgId == orgId && a.ChannelLabel == channelLabel)
-                .ToFirstAsync();
-        }
     }
 }

@@ -72,8 +72,8 @@ namespace PayService.Business
             }
 
             // 唯一性校验：同一企业下渠道标识不能重复
-            var existChannel = await _payChannelDAL.GetByLabelAsync(data.OrgId, data.ChannelLabel);
-            if (existChannel != null)
+            var existChannel = await _payChannelDAL.Some(x => x.OrgId == data.OrgId && data.ChannelLabel == data.ChannelLabel);
+            if (existChannel)
             {
                 return BusResponse<string>.Error(215, $"当前企业已存在{data.ChannelLabel}渠道");
             }

@@ -13,6 +13,7 @@ using Jint.Runtime;
 using Jint.Runtime.Interop;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
+using StackExchange.Redis;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -376,8 +377,14 @@ namespace IoTRulesService.DataParser
             }
             catch (Exception ex)
             {
-                //清除系统消息Id
-                await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
+                try
+                {
+                    await _iotRedis.KeyDeleteAsync($"DeviceMsgId:{deviceId}").ConfigureAwait(false);
+                }
+                catch
+                {
+                    Console.Write(ex.Message);
+                }
                 await Print(deviceId, "异常", "未收到回复消息").ConfigureAwait(false);
                 _log.LogError(ex.Message);
                 return null;
@@ -425,9 +432,16 @@ namespace IoTRulesService.DataParser
             }
             catch (Exception ex)
             {
+                try
+                {
+                    //清除系统消息Id
+                    await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
+                }
+                catch
+                {
+                    Console.Write(ex.Message);
+                }
                 await Print(deviceId, "异常", "下发的消息无回复").ConfigureAwait(false);
-                //清除系统消息Id
-                await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
                 _log.LogError(ex.Message);
                 return null;
             }
