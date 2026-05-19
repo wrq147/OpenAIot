@@ -2,43 +2,43 @@
 branches: {
   }
 fileChange:
+  /App:
+    newFile: !uuid 'a982c24a79ac458a010659c7d12ceecbbb5440a3'
+    oldFile: !uuid '73e7b5a078eb8f43ed4443f2a86b8a10518219ba'
+  /App/XML:
+    newFile: !uuid 'c0f871b4da32326778d6c8f328e95158fd1536bc'
+    oldFile: !uuid '4328151a923b0aac496aa38221e4748782b74601'
+  /App/XML/PayService.xml:
+    newFile: !uuid '10da0d6a5d9ac07327b54bf63ec8c9ffe7e9e602'
+    oldFile: !uuid '4ecd251d2ebb84eb296f06e156785ca0df9ec6a2'
   /Modules:
-    newFile: !uuid 'f01e613af3eb9f01c32074c730cb03c2ebfd00d0'
-    oldFile: !uuid '8e9f534b4e3901467f79372cef1bde8c829060e6'
+    newFile: !uuid '86340b80808101d8f7f90568b1598cfbb5fa4731'
+    oldFile: !uuid 'f01e613af3eb9f01c32074c730cb03c2ebfd00d0'
+  /Modules/IoTRulesService:
+    newFile: !uuid '0c0287730f03464099b159802842724ed4b5da37'
+    oldFile: !uuid 'bf49546cb17c812640cbab3b974fde8dde3c5a22'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid 'cac9f2b47dd0473a527b85c85d181f8cb758beff'
+    oldFile: !uuid 'ce61d88eb3998cf9d9650bf4e2e5ddf5d8f12dde'
+  /Modules/IoTRulesService/DataParser/PackParser.cs:
+    newFile: !uuid '4746f11942431c9d4175be5eaa5f27908129537c'
+    oldFile: !uuid '653bedb3012fce4f817698a92237bebdad0f7440'
   /Modules/PayService:
-    newFile: !uuid 'b9730b27b3098ff4dfc4fdaf8dbc5283728521f7'
-    oldFile: !uuid 'b2636e543648b9ef82925dafc105029d184f2064'
+    newFile: !uuid 'd0f2c99db8c7a423ce67f1c7b108aa72461c595f'
+    oldFile: !uuid 'b9730b27b3098ff4dfc4fdaf8dbc5283728521f7'
   /Modules/PayService/Business:
-    newFile: !uuid '0ea1d7581da39f4439b2f5d51017e6a4ca56422b'
-    oldFile: !uuid '6dc269a312ea3399b835d9f6764a0e1c088b0ae8'
+    newFile: !uuid '18eadc796d5d2088f81fe388db5c08982edc1b63'
+    oldFile: !uuid '0ea1d7581da39f4439b2f5d51017e6a4ca56422b'
   /Modules/PayService/Business/PayChannelBLL.cs:
-    newFile: !uuid 'ff56630145a17701049d15b11cac10d41326b5bc'
-    oldFile: !uuid 'c73ea307b89126359fda97e7155389a1efbe6c75'
-  /Modules/PayService/Business/PayDetailBLL.cs:
-    newFile: !uuid '510229b491a253fd30408a519fe0110568adb2dd'
-    oldFile: !uuid 'a12e549fb9e2f2c008f1e853cbcc939d5f789b57'
-  /Modules/PayService/Business/WalletBLL.cs:
-    newFile: !uuid '64218beaf4673d27224a882ce79fc6a461b787ef'
-    oldFile: !uuid '98e64d900f730003e5bad911a83f36cccbb21d62'
-  /Modules/PayService/Controller:
-    newFile: !uuid 'ef5956b388e7d3231165875e797e7ca45c900802'
-    oldFile: !uuid 'bc98e199939a48b64e8bb5c4f2e184ccf2b340bf'
-  /Modules/PayService/Controller/PayChannel.cs:
-    newFile: !uuid 'efdf0769cabe4920f8dc938702cc15d027b7b752'
-    oldFile: !uuid '77493434b7022bee90fefcbdf016cbc71a80f981'
-  /Modules/PayService/Controller/PayDetail.cs:
-    newFile: !uuid '1ec5a872f1bccaf7570c8142795c59e53a8ca35d'
-    oldFile: !uuid 'f244764fbfb7393193ed9c5b6b9df37874028538'
-  /Modules/PayService/Controller/Wallet.cs:
-    newFile: !uuid '9cff9faaea83d1d47880c9dc2d07b9e061eb0880'
-    oldFile: !uuid 'b06e6fdc031015ce2c17570a4473377f36c96e65'
-  /README.md:
-    newFile: !uuid '8e7ce3d83d4fcb784cee6a1818536d57ace77aec'
-    oldFile: !uuid '868ca332deddbe37be74c1174f76c207fdbce2a7'
-  /后端接口开发规范.md:
-    newFile: !uuid 'c3500ddd36cd73d05635cf0bdf51c70576666c15'
-    oldFile: null
-gitCommitId: !uuid 'b1761464ccdfcb148d617a1e36bd5f95cb11b0b2'
+    newFile: !uuid 'db7d14d96f42d4522988e7c1ce70536aec093fd0'
+    oldFile: !uuid 'ff56630145a17701049d15b11cac10d41326b5bc'
+  /Modules/PayService/DAL:
+    newFile: !uuid '9e725b505895071e0e5447f84ca3da6d1ea8a1d7'
+    oldFile: !uuid '27f58a1a9b199f2a9a9e72611dfe10c79dae2690'
+  /Modules/PayService/DAL/PayChannelDAL.cs:
+    newFile: !uuid '133e0b842ddfe1bfd3a04cd4675a4f381e903869'
+    oldFile: !uuid '49be58173ecb7198f10edd8238c8fdce9efd0437'
+gitCommitId: !uuid 'ce6a6d75995c85d0d36d6a5fc931eed275466220'
 renames: {
   }
-revisionId: 318
+revisionId: 319
