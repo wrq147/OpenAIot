@@ -33,7 +33,7 @@ namespace PayService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<PageObject<MZ_PayChannel>>> List(In_PayChannelList query)
         {
-            return this.Success(await _payChannelBLL.ListAsync(query));
+            return this.Success(await _payChannelBLL.ListAsync(query, GetUser()));
         }
 
         /// <summary>

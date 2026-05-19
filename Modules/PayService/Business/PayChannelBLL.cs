@@ -24,9 +24,10 @@ namespace PayService.Business
         /// <summary>
         /// 分页查询支付渠道
         /// </summary>
-        /// <param name="query">查询参数</param>
-        /// <returns>分页结果</returns>
-        public virtual async Task<PageObject<MZ_PayChannel>> ListAsync(In_PayChannelList query)
+        /// <param name="query"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public virtual async Task<PageObject<MZ_PayChannel>> ListAsync(In_PayChannelList query, IUserInfo user)
         {
             return await _payChannelDAL.ListAsync(query);
         }

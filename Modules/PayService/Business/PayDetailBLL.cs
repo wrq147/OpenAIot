@@ -29,9 +29,8 @@ namespace PayService.Business
         /// </summary>
         /// <param name="query">查询参数</param>
         /// <returns>分页结果</returns>
-        public virtual async Task<PageObject<MZ_PayDetail>> ListAsync(In_PayDetailList query)
+        public virtual async Task<PageObject<MZ_PayDetail>> ListAsync(In_PayDetailList query, IUserInfo user)
         {
-            // 数据归属校验：仅能查询本企业数据
             return await _payDetailDAL.ListAsync(query);
         }
 

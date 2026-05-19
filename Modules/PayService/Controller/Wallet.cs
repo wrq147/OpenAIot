@@ -31,7 +31,7 @@ namespace PayService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_Wallet>> GetMyWallet()
         {
-            return this.Success(await _walletBLL.GetWalletAsync(GetUser().UserId));
+            return this.Success(await _walletBLL.GetWalletAsync(GetUser()));
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace PayService.Controller
         [HttpPost]
         public async Task<DefaultAjaxResult<bool>> Recharge(decimal amount)
         {
-            return (await _walletBLL.RechargeAsync(GetUser().UserId, amount)).ToAjaxResult();
+            return (await _walletBLL.RechargeAsync(GetUser(), amount)).ToAjaxResult();
         }
     }
 }

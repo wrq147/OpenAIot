@@ -33,9 +33,7 @@ namespace PayService.Controller
         [HttpGet]
         public async Task<DefaultAjaxResult<PageObject<MZ_PayDetail>>> List(In_PayDetailList query)
         {
-            // 数据归属过滤：仅查询当前用户所属企业数据
-            query.OrgId = GetUser().OrgId;
-            return this.Success(await _payDetailBLL.ListAsync(query));
+            return this.Success(await _payDetailBLL.ListAsync(query, GetUser()));
         }
 
         /// <summary>

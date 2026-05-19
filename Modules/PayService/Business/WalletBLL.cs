@@ -19,18 +19,20 @@ namespace PayService.Business
             _walletDAL = walletDAL;
         }
 
+
         /// <summary>
         /// 获取用户钱包信息
         /// </summary>
-        /// <param name="userId">用户ID</param>
-        /// <returns>钱包信息</returns>
-        public virtual async Task<MZ_Wallet> GetWalletAsync(long userId)
+        /// <param name="user"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public virtual async Task<MZ_Wallet> GetWalletAsync(IUserInfo user)
         {
-            if (userId <= 0)
+            if (user.UserId <= 0)
             {
-                throw new ArgumentNullException(nameof(userId), "用户ID不能为空");
+                throw new ArgumentNullException(nameof(user.UserId), "用户ID不能为空");
             }
-            return await _walletDAL.Select(userId);
+            return await _walletDAL.Select(user.UserId);
         }
 
         /// <summary>

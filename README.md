@@ -103,7 +103,7 @@ sudo systemctl enable docker
 
 2. 需启用的模块，在 `App` 入口项目的 `services.txt` 文件中添加模块名称完成注册
 
-3. 可在 `App` 入口项目引用对应模块，编译后模块会自动生成至项目目录
+3. 在 `App` 入口项目引用对应模块，编译后模块会自动生成至项目目录
 
 4. 每个模块下必须创建 `PluginConfig.cs` 文件，且需继承 `TANetCorePluginConfig`，模块启动时会自动执行该文件初始化逻辑
 
