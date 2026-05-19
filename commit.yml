@@ -3,15 +3,42 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid '8e9f534b4e3901467f79372cef1bde8c829060e6'
-    oldFile: !uuid '08a74d936abe015136accde835abe320cebcb0cb'
+    newFile: !uuid 'f01e613af3eb9f01c32074c730cb03c2ebfd00d0'
+    oldFile: !uuid '8e9f534b4e3901467f79372cef1bde8c829060e6'
   /Modules/PayService:
-    newFile: !uuid 'b2636e543648b9ef82925dafc105029d184f2064'
-    oldFile: !uuid '0f8f35daf17234ebd5c30c27c557b6254e166078'
-  /Modules/PayService/PluginConfig.cs:
-    newFile: !uuid '3529081f922137a79add0ccb4b639b8abe2d284b'
-    oldFile: !uuid 'e9a289d6489780118451536f16f8efa4a018fd19'
-gitCommitId: !uuid '08835ec140e6775300b887b9298e324ff3b8c744'
+    newFile: !uuid 'b9730b27b3098ff4dfc4fdaf8dbc5283728521f7'
+    oldFile: !uuid 'b2636e543648b9ef82925dafc105029d184f2064'
+  /Modules/PayService/Business:
+    newFile: !uuid '0ea1d7581da39f4439b2f5d51017e6a4ca56422b'
+    oldFile: !uuid '6dc269a312ea3399b835d9f6764a0e1c088b0ae8'
+  /Modules/PayService/Business/PayChannelBLL.cs:
+    newFile: !uuid 'ff56630145a17701049d15b11cac10d41326b5bc'
+    oldFile: !uuid 'c73ea307b89126359fda97e7155389a1efbe6c75'
+  /Modules/PayService/Business/PayDetailBLL.cs:
+    newFile: !uuid '510229b491a253fd30408a519fe0110568adb2dd'
+    oldFile: !uuid 'a12e549fb9e2f2c008f1e853cbcc939d5f789b57'
+  /Modules/PayService/Business/WalletBLL.cs:
+    newFile: !uuid '64218beaf4673d27224a882ce79fc6a461b787ef'
+    oldFile: !uuid '98e64d900f730003e5bad911a83f36cccbb21d62'
+  /Modules/PayService/Controller:
+    newFile: !uuid 'ef5956b388e7d3231165875e797e7ca45c900802'
+    oldFile: !uuid 'bc98e199939a48b64e8bb5c4f2e184ccf2b340bf'
+  /Modules/PayService/Controller/PayChannel.cs:
+    newFile: !uuid 'efdf0769cabe4920f8dc938702cc15d027b7b752'
+    oldFile: !uuid '77493434b7022bee90fefcbdf016cbc71a80f981'
+  /Modules/PayService/Controller/PayDetail.cs:
+    newFile: !uuid '1ec5a872f1bccaf7570c8142795c59e53a8ca35d'
+    oldFile: !uuid 'f244764fbfb7393193ed9c5b6b9df37874028538'
+  /Modules/PayService/Controller/Wallet.cs:
+    newFile: !uuid '9cff9faaea83d1d47880c9dc2d07b9e061eb0880'
+    oldFile: !uuid 'b06e6fdc031015ce2c17570a4473377f36c96e65'
+  /README.md:
+    newFile: !uuid '8e7ce3d83d4fcb784cee6a1818536d57ace77aec'
+    oldFile: !uuid '868ca332deddbe37be74c1174f76c207fdbce2a7'
+  /后端接口开发规范.md:
+    newFile: !uuid 'c3500ddd36cd73d05635cf0bdf51c70576666c15'
+    oldFile: null
+gitCommitId: !uuid 'b1761464ccdfcb148d617a1e36bd5f95cb11b0b2'
 renames: {
   }
-revisionId: 317
+revisionId: 318
