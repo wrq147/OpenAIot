@@ -72,6 +72,7 @@ namespace IoTAIService.AIProject.Items
             string featureTxt = config.GetString("feature-txt");
             string featureImg = config.GetString("feature-img");
             List<object> feature = config.Get("feature") as List<object>;
+
             List<string> tclasses = null;
             if (!string.IsNullOrEmpty(featureTxt))
             {

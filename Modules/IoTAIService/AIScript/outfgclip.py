@@ -29,6 +29,7 @@ class AdaptedDetectHead(nn.Module):
             nn.GELU(),
             nn.Linear(768, 768),
         )
+
         self.box_head = nn.Sequential(
             nn.Conv2d(768, 384, kernel_size=3, padding=1),
             nn.BatchNorm2d(384),
@@ -65,48 +66,53 @@ class AdaptedDetectHead(nn.Module):
         ]) / 16.0
         self.register_buffer('gauss_kernel', gauss_kernel.view(1, 1, 3, 3))
 
+
+        edge_kernel = torch.tensor([
+            [-1.0, -2.0, -1.0],
+            [-2.0, 12.0, -2.0],
+            [-1.0, -2.0, -1.0]
+        ]) / 16.0
+        self.register_buffer('edge_kernel', edge_kernel.view(1, 1, 3, 3))
+
     def forward(self, last_hidden, text_feat):
         B = last_hidden.shape[0]
         featsize = int(last_hidden.shape[1] ** 0.5)  # 28
         N = text_feat.size(1)
-
-        text_feat = F.normalize(text_feat, dim=-1)
+        fc_text_feat = F.normalize(text_feat, dim=-1)
         fc_img_feat = self.fc(last_hidden)
         fc_img_feat = F.normalize(fc_img_feat, dim=-1)
 
         # cls_feat: [B,784,768]
         # text_feat: [B,30,768]
         # out:       [B,784,30]
-        cls_sim = torch.matmul(fc_img_feat, text_feat.transpose(-1, -2))
+        cls_sim = torch.matmul(fc_img_feat, fc_text_feat.transpose(-1, -2))
         cls_sim = cls_sim / self.scale
         cls_btm = cls_sim.view(
             B, featsize, featsize, -1).permute(0, 3, 1, 2).contiguous()  # [B,n,28,28]
         sim_max, _ = cls_sim.max(dim=-1)  # [B,784]
 
-        text_attended = torch.matmul(
-            F.softmax(cls_sim, dim=-1), text_feat)  # [B,784,768]
-
-        blur_alpha = self.blur_predictor(text_attended)  # [B,784,1]
+        blur_alpha = self.blur_predictor(last_hidden)  # [B,784,1]
         blur_strength = blur_alpha.view(
             B, 1, featsize, featsize)  # [B,1,28,28]
 
         sim_map = sim_max.view(B, 1, featsize, featsize)
-        sim_smooth = F.conv2d(
-            sim_map, self.gauss_kernel.to(sim_map.device), padding=1)
+        sim_smooth = F.conv2d(sim_map, self.gauss_kernel.to(sim_map.device), padding=1)
+        sim_edge   = F.conv2d(sim_map, self.edge_kernel.to(sim_map.device), padding=1)
 
-        sim_final = blur_strength * sim_smooth + (1 - blur_strength) * sim_map
+        sim_final = blur_strength * sim_smooth + (1 - blur_strength) * sim_edge
         sim_max_smoothed = sim_final.flatten(1)
 
         sim_max_min = sim_max_smoothed.amin(dim=1, keepdim=True)
         sim_max_max = sim_max_smoothed.amax(dim=1, keepdim=True)
-        sim_max = (sim_max_smoothed - sim_max_min) / \
+        x_sim_max = (sim_max_smoothed - sim_max_min) / \
             (sim_max_max - sim_max_min + 1e-8)
 
-        mask = sim_max.unsqueeze(-1)          # [B,784,1]
+        mask = x_sim_max.unsqueeze(-1)          # [B,784,1]
 
         final_feat = fc_img_feat * mask  # [B, 784, 768]
         final_feat = final_feat.permute(
             0, 2, 1).reshape(B, -1, featsize, featsize)
+
 
         box = self.box_head(final_feat)  # [B,4,28,28]
         box = box.flatten(2)           # [B,4,784]
@@ -279,11 +285,11 @@ class CNCLIPFeatureExtractor:
 
         tmptttt = [t for t in text_list] + [' ']
         token_input = self.tokenizer(
-            tmptttt, padding="max_length", max_length=64, truncation=True, return_tensors="pt").to(self.device)
+            tmptttt, padding="max_length", max_length=196, truncation=True, return_tensors="pt").to(self.device)
 
         with torch.no_grad():
             text_features = self.fgmodel.get_text_features(
-                **token_input, walk_type="box")
+                **token_input, walk_type="long")
             text_features = torch.nn.functional.normalize(
                 text_features, dim=-1)
 

@@ -1,8 +1,6 @@
 ﻿using ChannelUtility.Message;
-using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using Quartz.Impl.AdoJobStore.Common;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -131,7 +129,9 @@ namespace IoTAIService.AICode
             var results = new List<BoxItem>();
             int numBoxes = output.Dimensions[2]; // 输出维度：[1, 4 + num_classes, num_boxes]
 
-
+            // 计算padding
+            float paddingX = (640 - (originalWidth * gain)) / 2 - 0.1f;
+            float paddingY = (640 - (originalHeight * gain)) / 2 - 0.1f;
             // 解析每个检测框
             for (int i = 0; i < numBoxes; i++)
             {
@@ -166,9 +166,6 @@ namespace IoTAIService.AICode
                 if (maxConf < confidenceThreshold || maxClassIdx == -1)
                     continue;
 
-                // 计算padding
-                float paddingX = (640 - (originalWidth * gain)) / 2 - 0.1f;
-                float paddingY = (640 - (originalHeight * gain)) / 2 - 0.1f;
 
                 // 直接去padding + 缩放到原图（无需×640，因为已是像素值）
                 x1 = (x1 - paddingX) / gain;

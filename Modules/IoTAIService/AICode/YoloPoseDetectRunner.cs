@@ -130,6 +130,8 @@ namespace IoTAIService.AICode
             var results = new List<BoxItem>();
             int maxBoxes = output.Dimensions[1];
             int numKeypoints = 17;
+            float paddingX = (640 - originalWidth * gain) / 2;
+            float paddingY = (640 - originalHeight * gain) / 2;
             for (int i = 0; i < maxBoxes; i++)
             {
                 float conf = output[0, i, 4];
@@ -164,9 +166,6 @@ namespace IoTAIService.AICode
                 }
 
                 // 3. 坐标还原（去padding + 缩放）
-                float paddingX = (640 - originalWidth * gain) / 2;
-                float paddingY = (640 - originalHeight * gain) / 2;
-
                 x1 = (x1 - paddingX) / gain;
                 y1 = (y1 - paddingY) / gain;
                 x2 = (x2 - paddingX) / gain;
