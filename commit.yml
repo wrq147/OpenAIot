@@ -3,57 +3,27 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid '3cd8478ccbb7da9f2d5ec450c9e15f62a7402dec'
-    oldFile: !uuid '86340b80808101d8f7f90568b1598cfbb5fa4731'
+    newFile: !uuid '6c4ca30e666dc23e583e9557a5ce463a69de99f6'
+    oldFile: !uuid '3cd8478ccbb7da9f2d5ec450c9e15f62a7402dec'
   /Modules/IoTAIService:
-    newFile: !uuid '8965d448f1be38726438aad108074ec20df36a40'
-    oldFile: !uuid 'a0dc9cb0f0da836959ec81597a5ca136fc9f954b'
+    newFile: !uuid '768eb44fb5ee5e37c1dd77ba5f960233dcbeda80'
+    oldFile: !uuid '8965d448f1be38726438aad108074ec20df36a40'
   /Modules/IoTAIService/AICode:
-    newFile: !uuid '451f91ee3c0647721e562af65a58cb5f23ad1aa3'
-    oldFile: !uuid '698f7a2dae8915158745957a31cfef53f9eec635'
-  /Modules/IoTAIService/AICode/OcrDetectRunner.cs:
-    newFile: !uuid '2be57ee23ab28297e4fb8e2d4ceeee71f4fae893'
-    oldFile: null
-  /Modules/IoTAIService/AICode/OcrDocOriRunner.cs:
-    newFile: !uuid '9904328e28e8445f04186b40a40027f69e2eec40'
-    oldFile: null
+    newFile: !uuid '216bdb11019220e3e7c92f134c64d4c9c8cc29c5'
+    oldFile: !uuid '451f91ee3c0647721e562af65a58cb5f23ad1aa3'
   /Modules/IoTAIService/AICode/OcrRecRunner.cs:
-    newFile: !uuid '6f52b8e61a1d103367b455ea674c0aa54c970df5'
-    oldFile: null
-  /Modules/IoTAIService/AICode/YoloFaceDetectRunner.cs:
-    newFile: !uuid 'd38ce85ab490729b4ce6dda48e808b74b25ef9a7'
-    oldFile: !uuid '3d9c6517ae416a6fecaf26bb681259ad5b74acbd'
-  /Modules/IoTAIService/AICode/YoloPoseDetectRunner.cs:
-    newFile: !uuid '2c1b0dea41b784a5096ac4eaf285627aa149631e'
-    oldFile: !uuid 'a5356439a44b3c9beae6b9c5310b256271dd9086'
-  /Modules/IoTAIService/AICode/YoloWorldDetectRunner.cs:
-    newFile: !uuid '0bf5fe8bb13e363c8f5b457f73839fcdf919009a'
-    oldFile: !uuid '39822bac3a6801a07ef29a2a27e39b09fa7fe957'
+    newFile: !uuid '834c600b59237e64d59921da1bc31a0465931b8b'
+    oldFile: !uuid '6f52b8e61a1d103367b455ea674c0aa54c970df5'
   /Modules/IoTAIService/AIProject:
-    newFile: !uuid 'd29cea33fa7fda8a6272b4f255ee37382555323d'
-    oldFile: !uuid 'aabfa09b697055f775b98008b09781135316a47e'
+    newFile: !uuid '6e0f68ee4f424bf26113a7612e2f77042874815d'
+    oldFile: !uuid 'd29cea33fa7fda8a6272b4f255ee37382555323d'
   /Modules/IoTAIService/AIProject/Items:
-    newFile: !uuid '9de637e6c1da0a8ae9a2be68ef4cab7963c1481b'
-    oldFile: !uuid '1c6ec9a7144203fa2087a38a827a10b77e52bde3'
-  /Modules/IoTAIService/AIProject/Items/GeneralDetect.cs:
-    newFile: !uuid '5296faea1e824944656514d2f98821afa5709e25'
-    oldFile: !uuid '35a36fdd55e0fd13dda16da08183aed9309296ab'
-  /Modules/IoTAIService/AIProject/Items/OcrDetect.cs:
-    newFile: !uuid 'b604d980c00dddb538e908e95c40570d12130efa'
-    oldFile: null
+    newFile: !uuid '1d41b72179ab9e4fa025b6e86a9ba92d2b010f5e'
+    oldFile: !uuid '9de637e6c1da0a8ae9a2be68ef4cab7963c1481b'
   /Modules/IoTAIService/AIProject/Items/OcrRecog.cs:
-    newFile: !uuid '73c7dba90dddcc7b2fc8daad888325836ebe7b0a'
-    oldFile: null
-  /Modules/IoTAIService/AIScript:
-    newFile: !uuid '8622f5b1dc744318bf17a844ed05e9fea0a0f972'
-    oldFile: !uuid '31620e2a4f73f9e196ef276aa5dd2b51cd5128de'
-  /Modules/IoTAIService/AIScript/outfgclip.py:
-    newFile: !uuid '0e5902d8932da202115fbf14054349936e7e99e5'
-    oldFile: !uuid 'da6a6d2415b37522097827102a523ce6270c3954'
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid 'f0920254eb0a6175db35ad3e2a05bc949349bdda'
-    oldFile: !uuid '7f84db84fb76cec3b75ec412495aa801bef7f7a5'
-gitCommitId: !uuid 'e39506c3430e1c85aa824acefdafd2e672a3d7c1'
+    newFile: !uuid '7fd358053f488b50ba79cdafe15cc6277f867977'
+    oldFile: !uuid '73c7dba90dddcc7b2fc8daad888325836ebe7b0a'
+gitCommitId: !uuid '617429b79d7336103c99a3a590ea01f1c7630acb'
 renames: {
   }
-revisionId: 320
+revisionId: 321
