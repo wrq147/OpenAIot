@@ -35,7 +35,8 @@ namespace IoTAIService.AICode
             try
             {
                 // 1. 图像预处理（与训练时保持一致）
-                var inputTensor = PreprocessImage(image);
+                var inputImage = TransposeVerticalImage(image);
+                var inputTensor = PreprocessImage(inputImage);
                 // 2. 准备输入
                 var inputs = new List<NamedOnnxValue> {    
                     // 图片输入：假设已预处理为(1,3,48,320)的Tensor<float>
@@ -52,6 +53,29 @@ namespace IoTAIService.AICode
                 InferenceSessionPool.Instance.ReleaseSession(nameof(OcrRecRunner), inferenceSession);
             }
 
+        }
+        /// <summary>
+        /// 纵向图片像素转置：宽高互换，文字不旋转
+        /// </summary>
+        private Image<Rgb24> TransposeVerticalImage(Image<Rgb24> input)
+        {
+            // 横向图直接返回
+            if (input.Height <= input.Width)
+                return input;
+
+            int srcW = input.Width;
+            int srcH = input.Height;
+            // 新建画布：原高 → 新宽，原宽 → 新高
+            var dstImg = new Image<Rgb24>(srcH, srcW);
+            // 逐像素转置 (x,y) → (y,x)
+            for (int y = 0; y < srcH; y++)
+            {
+                for (int x = 0; x < srcW; x++)
+                {
+                    dstImg[y, x] = input[x,y];
+                }
+            }
+            return dstImg;
         }
         /// <summary>
         /// 图像预处理：缩放、归一化等

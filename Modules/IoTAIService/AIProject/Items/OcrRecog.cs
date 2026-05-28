@@ -25,7 +25,20 @@ namespace IoTAIService.AIProject.Items
 
         public override async Task Execute(AIDetectRequestMeesage req, Image<Rgb24> image, AIConfigData config, List<BoxItem> boxes)
         {
-          
+            var aiCache = _provider.GetService<AICache>();
+            var videoData = aiCache.GetVideoCache(req.DeviceId);
+            var tracklist = videoData.TrackList.Where(x => x.CurrentDetection.label == "文本").ToList();
+            var addlist = videoData.AddTrackList.Where(x => x.CurrentDetection.label == "文本").ToList();
+            var ocrRecRunner = _provider.GetService<OcrRecRunner>();
+            if (addlist.Count > 0)
+            {
+                var addDetects = addlist.Select(x => x.CurrentDetection);
+                foreach (var titem in addDetects)
+                {
+                    var tmpimg = image.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
+
+                }
+            }
         }
 
         public override async Task Init(ITAServiceProvider provider)
