@@ -73,7 +73,17 @@ namespace IoTAIService.Migrations
                 Sort = 3
             });
 
-
+            this.Execute.Sql("delete FROM mz_iot_code where Id=10006");
+            Insert.IntoTable("mz_iot_code").Row(new
+            {
+                Id = 10006,
+                Name = "文本信息",
+                Code = "OcrText",
+                CodeGroup = 731,
+                OptionData = "{\"description\":\"\",\"option\":{\"type\":\"string\",\"maxLen\":255}}",
+                CodeType = 0,
+                Sort = 2
+            });
         }
 
         public override void Down()

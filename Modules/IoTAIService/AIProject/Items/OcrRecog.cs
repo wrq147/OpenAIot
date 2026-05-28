@@ -1,11 +1,7 @@
 ﻿using ChannelUtility.Message;
 using Common;
 using IoTAIService.AICode;
-using IoTAIService.Business;
-using IoTAIService.DAL;
-using IoTAIService.Models;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -27,16 +23,26 @@ namespace IoTAIService.AIProject.Items
         {
             var aiCache = _provider.GetService<AICache>();
             var videoData = aiCache.GetVideoCache(req.DeviceId);
-            var tracklist = videoData.TrackList.Where(x => x.CurrentDetection.label == "文本").ToList();
-            var addlist = videoData.AddTrackList.Where(x => x.CurrentDetection.label == "文本").ToList();
+            var boxlist = boxes.Where(x => x.label == "文本").ToList();
             var ocrRecRunner = _provider.GetService<OcrRecRunner>();
-            if (addlist.Count > 0)
+            if (boxlist.Count > 0)
             {
-                var addDetects = addlist.Select(x => x.CurrentDetection);
-                foreach (var titem in addDetects)
+                string oldtxt = videoData.GetItem<string>("ocrwords");
+
+                List<string> tmplist = new List<string>();
+                foreach (var titem in boxlist)
                 {
                     var tmpimg = image.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
-
+                    var tmpstr = ocrRecRunner.Predict(tmpimg);
+                    tmplist.Add(tmpstr);
+                }
+                string allstrs = string.Join(",", tmplist);
+                if (oldtxt != allstrs)
+                {
+                    var aiBusProxy = _provider.GetService<AIBusProxy>();
+                    Dictionary<string, object> newvals = new Dictionary<string, object>();
+                    newvals.Add("OcrText", allstrs);
+                    await aiBusProxy.SendPropertyReply(string.Empty, req.DeviceId, newvals);
                 }
             }
         }

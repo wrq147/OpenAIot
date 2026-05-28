@@ -63,19 +63,8 @@ namespace IoTAIService.AICode
             if (input.Height <= input.Width)
                 return input;
 
-            int srcW = input.Width;
-            int srcH = input.Height;
-            // 新建画布：原高 → 新宽，原宽 → 新高
-            var dstImg = new Image<Rgb24>(srcH, srcW);
-            // 逐像素转置 (x,y) → (y,x)
-            for (int y = 0; y < srcH; y++)
-            {
-                for (int x = 0; x < srcW; x++)
-                {
-                    dstImg[y, x] = input[x,y];
-                }
-            }
-            return dstImg;
+            input.Mutate(x => x.Rotate(RotateMode.Rotate90));
+            return input;
         }
         /// <summary>
         /// 图像预处理：缩放、归一化等

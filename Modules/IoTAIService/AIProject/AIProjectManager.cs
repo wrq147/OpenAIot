@@ -44,6 +44,8 @@ namespace IoTAIService.AIProject
             await new PoseDetect().Init(_provider);
             await new BehaviorAnalysis().Init(_provider);
             await new ImageRecog().Init(_provider);
+            await new OcrDetect().Init(_provider);
+            await new OcrRecog().Init(_provider);
         }
 
         private async Task DownAIDetectResponse(string nodeid, string videoId, List<BoxItem> boxlist, bool needConf = false)
