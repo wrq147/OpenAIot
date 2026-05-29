@@ -102,7 +102,7 @@ namespace IoTAIService.AICode
             paddedImg.Mutate(x =>
             {
                 // 填充背景色
-                x.Fill(new Rgb24(114, 114, 114));
+                x.Fill(new Rgb24(0, 0, 0));
                 // 粘贴缩放后的图片（top/left为填充量）
                 x.DrawImage(image, new Point(left, top), 1.0f);
             });
@@ -115,9 +115,9 @@ namespace IoTAIService.AICode
                 {
                     var pixel = paddedImg[x, y];
                     // 归一化
-                    tensor[0, 0, y, x] = pixel.R / 255f;
-                    tensor[0, 1, y, x] = pixel.G / 255f;
-                    tensor[0, 2, y, x] = pixel.B / 255f;
+                    tensor[0, 0, y, x] = (pixel.R / 255f - 0.485f) / 0.229f; // R
+                    tensor[0, 1, y, x] = (pixel.G / 255f - 0.456f) / 0.224f; // G
+                    tensor[0, 2, y, x] = (pixel.B / 255f - 0.406f) / 0.225f; // B
                 }
             }
             return tensor;

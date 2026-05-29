@@ -2,7 +2,10 @@
 using Common;
 using IoTAIService.AICode;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +35,15 @@ namespace IoTAIService.AIProject.Items
                 List<string> tmplist = new List<string>();
                 foreach (var titem in boxlist)
                 {
-                    var tmpimg = image.CropByBox(titem.x1, titem.x2, titem.y1, titem.y2);
+
+                    var pts = new PointF[titem.points.Count];
+                    for (int i = 0; i < pts.Length; i++)
+                    {
+                        pts[i] = new PointF(titem.points[i].x, titem.points[i].y);
+                    }
+                    Polygon polygon = new Polygon(pts);
+                    var tmpimg = image.Clone();
+                    tmpimg.Mutate(ctx => ctx.Clip(polygon, x => {  }).Crop((Rectangle)polygon.Bounds));
                     var tmpstr = ocrRecRunner.Predict(tmpimg);
                     tmplist.Add(tmpstr);
                 }

@@ -30,6 +30,7 @@ class AdaptedDetectHead(nn.Module):
             nn.Linear(768, 768),
         )
 
+
         self.box_head = nn.Sequential(
             nn.Conv2d(768, 384, kernel_size=3, padding=1),
             nn.BatchNorm2d(384),
@@ -51,28 +52,7 @@ class AdaptedDetectHead(nn.Module):
             nn.Conv2d(192, 1, kernel_size=1)
         )
 
-        self.blur_predictor = nn.Sequential(
-            nn.Linear(768, 192),
-            nn.LayerNorm(192),
-            nn.GELU(),
-            nn.Linear(192, 1),
-            nn.Sigmoid()
-        )
 
-        gauss_kernel = torch.tensor([
-            [1.0, 2.0, 1.0],
-            [2.0, 4.0, 2.0],
-            [1.0, 2.0, 1.0]
-        ]) / 16.0
-        self.register_buffer('gauss_kernel', gauss_kernel.view(1, 1, 3, 3))
-
-
-        edge_kernel = torch.tensor([
-            [-1.0, -2.0, -1.0],
-            [-2.0, 12.0, -2.0],
-            [-1.0, -2.0, -1.0]
-        ]) / 16.0
-        self.register_buffer('edge_kernel', edge_kernel.view(1, 1, 3, 3))
 
     def forward(self, last_hidden, text_feat):
         B = last_hidden.shape[0]
@@ -91,16 +71,7 @@ class AdaptedDetectHead(nn.Module):
             B, featsize, featsize, -1).permute(0, 3, 1, 2).contiguous()  # [B,n,28,28]
         sim_max, _ = cls_sim.max(dim=-1)  # [B,784]
 
-        blur_alpha = self.blur_predictor(last_hidden)  # [B,784,1]
-        blur_strength = blur_alpha.view(
-            B, 1, featsize, featsize)  # [B,1,28,28]
-
-        sim_map = sim_max.view(B, 1, featsize, featsize)
-        sim_smooth = F.conv2d(sim_map, self.gauss_kernel.to(sim_map.device), padding=1)
-        sim_edge   = F.conv2d(sim_map, self.edge_kernel.to(sim_map.device), padding=1)
-
-        sim_final = blur_strength * sim_smooth + (1 - blur_strength) * sim_edge
-        sim_max_smoothed = sim_final.flatten(1)
+        sim_max_smoothed = sim_max
 
         sim_max_min = sim_max_smoothed.amin(dim=1, keepdim=True)
         sim_max_max = sim_max_smoothed.amax(dim=1, keepdim=True)
@@ -112,7 +83,6 @@ class AdaptedDetectHead(nn.Module):
         final_feat = fc_img_feat * mask  # [B, 784, 768]
         final_feat = final_feat.permute(
             0, 2, 1).reshape(B, -1, featsize, featsize)
-
 
         box = self.box_head(final_feat)  # [B,4,28,28]
         box = box.flatten(2)           # [B,4,784]

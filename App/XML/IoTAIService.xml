@@ -273,6 +273,76 @@
             运动方向枚举（8个主方向）
             </summary>
         </member>
+        <member name="M:IoTAIService.AICode.OcrDetectRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24},System.Single)">
+            <summary>
+            图像预处理：缩放、归一化等
+            </summary>
+            <param name="input"></param>
+            <param name="gain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrDetectRunner.PostprocessOutput(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single},System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single)">
+            <summary>
+            后处理：解析模型输出
+            </summary>
+            <param name="output"></param>
+            <param name="maskThreshold"></param>
+            <param name="scoreThresh"></param>
+            <param name="unclipRatio"></param>
+            <param name="originalWidth"></param>
+            <param name="originalHeight"></param>
+            <param name="gain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrDetectRunner.IsPointInPolygon(SixLabors.ImageSharp.PointF,SixLabors.ImageSharp.PointF[])">
+            <summary>
+            射线法判断点是否在多边形内
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrDetectRunner.FindContours(System.Boolean[],System.Int32,System.Int32)">
+            <summary>
+            输出轮廓点顺序、结构、简化规则完全一致
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrDetectRunner.TraceContour(System.Int32,System.Int32,System.Boolean[],System.Boolean[],System.Int32,System.Int32,System.Int32[],System.Int32[])">
+            <summary>
+            轮廓跟踪
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrDetectRunner.ApproxContourSimple(System.Collections.Generic.List{SixLabors.ImageSharp.Point})">
+            <summary>
+            去掉水平/垂直/对角线上的冗余中间点，只保留拐点
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AICode.OcrDocOriRunner">
+            <summary>
+            文档图像方向分类
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrDocOriRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24})">
+            <summary>
+            图像预处理：缩放、归一化等
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrRecRunner.TransposeVerticalImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24})">
+            <summary>
+            纵向图片像素转置：宽高互换，文字不旋转
+            </summary>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrRecRunner.PreprocessImage(SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgb24})">
+            <summary>
+            图像预处理：缩放、归一化等
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IoTAIService.AICode.OcrRecRunner.CtcDecode(Microsoft.ML.OnnxRuntime.Tensors.Tensor{System.Single})">
+            <summary>
+            CTC 解码，去重+去除空白占位
+            </summary>
+        </member>
         <member name="M:IoTAIService.AICode.PoseC3DRunner.ArgMax(System.Single[])">
             <summary>
             取数组最大值索引
@@ -443,6 +513,11 @@
             <summary>
             计算两个 float[] 特征向量的余弦相似度
             范围：[-1,1]，越接近1越相似
+            </summary>
+        </member>
+        <member name="T:IoTAIService.AIProject.Items.OcrRecog">
+            <summary>
+            文字识别
             </summary>
         </member>
         <member name="T:IoTAIService.AIProject.Items.PoseDetect">
