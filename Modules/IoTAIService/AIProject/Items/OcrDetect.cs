@@ -18,7 +18,7 @@ namespace IoTAIService.AIProject.Items
         public async Task Init(ITAServiceProvider provider)
         {
             _provider = provider;
-            string tkey = "OcrDet";
+            string tkey = "OcrDet"; 
             provider.GetService<AIProjectManager>().RegDetect(tkey, this);
             var redis = provider.GetService<GeneralRedisHelper>();
             await redis.HashSetAsync("AI-Items", tkey, new AIProjectInfo()
@@ -42,11 +42,22 @@ namespace IoTAIService.AIProject.Items
                         name="检测阈值",
                         code="threshold",
                         type="float",
-                        defval=0.7f,
+                        defval=0.6f,
                         min=0,
                         max=1,
                         help="0~1的区间值,值越小,对目标检测越模糊"
+                    },
+                    new AIProjectParam()
+                    {
+                        name="外扩比例",
+                        code="unclipratio",
+                        type="float",
+                        defval=1.5f,
+                        min=1.0f,
+                        max=3.0f,
+                        help="1.0~3.0的区间值,值越大,检测框越大"
                     }
+                    
                 }
             });
         }
@@ -54,7 +65,7 @@ namespace IoTAIService.AIProject.Items
         public List<BoxItem> GenerateBoxs(Image<Rgb24> image, byte[] rawBytes, AIConfigData config)
         {
             bool tIsRotate = config.GetBool("isrotate", false);
-            float tThreshold = config.GetFloat("threshold", 0.7f);
+            float tThreshold = config.GetFloat("threshold", 0.6f);
             Image<Rgb24> tmpImg;
             if (tIsRotate)
             {

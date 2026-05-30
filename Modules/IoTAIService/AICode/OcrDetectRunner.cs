@@ -1,6 +1,7 @@
 ﻿using ChannelUtility.Message;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using Quartz.Impl.AdoJobStore.Common;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -20,14 +21,18 @@ namespace IoTAIService.AICode
         {
         }
 
-        public List<BoxItem> Predict(Image<Rgb24> image, float maskThreshold = 0.3f, float scoreThresh = 0.6f, float unclipRatio = 1.2f)
+        public List<BoxItem> Predict(Image<Rgb24> image, float maskThreshold = 0.3f, float scoreThresh = 0.6f, float unclipRatio = 1.5f)
         {
             var inferenceSession = InferenceSessionPool.Instance.GetInferenceSession(nameof(OcrDetectRunner), () =>
             {
                 // 初始化ONNX推理会话
                 var sessionOptions = new SessionOptions();
-                AIUtility.TryEnableGpu(sessionOptions);
+                var provider = AIUtility.TryEnableGpu(sessionOptions);
                 string modelName = "OcrDet.onnx";
+                if (provider != ExecutionProviderType.CPU)
+                {
+                    modelName = "OcrDetBig.onnx";
+                }
                 string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"AIModel" + Path.DirectorySeparatorChar + modelName;
                 return new InferenceSession(modelPath, sessionOptions);
             });
@@ -84,7 +89,7 @@ namespace IoTAIService.AICode
             int top = (int)Math.Round(dh - 0.1f);
             int left = (int)Math.Round(dw - 0.1f);
 
-            // 7. 填充黑边（对齐cv2.copyMakeBorder）
+            // 7. 填充黑边
             int tmplen = (int)MaxLen;
             Image<Rgb24> paddedImg = new Image<Rgb24>(tmplen, tmplen);
             paddedImg.Mutate(x =>
