@@ -2,73 +2,25 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '7ceb800f0318ae356b812f6ed0d4ce63db5e14b3'
-    oldFile: !uuid '9512486189f430895def7ff15dc54e0c472a49fb'
-  /App/XML:
-    newFile: !uuid '1ee492fcec102bef1895eced8ccc15a2396dcd2c'
-    oldFile: !uuid '54a9fbf637f5a901cf70f315f6d18b8ac0e08cea'
-  /App/XML/IoTService.xml:
-    newFile: !uuid '37a54a038776931f1c89e7cab595b6fa0cfdd22f'
-    oldFile: !uuid '00e8b22a0bedba4601379c481b7b0d158f4a5421'
-  /Modules:
-    newFile: !uuid '95863397967f7520b237db484bab622ae03e869b'
-    oldFile: !uuid '6432da07b998934f939afd16081cb91429e142e5'
-  /Modules/IoTService:
-    newFile: !uuid '6f21a24e5b1cea4f535364e8665ae178a299ba8a'
-    oldFile: !uuid 'dae38c0eb385eb3563e3750ef4cc1c7897b789a0'
-  /Modules/IoTService/Business:
-    newFile: !uuid 'ce2bbf684a6344b102ba8ad152cb3fc1213b86ac'
-    oldFile: !uuid 'c9223008bca3c0b014dcd32da7e7dc2aef2efa94'
-  /Modules/IoTService/Business/IotWinRuleBLL.cs:
-    newFile: !uuid '9017f9aa31f49e7f755a1242f174eb4602c96a7f'
-    oldFile: !uuid '21114aefc80cbdbbe6b4715b816e5568b09acdbc'
-  /Modules/IoTService/Controller:
-    newFile: !uuid 'ea0ad9e292b15076b23154fa8ee175d66bebdfa8'
-    oldFile: !uuid '1902d19726c1162f5e6b2f784e0e1c97a64b85a0'
-  /Modules/IoTService/Controller/IotDevice.cs:
-    newFile: !uuid '775e1f037da1c15c5b0fe6253c09d6a052239397'
-    oldFile: !uuid '55840ffede9b4fb9df7c6e81aee09e6d15efc62a'
-  /Modules/IoTService/Controller/IotProduct.cs:
-    newFile: !uuid '6e42d97ea1faadd8974ec06a9f05a2785568c956'
-    oldFile: !uuid '10002746ff937ae6314f90ae6cfbe63a6791a18f'
-  /Modules/IoTService/Models:
-    newFile: !uuid '2df8361c919115b7ed905731d5ae39dbba8857b2'
-    oldFile: !uuid 'a9a94e95b7bbabe03ec8ab87d13a5cf224d07511'
-  /Modules/IoTService/Models/In_CalProp.cs:
-    newFile: !uuid 'e45f2a936348b7cd3e615dd91fcec724117e8176'
-    oldFile: null
-  /README.md:
-    newFile: !uuid '53794c400cc44461b1e43f8f909bade28d49c606'
-    oldFile: !uuid '8e7ce3d83d4fcb784cee6a1818536d57ace77aec'
   /admin-ui:
-    newFile: !uuid '2a1c8b56f36316044301049a1d52b582ee5f69d8'
-    oldFile: !uuid 'c749ad83006a8c261b6f870f8b0c56161692cce7'
+    newFile: !uuid '4e289e721fd02f6451dc9ddebdca6d64b2aeec75'
+    oldFile: !uuid '2a1c8b56f36316044301049a1d52b582ee5f69d8'
   /admin-ui/src:
-    newFile: !uuid '6caa341c7971ae758a4ad3cc45217ba5fb02b330'
-    oldFile: !uuid '3ab52e1c63560c4c4069c4ee1a5534f93bb9f0e4'
-  /admin-ui/src/api:
-    newFile: !uuid '95b9eddd1a38d7743b0111176d40428290e08660'
-    oldFile: !uuid 'e0f4fc87ea20e965eb9603662d736064968551cb'
-  /admin-ui/src/api/rules:
-    newFile: !uuid '5e5175cf556b31ca9cb6435e5da1997610d57adb'
-    oldFile: !uuid '642df013151c6d90630049e7e98cac84f57da177'
-  /admin-ui/src/api/rules/productModel.js:
-    newFile: !uuid '50451616ff911014e900a8feeb3bea7ef4759649'
-    oldFile: !uuid 'a2d87b24f6d7cfd6c48408229d277a2f9f9c89e7'
+    newFile: !uuid '6403a1259e9809d626b5f500dd6d3d5ab77da2b0'
+    oldFile: !uuid '6caa341c7971ae758a4ad3cc45217ba5fb02b330'
   /admin-ui/src/views:
-    newFile: !uuid '6b30085761b1ca4a14ea11b91cc7fc1465afcb6c'
-    oldFile: !uuid 'a4c2cc6ce5e497c056e24c4aec1e2cae2d624849'
+    newFile: !uuid '85da0b07084c0b60911cf8156dd2b58f9984c92f'
+    oldFile: !uuid '6b30085761b1ca4a14ea11b91cc7fc1465afcb6c'
   /admin-ui/src/views/iot:
-    newFile: !uuid 'a05cfbd0887740fc11a2a7d328e4d8b33dd69198'
-    oldFile: !uuid 'aebcedf8026da9fdc4503f70ac60fb082939720a'
+    newFile: !uuid '2a501ff1830453bd4d32c3d029406e894f9dec07'
+    oldFile: !uuid 'a05cfbd0887740fc11a2a7d328e4d8b33dd69198'
   /admin-ui/src/views/iot/physicalModel:
-    newFile: !uuid 'fdd70da7fa337e42f1466db3a698bb682a09d9fe'
-    oldFile: !uuid '63dd5ef4a4b4d5a94f497135480f2f30462d0d5d'
+    newFile: !uuid '9179007f0322589ea759114a8776fed9e3a1f547'
+    oldFile: !uuid 'fdd70da7fa337e42f1466db3a698bb682a09d9fe'
   /admin-ui/src/views/iot/physicalModel/productList.vue:
-    newFile: !uuid '8162cab441f28182246d9b9469a3d5266d322a1b'
-    oldFile: !uuid '9ded645aa271f1058e2a8df7119f4f8459136b04'
-gitCommitId: !uuid '2e45c21b8b5eab83ab02181641a920292a0fde73'
+    newFile: !uuid '6efadc2e50b5114d91c99a5c1971bbc818ff01f7'
+    oldFile: !uuid '8162cab441f28182246d9b9469a3d5266d322a1b'
+gitCommitId: !uuid '0fb94a3029c2afb78994e57b44feca3ef44ffecd'
 renames: {
   }
-revisionId: 325
+revisionId: 326
