@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
+using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -402,17 +403,21 @@ namespace IoTService
 
             });
             var option = app.ServiceProvider.GetService<IOptions<IotOption>>();
-            plg.RegisterCall("CalDev_" + option.Value.node_name, async (bs) =>
+            plg.RegisterBus("CalDev_" + option.Value.node_name, async (bs) =>
             {
+                GeneralRedisHelper tmpredis = app.ServiceProvider.GetService<GeneralRedisHelper>();
                 var quartzContext = bs.To<QuartzContext>();
-                try
+                string calnode = "xxcalkey_" + option.Value.node_name;
+                if (await tmpredis.WaitLockTakeAsync(calnode))
                 {
-                    await app.ServiceProvider.GetService<IotWinRuleBLL>().CalDevice(quartzContext);
-                    return CallResponse.Success(string.Empty);
-                }
-                catch (Exception ex)
-                {
-                    return CallResponse.Error(12, ex.Message);
+                    try
+                    {
+                        await app.ServiceProvider.GetService<IotWinRuleBLL>().CalDevice(quartzContext);
+                    }
+                    finally
+                    {
+                        await tmpredis.LockReleaseAsync(calnode);
+                    }
                 }
 
             });

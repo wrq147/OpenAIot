@@ -465,3 +465,8 @@ influxdb
 /Modules/IoTAIService/AIScript/fgmodel
 /Modules/IoTAIService/AIModel/wedetect_feat_input.onnx
 /Third/ZLMediaKit.Autogen/ZLMediaLibs/linux-arm64/libmk_api.so
+/Modules/IoTAIService/AIModel/OcrDet.onnx
+/Modules/IoTAIService/AIModel/OcrDocOri.onnx
+/Modules/IoTAIService/AIModel/OcrRec.onnx
+/Modules/IoTAIService/AIModel/ppocr5_dict.txt
+/Modules/IoTAIService/AIModel/OcrDetBig.onnx

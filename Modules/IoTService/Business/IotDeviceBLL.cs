@@ -1670,8 +1670,7 @@ namespace IoTService.Business
                 if (maxIdx != curMax)
                 {
                     IotRedisHelper redis = _provider.GetService<IotRedisHelper>();
-                    await redis.WaitWriteLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
-                    try
+                    await redis.WaitWriteNodeLockAsync(async () =>
                     {
                         Dictionary<int, List<Out_SimDev>> dict = new Dictionary<int, List<Out_SimDev>>();
                         for (int i = 0; i <= curMax; i++)
@@ -1717,11 +1716,8 @@ namespace IoTService.Business
                             }
                         }
 
-                    }
-                    finally
-                    {
-                        await redis.ReleaseWriteLockAsync("NodeIdx");
-                    }
+                    });
+
                 }
             }
 

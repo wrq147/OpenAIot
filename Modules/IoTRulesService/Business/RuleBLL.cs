@@ -10,6 +10,7 @@ using IoTRulesService.Flow.Builder;
 using IoTRulesService.Model;
 using IoTRulesService.TimerUtil;
 using IoTService;
+using IoTService.Controller;
 using IoTService.DAL;
 using IoTService.Models;
 using Microsoft.Extensions.Logging;
@@ -74,13 +75,18 @@ namespace IoTRulesService.Business
         public virtual async Task ExecuteProductTime(TimeEvent evt)
         {
             var redis = _provider.GetService<IotRedisHelper>();
-            await redis.WaitReadLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
+
+            var serverBus = _provider.GetService<ServerBusProxy>();
+            var devDAL = _provider.GetService<IotDeviceDAL>();
+            var idx = serverBus.GetNodeIdx();
+            List<MZ_IotDevice> tdevlist = await redis.WaitReadNodeLockAsync(async () =>
+            {
+                return await devDAL.SelectDevicesByIdx(evt.ProductId, idx);
+            });
+ 
             try
             {
-                var serverBus = _provider.GetService<ServerBusProxy>();
-                var devDAL = _provider.GetService<IotDeviceDAL>();
-                var idx = serverBus.GetNodeIdx();
-                var tdevlist = await devDAL.SelectDevicesByIdx(evt.ProductId, idx);
+
                 foreach (var dev in tdevlist)
                 {
                     //初始化参数
@@ -179,10 +185,6 @@ namespace IoTRulesService.Business
             {
                 _provider.GetService<ILoggerFactory>().CreateLogger<RuleBLL>().LogError(ex.Message + ex.StackTrace);
                 return;
-            }
-            finally
-            {
-                await redis.ReleaseReadLockAsync("NodeIdx");
             }
         }
         /// <summary>

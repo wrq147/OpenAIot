@@ -1,15 +1,15 @@
-﻿using Common.Redis;
+﻿using ChannelUtility.Tsl;
+using Common.Json;
+using Common.Redis;
 using Common.Share;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 using System;
-using System.Data;
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using TemplateAction.Core;
-using System.Collections.Generic;
-using StackExchange.Redis;
-using ChannelUtility.Tsl;
-using Common.Json;
 
 namespace IoTService
 {
@@ -136,6 +136,32 @@ namespace IoTService
         public async Task ClearRuleVal(long ruleId, string[] keys)
         {
             await this.HashDeleteAsync(RULE_DATA_KEY + ruleId, keys);
+        }
+
+        public async Task<T> WaitReadNodeLockAsync<T>(Func<Task<T>> func)
+        {
+            await this.WaitReadLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
+            try
+            {
+                return await func.Invoke();
+            }
+            finally
+            {
+                await this.ReleaseReadLockAsync("NodeIdx");
+            }
+        }
+
+        public async Task WaitWriteNodeLockAsync(Func<Task> func)
+        {
+            await this.WaitWriteLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
+            try
+            {
+                await func.Invoke();
+            }
+            finally
+            {
+                await this.ReleaseWriteLockAsync("NodeIdx");
+            }
         }
     }
 }

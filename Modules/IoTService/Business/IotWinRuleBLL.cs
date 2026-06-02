@@ -98,26 +98,14 @@ namespace IoTService.Business
         {
             var serverBus = _provider.GetService<ServerBusProxy>();
             var nodeList = serverBus.GetNodeList();
-            var redis = _provider.GetService<IotRedisHelper>();
-            await redis.WaitReadLockAsync("NodeIdx", TimeSpan.FromSeconds(60));
-            try
+            foreach (var node in nodeList)
             {
-                foreach (var node in nodeList)
-                {
-                    var callRes = await BusUtility.Call("CalDev_" + node, context);
-                    if (!callRes.IsSuccess())
-                    {
-                        throw new Exception(callRes.Message);
-                    }
-                }
-            }
-            finally
-            {
-                await redis.ReleaseReadLockAsync("NodeIdx");
+                await BusUtility.Dispatch("CalDev_" + node, context);
             }
         }
         public virtual async Task CalDevice(QuartzContext context)
         {
+            var redis = _provider.GetService<IotRedisHelper>();
             var serverBus = _provider.GetService<ServerBusProxy>();
             var iotInfluxBLL = _provider.GetService<IotInfluxBLL>();
             var deviceDAL = _provider.GetService<IotDeviceDAL>();
@@ -143,12 +131,15 @@ namespace IoTService.Business
                 {
                     continue;
                 }
-
-                var deviceList = await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
+                {
+                    return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                });
                 if (deviceList.Count == 0)
                 {
                     continue;
                 }
+
                 var model = TslModel.CreateFrom(pro.ModelTSL);
                 if (model == null)
                 {
@@ -275,8 +266,10 @@ namespace IoTService.Business
                     {
                         continue;
                     }
-
-                    var deviceList = await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                    List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
+                    {
+                        return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                    });
                     if (deviceList.Count == 0)
                     {
                         continue;
@@ -408,8 +401,10 @@ namespace IoTService.Business
                     {
                         continue;
                     }
-
-                    var deviceList = await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                    List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
+                    {
+                        return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                    });
                     if (deviceList.Count == 0)
                     {
                         continue;
