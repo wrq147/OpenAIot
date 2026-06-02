@@ -60,8 +60,8 @@
                 </el-col>
                 <el-col :span="1.5">
                   <el-button type="primary" plain @click="handleAddProp">
-                    <i class="el-icon-folder"></i>
-                    <span style="margin-left:6px">生成属性数据</span>
+                    <i class="el-icon-coin"></i>
+                    <span style="margin-left:6px">生成规则属性数据</span>
                   </el-button>
                 </el-col>
               </div>
@@ -74,7 +74,6 @@
             </el-table-column>
               <el-table-column width="320" align="center" label="协议信息" key="proInfo" prop="Name" v-if="columns[0].visible">
                 <template slot-scope="scope">
-                  <!-- <span>{{ parseTime(scope.row.createTime) }}</span> -->
                   <div class="col_con">
                     <div class="col_left">
                       <el-image fit="cover" style="width:54px;height:54px" :src="scope.row.PhotoUrl + '?wh=500x500'">
@@ -84,9 +83,6 @@
                       </el-image>
                     </div>
                     <div class="col_right">
-                      <!-- <div class="col_right_top">
-                        <span>{{scope.row.Name}}</span>
-                      </div>-->
                       <div class="col_right_bottom">
                         <div class="right_bottom1">
                           <div class="proName">{{scope.row.Name}}</div>
