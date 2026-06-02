@@ -206,12 +206,25 @@ namespace IoTService.Business
                                         Dictionary<string, object> props = new Dictionary<string, object>();
                                         if (curprop.option.type == "int")
                                         {
-                                            int rangeval = Convert.ToInt32(lastitem.Val) - Convert.ToInt32(firstitem.Val);
+                                            var maxval = Convert.ToInt32(lastitem.Val);
+                                            var minval = Convert.ToInt32(firstitem.Val);
+                                            int rangeval = maxval - minval;
+                                            if (curprop.option.min >= 0 && maxval < minval)
+                                            {
+                                                rangeval = maxval;
+                                            }
+
                                             props.Add(winrule.PropCode, rangeval);
                                         }
                                         else if (curprop.option.type == "float")
                                         {
-                                            double rangeval = Convert.ToDouble(lastitem.Val) - Convert.ToDouble(firstitem.Val);
+                                            var maxval = Convert.ToDouble(lastitem.Val);
+                                            var minval = Convert.ToDouble(firstitem.Val);
+                                            double rangeval = maxval - minval;
+                                            if (curprop.option.min >= 0 && maxval < minval)
+                                            {
+                                                rangeval = maxval;
+                                            }
                                             props.Add(winrule.PropCode, rangeval);
                                         }
                                         if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
@@ -338,12 +351,25 @@ namespace IoTService.Business
                                             Dictionary<string, object> props = new Dictionary<string, object>();
                                             if (curprop.option.type == "int")
                                             {
-                                                int rangeval = Convert.ToInt32(lastitem.Val) - Convert.ToInt32(firstitem.Val);
+                                                var maxval = Convert.ToInt32(lastitem.Val);
+                                                var minval = Convert.ToInt32(firstitem.Val);
+                                                int rangeval = maxval - minval;
+                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                {
+                                                    rangeval = maxval;
+                                                }
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             else if (curprop.option.type == "float")
                                             {
-                                                double rangeval = Convert.ToDouble(lastitem.Val) - Convert.ToDouble(firstitem.Val);
+                                                var maxval = Convert.ToDouble(lastitem.Val);
+                                                var minval = Convert.ToDouble(firstitem.Val);
+                                                double rangeval = maxval - minval;
+                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                {
+                                                    rangeval = maxval;
+                                                }
+      
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
@@ -471,12 +497,25 @@ namespace IoTService.Business
                                             Dictionary<string, object> props = new Dictionary<string, object>();
                                             if (curprop.option.type == "int")
                                             {
-                                                int rangeval = Convert.ToInt32(lastitem.Val) - Convert.ToInt32(firstitem.Val);
+                                                var maxval = Convert.ToInt32(lastitem.Val);
+                                                var minval = Convert.ToInt32(firstitem.Val);
+                                                int rangeval = maxval - minval;
+                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                {
+                                                    rangeval = maxval;
+                                                }
+
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             else if (curprop.option.type == "float")
                                             {
-                                                double rangeval = Convert.ToDouble(lastitem.Val) - Convert.ToDouble(firstitem.Val);
+                                                var maxval = Convert.ToDouble(lastitem.Val);
+                                                var minval = Convert.ToDouble(firstitem.Val);
+                                                double rangeval = maxval - minval;
+                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                {
+                                                    rangeval = maxval;
+                                                }
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
