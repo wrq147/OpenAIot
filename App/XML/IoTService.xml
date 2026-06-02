@@ -571,6 +571,12 @@
             物联协议接口
             </summary>
         </member>
+        <member name="M:IoTService.Controller.IotProduct.NoticeCalProp(IoTService.Models.In_CalProp)">
+            <summary>
+            重新计算属性规则
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:IoTService.Controller.IotProduct.ProductNames(IoTService.Models.In_ProductNamePage)">
             <summary>
             获取协议名称列表
@@ -1022,6 +1028,11 @@
         <member name="P:IoTService.Models.FlowItem.eltype">
             <summary>
             表单项类型
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_CalProp.Time">
+            <summary>
+            计算时间
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DebugEvent.DeviceId">

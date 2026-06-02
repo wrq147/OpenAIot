@@ -16,7 +16,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="创建时间">
-                <el-date-picker class="set_radius" v-model="dateRange" style="width:232px" value-format="yyyy-MM-dd" type="daterange"
+                <el-date-picker class="set_radius" v-model="dateRange" style="width:200px" value-format="yyyy-MM-dd" type="daterange"
                   range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
               </el-form-item>
               <el-form-item label="协议分类" prop="ClassId">
@@ -56,6 +56,12 @@
                   <el-button type="primary" plain @click="handleClsAdd" v-hasPermi="['/IoTService/IotClass/ListTree']">
                     <i class="el-icon-folder"></i>
                     <span style="margin-left:6px">协议分类</span>
+                  </el-button>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-button type="primary" plain @click="handleAddProp">
+                    <i class="el-icon-folder"></i>
+                    <span style="margin-left:6px">生成属性数据</span>
                   </el-button>
                 </el-col>
               </div>
@@ -193,6 +199,29 @@
 
       <!-- 添加或修改参数配置对话框 -->
     </div>
+
+
+    <el-dialog
+      title="选择生成时间"
+      :visible.sync="propDialogVisible"
+      width="400px"
+      center
+    >
+      <div style="text-align: center;padding: 20px 0;">
+        <el-date-picker
+          v-model="propDateTime"
+          type="datetime"
+          placeholder="请选择日期时间"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          style="width: 100%;"
+        >
+        </el-date-picker>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="propDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitPropData">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -204,8 +233,10 @@ import {
   copyProduct,
   productList,
   removeProduct,
-  productInfo
+  productInfo,
+  noticeCalProp
 } from "@/api/rules/productModel";
+
 import { resizeTableCon } from "@/mixins/resizeTableCon";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -258,7 +289,9 @@ export default {
         { key: 6, label: `当前版本`, visible: true },
         { key: 7, label: `创建时间`, visible: true },
       ],
-      proClassTree:[]//协议分类列表
+      proClassTree:[],//协议分类列表
+      propDialogVisible: false, // 弹窗显示隐藏
+      propDateTime: "", // 选中的时间
     };
   },
   mounted() {
@@ -481,6 +514,25 @@ export default {
     },
     handleClsAdd(){
       this.$router.push({ path: "/iot/physicalModel/productClass" });
+    },
+    handleAddProp(){
+      this.propDateTime = this.parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}');
+      this.propDialogVisible = true;
+
+    },
+    submitPropData(){
+      if(!this.propDateTime){
+        this.$modal.msgWarning("请选择时间");
+        return;
+      }
+      
+      this.$modal.loading("正在生成属性数据...");
+      noticeCalProp(this.propDateTime).then(() => {
+        this.$modal.closeLoading();
+        this.propDialogVisible = false;
+        this.$modal.msgSuccess(`生成成功！时间：${this.propDateTime}`);
+      })
+    
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

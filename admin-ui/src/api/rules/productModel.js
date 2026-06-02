@@ -292,3 +292,12 @@ export function getWarnConfig(pid){
         params: {pid}
     })
 }
+
+
+export function noticeCalProp(time){
+    return request({
+        url: '/IoTService/IotProduct/NoticeCalProp',
+        method: 'get',
+        params: {Time:time}
+    })
+}

@@ -31,6 +31,22 @@ namespace IoTService.Controller
             _code = code;
             _winRule = winRule;
         }
+
+        /// <summary>
+        /// 重新计算属性规则
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<string>> NoticeCalProp(In_CalProp data)
+        {
+            await _winRule.NoticeCalDevice(new Common.EventBus.QuartzContext()
+            {
+                PreviousFireTimeUtc = data.Time,
+                ScheduledFireTimeUtc = data.Time
+            });
+            return this.Success(string.Empty);
+        }
+
         /// <summary>
         /// 获取协议名称列表
         /// </summary>

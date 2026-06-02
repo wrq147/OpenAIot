@@ -51,7 +51,8 @@ sudo systemctl enable docker
   ]  
 }
 ```
-
+systemctl daemon-reload
+systemctl restart docker
 ## 三、项目目录结构说明
 
 |目录/文件|说明|

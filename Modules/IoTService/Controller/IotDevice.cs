@@ -28,6 +28,9 @@ namespace IoTService.Controller
             _deviceBLL = deviceBLL;
             _iotInflux = iotInflux;
         }
+
+
+
         /// <summary>
         /// 获取设备离在线状态
         /// </summary>
