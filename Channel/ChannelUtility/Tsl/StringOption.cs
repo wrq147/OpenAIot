@@ -10,7 +10,7 @@ namespace ChannelUtility.Tsl
             this.type = "string";
         }
         /// <summary>
-        /// 最大长度(1-255)
+        /// 最大长度
         /// </summary>
         public int maxLen { get; set; }
         public override object InnerRawTo(object input)

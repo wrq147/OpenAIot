@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using AuthService;
 using Common.IdGenerator;
 using Common.Share;
-using EfficiencyService.Controller;
 using EfficiencyService.DAL;
 using EfficiencyService.Model;
-using Google.Protobuf.Collections;
-using InfluxDB.Client.Api.Domain;
-using Minio.DataModel;
-using MySqlX.XDevAPI.Common;
-using NPOI.POIFS.Properties;
-using StackExchange.Redis;
 using TemplateAction.Core;
 
 namespace EfficiencyService.Business

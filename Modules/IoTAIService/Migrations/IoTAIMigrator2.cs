@@ -80,7 +80,7 @@ namespace IoTAIService.Migrations
                 Name = "文本信息",
                 Code = "OcrText",
                 CodeGroup = 731,
-                OptionData = "{\"description\":\"\",\"option\":{\"type\":\"string\",\"maxLen\":255}}",
+                OptionData = "{\"description\":\"\",\"option\":{\"type\":\"string\",\"maxLen\":0}}",
                 CodeType = 0,
                 Sort = 2
             });

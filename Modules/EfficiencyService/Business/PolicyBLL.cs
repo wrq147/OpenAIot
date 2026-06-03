@@ -9,7 +9,6 @@ using Common.Share;
 using EfficiencyService.DAL;
 using EfficiencyService.Model;
 using TemplateAction.Core;
-using TemplateAction.Label.Element;
 
 namespace EfficiencyService.Business
 {

@@ -7,25 +7,7 @@ using Common.Share;
 using EfficiencyService.DAL;
 using EfficiencyService.Model;
 using EfficiencyService.Model.Common;
-using EfficiencyService.Model.Org;
 using EfficiencyService.Model.Production;
-using Google.Protobuf.Collections;
-using InfluxDB.Client.Api.Domain;
-using Minio.DataModel;
-using MyAccess.DB;
-using MySqlX.XDevAPI.Common;
-using NPOI.POIFS.Properties;
-using NPOI.XSSF.UserModel;
-using Org.BouncyCastle.Bcpg.OpenPgp;
-using Org.BouncyCastle.Crypto;
-using RabbitMQ.Client;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace EfficiencyService.Business

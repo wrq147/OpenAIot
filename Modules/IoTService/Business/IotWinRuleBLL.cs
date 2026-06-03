@@ -197,24 +197,26 @@ namespace IoTService.Business
                                         Dictionary<string, object> props = new Dictionary<string, object>();
                                         if (curprop.option.type == "int")
                                         {
+                                            IntOption intOp = (IntOption)curprop.option;
                                             var maxval = Convert.ToInt32(lastitem.Val);
                                             var minval = Convert.ToInt32(firstitem.Val);
                                             int rangeval = maxval - minval;
-                                            if (curprop.option.min >= 0 && maxval < minval)
+                                            if (intOp.min >= 0 && maxval < minval)
                                             {
-                                                rangeval = maxval;
+                                                rangeval = maxval - intOp.min;
                                             }
 
                                             props.Add(winrule.PropCode, rangeval);
                                         }
                                         else if (curprop.option.type == "float")
                                         {
+                                            FloatOption floatOp = (FloatOption)curprop.option;
                                             var maxval = Convert.ToDouble(lastitem.Val);
                                             var minval = Convert.ToDouble(firstitem.Val);
                                             double rangeval = maxval - minval;
-                                            if (curprop.option.min >= 0 && maxval < minval)
+                                            if (floatOp.min >= 0 && maxval < minval)
                                             {
-                                                rangeval = maxval;
+                                                rangeval = maxval - floatOp.min;
                                             }
                                             props.Add(winrule.PropCode, rangeval);
                                         }
@@ -344,25 +346,27 @@ namespace IoTService.Business
                                             Dictionary<string, object> props = new Dictionary<string, object>();
                                             if (curprop.option.type == "int")
                                             {
+                                                IntOption intOp = (IntOption)curprop.option;
                                                 var maxval = Convert.ToInt32(lastitem.Val);
                                                 var minval = Convert.ToInt32(firstitem.Val);
                                                 int rangeval = maxval - minval;
-                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                if (intOp.min >= 0 && maxval < minval)
                                                 {
-                                                    rangeval = maxval;
+                                                    rangeval = maxval - intOp.min;
                                                 }
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             else if (curprop.option.type == "float")
                                             {
+                                                FloatOption floatOp = (FloatOption)curprop.option;
                                                 var maxval = Convert.ToDouble(lastitem.Val);
                                                 var minval = Convert.ToDouble(firstitem.Val);
                                                 double rangeval = maxval - minval;
-                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                if (floatOp.min >= 0 && maxval < minval)
                                                 {
-                                                    rangeval = maxval;
+                                                    rangeval = maxval - floatOp.min;
                                                 }
-      
+
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
@@ -492,24 +496,26 @@ namespace IoTService.Business
                                             Dictionary<string, object> props = new Dictionary<string, object>();
                                             if (curprop.option.type == "int")
                                             {
+                                                IntOption intOp = (IntOption)curprop.option;
                                                 var maxval = Convert.ToInt32(lastitem.Val);
                                                 var minval = Convert.ToInt32(firstitem.Val);
                                                 int rangeval = maxval - minval;
-                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                if (intOp.min >= 0 && maxval < minval)
                                                 {
-                                                    rangeval = maxval;
+                                                    rangeval = maxval - intOp.min;
                                                 }
 
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             else if (curprop.option.type == "float")
                                             {
+                                                FloatOption floatOp = (FloatOption)curprop.option;
                                                 var maxval = Convert.ToDouble(lastitem.Val);
                                                 var minval = Convert.ToDouble(firstitem.Val);
                                                 double rangeval = maxval - minval;
-                                                if (curprop.option.min >= 0 && maxval < minval)
+                                                if (floatOp.min >= 0 && maxval < minval)
                                                 {
-                                                    rangeval = maxval;
+                                                    rangeval = maxval - floatOp.min;
                                                 }
                                                 props.Add(winrule.PropCode, rangeval);
                                             }

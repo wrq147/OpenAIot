@@ -14,32 +14,10 @@ using EfficiencyService.Model;
 using EfficiencyService.Model.Common;
 using EfficiencyService.Model.Org;
 using EfficiencyService.Model.Production;
-using Google.Protobuf.WellKnownTypes;
-using InfluxDB.Client.Api.Domain;
 using IoTService.Business;
 using IoTService.DAL;
 using IoTService.Models;
-using MathNet.Numerics.LinearAlgebra.Factorization;
-using Minio.DataModel;
-using MyAccess.DB.Builder.WhereToSql;
-using NodaTime;
-using NPOI.POIFS.FileSystem;
-using NPOI.SS.Formula.Functions;
-using Quartz;
-using Quartz.Impl.AdoJobStore.Common;
-using RabbitMQ.Client;
-using SixLabors.Fonts;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TemplateAction.Core;
-using TemplateAction.Label.Element;
-using static NPOI.POIFS.Crypt.CryptoFunctions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EfficiencyService.Business
 {
