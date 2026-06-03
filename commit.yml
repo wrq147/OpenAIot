@@ -2,19 +2,58 @@
 branches: {
   }
 fileChange:
+  /Channel:
+    newFile: !uuid '761d3eccf6db3fa99142dc84d6be6278470b5335'
+    oldFile: !uuid '3521c6765aaecd2e4496d5e097d23a9d31f4408e'
+  /Channel/ChannelUtility:
+    newFile: !uuid '51666ee2a0b6d5f9fbdc74d32c90bc6ca50a4037'
+    oldFile: !uuid 'fa325a22e418dfa8316c75877e55223b69ec81f2'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid '4cd49686fe94d77cb2c66c28b9881cd53d779974'
+    oldFile: !uuid '26d23399b6d3fadb62ab28e18e4fc1dbf9fb84cc'
+  /Channel/ChannelUtility/Tsl/StringOption.cs:
+    newFile: !uuid '71d4589c5e1eaa052a4e2722561f1d43eb65bf7a'
+    oldFile: !uuid '3782da30fc89a7d674ac6e5d12f35305024c4cf2'
   /Modules:
-    newFile: !uuid '71eec6bd4622044354fe70c04c4834e420cc2025'
-    oldFile: !uuid '65e1add2970c685b2198f0b03dcf72a2d083e63d'
+    newFile: !uuid '67a880ac6fac72a5ea1c12a0a28e214a9e786e46'
+    oldFile: !uuid '71eec6bd4622044354fe70c04c4834e420cc2025'
+  /Modules/EfficiencyService:
+    newFile: !uuid 'c40f6ef9d54df2633eb5945b1b9363e2e1d073c2'
+    oldFile: !uuid '28fa7a82eb7e3b655b152881d418b6ae597e5c75'
+  /Modules/EfficiencyService/Business:
+    newFile: !uuid 'f529d9c816bd453712f400b9f497817ce40ce131'
+    oldFile: !uuid '743f901966d1af668a1bb5eaefdbfb51ad1fef28'
+  /Modules/EfficiencyService/Business/CommonBLL.cs:
+    newFile: !uuid '6b417eaa9b8d9188ba3168367d2c3419fd41ed6c'
+    oldFile: !uuid 'b07ee69beb04c54000b3975537061e6550cd76d3'
+  /Modules/EfficiencyService/Business/FactorBLL.cs:
+    newFile: !uuid '0ff1798472d12dc8d17b54308dfd8a432f6f6219'
+    oldFile: !uuid '30973251d47ed90ebd8356d5e4e659d91a4826c1'
+  /Modules/EfficiencyService/Business/PolicyBLL.cs:
+    newFile: !uuid '66ef276ddd707246cc26469260fef7567770607e'
+    oldFile: !uuid '933df71831ef18bbf176ac6408c6c20835a9cc08'
+  /Modules/EfficiencyService/Business/ProductionBLL.cs:
+    newFile: !uuid '34673c4333bf489e43adde4da27deda68c57d336'
+    oldFile: !uuid '7f09f1d56a127395e91c3cdf7db0722ead452cd4'
+  /Modules/IoTAIService:
+    newFile: !uuid '9843467254f54e72299ea556bf25c027f6f8af37'
+    oldFile: !uuid '8593c39ce9623ec68e38cdd1b1f43a4563d9b133'
+  /Modules/IoTAIService/Migrations:
+    newFile: !uuid '9a9ac9cf9312ff7a8f69907ee0c1121d3d152af6'
+    oldFile: !uuid '84883cc4149a185f15d972b66823bd4ec5074a62'
+  /Modules/IoTAIService/Migrations/IoTAIMigrator2.cs:
+    newFile: !uuid '36293dc492c0c2fd0051b9fe8a454728c3b37274'
+    oldFile: !uuid 'bf525f4bd7e4dd904de08fea3d2b8e54e41df01d'
   /Modules/IoTService:
-    newFile: !uuid '9de93ffcc188505db1c235b319c6552613025937'
-    oldFile: !uuid '64dc1d900c2334c56f25e45fed1b2a06484af968'
+    newFile: !uuid '776d4ae2dd8cffddfbee2ad28e0b0d3f4716808a'
+    oldFile: !uuid '9de93ffcc188505db1c235b319c6552613025937'
   /Modules/IoTService/Business:
-    newFile: !uuid '0463ec94dbfd61fef8a378d02945ecdf0560e61b'
-    oldFile: !uuid '5cd04509cebfc1980abcc173de900d9256de290e'
+    newFile: !uuid '61c86476a7e907cdc190eac4b8d32265848b0bd9'
+    oldFile: !uuid '0463ec94dbfd61fef8a378d02945ecdf0560e61b'
   /Modules/IoTService/Business/IotWinRuleBLL.cs:
-    newFile: !uuid '0e3387a06cb3573b3c7336eff49bb884724f00cb'
-    oldFile: !uuid 'f1143f4f68b4319bbb4d86ebc67d0637875baec9'
-gitCommitId: !uuid '58abb2ddc531e26743faba5a5729bb57dc1cb74f'
+    newFile: !uuid '61f9eac06c952d52a6d5b31881810a927bf89d7d'
+    oldFile: !uuid '0e3387a06cb3573b3c7336eff49bb884724f00cb'
+gitCommitId: !uuid '23b0242c563acc5911b87d1bd5dcfd7e578db773'
 renames: {
   }
-revisionId: 328
+revisionId: 329
