@@ -3,81 +3,66 @@ branches: {
   }
 fileChange:
   /App:
-    newFile: !uuid '27d91caba8abbf16a42f14506ea22fac7df5ecf6'
-    oldFile: !uuid '7ceb800f0318ae356b812f6ed0d4ce63db5e14b3'
-  /App/XML:
-    newFile: !uuid '53d68ed01a9922e2074dda59cb2f84dddfde6045'
-    oldFile: !uuid '1ee492fcec102bef1895eced8ccc15a2396dcd2c'
-  /App/XML/LLMService.xml:
-    newFile: !uuid 'ce74cbe90fdfc324b3f8ff1698722011ee617666'
-    oldFile: null
+    newFile: !uuid '514daacbd72ae5005c8ccb2eb964f442096bcb45'
+    oldFile: !uuid '27d91caba8abbf16a42f14506ea22fac7df5ecf6'
   /App/appsettings.json:
-    newFile: !uuid '778b300c0fbab81ce23724a8f34f20d39614ff00'
-    oldFile: !uuid 'ff792bb5b97f5ce4bb85cf82ddad597a44e676d9'
-  /DigitalCard.sln:
-    newFile: !uuid '52f7aafd8799ec295288be9feca26506e0e29ca2'
-    oldFile: !uuid 'e671a505f5533346daa9b09fe66d99d32469bf8e'
+    newFile: !uuid '701d8f92a2577c2ccf35a0787072c1324c718c35'
+    oldFile: !uuid '778b300c0fbab81ce23724a8f34f20d39614ff00'
   /Modules:
-    newFile: !uuid '8764b114293c135556c1052b2c8311a8cc221114'
-    oldFile: !uuid '67a880ac6fac72a5ea1c12a0a28e214a9e786e46'
-  /Modules/IoTAIService:
-    newFile: !uuid '8072628d4955a4e6ee2db147380a00ee380723a7'
-    oldFile: !uuid '9843467254f54e72299ea556bf25c027f6f8af37'
-  /Modules/IoTAIService/AICode:
-    newFile: !uuid 'fe378c2533757c8d9e42c35b9033c5f0b147a749'
-    oldFile: !uuid '712ee48356b95d149c136c3752c5e21773a30af7'
-  /Modules/IoTAIService/AICode/FaceKeyPointsRunner.cs:
-    newFile: !uuid 'fcf906343ed10ab2265e175c133592df65d99f06'
-    oldFile: !uuid 'c59d4b368fb468c3b951fb81fd85c39262dc4bde'
-  /Modules/IoTAIService/AICode/FaceRecogRunner.cs:
-    newFile: !uuid '5d7c22ac4695920fda14b99b30cc48de75ca8a18'
-    oldFile: !uuid '84ce28ebfff6f8c984ee852b9aabf8ed52384278'
-  /Modules/IoTAIService/AICode/FaceSTNRunner.cs:
-    newFile: !uuid '55334f25d255fd528b5fa3faa6a95af618a27095'
-    oldFile: !uuid '04f4c47f397db0c59bb8240484695a4e9b803d04'
-  /Modules/IoTAIService/AICode/OcrDetectRunner.cs:
-    newFile: !uuid 'b6d04a3630814a16112ca7b926cb7c516cf614e7'
-    oldFile: !uuid '62a8db45bbf28d0c8e8ce76baa1ec50277e6a49e'
-  /Modules/IoTAIService/AICode/OcrDocOriRunner.cs:
-    newFile: !uuid '46e1ef9a88e8e8a9eff7d05c01246b234a227f0a'
-    oldFile: !uuid '36c9822b0325bb135203a942cf526809952ff6b9'
-  /Modules/IoTAIService/AICode/OcrRecRunner.cs:
-    newFile: !uuid 'e7611a436f252299987e9c7df338851978535d20'
-    oldFile: !uuid 'e57da706b4848cbdcd3e25211bd44d76a1c9982e'
-  /Modules/IoTAIService/AICode/YoloFaceDetectRunner.cs:
-    newFile: !uuid '3c5ec0ba9e6e0403eab93f76f1b436fd3fbefcac'
-    oldFile: !uuid 'd38ce85ab490729b4ce6dda48e808b74b25ef9a7'
-  /Modules/IoTAIService/AICode/YoloPoseDetectRunner.cs:
-    newFile: !uuid 'a64b943e47a885d769192262b41f63aa20f87169'
-    oldFile: !uuid '2c1b0dea41b784a5096ac4eaf285627aa149631e'
-  /Modules/IoTAIService/AICode/YoloWorldDetectRunner.cs:
-    newFile: !uuid '63a34f9a1059d915e3d6308f6b858d74f4866b07'
-    oldFile: !uuid '0bf5fe8bb13e363c8f5b457f73839fcdf919009a'
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid 'f3433b79bbb45265573e7132da046dd9dad2cbe1'
-    oldFile: !uuid 'f0920254eb0a6175db35ad3e2a05bc949349bdda'
-  /Modules/IoTAIService/PythonExe.cs:
-    newFile: !uuid 'd6e6f419b44e336f0981b3d72d573da394f9ae10'
-    oldFile: !uuid '013c03a4564cd0c5c8e1158fa9378da26b77306d'
+    newFile: !uuid 'a77197fb1a1f669f2fc893151d4044d9f9d22117'
+    oldFile: !uuid '8764b114293c135556c1052b2c8311a8cc221114'
   /Modules/LLMService:
-    newFile: !uuid 'e0001e950bad18b1f91e6041a5b8a86307ba0993'
-    oldFile: null
+    newFile: !uuid '736d1dc282335b01052c7624b987ec89e0c200e6'
+    oldFile: !uuid 'e0001e950bad18b1f91e6041a5b8a86307ba0993'
   /Modules/LLMService/AiClientRegistry.cs:
-    newFile: !uuid '225cc1b7a84748da18fbad8dac6d35fc9248a876'
+    newFile: !uuid '392957b654139d868f82e695de12e6d59724d087'
+    oldFile: !uuid '225cc1b7a84748da18fbad8dac6d35fc9248a876'
+  /Modules/LLMService/Business:
+    newFile: !uuid '68ff70209d1d5644d60328f82bbce67d4f9a78d8'
+    oldFile: null
+  /Modules/LLMService/Business/ChatBLL.cs:
+    newFile: !uuid '02fa100a82814283b4a8c5e283859d580801420a'
+    oldFile: null
+  /Modules/LLMService/Business/InfoRagBLL.cs:
+    newFile: !uuid '7ff8720b88769ed2bf4854ec54a660f009d19df1'
+    oldFile: null
+  /Modules/LLMService/Business/MemoryRagBLL.cs:
+    newFile: !uuid '2b775ba4b65531a8d2616e5b956c735871f1d825'
+    oldFile: null
+  /Modules/LLMService/ChatMemory.cs:
+    newFile: !uuid '1ab64797a6fe907a90bb26110477d0818ff7a6ba'
+    oldFile: null
+  /Modules/LLMService/GeneratedTaskScript.cs:
+    newFile: !uuid '1f2af7f0620a2e7ff66318cdbc6a8b7d912d2ca7'
     oldFile: null
   /Modules/LLMService/IAiClientRegistry.cs:
-    newFile: !uuid '41a6d05540a3d3bf23a195a4dbbfa391eca7826d'
-    oldFile: null
+    newFile: !uuid '9e2da3074396df0067952a6864e60340af579d6c'
+    oldFile: !uuid '41a6d05540a3d3bf23a195a4dbbfa391eca7826d'
   /Modules/LLMService/LLMOption.cs:
-    newFile: !uuid '588dd6aec2d49bb77afa1194285e9914de8c8ae4'
-    oldFile: null
+    newFile: !uuid '4aedab2c4185dbeb30a4e0e449a0caeca22476f3'
+    oldFile: !uuid '588dd6aec2d49bb77afa1194285e9914de8c8ae4'
   /Modules/LLMService/LLMService.csproj:
-    newFile: !uuid '9b881e40754fb70d0e4d40d59e6ec3f889c8ad03'
+    newFile: !uuid 'fe61866aac41388a406ff11ef16edcca6e191412'
+    oldFile: !uuid '9b881e40754fb70d0e4d40d59e6ec3f889c8ad03'
+  /Modules/LLMService/OsPlatform.cs:
+    newFile: !uuid '6ab89a4bc719349937d64cf412a40e99f243852e'
     oldFile: null
   /Modules/LLMService/PluginConfig.cs:
-    newFile: !uuid '1cabc3ae0a6ddb39ed91f9b191377ecce711dcb9'
+    newFile: !uuid 'b41921b20a5b2d1a02fb49a53898f012f5af474e'
+    oldFile: !uuid '1cabc3ae0a6ddb39ed91f9b191377ecce711dcb9'
+  /Modules/LLMService/Skill:
+    newFile: !uuid '5bff26ddd57520add706d7df8c591f814a2b013c'
     oldFile: null
-gitCommitId: !uuid '4713d47a4ee4a91d2fca4c3661151fe5978cb7cf'
+  /Modules/LLMService/Skill/SkillConverter.cs:
+    newFile: !uuid 'ca50ee98971c70ba3284cf4a16fab32cf65edbd4'
+    oldFile: null
+  /Modules/LLMService/Skill/SkillLoader.cs:
+    newFile: !uuid '5c0bf51c885f65e5f9d67634753ffbbb392ee439'
+    oldFile: null
+  /Modules/LLMService/Skill/SkillMeta.cs:
+    newFile: !uuid 'a64cff0e0b71cee235cb1e088e776ed02163c507'
+    oldFile: null
+gitCommitId: !uuid '689a9ef5a7aaf2e580b2ea58759c6c479b352387'
 renames: {
   }
-revisionId: 330
+revisionId: 331
