@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.AI;
+﻿using LLMService.Skill;
+using Microsoft.Extensions.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,8 @@ namespace LLMService
         IChatClient GetChatClient(string modelKey);
         IChatClient GetDefaultChat();
         IEmbeddingGenerator<string, Embedding<float>> GetDefaultEmbed();
+
+        List<SkillMeta> GetAllSkills();
+        List<AITool> GetSkillTools();
     }
 }

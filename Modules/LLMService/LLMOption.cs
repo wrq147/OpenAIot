@@ -10,6 +10,14 @@ namespace LLMService
     {
         public Dictionary<string, ModelOption> Models { get; set; } = new();
         public string DefaultChatModel { get; set; } = "DeepSeek";
+        /// <summary>
+        /// Milvus的连接地址
+        /// </summary>
+        public string MilvusUrl { get; set; }
+        /// <summary>
+        /// Milvus数据库名称
+        /// </summary>
+        public string MilvusDatabase { get; set; }
     }
     public class ModelOption
     {
