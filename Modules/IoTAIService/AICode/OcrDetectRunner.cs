@@ -3,6 +3,7 @@ using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using Quartz.Impl.AdoJobStore.Common;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -71,7 +72,7 @@ namespace IoTAIService.AICode
         /// <returns></returns>
         private Tensor<float> PreprocessImage(Image<Rgb24> input, float gain)
         {
-            Image<Rgb24> image = input.Clone();
+            using Image<Rgb24> image = input.Clone();
             int originalWidth = image.Width;
             int originalHeight = image.Height;
             // 计算缩放比例（保持宽高比，填充黑边）
@@ -91,7 +92,7 @@ namespace IoTAIService.AICode
 
             // 7. 填充黑边
             int tmplen = (int)MaxLen;
-            Image<Rgb24> paddedImg = new Image<Rgb24>(tmplen, tmplen);
+            using Image<Rgb24> paddedImg = new Image<Rgb24>(tmplen, tmplen);
             paddedImg.Mutate(x =>
             {
                 // 填充背景色

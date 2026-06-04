@@ -1,15 +1,10 @@
 ﻿using ChannelUtility.Message;
 using CSnakes.Runtime;
-using Microsoft.Extensions.Options;
-using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using TemplateAction.Core;
 
 namespace IoTAIService

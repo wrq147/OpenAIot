@@ -2,6 +2,7 @@
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -67,7 +68,7 @@ namespace IoTAIService.AICode
         /// <returns></returns>
         private Tensor<float> PreprocessImage(Image<Rgb24> input, float gain)
         {
-            Image<Rgb24> image = input.Clone();
+            using Image<Rgb24> image = input.Clone();
             int originalWidth = image.Width;
             int originalHeight = image.Height;
             // 计算缩放比例（保持宽高比，填充黑边）
@@ -86,7 +87,7 @@ namespace IoTAIService.AICode
             int left = (int)Math.Round(dw - 0.1f);
 
             // 7. 填充黑边（对齐cv2.copyMakeBorder）
-            Image<Rgb24> paddedImg = new Image<Rgb24>(640, 640);
+            using Image<Rgb24> paddedImg = new Image<Rgb24>(640, 640);
             paddedImg.Mutate(x =>
             {
                 // 填充背景色
@@ -102,7 +103,7 @@ namespace IoTAIService.AICode
                 for (int x = 0; x < 640; x++)
                 {
                     var pixel = paddedImg[x, y];
-                    // 归一化
+                    
                     tensor[0, 0, y, x] = pixel.R / 255f;
                     tensor[0, 1, y, x] = pixel.G / 255f;
                     tensor[0, 2, y, x] = pixel.B / 255f;

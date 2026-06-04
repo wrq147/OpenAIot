@@ -111,6 +111,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Segmenter", "Third\jieba.NE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnvifChannel", "Channel\OnvifChannel\OnvifChannel.csproj", "{50F8DCCE-84F0-48DF-A7C3-6DFBA13CA77C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLMService", "Modules\LLMService\LLMService.csproj", "{14722155-101A-4FCA-BF28-BC291A778140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -317,6 +319,10 @@ Global
 		{50F8DCCE-84F0-48DF-A7C3-6DFBA13CA77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F8DCCE-84F0-48DF-A7C3-6DFBA13CA77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50F8DCCE-84F0-48DF-A7C3-6DFBA13CA77C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14722155-101A-4FCA-BF28-BC291A778140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14722155-101A-4FCA-BF28-BC291A778140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14722155-101A-4FCA-BF28-BC291A778140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14722155-101A-4FCA-BF28-BC291A778140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -363,6 +369,7 @@ Global
 		{73BBB617-9E28-8F55-659D-AF2CE5C91655} = {C4F73D91-B2AD-4365-9714-D119D7E056D5}
 		{F216C437-9BE1-F761-A440-9873FE0B4D09} = {C4F73D91-B2AD-4365-9714-D119D7E056D5}
 		{50F8DCCE-84F0-48DF-A7C3-6DFBA13CA77C} = {C26B908B-B010-4265-8BDE-BFB935C899BF}
+		{14722155-101A-4FCA-BF28-BC291A778140} = {CD28CBED-71E7-423E-8599-1521EBFBEF44}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {77EA5F0A-9A22-4C84-A103-055F8596621C}

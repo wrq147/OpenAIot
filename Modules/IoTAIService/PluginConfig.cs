@@ -1,10 +1,8 @@
 ﻿using Common;
 using Common.EventBus;
-using Common.FluentMigrator;
 using CSnakes.Runtime;
 using IoTAIService.AICode;
 using IoTAIService.AIProject;
-using IoTAIService.AIProject.Items;
 using IoTAIService.Business;
 using IoTAIService.DAL;
 using Microsoft.Extensions.Configuration;
@@ -54,7 +52,6 @@ namespace IoTAIService
             {
                 var home = Path.Join(Environment.CurrentDirectory, "AIScript");
                 s.WithPython().WithHome(home).FromRedistributable().WithVirtualEnvironment(Path.Combine(home, ".venv")).WithPipInstaller();
-
             });
         }
         private ITAServiceProvider _provider;

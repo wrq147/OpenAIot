@@ -81,7 +81,7 @@ namespace IoTAIService.AICode
             int originalWidth = input.Width;
             int originalHeight = input.Height;
             float gain = Math.Min(224.0f / originalWidth, 224.0f / originalHeight);
-            Image<Rgb24> image = input.Clone();
+            using Image<Rgb24> image = input.Clone();
             // 计算缩放比例（保持宽高比，填充黑边）
             float resizedWidth = originalWidth * gain;
             float resizedHeight = originalHeight * gain;
@@ -98,7 +98,7 @@ namespace IoTAIService.AICode
             int left = (int)Math.Round(dw - 0.1f);
 
             // 7. 填充黑边
-            Image<Rgb24> paddedImg = new Image<Rgb24>(224, 224);
+            using Image<Rgb24> paddedImg = new Image<Rgb24>(224, 224);
             paddedImg.Mutate(x =>
             {
                 // 填充背景色

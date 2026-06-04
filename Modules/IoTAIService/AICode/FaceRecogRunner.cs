@@ -56,7 +56,7 @@ namespace IoTAIService.AICode
         private Tensor<float> PreprocessImage(Image<Rgb24> input)
         {
             // 缩放为128x128
-            Image<Rgb24> image = input.Clone();
+            using Image<Rgb24> image = input.Clone();
             image.Mutate(x => x.Resize(128, 128));
 
             // 转换为张量（NCHW格式：batch=1, channel=3, height=128, width=128）

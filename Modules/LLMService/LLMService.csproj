@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\</OutputPath>
+		<DocumentationFile>..\..\App\XML\LLMService.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="ElBruno.LocalEmbeddings" Version="1.5.0" />
+	  <PackageReference Include="Microsoft.Extensions.AI" Version="10.6.0" />
+	  <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.6.0" />
+	  <PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" Version="10.6.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\AuthService\AuthService.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="EmbedModel\model_quantized.onnx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="EmbedModel\tokenizer.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+</Project>
