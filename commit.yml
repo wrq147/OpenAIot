@@ -3,18 +3,27 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'af1f62f523a8f6a8c89cc7b7f388453711caaf78'
-    oldFile: !uuid '650e6647447975cca0d4b30567e9c1bb4182f01d'
-  /Modules/IoTService:
-    newFile: !uuid '12204a6404cc70fe26d4ff76eb2357cc803eafd5'
-    oldFile: !uuid '0dfbf389e0bf3aaa5ea7c664071d8660dd537c12'
-  /Modules/IoTService/Business:
-    newFile: !uuid '7e9e0283a06648a97e15f0c8e49e95f4e9217c0b'
-    oldFile: !uuid '2fd30b1ea550cd14f0e47eb08bfcd583169f72cd'
-  /Modules/IoTService/Business/IotInfluxBLL.cs:
-    newFile: !uuid 'c0ca5b780dc9f788b7fe05b5c78616edbee20d9c'
-    oldFile: !uuid 'd71159504582c8ca4ffd0085114332df3d0100d6'
-gitCommitId: !uuid '5f7d4b854ad96b7bd8429929692a8c234f6fb66b'
+    newFile: !uuid '87ff48c24b45707a5db3e7a1cb098acb89312c6c'
+    oldFile: !uuid 'af1f62f523a8f6a8c89cc7b7f388453711caaf78'
+  /Modules/LLMService:
+    newFile: !uuid '5a8e3a3318a4f7c33bcac25be001ac847999c34a'
+    oldFile: !uuid '636e363e587bfc5ffcca7828f6588fcce0411087'
+  /Modules/LLMService/AiClientRegistry.cs:
+    newFile: !uuid '4190f9687cdb8a93a014ccecdb3e95be0f36f618'
+    oldFile: !uuid '392957b654139d868f82e695de12e6d59724d087'
+  /Modules/LLMService/Business:
+    newFile: !uuid '4eacd6b85fbf107b6582f21e7b5c21c976b2aada'
+    oldFile: !uuid '973a20be54f52ed6b3e1fa662288132dc43bb65c'
+  /Modules/LLMService/Business/MemoryRagBLL.cs:
+    newFile: !uuid '0d0e58cddc758a27a1d02a350ab575f0bf0cbf30'
+    oldFile: !uuid 'fd2dce50c22f759ba57ffede1a7a58d379903988'
+  /Modules/LLMService/Skill:
+    newFile: !uuid 'd0892c06dbec1416d6079add7be6290ab9de1d36'
+    oldFile: !uuid '5bff26ddd57520add706d7df8c591f814a2b013c'
+  /Modules/LLMService/Skill/SkillConverter.cs:
+    newFile: !uuid '223f06af62e45e6881f90146144c6dbbd43bdd64'
+    oldFile: !uuid 'ca50ee98971c70ba3284cf4a16fab32cf65edbd4'
+gitCommitId: !uuid '263f873d3888c0471d5f7ca53e49a0715d4b609d'
 renames: {
   }
-revisionId: 333
+revisionId: 334
