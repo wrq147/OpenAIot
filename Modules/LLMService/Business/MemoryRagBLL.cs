@@ -68,34 +68,35 @@ namespace LLMService.Business
             await collection.FlushAsync();
         }
 
-        public async Task<string> SearchRelatedMemoriesAsync(string sessionId, string query, int limit = 3)
-        {
-            var vec = await _embeddingGenerator.GenerateEmbeddingAsync(query);
-            var coll = _milvusClient.GetCollection(CollectionName);
+        //public async Task<string> SearchRelatedMemoriesAsync(string sessionId, string query, int limit = 10)
+        //{
+        //    var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
+        //    MilvusCollection collection = _client.GetCollection("ChatMemory");
 
-            var searchResult = await coll.SearchAsync(
-                "Embedding",
-                new[] { vec.Vector.ToArray() },
-                new SearchParameters
-                {
-                    Top = limit,
-                    Filter = $"SessionId == '{sessionId.Replace("'", "\\'")}'",
-                    MetricType = DistanceType.Cosine
-                },
-                outputFields: new[] { "Content", "SkillResult" });
+        //    SearchParameters searchParameters = new();
+        //    searchParameters.OutputFields.Add("Content");
+        //    searchParameters.OutputFields.Add("CreateTime");
+        //    searchParameters.Expression = "SessionId==\"" + sessionId + "\"";
 
-            if (!searchResult.Any() || !searchResult[0].Any()) return "";
+        //    var results = await collection.SearchAsync(
+        //        vectorFieldName: "Embedding",
+        //        vectors: new ReadOnlyMemory<float>[] { vec },
+        //        SimilarityMetricType.Cosine,
+        //        limit: limit, searchParameters);
 
-            var sb = new StringBuilder();
-            sb.AppendLine("\n【长期记忆】");
-            foreach (var hit in searchResult[0])
-            {
-                sb.AppendLine(hit.GetValue<string>("Content"));
-                var skill = hit.GetValue<string>("SkillResult");
-                if (!string.IsNullOrEmpty(skill))
-                    sb.AppendLine($"[技能结果] {skill}");
-            }
-            return sb.ToString();
-        }
+
+        //    if (!searchResult.Any() || !searchResult[0].Any()) return "";
+
+        //    var sb = new StringBuilder();
+        //    sb.AppendLine("\n【长期记忆】");
+        //    foreach (var hit in searchResult[0])
+        //    {
+        //        sb.AppendLine(hit.GetValue<string>("Content"));
+        //        var skill = hit.GetValue<string>("SkillResult");
+        //        if (!string.IsNullOrEmpty(skill))
+        //            sb.AppendLine($"[技能结果] {skill}");
+        //    }
+        //    return sb.ToString();
+        //}
     }
 }

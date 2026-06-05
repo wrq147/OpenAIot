@@ -15,6 +15,7 @@ using IoTService.Models;
 using Jint;
 using Microsoft.Extensions.Logging;
 using NPOI.SS.Formula.Atp;
+using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -332,42 +333,21 @@ namespace IoTRulesService.DataParser
                             var deviceCahce = _provider.GetService<DeviceCache>();
                             //获取所有旧属性数据
                             var allDict = await deviceCahce.GetDevice(rdmsg.DeviceId);
+                            string id = null;
                             if (allDict == null)
                             {
-                                if (rdmsg.IsTagSync)
+                                var deviceDAL = _provider.GetService<IotDeviceDAL>();
+                                var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
+                                if (devicelist.Count > 0)
                                 {
-                                    //离线保存历史数据
-                                    InfluxOption storageConfig = await redis.HashGetAsync<InfluxOption>("ProductSys:" + rs.ProductId, "$Storage");
-                                    if (storageConfig != null && storageConfig.enable == "1")
-                                    {
-                                        Dictionary<string, DevicePropertyValue> saveDict = new Dictionary<string, DevicePropertyValue>();
-                                        foreach (var kvp in rdmsg.Properties)
-                                        {
-                                            saveDict.Add(kvp.Key, new DevicePropertyValue()
-                                            {
-                                                val = kvp.Value,
-                                                date = nowTime
-                                            });
-                                        }
-                                        var deviceDAL = _provider.GetService<IotDeviceDAL>();
-                                        var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
-                                        if (devicelist.Count > 0)
-                                        {
-                                            await _provider.GetService<IotInfluxBLL>().SaveHistory(rdmsg.ProductId, rdmsg.DeviceId, devicelist[0].Id, storageConfig, nowTime, saveDict, model.Model.properties);
-                                        }
-
-                                    }
+                                    id = devicelist[0].Id;
                                 }
-                                else
-                                {
-                                    if (!string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
-                                    {
-                                        //转发数据时，设备离线则发送上线报文
-                                        await _provider.GetService<ServerBusProxy>().SendConnect(rdmsg.ProductId, rdmsg.DeviceId, "", rdmsg.RedirectFromProductId, rdmsg.RuleIds, rdmsg.RedirecDtuId, rdmsg.NodeId);
-                                    }
-                                }
-                                return;
                             }
+                            else
+                            {
+                                id = (string)allDict["$Id"].val;
+                            }
+
                             //触发计算当前属性
                             if (string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
                             {
@@ -376,10 +356,26 @@ namespace IoTRulesService.DataParser
                                     rdmsg.Properties = model.Model.RawToProp(rdmsg.Properties, (tmpkk) =>
                                     {
                                         object tmpnewval = null;
-                                        if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
+                                        if (allDict != null)
                                         {
-                                            tmpnewval = newcalpop.val;
+                                            if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
+                                            {
+                                                tmpnewval = newcalpop.val;
+                                            }
                                         }
+                                        else
+                                        {
+                                            var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == tmpkk).Select(x => x.code).ToList();
+                                            if (maptags.Count > 0)
+                                            {
+                                                var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
+                                                if (initTags.Count > 0)
+                                                {
+                                                    tmpnewval = initTags.First().Value;
+                                                }
+                                            }
+                                        }
+
                                         return tmpnewval;
                                     });
                                 }
@@ -414,6 +410,7 @@ namespace IoTRulesService.DataParser
                                     }
                                 }
                             }
+                        
                             if (rdmsg.Properties.Count == 0)
                             {
                                 return;
@@ -426,19 +423,50 @@ namespace IoTRulesService.DataParser
                                 if (rdmsg.Properties.Keys.Any(x => propcalitem.option.express.Contains(x)))
                                 {
                                     object tmpval = null;
-                                    if (allDict.TryGetValue(propcalitem.code, out DevicePropertyValue calpop))
+                                    if (allDict != null)
                                     {
-                                        tmpval = calpop.val;
+                                        if (allDict.TryGetValue(propcalitem.code, out DevicePropertyValue calpop))
+                                        {
+                                            tmpval = calpop.val;
+                                        }
                                     }
+                                    else
+                                    {
+                                        var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == propcalitem.code).Select(x => x.code).ToList();
+                                        if (maptags.Count > 0)
+                                        {
+                                            var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
+                                            if (initTags.Count > 0)
+                                            {
+                                                tmpval = initTags.First().Value;
+                                            }
+                                        }
+                                    }
+
 
                                     rdmsg.Properties[propcalitem.code] = propcalitem.option.RawTo(tmpval, (tmpkk) =>
                                     {
                                         object tmpnewval = null;
                                         if (!rdmsg.Properties.TryGetValue(tmpkk, out tmpnewval))
                                         {
-                                            if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
+                                            if (allDict != null)
                                             {
-                                                tmpnewval = newcalpop.val;
+                                                if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
+                                                {
+                                                    tmpnewval = newcalpop.val;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == tmpkk).Select(x => x.code).ToList();
+                                                if (maptags.Count > 0)
+                                                {
+                                                    var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
+                                                    if (initTags.Count > 0)
+                                                    {
+                                                        tmpval = initTags.First().Value;
+                                                    }
+                                                }
                                             }
                                         }
                                         return tmpnewval;
@@ -446,7 +474,54 @@ namespace IoTRulesService.DataParser
                                 }
                             }
 
-                            string id = (string)allDict["$Id"].val;
+                            if (allDict == null)
+                            {
+                                //离线保存历史数据
+                                InfluxOption storageConfig = await redis.HashGetAsync<InfluxOption>("ProductSys:" + rs.ProductId, "$Storage");
+                                if (storageConfig != null && storageConfig.enable == "1")
+                                {
+                                    Dictionary<string, DevicePropertyValue> saveDict = new Dictionary<string, DevicePropertyValue>();
+                                    foreach (var kvp in rdmsg.Properties)
+                                    {
+                                        saveDict.Add(kvp.Key, new DevicePropertyValue()
+                                        {
+                                            val = kvp.Value,
+                                            date = nowTime
+                                        });
+                                    }
+
+                                    if (!string.IsNullOrEmpty(id))
+                                    {
+                                        await _provider.GetService<IotInfluxBLL>().SaveHistory(rdmsg.ProductId, rdmsg.DeviceId, id, storageConfig, nowTime, saveDict, model.Model.properties);
+                                    }
+                                }
+                                if (!rdmsg.IsTagSync)
+                                {
+                                    if (!string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
+                                    {
+                                        //转发数据时，设备离线则发送上线报文
+                                        await _provider.GetService<ServerBusProxy>().SendConnect(rdmsg.ProductId, rdmsg.DeviceId, "", rdmsg.RedirectFromProductId, rdmsg.RuleIds, rdmsg.RedirecDtuId, rdmsg.NodeId);
+                                    }
+                                    if (model.Model.tags != null)
+                                    {
+                                        var tagBLL = _provider.GetService<IotTagBLL>();
+                                        foreach (var kvp in rdmsg.Properties)
+                                        {
+                                            var taglist = model.Model.tags.Where(x => x.enable && x.mapcode == kvp.Key).ToList();
+                                            foreach (var tag in taglist)
+                                            {
+                                                //更新Tag信息
+                                                if (!string.IsNullOrEmpty(id))
+                                                {
+                                                    await tagBLL.TagUpdateValue(tag, kvp.Value, id);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+
                             var cache = _provider.GetService<CacheHelper>();
                             //显示用变化属性
                             Dictionary<string, DevicePropertyValue> showChangeDict = new Dictionary<string, DevicePropertyValue>();
@@ -563,10 +638,10 @@ namespace IoTRulesService.DataParser
                                 //更新自定义标签
                                 if (taglist != null && !rdmsg.IsTagSync)
                                 {
+                                    var tagBLL = _provider.GetService<IotTagBLL>();
                                     foreach (var tag in taglist)
                                     {
                                         //更新Tag信息
-                                        var tagBLL = _provider.GetService<IotTagBLL>();
                                         if (!string.IsNullOrEmpty(id))
                                         {
                                             await tagBLL.TagUpdateValue(tag, kvp.Value, id);
@@ -575,7 +650,7 @@ namespace IoTRulesService.DataParser
                                 }
                             }
 
-          
+
                             //确认属性返回
                             var allnneList = deviceCahce.GetStartReadAll(rdmsg.DeviceId);
                             if (allnneList != null)
@@ -1048,7 +1123,7 @@ namespace IoTRulesService.DataParser
                     initdata.Add(StreamData.Create(new Dictionary<string, object>(), nowTime));
                     break;
             }
-    
+
             foreach (var rule in ruleList)
             {
                 //禁止递归触发规则

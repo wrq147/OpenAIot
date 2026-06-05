@@ -2,8 +2,6 @@
 using IoTAIService.Models;
 using Microsoft.Extensions.Options;
 using Milvus.Client;
-using Org.BouncyCastle.Crypto;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -116,17 +114,14 @@ namespace IoTAIService.Business
         {
             SearchParameters searchParameters = new();
             searchParameters.OutputFields.Add("mem_id");
-            if (!string.IsNullOrEmpty(houseId))
-            {
-                searchParameters.Expression = "h_id==\"" + houseId + "\"";
-            }
+            searchParameters.Expression = "h_id==\"" + houseId + "\"";
 
             MilvusCollection collection = _client.GetCollection("MemCollect");
             var results = await collection.SearchAsync(
                 vectorFieldName: "mem_vector",
                 vectors: new ReadOnlyMemory<float>[] { vectors },
                 SimilarityMetricType.Cosine,
-                limit: 10, searchParameters);
+                limit: 20, searchParameters);
             List<long> tmplist = new List<long>();
             foreach (var item in results.FieldsData)
             {

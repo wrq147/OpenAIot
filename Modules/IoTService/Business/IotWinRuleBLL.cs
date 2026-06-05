@@ -5,6 +5,7 @@ using Common.Json;
 using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace IoTService.Business
 {
     public class IotWinRuleBLL
     {
+        private ILogger<IotWinRuleBLL> _log;
         private IotWinRuleDAL _iotWinRuleDAL;
         private ITAServiceProvider _provider;
-        public IotWinRuleBLL(IotWinRuleDAL iotWinRuleDAL, ITAServiceProvider serviceProvider)
+        public IotWinRuleBLL(IotWinRuleDAL iotWinRuleDAL, ITAServiceProvider serviceProvider, ILoggerFactory logFactory)
         {
             _iotWinRuleDAL = iotWinRuleDAL;
             _provider = serviceProvider;
+            _log = logFactory.CreateLogger<IotWinRuleBLL>();
         }
         public virtual async Task<List<MZ_IotWinRule>> SelectList(string pid, IUserInfo user)
         {
@@ -105,169 +108,21 @@ namespace IoTService.Business
         }
         public virtual async Task CalDevice(QuartzContext context)
         {
-            var redis = _provider.GetService<IotRedisHelper>();
-            var serverBus = _provider.GetService<ServerBusProxy>();
-            var iotInfluxBLL = _provider.GetService<IotInfluxBLL>();
-            var deviceDAL = _provider.GetService<IotDeviceDAL>();
-            var productDAL = _provider.GetService<IotProductDAL>();
-            var busProxy = _provider.GetService<ServerBusProxy>();
-
-            var nodeIdx = serverBus.GetNodeIdx();
-            var fireTime = context.ScheduledFireTimeUtc.Value.LocalDateTime;
-
-            #region 触发统计每小时属性
-            var winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 0, "Priority asc");
-            var winruleGroup = winrules.GroupBy(x => x.ProductId);
-            foreach (var wingk in winruleGroup)
+            try
             {
-                var pro = await productDAL.Select(wingk.Key);
-                if (pro == null)
-                {
-                    await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
-                    continue;
-                }
-                var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
-                if (storageConfig == null || storageConfig.enable != "1")
-                {
-                    continue;
-                }
-                List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
-                {
-                    return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
-                });
-                if (deviceList.Count == 0)
-                {
-                    continue;
-                }
+                var redis = _provider.GetService<IotRedisHelper>();
+                var serverBus = _provider.GetService<ServerBusProxy>();
+                var iotInfluxBLL = _provider.GetService<IotInfluxBLL>();
+                var deviceDAL = _provider.GetService<IotDeviceDAL>();
+                var productDAL = _provider.GetService<IotProductDAL>();
+                var busProxy = _provider.GetService<ServerBusProxy>();
 
-                var model = TslModel.CreateFrom(pro.ModelTSL);
-                if (model == null)
-                {
-                    continue;
-                }
+                var nodeIdx = serverBus.GetNodeIdx();
+                var fireTime = context.ScheduledFireTimeUtc.Value.LocalDateTime;
 
-                int pageSize = 100;
-                int totalCount = deviceList.Count;
-                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-                foreach (var winrule in wingk)
-                {
-                    var curprop = model.properties.Where(x => x.code == winrule.PropCode).FirstOrDefault();
-                    if (curprop == null)
-                    {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == winrule.ProductId && x.PropCode == winrule.PropCode);
-                        continue;
-                    }
-
-
-                    In_HistoryMergeList query = new In_HistoryMergeList();
-                    query.IsGroup = true;
-                    query.Code = winrule.MergeCode;
-                    query.MergeWay = new List<string>();
-                    query.WindowWay = 2;
-                    if (winrule.MergeWay == "range")
-                    {
-                        var prepreHourse = fireTime.AddHours(-2);
-                        query.BeginTime = new DateTime(prepreHourse.Year, prepreHourse.Month, prepreHourse.Day, prepreHourse.Hour, 0, 0);
-                        query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, fireTime.Hour, 0, 0);
-                        query.MergeWay.Add("last");
-                        for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
-                        {
-                            int startIndex = pageIndex * pageSize;
-                            int endIndex = Math.Min(startIndex + pageSize, totalCount);
-                            var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
-                            var currentPageDict = currentPageData.ToDictionary(x => x.Id);
-                            var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
-                            if (rsp.IsSuccess())
-                            {
-                                var rangeGroup = rsp.Data.GroupBy(x => x.Id);
-                                foreach (var mitemGroup in rangeGroup)
-                                {
-                                    var titems = mitemGroup.OrderByDescending(x => x.Time).ToList();
-                                    Out_MergeItem firstitem = null;
-                                    Out_MergeItem lastitem = null;
-                                    if (titems.Count > 1)
-                                    {
-                                        firstitem = titems[1];
-                                        lastitem = titems[0];
-                                    }
-
-                                    if (firstitem != null && lastitem != null)
-                                    {
-                                        Dictionary<string, object> props = new Dictionary<string, object>();
-                                        if (curprop.option.type == "int")
-                                        {
-                                            IntOption intOp = (IntOption)curprop.option;
-                                            var maxval = Convert.ToInt32(lastitem.Val);
-                                            var minval = Convert.ToInt32(firstitem.Val);
-                                            int rangeval = maxval - minval;
-                                            if (intOp.min >= 0 && maxval < minval)
-                                            {
-                                                rangeval = maxval - intOp.min;
-                                            }
-
-                                            props.Add(winrule.PropCode, rangeval);
-                                        }
-                                        else if (curprop.option.type == "float")
-                                        {
-                                            FloatOption floatOp = (FloatOption)curprop.option;
-                                            var maxval = Convert.ToDouble(lastitem.Val);
-                                            var minval = Convert.ToDouble(firstitem.Val);
-                                            double rangeval = maxval - minval;
-                                            if (floatOp.min >= 0 && maxval < minval)
-                                            {
-                                                rangeval = maxval - floatOp.min;
-                                            }
-                                            props.Add(winrule.PropCode, rangeval);
-                                        }
-                                        if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
-                                        {
-                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var preHourse = fireTime.AddHours(-1);
-                        query.BeginTime = new DateTime(preHourse.Year, preHourse.Month, preHourse.Day, preHourse.Hour, 0, 0);
-                        query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, fireTime.Hour, 0, 0);
-                        query.MergeWay.Add(winrule.MergeWay);
-                        for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
-                        {
-                            int startIndex = pageIndex * pageSize;
-                            int endIndex = Math.Min(startIndex + pageSize, totalCount);
-                            var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
-                            var currentPageDict = currentPageData.ToDictionary(x => x.Id);
-                            var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
-                            if (rsp.IsSuccess())
-                            {
-                                foreach (var mitem in rsp.Data)
-                                {
-                                    Dictionary<string, object> props = new Dictionary<string, object>();
-                                    props.Add(winrule.PropCode, mitem.Val);
-                                    if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
-                                    {
-                                        await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-
-                }
-            }
-            #endregion
-
-            #region 触发统计每天属性
-            if (fireTime.Hour == 0)
-            {
-                winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 1, "Priority asc");
-                winruleGroup = winrules.GroupBy(x => x.ProductId);
+                #region 触发统计每小时属性
+                var winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 0, "Priority asc");
+                var winruleGroup = winrules.GroupBy(x => x.ProductId);
                 foreach (var wingk in winruleGroup)
                 {
                     var pro = await productDAL.Select(wingk.Key);
@@ -309,17 +164,17 @@ namespace IoTService.Business
                             continue;
                         }
 
+
                         In_HistoryMergeList query = new In_HistoryMergeList();
                         query.IsGroup = true;
                         query.Code = winrule.MergeCode;
                         query.MergeWay = new List<string>();
-                        query.WindowWay = 0;
-
+                        query.WindowWay = 2;
                         if (winrule.MergeWay == "range")
                         {
-                            var prepreDay = fireTime.AddDays(-2);
-                            query.BeginTime = new DateTime(prepreDay.Year, prepreDay.Month, prepreDay.Day, 0, 0, 0);
-                            query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, 0, 0, 0);
+                            var prepreHourse = fireTime.AddHours(-2);
+                            query.BeginTime = new DateTime(prepreHourse.Year, prepreHourse.Month, prepreHourse.Day, prepreHourse.Hour, 0, 0);
+                            query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, fireTime.Hour, 0, 0);
                             query.MergeWay.Add("last");
                             for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                             {
@@ -341,6 +196,7 @@ namespace IoTService.Business
                                             firstitem = titems[1];
                                             lastitem = titems[0];
                                         }
+
                                         if (firstitem != null && lastitem != null)
                                         {
                                             Dictionary<string, object> props = new Dictionary<string, object>();
@@ -354,6 +210,7 @@ namespace IoTService.Business
                                                 {
                                                     rangeval = maxval - intOp.min;
                                                 }
+
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             else if (curprop.option.type == "float")
@@ -366,7 +223,6 @@ namespace IoTService.Business
                                                 {
                                                     rangeval = maxval - floatOp.min;
                                                 }
-
                                                 props.Add(winrule.PropCode, rangeval);
                                             }
                                             if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
@@ -381,9 +237,9 @@ namespace IoTService.Business
                         }
                         else
                         {
-                            var preDay = fireTime.AddDays(-1);
-                            query.BeginTime = new DateTime(preDay.Year, preDay.Month, preDay.Day, 0, 0, 0);
-                            query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, 0, 0, 0);
+                            var preHourse = fireTime.AddHours(-1);
+                            query.BeginTime = new DateTime(preHourse.Year, preHourse.Month, preHourse.Day, preHourse.Hour, 0, 0);
+                            query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, fireTime.Hour, 0, 0);
                             query.MergeWay.Add(winrule.MergeWay);
                             for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                             {
@@ -410,160 +266,315 @@ namespace IoTService.Business
 
                     }
                 }
-            }
-            #endregion
+                #endregion
 
-            #region 触发统计每月属性
-            if (fireTime.Day == 1 && fireTime.Hour == 0)
-            {
-                winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 2, "Priority asc");
-                winruleGroup = winrules.GroupBy(x => x.ProductId);
-                foreach (var wingk in winruleGroup)
+                #region 触发统计每天属性
+                if (fireTime.Hour == 0)
                 {
-                    var pro = await productDAL.Select(wingk.Key);
-                    if (pro == null)
+                    winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 1, "Priority asc");
+                    winruleGroup = winrules.GroupBy(x => x.ProductId);
+                    foreach (var wingk in winruleGroup)
                     {
-                        await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
-                        continue;
-                    }
-                    var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
-                    if (storageConfig == null || storageConfig.enable != "1")
-                    {
-                        continue;
-                    }
-                    List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
-                    {
-                        return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
-                    });
-                    if (deviceList.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    var model = TslModel.CreateFrom(pro.ModelTSL);
-                    if (model == null)
-                    {
-                        continue;
-                    }
-
-                    int pageSize = 20;
-                    int totalCount = deviceList.Count;
-                    int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-                    foreach (var winrule in wingk)
-                    {
-                        var curprop = model.properties.Where(x => x.code == winrule.PropCode).FirstOrDefault();
-                        if (curprop == null)
+                        var pro = await productDAL.Select(wingk.Key);
+                        if (pro == null)
                         {
-                            await _iotWinRuleDAL.Delete(x => x.ProductId == winrule.ProductId && x.PropCode == winrule.PropCode);
+                            await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
+                            continue;
+                        }
+                        var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
+                        if (storageConfig == null || storageConfig.enable != "1")
+                        {
+                            continue;
+                        }
+                        List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
+                        {
+                            return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                        });
+                        if (deviceList.Count == 0)
+                        {
                             continue;
                         }
 
-                        In_HistoryMergeList query = new In_HistoryMergeList();
-                        query.IsGroup = true;
-                        query.Code = winrule.MergeCode;
-                        query.MergeWay = new List<string>();
-                        query.WindowWay = 1;
-
-                        if (winrule.MergeWay == "range")
+                        var model = TslModel.CreateFrom(pro.ModelTSL);
+                        if (model == null)
                         {
-                            var prepreMonth = fireTime.AddMonths(-2);
-                            query.BeginTime = new DateTime(prepreMonth.Year, prepreMonth.Month, 1, 0, 0, 0);
-                            query.EndTime = new DateTime(fireTime.Year, fireTime.Month, 1, 0, 0, 0);
-                            query.MergeWay.Add("last");
-                            for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
+                            continue;
+                        }
+
+                        int pageSize = 100;
+                        int totalCount = deviceList.Count;
+                        int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                        foreach (var winrule in wingk)
+                        {
+                            var curprop = model.properties.Where(x => x.code == winrule.PropCode).FirstOrDefault();
+                            if (curprop == null)
                             {
-                                int startIndex = pageIndex * pageSize;
-                                int endIndex = Math.Min(startIndex + pageSize, totalCount);
-                                var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
-                                var currentPageDict = currentPageData.ToDictionary(x => x.Id);
-                                var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
-                                if (rsp.IsSuccess())
+                                await _iotWinRuleDAL.Delete(x => x.ProductId == winrule.ProductId && x.PropCode == winrule.PropCode);
+                                continue;
+                            }
+
+                            In_HistoryMergeList query = new In_HistoryMergeList();
+                            query.IsGroup = true;
+                            query.Code = winrule.MergeCode;
+                            query.MergeWay = new List<string>();
+                            query.WindowWay = 0;
+
+                            if (winrule.MergeWay == "range")
+                            {
+                                var prepreDay = fireTime.AddDays(-2);
+                                query.BeginTime = new DateTime(prepreDay.Year, prepreDay.Month, prepreDay.Day, 0, 0, 0);
+                                query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, 0, 0, 0);
+                                query.MergeWay.Add("last");
+                                for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                                 {
-                                    var rangeGroup = rsp.Data.GroupBy(x => x.Id);
-                                    foreach (var mitemGroup in rangeGroup)
+                                    int startIndex = pageIndex * pageSize;
+                                    int endIndex = Math.Min(startIndex + pageSize, totalCount);
+                                    var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
+                                    var currentPageDict = currentPageData.ToDictionary(x => x.Id);
+                                    var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
+                                    if (rsp.IsSuccess())
                                     {
-                                        var titems = mitemGroup.OrderByDescending(x => x.Time).ToList();
-                                        Out_MergeItem firstitem = null;
-                                        Out_MergeItem lastitem = null;
-                                        if (titems.Count > 1)
+                                        var rangeGroup = rsp.Data.GroupBy(x => x.Id);
+                                        foreach (var mitemGroup in rangeGroup)
                                         {
-                                            firstitem = titems[1];
-                                            lastitem = titems[0];
+                                            var titems = mitemGroup.OrderByDescending(x => x.Time).ToList();
+                                            Out_MergeItem firstitem = null;
+                                            Out_MergeItem lastitem = null;
+                                            if (titems.Count > 1)
+                                            {
+                                                firstitem = titems[1];
+                                                lastitem = titems[0];
+                                            }
+                                            if (firstitem != null && lastitem != null)
+                                            {
+                                                Dictionary<string, object> props = new Dictionary<string, object>();
+                                                if (curprop.option.type == "int")
+                                                {
+                                                    IntOption intOp = (IntOption)curprop.option;
+                                                    var maxval = Convert.ToInt32(lastitem.Val);
+                                                    var minval = Convert.ToInt32(firstitem.Val);
+                                                    int rangeval = maxval - minval;
+                                                    if (intOp.min >= 0 && maxval < minval)
+                                                    {
+                                                        rangeval = maxval - intOp.min;
+                                                    }
+                                                    props.Add(winrule.PropCode, rangeval);
+                                                }
+                                                else if (curprop.option.type == "float")
+                                                {
+                                                    FloatOption floatOp = (FloatOption)curprop.option;
+                                                    var maxval = Convert.ToDouble(lastitem.Val);
+                                                    var minval = Convert.ToDouble(firstitem.Val);
+                                                    double rangeval = maxval - minval;
+                                                    if (floatOp.min >= 0 && maxval < minval)
+                                                    {
+                                                        rangeval = maxval - floatOp.min;
+                                                    }
+
+                                                    props.Add(winrule.PropCode, rangeval);
+                                                }
+                                                if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
+                                                {
+                                                    await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
+                                                }
+                                            }
+
                                         }
-                                        if (firstitem != null && lastitem != null)
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var preDay = fireTime.AddDays(-1);
+                                query.BeginTime = new DateTime(preDay.Year, preDay.Month, preDay.Day, 0, 0, 0);
+                                query.EndTime = new DateTime(fireTime.Year, fireTime.Month, fireTime.Day, 0, 0, 0);
+                                query.MergeWay.Add(winrule.MergeWay);
+                                for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
+                                {
+                                    int startIndex = pageIndex * pageSize;
+                                    int endIndex = Math.Min(startIndex + pageSize, totalCount);
+                                    var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
+                                    var currentPageDict = currentPageData.ToDictionary(x => x.Id);
+                                    var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
+                                    if (rsp.IsSuccess())
+                                    {
+                                        foreach (var mitem in rsp.Data)
                                         {
                                             Dictionary<string, object> props = new Dictionary<string, object>();
-                                            if (curprop.option.type == "int")
-                                            {
-                                                IntOption intOp = (IntOption)curprop.option;
-                                                var maxval = Convert.ToInt32(lastitem.Val);
-                                                var minval = Convert.ToInt32(firstitem.Val);
-                                                int rangeval = maxval - minval;
-                                                if (intOp.min >= 0 && maxval < minval)
-                                                {
-                                                    rangeval = maxval - intOp.min;
-                                                }
-
-                                                props.Add(winrule.PropCode, rangeval);
-                                            }
-                                            else if (curprop.option.type == "float")
-                                            {
-                                                FloatOption floatOp = (FloatOption)curprop.option;
-                                                var maxval = Convert.ToDouble(lastitem.Val);
-                                                var minval = Convert.ToDouble(firstitem.Val);
-                                                double rangeval = maxval - minval;
-                                                if (floatOp.min >= 0 && maxval < minval)
-                                                {
-                                                    rangeval = maxval - floatOp.min;
-                                                }
-                                                props.Add(winrule.PropCode, rangeval);
-                                            }
-                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
+                                            props.Add(winrule.PropCode, mitem.Val);
+                                            if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                             {
                                                 await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
                                             }
                                         }
-
                                     }
                                 }
                             }
+
+
                         }
-                        else
+                    }
+                }
+                #endregion
+
+                #region 触发统计每月属性
+                if (fireTime.Day == 1 && fireTime.Hour == 0)
+                {
+                    winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 2, "Priority asc");
+                    winruleGroup = winrules.GroupBy(x => x.ProductId);
+                    foreach (var wingk in winruleGroup)
+                    {
+                        var pro = await productDAL.Select(wingk.Key);
+                        if (pro == null)
                         {
-                            var preMonth = fireTime.AddMonths(-1);
-                            query.BeginTime = new DateTime(preMonth.Year, preMonth.Month, 1, 0, 0, 0);
-                            query.EndTime = new DateTime(fireTime.Year, fireTime.Month, 1, 0, 0, 0);
-                            query.MergeWay.Add(winrule.MergeWay);
-                            for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
+                            await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
+                            continue;
+                        }
+                        var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(pro.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
+                        if (storageConfig == null || storageConfig.enable != "1")
+                        {
+                            continue;
+                        }
+                        List<MZ_IotDevice> deviceList = await redis.WaitReadNodeLockAsync(async () =>
+                        {
+                            return await deviceDAL.SelectList(x => x.ProductId == pro.Id && x.DeviceUpIdx == nodeIdx);
+                        });
+                        if (deviceList.Count == 0)
+                        {
+                            continue;
+                        }
+
+                        var model = TslModel.CreateFrom(pro.ModelTSL);
+                        if (model == null)
+                        {
+                            continue;
+                        }
+
+                        int pageSize = 20;
+                        int totalCount = deviceList.Count;
+                        int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                        foreach (var winrule in wingk)
+                        {
+                            var curprop = model.properties.Where(x => x.code == winrule.PropCode).FirstOrDefault();
+                            if (curprop == null)
                             {
-                                int startIndex = pageIndex * pageSize;
-                                int endIndex = Math.Min(startIndex + pageSize, totalCount);
-                                var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
-                                var currentPageDict = currentPageData.ToDictionary(x => x.Id);
-                                var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
-                                if (rsp.IsSuccess())
+                                await _iotWinRuleDAL.Delete(x => x.ProductId == winrule.ProductId && x.PropCode == winrule.PropCode);
+                                continue;
+                            }
+
+                            In_HistoryMergeList query = new In_HistoryMergeList();
+                            query.IsGroup = true;
+                            query.Code = winrule.MergeCode;
+                            query.MergeWay = new List<string>();
+                            query.WindowWay = 1;
+
+                            if (winrule.MergeWay == "range")
+                            {
+                                var prepreMonth = fireTime.AddMonths(-2);
+                                query.BeginTime = new DateTime(prepreMonth.Year, prepreMonth.Month, 1, 0, 0, 0);
+                                query.EndTime = new DateTime(fireTime.Year, fireTime.Month, 1, 0, 0, 0);
+                                query.MergeWay.Add("last");
+                                for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
                                 {
-                                    foreach (var mitem in rsp.Data)
+                                    int startIndex = pageIndex * pageSize;
+                                    int endIndex = Math.Min(startIndex + pageSize, totalCount);
+                                    var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
+                                    var currentPageDict = currentPageData.ToDictionary(x => x.Id);
+                                    var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
+                                    if (rsp.IsSuccess())
                                     {
-                                        Dictionary<string, object> props = new Dictionary<string, object>();
-                                        props.Add(winrule.PropCode, mitem.Val);
-                                        if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
+                                        var rangeGroup = rsp.Data.GroupBy(x => x.Id);
+                                        foreach (var mitemGroup in rangeGroup)
                                         {
-                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
+                                            var titems = mitemGroup.OrderByDescending(x => x.Time).ToList();
+                                            Out_MergeItem firstitem = null;
+                                            Out_MergeItem lastitem = null;
+                                            if (titems.Count > 1)
+                                            {
+                                                firstitem = titems[1];
+                                                lastitem = titems[0];
+                                            }
+                                            if (firstitem != null && lastitem != null)
+                                            {
+                                                Dictionary<string, object> props = new Dictionary<string, object>();
+                                                if (curprop.option.type == "int")
+                                                {
+                                                    IntOption intOp = (IntOption)curprop.option;
+                                                    var maxval = Convert.ToInt32(lastitem.Val);
+                                                    var minval = Convert.ToInt32(firstitem.Val);
+                                                    int rangeval = maxval - minval;
+                                                    if (intOp.min >= 0 && maxval < minval)
+                                                    {
+                                                        rangeval = maxval - intOp.min;
+                                                    }
+
+                                                    props.Add(winrule.PropCode, rangeval);
+                                                }
+                                                else if (curprop.option.type == "float")
+                                                {
+                                                    FloatOption floatOp = (FloatOption)curprop.option;
+                                                    var maxval = Convert.ToDouble(lastitem.Val);
+                                                    var minval = Convert.ToDouble(firstitem.Val);
+                                                    double rangeval = maxval - minval;
+                                                    if (floatOp.min >= 0 && maxval < minval)
+                                                    {
+                                                        rangeval = maxval - floatOp.min;
+                                                    }
+                                                    props.Add(winrule.PropCode, rangeval);
+                                                }
+                                                if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
+                                                {
+                                                    await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
+                                                }
+                                            }
+
                                         }
                                     }
                                 }
                             }
+                            else
+                            {
+                                var preMonth = fireTime.AddMonths(-1);
+                                query.BeginTime = new DateTime(preMonth.Year, preMonth.Month, 1, 0, 0, 0);
+                                query.EndTime = new DateTime(fireTime.Year, fireTime.Month, 1, 0, 0, 0);
+                                query.MergeWay.Add(winrule.MergeWay);
+                                for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
+                                {
+                                    int startIndex = pageIndex * pageSize;
+                                    int endIndex = Math.Min(startIndex + pageSize, totalCount);
+                                    var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
+                                    var currentPageDict = currentPageData.ToDictionary(x => x.Id);
+                                    var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
+                                    if (rsp.IsSuccess())
+                                    {
+                                        foreach (var mitem in rsp.Data)
+                                        {
+                                            Dictionary<string, object> props = new Dictionary<string, object>();
+                                            props.Add(winrule.PropCode, mitem.Val);
+                                            if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
+                                            {
+                                                await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
                         }
-
-
                     }
                 }
+                #endregion
+
+
             }
-            #endregion
-
-
+            catch (Exception ex)
+            {
+                _log.LogError(ex.Message);
+            }
+      
 
 
         }
