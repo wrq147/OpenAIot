@@ -4,9 +4,11 @@ using Microsoft.Extensions.Options;
 using Milvus.Client;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LLMService.Business
 {
@@ -68,35 +70,114 @@ namespace LLMService.Business
             await collection.FlushAsync();
         }
 
-        //public async Task<string> SearchRelatedMemoriesAsync(string sessionId, string query, int limit = 10)
-        //{
-        //    var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
-        //    MilvusCollection collection = _client.GetCollection("ChatMemory");
+        public async Task<string> SearchRelatedMemoriesAsync([Description("会话ID")] string sessionId,[Description("用户的问题")] string query, int limit = 10, float score = 0.6f)
+        {
+            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
+            MilvusCollection collection = _client.GetCollection("ChatMemory");
 
-        //    SearchParameters searchParameters = new();
-        //    searchParameters.OutputFields.Add("Content");
-        //    searchParameters.OutputFields.Add("CreateTime");
-        //    searchParameters.Expression = "SessionId==\"" + sessionId + "\"";
+            SearchParameters searchParameters = new();
+            searchParameters.OutputFields.Add("Content");
+            searchParameters.OutputFields.Add("CreateTime");
+            searchParameters.Expression = "SessionId==\"" + sessionId + "\"";
 
-        //    var results = await collection.SearchAsync(
-        //        vectorFieldName: "Embedding",
-        //        vectors: new ReadOnlyMemory<float>[] { vec },
-        //        SimilarityMetricType.Cosine,
-        //        limit: limit, searchParameters);
+            var results = await collection.SearchAsync(
+                vectorFieldName: "Embedding",
+                vectors: new ReadOnlyMemory<float>[] { vec },
+                SimilarityMetricType.Cosine,
+                limit: limit, searchParameters);
 
 
-        //    if (!searchResult.Any() || !searchResult[0].Any()) return "";
 
-        //    var sb = new StringBuilder();
-        //    sb.AppendLine("\n【长期记忆】");
-        //    foreach (var hit in searchResult[0])
-        //    {
-        //        sb.AppendLine(hit.GetValue<string>("Content"));
-        //        var skill = hit.GetValue<string>("SkillResult");
-        //        if (!string.IsNullOrEmpty(skill))
-        //            sb.AppendLine($"[技能结果] {skill}");
-        //    }
-        //    return sb.ToString();
-        //}
+            List<ChatMemory> memories = new List<ChatMemory>();
+            // 遍历每一条结果
+            for (int i = 0; i < results.Scores.Count; i++)
+            {
+                float rsscore = results.Scores[i];
+                if (rsscore > score)
+                {
+                    string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
+                    long ttime = (results.FieldsData[1] as FieldData<long>).Data[i];
+                    DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
+                    memories.Add(new ChatMemory()
+                    {
+                        Content = tcontent,
+                        CreateTime = dttime
+                    });
+                }
+            }
+
+            if (memories.Count > 0)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("【相关历史会话】");
+                foreach (var mm in memories)
+                {
+                    sb.AppendLine(mm.CreateTime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + mm.Content);
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return "没有相关的会话记录";
+            }
+        }
+        /// <summary>
+        /// 查询指定日期的历史会话
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="day">日期格式：yyyy-MM-dd</param>
+        /// <returns></returns>
+        public async Task<string> GetHistoryByDate(string sessionId, string day)
+        {
+            if (!DateTime.TryParse(day, out DateTime searchDT))
+            {
+                return $"{day} 日期参数格式错误";
+            }
+            MilvusCollection collection = _client.GetCollection("ChatMemory");
+            long startll = MyAccess.Core.TypeConvert.Time2Unix(searchDT);
+            long endll = MyAccess.Core.TypeConvert.Time2Unix(searchDT.AddDays(1));
+            string exp = "SessionId==\"" + sessionId + "\" AND CreateTime>=" + startll + " AND CreateTime<=" + endll;
+            QueryParameters searchParameters = new();
+            searchParameters.OutputFields.Add("Content");
+            searchParameters.OutputFields.Add("CreateTime");
+            IReadOnlyList<FieldData> results = await collection.QueryAsync(exp, searchParameters);
+            if (results == null || results.Count == 0)
+            {
+                return $"{day} 无历史记录";
+            }
+            List<ChatMemory> memories = new List<ChatMemory>();
+            var contentField = results.FirstOrDefault(f => f.FieldName == "Content");
+            var createTimeField = results.FirstOrDefault(f => f.FieldName == "CreateTime");
+
+
+            // 遍历每一条结果
+            for (int i = 0; i < contentField.RowCount; i++)
+            {
+                string tcontent = (contentField as FieldData<string>).Data[i];
+                long ttime = (createTimeField as FieldData<long>).Data[i];
+                DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
+                memories.Add(new ChatMemory()
+                {
+                    Content = tcontent,
+                    CreateTime = dttime
+                });
+            }
+
+            if (memories.Count > 0)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine($"【{day} 历史会话】");
+                foreach (var mm in memories)
+                {
+                    sb.AppendLine(mm.CreateTime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + mm.Content);
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Mysqlx.Expr;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,17 +18,16 @@ namespace LLMService.Skill
     public static class SkillConverter
     {
         /// <summary>批量转为AI可调用Function工具</summary>
-        public static List<AITool> BuildAIFunctions(this List<SkillMeta> skills, Func<string, AIFunctionArguments, Task<string>> skillExecuteHandler)
+        public static List<AITool> BuildAIFunctions(this List<SkillMeta> skills, Func<string, string, Task<string>> skillExecuteHandler)
         {
             var funcs = new List<AITool>();
             foreach (var sk in skills)
             {
                 //构建绑定执行器的AIFunction，Name=skill.name、Description取自yaml描述
                 var func = AIFunctionFactory.Create(
-                    async (FunctionInvocationContext context, CancellationToken ct) =>
+                    async ([Description("用户完整原始输入语句，完整原样传入用户的提问内容，不做截取、提取，整段原文填入")] string userRawInput) =>
                     {
-                        string skillName = context.Function.Name;
-                        return await skillExecuteHandler(skillName, context.Arguments);
+                        return await skillExecuteHandler(sk.Name, userRawInput);
                     },
                     name: sk.Name,
                     description: sk.Description

@@ -1,6 +1,7 @@
 ﻿using ElBruno.LocalEmbeddings;
 using ElBruno.LocalEmbeddings.Options;
 using LLMService.Skill;
+using LLMService.Tool;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using OpenAI;
@@ -15,6 +16,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TemplateAction.Core;
 
 namespace LLMService
 {
@@ -25,16 +27,17 @@ namespace LLMService
         private readonly string _defChatKey;
         private readonly List<SkillMeta> _allSkills;
         private readonly List<AITool> _allTools;
-        public AiClientRegistry(IOptions<LLMOption> cfg)
+        private ITAServiceProvider _provider;
+        public AiClientRegistry(IOptions<LLMOption> cfg, ITAServiceProvider provider)
         {
+            _provider = provider;
             //加载标准Skills目录
             string skillRoot = Path.Combine(Directory.GetCurrentDirectory(), "Skills");
             var skillLoader = new SkillLoader(skillRoot);
             _allSkills = skillLoader.LoadAllSkills();
             _allTools = _allSkills.BuildAIFunctions(ExecuteSkill);
-
-            //添加系统工具
-
+            //注册系统工具
+            RegisterSystemTools();
 
 
             _defChatKey = cfg.Value.DefaultChatModel;
@@ -57,21 +60,26 @@ namespace LLMService
                 });
             }
         }
+        private void RegisterSystemTools()
+        {
+            _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
+            //_allTools.Add(CreateGetHistoryByDateTool());
 
+        }
         /// <summary>
         /// 技能执行回调：外部注入业务逻辑（执行scripts脚本/本地API/自定义逻辑）
         /// </summary>
         /// <param name="skillName"></param>
-        /// <param name="args"></param>
+        /// <param name="userRawInput"></param>
         /// <returns></returns>
-        private async Task<string> ExecuteSkill(string skillName, AIFunctionArguments args)
+        private async Task<string> ExecuteSkill(string skillName, string userRawInput)
         {
             try
             {
                 //1.查找技能元数据
                 var skill = _allSkills.FirstOrDefault(s => s.Name == skillName);
                 if (skill == null) return $"未找到技能:{skillName}";
-                string argsJson = JsonSerializer.Serialize(args);
+
                 var promptSb = new StringBuilder();
                 promptSb.AppendLine($"# 技能：{skill.Name}");
                 promptSb.AppendLine(skill.Description);
@@ -101,8 +109,8 @@ namespace LLMService
                 promptSb.AppendLine(OsPlatform.GetSystemPrompt());
 
                 // 参数
-                promptSb.AppendLine("\n## 当前任务入参：");
-                promptSb.AppendLine(argsJson);
+                promptSb.AppendLine("\n## 用户原始输入语句：");
+                promptSb.AppendLine(userRawInput);
 
 
                 promptSb.AppendLine($@"
@@ -135,7 +143,7 @@ namespace LLMService
                     script.FilePath = Path.Combine(tempDir, $"task_{index++}.{script.Lang}");
                     await File.WriteAllTextAsync(script.FilePath, script.ScriptContent);
 
-                    var runResult = await RunGeneratedScript(script, args);
+                    var runResult = await RunGeneratedScript(script);
                     resultBuilder.AppendLine($"\n--- 脚本 {index} 执行结果 ---");
                     resultBuilder.AppendLine(runResult);
                 }
@@ -182,7 +190,7 @@ namespace LLMService
 
             return scripts;
         }
-        private async Task<string> RunGeneratedScript(GeneratedTaskScript script, AIFunctionArguments args)
+        private async Task<string> RunGeneratedScript(GeneratedTaskScript script)
         {
             var psi = new ProcessStartInfo
             {
@@ -192,22 +200,21 @@ namespace LLMService
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
-            string argStr = string.Join(" ", args.Select(kv => $"{kv.Key}={kv.Value}"));
             var langval = script.Lang.ToLower();
             if (langval == "py")
             {
                 psi.FileName = "python";
-                psi.Arguments = $"\"{script.FilePath}\" {argStr}";
+                psi.Arguments = $"\"{script.FilePath}\"";
             }
             else if (langval == "sh")
             {
                 psi.FileName = "/bin/bash";
-                psi.Arguments = $"\"{script.FilePath}\" {argStr}";
+                psi.Arguments = $"\"{script.FilePath}\"";
             }
             else if (langval == "cmd")
             {
                 psi.FileName = "cmd.exe";
-                psi.Arguments = $"/c \"{script.FilePath}\" {argStr}";
+                psi.Arguments = $"/c \"{script.FilePath}\"";
             }
             else
             {
