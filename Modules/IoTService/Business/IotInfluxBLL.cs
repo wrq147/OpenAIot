@@ -286,341 +286,349 @@ namespace IoTService.Business
             {
                 return BusResponse<List<Out_MergeItem>>.Error(111, "属性标识不能为空");
             }
-            IotDeviceDAL deviceDAL = _provider.GetService<IotDeviceDAL>();
-            IotProductDAL productDAL = _provider.GetService<IotProductDAL>();
-            if (devices == null)
+            try
             {
-                if (query is In_HistoryMergeListSync quid)
+                IotDeviceDAL deviceDAL = _provider.GetService<IotDeviceDAL>();
+                IotProductDAL productDAL = _provider.GetService<IotProductDAL>();
+                if (devices == null)
                 {
-                    devices = await deviceDAL.SelectList(x => quid.Numbers.Contains(x.DeviceNumber));
-                }
-                else if (query is In_HistoryMergeList qusyn)
-                {
-                    devices = await deviceDAL.SelectList(x => qusyn.Ids.Contains(x.Id));
-                }
-                else
-                {
-                    return BusResponse<List<Out_MergeItem>>.Error(131, "参数格式错误");
-                }
-            }
-            var dviddict = devices.ToDictionary(x => x.Id);
-
-            if (prod == null)
-            {
-                List<string> pids = devices.Select(x => x.ProductId).ToList();
-                var products = await productDAL.SelectList(x => pids.Contains(x.Id));
-                if (products.Count > 1)
-                {
-                    return BusResponse<List<Out_MergeItem>>.Error(112, "无法操作多个协议");
-                }
-                if (products.Count == 0)
-                {
-                    return BusResponse<List<Out_MergeItem>>.Error(101, "协议不存在");
-                }
-                prod = products[0];
-            }
-
-            Dictionary<string, BaseProperty> hsdict = new Dictionary<string, BaseProperty>();
-            if (model == null)
-            {
-                model = TslModel.CreateFrom(prod.ModelTSL);
-            }
-            foreach (BaseProperty bp in model.properties)
-            {
-                hsdict.Add(bp.code, bp);
-            }
-            if (string.IsNullOrEmpty(prod.StorageConfig))
-            {
-                return BusResponse<List<Out_MergeItem>>.Error(113, "未设置历史存储配置");
-            }
-            if (storageConfig == null)
-            {
-                storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(prod.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
-                if (storageConfig == null || storageConfig.enable != "1")
-                {
-                    return BusResponse<List<Out_MergeItem>>.Error(114, "未设置存储配置url");
-                }
-            }
-
-
-            if (query.MergeWay == null || query.MergeWay.Count == 0)
-            {
-                return BusResponse<List<Out_MergeItem>>.Error(124, "MergeWay参数不能为空");
-            }
-            string influxDBTimeZone = TimeZoneInfo.Local.Id;
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-            {
-                TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
-                influxDBTimeZone = TZConvert.WindowsToIana(localTimeZone.Id);
-            }
-
-            InfluxDBClientOptions clientOption = new InfluxDBClientOptions(storageConfig.url);
-            clientOption.Timeout = TimeSpan.FromSeconds(60);
-            clientOption.Token = storageConfig.token;
-            using var client = new InfluxDBClient(clientOption);
-            var queryApi = client.GetQueryApi();
-            List<Out_MergeItem> finalList = new List<Out_MergeItem>();
-            foreach (var merge_way in query.MergeWay)
-            {
-                int totalNumbers = -1;
-                StringBuilder querysql = new StringBuilder();
-                if (query.Hours != null && query.Hours.Count > 0)
-                {
-                    querysql.Append("import \"date\"\n");
-                }
-                querysql.Append($"from(bucket:\"{storageConfig.bucket.Replace("\"", "")}\")");
-                DateTime? queryStart = query.BeginTime;
-                DateTime? queryEnd = query.EndTime;
-                if (queryEnd == null)
-                {
-                    queryEnd = DateTime.Now;
-                }
-                if (queryStart == null)
-                {
-                    queryStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
-                }
-                querysql.Append($" |> range(start: {TimeZoneInfo.ConvertTime(queryStart.Value, TimeZoneInfo.Utc).ToString("yyyy-MM-ddTHH:mm:ssZ")},stop:{TimeZoneInfo.ConvertTime(queryEnd.Value, TimeZoneInfo.Utc).ToString("yyyy-MM-ddTHH:mm:ssZ")})");
-                querysql.Append(" |> filter(fn: (r) => r[\"_measurement\"] == \"device\")");
-                StringBuilder dvsb = new StringBuilder();
-                var devlist = devices.Where(x => x.ProductId == prod.Id).ToList();
-                for (int i = 0; i < devlist.Count; i++)
-                {
-                    if (i == 0)
+                    if (query is In_HistoryMergeListSync quid)
                     {
-                        dvsb.Append("r[\"DxId\"] == \"" + devlist[i].Id + "\"");
+                        devices = await deviceDAL.SelectList(x => quid.Numbers.Contains(x.DeviceNumber));
+                    }
+                    else if (query is In_HistoryMergeList qusyn)
+                    {
+                        devices = await deviceDAL.SelectList(x => qusyn.Ids.Contains(x.Id));
                     }
                     else
                     {
-                        dvsb.Append(" or r[\"DxId\"] == \"" + devlist[i].Id + "\"");
+                        return BusResponse<List<Out_MergeItem>>.Error(131, "参数格式错误");
                     }
                 }
-                querysql.Append(" |> filter(fn: (r) => (" + dvsb.ToString() + "))");
+                var dviddict = devices.ToDictionary(x => x.Id);
 
-                BaseProperty pp;
-                if (!hsdict.TryGetValue(query.Code, out pp))
+                if (prod == null)
                 {
-                    return BusResponse<List<Out_MergeItem>>.Error(115, "参数Code值不存在");
-                }
-                if (pp.option.type == "geo" || pp.option.type == "string" || pp.option.type == "enum" || pp.option.type == "date")
-                {
-                    return BusResponse<List<Out_MergeItem>>.Error(116, "无法统计非数值字段");
-                }
-                querysql.Append(" |> filter(fn: (r) => r[\"_field\"] == \"" + pp.option.type + "#" + query.Code + "\")");
-                if (query.Hours != null && query.Hours.Count > 0)
-                {
-                    StringBuilder timesql = new StringBuilder();
-                    int i = 0;
-                    foreach (var t in query.Hours)
+                    List<string> pids = devices.Select(x => x.ProductId).ToList();
+                    var products = await productDAL.SelectList(x => pids.Contains(x.Id));
+                    if (products.Count > 1)
                     {
-                        if (i > 0)
+                        return BusResponse<List<Out_MergeItem>>.Error(112, "无法操作多个协议");
+                    }
+                    if (products.Count == 0)
+                    {
+                        return BusResponse<List<Out_MergeItem>>.Error(101, "协议不存在");
+                    }
+                    prod = products[0];
+                }
+
+                Dictionary<string, BaseProperty> hsdict = new Dictionary<string, BaseProperty>();
+                if (model == null)
+                {
+                    model = TslModel.CreateFrom(prod.ModelTSL);
+                }
+                foreach (BaseProperty bp in model.properties)
+                {
+                    hsdict.Add(bp.code, bp);
+                }
+                if (string.IsNullOrEmpty(prod.StorageConfig))
+                {
+                    return BusResponse<List<Out_MergeItem>>.Error(113, "未设置历史存储配置");
+                }
+                if (storageConfig == null)
+                {
+                    storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(prod.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
+                    if (storageConfig == null || storageConfig.enable != "1")
+                    {
+                        return BusResponse<List<Out_MergeItem>>.Error(114, "未设置存储配置url");
+                    }
+                }
+
+
+                if (query.MergeWay == null || query.MergeWay.Count == 0)
+                {
+                    return BusResponse<List<Out_MergeItem>>.Error(124, "MergeWay参数不能为空");
+                }
+                string influxDBTimeZone = TimeZoneInfo.Local.Id;
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                {
+                    TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+                    influxDBTimeZone = TZConvert.WindowsToIana(localTimeZone.Id);
+                }
+
+                InfluxDBClientOptions clientOption = new InfluxDBClientOptions(storageConfig.url);
+                clientOption.Timeout = TimeSpan.FromSeconds(60);
+                clientOption.Token = storageConfig.token;
+                using var client = new InfluxDBClient(clientOption);
+                var queryApi = client.GetQueryApi();
+                List<Out_MergeItem> finalList = new List<Out_MergeItem>();
+                foreach (var merge_way in query.MergeWay)
+                {
+                    int totalNumbers = -1;
+                    StringBuilder querysql = new StringBuilder();
+                    if (query.Hours != null && query.Hours.Count > 0)
+                    {
+                        querysql.Append("import \"date\"\n");
+                    }
+                    querysql.Append($"from(bucket:\"{storageConfig.bucket.Replace("\"", "")}\")");
+                    DateTime? queryStart = query.BeginTime;
+                    DateTime? queryEnd = query.EndTime;
+                    if (queryEnd == null)
+                    {
+                        queryEnd = DateTime.Now;
+                    }
+                    if (queryStart == null)
+                    {
+                        queryStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
+                    }
+                    querysql.Append($" |> range(start: {TimeZoneInfo.ConvertTime(queryStart.Value, TimeZoneInfo.Utc).ToString("yyyy-MM-ddTHH:mm:ssZ")},stop:{TimeZoneInfo.ConvertTime(queryEnd.Value, TimeZoneInfo.Utc).ToString("yyyy-MM-ddTHH:mm:ssZ")})");
+                    querysql.Append(" |> filter(fn: (r) => r[\"_measurement\"] == \"device\")");
+                    StringBuilder dvsb = new StringBuilder();
+                    var devlist = devices.Where(x => x.ProductId == prod.Id).ToList();
+                    for (int i = 0; i < devlist.Count; i++)
+                    {
+                        if (i == 0)
                         {
-                            timesql.Append(" and ");
+                            dvsb.Append("r[\"DxId\"] == \"" + devlist[i].Id + "\"");
                         }
-                        timesql.Append("date.hour(t: r._time, location: {zone: \"" + influxDBTimeZone + "\", offset: 0s})>=" + t.StartHour + " and date.hour(t: r._time, location: {zone: \"" + influxDBTimeZone + "\", offset: 0s})<" + t.EndHour);
-                        i++;
-                    }
-                    querysql.Append(" |> filter(fn: (r) => " + timesql.ToString() + ")");
-                }
-                if (queryEnd == null)
-                {
-                    queryEnd = DateTime.Now;
-                }
-                if (queryStart == null)
-                {
-                    queryStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
-                }
-
-                switch (merge_way)
-                {
-                    case "max":
-                    case "min":
-                    case "mean":
-                    case "sum":
-                    case "first":
-                    case "last":
-                    case "count":
-                        break;
-                    default:
-                        return BusResponse<List<Out_MergeItem>>.Error(115, "参数MergeWay值不存在");
-                }
-                if (query.IsGroup == true)
-                {
-                    querysql.Append(" |> group(columns: [\"DxId\"])");
-                }
-                switch (query.WindowWay)
-                {
-                    case 0:
-                        querysql.Append(" |> aggregateWindow(every: 1d, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
-                        break;
-                    case 1:
-                        querysql.Append(" |> aggregateWindow(every: 1mo, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
-                        break;
-                    case 2:
-                        querysql.Append(" |> aggregateWindow(every: 1h, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
-                        break;
-                    case 3:
-                        querysql.Append(" |> aggregateWindow(every: 1m, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
-                        break;
-                    case 4:
-                        querysql.Append(" |> aggregateWindow(every: 15m, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
-                        break;
-                }
-
-
-                querysql.Append(" |> sort(columns: [\"_time\"], desc: true)");
-
-                var fluxTable = await queryApi.QueryAsync(querysql.ToString(), storageConfig.org);
-                for (int i = 0; i < fluxTable.Count; i++)
-                {
-                    //i是参数
-                    for (int j = 0; j < fluxTable[i].Records.Count; j++)
-                    {
-                        try
+                        else
                         {
-                            //j是数据
-                            DateTime? time = fluxTable[i].Records[j].GetTimeInDateTime()?.ToLocalTime();
-                            Dictionary<string, object> values = fluxTable[i].Records[j].Values;
-                            string tmpdxId = string.Empty;
-                            if (values.TryGetValue("DxId", out object tmpid))
+                            dvsb.Append(" or r[\"DxId\"] == \"" + devlist[i].Id + "\"");
+                        }
+                    }
+                    querysql.Append(" |> filter(fn: (r) => (" + dvsb.ToString() + "))");
+
+                    BaseProperty pp;
+                    if (!hsdict.TryGetValue(query.Code, out pp))
+                    {
+                        return BusResponse<List<Out_MergeItem>>.Error(115, "参数Code值不存在");
+                    }
+                    if (pp.option.type == "geo" || pp.option.type == "string" || pp.option.type == "enum" || pp.option.type == "date")
+                    {
+                        return BusResponse<List<Out_MergeItem>>.Error(116, "无法统计非数值字段");
+                    }
+                    querysql.Append(" |> filter(fn: (r) => r[\"_field\"] == \"" + pp.option.type + "#" + query.Code + "\")");
+                    if (query.Hours != null && query.Hours.Count > 0)
+                    {
+                        StringBuilder timesql = new StringBuilder();
+                        int i = 0;
+                        foreach (var t in query.Hours)
+                        {
+                            if (i > 0)
                             {
-                                if (tmpid != null)
+                                timesql.Append(" and ");
+                            }
+                            timesql.Append("date.hour(t: r._time, location: {zone: \"" + influxDBTimeZone + "\", offset: 0s})>=" + t.StartHour + " and date.hour(t: r._time, location: {zone: \"" + influxDBTimeZone + "\", offset: 0s})<" + t.EndHour);
+                            i++;
+                        }
+                        querysql.Append(" |> filter(fn: (r) => " + timesql.ToString() + ")");
+                    }
+                    if (queryEnd == null)
+                    {
+                        queryEnd = DateTime.Now;
+                    }
+                    if (queryStart == null)
+                    {
+                        queryStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
+                    }
+
+                    switch (merge_way)
+                    {
+                        case "max":
+                        case "min":
+                        case "mean":
+                        case "sum":
+                        case "first":
+                        case "last":
+                        case "count":
+                            break;
+                        default:
+                            return BusResponse<List<Out_MergeItem>>.Error(115, "参数MergeWay值不存在");
+                    }
+                    if (query.IsGroup == true)
+                    {
+                        querysql.Append(" |> group(columns: [\"DxId\"])");
+                    }
+                    switch (query.WindowWay)
+                    {
+                        case 0:
+                            querysql.Append(" |> aggregateWindow(every: 1d, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
+                            break;
+                        case 1:
+                            querysql.Append(" |> aggregateWindow(every: 1mo, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
+                            break;
+                        case 2:
+                            querysql.Append(" |> aggregateWindow(every: 1h, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
+                            break;
+                        case 3:
+                            querysql.Append(" |> aggregateWindow(every: 1m, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
+                            break;
+                        case 4:
+                            querysql.Append(" |> aggregateWindow(every: 15m, fn: " + merge_way + ", location: {zone: \"" + influxDBTimeZone + "\", offset: 0s}, createEmpty: false)");
+                            break;
+                    }
+
+
+                    querysql.Append(" |> sort(columns: [\"_time\"], desc: true)");
+
+                    var fluxTable = await queryApi.QueryAsync(querysql.ToString(), storageConfig.org);
+                    for (int i = 0; i < fluxTable.Count; i++)
+                    {
+                        //i是参数
+                        for (int j = 0; j < fluxTable[i].Records.Count; j++)
+                        {
+                            try
+                            {
+                                //j是数据
+                                DateTime? time = fluxTable[i].Records[j].GetTimeInDateTime()?.ToLocalTime();
+                                Dictionary<string, object> values = fluxTable[i].Records[j].Values;
+                                string tmpdxId = string.Empty;
+                                if (values.TryGetValue("DxId", out object tmpid))
                                 {
-                                    tmpdxId = tmpid.ToString();
+                                    if (tmpid != null)
+                                    {
+                                        tmpdxId = tmpid.ToString();
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                                string tmpNumber = string.Empty;
+                                if (dviddict.TryGetValue(tmpdxId, out MZ_IotDevice tmpddvv))
+                                {
+                                    tmpNumber = tmpddvv.DeviceNumber;
+                                }
+                                switch (pp.option.type)
+                                {
+                                    case "int":
+                                        {
+                                            var tmpintop = ((IntOption)pp.option);
+                                            finalList.Add(new Out_MergeItem()
+                                            {
+                                                Id = tmpdxId,
+                                                Number = tmpNumber,
+                                                MergeWay = merge_way,
+                                                Val = values["_value"],
+                                                Unit = tmpintop.unit,
+                                                Time = time.Value,
+                                            });
+                                        }
+                                        break;
+                                    case "float":
+                                        {
+                                            var tmpfloatop = ((FloatOption)pp.option);
+                                            finalList.Add(new Out_MergeItem()
+                                            {
+                                                Id = tmpdxId,
+                                                Number = tmpNumber,
+                                                MergeWay = merge_way,
+                                                Val = values["_value"],
+                                                Unit = tmpfloatop.unit,
+                                                Time = time.Value,
+                                            });
+                                        }
+                                        break;
                                 }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                continue;
+                                _log.LogError("influxdb错误" + System.Text.Json.JsonSerializer.Serialize(fluxTable[i].Records[j], MyDefaultTextJsonConfig.DefaultOptions));
                             }
-                            string tmpNumber = string.Empty;
-                            if (dviddict.TryGetValue(tmpdxId, out MZ_IotDevice tmpddvv))
-                            {
-                                tmpNumber = tmpddvv.DeviceNumber;
-                            }
-                            switch (pp.option.type)
-                            {
-                                case "int":
-                                    {
-                                        var tmpintop = ((IntOption)pp.option);
-                                        finalList.Add(new Out_MergeItem()
-                                        {
-                                            Id = tmpdxId,
-                                            Number = tmpNumber,
-                                            MergeWay = merge_way,
-                                            Val = values["_value"],
-                                            Unit = tmpintop.unit,
-                                            Time = time.Value,
-                                        });
-                                    }
-                                    break;
-                                case "float":
-                                    {
-                                        var tmpfloatop = ((FloatOption)pp.option);
-                                        finalList.Add(new Out_MergeItem()
-                                        {
-                                            Id = tmpdxId,
-                                            Number = tmpNumber,
-                                            MergeWay = merge_way,
-                                            Val = values["_value"],
-                                            Unit = tmpfloatop.unit,
-                                            Time = time.Value,
-                                        });
-                                    }
-                                    break;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            _log.LogError("influxdb错误" + System.Text.Json.JsonSerializer.Serialize(fluxTable[i].Records[j], MyDefaultTextJsonConfig.DefaultOptions));
-                        }
 
+                        }
                     }
+
                 }
 
-            }
-
-            //同期多个值合并
-            IEnumerable<IGrouping<string, Out_MergeItem>> tmplist;
-            if (query.WindowWay == 0)
-            {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd") + "|" + x.Id + "|" + x.MergeWay);
-            }
-            else if (query.WindowWay == 1)
-            {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM") + "|" + x.Id + "|" + x.MergeWay);
-            }
-            else if (query.WindowWay == 2)
-            {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH") + "|" + x.Id + "|" + x.MergeWay);
-            }
-            else if (query.WindowWay == 3 || query.WindowWay == 4)
-            {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm") + "|" + x.Id + "|" + x.MergeWay);
-            }
-            else
-            {
-                tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm:ss") + "|" + x.Id + "|" + x.MergeWay);
-            }
-
-
-            List<Out_MergeItem> mergeList = new List<Out_MergeItem>();
-            foreach (var tmp in tmplist)
-            {
-                if (tmp.Count() > 1)
+                //同期多个值合并
+                IEnumerable<IGrouping<string, Out_MergeItem>> tmplist;
+                if (query.WindowWay == 0)
                 {
-                    if (tmp.Key.EndsWith("max"))
-                    {
-                        mergeList.Add(tmp.MaxBy(x => x.Val));
-                    }
-                    else if (tmp.Key.EndsWith("min"))
-                    {
-                        mergeList.Add(tmp.MinBy(x => x.Val));
-                    }
-                    else if (tmp.Key.EndsWith("mean"))
-                    {
-                        var tmpavg = tmp.Select(x => Convert.ToDouble(x.Val)).Average();
-                        var tmpfirst = tmp.First();
-                        mergeList.Add(new Out_MergeItem()
-                        {
-                            MergeWay = "mean",
-                            Val = tmpavg,
-                            Unit = tmpfirst.Unit,
-                            Time = tmpfirst.Time,
-                            Id = tmpfirst.Id,
-                            Number = tmpfirst.Number
-                        });
-                    }
-                    else if (tmp.Key.EndsWith("sum"))
-                    {
-                        var tmpsum = tmp.Select(x => Convert.ToDouble(x.Val)).Sum();
-                        var tmpfirst = tmp.First();
-                        mergeList.Add(new Out_MergeItem()
-                        {
-                            MergeWay = "sum",
-                            Val = tmpsum,
-                            Unit = tmp.First().Unit,
-                            Time = tmp.First().Time,
-                            Id = tmpfirst.Id,
-                            Number = tmpfirst.Number
-                        });
-                    }
-                    else if (tmp.Key.EndsWith("first"))
-                    {
-                        mergeList.Add(tmp.First());
-                    }
-                    else if (tmp.Key.EndsWith("last"))
-                    {
-                        mergeList.Add(tmp.Last());
-                    }
-
+                    tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd") + "|" + x.Id + "|" + x.MergeWay);
+                }
+                else if (query.WindowWay == 1)
+                {
+                    tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM") + "|" + x.Id + "|" + x.MergeWay);
+                }
+                else if (query.WindowWay == 2)
+                {
+                    tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH") + "|" + x.Id + "|" + x.MergeWay);
+                }
+                else if (query.WindowWay == 3 || query.WindowWay == 4)
+                {
+                    tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm") + "|" + x.Id + "|" + x.MergeWay);
                 }
                 else
                 {
-                    mergeList.Add(tmp.First());
+                    tmplist = finalList.OrderByDescending(x => x.Time).GroupBy(x => x.Time.ToString("yyyy-MM-dd HH:mm:ss") + "|" + x.Id + "|" + x.MergeWay);
                 }
+
+
+                List<Out_MergeItem> mergeList = new List<Out_MergeItem>();
+                foreach (var tmp in tmplist)
+                {
+                    if (tmp.Count() > 1)
+                    {
+                        if (tmp.Key.EndsWith("max"))
+                        {
+                            mergeList.Add(tmp.MaxBy(x => x.Val));
+                        }
+                        else if (tmp.Key.EndsWith("min"))
+                        {
+                            mergeList.Add(tmp.MinBy(x => x.Val));
+                        }
+                        else if (tmp.Key.EndsWith("mean"))
+                        {
+                            var tmpavg = tmp.Select(x => Convert.ToDouble(x.Val)).Average();
+                            var tmpfirst = tmp.First();
+                            mergeList.Add(new Out_MergeItem()
+                            {
+                                MergeWay = "mean",
+                                Val = tmpavg,
+                                Unit = tmpfirst.Unit,
+                                Time = tmpfirst.Time,
+                                Id = tmpfirst.Id,
+                                Number = tmpfirst.Number
+                            });
+                        }
+                        else if (tmp.Key.EndsWith("sum"))
+                        {
+                            var tmpsum = tmp.Select(x => Convert.ToDouble(x.Val)).Sum();
+                            var tmpfirst = tmp.First();
+                            mergeList.Add(new Out_MergeItem()
+                            {
+                                MergeWay = "sum",
+                                Val = tmpsum,
+                                Unit = tmp.First().Unit,
+                                Time = tmp.First().Time,
+                                Id = tmpfirst.Id,
+                                Number = tmpfirst.Number
+                            });
+                        }
+                        else if (tmp.Key.EndsWith("first"))
+                        {
+                            mergeList.Add(tmp.First());
+                        }
+                        else if (tmp.Key.EndsWith("last"))
+                        {
+                            mergeList.Add(tmp.Last());
+                        }
+
+                    }
+                    else
+                    {
+                        mergeList.Add(tmp.First());
+                    }
+                }
+
+                return BusResponse<List<Out_MergeItem>>.Success(mergeList);
+            }
+            catch(Exception ex)
+            {
+                return BusResponse<List<Out_MergeItem>>.Error(411, ex.Message);
             }
 
-            return BusResponse<List<Out_MergeItem>>.Success(mergeList);
         }
         public virtual async Task<PageObject<DeviceProperty>> SelectHistory(In_HistoryBase query)
         {
