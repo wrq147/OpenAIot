@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-drawer title="规则匹配" :visible="matchesDrawer" direction="rtl" @close="closeMatchesDrawer" size="900px" :destroy-on-close="true">
+    <el-drawer title="规则匹配" :visible="matchesDrawer" direction="rtl" @close="closeMatchesDrawer" :wrapperClosable="false" size="900px" :destroy-on-close="true">
       <div style="padding-left: 20px; color: #97999c">匹配规则</div>
       <el-form ref="matchesForm" :model="matchesForm" :rules="matchesRules" label-position="top" :inline="true" class="matches_form">
         <el-form-item label="规则名称" prop="Name">

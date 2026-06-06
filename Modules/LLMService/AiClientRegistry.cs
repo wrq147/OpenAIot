@@ -63,7 +63,7 @@ namespace LLMService
         private void RegisterSystemTools()
         {
             _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
-            //_allTools.Add(CreateGetHistoryByDateTool());
+            _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
 
         }
         /// <summary>

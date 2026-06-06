@@ -1,4 +1,5 @@
 ﻿using Common.Share;
+using LLMService.Model;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using Milvus.Client;
@@ -8,7 +9,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LLMService.Business
 {
@@ -50,10 +50,9 @@ namespace LLMService.Business
             return BusResponse<string>.Success();
         }
 
-        public async Task SaveMemoryAsync(string sessionId, string userInput, string aiResp)
+        public async Task SaveMemoryAsync(string sessionId, string query, string content)
         {
-            var content = $"用户输入: {userInput}\nAI回答: {aiResp}";
-            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(content);
+            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
             MilvusCollection collection = _client.GetCollection("ChatMemory");
             var curtime = MyAccess.Core.TypeConvert.Time2Unix(DateTime.Now);
             List<ReadOnlyMemory<float>> embedVector = new();
@@ -70,7 +69,7 @@ namespace LLMService.Business
             await collection.FlushAsync();
         }
 
-        public async Task<string> SearchRelatedMemoriesAsync([Description("会话ID")] string sessionId,[Description("用户的问题")] string query, int limit = 10, float score = 0.6f)
+        public async Task<string> SearchRelatedMemoriesAsync([Description("会话ID")] string sessionId,[Description("用户的问题")] string query,[Description("相关度阈值，默认0.6")] float score = 0.6f)
         {
             var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
             MilvusCollection collection = _client.GetCollection("ChatMemory");
@@ -84,11 +83,12 @@ namespace LLMService.Business
                 vectorFieldName: "Embedding",
                 vectors: new ReadOnlyMemory<float>[] { vec },
                 SimilarityMetricType.Cosine,
-                limit: limit, searchParameters);
+                limit: 20, searchParameters);
 
 
-
-            List<ChatMemory> memories = new List<ChatMemory>();
+            bool hasmem = false;
+            var sb = new StringBuilder();
+            sb.AppendLine("【相关历史会话】");
             // 遍历每一条结果
             for (int i = 0; i < results.Scores.Count; i++)
             {
@@ -98,22 +98,13 @@ namespace LLMService.Business
                     string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
                     long ttime = (results.FieldsData[1] as FieldData<long>).Data[i];
                     DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
-                    memories.Add(new ChatMemory()
-                    {
-                        Content = tcontent,
-                        CreateTime = dttime
-                    });
+                    sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
+                    hasmem = true;
                 }
             }
 
-            if (memories.Count > 0)
+            if (hasmem)
             {
-                var sb = new StringBuilder();
-                sb.AppendLine("【相关历史会话】");
-                foreach (var mm in memories)
-                {
-                    sb.AppendLine(mm.CreateTime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + mm.Content);
-                }
                 return sb.ToString();
             }
             else
@@ -127,7 +118,7 @@ namespace LLMService.Business
         /// <param name="sessionId"></param>
         /// <param name="day">日期格式：yyyy-MM-dd</param>
         /// <returns></returns>
-        public async Task<string> GetHistoryByDate(string sessionId, string day)
+        public async Task<string> GetHistoryByDate([Description("会话ID")] string sessionId, [Description("查询日期（格式：yyyy-MM-dd）")] string day)
         {
             if (!DateTime.TryParse(day, out DateTime searchDT))
             {
@@ -145,32 +136,23 @@ namespace LLMService.Business
             {
                 return $"{day} 无历史记录";
             }
-            List<ChatMemory> memories = new List<ChatMemory>();
+            List<LongMemory> memories = new List<LongMemory>();
             var contentField = results.FirstOrDefault(f => f.FieldName == "Content");
             var createTimeField = results.FirstOrDefault(f => f.FieldName == "CreateTime");
 
 
-            // 遍历每一条结果
+            var sb = new StringBuilder();
+            sb.AppendLine($"【{day} 历史会话】");
             for (int i = 0; i < contentField.RowCount; i++)
             {
                 string tcontent = (contentField as FieldData<string>).Data[i];
                 long ttime = (createTimeField as FieldData<long>).Data[i];
                 DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
-                memories.Add(new ChatMemory()
-                {
-                    Content = tcontent,
-                    CreateTime = dttime
-                });
+                sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
             }
 
-            if (memories.Count > 0)
+            if (contentField.RowCount > 0)
             {
-                var sb = new StringBuilder();
-                sb.AppendLine($"【{day} 历史会话】");
-                foreach (var mm in memories)
-                {
-                    sb.AppendLine(mm.CreateTime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + mm.Content);
-                }
                 return sb.ToString();
             }
             else

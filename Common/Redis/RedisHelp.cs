@@ -1170,7 +1170,12 @@ namespace Common.Redis
             var values = await DoAsync(async redis => await redis.SortedSetRangeByRankAsync(key));
             return ConvetList<T>(values);
         }
-
+        public async Task<List<T>> SortedSetRangeByScoreAsync<T>(string key, double start, double end)
+        {
+            key = AddPrefixKey(key);
+            var values = await DoAsync(async redis => await redis.SortedSetRangeByScoreAsync(key, start, end));
+            return ConvetList<T>(values);
+        }
         /// <summary>
         /// 获取集合中的数量
         /// </summary>

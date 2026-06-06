@@ -20,8 +20,17 @@ namespace LLMService.Tool
             return AIFunctionFactory.Create(
               provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync,
               name: "SearchRelatedMemoriesAsync",
-              description: "根据用户问题搜索语义相关的历史聊天记忆"
+              description: "根据用户问题搜索语义相关的蒸馏总结后的历史聊天记忆"
             );
         }
+        public static AITool CreateGetHistoryByDateTool(ITAServiceProvider provider)
+        {
+            return AIFunctionFactory.Create(
+              provider.GetService<MemoryRagBLL>().GetHistoryByDate,
+              name: "GetHistoryByDate",
+              description: "查询指定日期的蒸馏总结后的聊天历史"
+            );
+        }
+
     }
 }
