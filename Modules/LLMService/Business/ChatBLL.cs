@@ -1,4 +1,5 @@
 ﻿using AuthService;
+using AuthService.Business;
 using Common;
 using Common.EventBus;
 using Grpc.Core;
@@ -64,18 +65,43 @@ namespace LLMService.Business
             var sessionId = user.UserId.ToString();
             var tools = _registry.GetSkillTools();
             var chatClient = _registry.GetDefaultChat();
-
+            var orgDAL = _provider.GetService<OrgDAL>();
+            var orgInfo = await orgDAL.SelectById(user.OrgId);
+            string companyName = string.Empty;
+            string companyId = string.Empty;
+            string companyAddr = string.Empty;
+            string deptStr = string.Empty;
+            string deptIds = string.Empty;
+            string postStr = string.Empty;
+            if (orgInfo != null)
+            {
+                companyName = orgInfo.OrgName;
+                companyId = orgInfo.Id.ToString();
+                var tmpcodeDict = await _provider.GetService<CodeBLL>().SelectAreaDict();
+                companyAddr = tmpcodeDict.ToName(orgInfo.AddressCode) + orgInfo.AddressDetail;
+                var userdepts = await orgDAL.SelectUserDept(user.UserId, user.OrgId);
+                deptStr = string.Join(",", userdepts.Select(x => x.dept_name));
+                deptIds = string.Join(",", userdepts.Select(x => x.dept_id));
+                postStr = string.Join(",", userdepts.Select(x => x.post_name));
+            }
             var msgList = new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.System, @"你是一个专业的智能助手，请严格遵守以下规则：
+                new ChatMessage(ChatRole.System, $@"你是一个专业的智能助手。
+当前用户信息：
+- 企业Id：{companyId}
+- 所属企业：{companyName}
+- 企业地址：{companyAddr}
+- 所在部门：{deptStr}
+- 所在部门Id：{deptIds}
+- 用户职位：{postStr}
+- 用户ID：{user.UserId}
+- 真实姓名或用户名：{user.UserName}
 
-1. 优先使用提供的工具（Tools）回答用户问题，禁止编造答案。
-2. 只有在工具能解决问题时才调用工具；简单闲聊、问候不需要调用工具。
-3. 调用工具时必须严格按照工具要求传入正确、完整的参数。
-4. 如果参数不足，必须礼貌地向用户询问缺失信息，不要编造参数。
-5. 工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
-6. 不知道答案时不要猜测，直接告诉用户无法回答。
-7. 保持回答简洁、专业、有礼貌。"),
+请严格遵守以下规则：
+1. 请根据用户身份提供合适的回答
+2. 工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
+3. 不知道答案时不要猜测，直接告诉用户无法回答。
+4. 保持回答简洁、专业、有礼貌。"),
 
             };
             var shortMemorys = await _provider.GetService<ShortMemoryBLL>().GetShortMemoryList(sessionId);
