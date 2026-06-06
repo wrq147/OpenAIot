@@ -5,6 +5,7 @@ using LLMService.Tool;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using OpenAI;
+using OpenAI.Responses;
 using Org.BouncyCastle.Crypto.Prng;
 using System;
 using System.ClientModel;
@@ -49,7 +50,9 @@ namespace LLMService
                 var openAiCli = new OpenAIClient(apiKey, openopt);
                 //对话客户端
                 string chatModel = key == "DeepSeek" ? "deepseek-chat" : "gpt-4o";
-                IChatClient chatCli = openAiCli.GetChatClient(chatModel).AsIChatClient();
+                IChatClient chatCli = openAiCli.GetChatClient(chatModel).AsIChatClient().AsBuilder()
+                .UseFunctionInvocation()
+                .Build();
                 _chatMap[key] = chatCli;
 
                 //向量客户端
@@ -64,21 +67,22 @@ namespace LLMService
         {
             _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
             _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
+            _allTools.Add(SystemTime.CreateSystemTimeTool(_provider));
 
         }
         /// <summary>
         /// 技能执行回调：外部注入业务逻辑（执行scripts脚本/本地API/自定义逻辑）
         /// </summary>
-        /// <param name="skillName"></param>
+        /// <param name="context"></param>
         /// <param name="userRawInput"></param>
         /// <returns></returns>
-        private async Task<string> ExecuteSkill(string skillName, string userRawInput)
+        private async Task<string> ExecuteSkill(FunctionInvocationContext context, string userRawInput)
         {
             try
             {
                 //1.查找技能元数据
-                var skill = _allSkills.FirstOrDefault(s => s.Name == skillName);
-                if (skill == null) return $"未找到技能:{skillName}";
+                var skill = _allSkills.FirstOrDefault(s => s.Name == context.Function.Name);
+                if (skill == null) return $"未找到技能:{context.Function.Name}";
 
                 var promptSb = new StringBuilder();
                 promptSb.AppendLine($"# 技能：{skill.Name}");

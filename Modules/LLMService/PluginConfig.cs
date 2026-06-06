@@ -3,7 +3,6 @@ using Common.EventBus;
 using LLMService.Business;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using MonitorService.Business;
 using MonitorService.Model;
 using System;
@@ -21,7 +20,7 @@ namespace LLMService
             services.Configure<LLMOption>(cs);
             var aiOption = cs.Get<LLMOption>();
             services.AddSingleton<IAiClientRegistry, AiClientRegistry>();
-            services.AddBLL<ChatBLL>();
+            services.AddSingleton<ChatBLL>();
             services.AddSingleton<ShortMemoryBLL>();
             services.AddSingleton<MemoryRagBLL>();
             services.AddSingleton<InfoRagBLL>();
@@ -59,6 +58,8 @@ namespace LLMService
             });
 
             plg.RegisterQuartzTask();
+
+
         }
 
     }

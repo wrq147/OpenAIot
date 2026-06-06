@@ -1,5 +1,6 @@
 ﻿using LLMService.Business;
 using Microsoft.Extensions.AI;
+using MySqlX.XDevAPI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +19,11 @@ namespace LLMService.Tool
         public static AITool CreateSearchRelatedMemoriesTool(ITAServiceProvider provider)
         {
             return AIFunctionFactory.Create(
-              provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync,
+              async ([Description("用户的问题")] string query, [Description("相关度阈值，默认0.6")] float score = 0.6f) =>
+              {
+                  var context = FunctionInvokingChatClient.CurrentContext;
+                  return await provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(context.Options.ConversationId, query, score);
+              },
               name: "SearchRelatedMemoriesAsync",
               description: "根据用户问题搜索语义相关的蒸馏总结后的历史聊天记忆"
             );
@@ -26,7 +31,11 @@ namespace LLMService.Tool
         public static AITool CreateGetHistoryByDateTool(ITAServiceProvider provider)
         {
             return AIFunctionFactory.Create(
-              provider.GetService<MemoryRagBLL>().GetHistoryByDate,
+                async ([Description("查询日期（格式：yyyy-MM-dd）")] string day) =>
+                {
+                    var context = FunctionInvokingChatClient.CurrentContext;
+                    return await provider.GetService<MemoryRagBLL>().GetHistoryByDate(context.Options.ConversationId, day);
+                },
               name: "GetHistoryByDate",
               description: "查询指定日期的蒸馏总结后的聊天历史"
             );

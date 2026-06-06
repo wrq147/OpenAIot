@@ -69,7 +69,7 @@ namespace LLMService.Business
             await collection.FlushAsync();
         }
 
-        public async Task<string> SearchRelatedMemoriesAsync([Description("会话ID")] string sessionId,[Description("用户的问题")] string query,[Description("相关度阈值，默认0.6")] float score = 0.6f)
+        public async Task<string> SearchRelatedMemoriesAsync(string sessionId, string query, float score = 0.6f)
         {
             var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
             MilvusCollection collection = _client.GetCollection("ChatMemory");
@@ -118,7 +118,7 @@ namespace LLMService.Business
         /// <param name="sessionId"></param>
         /// <param name="day">日期格式：yyyy-MM-dd</param>
         /// <returns></returns>
-        public async Task<string> GetHistoryByDate([Description("会话ID")] string sessionId, [Description("查询日期（格式：yyyy-MM-dd）")] string day)
+        public async Task<string> GetHistoryByDate(string sessionId, string day)
         {
             if (!DateTime.TryParse(day, out DateTime searchDT))
             {
@@ -136,7 +136,7 @@ namespace LLMService.Business
             {
                 return $"{day} 无历史记录";
             }
-            List<LongMemory> memories = new List<LongMemory>();
+
             var contentField = results.FirstOrDefault(f => f.FieldName == "Content");
             var createTimeField = results.FirstOrDefault(f => f.FieldName == "CreateTime");
 

@@ -18,7 +18,7 @@ namespace LLMService.Skill
     public static class SkillConverter
     {
         /// <summary>批量转为AI可调用Function工具</summary>
-        public static List<AITool> BuildAIFunctions(this List<SkillMeta> skills, Func<string, string, Task<string>> skillExecuteHandler)
+        public static List<AITool> BuildAIFunctions(this List<SkillMeta> skills, Func<FunctionInvocationContext, string, Task<string>> skillExecuteHandler)
         {
             var funcs = new List<AITool>();
             foreach (var sk in skills)
@@ -27,7 +27,8 @@ namespace LLMService.Skill
                 var func = AIFunctionFactory.Create(
                     async ([Description("用户完整原始输入语句，完整原样传入用户的提问内容，不做截取、提取，整段原文填入")] string userRawInput) =>
                     {
-                        return await skillExecuteHandler(sk.Name, userRawInput);
+                        var context = FunctionInvokingChatClient.CurrentContext;
+                        return await skillExecuteHandler(context, userRawInput);
                     },
                     name: sk.Name,
                     description: sk.Description

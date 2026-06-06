@@ -18,6 +18,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\AuthService\AuthService.csproj" />
+	  <ProjectReference Include="..\MonitorService\MonitorService.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="EmbedModel\model_quantized.onnx">
@@ -26,5 +27,8 @@
 	  <None Update="EmbedModel\tokenizer.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Controller\" />
 	</ItemGroup>
 </Project>

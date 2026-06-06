@@ -39,7 +39,7 @@ namespace LLMService.Business
             {
                 await DoChatLock(sessionId, async () =>
                 {
-                    var historyText = await GetShortMemory(sessionId);
+                    var historyText = await GetShortMemoryStr(sessionId);
                     // LLM 总结
                     var prompt = $@"
 请对以下用户对话进行两项处理，并**严格按JSON格式返回**，不要额外说明：
@@ -47,7 +47,6 @@ namespace LLMService.Business
 1. summary：精简总结对话内容（长期记忆）
 2. query：提取用户问题的核心主题、关键词，用于未来检索相关记忆
 
-对话内容：
 {historyText}
 
 输出格式（必须合法JSON）：
@@ -114,11 +113,11 @@ namespace LLMService.Business
         }
 
         /// <summary>
-        /// 获取全部短期记忆
+        /// 获取最近对话记录
         /// </summary>
         /// <param name="sessionId"></param>
         /// <returns></returns>
-        public async Task<string> GetShortMemory(string sessionId)
+        public async Task<string> GetShortMemoryStr(string sessionId)
         {
             string key = $"short_memory:{sessionId}";
 
@@ -128,7 +127,7 @@ namespace LLMService.Business
                 return "无短期记忆";
 
             var sb = new StringBuilder();
-            sb.AppendLine("【今日短期对话记录】");
+            sb.AppendLine("【最近对话记录】");
 
             foreach (var obj in entries)
             {
@@ -139,6 +138,14 @@ namespace LLMService.Business
             }
 
             return sb.ToString();
+        }
+
+        public async Task<List<T_ShortMemory>> GetShortMemoryList(string sessionId)
+        {
+            string key = $"short_memory:{sessionId}";
+
+            var entries = await _redis.ListRangeAsync<T_ShortMemory>(key);
+            return entries;
         }
 
         /// <summary>
