@@ -59,6 +59,9 @@ namespace LLMService.Business
                     {
                         new(ChatRole.System, "你是记忆处理助手，只输出标准JSON，无其他内容"),
                         new(ChatRole.User, prompt)
+                    }, new ChatOptions()
+                    {
+                        ToolMode = ChatToolMode.None
                     });
                     var json = JsonSerializer.Deserialize<Dictionary<string, string>>(response.Text);
                     string summary = json["summary"];

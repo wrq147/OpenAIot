@@ -130,6 +130,9 @@ namespace LLMService
                 {
                     new(ChatRole.System,"你是代码生成器，仅输出可运行代码块"),
                     new(ChatRole.User,promptSb.ToString())
+                }, new ChatOptions()
+                {
+                    ToolMode = ChatToolMode.None
                 });
 
                 //解析LLM返回的代码块，落地到临时目录

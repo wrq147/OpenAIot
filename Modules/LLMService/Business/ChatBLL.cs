@@ -99,7 +99,7 @@ namespace LLMService.Business
 
 请严格遵守以下规则：
 1. 请根据用户身份提供合适的回答
-2. 工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
+2. 优先使用提供的工具回答用户问题，工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
 3. 不知道答案时不要猜测，直接告诉用户无法回答。
 4. 保持回答简洁、专业、有礼貌。"),
 
@@ -119,6 +119,7 @@ namespace LLMService.Business
             extInfo.Add("UserInfo", user);
             var opt = new ChatOptions
             {
+                ToolMode = ChatToolMode.Auto,
                 Tools = tools,
                 ConversationId = user.UserId.ToString(),
                 AdditionalProperties = extInfo
