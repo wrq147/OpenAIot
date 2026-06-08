@@ -22,14 +22,15 @@ maxnumpatches = featuresize * featuresize
 class AdaptedDetectHead(nn.Module):
     def __init__(self):
         super().__init__()
-        self.scale = nn.Parameter(torch.ones(1) * 0.5)
+        self.logit_scale = nn.Parameter(torch.ones(1) * 2.6592)
+        self.logit_bias = nn.Parameter(torch.zeros(1))
+
         self.fc = nn.Sequential(
             nn.Linear(768, 768),
             nn.LayerNorm(768),
             nn.GELU(),
             nn.Linear(768, 768),
         )
-
 
         self.box_head = nn.Sequential(
             nn.Conv2d(768, 384, kernel_size=3, padding=1),
@@ -52,8 +53,6 @@ class AdaptedDetectHead(nn.Module):
             nn.Conv2d(192, 1, kernel_size=1)
         )
 
-
-
     def forward(self, last_hidden, text_feat):
         B = last_hidden.shape[0]
         featsize = int(last_hidden.shape[1] ** 0.5)  # 28
@@ -66,20 +65,21 @@ class AdaptedDetectHead(nn.Module):
         # text_feat: [B,30,768]
         # out:       [B,784,30]
         cls_sim = torch.matmul(fc_img_feat, fc_text_feat.transpose(-1, -2))
-        cls_sim = cls_sim / self.scale
+        logit_scale = self.logit_scale.exp()
+        cls_sim = cls_sim * logit_scale + self.logit_bias
         cls_btm = cls_sim.view(
             B, featsize, featsize, -1).permute(0, 3, 1, 2).contiguous()  # [B,n,28,28]
-        sim_max, _ = cls_sim.max(dim=-1)  # [B,784]
 
-        sim_max_smoothed = sim_max
-
+        max_sim, _ = cls_sim.max(dim=-1)
+        confidence = torch.sigmoid(max_sim)
+        sim_mean = cls_sim.mean(dim=-1)
+        sim_max_smoothed = sim_mean
         sim_max_min = sim_max_smoothed.amin(dim=1, keepdim=True)
         sim_max_max = sim_max_smoothed.amax(dim=1, keepdim=True)
-        x_sim_max = (sim_max_smoothed - sim_max_min) / \
+        sim_mean = (sim_max_smoothed - sim_max_min) / \
             (sim_max_max - sim_max_min + 1e-8)
-
-        mask = x_sim_max.unsqueeze(-1)          # [B,784,1]
-
+        real_mm = confidence * sim_mean
+        mask = real_mm.unsqueeze(-1)          # [B,784,1]
         final_feat = fc_img_feat * mask  # [B, 784, 768]
         final_feat = final_feat.permute(
             0, 2, 1).reshape(B, -1, featsize, featsize)
@@ -92,26 +92,6 @@ class AdaptedDetectHead(nn.Module):
 
         return box, cls_map, cls_btm
 
-
-class FeatureAlignProjection(nn.Module):
-    def __init__(self, in_dim=768, out_dim=768, hidden_dim=1024):
-        super().__init__()
-        # 🔥 二层 MLP + 归一化
-        self.fc1 = nn.Linear(in_dim, hidden_dim)
-        self.norm1 = nn.LayerNorm(hidden_dim)
-        self.act = nn.GELU()  # 比ReLU更平滑
-
-        self.fc2 = nn.Linear(hidden_dim, out_dim, bias=True)
-
-    def forward(self, x):
-        # 第一层
-        x = self.fc1(x)
-        x = self.norm1(x)
-        x = self.act(x)
-
-        # 第二层
-        x = self.fc2(x)
-        return x
 
 
 def resize_and_pad(image, target_size=512):
@@ -137,7 +117,7 @@ class CNCLIPFeatureExtractor:
         # 加载模型
         current_dir = os.path.dirname(os.path.abspath(__file__))
         model_path = os.path.join(current_dir, "fgmodel")
-        dethead_path = os.path.join(current_dir, "dethead_yolo_best.pth")
+        dethead_path = os.path.join(current_dir, "dethead.pth")
         try:
             self.fgmodel = AutoModelForCausalLM.from_pretrained(
                 model_path, trust_remote_code=True)
@@ -194,8 +174,8 @@ class CNCLIPFeatureExtractor:
             gy = grid_idx // featuresize
             gx = grid_idx % featuresize
 
-            cx = (gx + dx * 5 - 2.5)/featuresize
-            cy = (gy + dy * 5 - 2.5)/featuresize
+            cx = (gx + dx * 3 - 1.5)/featuresize
+            cy = (gy + dy * 3 - 1.5)/featuresize
 
             # 映射到 padded 图尺度
             cx_pad = cx * imgsize
@@ -331,16 +311,18 @@ def execall(
         raise ValueError("必须传入text_list或base64_img中的至少一个")
 
     global global_extractor
-    result = {}
+    final_features = []
 
     # 提取文本特征
     if text_list is not None and len(text_list) > 0:
-        result["text_features"] = global_extractor.get_text_features(
+        text_feats = global_extractor.get_text_features(
             text_list).tolist()
+        final_features.extend(text_feats)
 
     # 提取Base64图片特征
     if base64_img is not None:
-        result["image_features"] = global_extractor.get_image_features_from_base64(
+        img_feats = global_extractor.get_image_features_from_base64(
             base64_img).tolist()
+        final_features.extend(img_feats)
 
-    return result
+    return final_features

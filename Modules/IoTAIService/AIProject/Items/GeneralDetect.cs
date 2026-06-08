@@ -39,7 +39,7 @@ namespace IoTAIService.AIProject.Items
                         name="检测阈值",
                         code="threshold",
                         type="float",
-                        defval=0.2f,
+                        defval=0.6f,
                         min=0,
                         max=1,
                         help="0~1的区间值,值越小,对目标检测越模糊"
@@ -67,7 +67,7 @@ namespace IoTAIService.AIProject.Items
 
         public List<BoxItem> GenerateBoxs(Image<Rgb24> image, byte[] rawBytes, AIConfigData config)
         {
-            float tThreshold = config.GetFloat("threshold", 0.2f);
+            float tThreshold = config.GetFloat("threshold", 0.6f);
             float tIOU = config.GetFloat("iou_threshold", 0.2f);
             string featureTxt = config.GetString("feature-txt");
             string featureImg = config.GetString("feature-img");

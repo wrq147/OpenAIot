@@ -76,6 +76,9 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
+		<None Update="AIScript\dethead.pth">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="AIScript\fgclip_to_wedetect_align.pth">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

@@ -1,5 +1,6 @@
 ﻿using ChannelUtility.Message;
 using CSnakes.Runtime;
+using CSnakes.Runtime.Python;
 using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
@@ -28,21 +29,22 @@ namespace IoTAIService
                 var output = outfgclip.Exedetect(rawBytes, classEmbeds, thresh, iou_threshold);
                 for (int i = 0; i < output.Count; i++)
                 {
-                    var boxitem = output[i];
-                    var clsidx = boxitem.GetAttr("cls_idx").As<int>();
-                    var score = boxitem.GetAttr("score").As<float>();
-                    var boxs = boxitem.GetAttr("box").As<float[]>();
-                    if (clsidx < classes.Count && boxs.Length > 3)
+                    var boxitem = output[i].As<IReadOnlyDictionary<string, PyObject>>();
+
+                    var clsidx = boxitem["cls_idx"].As<int>();
+                    var score = boxitem["score"].As<float>();
+                    var boxs = boxitem["box"].As<IReadOnlyList<PyObject>>();
+                    if (clsidx < classes.Count && boxs.Count > 3)
                     {
                         string labelName = classes[clsidx];
                         tmpboxlist.Add(new BoxItem
                         {
                             label = labelName,
                             score = score,
-                            x1 = (int)boxs[0],
-                            y1 = (int)boxs[1],
-                            x2 = (int)boxs[2],
-                            y2 = (int)boxs[3],
+                            x1 = (int)boxs[0].As<float>(),
+                            y1 = (int)boxs[1].As<float>(),
+                            x2 = (int)boxs[2].As<float>(),
+                            y2 = (int)boxs[3].As<float>(),
                             color = "#057C18"
                         });
                     }

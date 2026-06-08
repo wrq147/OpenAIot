@@ -11,7 +11,11 @@ namespace IoTAIService
         /// <summary>
         /// AI任务线程数量（默认4）
         /// </summary>
-        public int runer_count { get; set; }
+        public int RunerCount { get; set; }
+        /// <summary>
+        /// Python根目录,放空则使用根目录下的python目录
+        /// </summary>
+        public string PythonRoot { get; set; }
         /// <summary>
         /// 绑定端口，等待所有发布端连接
         /// </summary>

@@ -24,7 +24,7 @@ namespace IoTAIService
         {
             var cs = config.GetSection("IoTAIService");
             services.Configure<IoTAIOption>(cs);
-
+            var aiOption = cs.Get<IoTAIOption>();
             services.AddDAL<AiMemDAL>();
             services.AddDAL<AiHouseDAL>();
             services.AddSingleton<MilvusBLL>();
@@ -51,7 +51,16 @@ namespace IoTAIService
             services.AddServices(s =>
             {
                 var home = Path.Join(Environment.CurrentDirectory, "AIScript");
-                s.WithPython().WithHome(home).FromRedistributable().WithVirtualEnvironment(Path.Combine(home, ".venv")).WithPipInstaller();
+                string pythonRoot;
+                if (string.IsNullOrEmpty(aiOption.PythonRoot))
+                {
+                    pythonRoot = Path.Join(Environment.CurrentDirectory, "Python");
+                }
+                else
+                {
+                    pythonRoot = aiOption.PythonRoot;
+                }
+                s.WithPython().WithHome(home).FromFolder(pythonRoot, "3.12").WithVirtualEnvironment(Path.Combine(home, ".venv")).WithPipInstaller();
             });
         }
         private ITAServiceProvider _provider;
@@ -87,6 +96,10 @@ namespace IoTAIService
 
                 await app.ServiceProvider.GetService<AIProjectManager>().Init();
                 await app.ServiceProvider.GetService<AIBusProxy>().UpdateUpList();
+
+                Console.WriteLine("检测与安装Python环境...");
+                app.ServiceProvider.GetService<IPythonEnvironment>();
+                Console.WriteLine("完成Python环境检测与安装");
             });
         }
 

@@ -16,7 +16,7 @@ namespace LLMService.Controller
         /// </summary>
         /// <param name="userInput"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public async Task<DefaultAjaxResult<string>> Message(string userInput)
         {
             await this.ServiceProvider.GetService<ChatBLL>().ChatAsync(GetUser(), userInput);

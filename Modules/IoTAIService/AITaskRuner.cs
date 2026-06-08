@@ -23,9 +23,9 @@ namespace IoTAIService
             _provider = provider;
             var option = _provider.GetService<IOptions<IoTAIOption>>();
             int totalcc = 4;
-            if (option.Value.runer_count > 0)
+            if (option.Value.RunerCount > 0)
             {
-                totalcc = option.Value.runer_count;
+                totalcc = option.Value.RunerCount;
             }
             _schedulers = new List<HashedWheelTimer>();
             for (int i = 0; i < totalcc; i++)

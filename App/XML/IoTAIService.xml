@@ -644,9 +644,14 @@
             验证区域是否在图像范围内
             </summary>
         </member>
-        <member name="P:IoTAIService.IoTAIOption.runer_count">
+        <member name="P:IoTAIService.IoTAIOption.RunerCount">
             <summary>
             AI任务线程数量（默认4）
+            </summary>
+        </member>
+        <member name="P:IoTAIService.IoTAIOption.PythonRoot">
+            <summary>
+            Python根目录,放空则使用根目录下的python目录
             </summary>
         </member>
         <member name="P:IoTAIService.IoTAIOption.AIBind">
