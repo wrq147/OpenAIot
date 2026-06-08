@@ -26,28 +26,37 @@ namespace LLMService.Business
         }
         public async Task<BusResponse<string>> CreateRagCollection()
         {
-            // 检查集合是否已存在
-            var exists = await _client.HasCollectionAsync("ChatMemory");
-            if (exists)
+            try
             {
-                return BusResponse<string>.Error(111, "AI记忆向量表已存在");
+                // 检查集合是否已存在
+                var exists = await _client.HasCollectionAsync("ChatMemory");
+                if (exists)
+                {
+                    return BusResponse<string>.Error(111, "AI记忆向量表已存在");
+                }
+
+                // 定义集合结构
+                var schema = new CollectionSchema();
+                schema.Fields.Add(FieldSchema.Create<long>("Id", isPrimaryKey: true, autoId: true));
+                schema.Fields.Add(FieldSchema.CreateVarchar("SessionId", maxLength: 256));
+                schema.Fields.Add(FieldSchema.CreateVarchar("Content", 8192));
+                schema.Fields.Add(FieldSchema.CreateFloatVector("Embedding", dimension: 768));
+                schema.Fields.Add(FieldSchema.Create<long>("CreateTime"));
+
+                var collection = await _client.CreateCollectionAsync("ChatMemory", schema);
+                // 创建索引以提高搜索性能
+                await collection.CreateIndexAsync("Embedding", IndexType.Hnsw, SimilarityMetricType.Cosine);
+                await collection.CreateIndexAsync(fieldName: "SessionId", indexType: IndexType.AutoIndex);
+                await collection.CreateIndexAsync(fieldName: "CreateTime", indexType: IndexType.AutoIndex);
+
+                return BusResponse<string>.Success();
             }
-
-            // 定义集合结构
-            var schema = new CollectionSchema();
-            schema.Fields.Add(FieldSchema.Create<long>("Id", isPrimaryKey: true, autoId: true));
-            schema.Fields.Add(FieldSchema.CreateVarchar("SessionId", maxLength: 256));
-            schema.Fields.Add(FieldSchema.CreateVarchar("Content", 8192));
-            schema.Fields.Add(FieldSchema.CreateFloatVector("Embedding", dimension: 768));
-            schema.Fields.Add(FieldSchema.Create<long>("CreateTime"));
-
-            var collection = await _client.CreateCollectionAsync("ChatMemory", schema);
-            // 创建索引以提高搜索性能
-            await collection.CreateIndexAsync("Embedding", IndexType.Hnsw, SimilarityMetricType.Cosine);
-            await collection.CreateIndexAsync(fieldName: "SessionId", indexType: IndexType.AutoIndex);
-            await collection.CreateIndexAsync(fieldName: "CreateTime", indexType: IndexType.AutoIndex);
-
-            return BusResponse<string>.Success();
+            catch
+            {
+                Console.WriteLine("张量数据库Milvus未启用");
+                return BusResponse<string>.Error(110, "张量数据库Milvus未启用");
+            }
+        
         }
 
         public async Task SaveMemoryAsync(string sessionId, string query, string content)

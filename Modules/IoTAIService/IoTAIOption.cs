@@ -21,10 +21,6 @@ namespace IoTAIService
         /// </summary>
         public string AIBind { get; set; }
         /// <summary>
-        /// 是否初始化Milvus表
-        /// </summary>
-        public bool InitMilvus { get; set; }
-        /// <summary>
         /// Milvus的连接地址
         /// </summary>
         public string MilvusUrl { get; set; }

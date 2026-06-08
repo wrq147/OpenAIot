@@ -22,27 +22,36 @@ namespace IoTAIService.Business
 
         public virtual async Task<BusResponse<string>> CreateMemberCollection()
         {
-            // 检查集合是否已存在
-            var exists = await _client.HasCollectionAsync("MemCollect");
-            if (exists)
+            try
             {
-                return BusResponse<string>.Error(111, "成员向量表已存在");
+                // 检查集合是否已存在
+                var exists = await _client.HasCollectionAsync("MemCollect");
+                if (exists)
+                {
+                    return BusResponse<string>.Error(111, "成员向量表已存在");
+                }
+
+                // 定义集合结构 - 假设我们使用128维的向量
+                var schema = new CollectionSchema();
+                schema.Fields.Add(FieldSchema.Create<long>("vec_id", isPrimaryKey: true, autoId: true));
+                schema.Fields.Add(FieldSchema.CreateVarchar("h_id", maxLength: 128));
+                schema.Fields.Add(FieldSchema.Create<long>("mem_id"));
+                schema.Fields.Add(FieldSchema.CreateFloatVector("mem_vector", dimension: 128));
+
+                var collection = await _client.CreateCollectionAsync("MemCollect", schema);
+                // 创建索引以提高搜索性能
+                await collection.CreateIndexAsync("mem_vector", IndexType.AutoIndex, SimilarityMetricType.Cosine);
+                await collection.CreateIndexAsync(fieldName: "h_id", indexType: IndexType.AutoIndex);
+                await collection.CreateIndexAsync(fieldName: "mem_id", indexType: IndexType.AutoIndex);
+
+                return BusResponse<string>.Success();
             }
-
-            // 定义集合结构 - 假设我们使用128维的向量
-            var schema = new CollectionSchema();
-            schema.Fields.Add(FieldSchema.Create<long>("vec_id", isPrimaryKey: true, autoId: true));
-            schema.Fields.Add(FieldSchema.CreateVarchar("h_id", maxLength: 128));
-            schema.Fields.Add(FieldSchema.Create<long>("mem_id"));
-            schema.Fields.Add(FieldSchema.CreateFloatVector("mem_vector", dimension: 128));
-
-            var collection = await _client.CreateCollectionAsync("MemCollect", schema);
-            // 创建索引以提高搜索性能
-            await collection.CreateIndexAsync("mem_vector", IndexType.AutoIndex, SimilarityMetricType.Cosine);
-            await collection.CreateIndexAsync(fieldName: "h_id", indexType: IndexType.AutoIndex);
-            await collection.CreateIndexAsync(fieldName: "mem_id", indexType: IndexType.AutoIndex);
-
-            return BusResponse<string>.Success();
+            catch
+            {
+                Console.WriteLine("张量数据库Milvus未启用");
+                return BusResponse<string>.Error(110, "张量数据库Milvus未启用");
+            }
+         
         }
         public virtual async Task<BusResponse<int>> DelFromIdsCollection(long[] ids)
         {

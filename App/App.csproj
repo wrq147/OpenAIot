@@ -21,6 +21,7 @@
 		<ProjectReference Include="..\Modules\IoTRulesService\IoTRulesService.csproj" />
 		<ProjectReference Include="..\Modules\IoTService\IoTService.csproj" />
 		<ProjectReference Include="..\Modules\IoTVideoService\IoTVideoService.csproj" />
+		<ProjectReference Include="..\Modules\LLMService\LLMService.csproj" />
 		<ProjectReference Include="..\Modules\MessageService\MessageService.csproj" />
 		<ProjectReference Include="..\Modules\MESService\MESService.csproj" />
 		<ProjectReference Include="..\Modules\MonitorService\MonitorService.csproj" />

@@ -1,12 +1,8 @@
-﻿using ElBruno.LocalEmbeddings;
-using ElBruno.LocalEmbeddings.Options;
-using LLMService.Skill;
+﻿using LLMService.Skill;
 using LLMService.Tool;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using OpenAI;
-using OpenAI.Responses;
-using Org.BouncyCastle.Crypto.Prng;
 using System;
 using System.ClientModel;
 using System.Collections.Generic;
@@ -56,11 +52,7 @@ namespace LLMService
                 _chatMap[key] = chatCli;
 
                 //向量客户端
-                string modelPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + @"EmbedModel";
-                _embedding = new LocalEmbeddingGenerator(new LocalEmbeddingsOptions
-                {
-                    ModelPath = modelPath
-                });
+                _embedding = new BpeLocalEmbeddingGenerator();
             }
         }
         private void RegisterSystemTools()

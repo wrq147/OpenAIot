@@ -29,6 +29,11 @@
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
+        <el-tooltip content="AI助手" effect="dark" placement="bottom" v-if="checkPermission(['/LLMService/AI/Assistant'])">
+          <div class="right-menu-item hover-effect" @click="openAIAssistant" style="font-size: 14px; color:#7D8598;">
+            AI助手
+          </div>
+        </el-tooltip>
       </template>
       <el-dropdown
         v-if="checkPermission(['/MsgSrv/Message/List'])"

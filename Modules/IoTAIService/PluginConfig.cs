@@ -71,12 +71,7 @@ namespace IoTAIService
 
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
-                var aiOption = app.ServiceProvider.GetService<IOptions<IoTAIOption>>();
-                if (aiOption.Value.InitMilvus == true)
-                {
-                    var milvusBLL = app.ServiceProvider.GetService<MilvusBLL>();
-                    await milvusBLL.CreateMemberCollection();
-                }
+                await app.ServiceProvider.GetService<MilvusBLL>().CreateMemberCollection();
 
                 _provider.GetService<ReliableAISubscriber>().StartReceiving();
 

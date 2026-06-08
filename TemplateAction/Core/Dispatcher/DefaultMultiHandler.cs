@@ -30,7 +30,14 @@ namespace TemplateAction.Core
         {
             for (int i = 0; i < _handlers.Count; i++)
             {
-                await _handlers[i](evt as T);
+                try
+                {
+                    await _handlers[i](evt as T);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(_handlers[i].Target.GetType() + "的事件处理异常," + ex.ToString());
+                }
             }
         }
     }
