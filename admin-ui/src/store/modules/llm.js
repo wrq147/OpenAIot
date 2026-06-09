@@ -37,7 +37,15 @@ const mutations = {
         break;
       }
     }
-  }
+  },
+  pushUserInput: (state, info) => {
+    state.messageList.push({
+      role: "user",
+      status: 1,
+      data: info,
+      time: Date.now()
+    });
+  },
 }
 
 const actions = {

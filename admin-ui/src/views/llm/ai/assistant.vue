@@ -13,34 +13,24 @@
       </div>
 
       <!-- 用户消息 -->
-      <div
-        v-for="(item, index) in messageList"
-        :key="index"
-        class="message-item"
-        :class="{ user: item.type === 'user', ai: item.type === 'ai' }"
-      >
+      <div v-for="(item, index) in ChatMessageList" :key="index" class="message-item"
+        :class="{ user: item.role === 'user', ai: item.role === 'assistant' }">
         <div class="avatar">
           <i v-if="item.type === 'user'" class="el-icon-user"></i>
           <i v-else class="el-icon-chat-dot-round"></i>
         </div>
         <div class="message-content">
-          {{ item.content }}
+          {{ item.data }}
           <!-- AI 回复加载中动画 -->
-          <span v-if="item.loading" class="loading-dot">...</span>
+          <span v-if="item.status==1" class="loading-dot">...</span>
         </div>
       </div>
     </div>
 
     <!-- 输入框区域 -->
     <div class="chat-input-box">
-      <el-input
-        v-model="userInput"
-        type="textarea"
-        :rows="3"
-        placeholder="请输入你的问题..."
-        @keyup.enter.native="handleSend"
-        :disabled="loading"
-      ></el-input>
+      <el-input v-model="userInput" type="textarea" :rows="3" placeholder="请输入你的问题..." @keyup.enter.native="handleSend"
+        :disabled="loading"></el-input>
       <div class="btn-box">
         <el-button type="primary" @click="handleSend" :loading="loading">
           发送
@@ -51,7 +41,7 @@
 </template>
 
 <script>
-import { recentHistory,postMessage } from "@/api/llmchat";
+import { postMessage } from "@/api/llmchat";
 
 export default {
   name: 'AiChat',
@@ -59,74 +49,22 @@ export default {
     return {
       // 用户输入内容
       userInput: '',
-      // 消息列表
-      messageList: [],
       // 加载状态
       loading: false,
-      // MQTT客户端实例
-      mqttClient: null,
-      // 会话ID（唯一标识当前对话）
-      sessionId: '',
-      // MQTT连接配置（根据你的实际MQTT服务修改）
-      mqttOptions: {
-        protocol: 'ws', // websocket协议
-        host: 'localhost', // MQTT服务器地址
-        port: 8083, // MQTT ws端口
-        username: '', // 用户名（如有）
-        password: '', // 密码（如有）
-        clientId: 'ai_chat_' + Math.random().toString(16).substr(2, 8)
-      }
     }
   },
   created() {
-    // 生成会话ID
-    this.sessionId = this.generateSessionId()
-    // 初始化MQTT连接
-    this.initMqtt()
+
   },
   beforeDestroy() {
-    // 页面销毁时断开MQTT连接
-    if (this.mqttClient) {
-      this.mqttClient.end()
-    }
   },
+	computed: {
+    //消息列表
+		ChatMessageList: function () {
+			return this.$store.state.llm.messageList;
+		}
+	},
   methods: {
-    // 生成随机会话ID
-    generateSessionId() {
-      return Date.now().toString(16) + Math.random().toString(16).substr(2)
-    },
-    // 初始化MQTT连接
-    initMqtt() {
-      const { protocol, host, port, ...options } = this.mqttOptions
-      const connectUrl = `${protocol}://${host}:${port}/mqtt`
-      
-      // 创建客户端
-      this.mqttClient = mqtt.connect(connectUrl, options)
-      
-      // 连接成功
-      this.mqttClient.on('connect', () => {
-        console.log('MQTT连接成功')
-        // 订阅AI回复主题：llmchat/会话ID
-        const topic = `llmchat/${this.sessionId}`
-        this.mqttClient.subscribe(topic, (err) => {
-          if (!err) {
-            console.log('订阅主题成功：', topic)
-          }
-        })
-      })
-
-      // 监听消息接收（服务端流式回复）
-      this.mqttClient.on('message', (topic, message) => {
-        const content = message.toString()
-        this.handleAiStreamResponse(content)
-      })
-
-      // 连接失败
-      this.mqttClient.on('error', (err) => {
-        console.error('MQTT连接失败：', err)
-        this.$message.error('消息连接失败，请刷新页面')
-      })
-    },
     // 发送用户提问
     async handleSend() {
       const input = this.userInput.trim()
@@ -135,12 +73,8 @@ export default {
         return
       }
       if (this.loading) return
-
       // 1. 添加用户消息到列表
-      this.messageList.push({
-        type: 'user',
-        content: input
-      })
+      this.$store.commit("llm/pushUserInput", input);
       this.scrollToBottom()
 
       // 2. 清空输入框 + 开启加载
@@ -148,46 +82,11 @@ export default {
       this.loading = true
 
       // 3. 添加AI加载中消息
-      this.messageList.push({
-        type: 'ai',
-        content: '',
-        loading: true
-      })
+      this.$store.commit("llm/pushmsg", "");
       this.scrollToBottom()
 
-      try {
-        // 4. 调用后端接口发送提问
-        await axios({
-          url: '/LLMService/Chat/Message',
-          method: 'post',
-          data: {
-            userInput: input,
-            sessionId: this.sessionId // 携带会话ID，后端用于匹配MQTT推送
-          }
-        })
-      } catch (error) {
-        console.error('发送失败：', error)
-        this.$message.error('发送失败，请重试')
-        // 移除加载中消息
-        this.messageList.pop()
-        this.loading = false
-      }
-    },
-    // 处理AI流式回复
-    handleAiStreamResponse(content) {
-      if (!content) return
-      
-      // 关闭加载状态
+      await postMessage(input);
       this.loading = false
-      
-      // 获取最后一条AI消息
-      const lastMsg = this.messageList[this.messageList.length - 1]
-      if (lastMsg && lastMsg.type === 'ai') {
-        // 流式追加内容
-        lastMsg.content += content
-        lastMsg.loading = false
-      }
-      this.scrollToBottom()
     },
     // 滚动到底部
     scrollToBottom() {
@@ -211,15 +110,24 @@ export default {
   overflow: hidden;
 }
 
-/* 标题栏 */
+/* 标题栏 - 升级美化版 */
 .chat-header {
-  height: 60px;
-  background: #fff;
-  line-height: 60px;
-  padding: 0 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border-bottom: 1px solid #eee;
+  height: 64px;
+  /* 渐变背景，更高级 */
+  background: linear-gradient(135deg, #409eff, #69b1ff);
+  line-height: 64px;
+  padding: 0 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  /* 柔和阴影 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  /* 居中+美观 */
+  display: flex;
+  align-items: center;
+  border-bottom: none;
+  position: relative;
+  z-index: 10;
 }
 
 /* 消息列表 */
@@ -228,6 +136,7 @@ export default {
   padding: 20px;
   overflow-y: auto;
 }
+
 .empty-tip {
   text-align: center;
   color: #909399;
@@ -240,10 +149,12 @@ export default {
   margin-bottom: 20px;
   align-items: flex-start;
 }
+
 /* 用户消息：右对齐 */
 .message-item.user {
   flex-direction: row-reverse;
 }
+
 /* 头像 */
 .avatar {
   width: 36px;
@@ -257,6 +168,7 @@ export default {
   font-size: 18px;
   margin: 0 10px;
 }
+
 .message-item.user .avatar {
   background: #67c23a;
 }
@@ -271,6 +183,7 @@ export default {
   word-break: break-all;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
+
 .message-item.user .message-content {
   background: #409eff;
   color: #fff;
@@ -281,10 +194,21 @@ export default {
   color: #909399;
   animation: dot 1s infinite step-start;
 }
+
 @keyframes dot {
-  0%, 100% { content: ''; }
-  33% { content: '.'; }
-  66% { content: '..'; }
+
+  0%,
+  100% {
+    content: '';
+  }
+
+  33% {
+    content: '.';
+  }
+
+  66% {
+    content: '..';
+  }
 }
 
 /* 输入框 */
@@ -293,6 +217,7 @@ export default {
   padding: 15px 20px;
   border-top: 1px solid #eee;
 }
+
 .btn-box {
   text-align: right;
   margin-top: 10px;
