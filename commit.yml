@@ -3,96 +3,93 @@ branches: {
   }
 fileChange:
   /App:
-    newFile: !uuid '771e1950f17205dd5ee68f8986453b2dc3de0ae2'
-    oldFile: !uuid '753352d6aa999ec3f80581c1ed6c62322630d51f'
-  /App/App.csproj:
-    newFile: !uuid 'f328f5276acdffa897c586939f8d5ef41cd23fe8'
-    oldFile: !uuid 'ac036c428e067b270ae492df0f33471ced203078'
-  /App/XML:
-    newFile: !uuid 'aabe814c1d5792b8eabdef66a6a467c303c9439b'
-    oldFile: !uuid '9b4fa2793c747b9890f46035228c7114db1ac411'
-  /App/XML/IoTAIService.xml:
-    newFile: !uuid '64b99b3a3d1bdb0cee6eaac6adae6ea2f6313c2f'
-    oldFile: !uuid '8fb93e56e1d3042d28f08a79abbe1153a5017022'
-  /App/XML/LLMService.xml:
-    newFile: !uuid 'bfdeee6164ee835959e648790d9ead4fb092803b'
-    oldFile: !uuid 'ce74cbe90fdfc324b3f8ff1698722011ee617666'
-  /App/appsettings.json:
-    newFile: !uuid '366a57d4b9040db949bada8d81a7e36d2962c2ac'
-    oldFile: !uuid 'cfda0f8fb4f91c50d88fb145a17f0377686516dc'
-  /App/services.txt:
-    newFile: !uuid '0117e0f0ba1aa8ee012bccd3705fef716c185971'
-    oldFile: !uuid 'f5b141fd5dc236689911271036f6d6d56d9cc140'
+    newFile: !uuid '6c25ba53d99c8c5345a9fdddfc70be35bc635580'
+    oldFile: !uuid '771e1950f17205dd5ee68f8986453b2dc3de0ae2'
+  /App/PluginConfig.cs:
+    newFile: !uuid '23fd1d34b02f464aca0e2259daec9f7c1b2565b8'
+    oldFile: !uuid 'f018a5a48fdbf82776f04bd0d8ac4b93d867a434'
   /Modules:
-    newFile: !uuid 'fb7574a6376149358e20c1f7dc2f42cc066f9e99'
-    oldFile: !uuid '5bedd3d84b6f65558d42e7a9e197daa68bbfc43f'
+    newFile: !uuid '01b250f1b69660b34d072ea6e26029560d7da346'
+    oldFile: !uuid 'fb7574a6376149358e20c1f7dc2f42cc066f9e99'
+  /Modules/AuthService:
+    newFile: !uuid 'bc84edab4b45206c2c45fa4e174a80271f2cf3dc'
+    oldFile: !uuid '7f285daacc27e4c95bddc3e77cc2067c2b231063'
+  /Modules/AuthService/PluginConfig.cs:
+    newFile: !uuid 'fa03e6d672a2eb6f683a7c831b295eb9544e75e1'
+    oldFile: !uuid '6e554e5d654528e654f0e2a645beaf33b5f919fb'
   /Modules/IoTAIService:
-    newFile: !uuid '8359ce0cf7645e466c7fec31373aec0293a423c2'
-    oldFile: !uuid '35102b5069cbb2734f54f5d9b0367127c0046c4b'
+    newFile: !uuid 'dea32e03fb4e334da110fd4ba4e2a9bb3142be37'
+    oldFile: !uuid '8359ce0cf7645e466c7fec31373aec0293a423c2'
   /Modules/IoTAIService/Business:
-    newFile: !uuid 'a7b627de3a7d235dab557eca82f5a314bca8f979'
-    oldFile: !uuid '5e4e60c1efea646cccd3ecb6b6fcb4eaec85d7c2'
+    newFile: !uuid '25af687fcfa974a564a4611f04978ed17220b2e1'
+    oldFile: !uuid 'a7b627de3a7d235dab557eca82f5a314bca8f979'
   /Modules/IoTAIService/Business/MilvusBLL.cs:
-    newFile: !uuid '5adf9c60b1a70d2dc674b0ccd937d69de03cfa51'
-    oldFile: !uuid '0d10678b351d6d69a561c4656981f4d71ffcb3f6'
-  /Modules/IoTAIService/IoTAIOption.cs:
-    newFile: !uuid 'bdf746c62c2323c0e5d3372c52bf7f707aedcfe4'
-    oldFile: !uuid '0df3cf3c3db348281487aca56171b5cfdb3fad3e'
-  /Modules/IoTAIService/PluginConfig.cs:
-    newFile: !uuid '02809fc53599ce00a4ed8dfbc7d082af7fdc75da'
-    oldFile: !uuid '0c5595d364cf64c7c864b088dc0c665084302636'
+    newFile: !uuid 'f3c05a4b4e9d1a172d599f493e4b27332d2e8f1a'
+    oldFile: !uuid '5adf9c60b1a70d2dc674b0ccd937d69de03cfa51'
   /Modules/LLMService:
-    newFile: !uuid '5c2d62f516b4bac919bbf1dd1a447547cc0e5551'
-    oldFile: !uuid '0ad1f995f606d13c99dc514fb2b8845a608912f7'
-  /Modules/LLMService/AiClientRegistry.cs:
-    newFile: !uuid '5fedfdcd29d10c2ad1be9de8cf6b04337c19f0a1'
-    oldFile: !uuid '6250467006b51bff4337e5ab9b479514f97c3560'
-  /Modules/LLMService/BpeLocalEmbeddingGenerator.cs:
-    newFile: !uuid '5d426e48b5bece03c193b2d9eb32c35e6f88ccc7'
-    oldFile: null
+    newFile: !uuid '22b7bc5543159b77e593e6fc2a9bef896d912233'
+    oldFile: !uuid '5c2d62f516b4bac919bbf1dd1a447547cc0e5551'
   /Modules/LLMService/Business:
-    newFile: !uuid 'ce9887cbfb010438a89aadd9dd6799ce65cab3b4'
-    oldFile: !uuid 'ad537566418d7c18b59c3e7c482e2ca7dd7b68ae'
+    newFile: !uuid '354a46d1bf8f5b0df46789a1cc1b4d6337f6d5b3'
+    oldFile: !uuid 'ce9887cbfb010438a89aadd9dd6799ce65cab3b4'
   /Modules/LLMService/Business/MemoryRagBLL.cs:
-    newFile: !uuid 'f7c4353189a37f8c6359a0c62857b0d00479bcfd'
-    oldFile: !uuid '7f4b21eea18f51024c572d2b503c28bdff5eb084'
-  /Modules/LLMService/LLMService.csproj:
-    newFile: !uuid '637a737d2c7d2a1b3f136197f7e9d87a535c6ccb'
-    oldFile: !uuid '79a4c3d80d60a11917e743cff9a8fbe87aff8724'
-  /Modules/LLMService/Migrations:
-    newFile: !uuid '6a4bc1237990758e3292e2e8c6f2316270ed4ac8'
-    oldFile: null
-  /Modules/LLMService/Migrations/LLMMigrator.cs:
-    newFile: !uuid '576d3a73f86b48128438a46f7d9aeaab6151acba'
-    oldFile: null
+    newFile: !uuid 'd1efe3b530500e32ab8d10182137692264da4ee1'
+    oldFile: !uuid 'f7c4353189a37f8c6359a0c62857b0d00479bcfd'
+  /README.md:
+    newFile: !uuid '70dc7499e1c0818b1df85e429cde69692d60b4c6'
+    oldFile: !uuid '53794c400cc44461b1e43f8f909bade28d49c606'
   /TemplateAction:
-    newFile: !uuid 'f0908cb3c5f51b5625e312e189de6021fcbc682f'
-    oldFile: !uuid '5842dfb311d65700e1944d5876dbbfc8a890d5f4'
+    newFile: !uuid '1307ed85b51d20d6dd9bc423cd530dea817a0050'
+    oldFile: !uuid 'f0908cb3c5f51b5625e312e189de6021fcbc682f'
+  /TemplateAction.NetCore:
+    newFile: !uuid '6ea782305aa8caf50ee5714e2fee901a8fb7a823'
+    oldFile: !uuid '9bf93dafbf4c559c06aaedbc9916f52dd7858f3f'
+  /TemplateAction.NetCore/TANetCorePluginConfig.cs:
+    newFile: !uuid '69d05ca25f0b02bbe7abe0cd36d831f067f59907'
+    oldFile: !uuid '676a24b125731e93975d1d86cceed9665576e70d'
   /TemplateAction/Core:
-    newFile: !uuid '734abde8b269c7090a0829f6fdf378ee12079cc1'
-    oldFile: !uuid 'ed69a9667a7d8726d2ea2c72d3fd08ffeb196b83'
-  /TemplateAction/Core/Dispatcher:
-    newFile: !uuid '2674fb33dea124bde24294b2092c8996b42768f6'
-    oldFile: !uuid '15e66917bb8c287a04a4929029a9de759b73b706'
-  /TemplateAction/Core/Dispatcher/DefaultMultiHandler.cs:
-    newFile: !uuid '549a9587961dce560932107f7284c314c02f8027'
-    oldFile: !uuid 'c19d924074a5457331fb5cf96cc1c950ceff85db'
+    newFile: !uuid '353b20515ae68e1cb78057b53eb4df72f081b808'
+    oldFile: !uuid '734abde8b269c7090a0829f6fdf378ee12079cc1'
+  /TemplateAction/Core/Plugin:
+    newFile: !uuid 'd9a1dd10d8376ba59bc45a28a1981063ccda0ff1'
+    oldFile: !uuid 'd9ee36e774bfc330650372ec3fddd4941bc77347'
+  /TemplateAction/Core/Plugin/PluginLoader.cs:
+    newFile: !uuid 'fb4d052d6db3cd2d565a7e51b1fb097ce7037695'
+    oldFile: !uuid '6149f82f70acc0f14ea90cc4e91654187b844298'
+  /TemplateAction/Core/Plugin/PluginObject.cs:
+    newFile: !uuid 'a7fe2e96b0cc66e8829dc3516dbdb64b9550332f'
+    oldFile: !uuid '0ed26544e44d72854756a4e8a2a16127966854d1'
+  /TemplateAction/Core/TAAbstractApplication.cs:
+    newFile: !uuid '3b25fac4b1d14d714f4d182d38091e6d6ff52289'
+    oldFile: !uuid '7c198128eb1fe8d6e66a0a212c829341aaedcd49'
   /admin-ui:
-    newFile: !uuid 'db8d05a2dc355c57c71225cbd88cc6c889f52242'
-    oldFile: !uuid 'ed4a33039d2120d1693f7a72dc6db7e551fdd4cf'
+    newFile: !uuid '3e0f009253371417fe5c11a93dffa0f84ccbd8ff'
+    oldFile: !uuid 'db8d05a2dc355c57c71225cbd88cc6c889f52242'
   /admin-ui/src:
-    newFile: !uuid '7c9ad28299f602a8828faf329ae778e72c2c1190'
-    oldFile: !uuid 'fb6c77474dec01c05b8efe038a908309ff74704c'
+    newFile: !uuid '8b1becf5c3b468773dc484b620d687db682c9841'
+    oldFile: !uuid '7c9ad28299f602a8828faf329ae778e72c2c1190'
   /admin-ui/src/layout:
-    newFile: !uuid '6e8897eb261d2b7443f3d9e081d1e7e011c07245'
-    oldFile: !uuid 'f478f50459824a5384c5a4d995b6ad7f0db00da5'
+    newFile: !uuid '3942bb0c2bbfdf188b66179b189a2af303fefd28'
+    oldFile: !uuid '6e8897eb261d2b7443f3d9e081d1e7e011c07245'
   /admin-ui/src/layout/components:
-    newFile: !uuid 'b64fbeafeb56d866e541edbbb79a4d3d23ea8d2d'
-    oldFile: !uuid 'd1e536e7de200dcf23b5f7946c6f06045ba9aad5'
+    newFile: !uuid 'fa76e7872a9f28752c61a9ade4fd64f8f2ed4d47'
+    oldFile: !uuid 'b64fbeafeb56d866e541edbbb79a4d3d23ea8d2d'
   /admin-ui/src/layout/components/Navbar.vue:
-    newFile: !uuid '3bd524a3ecdaff82ed0c7139a8dad11763775b2c'
-    oldFile: !uuid '15483afb0cd8fb8c130631871e745b3b60e5e758'
-gitCommitId: !uuid 'f168d063a442fd4cee76ce057dc9af41f16dce7a'
+    newFile: !uuid '77644a4636df7cea5bf0777be6c2423f33279fc4'
+    oldFile: !uuid '3bd524a3ecdaff82ed0c7139a8dad11763775b2c'
+  /admin-ui/src/views:
+    newFile: !uuid 'f5bf378f871e4d859d5856c4dc21530c6011d15a'
+    oldFile: !uuid '3dd008eed9cac2ac3f88a71132312fed9bf30c5e'
+  /admin-ui/src/views/llm:
+    newFile: !uuid 'ceb24daad695984d53cbf32285a39fa34b2de001'
+    oldFile: null
+  /admin-ui/src/views/llm/ai:
+    newFile: !uuid 'd74a77245973de6939fe1d0b6024a89e3a63754e'
+    oldFile: null
+  /admin-ui/src/views/llm/ai/assistant.vue:
+    newFile: !uuid '5c4319aabaecec704a03e7ffb9a8aff1fd5a8705'
+    oldFile: null
+gitCommitId: !uuid 'f88da3eede5b6dc4fbb2715dfd119e1f66d570f2'
 renames: {
   }
-revisionId: 341
+revisionId: 342
