@@ -113,7 +113,6 @@ namespace App
                 services.AddSingleton<NatsScope>();
                 TAEventDispatcher.Instance.AddScope(app.ServiceProvider.GetService<NatsScope>());
             }
-
         }
 
         public void Unload(ITAApplication app, PluginObject plg)

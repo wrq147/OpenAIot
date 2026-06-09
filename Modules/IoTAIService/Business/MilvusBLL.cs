@@ -48,7 +48,7 @@ namespace IoTAIService.Business
             }
             catch
             {
-                Console.WriteLine("张量数据库Milvus未启用");
+                Console.WriteLine("数据库Milvus未启用，无法初始化MemCollect");
                 return BusResponse<string>.Error(110, "张量数据库Milvus未启用");
             }
          

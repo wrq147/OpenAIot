@@ -200,6 +200,7 @@ namespace TemplateAction.Core
             }
 
             _entryPlugin = _plugins.NewPlugin(entry, null);
+            _entryPlugin.IsService = true;
             BeforeInit();
             //监听插件事件
             TAEventDispatcher.Instance.RegisterPluginLoad(PluginLoad);

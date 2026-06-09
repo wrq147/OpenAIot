@@ -79,6 +79,7 @@ namespace TemplateAction.Core
                         PluginObject tmpobj = _collection.NewPlugin(tmpAss, null);
                         if (tmpobj != null)
                         {
+                            tmpobj.IsService = true;
                             tlist.Add(tmpobj);
                             hslist.Add(tmpAss.FullName);
                         }
@@ -92,6 +93,7 @@ namespace TemplateAction.Core
             //加载动态模块
             AppDomain.CurrentDomain.AssemblyResolve += LoadEmbeddedAssembly;
             _pluginPath = path;
+            HashSet<string> pluginSet = new HashSet<string>();
             DirectoryInfo info = new DirectoryInfo(path);
             if (info.Exists)
             {
@@ -104,6 +106,7 @@ namespace TemplateAction.Core
                         string fullpath = fi.FullName;
                         if (!_allAssembly.ContainsKey(fullpath))
                         {
+                            pluginSet.Add(fullpath);
                             _allAssembly.TryAdd(fullpath, Path2Assembly(fullpath));
                         }
                     }
@@ -118,7 +121,12 @@ namespace TemplateAction.Core
 
             foreach (KeyValuePair<string, Assembly> kvp in _allAssembly)
             {
-                tlist.Add(_collection.NewPlugin(kvp.Value, kvp.Key));
+                var tmpplugin = _collection.NewPlugin(kvp.Value, kvp.Key);
+                if (pluginSet.Contains(kvp.Key))
+                {
+                    tmpplugin.IsService = true;
+                }
+                tlist.Add(tmpplugin);
             }
 
             //生成引用节点树,并调用各个插件的load

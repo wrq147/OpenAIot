@@ -41,6 +41,15 @@ namespace TemplateAction.Core
         {
             get { return mName; }
         }
+        private bool mIsService = false;
+        /// <summary>
+        /// 判断模块是否为服务
+        /// </summary>
+        public bool IsService
+        {
+            get { return mIsService; }
+            set { mIsService = value; }
+        }
         /// <summary>
         /// 当前插件版本
         /// </summary>
@@ -114,7 +123,7 @@ namespace TemplateAction.Core
             this.mVersion = assembly.GetName().Version;
             this._data = new ExtentionDataCollection();
 
-            if (pcdata != null)
+            if (pcdata != null && this.IsService)
             {
                 pcdata.PluginLoadBefore(this);
 

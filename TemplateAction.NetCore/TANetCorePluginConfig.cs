@@ -19,7 +19,10 @@ namespace TemplateAction.NetCore
             IConfiguration config = app.ServiceProvider.GetService<IConfiguration>();
             ConfigureServices(config, services);
             app.UsePlugin(plg);
-            Configure(app, plg);
+            if (plg.IsService)
+            {
+                Configure(app, plg);
+            }
         }
         /// <summary>
         /// 配置服务（插件激活前）
@@ -28,7 +31,7 @@ namespace TemplateAction.NetCore
         /// <param name="services"></param>
         protected abstract void ConfigureServices(IConfiguration config, IServiceCollection services);
         /// <summary>
-        /// 其它配置（插件激活后）
+        /// 服务初始化，非服务不会执行（插件激活后）
         /// </summary>
         /// <param name="app"></param>
         /// <param name="plg"></param>

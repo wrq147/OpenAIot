@@ -17,43 +17,39 @@ namespace AuthService
         public override string[] DependOn => Array.Empty<string>();
         protected override void ConfigureServices(IConfiguration config, IServiceCollection services)
         {
-            if (string.IsNullOrEmpty(Constants.General.token_url))
-            {
-                services.AddTransient<OperatorHelper>();
-                services.AddBLL<LoginLogBLL>();
-                services.AddBLL<MenuBLL>();
-                services.AddBLL<PermissionBLL>();
-                services.AddBLL<AuthBLL>();
-                services.AddBLL<UserBLL>();
-                services.AddBLL<DeptBLL>();
-                services.AddBLL<OrgBLL>();
-                services.AddBLL<UpgradeBLL>();
-                services.AddBLL<DataChangeBLL>();
-                services.AddScope<ConfigBLL>();
-                services.AddBLL<StyleBLL>();
-                services.AddBLL<GroupViewBLL>();
+            services.AddTransient<OperatorHelper>();
+            services.AddBLL<LoginLogBLL>();
+            services.AddBLL<MenuBLL>();
+            services.AddBLL<PermissionBLL>();
+            services.AddBLL<AuthBLL>();
+            services.AddBLL<UserBLL>();
+            services.AddBLL<DeptBLL>();
+            services.AddBLL<OrgBLL>();
+            services.AddBLL<UpgradeBLL>();
+            services.AddBLL<DataChangeBLL>();
+            services.AddScope<ConfigBLL>();
+            services.AddBLL<StyleBLL>();
+            services.AddBLL<GroupViewBLL>();
 
-                services.AddDAL<UserDAL>();
-                services.AddDAL<LoginLogDAL>();
-                services.AddDAL<PermissionDAL>();
-                services.AddDAL<MenuDAL>();
-                services.AddDAL<OrgDAL>();
-                services.AddSingleton<DeptDAL>();
-                services.AddSingleton<ConfigDAL>();
-                services.AddTransient<CodeBLL>();
-                services.AddSingleton<CodeDAL>();
-                services.AddSingleton<AuthMiddleware>();
-                services.AddDAL<AdminExtDAL>();
-                services.AddDAL<OrgExtDAL>();
-                services.AddDAL<UpgradeDAL>();
-                services.AddDAL<StyleDAL>();
-                services.AddDAL<OrgStyleDAL>();
-                services.AddDAL<GroupViewDAL>();
-                services.AddDAL<FieldValDAL>();
+            services.AddDAL<UserDAL>();
+            services.AddDAL<LoginLogDAL>();
+            services.AddDAL<PermissionDAL>();
+            services.AddDAL<MenuDAL>();
+            services.AddDAL<OrgDAL>();
+            services.AddSingleton<DeptDAL>();
+            services.AddSingleton<ConfigDAL>();
+            services.AddTransient<CodeBLL>();
+            services.AddSingleton<CodeDAL>();
+            services.AddSingleton<AuthMiddleware>();
+            services.AddDAL<AdminExtDAL>();
+            services.AddDAL<OrgExtDAL>();
+            services.AddDAL<UpgradeDAL>();
+            services.AddDAL<StyleDAL>();
+            services.AddDAL<OrgStyleDAL>();
+            services.AddDAL<GroupViewDAL>();
+            services.AddDAL<FieldValDAL>();
 
-                services.AddSingleton<ConfigCache>();
-            }
-
+            services.AddSingleton<ConfigCache>();
         }
         private DA_Table tb1;
         protected override void Configure(ITAApplication app, PluginObject plg)

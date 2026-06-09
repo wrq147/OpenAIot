@@ -258,6 +258,9 @@ export default {
     
   },
   methods: {
+    openAIAssistant(){
+      this.$router.push("/llm/ai/assistant");
+    },
     async reqOrgLis() {
       let list = await this.$store.dispatch("orgLis/setOrgList");
       return list;
