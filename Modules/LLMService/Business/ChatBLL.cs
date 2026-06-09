@@ -2,12 +2,9 @@
 using AuthService.Business;
 using Common;
 using Common.EventBus;
-using Grpc.Core;
 using LLMService.Model;
 using Microsoft.Extensions.AI;
-using MySqlX.XDevAPI;
-using NATS.Client.Core;
-using Quartz.Impl.AdoJobStore.Common;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +18,12 @@ namespace LLMService.Business
     {
         private IAiClientRegistry _registry;
         private ITAServiceProvider _provider;
-        public ChatBLL(IAiClientRegistry registry, ITAServiceProvider provider)
+        private ILogger<ChatBLL> _log;
+        public ChatBLL(IAiClientRegistry registry, ITAServiceProvider provider, ILoggerFactory logFactory)
         {
             _registry = registry;
             _provider = provider;
+            _log = logFactory.CreateLogger<ChatBLL>();
         }
         private async Task<T_ChatStatus> GetSessionStatus(string sessionId)
         {
@@ -127,29 +126,41 @@ namespace LLMService.Business
             StringBuilder aiFullResponse = new StringBuilder();
             var bus = _provider.GetService<NatsScope>().Bus;
             var resp = chatClient.GetStreamingResponseAsync(msgList, opt);
-            await foreach (var update in resp)
+            try
             {
-                if (await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
+                await foreach (var update in resp)
                 {
-                    await SetSessionStatus(sessionId, T_ChatStatus.Active);
-                    return;
-                }
-                if (!string.IsNullOrEmpty(update.Text))
-                {
-                    List<string> data = new List<string>();
-                    data.Add("llmchat/" + sessionId);
-                    data.Add(update.Text);
-                    await bus.PublishAsync(new NatsMsg<List<string>>()
+                    if (await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
                     {
-                        Subject = "MqttNotice.Msg",
-                        Data = data
-                    }, DefalutNatsJsonSerializer<List<string>>.Default);
-
-                    aiFullResponse.Append(update.Text);
+                        await SetSessionStatus(sessionId, T_ChatStatus.Active);
+                        return;
+                    }
+                    if (!string.IsNullOrEmpty(update.Text))
+                    {
+                        await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>(){
+                                sessionId,
+                                "#llm"+update.Text
+                            });
+                        aiFullResponse.Append(update.Text);
+                    }
                 }
             }
-            //将本轮对话保存到短期记忆
-            await _provider.GetService<ShortMemoryBLL>().SaveChat(opt.ConversationId, userInput, aiFullResponse.ToString());
+            catch (Exception ex)
+            {
+                _log.LogError(ex.Message);
+            }
+            finally
+            {
+                //将本轮对话保存到短期记忆
+                if (aiFullResponse.Length > 0)
+                {
+                    await _provider.GetService<ShortMemoryBLL>().SaveChat(opt.ConversationId, userInput, aiFullResponse.ToString());
+                }
+                await SetSessionStatus(sessionId, T_ChatStatus.Active);
+                await Task.Delay(100);
+                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>() { sessionId, "#llm" });
+            }
+
         }
     }
 }

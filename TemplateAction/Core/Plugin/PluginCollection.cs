@@ -506,16 +506,19 @@ namespace TemplateAction.Core
         }
 
 
+
+
         /// <summary>
         /// 创建插件
         /// </summary>
         /// <param name="ass"></param>
         /// <param name="filepath"></param>
+        /// <param name="isService"></param>
         /// <returns></returns>
-        public PluginObject NewPlugin(Assembly ass, string filepath)
+        public PluginObject NewPlugin(Assembly ass, string filepath, bool isService)
         {
             if (ass == null) return null;
-            PluginObject newObj = new PluginObject(this, _extionData, ass, filepath);
+            PluginObject newObj = new PluginObject(this, _extionData, ass, filepath, isService);
             if (newObj.Config == null) return null;
             return newObj;
         }

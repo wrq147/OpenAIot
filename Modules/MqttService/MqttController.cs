@@ -109,17 +109,19 @@ namespace MqttService
 
             await client.PublishAsync(applicationMessage);
         }
+
         /// <summary>
         /// 通知用户有新的消息
         /// </summary>
         /// <param name="uid"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public async Task NoticeUpdate(string uid)
+        public async Task NoticeUpdate(string uid, string data)
         {
             var client = await GetSystemClient();
             var applicationMessage = new MqttApplicationMessageBuilder()
     .WithTopic("user/" + uid + "/new")
-    .WithPayload(string.Empty)
+    .WithPayload(data)
     .Build();
             await client.PublishAsync(applicationMessage);
         }

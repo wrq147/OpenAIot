@@ -137,6 +137,7 @@ import {
   noReadCount,
   setReadAll
 } from "@/api/message/message";
+import { recentHistory } from "@/api/llmchat";
 import { switchOrg } from "@/api/system/user";
 import {loginThemeInfo} from '@/utils/theme'
 import { checkPermi } from "@/utils/permission"; // 权限判断函数
@@ -236,6 +237,12 @@ export default {
     
   },
   mounted() {
+    if (checkPermi(["/LLMService/AI/Assistant"])) {
+      //初始化助手的聊天记录
+      recentHistory().then(res=>{
+        this.$store.commit("llm/inithis", res.data);
+      });
+    }
     if (checkPermi(["/MsgSrv/Message/List"])) {
       this.getNoReadCount();
       this.getNoReadList();
@@ -247,8 +254,22 @@ export default {
             this.$store.commit("mqttclient/Add_Handler", {
               key: tkey,
               func:  (message)=>{
-                this.getNoReadCount();
-                this.getNoReadList();
+                if(message==null||message==""){
+                  this.getNoReadCount();
+                  this.getNoReadList();
+                }
+                else{
+                  if(message.startsWith("#llm")){
+                    //接收到AI助手回复
+                    let msgcont=message.substring(4);
+                    if(msgcont!=""){
+                      this.$store.commit("llm/pushmsg", msgcont);
+                    }
+                    else{
+                      this.$store.commit("llm/finishmsg", "");
+                    }
+                  }
+                }
               },
             });
           }
@@ -259,7 +280,7 @@ export default {
   },
   methods: {
     openAIAssistant(){
-      this.$router.push("/llm/ai/assistant");
+      this.$router.push("/report/ai/assistant");
     },
     async reqOrgLis() {
       let list = await this.$store.dispatch("orgLis/setOrgList");

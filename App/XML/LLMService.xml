@@ -64,6 +64,12 @@
             <param name="userInput"></param>
             <returns></returns>
         </member>
+        <member name="M:LLMService.Controller.Chat.RecentHistory">
+            <summary>
+            最近会话记录
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:LLMService.GeneratedTaskScript">
             <summary>
             LLM生成的脚本信息
@@ -82,6 +88,26 @@
         <member name="P:LLMService.LLMOption.MilvusDatabase">
             <summary>
             Milvus数据库名称
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.Out_ChatMessage.role">
+            <summary>
+            消息所属角色：用户user、助手assistant
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.Out_ChatMessage.status">
+            <summary>
+            状态：0为完成，1为进行中
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.Out_ChatMessage.data">
+            <summary>
+            消息内容
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.Out_ChatMessage.time">
+            <summary>
+            时间戳
             </summary>
         </member>
         <member name="M:LLMService.OsPlatform.GetSystemPrompt">

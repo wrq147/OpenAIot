@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { recentHistory,postMessage } from "@/api/llmchat";
 
 export default {
   name: 'AiChat',

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace TemplateAction.Core
 {
@@ -29,7 +30,7 @@ namespace TemplateAction.Core
                 tmp.Add(d);
             }
             //被移除的引用
-            foreach(ReferenceNode parentNode in node.Parents)
+            foreach (ReferenceNode parentNode in node.Parents)
             {
                 if (tmp.Contains(parentNode.Name))
                 {
@@ -68,8 +69,8 @@ namespace TemplateAction.Core
                 return null;
             }
         }
-     
-        public void Append(List<PluginObject> plugins)
+
+        public void Append(List<PluginObject> plugins, Func<string, PluginObject> plgCreator)
         {
             foreach (PluginObject plg in plugins)
             {
@@ -80,10 +81,10 @@ namespace TemplateAction.Core
             }
             foreach (PluginObject plg in plugins)
             {
-                GenerateReferenceNode(_mapping[plg.Name]);
+                GenerateReferenceNode(_mapping[plg.Name], plgCreator);
             }
         }
-        private ReferenceNode GenerateReferenceNode(MappingObject mapObj)
+        private ReferenceNode GenerateReferenceNode(MappingObject mapObj, Func<string, PluginObject> plgCreator)
         {
             if (mapObj.Node == null)
             {
@@ -95,10 +96,28 @@ namespace TemplateAction.Core
                 string[] dependOn = mapObj.Target.GenerateDependOn();
                 foreach (string s in dependOn)
                 {
-                    ReferenceNode n = GenerateReferenceNode(_mapping[s]);
-                    n.Children.Add(mapObj.Node);
-                    maxLevel = Math.Max(maxLevel, n.Level);
-                    mapObj.Node.Parents.Add(n);
+                    ReferenceNode n = null;
+                    if (!_mapping.TryGetValue(s, out MappingObject tmpobj))
+                    {
+                        PluginObject target = plgCreator(s);
+                        if (target != null)
+                        {
+                            n = GenerateReferenceNode(new MappingObject()
+                            {
+                                Target = target
+                            }, plgCreator);
+                        }
+                    }
+                    else
+                    {
+                        n = GenerateReferenceNode(_mapping[s], plgCreator);
+                    }
+                    if (n != null)
+                    {
+                        n.Children.Add(mapObj.Node);
+                        maxLevel = Math.Max(maxLevel, n.Level);
+                        mapObj.Node.Parents.Add(n);
+                    }
                 }
                 //初始化本节点
                 mapObj.Node.Level = maxLevel + 1;

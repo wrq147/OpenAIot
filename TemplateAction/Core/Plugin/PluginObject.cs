@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Xml.Linq;
 using TemplateAction.Cache;
 
 namespace TemplateAction.Core
@@ -41,15 +42,7 @@ namespace TemplateAction.Core
         {
             get { return mName; }
         }
-        private bool mIsService = false;
-        /// <summary>
-        /// 判断模块是否为服务
-        /// </summary>
-        public bool IsService
-        {
-            get { return mIsService; }
-            set { mIsService = value; }
-        }
+
         /// <summary>
         /// 当前插件版本
         /// </summary>
@@ -110,8 +103,14 @@ namespace TemplateAction.Core
         {
             get { return _collection; }
         }
-        public PluginObject(PluginCollection collection, IPluginExtData pcdata, Assembly assembly, string pluginpath)
+        private bool _isService;
+        public bool IsService
         {
+            get { return _isService; }
+        }
+        public PluginObject(PluginCollection collection, IPluginExtData pcdata, Assembly assembly, string pluginpath, bool isService)
+        {
+            this._isService = isService;
             this._collection = collection;
             this._assembly = assembly;
             this._plgPath = pluginpath;
@@ -122,7 +121,6 @@ namespace TemplateAction.Core
             this._services = new ServiceCollection(collection, this.mName);
             this.mVersion = assembly.GetName().Version;
             this._data = new ExtentionDataCollection();
-
             if (pcdata != null && this.IsService)
             {
                 pcdata.PluginLoadBefore(this);
@@ -167,7 +165,7 @@ namespace TemplateAction.Core
 
 
             //无Config，则创建一个默认的
-            if (this._config == null && pluginpath != null)
+            if (this._config == null && pcdata != null)
             {
                 this._config = new EmptyConfig();
             }

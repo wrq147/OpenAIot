@@ -13,6 +13,8 @@ import mqttclient from './modules/mqttclient'
 import getters from './getters'
 import printTemplateModule from './modules/print/index.js'
 import snapshot from './modules/snapshot'
+import llm from './modules/llm'
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -28,7 +30,8 @@ const store = new Vuex.Store({
         mqttclient,
         orgLis,
         printTemplateModule,
-        snapshot
+        snapshot,
+        llm
     },
     getters
 })

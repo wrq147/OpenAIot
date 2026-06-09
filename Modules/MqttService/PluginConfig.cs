@@ -129,7 +129,8 @@ namespace MqttService
                                     await app.ServiceProvider.GetService<EmqxController>().NoticeData(msg.Data[0], msg.Data[1]);
                                 }
                             }
-                            catch (Exception ex) {
+                            catch (Exception ex)
+                            {
                                 Console.WriteLine(ex.Message);
                             }
                         }
@@ -137,7 +138,7 @@ namespace MqttService
 
                     Task t2 = Task.Run(async () =>
                     {
-                        await foreach (var msg in bus.SubscribeAsync("Mqtt.User.New", tmpsubid, DefalutNatsJsonSerializer<string>.Default))
+                        await foreach (var msg in bus.SubscribeAsync("Mqtt.User.New", tmpsubid, DefalutNatsJsonSerializer<List<string>>.Default))
                         {
                             if (msg.Data == null)
                             {
@@ -146,11 +147,11 @@ namespace MqttService
                             //发送前端mqtt通知
                             if (!option.Value.enable_emqx)
                             {
-                                await app.ServiceProvider.GetService<MqttController>().NoticeUpdate(msg.Data);
+                                await app.ServiceProvider.GetService<MqttController>().NoticeUpdate(msg.Data[0], msg.Data[1]);
                             }
                             else
                             {
-                                await app.ServiceProvider.GetService<EmqxController>().NoticeUpdate(msg.Data);
+                                await app.ServiceProvider.GetService<EmqxController>().NoticeUpdate(msg.Data[0], msg.Data[1]);
                             }
                         }
                     });
@@ -158,16 +159,16 @@ namespace MqttService
                 }
                 else
                 {
-                    plg.Dispatcher.Register<string>("Mqtt.User.New", async (evt) =>
+                    plg.Dispatcher.Register<List<string>>("Mqtt.User.New", async (evt) =>
                     {
                         //发送前端mqtt通知
                         if (!option.Value.enable_emqx)
                         {
-                            await app.ServiceProvider.GetService<MqttController>().NoticeUpdate(evt);
+                            await app.ServiceProvider.GetService<MqttController>().NoticeUpdate(evt[0], evt[1]);
                         }
                         else
                         {
-                            await app.ServiceProvider.GetService<EmqxController>().NoticeUpdate(evt);
+                            await app.ServiceProvider.GetService<EmqxController>().NoticeUpdate(evt[0], evt[1]);
                         }
                     });
                 }

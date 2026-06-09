@@ -57,11 +57,11 @@ namespace MqttService
             await _client.PublishAsync(applicationMessage);
         }
 
-        public async Task NoticeUpdate(string uid)
+        public async Task NoticeUpdate(string uid, string data)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
     .WithTopic("user/" + uid + "/new")
-    .WithPayload(string.Empty)
+    .WithPayload(data)
     .Build();
             await _client.PublishAsync(applicationMessage);
         }

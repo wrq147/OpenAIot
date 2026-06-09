@@ -199,8 +199,7 @@ namespace TemplateAction.Core
                 throw new ArgumentNullException("入口程序集不能为null");
             }
 
-            _entryPlugin = _plugins.NewPlugin(entry, null);
-            _entryPlugin.IsService = true;
+            _entryPlugin = _plugins.NewPlugin(entry, null, true);
             BeforeInit();
             //监听插件事件
             TAEventDispatcher.Instance.RegisterPluginLoad(PluginLoad);

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TemplateAction.Core;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace MessageService
 {
@@ -54,7 +55,11 @@ namespace MessageService
                         //站内新消息提醒
                         if (tmpconfig.active_notice)
                         {
-                            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", recv.uid.ToString());
+                            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                            {
+                                recv.uid.ToString(),
+                                string.Empty
+                            });
                         }
 
                         //离线个推提醒

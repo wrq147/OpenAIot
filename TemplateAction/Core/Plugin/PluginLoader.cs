@@ -76,10 +76,9 @@ namespace TemplateAction.Core
                         {
                             continue;
                         }
-                        PluginObject tmpobj = _collection.NewPlugin(tmpAss, null);
+                        PluginObject tmpobj = _collection.NewPlugin(tmpAss, null, true);
                         if (tmpobj != null)
                         {
-                            tmpobj.IsService = true;
                             tlist.Add(tmpobj);
                             hslist.Add(tmpAss.FullName);
                         }
@@ -121,16 +120,20 @@ namespace TemplateAction.Core
 
             foreach (KeyValuePair<string, Assembly> kvp in _allAssembly)
             {
-                var tmpplugin = _collection.NewPlugin(kvp.Value, kvp.Key);
-                if (pluginSet.Contains(kvp.Key))
-                {
-                    tmpplugin.IsService = true;
-                }
+                var tmpplugin = _collection.NewPlugin(kvp.Value, kvp.Key, pluginSet.Contains(kvp.Key));
                 tlist.Add(tmpplugin);
             }
 
             //生成引用节点树,并调用各个插件的load
-            _tree.Append(tlist);
+            _tree.Append(tlist, s =>
+            {
+                Assembly tmpAss = Assembly.Load(s);
+                if (tmpAss == null)
+                {
+                    return null;
+                }
+                return _collection.NewPlugin(tmpAss, null, false);
+            });
         }
         public void UpdateAssembly(List<string> pathList)
         {
@@ -171,17 +174,25 @@ namespace TemplateAction.Core
                 Assembly ass = Path2Assembly(filepath);
                 if (_allAssembly.TryAdd(filepath, ass))
                 {
-                    tlist.Add(_collection.NewPlugin(ass, filepath));
+                    tlist.Add(_collection.NewPlugin(ass, filepath, true));
                 }
             }
-            _tree.Append(tlist);
+            _tree.Append(tlist, s =>
+            {
+                Assembly tmpAss = Assembly.Load(s);
+                if (tmpAss == null)
+                {
+                    return null;
+                }
+                return _collection.NewPlugin(tmpAss, null, false);
+            });
         }
         private void UpdateReferenceNode(ReferenceNode node, HashSet<string> needUpdates)
         {
             string filepath = _pluginPath + Path.DirectorySeparatorChar + node.Name + TAUtility.ModExt;
             Assembly ass = Path2Assembly(filepath);
             _allAssembly[filepath] = ass;
-            PluginObject target = _collection.NewPlugin(ass, filepath);
+            PluginObject target = _collection.NewPlugin(ass, filepath, true);
             _tree.UpdateReferenceNode(node, target);
             needUpdates.Remove(node.Name);
             //初始化插件
