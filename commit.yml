@@ -3,33 +3,27 @@ branches: {
   }
 fileChange:
   /admin-ui:
-    newFile: !uuid 'ab17fafa93c1ec38031d3ce9306e4473eeb432a3'
-    oldFile: !uuid 'ae38aa35a007b71585a2d279333f22790fe6985a'
+    newFile: !uuid '71332b9dab6adbc9d0fd28dca9388389c49f4d16'
+    oldFile: !uuid 'ab17fafa93c1ec38031d3ce9306e4473eeb432a3'
+  /admin-ui/package.json:
+    newFile: !uuid '0ed7eba9dd6adfb01584fbd00ddd6fd29f0eda90'
+    oldFile: !uuid '5f43f092f7031867319898b635aeee89f78e8d71'
   /admin-ui/src:
-    newFile: !uuid '92466d95d1b9b3c8430bfc224be0c9185e10c157'
-    oldFile: !uuid '4ae7ecb899a7c744be7c9441b33c98d37fdc5480'
-  /admin-ui/src/store:
-    newFile: !uuid '60ac78355d2102fb10b0535c2bbcf51173a6004d'
-    oldFile: !uuid 'bf8e6ec8a8d4946d98f293997fd6b190c4e7b290'
-  /admin-ui/src/store/modules:
-    newFile: !uuid '138954748da44234ec8ecbee2e7b93a30931cb42'
-    oldFile: !uuid 'bd2fb819df51d8048e33f33cc5e898a116c3891c'
-  /admin-ui/src/store/modules/llm.js:
-    newFile: !uuid '24e1d6cb8d0a5f39c155ea650584590dfc9d6a3e'
-    oldFile: !uuid 'a642555377731a89f15d2385f3d9cf69e155bb10'
+    newFile: !uuid '3e0a380504aba18f19d7a19bbf2549595ae1720c'
+    oldFile: !uuid '92466d95d1b9b3c8430bfc224be0c9185e10c157'
   /admin-ui/src/views:
-    newFile: !uuid '457c88f822161ccaa7e24498c891e00c3d143f9c'
-    oldFile: !uuid 'b1d61f3524aee18931e157f0e8c89bd69cd0fb48'
+    newFile: !uuid '06a075c722b64f07243db1193d2d3aa18539aa23'
+    oldFile: !uuid '457c88f822161ccaa7e24498c891e00c3d143f9c'
   /admin-ui/src/views/llm:
-    newFile: !uuid 'a367d253e06b96ddd4f5245f5b0763cc84dbc2db'
-    oldFile: !uuid '1a8da9efa4b0f7e2a111c37badb5ee686524fb82'
+    newFile: !uuid 'a8b1e7eecbe13193dbb55ef50c031adb53241706'
+    oldFile: !uuid 'a367d253e06b96ddd4f5245f5b0763cc84dbc2db'
   /admin-ui/src/views/llm/ai:
-    newFile: !uuid '98b3ac2a7f72b6ee1733e052fcb0e364aa0921b7'
-    oldFile: !uuid '683f9e8bdfee0bac7854af75aa8f742edb0f0a0c'
+    newFile: !uuid '28fd50899c88ccace65ad49f876559ed41e6cbce'
+    oldFile: !uuid '98b3ac2a7f72b6ee1733e052fcb0e364aa0921b7'
   /admin-ui/src/views/llm/ai/assistant.vue:
-    newFile: !uuid '082a4d9943294c8a32937910733a5994a9f48d77'
-    oldFile: !uuid '7b5416457429bf8b64040c32ea4da4a19b7c09d5'
-gitCommitId: !uuid '8507ec019c08ea9d76cf7f1c72cebd67d131aaac'
+    newFile: !uuid '08f44b0ec87d273c702c3ee8707e59a1b2e6a294'
+    oldFile: !uuid '082a4d9943294c8a32937910733a5994a9f48d77'
+gitCommitId: !uuid '7d72dedaccca385b86300016bdba48272358c25a'
 renames: {
   }
-revisionId: 344
+revisionId: 345
