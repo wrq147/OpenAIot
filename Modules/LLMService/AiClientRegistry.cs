@@ -45,8 +45,7 @@ namespace LLMService
                 var openopt = new OpenAIClientOptions() { Endpoint = new Uri(opt.Endpoint) };
                 var openAiCli = new OpenAIClient(apiKey, openopt);
                 //对话客户端
-                string chatModel = key == "DeepSeek" ? "deepseek-chat" : "gpt-4o";
-                IChatClient chatCli = openAiCli.GetChatClient(chatModel).AsIChatClient().AsBuilder()
+                IChatClient chatCli = openAiCli.GetChatClient(key).AsIChatClient().AsBuilder()
                 .UseFunctionInvocation()
                 .Build();
                 _chatMap[key] = chatCli;

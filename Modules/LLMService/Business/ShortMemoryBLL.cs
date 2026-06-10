@@ -42,33 +42,24 @@ namespace LLMService.Business
                     var historyText = await GetShortMemoryStr(sessionId);
                     // LLM 总结
                     var prompt = $@"
-请对以下用户对话进行两项处理，并**严格按JSON格式返回**，不要额外说明：
-
-1. summary：精简总结对话内容（长期记忆）
-2. query：提取用户问题的核心主题、关键词，用于未来检索相关记忆
+请对以下用户对话进行精简总结，字数不能超过2500个字，并且只需要返回总结内容，不要额外说明：
 
 {historyText}
 
-输出格式（必须合法JSON）：
-{{
-    ""summary"": ""这里写总结"",
-    ""query"": ""这里写关键词/主题""
-}}";
+";
                     var chatClient = _registry.GetDefaultChat();
                     var response = await chatClient.GetResponseAsync(new List<ChatMessage>
                     {
-                        new(ChatRole.System, "你是记忆处理助手，只输出标准JSON，无其他内容"),
+                        new(ChatRole.System, "你是记忆处理助手，只输出精简总结，无其他内容"),
                         new(ChatRole.User, prompt)
                     }, new ChatOptions()
                     {
                         ToolMode = ChatToolMode.None
                     });
-                    var json = JsonSerializer.Deserialize<Dictionary<string, string>>(response.Text);
-                    string summary = json["summary"];
-                    string query = json["query"];
+                    string summary = response.Text;
 
                     // 存入长期记忆（带query用于相关度计算）
-                    await _provider.GetService<MemoryRagBLL>().SaveMemoryAsync(sessionId, query, summary);
+                    await _provider.GetService<MemoryRagBLL>().SaveMemoryAsync(sessionId, summary);
                     // 清理
                     await Clear(sessionId);
                 });

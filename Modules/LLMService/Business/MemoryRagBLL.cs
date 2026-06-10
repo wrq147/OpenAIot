@@ -59,9 +59,9 @@ namespace LLMService.Business
         
         }
 
-        public async Task SaveMemoryAsync(string sessionId, string query, string content)
+        public async Task SaveMemoryAsync(string sessionId, string content)
         {
-            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
+            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(content);
             MilvusCollection collection = _client.GetCollection("ChatMemory");
             var curtime = MyAccess.Core.TypeConvert.Time2Unix(DateTime.Now);
             List<ReadOnlyMemory<float>> embedVector = new();

@@ -11,6 +11,9 @@ using TemplateAction.Core;
 using TemplateAction.Route;
 namespace LLMService.Controller
 {
+    /// <summary>
+    /// AI会话接口
+    /// </summary>
     public class Chat : AbstractLoginedController
     {
         /// <summary>

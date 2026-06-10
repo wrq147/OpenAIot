@@ -1,8 +1,7 @@
 <template>
   <div id="formulaPage">
     <div ref="formulaView" class="formulaView" contentEditable="false">
-      <span v-for="(item, idx) in backFormulaStrArray" :key="idx" :class="{ 'cursor': item.active }">{{ item.name
-      }}</span>
+      <span v-for="(item, idx) in backFormulaStrArray" :key="idx" :class="{ 'cursor': item.active }">{{ item.name}}</span>
     </div>
     <div style="display: flex;flex-direction: row;">
       <div class="info-left">

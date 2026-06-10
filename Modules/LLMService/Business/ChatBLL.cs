@@ -130,9 +130,12 @@ namespace LLMService.Business
             {
                 await foreach (var update in resp)
                 {
+                    if (update == null)
+                    {
+                        return;
+                    }
                     if (await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
                     {
-                        await SetSessionStatus(sessionId, T_ChatStatus.Active);
                         return;
                     }
                     if (!string.IsNullOrEmpty(update.Text))

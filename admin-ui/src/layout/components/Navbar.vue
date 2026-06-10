@@ -1,12 +1,8 @@
 <template>
   <div class="navbar">
     <div class="navbar_left" v-if="!isOrg">
-      <hamburger
-        id="hamburger-container"
-        :is-active="sidebar.opened"
-        class="hamburger-container"
-        @toggleClick="toggleSideBar"
-      />
+      <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
+        @toggleClick="toggleSideBar" />
 
       <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav" />
       <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav" />
@@ -14,14 +10,14 @@
     <div v-if="isOrg">
       <div style="padding:20px" class="org_nav">
         <!-- <svg-icon icon-class="qiyemingcheng" style="color:#B1A3A8"></svg-icon> -->
-        <i class="zhongtaiiconfont zhongtai-icon-qiyemingcheng" style="color:#B1A3A8" ></i>
+        <i class="zhongtaiiconfont zhongtai-icon-qiyemingcheng" style="color:#B1A3A8"></i>
         <div class="org_logo">
           <img :src="org.Logo" alt style="width:40px;height:40px;border-radius:50%;" />
         </div>
-        <span class="org_name">{{org.OrgName}}</span>
+        <span class="org_name">{{ org.OrgName }}</span>
       </div>
     </div>
-    
+
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
         <search id="header-search" class="right-menu-item" />
@@ -29,20 +25,18 @@
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-        <el-tooltip content="AI助手" effect="dark" placement="bottom" v-if="checkPermission(['/LLMService/AI/Assistant'])">
+        <el-tooltip content="AI助手" effect="dark" placement="bottom"
+          v-if="checkPermission(['/LLMService/AI/Assistant'])">
           <div class="right-menu-item hover-effect" @click="openAIAssistant" style="font-size: 14px; color:#7D8598;">
             AI助手
           </div>
         </el-tooltip>
       </template>
-      <el-dropdown
-        v-if="checkPermission(['/MsgSrv/Message/List'])"
-        class="right-menu-item hover-effect"
-        trigger="click"
-      >
+      <el-dropdown v-if="checkPermission(['/MsgSrv/Message/List'])" class="right-menu-item hover-effect"
+        trigger="click">
         <div>
           <!-- <svg-icon icon-class="xiaoxizhongxin" color="#7D8598" /> -->
-          <i class="zhongtaiiconfont zhongtai-icon-xiaoxizhongxin" style="color:#7D8598" ></i>
+          <i class="zhongtaiiconfont zhongtai-icon-xiaoxizhongxin" style="color:#7D8598"></i>
           <div class="yuan1" v-if="noReadCount > 0">{{ noReadCount }}</div>
         </div>
         <el-dropdown-menu slot="dropdown" class="message_ul">
@@ -51,13 +45,9 @@
             <span class="otherColor" @click="readAll" v-if="noReadList.length > 0">全部已读</span>
           </el-dropdown-item>
           <el-dropdown-item class="message_li">
-            <ul
-              class="infinite-list"
-              style="overflow: scroll; overflow-x: hidden"
-              v-if="noReadList.length > 0"
-            >
+            <ul class="infinite-list" style="overflow: scroll; overflow-x: hidden" v-if="noReadList.length > 0">
               <li v-for="(i, ix) in noReadList" :key="ix" class="infinite-list-item">
-                <div @click="toEveryMessage(i.click_url, i.id,i)">
+                <div @click="toEveryMessage(i.click_url, i.id, i)">
                   <div class="noRead_title">{{ i.label }}</div>
                   <div class="msgContent huise">{{ i.content }}</div>
                   <div class="times huise">{{ i.create_time }}</div>
@@ -67,11 +57,8 @@
             <div class="noMessage" v-else>暂无数据</div>
           </el-dropdown-item>
           <el-dropdown-item class="message_li last_li">
-            <div
-              @click="toMessageList"
-              class="otherColor"
-              style="width: 100%; height: 100%; text-align: center"
-            >前往信息中心</div>
+            <div @click="toMessageList" class="otherColor" style="width: 100%; height: 100%; text-align: center">前往信息中心
+            </div>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -80,18 +67,13 @@
         <div class="avatar-wrapper">
           <el-avatar shape="square" :size="35" fit="cover" :src="avatar"></el-avatar>
           <!-- <i class="xiajiantou" /> -->
-          <svg-icon icon-class="xiajiantou" class="avatar-xiajiantou" style="color:#BBC0CD"/>
+          <svg-icon icon-class="xiajiantou" class="avatar-xiajiantou" style="color:#BBC0CD" />
           <!-- <i class="zhongtaiiconfont zhongtai-icon-xiajiantou avatar-xiajiantou" color="#BBC0CD" ></i> -->
         </div>
         <el-dropdown-menu slot="dropdown" style="width: 240px !important">
           <el-dropdown-item class="cmp-blk">
             <div class="cmp-title">企业</div>
-            <div
-              class="cmp-item"
-              v-for="orgitem in orgList"
-              :key="orgitem.Id"
-              @click="onSwitchOrg(orgitem.Id)"
-            >
+            <div class="cmp-item" v-for="orgitem in orgList" :key="orgitem.Id" @click="onSwitchOrg(orgitem.Id)">
               <el-avatar :size="20" shape="square" fit="cover" :src="orgitem.Logo"></el-avatar>
               <span class="txt">{{ orgitem.OrgName }}</span>
               <i class="el-icon-check ric" v-if="curOrgId == orgitem.Id"></i>
@@ -139,7 +121,7 @@ import {
 } from "@/api/message/message";
 import { recentHistory } from "@/api/llmchat";
 import { switchOrg } from "@/api/system/user";
-import {loginThemeInfo} from '@/utils/theme'
+import { loginThemeInfo } from '@/utils/theme'
 import { checkPermi } from "@/utils/permission"; // 权限判断函数
 import { Loading } from 'element-ui';
 export default {
@@ -196,7 +178,7 @@ export default {
     visitedViews() {
       return this.$store.state.tagsView.visitedViews;
     },
-    ischangeMessageLoad(){
+    ischangeMessageLoad() {
       return this.$store.state.user.ischangeMessageLoad;
     }
   },
@@ -208,38 +190,38 @@ export default {
           //从登入页面进入重新更新企业列表
           this.$store.commit("orgLis/SET_ORG_LIST", null);
         }
-        if(this.$store.state.user.changeOrgId){
+        if (this.$store.state.user.changeOrgId) {
           this.onSwitchOrg(this.$store.state.user.changeOrgId)
           this.$store.commit("SET_CHANGE_ORG", '');
         }
-        
-        if(!this.$store.state.user.orgId){
-          let orgList=await this.reqOrgLis()
+
+        if (!this.$store.state.user.orgId) {
+          let orgList = await this.reqOrgLis()
           // console.log(orgList,'企业列表');
-          if(orgList&&orgList[0]){
+          if (orgList && orgList[0]) {
             this.onSwitchOrg(orgList[0].Id)
           }
-          
+
         }
       },
       deep: true, // 深度监听
       immediate: true // 第一次初始化渲染就可以监听到
     },
-    ischangeMessageLoad:{
-      handler(to,from){
-        if(this.ischangeMessageLoad){
+    ischangeMessageLoad: {
+      handler(to, from) {
+        if (this.ischangeMessageLoad) {
           this.$store.commit("SET_changeMessageLoad", false);
           this.getNoReadCount();
           this.getNoReadList();
         }
       }
     }
-    
+
   },
   mounted() {
     if (checkPermi(["/LLMService/AI/Assistant"])) {
       //初始化助手的聊天记录
-      recentHistory().then(res=>{
+      recentHistory().then(res => {
         this.$store.commit("llm/inithis", res.data);
       });
     }
@@ -253,19 +235,26 @@ export default {
           if (!error) {
             this.$store.commit("mqttclient/Add_Handler", {
               key: tkey,
-              func:  (message)=>{
-                if(message==null||message==""){
+              func: (message) => {
+                if (message == null) {
+                  this.getNoReadCount();
+                  this.getNoReadList();
+                  return;
+                }
+                let msgcont = message.toString();
+                if(msgcont== ""){
                   this.getNoReadCount();
                   this.getNoReadList();
                 }
-                else{
-                  if(message.startsWith("#llm")){
+                else
+                {
+                  if (msgcont.startsWith("#llm")) {
                     //接收到AI助手回复
-                    let msgcont=message.substring(4);
-                    if(msgcont!=""){
+                    msgcont = msgcont.substring(4);
+                    if (msgcont != "") {
                       this.$store.commit("llm/pushmsg", msgcont);
                     }
-                    else{
+                    else {
                       this.$store.commit("llm/finishmsg", "");
                     }
                   }
@@ -276,10 +265,10 @@ export default {
         });
       });
     }
-    
+
   },
   methods: {
-    openAIAssistant(){
+    openAIAssistant() {
       this.$router.push("/report/ai/assistant");
     },
     async reqOrgLis() {
@@ -316,22 +305,22 @@ export default {
             });
         });
     },
-    toEveryMessage(routs, id,item) {
+    toEveryMessage(routs, id, item) {
       setRead({ id }).then(res => {
         if (res.code == 0) {
-          this.jmpToUrl(routs,item);
+          this.jmpToUrl(routs, item);
           this.getNoReadCount();
           this.getNoReadList();
         }
       });
     },
-    jmpToUrl(routs,item){
+    jmpToUrl(routs, item) {
       if (routs) {
-        let clickurl= item.click_url.toLowerCase();
-        if(clickurl.indexOf("http")==0){
+        let clickurl = item.click_url.toLowerCase();
+        if (clickurl.indexOf("http") == 0) {
           window.open(clickurl);
         }
-        else{
+        else {
           this.$router.push(routs);
         }
       }
@@ -383,9 +372,9 @@ export default {
         type: "warning"
       })
         .then(async () => {
-          
+
           await this.closeAllTags(); //在退出系统之前关闭所有页面
-          let logUid=this.$store.getters.uid
+          let logUid = this.$store.getters.uid
           this.$store.dispatch("LogOut").then(async () => {
             sessionStorage.setItem('wxloginout', true);
             // this.$router.replace(`/login?redirect=${this.$route.fullPath}`);
@@ -397,18 +386,18 @@ export default {
               });
             });
             let loadingInstance = Loading.service({ fullscreen: true });
-            let loginUrl=await loginThemeInfo(this.$store.state.user.orgId)
-            if(loginUrl){
+            let loginUrl = await loginThemeInfo(this.$store.state.user.orgId)
+            if (loginUrl) {
               // this.$router.replace(`${loginUrl}&redirect=${this.$route.fullPath}`);
-              if(loginUrl.indexOf('?')>-1){
-                window.location.href=`${loginUrl}&redirect=${this.$route.fullPath}`
+              if (loginUrl.indexOf('?') > -1) {
+                window.location.href = `${loginUrl}&redirect=${this.$route.fullPath}`
                 window.location.reload()
-              }else{
-                window.location.href=`${loginUrl}?redirect=${this.$route.fullPath}`
+              } else {
+                window.location.href = `${loginUrl}?redirect=${this.$route.fullPath}`
                 window.location.reload()
               }
-              
-            }else{
+
+            } else {
               this.$router.replace(`/login?redirect=${this.$route.fullPath}`);
             }
             this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
@@ -416,7 +405,7 @@ export default {
             });
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     async closeAllTags() {
       let { visitedViews } = await this.$store.dispatch("tagsView/delAllViews");
@@ -430,6 +419,7 @@ export default {
   left: calc(100vw - 340px) !important;
   position: relative;
 }
+
 .message_ul .popper__arrow::after {
   right: 60px;
   border-left: 15px solid transparent;
@@ -459,6 +449,7 @@ export default {
 .navbar {
   background-color: #ffffff;
 }
+
 .message_ul {
   // background-color: #3dacfe;
   // color: #3dacfe;
@@ -497,12 +488,15 @@ export default {
   width: 100%;
   border-bottom: 1px solid rgba(144, 147, 153, 0.3);
   padding: 0 !important;
+
   .otherColor {
     color: #6aa5ff;
   }
+
   .largeWords {
     // font-size: 16px;
   }
+
   .noMessage {
     height: 150px;
     width: 100%;
@@ -511,6 +505,7 @@ export default {
     line-height: 150px;
     text-align: center;
   }
+
   .infinite-list {
     max-height: 300px;
     width: 100%;
@@ -519,36 +514,44 @@ export default {
     box-sizing: border-box;
     padding: 0 6px 0 17px;
     visibility: top;
+
     &::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
+
     // 滚动条的轨道的两端按钮，允许通过点击微调小方块的位置。
     &::-webkit-scrollbar-button {
       display: none;
     }
+
     // 滚动条的轨道（里面装有Thumb）
     &::-webkit-scrollbar-track {
       background: transparent;
     }
+
     // 滚动条的轨道（里面装有Thumb）
     &::-webkit-scrollbar-track-piece {
       background-color: transparent;
     }
+
     // 滚动条里面的小方块，能向上向下移动（或往左往右移动，取决于是垂直滚动条还是水平滚动条）
     &::-webkit-scrollbar-thumb {
       background: rgba(144, 147, 153, 0.3);
       cursor: pointer;
       border-radius: 4px;
     }
+
     // 边角，即两个滚动条的交汇处
     &::-webkit-scrollbar-corner {
       display: none;
     }
+
     // 两个滚动条的交汇处上用于通过拖动调整元素大小的小控件
     &::-webkit-resizer {
       display: none;
     }
+
     .infinite-list-item {
       list-style: none;
       // height: 50px;
@@ -557,6 +560,7 @@ export default {
       border-bottom: 1px solid rgba(144, 147, 153, 0.3);
       padding: 5px 0;
       line-height: 24px;
+
       .noRead_title {
         //单行溢出设置
         white-space: nowrap; // 文本不会换行。
@@ -564,49 +568,62 @@ export default {
         text-overflow: ellipsis; // 显示省略符号来代表被修剪的文本。
         line-height: 24px;
       }
+
       .msgContent {
         // font-size: 14px;
         max-height: 36px;
         display: -webkit-box;
         line-height: 18px;
-        -webkit-box-orient: vertical; /* 表示盒子对象的子元素的排列方式 */
-        -webkit-line-clamp: 2; /* 限制文本的行数，表示文本第多少行省略 */
-        text-overflow: ellipsis; /*  打点展示 */
-        overflow: hidden; /*超出部分进行隐藏*/
+        -webkit-box-orient: vertical;
+        /* 表示盒子对象的子元素的排列方式 */
+        -webkit-line-clamp: 2;
+        /* 限制文本的行数，表示文本第多少行省略 */
+        text-overflow: ellipsis;
+        /*  打点展示 */
+        overflow: hidden;
+        /*超出部分进行隐藏*/
       }
+
       .times {
         margin-top: 2px;
       }
+
       .huise {
         //字体颜色为灰色
         color: #9a9a9a;
       }
     }
+
     .infinite-list-item:last-child {
       border-bottom: none;
     }
   }
 }
+
 .message_li:hover {
   background-color: #ffffff !important;
   box-sizing: border-box;
   width: 100%;
   color: #606266 !important;
 }
+
 .first_li,
 .last_li {
   height: 50px;
   line-height: 50px !important;
 }
+
 .last_li {
   border-radius: 0 0 5px 5px;
   border: none;
   justify-content: center;
 }
+
 .first_li {
   padding: 0 17px !important;
   border-radius: 5px 5px 0 0;
 }
+
 // .message_li:hover span {
 //   // color: #fff;
 // }
@@ -615,22 +632,27 @@ export default {
   background-color: #ffffff !important;
   color: #606266;
 }
+
 .cmp-blk {
   padding: 0 !important;
+
   .cmp-title {
     padding: 0 17px;
     font-size: 12px;
     color: #bfbfbf;
   }
+
   .cmp-item:hover {
     background-color: #e8f4ff;
     color: #6aa5ff;
   }
+
   .cmp-item {
     padding: 0 17px;
     display: flex;
     align-items: center;
     height: 36px;
+
     .txt {
       flex: 1 1 auto;
       margin-left: 8px;
@@ -638,12 +660,14 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .ric {
       color: #6aa5ff;
       font-size: 16px;
       margin-left: 10px;
     }
   }
+
   .cmp-add {
     padding: 0 17px;
     display: flex;
@@ -651,6 +675,7 @@ export default {
     color: #6aa5ff;
     height: 36px;
   }
+
   .cmp-add:hover {
     background-color: #e8f4ff;
     color: #6aa5ff;
@@ -661,6 +686,7 @@ export default {
   display: flex;
   height: 36px;
   align-items: center;
+
   .ic {
     margin-right: 10px;
     font-size: 18px;
@@ -680,20 +706,24 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .navbar_left {
     display: flex;
     align-items: center;
   }
+
   .org_nav {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin-left: 30px;
+
     .org_name {
       font-size: 12px;
       font-weight: 600;
       margin-left: 10px;
     }
+
     .org_logo {
       width: 40px;
       height: 40px;
@@ -701,6 +731,7 @@ export default {
       margin-left: 10px;
     }
   }
+
   .hamburger-container {
     line-height: 45px;
     height: 45px;
@@ -709,6 +740,7 @@ export default {
     transition: background 0.3s;
     -webkit-tap-highlight-color: transparent;
     font-size: var(--fslist);
+
     &:hover {
       background: rgba(0, 0, 0, 0.025);
     }
@@ -717,10 +749,12 @@ export default {
   .breadcrumb-container {
     float: left;
   }
+
   .el-breadcrumb.app-breadcrumb {
     // font-size: 18px;//固定头部导航栏字体样式
     font-size: var(--fsslde);
   }
+
   .topmenu-container {
     position: absolute;
     left: 50px;
@@ -735,6 +769,7 @@ export default {
     float: right;
     height: 45px;
     line-height: 45px;
+
     &:focus {
       outline: none;
     }
@@ -761,6 +796,7 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
+
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
@@ -773,6 +809,7 @@ export default {
           top: 25px;
           // font-size: 12px;
         }
+
         .avatar-xiajiantou {
           //头像旁边的箭头的样式
           position: absolute;

@@ -10,6 +10,7 @@ export function recentHistory() {
 
 // 用户输入提问
 export function postMessage(input) {
+    console.info(input)
     return request({
         url: '/LLMService/Chat/Message',
         method: 'post',

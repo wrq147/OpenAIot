@@ -8,7 +8,7 @@ const mutations = {
   },
   pushmsg: (state, info) => {
     let tmparr = state.messageList;
-    if (tmparr.lenght == 0) {
+    if (tmparr.length == 0) {
       state.messageList.push({
         role: "assistant",
         status: 1,
@@ -17,8 +17,9 @@ const mutations = {
       });
       return;
     }
-    if (tmparr[tmparr.lenght - 1].role == "assistant" && tmparr[tmparr.lenght - 1].status == "1") {
-      tmparr[tmparr.lenght - 1].data += info;
+
+    if (tmparr[tmparr.length - 1].role == "assistant" && tmparr[tmparr.length - 1].status == "1") {
+      tmparr[tmparr.length - 1].data += info;
     }
     else {
       state.messageList.push({
@@ -31,7 +32,7 @@ const mutations = {
   },
   finishmsg: (state, info) => {
     let tmparr = state.messageList;
-    for (let i = tmparr.lenght - 1; i >= 0; i--) {
+    for (let i = tmparr.length - 1; i >= 0; i--) {
       if (tmparr[i].role == "assistant" && tmparr[i].status == 1) {
         state.messageList[i].status = 0;
         break;
