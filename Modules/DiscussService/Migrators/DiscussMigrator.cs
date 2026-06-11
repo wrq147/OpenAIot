@@ -16,7 +16,6 @@ namespace DiscussService.Migrators
 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
 .WithColumn("OrgId").AsInt64().Indexed("SubjectOrgId").WithColumnDescription("所属企业Id")
 .WithColumn("Title").AsString(255).WithColumnDescription("标题")
-.WithColumn("IsExt").AsBoolean().WithColumnDescription("是否为扩展用主题")
 .WithColumn("TargetId").AsString(128).WithColumnDescription("关联对象Id")
 .WithColumn("TargetType").AsString(100).WithColumnDescription("主题类型")
 .WithColumn("SubjectContent").AsString(20000).WithColumnDescription("主题内容")

@@ -205,7 +205,6 @@ namespace CRMService.Business
             subj.OrgId = data.OrgId;
             subj.Title = data.CustomerName;
             subj.SubjectContent = string.Empty;
-            subj.IsExt = true;
             subj.TargetId = data.Id;
             subj.TargetType = "客户";
 

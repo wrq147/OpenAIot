@@ -28,10 +28,6 @@ namespace DiscussService.Model
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 是否为扩展用主题
-        /// </summary>
-        public bool? IsExt { get; set; }
-        /// <summary>
         /// 关联对象Id
         /// </summary>
         public string TargetId { get; set; }

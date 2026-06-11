@@ -23,7 +23,7 @@ namespace LLMService
             services.AddSingleton<ChatBLL>();
             services.AddSingleton<ShortMemoryBLL>();
             services.AddSingleton<MemoryRagBLL>();
-            services.AddSingleton<InfoRagBLL>();
+            services.AddSingleton<KnowledgeBLL>();
         }
         protected override void Configure(ITAApplication app, PluginObject plg)
         {

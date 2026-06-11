@@ -375,7 +375,6 @@ namespace CRMService.Business
             subj.OrgId = data.OrgId;
             subj.Title = data.OpportName;
             subj.SubjectContent = string.Empty;
-            subj.IsExt = true;
             subj.TargetId = data.Id;
             subj.TargetType = "商机";
 

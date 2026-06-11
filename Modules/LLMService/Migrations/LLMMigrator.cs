@@ -7,11 +7,90 @@ using System.Threading.Tasks;
 
 namespace LLMService.Migrations
 {
-    [Migration(20260608001)]
+    [Migration(20260611001)]
     public class LLMMigrator : Migration
     {
         public override void Up()
         {
+            // 创建知识库表
+            if (!Schema.Table("llm_knowledge").Exists())
+            {
+                Create.Table("llm_knowledge")
+                    .WithColumn("Id").AsString(128).PrimaryKey()
+                    .WithColumn("Cover").AsString(500).Nullable().WithColumnDescription("封面URL")
+                    .WithColumn("Name").AsString(100).NotNullable().WithColumnDescription("文库名称")
+                    .WithColumn("Description").AsString(500).Nullable().WithColumnDescription("文库描述")
+                    .WithColumn("OrgId").AsInt64().NotNullable().WithColumnDescription("组织ID,0为全网级文库")
+                    .WithColumn("Status").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：3-审核失败，2-审核中，1-启用，0-禁用")
+                    .WithColumn("DocCount").AsInt32().NotNullable().WithDefaultValue(0).WithColumnDescription("文档数量")
+                    .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
+                    .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
+                    .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
+                    .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
+
+                Create.Index("idx_llm_kb_orgid").OnTable("llm_knowledge").OnColumn("OrgId");
+                Create.Index("idx_llm_kb_status").OnTable("llm_knowledge").OnColumn("Status");
+            }
+
+            // 创建栏目表
+            if (!Schema.Table("llm_kb_column").Exists())
+            {
+                Create.Table("llm_kb_column")
+                    .WithColumn("Id").AsString(128).PrimaryKey()
+                    .WithColumn("KbId").AsString(128).NotNullable().WithColumnDescription("知识库ID")
+                    .WithColumn("Name").AsString(100).NotNullable().WithColumnDescription("栏目名称")
+                    .WithColumn("ParentId").AsInt64().NotNullable().WithDefaultValue(0).WithColumnDescription("父栏目ID，0表示顶级栏目")
+                    .WithColumn("SortOrder").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("排序号")
+                    .WithColumn("Status").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：1-启用，0-禁用")
+                    .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
+                    .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
+                    .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
+                    .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
+
+                Create.Index("idx_llm_col_kbid").OnTable("llm_kb_column").OnColumn("KbId");
+                Create.Index("idx_llm_col_parentid").OnTable("llm_kb_column").OnColumn("ParentId");
+                Create.Index("idx_llm_col_status").OnTable("llm_kb_column").OnColumn("Status");
+
+                Create.ForeignKey("fk_llm_col_kb")
+                    .FromTable("llm_kb_column").ForeignColumn("KbId")
+                    .ToTable("llm_knowledge").PrimaryColumn("Id")
+                    .OnDelete(System.Data.Rule.Cascade);
+            }
+
+            // 创建文章表
+            if (!Schema.Table("llm_article").Exists())
+            {
+                Create.Table("llm_article")
+                    .WithColumn("Id").AsString(128).PrimaryKey()
+                    .WithColumn("KbId").AsString(128).NotNullable().WithColumnDescription("知识库ID")
+                    .WithColumn("ColumnId").AsString(128).Nullable().WithColumnDescription("栏目ID")
+                    .WithColumn("Title").AsString(200).NotNullable().WithColumnDescription("文章标题")
+                    .WithColumn("Content").AsString(16777215).Nullable().WithColumnDescription("文章内容")
+                    .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("文章关键词")
+                    .WithColumn("Cover").AsString(500).Nullable().WithColumnDescription("封面URL")
+                    .WithColumn("Status").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：1-已发布，0-草稿")
+                    .WithColumn("ViewCount").AsInt32().NotNullable().WithDefaultValue(0).WithColumnDescription("阅读次数")
+                    .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
+                    .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
+                    .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
+                    .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
+
+                Create.Index("idx_llm_art_kbid").OnTable("llm_article").OnColumn("KbId");
+                Create.Index("idx_llm_art_colid").OnTable("llm_article").OnColumn("ColumnId");
+                Create.Index("idx_llm_art_status").OnTable("llm_article").OnColumn("Status");
+                Create.Index("idx_llm_art_doctype").OnTable("llm_article").OnColumn("DocType");
+
+                Create.ForeignKey("fk_llm_art_kb")
+                    .FromTable("llm_article").ForeignColumn("KbId")
+                    .ToTable("llm_knowledge").PrimaryColumn("Id")
+                    .OnDelete(System.Data.Rule.Cascade);
+
+                Create.ForeignKey("fk_llm_art_col")
+                    .FromTable("llm_article").ForeignColumn("ColumnId")
+                    .ToTable("llm_kb_column").PrimaryColumn("Id")
+                    .OnDelete(System.Data.Rule.Cascade);
+            }
+
             this.Execute.Sql("delete FROM mz_menu where menu_id=55");
             Insert.IntoTable("mz_menu").Row(new
             {
@@ -36,9 +115,73 @@ namespace LLMService.Migrations
                 updateId = 0
             });
 
+
+
+            // 添加知识库管理菜单
+            this.Execute.Sql("delete FROM mz_menu where menu_id=56");
+            Insert.IntoTable("mz_menu").Row(new
+            {
+                menu_id = 56,
+                menu_name = "知识库管理",
+                parent_id = 55,
+                order_num = 1,
+                path = "klg/index",
+                component = "llm/klg/index",
+                query = string.Empty,
+                is_frame = 0,
+                is_cache = 0,
+                menu_type = "C",
+                visible = "0",
+                status = "0",
+                perms = "/LLMService/Knowledge/List",
+                icon = "document",
+                scope = 0,
+                create_time = DateTime.Now,
+                update_time = DateTime.Now,
+                createId = 0,
+                updateId = 0
+            });
+
+            // 添加文章管理菜单
+            this.Execute.Sql("delete FROM mz_menu where menu_id=57");
+            Insert.IntoTable("mz_menu").Row(new
+            {
+                menu_id = 57,
+                menu_name = "文章管理",
+                parent_id = 56,
+                order_num = 1,
+                path = "klg/article",
+                component = "llm/klg/article",
+                query = string.Empty,
+                is_frame = 0,
+                is_cache = 0,
+                menu_type = "C",
+                visible = "0",
+                status = "0",
+                perms = "/LLMService/Knowledge/Article/List",
+                icon = "article",
+                scope = 0,
+                create_time = DateTime.Now,
+                update_time = DateTime.Now,
+                createId = 0,
+                updateId = 0
+            });
+
         }
         public override void Down()
         {
+            if (Schema.Table("llm_kb_column").Exists())
+            {
+                Delete.Table("llm_kb_column");
+            }
+            if (Schema.Table("llm_article").Exists())
+            {
+                Delete.Table("llm_article");
+            }
+            if (Schema.Table("llm_knowledge").Exists())
+            {
+                Delete.Table("llm_knowledge");
+            }
         }
     }
 }
