@@ -3,153 +3,60 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid '8f042e79fc04624fbcb5fab1d78e97670435369b'
-    oldFile: !uuid 'ba8c48a0811226de06e986dd78ac6c1e5a5dd63b'
-  /Modules/CRMService:
-    newFile: !uuid 'ba51491ce63ebf0d3a1f5b4424492b9221e49a4c'
-    oldFile: !uuid '41df4659d787f129a79a59897300a3f0277ecdf0'
-  /Modules/CRMService/Business:
-    newFile: !uuid 'a195f557f304871f9edd50c583ad9eefffcf6e9a'
-    oldFile: !uuid '487a27cefc19bb808c44744681ed742669750f8f'
-  /Modules/CRMService/Business/ClueBLL.cs:
-    newFile: !uuid 'e0024edc83ccea56b58831ffa91bfd3c70248951'
-    oldFile: !uuid 'c94960199193d82f0e4fa4f63871be5cfc01cdd1'
-  /Modules/CRMService/Business/CustomerBLL.cs:
-    newFile: !uuid 'b90a2525b3fb827776a6427d5683f0170471b944'
-    oldFile: !uuid '1962d914952f63d842305bccc3b9377f5ddbb307'
-  /Modules/CRMService/Business/OpportunityBLL.cs:
-    newFile: !uuid 'bfb1497ecaeb48f65e52810b75507aeeddc7e35c'
-    oldFile: !uuid '90762ecc06151076c89f53440abfcd12b269910b'
-  /Modules/DiscussService:
-    newFile: !uuid '143d9c27947fe6f9810057b77281ed3c7ad6d097'
-    oldFile: !uuid 'f97f0af6690481e79a61d5c6282b930dbaaf9833'
-  /Modules/DiscussService/Migrators:
-    newFile: !uuid 'a097f7378d270f274d759f44cc806bfdacc20079'
-    oldFile: !uuid '0f80539848c550b1e37e44b4f7df0b0b370f78c1'
-  /Modules/DiscussService/Migrators/DiscussMigrator.cs:
-    newFile: !uuid 'f733dc973d1b1bb470f51f5747b8822cc4374a7e'
-    oldFile: !uuid '313ad0143281ad573209a711e9e52efe7d85c745'
-  /Modules/DiscussService/Model:
-    newFile: !uuid '868361484d091bd3ba017f305f4d6589c065ae05'
-    oldFile: !uuid 'f70eb4e8aac9f0d60e7d6f2a396add1d4d5c74d5'
-  /Modules/DiscussService/Model/MZ_Subject.cs:
-    newFile: !uuid '6521a6e9f637cd1ac7ec1f6ee7b485e26f01a605'
-    oldFile: !uuid '53239ba14e1911aba3e3f3fde45cd7618f56a999'
+    newFile: !uuid 'd44165ecdeb43d1b9f06f75f88b4be93d951e21e'
+    oldFile: !uuid '8f042e79fc04624fbcb5fab1d78e97670435369b'
   /Modules/LLMService:
-    newFile: !uuid '0e411aa473f0b566cb2cff18487f3aa9545984b0'
-    oldFile: !uuid '5db6acc7baa821ba6013d9eeead86bdb9ca61e5e'
+    newFile: !uuid '76307ae3caca27e19e08764f8a0aba26c16b8eb1'
+    oldFile: !uuid '0e411aa473f0b566cb2cff18487f3aa9545984b0'
   /Modules/LLMService/Business:
-    newFile: !uuid '4ab8352636e0a853ab1a10108a18450ed0f9d23f'
-    oldFile: !uuid '69aff4649a335491c7fef6c62e0adc698ca4c3d8'
-  /Modules/LLMService/Business/ArticleBLL.cs:
-    newFile: !uuid 'f4bb55c9ce19a26e48d3a59f339b7be50e5cb662'
-    oldFile: null
-  /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid 'be93fde05c6b2f64dda05b9a0b60ad2f4a15cc80'
-    oldFile: !uuid 'a64d0331d3f40bd835a6f336afcec47a7ad4385c'
-  /Modules/LLMService/Business/InfoRagBLL.cs:
-    newFile: null
-    oldFile: !uuid '7ff8720b88769ed2bf4854ec54a660f009d19df1'
+    newFile: !uuid '7ce2416b5cf7bd25ad978be074650b0077a17d68'
+    oldFile: !uuid '4ab8352636e0a853ab1a10108a18450ed0f9d23f'
   /Modules/LLMService/Business/KbColumnBLL.cs:
-    newFile: !uuid 'b5f6a89e1b97db6bf6b66b16cef0ca35a96689f9'
-    oldFile: null
+    newFile: !uuid '89d2c5e406bd8c8b508fb55569576fe696c82eb9'
+    oldFile: !uuid 'b5f6a89e1b97db6bf6b66b16cef0ca35a96689f9'
   /Modules/LLMService/Business/KnowledgeBLL.cs:
-    newFile: !uuid '106f8b4b5b91da7ad4bc8656892f1a32cb141fe1'
-    oldFile: null
+    newFile: !uuid '6f76f2c21ed3dba89138174e68155e635f19d12e'
+    oldFile: !uuid '106f8b4b5b91da7ad4bc8656892f1a32cb141fe1'
   /Modules/LLMService/Controller:
-    newFile: !uuid 'f01ca2db7dba2965d187ef808590a19e4d340839'
-    oldFile: !uuid '2bc63f6f61b3fc56c2e1f53a3d8eb4c2408d2ca4'
-  /Modules/LLMService/Controller/Article.cs:
-    newFile: !uuid 'f477ddfaa731eac768877d3f4434a4e7a93a2391'
-    oldFile: null
+    newFile: !uuid '846be47e6b0740ec95645395b78aee17db0d66ee'
+    oldFile: !uuid 'f01ca2db7dba2965d187ef808590a19e4d340839'
   /Modules/LLMService/Controller/KbColumn.cs:
-    newFile: !uuid 'cbda4a9801755e447c7a639e1ec1869991f3e309'
-    oldFile: null
+    newFile: !uuid 'c33c90a0f9184b264aa54572e3b9d351207e4e01'
+    oldFile: !uuid 'cbda4a9801755e447c7a639e1ec1869991f3e309'
   /Modules/LLMService/Controller/Knowledge.cs:
-    newFile: !uuid 'be00a17727a24d2505c367e625172b048d6aec3a'
-    oldFile: !uuid '5e3cd7e9c572ea6402f8fc2fe03716a26933c1d6'
+    newFile: !uuid '984f7c3e71509466903f54adb3689f921319c803'
+    oldFile: !uuid 'be00a17727a24d2505c367e625172b048d6aec3a'
   /Modules/LLMService/DAL:
-    newFile: !uuid '555b5b8936913154f83591864530c589c46adef6'
-    oldFile: null
+    newFile: !uuid 'bf6a580f6b4ab3cea531993d44c12bb0681d6c29'
+    oldFile: !uuid '555b5b8936913154f83591864530c589c46adef6'
   /Modules/LLMService/DAL/ArticleDAL.cs:
-    newFile: !uuid 'a3bba7305788b2d2907cc42822d2618732233562'
-    oldFile: null
+    newFile: !uuid '354aa033a5d7e38d383ee23a8bf86ba8225ca305'
+    oldFile: !uuid 'a3bba7305788b2d2907cc42822d2618732233562'
   /Modules/LLMService/DAL/KbColumnDAL.cs:
-    newFile: !uuid 'fbf0f847ca12a907a7ff392fb4e87cd782adf10c'
-    oldFile: null
+    newFile: !uuid '07287968b6631f705e8b20faf25838f9bedbc97f'
+    oldFile: !uuid 'fbf0f847ca12a907a7ff392fb4e87cd782adf10c'
   /Modules/LLMService/DAL/KnowledgeDAL.cs:
-    newFile: !uuid '273ed450e3d0daa5685daf2509799d3247368c0e'
-    oldFile: null
+    newFile: !uuid '4fbf58b9f84b4d6835cab33abc111e2affa47036'
+    oldFile: !uuid '273ed450e3d0daa5685daf2509799d3247368c0e'
   /Modules/LLMService/Migrations:
-    newFile: !uuid '40a296c55ca26e7e918f58185079cf91db0fe48c'
-    oldFile: !uuid '6a4bc1237990758e3292e2e8c6f2316270ed4ac8'
+    newFile: !uuid 'c834d8d6458d59e83566def97189cf99411e2cdf'
+    oldFile: !uuid '40a296c55ca26e7e918f58185079cf91db0fe48c'
   /Modules/LLMService/Migrations/LLMMigrator.cs:
-    newFile: !uuid 'fb511abf952e5d619cd1632324714ef806b46b80'
-    oldFile: !uuid '576d3a73f86b48128438a46f7d9aeaab6151acba'
+    newFile: !uuid 'ff1e31a33a30f4249c30ac0e19080c31d44bedf4'
+    oldFile: !uuid 'fb511abf952e5d619cd1632324714ef806b46b80'
   /Modules/LLMService/Model:
-    newFile: !uuid '4fcea6e10b7e2e6b2aab254839728690b5cee25d'
-    oldFile: !uuid 'd1e80077b494ded4920105b64bf660195f50fafa'
-  /Modules/LLMService/Model/In_ArticleQuery.cs:
-    newFile: !uuid '9087e1ed8a33616e43265b32b37a390c1bc98b45'
-    oldFile: null
-  /Modules/LLMService/Model/In_KbColumnQuery.cs:
-    newFile: !uuid 'ac65f7e8dcb34db31e93a62ea99a247683713a46'
-    oldFile: null
-  /Modules/LLMService/Model/In_KnowledgeQuery.cs:
-    newFile: !uuid '77573028af536114f913b5a3bdf9872ecef039e6'
-    oldFile: null
+    newFile: !uuid 'af7b468f9591846f54796a5112e9deb9e51f9fca'
+    oldFile: !uuid '4fcea6e10b7e2e6b2aab254839728690b5cee25d'
   /Modules/LLMService/Model/MZ_Article.cs:
-    newFile: !uuid 'bbee134b54f004bc8ebc39793346f2d06b7bfea1'
-    oldFile: null
+    newFile: !uuid '5074ef652afd15597cd41c5c2b878940947b6f44'
+    oldFile: !uuid 'bbee134b54f004bc8ebc39793346f2d06b7bfea1'
   /Modules/LLMService/Model/MZ_KbColumn.cs:
-    newFile: !uuid 'e851fa70da40a2c6f650dfa23b4d4d26ecd9d864'
-    oldFile: null
+    newFile: !uuid 'dc3ca0684f94ab745d2e30964297c2d146641a7a'
+    oldFile: !uuid 'e851fa70da40a2c6f650dfa23b4d4d26ecd9d864'
   /Modules/LLMService/Model/MZ_Knowledge.cs:
-    newFile: !uuid '06a9b446fa07349d3f7cd5de511287b1659c60a8'
-    oldFile: null
-  /Modules/LLMService/PluginConfig.cs:
-    newFile: !uuid '395f146dee16f80b28a59664a60c5232b601098f'
-    oldFile: !uuid '2cb554b80db736df1c657c59e947110ffd8cbc83'
-  /admin-ui:
-    newFile: !uuid '85f1d1df702186a8199335500581e8eb82e1132a'
-    oldFile: !uuid '63fb057ac8bc9dd14072e338f91f9eb7fb3c378b'
-  /admin-ui/src:
-    newFile: !uuid '7aa7fce5ca49aca140ab829e370b5e8434b1e528'
-    oldFile: !uuid '51ea5d8f88ed56cb28d332b863c3ba98c702fff5'
-  /admin-ui/src/api:
-    newFile: !uuid 'd55f6bc28b6c2869d178426270e727923498ab09'
-    oldFile: !uuid 'c2ca9b6726eeea909f5dff2ff79cf4aedc3bb48a'
-  /admin-ui/src/api/llm:
-    newFile: !uuid 'b0a4ba539da4dca36461e857b74dde69fecc6621'
-    oldFile: null
-  /admin-ui/src/api/llm/article.js:
-    newFile: !uuid '2eab81b36cd60754d9287dd016ad391600ee9262'
-    oldFile: null
-  /admin-ui/src/api/llm/column.js:
-    newFile: !uuid '47316e1fed2ab586f6530ffe2f18d82fa96df7e3'
-    oldFile: null
-  /admin-ui/src/api/llm/knowledge.js:
-    newFile: !uuid '66c587fc9388e13310064814b1da58b0287c1608'
-    oldFile: null
-  /admin-ui/src/views:
-    newFile: !uuid 'e5a63dada24b2ee7ea296266b8c669acfe75aca4'
-    oldFile: !uuid '9a5e03efc961d117bd1b8f56a058cffae433de54'
-  /admin-ui/src/views/llm:
-    newFile: !uuid '1813f6b491b791c39edc4c660ebfe76afd65bb50'
-    oldFile: !uuid 'a1737c02f388ce854469188843d1df7b36ce67d6'
-  /admin-ui/src/views/llm/klg:
-    newFile: !uuid '8cce6f56dee587dd89b63d931f3c33de8e0469a4'
-    oldFile: null
-  /admin-ui/src/views/llm/klg/column.vue:
-    newFile: !uuid '1dc6a902ddf040649f0efb542f80741a12036189'
-    oldFile: null
-  /admin-ui/src/views/llm/klg/detail.vue:
-    newFile: !uuid 'ee589e26a9b23018dcb1199a4cecc3a316e9731a'
-    oldFile: null
-  /admin-ui/src/views/llm/klg/index.vue:
-    newFile: !uuid '3158a95089ea41d1abe0dbb0039315276a126af9'
-    oldFile: null
-gitCommitId: !uuid '45326df3b181ce4dc2e53852315934d2483f8a7f'
+    newFile: !uuid 'c2ff1f73cd192b64081221dd492db64de2731275'
+    oldFile: !uuid '06a9b446fa07349d3f7cd5de511287b1659c60a8'
+gitCommitId: !uuid 'd0395d6589caf2cbf3d0211afe75a28a8ba19dab'
 renames: {
   }
-revisionId: 347
+revisionId: 348
