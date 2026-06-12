@@ -5,7 +5,6 @@ using LLMService.Model;
 using MyAccess.Aop;
 using MyAccess.DB;
 using MyAccess.DB.Builder.WhereToSql;
-using SqlParser.Net.Ast;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +25,14 @@ namespace LLMService.DAL
             var listResult = await tmpSql.ToListAsync();
             return listResult;
         }
-
+        /// <summary>
+        /// 获取栏目的最大排序号
+        /// </summary>
+        public virtual async Task<int> GetMaxSortOrder(string kbId)
+        {
+            return (await new SqlBuilder(help).Append("SELECT MAX(DeviceUpIdx) FROM llm_kb_column where KbId=").AppendParam(kbId)
+                .DoAsync<DoQueryScalar>()).GetValueInt();
+        }
     }
 
 }

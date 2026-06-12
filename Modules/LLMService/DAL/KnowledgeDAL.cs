@@ -18,7 +18,7 @@ namespace LLMService.DAL
             Expression<Func<MZ_Knowledge, bool>> expression;
             if (query.WithPublic == true)
             {
-                expression = (kb) => kb.OrgId == user.OrgId || kb.OrgId == 0;
+                expression = (kb) => kb.OrgId == user.OrgId || kb.IsPublic == true;
             }
             else
             {

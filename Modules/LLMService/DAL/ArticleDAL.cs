@@ -1,11 +1,10 @@
 using Common;
 using Common.Share;
-using LLMService.Controller;
+using JiebaNet.Segmenter;
 using LLMService.Model;
 using MyAccess.DB;
-using SqlParser.Net.Ast;
+using MyAccess.DB.Builder.WhereToSql;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -18,28 +17,24 @@ namespace LLMService.DAL
         public virtual async Task<PageObject<MZ_Article>> SelectByPage(In_ArticleQuery query, IUserInfo user)
         {
             Expression<Func<MZ_Article, bool>> expression = (a) => a.Kb.OrgId == 0 || a.Kb.OrgId == user.OrgId;
-            if (query.KbId.HasValue)
+            if (!string.IsNullOrEmpty(query.KbId))
             {
-                expression = expression.And((a, kb) => a.kb_id == query.KbId.Value);
+                expression = expression.And((a) => a.KbId == query.KbId);
             }
-            if (!string.IsNullOrEmpty(query.Title))
+            if (!string.IsNullOrEmpty(query.Key))
             {
-                expression = expression.And((a, kb) => a.title.Contains(query.Title));
+                var keys = new JiebaSegmenter().CutForSearch(query.Key);
+                expression = expression.And((a) => SonSqlFun.FullSearch("KeyWords", keys));
             }
             if (query.Status.HasValue)
             {
-                expression = expression.And((a, kb) => a.status == query.Status.Value);
-            }
-            if (query.DocType.HasValue)
-            {
-                expression = expression.And((a, kb) => a.doc_type == query.DocType.Value);
+                expression = expression.And((a) => a.Status == query.Status.Value);
             }
 
-            var tmpSql = new SqlBuilder(help).Query<T_Article>()
-                .LeftJoin<T_KnowledgeBase>((a, kb) => a.kb_id == kb.id)
-                .Where(expression, "a.*,kb.name as KbName");
+            var tmpSql = new SqlBuilder(help).Query<MZ_Article>()
+                .Include(a => a.Kb, a => a.KbId)
+                .Where(expression);
             var pageResult = await tmpSql.GeneratePageObjectAsync(query, "a.create_time desc");
-
             return pageResult;
         }
 

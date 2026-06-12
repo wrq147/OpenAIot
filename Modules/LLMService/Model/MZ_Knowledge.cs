@@ -1,6 +1,8 @@
+using Common.Attr;
 using Common.Share;
 using MyAccess.DB.Attr;
 using System;
+using System.Text.Json.Serialization;
 
 namespace LLMService.Model
 {
@@ -12,6 +14,7 @@ namespace LLMService.Model
         /// <summary>
         /// 封面URL
         /// </summary>
+        [JsonConverter(typeof(ImageUrl))]
         public string Cover { get; set; }
         /// <summary>
         /// 文库名称
@@ -26,9 +29,13 @@ namespace LLMService.Model
         /// 组织ID,0为全网级文库
         /// </summary>
         public long? OrgId { get; set; }
+        /// <summary>
+        /// 是否公开
+        /// </summary>
+        public bool? IsPublic { get; set; }
 
         /// <summary>
-        /// 状态：3-审核失败，2-审核中，1-启用，0-禁用
+        /// 状态：3-审核失败，2-审核中，1-已发布，0-草稿
         /// </summary>
         public int? Status { get; set; }
 

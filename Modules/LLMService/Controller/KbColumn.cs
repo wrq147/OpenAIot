@@ -12,6 +12,11 @@ namespace LLMService.Controller
 {
     public class KbColumn : AbstractLoginedController
     {
+        /// <summary>
+        /// 获取知识库的栏目列表
+        /// </summary>
+        /// <param name="kbId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<List<MZ_KbColumn>>> ListByKbId(string kbId)
         {
@@ -19,6 +24,11 @@ namespace LLMService.Controller
             return this.Success(result);
         }
 
+        /// <summary>
+        /// 获取栏目信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_KbColumn>> Info(string id)
         {
@@ -26,40 +36,41 @@ namespace LLMService.Controller
             return this.Success(result);
         }
 
-
-        [HttpGet]
-        public async Task<DefaultAjaxResult<List<MZ_KbColumn>>> GetByParentId(string parentId)
-        {
-            var result = await ServiceProvider.GetService<KbColumnBLL>().GetByParentId(parentId, GetUser());
-            return this.Success(result);
-        }
-
+        /// <summary>
+        /// 新增栏目
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<DefaultAjaxResult<string>> Add(MZ_KbColumn entity)
         {
-            var id = await ServiceProvider.GetService<KbColumnBLL>().Add(entity, GetUser());
-            return this.Success(id);
+            var rs = await ServiceProvider.GetService<KbColumnBLL>().Add(entity, GetUser());
+            return rs.ToAjaxResult();
         }
 
+        /// <summary>
+        /// 编辑栏目
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<DefaultAjaxResult<int>> Update(MZ_KbColumn entity)
         {
-            int rs = await ServiceProvider.GetService<KbColumnBLL>().Update(entity, GetUser());
-            return this.Success(rs);
+            var rs = await ServiceProvider.GetService<KbColumnBLL>().Update(entity, GetUser());
+            return rs.ToAjaxResult();
         }
 
+        /// <summary>
+        /// 删除栏目
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<int>> Delete(string id)
         {
-            int rs = await ServiceProvider.GetService<KbColumnBLL>().Delete(id, GetUser());
-            return this.Success(rs);
+            var rs = await ServiceProvider.GetService<KbColumnBLL>().Delete(id, GetUser());
+            return rs.ToAjaxResult();
         }
 
-        [HttpPost]
-        public async Task<DefaultAjaxResult<int>> ChangeStatus(string id, int status)
-        {
-            int rs = await ServiceProvider.GetService<KbColumnBLL>().ChangeStatus(id, status, GetUser());
-            return this.Success(rs);
-        }
     }
 }

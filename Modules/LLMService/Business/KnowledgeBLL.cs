@@ -1,8 +1,12 @@
 using AuthService;
+using Common.EventBus;
+using Common.IdGenerator;
 using Common.Share;
 using LLMService.DAL;
 using LLMService.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
@@ -11,23 +15,14 @@ namespace LLMService.Business
     public class KnowledgeBLL
     {
         private readonly KnowledgeDAL _kbDal;
-
-        public KnowledgeBLL(KnowledgeDAL kbDal)
+        private ITAServiceProvider _provider;
+        public KnowledgeBLL(KnowledgeDAL kbDal, ITAServiceProvider provider)
         {
             _kbDal = kbDal;
+            _provider = provider;
         }
 
-        private string GetPermissionTypeName(long orgId)
-        {
-            if (orgId > 0)
-            {
-                return "私有文库";
-            }
-            else
-            {
-                return "公开文库";
-            }
-        }
+
         public async Task<PageObject<MZ_Knowledge>> QueryList(In_KnowledgeQuery query, IUserInfo user)
         {
             var result = await _kbDal.SelectByPage(query, user);
@@ -36,63 +31,108 @@ namespace LLMService.Business
 
         public async Task<MZ_Knowledge> GetById(string id, IUserInfo user)
         {
-            var result = await _kbDal.SelectList(x => x.Id == id && (x.OrgId == 0 || x.OrgId == user.OrgId));
-            if (result != null)
-            {
-                result.DocCount = await _kbDal.GetDocCount(id);
-            }
-            return result;
+            var result = await _kbDal.SelectList(x => x.Id == id && (x.IsPublic == true || x.OrgId == user.OrgId));
+            return result.FirstOrDefault();
         }
 
-        public async Task<string> Add(MZ_Knowledge entity, IUserInfo user)
+        public async Task<BusResponse<string>> Add(MZ_Knowledge entity, IUserInfo user)
         {
             entity.OrgId = user.OrgId;
-            entity.Status = 1;
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            entity.Id = snowflake.NextId().ToString();
+            entity.Status = 0;
             entity.DocCount = 0;
             entity.SetCreateBy(user);
-            await _kbDal.InsertAsync(entity);
-            return entity.Id;
+            await _kbDal.Insert(entity);
+            return BusResponse<string>.Success(entity.Id);
         }
 
-        public async Task<int> Update(MZ_Knowledge entity, IUserInfo user)
+        public async Task<BusResponse<int>> Update(MZ_Knowledge entity, IUserInfo user)
         {
-            var existing = await _kbDal.SelectByIdAsync(entity.Id);
+            var existing = await _kbDal.Select(entity.Id);
             if (existing == null || existing.OrgId != user.OrgId)
             {
-                throw new Exception("知识库不存在或无权修改");
+                return BusResponse<int>.Error(111, "知识库不存在或无权修改");
             }
-
-            existing.Cover = entity.Cover;
-            existing.Name = entity.Name;
-            existing.Description = entity.Description;
-            existing.PermissionType = entity.PermissionType;
-            existing.SetUpdateBy(user);
-
-            await _kbDal.UpdateAsync(existing);
-        }
-
-        public async Task<int> Delete(string id, IUserInfo user)
-        {
-            var entity = await _kbDal.SelectByIdAsync(id);
-            if (entity == null || entity.OrgId != user.OrgId)
+            if (existing.Status != 0)
             {
-                throw new Exception("知识库不存在或无权删除");
+                return BusResponse<int>.Error(112, "知识库状态错误，无法修改");
             }
-
-            await _kbDal.DeleteAsync(id);
-        }
-
-        public async Task<int> ChangeStatus(string id, int status, IUserInfo user)
-        {
-            var entity = await _kbDal.SelectByIdAsync(id);
-            if (entity == null || entity.OrgId != user.OrgId)
-            {
-                throw new Exception("知识库不存在或无权修改");
-            }
-
-            entity.Status = status;
+            entity.Id = null;
+            entity.OrgId = null;
+            entity.Status = null;
+            entity.DocCount = null;
             entity.SetUpdateBy(user);
-            await _kbDal.UpdateAsync(entity);
+            return BusResponse<int>.Success(await _kbDal.Update(existing));
         }
+
+        public async Task<BusResponse<int>> Delete(string id, IUserInfo user)
+        {
+            var entity = await _kbDal.Select(id);
+            if (entity == null || entity.OrgId != user.OrgId)
+            {
+                return BusResponse<int>.Error(111, "知识库不存在或无权修改");
+            }
+
+            return BusResponse<int>.Success(await _kbDal.Delete(id));
+        }
+
+        public async Task<BusResponse<int>> EnableKnowledge(string id, IUserInfo user)
+        {
+            var entity = await _kbDal.Select(id);
+            if (entity == null || entity.OrgId != user.OrgId)
+            {
+                return BusResponse<int>.Error(111, "知识库不存在或无权修改");
+            }
+            if (user.OrgId == 1)
+            {
+                entity.Status = 1;
+            }
+            else
+            {
+                if (entity.IsPublic == true && entity.Status != 1)
+                {
+                    entity.Status = 2;
+
+                    var userDAL = _provider.GetService<UserDAL>();
+                    var recvList = await userDAL.SelectManUsers(1);
+                    List<TargetUser> targets = new List<TargetUser>();
+                    foreach (var recvId in recvList)
+                    {
+                        targets.Add(new TargetUser()
+                        {
+                            uid = recvId.Id.Value,
+                            email = recvId.Email,
+                            phone = recvId.Mobile
+                        });
+                    }
+                    var nt = new NoticeEvent(2, targets.ToArray(), new string[] { "APP" });
+                    nt.OrgId = 1;
+                    nt.TargetType = "Knowledge";
+                    nt.TargetUrl = string.Empty;
+                    nt.Content = $"知识库【{entity.Name}】需要您的审核";
+                    nt.Label = "知识库发布申请消息";
+                    await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
+                }
+                else
+                {
+                    entity.Status = 1;
+                }
+            }
+            entity.SetUpdateBy(user);
+            return BusResponse<int>.Success(await _kbDal.Update(entity));
+        }
+        public async Task<BusResponse<int>> DisableKnowledge(string id, IUserInfo user)
+        {
+            var entity = await _kbDal.Select(id);
+            if (entity == null || entity.OrgId != user.OrgId)
+            {
+                return BusResponse<int>.Error(111, "知识库不存在或无权修改");
+            }
+            entity.Status = 0;
+            entity.SetUpdateBy(user);
+            return BusResponse<int>.Success(await _kbDal.Update(entity));
+        }
+
     }
 }

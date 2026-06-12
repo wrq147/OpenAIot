@@ -52,10 +52,6 @@ namespace LLMService.Model
         /// </summary>
         public string Cover { get; set; }
 
-        /// <summary>
-        /// 状态：1-已发布，0-草稿
-        /// </summary>
-        public int? Status { get; set; }
 
         /// <summary>
         /// 阅读次数

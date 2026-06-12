@@ -11,6 +11,11 @@ namespace LLMService.Controller
 {
     public class Knowledge : AbstractLoginedController
     {
+        /// <summary>
+        /// 获取知识库列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<PageObject<MZ_Knowledge>>> List(In_KnowledgeQuery query)
         {
@@ -18,6 +23,11 @@ namespace LLMService.Controller
             return this.Success(result);
         }
 
+        /// <summary>
+        /// 获取知识库信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<MZ_Knowledge>> Info(string id)
         {
@@ -25,32 +35,64 @@ namespace LLMService.Controller
             return this.Success(result);
         }
 
+        /// <summary>
+        /// 添加知识库
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<DefaultAjaxResult<string>> Add(MZ_Knowledge entity)
         {
-            var id = await ServiceProvider.GetService<KnowledgeBLL>().Add(entity, GetUser());
-            return this.Success(id);
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().Add(entity, GetUser());
+            return rs.ToAjaxResult();
         }
 
+        /// <summary>
+        /// 更新知识库
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<DefaultAjaxResult<int>> Update(MZ_Knowledge entity)
         {
-            int rs = await ServiceProvider.GetService<KnowledgeBLL>().Update(entity, GetUser());
-            return this.Success(rs);
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().Update(entity, GetUser());
+            return rs.ToAjaxResult();
         }
 
+        /// <summary>
+        /// 删除知识库
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<DefaultAjaxResult<int>> Delete(string id)
         {
-            int rs = await ServiceProvider.GetService<KnowledgeBLL>().Delete(id, GetUser());
-            return this.Success(rs);
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().Delete(id, GetUser());
+            return rs.ToAjaxResult();
         }
 
-        [HttpPost]
-        public async Task<DefaultAjaxResult<int>> ChangeStatus(string id, int status)
+        /// <summary>
+        /// 启用知识库
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<int>> Enable(string id)
         {
-            int rs = await ServiceProvider.GetService<KnowledgeBLL>().ChangeStatus(id, status, GetUser());
-            return this.Success(rs);
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().EnableKnowledge(id, GetUser());
+            return rs.ToAjaxResult();
+        }
+
+        /// <summary>
+        /// 禁用知识库
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<int>> Disable(string id)
+        {
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().DisableKnowledge(id, GetUser());
+            return rs.ToAjaxResult();
         }
     }
 }

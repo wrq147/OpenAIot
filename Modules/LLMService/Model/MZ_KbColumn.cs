@@ -24,17 +24,13 @@ namespace LLMService.Model
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 父栏目ID，0表示顶级栏目
+        /// 父栏目ID，空表示顶级栏目
         /// </summary>
         public string ParentId { get; set; }
         /// <summary>
         /// 排序号
         /// </summary>
         public int? SortOrder { get; set; }
-        /// <summary>
-        /// 状态：1-启用，0-禁用
-        /// </summary>
-        public int? Status { get; set; }
     }
 
 }

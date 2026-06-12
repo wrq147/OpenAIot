@@ -1,4 +1,5 @@
 using AuthService;
+using Common.IdGenerator;
 using Common.Share;
 using LLMService.DAL;
 using LLMService.Model;
@@ -13,16 +14,19 @@ namespace LLMService.Business
     public class KbColumnBLL
     {
         private readonly KbColumnDAL _columnDal;
-
-        public KbColumnBLL(KbColumnDAL columnDal)
+        private readonly KnowledgeDAL _knowledgeDal;
+        private ITAServiceProvider _provider;
+        public KbColumnBLL(KbColumnDAL columnDal, KnowledgeDAL knowledgeDal, ITAServiceProvider provider)
         {
             _columnDal = columnDal;
+            _knowledgeDal = knowledgeDal;
+            _provider = provider;
         }
 
 
         public async Task<MZ_KbColumn> GetById(string id, IUserInfo user)
         {
-            return await _columnDal.SelectById(id, user.OrgId);
+            return await _columnDal.Select(id);
         }
 
         public async Task<List<MZ_KbColumn>> GetByKbId(string kbId)
@@ -30,97 +34,73 @@ namespace LLMService.Business
             return await _columnDal.SelectKbColumnList(kbId);
         }
 
-        public async Task<List<MZ_KbColumn>> GetByParentId(string parentId, IUserInfo user)
-        {
-            return await _columnDal.SelectByParentId(parentId, user.OrgId);
-        }
 
-        public async Task<string> Add(MZ_KbColumn entity, IUserInfo user)
+        public async Task<BusResponse<string>> Add(MZ_KbColumn entity, IUserInfo user)
         {
-            var kb = await _kbDal.SelectByIdAsync(entity.KbId);
+            var kb = await _knowledgeDal.Select(entity.KbId);
             if (kb == null || kb.OrgId != user.OrgId)
             {
-                throw new Exception("知识库不存在或无权操作");
+                return BusResponse<string>.Error(111, "知识库不存在或无权操作");
             }
 
-            if (entity.ParentId > 0)
+            if (!string.IsNullOrEmpty(entity.ParentId))
             {
-                var parent = await _columnDal.SelectByIdAsync(entity.ParentId);
+                var parent = await _columnDal.Select(entity.ParentId);
                 if (parent == null || parent.KbId != entity.KbId)
                 {
-                    throw new Exception("父栏目不存在或不属于同一知识库");
+                    return BusResponse<string>.Error(112, "父栏目不存在或不属于同一知识库");
                 }
             }
-
-            entity.Status = 1;
+            var snowflake = _provider.GetService<SnowflakeHelper>();
+            entity.Id = snowflake.NextId().ToString();
             entity.SortOrder = await _columnDal.GetMaxSortOrder(entity.KbId) + 1;
             entity.SetCreateBy(user);
-            await _columnDal.InsertAsync(entity);
+            await _columnDal.Insert(entity);
 
-            return entity.Id;
+            return BusResponse<string>.Success(entity.Id);
         }
 
-        public async Task<int> Update(MZ_KbColumn entity, IUserInfo user)
+        public async Task<BusResponse<int>> Update(MZ_KbColumn entity, IUserInfo user)
         {
-            var existing = await _columnDal.SelectByIdAsync(entity.Id);
+            var existing = await _columnDal.Select(entity.Id);
             if (existing == null)
             {
-                throw new Exception("栏目不存在");
+                return BusResponse<int>.Error(111, "栏目不存在");
             }
 
-            var kb = await _kbDal.SelectByIdAsync(existing.KbId);
+            var kb = await _knowledgeDal.Select(existing.KbId);
             if (kb == null || kb.OrgId != user.OrgId)
             {
-                throw new Exception("无权修改此栏目");
+                return BusResponse<int>.Error(112, "知识库不存在或无权操作");
             }
 
-            existing.Name = entity.Name;
-            existing.SortOrder = entity.SortOrder;
-            existing.SetUpdateBy(user);
-
-            await _columnDal.UpdateAsync(existing);
+            entity.SetUpdateBy(user);
+            return BusResponse<int>.Success(await _columnDal.Update(entity));
         }
 
-        public async Task<int> Delete(string id, IUserInfo user)
+        public async Task<BusResponse<int>> Delete(string id, IUserInfo user)
         {
-            var existing = await _columnDal.SelectByIdAsync(id);
+            var existing = await _columnDal.Select(id);
             if (existing == null)
             {
-                throw new Exception("栏目不存在");
+                return BusResponse<int>.Error(111, "栏目不存在");
             }
 
-            var kb = await _kbDal.SelectByIdAsync(existing.KbId);
+            var kb = await _knowledgeDal.Select(existing.KbId);
             if (kb == null || kb.OrgId != user.OrgId)
             {
-                throw new Exception("无权删除此栏目");
+                return BusResponse<int>.Error(112, "知识库不存在或无权操作");
             }
 
-            var children = await _columnDal.SelectByParentId(id, user.OrgId);
+            var children = await _columnDal.SelectList(x => x.ParentId == id);
             if (children.Any())
             {
-                throw new Exception("请先删除子栏目");
+                return BusResponse<int>.Error(113, "请先删除子栏目");
             }
 
-            await _columnDal.DeleteAsync(id);
+            return BusResponse<int>.Success(await _columnDal.Delete(id));
         }
 
-        public async Task<int> ChangeStatus(string id, int status, IUserInfo user)
-        {
-            var existing = await _columnDal.SelectByIdAsync(id);
-            if (existing == null)
-            {
-                throw new Exception("栏目不存在");
-            }
-
-            var kb = await _kbDal.SelectByIdAsync(existing.KbId);
-            if (kb == null || kb.OrgId != user.OrgId)
-            {
-                throw new Exception("无权修改此栏目");
-            }
-
-            existing.Status = status;
-            existing.SetUpdateBy(user);
-            await _columnDal.UpdateAsync(existing);
-        }
+     
     }
 }

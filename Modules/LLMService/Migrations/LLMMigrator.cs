@@ -20,16 +20,15 @@ namespace LLMService.Migrations
                     .WithColumn("Cover").AsString(500).Nullable().WithColumnDescription("封面URL")
                     .WithColumn("Name").AsString(100).NotNullable().WithColumnDescription("文库名称")
                     .WithColumn("Description").AsString(500).Nullable().WithColumnDescription("文库描述")
-                    .WithColumn("OrgId").AsInt64().NotNullable().WithColumnDescription("组织ID,0为全网级文库")
-                    .WithColumn("Status").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：3-审核失败，2-审核中，1-启用，0-禁用")
+                    .WithColumn("OrgId").AsInt64().Indexed().NotNullable().WithColumnDescription("组织ID")
+                    .WithColumn("IsPublic").AsBoolean().Indexed().WithColumnDescription("是否公开")
+                    .WithColumn("Status").AsInt32().Indexed().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：3-审核失败，2-审核中，1-已发布，0-草稿")
                     .WithColumn("DocCount").AsInt32().NotNullable().WithDefaultValue(0).WithColumnDescription("文档数量")
                     .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                     .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
                     .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                     .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
-                Create.Index("idx_llm_kb_orgid").OnTable("llm_knowledge").OnColumn("OrgId");
-                Create.Index("idx_llm_kb_status").OnTable("llm_knowledge").OnColumn("Status");
             }
 
             // 创建栏目表
@@ -39,9 +38,8 @@ namespace LLMService.Migrations
                     .WithColumn("Id").AsString(128).PrimaryKey()
                     .WithColumn("KbId").AsString(128).NotNullable().WithColumnDescription("知识库ID")
                     .WithColumn("Name").AsString(100).NotNullable().WithColumnDescription("栏目名称")
-                    .WithColumn("ParentId").AsInt64().NotNullable().WithDefaultValue(0).WithColumnDescription("父栏目ID，0表示顶级栏目")
+                    .WithColumn("ParentId").AsInt64().NotNullable().WithDefaultValue(0).WithColumnDescription("父栏目ID，空表示顶级栏目")
                     .WithColumn("SortOrder").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("排序号")
-                    .WithColumn("Status").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：1-启用，0-禁用")
                     .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                     .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
                     .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
@@ -68,7 +66,6 @@ namespace LLMService.Migrations
                     .WithColumn("Content").AsString(16777215).Nullable().WithColumnDescription("文章内容")
                     .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("文章关键词")
                     .WithColumn("Cover").AsString(500).Nullable().WithColumnDescription("封面URL")
-                    .WithColumn("Status").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("状态：1-已发布，0-草稿")
                     .WithColumn("ViewCount").AsInt32().NotNullable().WithDefaultValue(0).WithColumnDescription("阅读次数")
                     .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                     .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
