@@ -47,11 +47,6 @@ namespace LLMService.Model
         /// </summary>
         public string KeyWords { get; set; }
 
-        /// <summary>
-        /// ·âÃæURL
-        /// </summary>
-        public string Cover { get; set; }
-
 
         /// <summary>
         /// ÔÄ¶Á´ÎÊı

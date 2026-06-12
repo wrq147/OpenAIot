@@ -26,9 +26,9 @@ namespace LLMService.DAL
                 var keys = new JiebaSegmenter().CutForSearch(query.Key);
                 expression = expression.And((a) => SonSqlFun.FullSearch("KeyWords", keys));
             }
-            if (query.Status.HasValue)
+            if (query.IsPublic == true)
             {
-                expression = expression.And((a) => a.Status == query.Status.Value);
+                expression = expression.And((a) => a.Kb.Status == 1);
             }
 
             var tmpSql = new SqlBuilder(help).Query<MZ_Article>()

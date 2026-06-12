@@ -12,11 +12,6 @@
             <param name="userRawInput"></param>
             <returns></returns>
         </member>
-        <member name="T:LLMService.Business.InfoRagBLL">
-            <summary>
-            知识库
-            </summary>
-        </member>
         <member name="T:LLMService.Business.MemoryRagBLL">
             <summary>
             长期记忆
@@ -57,6 +52,53 @@
             </summary>
             <param name="sessionId"></param>
         </member>
+        <member name="M:LLMService.Controller.Article.List(LLMService.Model.In_ArticleQuery)">
+            <summary>
+            文章列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Article.Info(System.String)">
+            <summary>
+            文章详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Article.Add(LLMService.Model.MZ_Article)">
+            <summary>
+            添加文章
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Article.Update(LLMService.Model.MZ_Article)">
+            <summary>
+            修改文章
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Article.Delete(System.String)">
+            <summary>
+            删除文章
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Article.View(System.String)">
+            <summary>
+            增加文章的阅读次数
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LLMService.Controller.Chat">
+            <summary>
+            AI会话接口
+            </summary>
+        </member>
         <member name="M:LLMService.Controller.Chat.Message(System.String)">
             <summary>
             用户输入提问
@@ -69,6 +111,95 @@
             最近会话记录
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.KbColumn.ListByKbId(System.String)">
+            <summary>
+            获取知识库的栏目列表
+            </summary>
+            <param name="kbId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.KbColumn.Info(System.String)">
+            <summary>
+            获取栏目信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.KbColumn.Add(LLMService.Model.MZ_KbColumn)">
+            <summary>
+            新增栏目
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.KbColumn.Update(LLMService.Model.MZ_KbColumn)">
+            <summary>
+            编辑栏目
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.KbColumn.Delete(System.String)">
+            <summary>
+            删除栏目
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.List(LLMService.Model.In_KnowledgeQuery)">
+            <summary>
+            获取知识库列表
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Info(System.String)">
+            <summary>
+            获取知识库信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Add(LLMService.Model.MZ_Knowledge)">
+            <summary>
+            添加知识库
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Update(LLMService.Model.MZ_Knowledge)">
+            <summary>
+            更新知识库
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Delete(System.String)">
+            <summary>
+            删除知识库
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Enable(System.String)">
+            <summary>
+            启用知识库
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Disable(System.String)">
+            <summary>
+            禁用知识库
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.DAL.KbColumnDAL.GetMaxSortOrder(System.String)">
+            <summary>
+            获取栏目的最大排序号
+            </summary>
         </member>
         <member name="T:LLMService.GeneratedTaskScript">
             <summary>
@@ -103,6 +234,111 @@
         <member name="P:LLMService.SelectTable.Description">
             <summary>
             表描述
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.In_KnowledgeQuery.WithPublic">
+            <summary>
+            是否包含公开
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.KbId">
+            <summary>
+            知识库ID
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.Kb">
+            <summary>
+            知识库
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.ColumnId">
+            <summary>
+            栏目ID
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.KbColumn">
+            <summary>
+            栏目
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.Title">
+            <summary>
+            文章标题
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.Content">
+            <summary>
+            文章内容
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.KeyWords">
+            <summary>
+            文章关键词
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Article.ViewCount">
+            <summary>
+            阅读次数
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.KbId">
+            <summary>
+            知识库ID
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.Kb">
+            <summary>
+            知识库
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.Name">
+            <summary>
+            栏目名称
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.ParentId">
+            <summary>
+            父栏目ID，空表示顶级栏目
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.SortOrder">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.Cover">
+            <summary>
+            封面URL
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.Name">
+            <summary>
+            文库名称
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.Description">
+            <summary>
+            文库描述
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.OrgId">
+            <summary>
+            组织ID,0为全网级文库
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.IsPublic">
+            <summary>
+            是否公开
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.Status">
+            <summary>
+            状态：3-审核失败，2-审核中，1-已发布，0-草稿
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_Knowledge.DocCount">
+            <summary>
+            文档数量
             </summary>
         </member>
         <member name="P:LLMService.Model.Out_ChatMessage.role">

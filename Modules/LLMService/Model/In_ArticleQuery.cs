@@ -11,6 +11,6 @@ namespace LLMService.Model
     {
         public string? KbId { get; set; }
         public string Key { get; set; }
-        public int? Status { get; set; }
+        public bool? IsPublic { get; set; }
     }
 }
