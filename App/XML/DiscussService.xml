@@ -150,11 +150,6 @@
             标题
             </summary>
         </member>
-        <member name="P:DiscussService.Model.MZ_Subject.IsExt">
-            <summary>
-            是否为扩展用主题
-            </summary>
-        </member>
         <member name="P:DiscussService.Model.MZ_Subject.TargetId">
             <summary>
             关联对象Id

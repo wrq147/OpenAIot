@@ -23,19 +23,19 @@ namespace LLMService.Business
         }
 
 
-        public async Task<PageObject<MZ_Knowledge>> QueryList(In_KnowledgeQuery query, IUserInfo user)
+        public virtual async Task<PageObject<MZ_Knowledge>> QueryList(In_KnowledgeQuery query, IUserInfo user)
         {
             var result = await _kbDal.SelectByPage(query, user);
             return result;
         }
 
-        public async Task<MZ_Knowledge> GetById(string id, IUserInfo user)
+        public virtual async Task<MZ_Knowledge> GetById(string id, IUserInfo user)
         {
             var result = await _kbDal.SelectList(x => x.Id == id && (x.IsPublic == true || x.OrgId == user.OrgId));
             return result.FirstOrDefault();
         }
 
-        public async Task<BusResponse<string>> Add(MZ_Knowledge entity, IUserInfo user)
+        public virtual async Task<BusResponse<string>> Add(MZ_Knowledge entity, IUserInfo user)
         {
             entity.OrgId = user.OrgId;
             var snowflake = _provider.GetService<SnowflakeHelper>();
@@ -47,7 +47,7 @@ namespace LLMService.Business
             return BusResponse<string>.Success(entity.Id);
         }
 
-        public async Task<BusResponse<int>> Update(MZ_Knowledge entity, IUserInfo user)
+        public virtual async Task<BusResponse<int>> Update(MZ_Knowledge entity, IUserInfo user)
         {
             var existing = await _kbDal.Select(entity.Id);
             if (existing == null || existing.OrgId != user.OrgId)
@@ -66,7 +66,7 @@ namespace LLMService.Business
             return BusResponse<int>.Success(await _kbDal.Update(existing));
         }
 
-        public async Task<BusResponse<int>> Delete(string id, IUserInfo user)
+        public virtual async Task<BusResponse<int>> Delete(string id, IUserInfo user)
         {
             var entity = await _kbDal.Select(id);
             if (entity == null || entity.OrgId != user.OrgId)
@@ -77,7 +77,7 @@ namespace LLMService.Business
             return BusResponse<int>.Success(await _kbDal.Delete(id));
         }
 
-        public async Task<BusResponse<int>> EnableKnowledge(string id, IUserInfo user)
+        public virtual async Task<BusResponse<int>> EnableKnowledge(string id, IUserInfo user)
         {
             var entity = await _kbDal.Select(id);
             if (entity == null || entity.OrgId != user.OrgId)
@@ -122,7 +122,7 @@ namespace LLMService.Business
             entity.SetUpdateBy(user);
             return BusResponse<int>.Success(await _kbDal.Update(entity));
         }
-        public async Task<BusResponse<int>> DisableKnowledge(string id, IUserInfo user)
+        public virtual async Task<BusResponse<int>> DisableKnowledge(string id, IUserInfo user)
         {
             var entity = await _kbDal.Select(id);
             if (entity == null || entity.OrgId != user.OrgId)

@@ -36,18 +36,17 @@ namespace LLMService.Migrations
             {
                 Create.Table("llm_kb_column")
                     .WithColumn("Id").AsString(128).PrimaryKey()
-                    .WithColumn("KbId").AsString(128).NotNullable().WithColumnDescription("知识库ID")
+                    .WithColumn("KbId").AsString(128).Indexed().NotNullable().WithColumnDescription("知识库ID")
                     .WithColumn("Name").AsString(100).NotNullable().WithColumnDescription("栏目名称")
-                    .WithColumn("ParentId").AsInt64().NotNullable().WithDefaultValue(0).WithColumnDescription("父栏目ID，空表示顶级栏目")
+                    .WithColumn("ParentId").AsString().Indexed().NotNullable().WithDefaultValue(0).WithColumnDescription("父栏目ID，空表示顶级栏目")
                     .WithColumn("SortOrder").AsInt32().NotNullable().WithDefaultValue(1).WithColumnDescription("排序号")
+                    .WithColumn("Path").AsString(800).Indexed().WithColumnDescription("分类层级")
                     .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")
                     .WithColumn("create_time").AsDateTime().WithColumnDescription("创建时间")
                     .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                     .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
-                Create.Index("idx_llm_col_kbid").OnTable("llm_kb_column").OnColumn("KbId");
-                Create.Index("idx_llm_col_parentid").OnTable("llm_kb_column").OnColumn("ParentId");
-                Create.Index("idx_llm_col_status").OnTable("llm_kb_column").OnColumn("Status");
+
 
                 Create.ForeignKey("fk_llm_col_kb")
                     .FromTable("llm_kb_column").ForeignColumn("KbId")
@@ -60,8 +59,8 @@ namespace LLMService.Migrations
             {
                 Create.Table("llm_article")
                     .WithColumn("Id").AsString(128).PrimaryKey()
-                    .WithColumn("KbId").AsString(128).NotNullable().WithColumnDescription("知识库ID")
-                    .WithColumn("ColumnId").AsString(128).Nullable().WithColumnDescription("栏目ID")
+                    .WithColumn("KbId").AsString(128).Indexed().NotNullable().WithColumnDescription("知识库ID")
+                    .WithColumn("ColumnId").AsString(128).Indexed().Nullable().WithColumnDescription("栏目ID")
                     .WithColumn("Title").AsString(200).NotNullable().WithColumnDescription("文章标题")
                     .WithColumn("Content").AsString(16777215).Nullable().WithColumnDescription("文章内容")
                     .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("文章关键词")
@@ -71,10 +70,6 @@ namespace LLMService.Migrations
                     .WithColumn("updateId").AsInt64().WithColumnDescription("更新者Id")
                     .WithColumn("update_time").AsDateTime().WithColumnDescription("更新时间");
 
-                Create.Index("idx_llm_art_kbid").OnTable("llm_article").OnColumn("KbId");
-                Create.Index("idx_llm_art_colid").OnTable("llm_article").OnColumn("ColumnId");
-                Create.Index("idx_llm_art_status").OnTable("llm_article").OnColumn("Status");
-                Create.Index("idx_llm_art_doctype").OnTable("llm_article").OnColumn("DocType");
 
                 Create.ForeignKey("fk_llm_art_kb")
                     .FromTable("llm_article").ForeignColumn("KbId")
@@ -137,32 +132,6 @@ namespace LLMService.Migrations
                 createId = 0,
                 updateId = 0
             });
-
-            // 添加文章管理菜单
-            this.Execute.Sql("delete FROM mz_menu where menu_id=57");
-            Insert.IntoTable("mz_menu").Row(new
-            {
-                menu_id = 57,
-                menu_name = "文章管理",
-                parent_id = 56,
-                order_num = 1,
-                path = "klg/article",
-                component = "llm/klg/article",
-                query = string.Empty,
-                is_frame = 0,
-                is_cache = 0,
-                menu_type = "C",
-                visible = "0",
-                status = "0",
-                perms = "/LLMService/Knowledge/Article/List",
-                icon = "article",
-                scope = 0,
-                create_time = DateTime.Now,
-                update_time = DateTime.Now,
-                createId = 0,
-                updateId = 0
-            });
-
         }
         public override void Down()
         {

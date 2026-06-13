@@ -6,22 +6,37 @@ using LLMService.DAL;
 using LLMService.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TemplateAction.Route;
 using TemplateAction.Core;
+using TemplateAction.NetCore;
+using TemplateAction.Route;
 namespace LLMService.Controller
 {
     public class KbColumn : AbstractLoginedController
     {
+
+
         /// <summary>
-        /// 获取知识库的栏目列表
+        /// 栏目树
         /// </summary>
-        /// <param name="kbId"></param>
+        /// <param name="kbId">知识库Id</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<DefaultAjaxResult<List<MZ_KbColumn>>> ListByKbId(string kbId)
+        public async Task<DefaultAjaxResult<List<MZ_KbColumn>>> ListTree(string kbId)
         {
-            var result = await ServiceProvider.GetService<KbColumnBLL>().GetByKbId(kbId);
-            return this.Success(result);
+            var allcls = await ServiceProvider.GetService<KbColumnBLL>().SelectAllClass(kbId);
+            return this.Success(MZ_KbColumn.BuildTree(allcls));
+        }
+
+        /// <summary>
+        /// 栏目排序
+        /// </summary>
+        /// <param name="ids">排序Id列表</param>
+        /// <returns></returns>
+        [HttpPost]
+        [About("/IoTService/IotClass/ListTree")]
+        public async Task<AjaxResult> Sort(List<string> ids)
+        {
+            return (await ServiceProvider.GetService<KbColumnBLL>().UpdateSort(ids)).ToAjaxResult();
         }
 
         /// <summary>

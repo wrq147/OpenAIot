@@ -8,9 +8,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAdd">
           新建
         </el-button>
-        <el-button icon="el-icon-upload">
-          导入
-        </el-button>
       </div>
     </div>
 
@@ -71,25 +68,12 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="封面" prop="Cover">
+        <el-form-item label="图标" prop="Cover">
           <div class="cover-selector">
             <div class="cover-preview">
-              <img :src="form.Cover || defaultCover" alt="封面" />
+              <img :src="form.Cover || defaultCover" alt="图标" />
             </div>
-            <div class="cover-options">
-              <div class="cover-grid">
-                <div
-                  v-for="(cover, index) in coverOptions"
-                  :key="index"
-                  class="cover-item"
-                  :class="{ active: form.Cover === cover }"
-                  @click="form.Cover = cover"
-                >
-                  <img :src="cover" alt="" />
-                </div>
-              </div>
-              <el-button type="text" size="small" @click="uploadCover">上传封面</el-button>
-            </div>
+            <image-upload v-model="form.Cover" :limit="1"></image-upload>
           </div>
         </el-form-item>
 
@@ -107,13 +91,6 @@
           />
         </el-form-item>
 
-        <el-form-item label="文库权限">
-          <el-radio-group v-model="form.PermissionType">
-            <el-radio label="1">私有文库(查看、修改管理需要相应授权)</el-radio>
-            <el-radio label="2">企业级文库(企业员工可查看,修改管理需要相应授权)</el-radio>
-            <el-radio label="3">全网级文库(无需登录即可查看,修改管理需要相应授权)</el-radio>
-          </el-radio-group>
-        </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -409,35 +386,7 @@ export default {
   object-fit: cover;
 }
 
-.cover-options {
-  flex: 1;
-}
 
-.cover-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.cover-item {
-  width: 50px;
-  height: 50px;
-  border-radius: 4px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  cursor: pointer;
-}
-
-.cover-item.active {
-  border-color: #1890ff;
-}
-
-.cover-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
 .dialog-footer {
   display: flex;

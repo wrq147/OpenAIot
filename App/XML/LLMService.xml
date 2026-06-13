@@ -112,11 +112,18 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:LLMService.Controller.KbColumn.ListByKbId(System.String)">
+        <member name="M:LLMService.Controller.KbColumn.ListTree(System.String)">
             <summary>
-            获取知识库的栏目列表
+            栏目树
             </summary>
-            <param name="kbId"></param>
+            <param name="kbId">知识库Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.KbColumn.Sort(System.Collections.Generic.List{System.String})">
+            <summary>
+            栏目排序
+            </summary>
+            <param name="ids">排序Id列表</param>
             <returns></returns>
         </member>
         <member name="M:LLMService.Controller.KbColumn.Info(System.String)">
@@ -195,11 +202,6 @@
             </summary>
             <param name="id"></param>
             <returns></returns>
-        </member>
-        <member name="M:LLMService.DAL.KbColumnDAL.GetMaxSortOrder(System.String)">
-            <summary>
-            获取栏目的最大排序号
-            </summary>
         </member>
         <member name="T:LLMService.GeneratedTaskScript">
             <summary>
@@ -305,6 +307,31 @@
             <summary>
             排序号
             </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.Path">
+            <summary>
+            分类层级
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.MZ_KbColumn.Children">
+            <summary>
+            子分类
+            </summary>
+        </member>
+        <member name="M:LLMService.Model.MZ_KbColumn._RecursionFn(System.Collections.Generic.List{LLMService.Model.MZ_KbColumn},LLMService.Model.MZ_KbColumn)">
+            <summary>
+            递归列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+        </member>
+        <member name="M:LLMService.Model.MZ_KbColumn._GetChildList(System.Collections.Generic.List{LLMService.Model.MZ_KbColumn},LLMService.Model.MZ_KbColumn)">
+            <summary>
+            得到子节点列表
+            </summary>
+            <param name="list"></param>
+            <param name="t"></param>
+            <returns></returns>
         </member>
         <member name="P:LLMService.Model.MZ_Knowledge.Cover">
             <summary>

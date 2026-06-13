@@ -40,7 +40,7 @@ namespace LLMService.Business
                 schema.Fields.Add(FieldSchema.Create<long>("Id", isPrimaryKey: true, autoId: true));
                 schema.Fields.Add(FieldSchema.CreateVarchar("SessionId", maxLength: 256));
                 schema.Fields.Add(FieldSchema.CreateVarchar("Content", 8192));
-                schema.Fields.Add(FieldSchema.CreateFloatVector("Embedding", dimension: 768));
+                schema.Fields.Add(FieldSchema.CreateFloatVector("Embedding", dimension: 1024));
                 schema.Fields.Add(FieldSchema.Create<long>("CreateTime"));
 
                 var collection = await _client.CreateCollectionAsync("ChatMemory", schema);

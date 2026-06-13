@@ -6,8 +6,8 @@
           <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/llm/klg/index' }">知识库管理</el-breadcrumb-item>
             <el-breadcrumb-item>{{ knowledge.Name }}</el-breadcrumb-item>
-            <template v-for="(item, index) in currentPath" :key="index">
-              <el-breadcrumb-item>{{ item.name }}</el-breadcrumb-item>
+            <template v-for="(item, index) in currentPath">
+              <el-breadcrumb-item :key="index">{{ item.name }}</el-breadcrumb-item>
             </template>
           </el-breadcrumb>
         </div>
