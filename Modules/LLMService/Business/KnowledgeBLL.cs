@@ -61,7 +61,7 @@ namespace LLMService.Business
             entity.Id = null;
             entity.OrgId = null;
             entity.Status = null;
-            entity.DocCount = null;
+            entity.DocCount = await _provider.GetService<ArticleDAL>().Count(x => x.KbId == entity.Id);
             entity.SetUpdateBy(user);
             return BusResponse<int>.Success(await _kbDal.Update(existing));
         }

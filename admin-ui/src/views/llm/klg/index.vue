@@ -36,8 +36,13 @@
         @click="goToDetail(item.Id)"
       >
         <div class="card-cover" :style="{ backgroundImage: `url(${item.Cover || defaultCover})` }">
-          <span v-if="item.PermissionType === 3" class="tag-public">公开</span>
+          <!-- 权限标签：左上角 -->
+          <span v-if="item.IsPublic === true" class="tag-public">公开</span>
           <span v-else class="tag-private">私有</span>
+          <!-- 状态标签：右下角 -->
+          <span class="status-tag" :class="statusClass(item.Status)">
+            {{ statusText(item.Status) }}
+          </span>
         </div>
         <div class="card-content">
           <h3 class="card-title">{{ item.Name }}</h3>
@@ -49,6 +54,16 @@
         </div>
         <div class="card-actions" @click.stop>
           <el-button text type="primary" size="small" @click="handleEdit(item)">编辑</el-button>
+          <!-- 草稿、审核失败 显示发布按钮 -->
+          <el-button
+            v-if="[0,3].includes(item.Status)"
+            text
+            type="success"
+            size="small"
+            @click="handlePublish(item)"
+          >
+            {{ item.Status === 0 ? '发布' : '重新提交' }}
+          </el-button>
           <el-button text type="danger" size="small" @click="handleDelete(item)">删除</el-button>
         </div>
       </div>
@@ -79,6 +94,7 @@
       :title="dialogTitle"
       :visible.sync="dialogVisible"
       width="520px"
+      top="3vh"
       append-to-body
       :close-on-click-modal="false"
     >
@@ -99,13 +115,6 @@
           <el-input v-model="form.Name" placeholder="请输入文库名称" maxlength="50" show-word-limit />
         </el-form-item>
 
-        <el-form-item label="权限类型" prop="PermissionType">
-          <el-radio-group v-model="form.PermissionType">
-            <el-radio :label="1">私有</el-radio>
-            <el-radio :label="3">公开</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
         <el-form-item label="文库描述" prop="Description">
           <el-input
             v-model="form.Description"
@@ -116,6 +125,14 @@
             show-word-limit
           />
         </el-form-item>
+
+        <el-form-item label="文库权限" prop="IsPublic">
+          <el-radio-group v-model="form.IsPublic">
+            <el-radio :label="false">私有</el-radio>
+            <el-radio :label="true">公开</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -152,20 +169,17 @@ export default {
         Cover: '',
         Name: '',
         Description: '',
-        PermissionType: 1
+        IsPublic: false
       },
       queryParams: {
         pageNum: 1,
         pageSize: 12,
         Name: undefined
       },
-      defaultCover: 'https://neeko-copilot.bytedance.net/api/text_to_image?prompt=business%20knowledge%20library%20cover%20abstract%20blue&image_size=square',
+      defaultCover: '/knowicon.png',
       rules: {
         Name: [
           { required: true, message: '文库名称不能为空', trigger: 'blur' }
-        ],
-        PermissionType: [
-          { required: true, message: '请选择权限类型', trigger: 'change' }
         ]
       }
     }
@@ -174,6 +188,26 @@ export default {
     this.getList()
   },
   methods: {
+    // 状态文本映射
+    statusText(status) {
+      const map = {
+        0: '草稿',
+        1: '已发布',
+        2: '审核中',
+        3: '审核失败'
+      }
+      return map[status] || '未知'
+    },
+    // 状态样式class
+    statusClass(status) {
+      const map = {
+        0: 'status-draft',
+        1: 'status-publish',
+        2: 'status-auditing',
+        3: 'status-reject'
+      }
+      return map[status] || ''
+    },
     getList() {
       this.loading = true
       listKnowledge(this.queryParams).then(response => {
@@ -194,7 +228,7 @@ export default {
       this.getList()
     },
     goToDetail(id) {
-      this.$router.push(`/llm/klg/detail/${id}`)
+      this.$router.push(`/report/klg/detail/${id}`)
     },
     handleAdd() {
       this.form = {
@@ -202,7 +236,7 @@ export default {
         Cover: '',
         Name: '',
         Description: '',
-        PermissionType: 1
+        IsPublic: false
       }
       this.dialogTitle = '新建知识库'
       this.dialogVisible = true
@@ -214,7 +248,7 @@ export default {
         Cover: item.Cover,
         Name: item.Name,
         Description: item.Description,
-        PermissionType: item.PermissionType
+        IsPublic: item.IsPublic
       }
       this.dialogTitle = '编辑知识库'
       this.dialogVisible = true
@@ -334,26 +368,53 @@ export default {
   background-position: center;
   position: relative;
 }
+
 .tag-public {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #409eff;
+  top: 0px;
+  left: 0px;
+  background: linear-gradient(90deg, #d926e8, #8033e8);
   color: #fff;
   font-size: 12px;
-  padding: 3px 9px;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 12px 4px 12px 4px;
+  font-weight: 500;
 }
 .tag-private {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #909399;
+  top: 0px;
+  left: 0px;
+  background: linear-gradient(90deg, #7488a2, #4e5e72);
   color: #fff;
   font-size: 12px;
-  padding: 3px 9px;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 12px 4px 12px 4px;
+  font-weight: 500;
 }
+
+.status-tag {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.status-draft {
+  background-color: #909399;
+}
+.status-auditing {
+  background-color: #e6a23c;
+}
+.status-publish {
+  background-color: #67c23a;
+}
+.status-reject {
+  background-color: #f56c6c;
+}
+
 
 .card-content {
   padding: 18px;
@@ -397,14 +458,13 @@ export default {
 }
 
 .card-actions {
-  padding: 0 18px 18px;
+  padding: 14px 18px 18px;
   display: flex;
-  gap: 20px;
+  gap: 8px;
   border-top: 1px solid #f2f3f5;
-  margin-top: 6px;
-  padding-top: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
 }
-
 /* 空状态 */
 .empty-state {
   grid-column: 1 / -1;

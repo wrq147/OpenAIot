@@ -76,10 +76,6 @@ namespace LLMService.Migrations
                     .ToTable("llm_knowledge").PrimaryColumn("Id")
                     .OnDelete(System.Data.Rule.Cascade);
 
-                Create.ForeignKey("fk_llm_art_col")
-                    .FromTable("llm_article").ForeignColumn("ColumnId")
-                    .ToTable("llm_kb_column").PrimaryColumn("Id")
-                    .OnDelete(System.Data.Rule.Cascade);
             }
 
             this.Execute.Sql("delete FROM mz_menu where menu_id=55");
@@ -132,6 +128,7 @@ namespace LLMService.Migrations
                 createId = 0,
                 updateId = 0
             });
+
         }
         public override void Down()
         {

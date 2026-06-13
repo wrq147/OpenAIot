@@ -91,8 +91,6 @@
 
 <script>
 import { getKnowledge } from '@/api/llm/knowledge'
-import { getColumnsByKbId } from '@/api/llm/column'
-import { getArticlesByKbId } from '@/api/llm/article'
 import marked from 'marked'
 
 export default {

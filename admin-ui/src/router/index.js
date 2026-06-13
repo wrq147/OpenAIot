@@ -283,7 +283,18 @@ export const constantRoutes = [{
             name: 'stockApply',
             meta: { title: '待出库申请单' }
         }]
-    },
+    }, {
+        path: '/report/klg',
+        component: Layout,
+        redirect: 'KlgDetail',
+        hidden: true,
+        children: [{
+            path: '/report/klg/detail',
+            component: (resolve) => require(['@/views/llm/klg/detail'], resolve),
+            name: 'KlgDetail',
+            meta: { title: '知识库详情', icon: 'dashboard', affix: false }
+        }]
+    }
 ]
 
 export default new Router({

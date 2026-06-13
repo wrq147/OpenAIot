@@ -51,6 +51,11 @@ namespace LLMService.Business
             entity.SetCreateBy(user);
             await _articleDal.Insert(entity);
 
+            MZ_Knowledge kn = new MZ_Knowledge();
+            kn.Id = entity.KbId;
+            kn.DocCount = await _articleDal.Count(x => x.KbId == entity.KbId);
+            await _kbDal.Update(kn, x => x.Id == entity.KbId);
+
             return BusResponse<string>.Success(entity.Id);
         }
 
@@ -85,8 +90,13 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(112, "知识库不存在或无权操作");
             }
+            int rt = await _articleDal.Delete(id);
+            MZ_Knowledge kn = new MZ_Knowledge();
+            kn.Id = existing.KbId;
+            kn.DocCount = await _articleDal.Count(x => x.KbId == existing.KbId);
+            await _kbDal.Update(kn, x => x.Id == existing.KbId);
 
-            return BusResponse<int>.Success(await _articleDal.Delete(id));
+            return BusResponse<int>.Success(rt);
         }
 
       

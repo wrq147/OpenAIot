@@ -26,7 +26,7 @@ namespace LLMService.Model
         public string Description { get; set; }
 
         /// <summary>
-        /// 组织ID,0为全网级文库
+        /// 组织ID
         /// </summary>
         public long? OrgId { get; set; }
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Common;
 using Common.EventBus;
 using LLMService.Business;
+using LLMService.DAL;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using MonitorService.Business;
@@ -23,7 +24,14 @@ namespace LLMService
             services.AddSingleton<ChatBLL>();
             services.AddSingleton<ShortMemoryBLL>();
             services.AddSingleton<MemoryRagBLL>();
-            services.AddSingleton<KnowledgeBLL>();
+
+            services.AddBLL<ArticleBLL>();
+            services.AddBLL<KnowledgeBLL>();
+            services.AddBLL<KbColumnBLL>();
+
+            services.AddDAL<ArticleDAL>();
+            services.AddDAL<KbColumnDAL>();
+            services.AddDAL<KnowledgeDAL>();
         }
         protected override void Configure(ITAApplication app, PluginObject plg)
         {

@@ -229,10 +229,9 @@
 
 <script>
 import { listKnowledge, getKnowledge } from '@/api/llm/knowledge'
-import { getColumnsByKbId, addColumn, updateColumn, deleteColumn } from '@/api/llm/column'
-import { getArticlesByKbId, addArticle, updateArticle, deleteArticle } from '@/api/llm/article'
+import { addColumn, updateColumn, deleteColumn } from '@/api/llm/column'
+import { addArticle, updateArticle, deleteArticle } from '@/api/llm/article'
 import { Editor } from '@wangeditor/editor-for-vue'
-import { Markdown } from '@wangeditor/editor'
 import marked from 'marked'
 
 export default {
