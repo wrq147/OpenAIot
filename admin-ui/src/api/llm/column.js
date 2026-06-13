@@ -2,30 +2,25 @@ import request from '@/utils/request'
 
 export function listColumn(query) {
   return request({
-    url: '/LLMService/KbColumn/List',
+    url: '/LLMService/KbColumn/ListTree',
     method: 'get',
-    params: query
+    params: {id}
+  })
+}
+
+export function sortColumn(data) {
+  return request({
+    url: '/LLMService/KbColumn/Sort',
+    method: 'post',
+    data: data
   })
 }
 
 export function getColumn(id) {
   return request({
-    url: `/LLMService/KbColumn/${id}`,
-    method: 'get'
-  })
-}
-
-export function getColumnsByKbId(kbId) {
-  return request({
-    url: `/LLMService/KbColumn/KbId/${kbId}`,
-    method: 'get'
-  })
-}
-
-export function getColumnsByParentId(parentId) {
-  return request({
-    url: `/LLMService/KbColumn/ParentId/${parentId}`,
-    method: 'get'
+    url: `/LLMService/KbColumn/Info`,
+    method: 'get',
+    params: {id}
   })
 }
 
@@ -40,22 +35,16 @@ export function addColumn(data) {
 export function updateColumn(data) {
   return request({
     url: '/LLMService/KbColumn/Update',
-    method: 'put',
+    method: 'post',
     data: data
   })
 }
 
 export function deleteColumn(id) {
   return request({
-    url: `/LLMService/KbColumn/Delete/${id}`,
-    method: 'delete'
+    url: `/LLMService/KbColumn/Delete`,
+    method: 'get',
+    params: {id}
   })
 }
 
-export function changeColumnStatus(id, status) {
-  return request({
-    url: `/LLMService/KbColumn/${id}/status`,
-    method: 'post',
-    data: status
-  })
-}

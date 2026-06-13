@@ -33,7 +33,6 @@ namespace LLMService.Controller
         /// <param name="ids">≈≈–ÚId¡–±Ì</param>
         /// <returns></returns>
         [HttpPost]
-        [About("/IoTService/IotClass/ListTree")]
         public async Task<AjaxResult> Sort(List<string> ids)
         {
             return (await ServiceProvider.GetService<KbColumnBLL>().UpdateSort(ids)).ToAjaxResult();

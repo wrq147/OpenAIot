@@ -10,17 +10,12 @@ export function listArticle(query) {
 
 export function getArticle(id) {
   return request({
-    url: `/LLMService/Article/${id}`,
-    method: 'get'
+    url: `/LLMService/Article/Info`,
+    method: 'get',
+    params: {id}
   })
 }
 
-export function getArticlesByKbId(kbId) {
-  return request({
-    url: `/LLMService/Article/KbId/${kbId}`,
-    method: 'get'
-  })
-}
 
 export function addArticle(data) {
   return request({
@@ -33,22 +28,23 @@ export function addArticle(data) {
 export function updateArticle(data) {
   return request({
     url: '/LLMService/Article/Update',
-    method: 'put',
+    method: 'post',
     data: data
   })
 }
 
 export function deleteArticle(id) {
   return request({
-    url: `/LLMService/Article/Delete/${id}`,
-    method: 'delete'
+    url: `/LLMService/Article/Delete`,
+    method: 'get',
+    params: {id}
   })
 }
 
-export function changeArticleStatus(id, status) {
+export function viewArticle(id) {
   return request({
-    url: `/LLMService/Article/${id}/status`,
-    method: 'post',
-    data: status
+    url: `/LLMService/Article/View`,
+    method: 'get',
+    params: {id}
   })
 }

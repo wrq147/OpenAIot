@@ -72,7 +72,7 @@ namespace LLMService.Controller
         }
 
         /// <summary>
-        /// 启用知识库
+        /// 发布知识库
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -84,7 +84,7 @@ namespace LLMService.Controller
         }
 
         /// <summary>
-        /// 禁用知识库
+        /// 设置为草稿
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

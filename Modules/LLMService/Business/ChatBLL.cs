@@ -56,10 +56,10 @@ namespace LLMService.Business
             }
             await SetSessionStatus(sessionId, T_ChatStatus.Pending);
 
-            StartChart(user, userInput);
+            _ = StartChart(user, userInput);
         }
 
-        private async void StartChart(Data_ServerTokenInfo user, string userInput)
+        private async Task StartChart(Data_ServerTokenInfo user, string userInput)
         {
             var sessionId = user.UserId.ToString();
             var tools = _registry.GetSkillTools();

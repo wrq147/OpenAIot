@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function listKnowledge(query) {
   return request({
-    url: '/LLMService/KnowledgeBase/List',
+    url: '/LLMService/Knowledge/List',
     method: 'get',
     params: query
   })
@@ -10,14 +10,15 @@ export function listKnowledge(query) {
 
 export function getKnowledge(id) {
   return request({
-    url: `/LLMService/KnowledgeBase/${id}`,
-    method: 'get'
+    url: `/LLMService/Knowledge/Info`,
+    method: 'get',
+    params: {id}
   })
 }
 
 export function addKnowledge(data) {
   return request({
-    url: '/LLMService/KnowledgeBase/Add',
+    url: '/LLMService/Knowledge/Add',
     method: 'post',
     data: data
   })
@@ -25,23 +26,32 @@ export function addKnowledge(data) {
 
 export function updateKnowledge(data) {
   return request({
-    url: '/LLMService/KnowledgeBase/Update',
-    method: 'put',
+    url: '/LLMService/Knowledge/Update',
+    method: 'post',
     data: data
   })
 }
 
 export function deleteKnowledge(id) {
   return request({
-    url: `/LLMService/KnowledgeBase/Delete/${id}`,
-    method: 'delete'
+    url: `/LLMService/Knowledge/Delete`,
+    method: 'get',
+    params: {id}
   })
 }
 
-export function changeKnowledgeStatus(id, status) {
+export function enableKnowledge(id) {
   return request({
-    url: `/LLMService/KnowledgeBase/${id}/status`,
-    method: 'post',
-    data: status
+    url: `/LLMService/Knowledge/Enable`,
+    method: 'get',
+    params: {id}
+  })
+}
+
+export function disableKnowledge(id) {
+  return request({
+    url: `/LLMService/Knowledge/Disable`,
+    method: 'get',
+    params: {id}
   })
 }

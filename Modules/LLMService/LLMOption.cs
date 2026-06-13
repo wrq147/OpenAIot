@@ -19,24 +19,14 @@ namespace LLMService
         /// </summary>
         public string MilvusDatabase { get; set; }
         /// <summary>
-        /// 助手可查询表元数据
+        /// LLM的数据库查询连接字符串
         /// </summary>
-        public List<SelectTable> TableSchema { get; set; } = new();
+        public string DBConnectionString { get; set; }
     }
     public class ModelOption
     {
         public string ApiKey { get; set; }
         public string Endpoint { get; set; }
     }
-    public class SelectTable
-    {
-        /// <summary>
-        /// 表名
-        /// </summary>
-        public string TableName { get; set; }
-        /// <summary>
-        /// 表描述
-        /// </summary>
-        public string Description { get; set; }
-    }
+
 }

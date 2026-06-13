@@ -113,9 +113,9 @@ namespace LLMService.Migrations
             Insert.IntoTable("mz_menu").Row(new
             {
                 menu_id = 56,
-                menu_name = "知识库管理",
-                parent_id = 55,
-                order_num = 1,
+                menu_name = "知识库",
+                parent_id = 4,
+                order_num = 5,
                 path = "klg/index",
                 component = "llm/klg/index",
                 query = string.Empty,
@@ -125,7 +125,7 @@ namespace LLMService.Migrations
                 visible = "0",
                 status = "0",
                 perms = "/LLMService/Knowledge/List",
-                icon = "document",
+                icon = "haocaiguanli",
                 scope = 0,
                 create_time = DateTime.Now,
                 update_time = DateTime.Now,

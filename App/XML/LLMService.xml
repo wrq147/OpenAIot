@@ -12,6 +12,21 @@
             <param name="userRawInput"></param>
             <returns></returns>
         </member>
+        <member name="T:LLMService.AiSqlSecurityValidator">
+            <summary>
+            SqlParser.Net 原生AST SQL安全校验器
+            </summary>
+        </member>
+        <member name="T:LLMService.AiSqlSecurityValidator.ExtractTableVisitor">
+            <summary>
+            内部Visitor：提取所有物理表名
+            </summary>
+        </member>
+        <member name="T:LLMService.AiSqlSecurityValidator.JoinTableCountVisitor">
+            <summary>
+            统计所有参与联查的物理表总数
+            </summary>
+        </member>
         <member name="T:LLMService.Business.MemoryRagBLL">
             <summary>
             长期记忆
@@ -191,14 +206,14 @@
         </member>
         <member name="M:LLMService.Controller.Knowledge.Enable(System.String)">
             <summary>
-            启用知识库
+            发布知识库
             </summary>
             <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:LLMService.Controller.Knowledge.Disable(System.String)">
             <summary>
-            禁用知识库
+            设置为草稿
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -223,19 +238,9 @@
             Milvus数据库名称
             </summary>
         </member>
-        <member name="P:LLMService.LLMOption.TableSchema">
+        <member name="P:LLMService.LLMOption.DBConnectionString">
             <summary>
-            助手可查询表元数据
-            </summary>
-        </member>
-        <member name="P:LLMService.SelectTable.TableName">
-            <summary>
-            表名
-            </summary>
-        </member>
-        <member name="P:LLMService.SelectTable.Description">
-            <summary>
-            表描述
+            LLM的数据库查询连接字符串
             </summary>
         </member>
         <member name="P:LLMService.Model.In_KnowledgeQuery.WithPublic">
