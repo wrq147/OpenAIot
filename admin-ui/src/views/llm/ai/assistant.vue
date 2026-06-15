@@ -10,8 +10,7 @@
         <div v-if="ChatMessageList.length === 0" class="empty-state">
           <h1 class="empty-title">有什么我能帮你的吗？</h1>
           <div class="quick-questions">
-            <span class="quick-btn" @click="handleQuickSend('资讯：Linux 内核曝单字符漏洞普通用户可提权至 root')">资讯：Linux 内核曝单字符漏洞普通用户可提权至
-              root</span>
+            <span class="quick-btn" @click="handleQuickSend('你能干什么？')">你能干什么？</span>
             <span class="quick-btn" @click="handleQuickSend('什么食物可以帮助缓解拉肚子？')">什么食物可以帮助缓解拉肚子？</span>
             <span class="quick-btn" @click="handleQuickSend('什么是 AGI 时代？')">什么是 AGI 时代？</span>
             <span class="quick-btn" @click="handleQuickSend('解释L0、L1、L2范数的区别')">解释L0、L1、L2范数的区别</span>

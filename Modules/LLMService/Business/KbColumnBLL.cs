@@ -3,6 +3,7 @@ using Common.IdGenerator;
 using Common.Share;
 using LLMService.DAL;
 using LLMService.Model;
+using MonitorService.DAL;
 using MyAccess.DB;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace LLMService.Business
     {
         private readonly KbColumnDAL _columnDal;
         private readonly KnowledgeDAL _knowledgeDal;
+        private readonly ArticleDAL _articleDAL;
         private ITAServiceProvider _provider;
-        public KbColumnBLL(KbColumnDAL columnDal, KnowledgeDAL knowledgeDal, ITAServiceProvider provider)
+        public KbColumnBLL(KbColumnDAL columnDal, KnowledgeDAL knowledgeDal, ArticleDAL articleDAL, ITAServiceProvider provider)
         {
             _columnDal = columnDal;
             _knowledgeDal = knowledgeDal;
+            _articleDAL = articleDAL;
             _provider = provider;
         }
 
@@ -96,7 +99,7 @@ namespace LLMService.Business
             {
                 entity.Path = entity.Id + ",";
             }
-            await _columnDal.Insert(entity);
+            var ddd = await _columnDal.Insert(entity);
 
             return BusResponse<string>.Success(entity.Id);
         }
@@ -159,10 +162,20 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(113, "请先删除子栏目");
             }
+            var rs = await _columnDal.Delete(id);
 
-            return BusResponse<int>.Success(await _columnDal.Delete(id));
+            //删除栏目下的文章
+            await _articleDAL.Delete(x => x.ColumnId == id);
+
+            //重新计算知识库的文章数量
+            MZ_Knowledge kn = new MZ_Knowledge();
+            kn.Id = existing.KbId;
+            kn.DocCount = await _articleDAL.Count(x => x.KbId == existing.KbId);
+            await _knowledgeDal.Update(kn, x => x.Id == existing.KbId);
+
+            return BusResponse<int>.Success(rs);
         }
 
-     
+
     }
 }

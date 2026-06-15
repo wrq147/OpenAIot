@@ -286,13 +286,17 @@ export const constantRoutes = [{
     }, {
         path: '/report/klg',
         component: Layout,
-        redirect: 'KlgDetail',
         hidden: true,
         children: [{
             path: '/report/klg/detail',
             component: (resolve) => require(['@/views/llm/klg/detail'], resolve),
             name: 'KlgDetail',
             meta: { title: '知识库详情', icon: 'dashboard', affix: false }
+        },{
+            path: '/report/klg/column',
+            component: (resolve) => require(['@/views/llm/klg/column'], resolve),
+            name: 'KlgColumn',
+            meta: { title: '编辑知识库', icon: 'dashboard', affix: false }
         }]
     }
 ]

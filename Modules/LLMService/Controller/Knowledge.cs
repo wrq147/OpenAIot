@@ -94,5 +94,31 @@ namespace LLMService.Controller
             var rs = await ServiceProvider.GetService<KnowledgeBLL>().DisableKnowledge(id, GetUser());
             return rs.ToAjaxResult();
         }
+
+        /// <summary>
+        /// 审核通过
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<int>> Agree(string id)
+        {
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().AgreeKnowledge(id, GetUser());
+            return rs.ToAjaxResult();
+        }
+
+
+        /// <summary>
+        /// 审核拒绝
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="reason"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<DefaultAjaxResult<int>> Refuse(string id, string reason)
+        {
+            var rs = await ServiceProvider.GetService<KnowledgeBLL>().RefuseKnowledge(id, reason, GetUser());
+            return rs.ToAjaxResult();
+        }
     }
 }

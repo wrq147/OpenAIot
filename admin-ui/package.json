@@ -37,6 +37,7 @@
         "@types/qs": "^6.9.7",
         "@wangeditor/editor": "^5.1.23",
         "@wangeditor/editor-for-vue": "^1.0.2",
+        "@wangeditor/plugin-md": "^1.0.0",
         "@wangeditor/plugin-mention": "^1.0.0",
         "axios": "^0.23.0",
         "big.js": "^6.2.1",

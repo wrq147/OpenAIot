@@ -23,6 +23,11 @@ namespace LLMService.Business
 
         }
 
+        public virtual async Task<List<Out_ArticleItem>> QueryArticleItems(string kbId)
+        {
+            return await _articleDal.SelectArticleItems(kbId);
+        }
+
         public virtual async Task<PageObject<MZ_Article>> QueryList(In_ArticleQuery query, IUserInfo user)
         {
             return await _articleDal.SelectByPage(query, user);

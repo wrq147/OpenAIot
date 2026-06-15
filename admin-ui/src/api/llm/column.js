@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-export function listColumn(query) {
+export function listColumn(kbId) {
   return request({
     url: '/LLMService/KbColumn/ListTree',
     method: 'get',
-    params: {id}
+    params: {kbId}
   })
 }
 

@@ -16,6 +16,14 @@ export function getArticle(id) {
   })
 }
 
+export function getArticleItems(kbId) {
+  return request({
+    url: `/LLMService/Article/ArticleItems`,
+    method: 'get',
+    params: {kbId}
+  })
+}
+
 
 export function addArticle(data) {
   return request({

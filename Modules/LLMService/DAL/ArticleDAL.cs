@@ -5,6 +5,7 @@ using LLMService.Model;
 using MyAccess.DB;
 using MyAccess.DB.Builder.WhereToSql;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -13,6 +14,10 @@ namespace LLMService.DAL
 {
     public class ArticleDAL : BaseRepository<MZ_Article>
     {
+        public virtual async Task<List<Out_ArticleItem>> SelectArticleItems(string kbId)
+        {
+            return await new SqlBuilder(help).Query<Out_ArticleItem>().Where(x => x.KbId == kbId, "Title,ColumnId").ToListAsync();
+        }
 
         public virtual async Task<PageObject<MZ_Article>> SelectByPage(In_ArticleQuery query, IUserInfo user)
         {

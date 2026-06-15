@@ -74,6 +74,13 @@
             <param name="query"></param>
             <returns></returns>
         </member>
+        <member name="M:LLMService.Controller.Article.ArticleItems(System.String)">
+            <summary>
+            栏目的文章列表
+            </summary>
+            <param name="kbId"></param>
+            <returns></returns>
+        </member>
         <member name="M:LLMService.Controller.Article.Info(System.String)">
             <summary>
             文章详情
@@ -218,6 +225,21 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:LLMService.Controller.Knowledge.Agree(System.String)">
+            <summary>
+            审核通过
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LLMService.Controller.Knowledge.Refuse(System.String,System.String)">
+            <summary>
+            审核拒绝
+            </summary>
+            <param name="id"></param>
+            <param name="reason"></param>
+            <returns></returns>
+        </member>
         <member name="T:LLMService.GeneratedTaskScript">
             <summary>
             LLM生成的脚本信息
@@ -355,7 +377,7 @@
         </member>
         <member name="P:LLMService.Model.MZ_Knowledge.OrgId">
             <summary>
-            组织ID,0为全网级文库
+            组织ID
             </summary>
         </member>
         <member name="P:LLMService.Model.MZ_Knowledge.IsPublic">
@@ -371,6 +393,16 @@
         <member name="P:LLMService.Model.MZ_Knowledge.DocCount">
             <summary>
             文档数量
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.Out_ArticleItem.KbId">
+            <summary>
+            知识库ID
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.Out_ArticleItem.Title">
+            <summary>
+            文章标题
             </summary>
         </member>
         <member name="P:LLMService.Model.Out_ChatMessage.role">

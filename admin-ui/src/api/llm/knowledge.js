@@ -12,7 +12,7 @@ export function getKnowledge(id) {
   return request({
     url: `/LLMService/Knowledge/Info`,
     method: 'get',
-    params: {id}
+    params: { id }
   })
 }
 
@@ -36,7 +36,7 @@ export function deleteKnowledge(id) {
   return request({
     url: `/LLMService/Knowledge/Delete`,
     method: 'get',
-    params: {id}
+    params: { id }
   })
 }
 
@@ -44,7 +44,7 @@ export function enableKnowledge(id) {
   return request({
     url: `/LLMService/Knowledge/Enable`,
     method: 'get',
-    params: {id}
+    params: { id }
   })
 }
 
@@ -52,6 +52,22 @@ export function disableKnowledge(id) {
   return request({
     url: `/LLMService/Knowledge/Disable`,
     method: 'get',
-    params: {id}
+    params: { id }
+  })
+}
+
+export function agreeKnowledge(id) {
+  return request({
+    url: `/LLMService/Knowledge/Agree`,
+    method: 'get',
+    params: { id }
+  })
+}
+
+export function refuseKnowledge(id, reason) {
+  return request({
+    url: `/LLMService/Knowledge/Refuse`,
+    method: 'post',
+    data: { id, reason }
   })
 }

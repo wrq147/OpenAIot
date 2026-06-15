@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TemplateAction.Route;
 using TemplateAction.Core;
+
 namespace LLMService.Controller
 {
     public class Article : AbstractLoginedController
@@ -21,6 +22,18 @@ namespace LLMService.Controller
         public async Task<DefaultAjaxResult<PageObject<MZ_Article>>> List(In_ArticleQuery query)
         {
             var result = await ServiceProvider.GetService<ArticleBLL>().QueryList(query, GetUser());
+            return this.Success(result);
+        }
+
+        /// <summary>
+        /// 栏目的文章列表
+        /// </summary>
+        /// <param name="kbId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<List<Out_ArticleItem>>> ArticleItems(string kbId)
+        {
+            var result = await ServiceProvider.GetService<ArticleBLL>().QueryArticleItems(kbId);
             return this.Success(result);
         }
 

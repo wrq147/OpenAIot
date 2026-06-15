@@ -1,103 +1,93 @@
 <template>
   <div class="knowledge-base-container">
-    <!-- 顶部操作栏 -->
-    <div class="header-bar">
-      <div class="header-left">
-        <h2 class="page-title">知识库管理</h2>
-        <span class="page-desc">统一管理业务知识库，支持文档导入与检索</span>
-      </div>
-      <div class="header-right">
-        <el-button type="primary" icon="el-icon-plus" @click="handleAdd">
-          新建知识库
-        </el-button>
-      </div>
-    </div>
-
-    <!-- 搜索区域 -->
-    <div class="search-wrapper">
-      <el-input
-        v-model="searchKeyword"
-        placeholder="输入知识库名称快速检索"
-        class="search-input"
-        clearable
-        @keyup.enter.native="handleSearch"
-      >
-        <el-button slot="append" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-      </el-input>
-      <el-button @click="resetSearch">重置</el-button>
-    </div>
-
-    <!-- 知识库卡片网格 -->
-    <div class="knowledge-grid">
-      <div
-        v-for="item in knowledgeList"
-        :key="item.Id"
-        class="knowledge-card"
-        @click="goToDetail(item.Id)"
-      >
-        <div class="card-cover" :style="{ backgroundImage: `url(${item.Cover || defaultCover})` }">
-          <!-- 权限标签：左上角 -->
-          <span v-if="item.IsPublic === true" class="tag-public">公开</span>
-          <span v-else class="tag-private">私有</span>
-          <!-- 状态标签：右下角 -->
-          <span class="status-tag" :class="statusClass(item.Status)">
-            {{ statusText(item.Status) }}
-          </span>
+    <div class="kn-header"></div>
+    <div class="kn-padd">
+      <!-- 顶部操作栏 -->
+      <div class="header-bar">
+        <div class="header-left">
+          <h2 class="page-title">知识库管理</h2>
+          <span class="page-desc">统一管理业务知识库，支持文档导入与检索</span>
         </div>
-        <div class="card-content">
-          <h3 class="card-title">{{ item.Name }}</h3>
-          <p class="card-desc">{{ item.Description || '暂无描述信息' }}</p>
-          <div class="card-footer">
-            <span class="permission-badge">{{ item.PermissionTypeName }}</span>
-            <span class="doc-count">{{ item.DocCount }} 篇文档</span>
+        <div class="header-right">
+          <el-button type="primary" icon="el-icon-plus" @click="handleAdd">
+            新建知识库
+          </el-button>
+        </div>
+      </div>
+
+      <!-- 搜索区域 -->
+      <div class="search-wrapper">
+        <el-input v-model="searchKeyword" placeholder="输入知识库名称快速检索" class="search-input" clearable
+          @keyup.enter.native="handleSearch">
+          <el-button slot="append" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        </el-input>
+        <el-button @click="resetSearch">重置</el-button>
+      </div>
+
+      <!-- 知识库卡片网格 -->
+      <div class="knowledge-grid">
+        <div v-for="item in knowledgeList" :key="item.Id" class="knowledge-card" @click="goToDetail(item)">
+          <div class="card-cover" :style="{ backgroundImage: `url(${item.Cover || defaultCover})` }">
+            <!-- 权限标签：左上角 -->
+            <span v-if="item.IsPublic === true" class="tag-public">公开</span>
+            <span v-else class="tag-private">私有</span>
+            <!-- 状态标签：右下角 -->
+            <span class="status-tag" :class="statusClass(item.Status)">
+              {{ statusText(item.Status) }}
+            </span>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">{{ item.Name }}</h3>
+            <p class="card-desc">{{ item.Description || '暂无描述信息' }}</p>
+            <div class="card-footer">
+              <span class="permission-badge">{{ item.PermissionTypeName }}</span>
+              <span class="doc-count">{{ item.DocCount }} 篇文档</span>
+            </div>
+          </div>
+          <div class="card-actions" @click.stop>
+            <!-- 左侧：日期信息 -->
+            <div class="action-left">
+              <span class="create-time">{{ parseTime(item.createTime) }}</span>
+            </div>
+            <!-- 右侧：操作文字组 -->
+            <div class="action-right">
+              <template v-if="item.Status == 2 && MyOrgId == 1">
+                <span class="action-item" @click="confirmCheck(item)">同意</span>
+                <span class="action-item danger-text" @click="refuseCheck(item)">拒绝</span>
+              </template>
+              <template v-else>
+                <span v-if="item.Status == 0" class="action-item" @click="handleEdit(item)">编辑</span>
+                <span v-if="[0, 3].includes(item.Status)" class="action-item" @click="handlePublish(item)">
+                  {{ item.Status === 0 ? '发布' : '重新提交' }}
+                </span>
+                <span v-if="item.Status == 1 || item.Status == 2" class="action-item danger-text"
+                  @click="handleCancel(item)">取消</span>
+                <span v-else class="action-item danger-text" @click="handleDelete(item)">删除</span>
+              </template>
+            </div>
           </div>
         </div>
-        <div class="card-actions" @click.stop>
-          <el-button text type="primary" size="small" @click="handleEdit(item)">编辑</el-button>
-          <!-- 草稿、审核失败 显示发布按钮 -->
-          <el-button
-            v-if="[0,3].includes(item.Status)"
-            text
-            type="success"
-            size="small"
-            @click="handlePublish(item)"
-          >
-            {{ item.Status === 0 ? '发布' : '重新提交' }}
+
+        <!-- 空数据 -->
+        <div v-if="knowledgeList.length === 0" class="empty-state">
+          <i class="el-icon-folder-opened empty-icon"></i>
+          <p class="empty-text">暂无知识库数据</p>
+          <p class="empty-tip">还没有创建任何知识库，立即开始搭建你的第一个知识库吧</p>
+          <el-button type="primary" icon="el-icon-plus" @click="handleAdd" style="margin-top:16px">
+            创建知识库
           </el-button>
-          <el-button text type="danger" size="small" @click="handleDelete(item)">删除</el-button>
         </div>
       </div>
 
-      <!-- 空数据 -->
-      <div v-if="knowledgeList.length === 0" class="empty-state">
-        <i class="el-icon-folder-opened empty-icon"></i>
-        <p class="empty-text">暂无知识库数据</p>
-        <p class="empty-tip">还没有创建任何知识库，立即开始搭建你的第一个知识库吧</p>
-        <el-button type="primary" icon="el-icon-plus" @click="handleAdd" style="margin-top:16px">
-          创建知识库
-        </el-button>
-      </div>
+      <!-- 分页 -->
+      <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+        @pagination="getList" class="pagination-wrapper" />
+
     </div>
 
-    <!-- 分页 -->
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-      class="pagination-wrapper"
-    />
-
     <!-- 新增/编辑弹窗 -->
-    <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
-      width="520px"
-      top="3vh"
-      append-to-body
-      :close-on-click-modal="false"
-    >
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="520px" top="3vh" append-to-body
+      :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="88px">
         <el-form-item label="封面图标" prop="Cover">
           <div class="cover-selector">
@@ -116,14 +106,8 @@
         </el-form-item>
 
         <el-form-item label="文库描述" prop="Description">
-          <el-input
-            v-model="form.Description"
-            type="textarea"
-            placeholder="简单描述知识库用途、业务范围等"
-            :rows="4"
-            maxlength="200"
-            show-word-limit
-          />
+          <el-input v-model="form.Description" type="textarea" placeholder="简单描述知识库用途、业务范围等" :rows="4" maxlength="200"
+            show-word-limit />
         </el-form-item>
 
         <el-form-item label="文库权限" prop="IsPublic">
@@ -151,7 +135,9 @@ import {
   updateKnowledge,
   deleteKnowledge,
   enableKnowledge,
-  disableKnowledge
+  disableKnowledge,
+  agreeKnowledge,
+  refuseKnowledge
 } from '@/api/llm/knowledge'
 
 export default {
@@ -187,6 +173,11 @@ export default {
   created() {
     this.getList()
   },
+  computed: {
+    MyOrgId: function () {
+      return this.$store.getters.orgId;
+    }
+  },
   methods: {
     // 状态文本映射
     statusText(status) {
@@ -210,6 +201,7 @@ export default {
     },
     getList() {
       this.loading = true
+      this.queryParams.WithPublic = this.MyOrgId == 1;
       listKnowledge(this.queryParams).then(response => {
         this.knowledgeList = response.data.List
         this.total = response.data.Total
@@ -227,8 +219,20 @@ export default {
       this.queryParams.pageNum = 1
       this.getList()
     },
-    goToDetail(id) {
-      this.$router.push(`/report/klg/detail/${id}`)
+    goToDetail(item) {
+      if(item.OrgId==this.MyOrgId){
+        this.$router.push({
+          path: '/report/klg/column',
+          query: { id: item.Id }
+        })
+      }
+      else{
+        this.$router.push({
+          path: '/report/klg/detail',
+          query: { id: item.Id }
+        })
+      }
+
     },
     handleAdd() {
       this.form = {
@@ -242,14 +246,9 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => this.$refs.form?.clearValidate())
     },
-    handleEdit(item) {
-      this.form = {
-        Id: item.Id,
-        Cover: item.Cover,
-        Name: item.Name,
-        Description: item.Description,
-        IsPublic: item.IsPublic
-      }
+    async handleEdit(item) {
+      let res = await getKnowledge(item.Id);
+      this.form = res.data;
       this.dialogTitle = '编辑知识库'
       this.dialogVisible = true
       this.$nextTick(() => this.$refs.form?.clearValidate())
@@ -261,7 +260,7 @@ export default {
           this.getList()
           this.$modal.msgSuccess('删除成功')
         })
-        .catch(() => {})
+        .catch(() => { })
     },
     cancel() {
       this.dialogVisible = false
@@ -284,6 +283,45 @@ export default {
           })
         }
       })
+    },
+    async confirmCheck(item) {
+      await agreeKnowledge(item.Id);
+      this.getList();
+      this.$modal.msgSuccess('审核通过！')
+    },
+    async refuseCheck(item) {
+      const { value } = await this.$prompt('请输入拒绝原因', '审核拒绝', {
+        inputType: 'textarea',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        inputValidator: (value) => {
+          if (!value || value.trim() === '') {
+            return '拒绝原因不能为空';
+          }
+          return true;
+        }
+      })
+      // 去除首尾空格后调用接口
+      const refuseReason = value.trim()
+      // 根据后端接口格式传参，按需调整
+      await refuseKnowledge({
+        id: item.Id,
+        reason: refuseReason
+      })
+      this.getList();
+      this.$modal.msgSuccess('审核拒绝！')
+    },
+    async handlePublish(item) {
+      await this.$modal.confirm(`确定要${item.Status === 0 ? '发布' : '重新提交'}该知识库吗？`)
+      await enableKnowledge(item.Id);
+      this.getList();
+      this.$modal.msgSuccess('提交成功！')
+    },
+    async handleCancel(item) {
+      await this.$modal.confirm('确定要取消当前状态吗？')
+      await disableKnowledge(item.Id);
+      this.getList();
+      this.$modal.msgSuccess('取消成功！')
     }
   }
 }
@@ -291,11 +329,20 @@ export default {
 
 <style scoped>
 .knowledge-base-container {
-  padding: 24px;
+
   background-color: #f7f8fa;
   min-height: calc(100vh - 60px);
 }
 
+.kn-header {
+  height: 5px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  z-index: 99;
+}
+.kn-padd{
+  padding: 24px;
+}
 /* 顶部栏 */
 .header-bar {
   display: flex;
@@ -303,21 +350,25 @@ export default {
   align-items: center;
   margin-bottom: 28px;
 }
+
 .header-left {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .page-title {
   margin: 0;
   color: #1d2129;
   font-size: 22px;
   font-weight: 600;
 }
+
 .page-desc {
   font-size: 13px;
   color: #86909c;
 }
+
 .header-right {
   display: flex;
   gap: 12px;
@@ -334,6 +385,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
+
 .search-input {
   width: 360px;
 }
@@ -356,8 +408,9 @@ export default {
   transition: all 0.25s ease;
   border: 1px solid transparent;
 }
+
 .knowledge-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
   border-color: #e5ebfa;
 }
@@ -380,11 +433,12 @@ export default {
   border-radius: 12px 4px 12px 4px;
   font-weight: 500;
 }
+
 .tag-private {
   position: absolute;
   top: 0px;
   left: 0px;
-  background: linear-gradient(90deg, #7488a2, #4e5e72);
+  background: linear-gradient(90deg, #02377c, #024ca7);
   color: #fff;
   font-size: 12px;
   padding: 4px 10px;
@@ -400,17 +454,21 @@ export default {
   padding: 3px 10px;
   border-radius: 20px;
   color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
+
 .status-draft {
   background-color: #909399;
 }
+
 .status-auditing {
   background-color: #e6a23c;
 }
+
 .status-publish {
   background-color: #67c23a;
 }
+
 .status-reject {
   background-color: #f56c6c;
 }
@@ -419,6 +477,7 @@ export default {
 .card-content {
   padding: 18px;
 }
+
 .card-title {
   margin: 0 0 8px;
   font-size: 16px;
@@ -428,6 +487,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .card-desc {
   margin: 0 0 14px;
   font-size: 13px;
@@ -445,6 +505,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .permission-badge {
   font-size: 12px;
   padding: 2px 9px;
@@ -452,19 +513,79 @@ export default {
   background-color: #f0f9eb;
   color: #67c23a;
 }
+
 .doc-count {
   font-size: 12px;
   color: #86909c;
 }
 
 .card-actions {
-  padding: 14px 18px 18px;
+  padding: 12px 18px 16px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   border-top: 1px solid #f2f3f5;
-  margin-top: 8px;
-  flex-wrap: wrap;
+  margin-top: 6px;
+  min-height: 44px;
+  position: relative;
+  z-index: 2;
 }
+
+/* 左侧日期 */
+.action-left {
+  font-size: 12px;
+  color: #86909c;
+}
+
+/* 右侧操作容器 */
+.action-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+/* 操作文字通用样式 */
+.action-item {
+  font-size: 13px;
+  padding: 0 10px;
+  color: #409eff;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.action-item:first-child {
+  padding-left: 0;
+}
+
+/* 分割竖线 */
+.action-item:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 14px;
+  background-color: #e4e7ed;
+}
+
+.action-item:hover {
+  color: #66b1ff;
+}
+
+.action-item.danger-text {
+  color: #f56c6c;
+}
+
+.action-item.danger-text:hover {
+  color: #f78989;
+}
+
+
 /* 空状态 */
 .empty-state {
   grid-column: 1 / -1;
@@ -476,15 +597,18 @@ export default {
   background: #fff;
   border-radius: 12px;
 }
+
 .empty-icon {
   font-size: 56px;
   color: #c0c4cc;
 }
+
 .empty-text {
   margin: 12px 0 4px;
   font-size: 16px;
   color: #606266;
 }
+
 .empty-tip {
   font-size: 13px;
   color: #909399;
@@ -503,6 +627,7 @@ export default {
   align-items: center;
   gap: 18px;
 }
+
 .cover-preview {
   width: 104px;
   height: 104px;
@@ -510,16 +635,19 @@ export default {
   overflow: hidden;
   border: 1px solid #dcdfe6;
 }
+
 .cover-preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .cover-tip {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .tip-text {
   font-size: 12px;
   color: #909399;

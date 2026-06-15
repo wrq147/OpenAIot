@@ -84,13 +84,17 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(111, "知识库不存在或无权修改");
             }
+            if (entity.Status != 0 && entity.Status != 3)
+            {
+                return BusResponse<int>.Error(112, "当前状态无法发布");
+            }
             if (user.OrgId == 1)
             {
                 entity.Status = 1;
             }
             else
             {
-                if (entity.IsPublic == true && entity.Status != 1)
+                if (entity.IsPublic == true)
                 {
                     entity.Status = 2;
 
@@ -111,7 +115,7 @@ namespace LLMService.Business
                     nt.TargetType = "Knowledge";
                     nt.TargetUrl = string.Empty;
                     nt.Content = $"知识库【{entity.Name}】需要您的审核";
-                    nt.Label = "知识库发布申请消息";
+                    nt.Label = "知识库发布申请";
                     await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
                 }
                 else
@@ -129,10 +133,76 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(111, "知识库不存在或无权修改");
             }
+            if (entity.Status != 1 || entity.Status != 2)
+            {
+                return BusResponse<int>.Error(112, "当前状态无法取消");
+            }
             entity.Status = 0;
             entity.SetUpdateBy(user);
             return BusResponse<int>.Success(await _kbDal.Update(entity));
         }
+        public virtual async Task<BusResponse<int>> AgreeKnowledge(string id, IUserInfo user)
+        {
+            var entity = await _kbDal.Select(id);
+            if (entity == null || entity.Status != 2 || entity.OrgId != 1)
+            {
+                return BusResponse<int>.Error(111, "知识库不存在或无审核权");
+            }
 
+            var userDAL = _provider.GetService<UserDAL>();
+            var recvList = await userDAL.SelectManUsers(entity.OrgId.Value);
+            List<TargetUser> targets = new List<TargetUser>();
+            foreach (var recvId in recvList)
+            {
+                targets.Add(new TargetUser()
+                {
+                    uid = recvId.Id.Value,
+                    email = recvId.Email,
+                    phone = recvId.Mobile
+                });
+            }
+            var nt = new NoticeEvent(2, targets.ToArray(), new string[] { "APP" });
+            nt.OrgId = 1;
+            nt.TargetType = "Knowledge";
+            nt.TargetUrl = string.Empty;
+            nt.Content = $"知识库【{entity.Name}】发布申请通过";
+            nt.Label = "知识库发布申请通过";
+            await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
+
+            entity.Status = 1;
+            return BusResponse<int>.Success(await _kbDal.Update(entity));
+        }
+
+        public virtual async Task<BusResponse<int>> RefuseKnowledge(string id, string reason, IUserInfo user)
+        {
+            var entity = await _kbDal.Select(id);
+            if (entity == null || entity.Status != 2 || entity.OrgId != 1)
+            {
+                return BusResponse<int>.Error(111, "知识库不存在或无审核权");
+            }
+
+            var userDAL = _provider.GetService<UserDAL>();
+            var recvList = await userDAL.SelectManUsers(entity.OrgId.Value);
+            List<TargetUser> targets = new List<TargetUser>();
+            foreach (var recvId in recvList)
+            {
+                targets.Add(new TargetUser()
+                {
+                    uid = recvId.Id.Value,
+                    email = recvId.Email,
+                    phone = recvId.Mobile
+                });
+            }
+            var nt = new NoticeEvent(2, targets.ToArray(), new string[] { "APP" });
+            nt.OrgId = 1;
+            nt.TargetType = "Knowledge";
+            nt.TargetUrl = string.Empty;
+            nt.Content = $"知识库【{entity.Name}】发布申请被拒，原因{reason}";
+            nt.Label = "知识库发布申请被拒";
+            await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
+
+            entity.Status = 3;
+            return BusResponse<int>.Success(await _kbDal.Update(entity));
+        }
     }
 }

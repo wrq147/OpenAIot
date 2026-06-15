@@ -1,25 +1,6 @@
 <template>
   <div class="knowledge-detail-container">
-    <div class="detail-header">
-      <div class="header-top">
-        <div class="breadcrumb">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/llm/klg/index' }">知识库管理</el-breadcrumb-item>
-            <el-breadcrumb-item>{{ knowledge.Name }}</el-breadcrumb-item>
-            <template v-for="(item, index) in currentPath">
-              <el-breadcrumb-item :key="index">{{ item.name }}</el-breadcrumb-item>
-            </template>
-          </el-breadcrumb>
-        </div>
-        <div class="header-actions">
-          <el-input v-model="searchKeyword" placeholder="搜索文档..." style="width: 240px;">
-            <i slot="prefix" class="el-icon-search"></i>
-          </el-input>
-          <el-button icon="el-icon-setting" circle></el-button>
-          <el-button icon="el-icon-user" circle></el-button>
-        </div>
-      </div>
-    </div>
+    <div class="detail-header"></div>
 
     <div class="detail-body">
       <div class="sidebar">
@@ -31,16 +12,9 @@
         </div>
 
         <div class="nav-tree">
-          <el-tree
-            :data="treeData"
-            :props="treeProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            @node-click="handleNodeClick"
-            :default-expanded-keys="expandedKeys"
-            :default-selected-keys="selectedKeys"
-          >
+          <el-tree :data="treeData" :props="treeProps" :expand-on-click-node="false" :filter-node-method="filterNode"
+            ref="tree" @node-click="handleNodeClick" :default-expanded-keys="expandedKeys"
+            :default-selected-keys="selectedKeys">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span class="node-icon">
                 <i v-if="data.isColumn" class="el-icon-folder"></i>
@@ -91,6 +65,9 @@
 
 <script>
 import { getKnowledge } from '@/api/llm/knowledge'
+import { listColumn } from '@/api/llm/column'
+import { getArticle, getArticleItems } from '@/api/llm/article'
+
 import marked from 'marked'
 
 export default {
@@ -134,11 +111,11 @@ export default {
       return data.name.indexOf(value) !== -1
     },
     async getDetail() {
-      const kbId = this.$route.params.id
+      const kbId = this.$route.query.id
       const [kbRes, columnsRes, articlesRes] = await Promise.all([
         getKnowledge(kbId),
-        getColumnsByKbId(kbId),
-        getArticlesByKbId(kbId)
+        listColumn(kbId),
+        getArticleItems(kbId)
       ])
 
       this.knowledge = kbRes.data
@@ -238,26 +215,11 @@ export default {
 
 .detail-header {
   background: #fff;
-  padding: 12px 24px;
-  border-bottom: 1px solid #e4e7ed;
+  height: 5px;
+  border-bottom: 1px solid #eee;
+  z-index: 99;
 }
 
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.breadcrumb {
-  font-size: 14px;
-  color: #606266;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
 
 .detail-body {
   display: flex;
