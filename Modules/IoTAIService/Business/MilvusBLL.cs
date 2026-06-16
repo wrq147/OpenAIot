@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace IoTAIService.Business
 {
@@ -28,6 +29,9 @@ namespace IoTAIService.Business
                 var exists = await _client.HasCollectionAsync("MemCollect");
                 if (exists)
                 {
+                    MilvusCollection tmpcollection = _client.GetCollection("MemCollect");
+                    await tmpcollection.LoadAsync();
+                    await tmpcollection.WaitForCollectionLoadAsync();
                     return BusResponse<string>.Error(111, "成员向量表已存在");
                 }
 
@@ -43,7 +47,8 @@ namespace IoTAIService.Business
                 await collection.CreateIndexAsync("mem_vector", IndexType.AutoIndex, SimilarityMetricType.Cosine);
                 await collection.CreateIndexAsync(fieldName: "h_id", indexType: IndexType.AutoIndex);
                 await collection.CreateIndexAsync(fieldName: "mem_id", indexType: IndexType.AutoIndex);
-
+                await collection.LoadAsync();
+                await collection.WaitForCollectionLoadAsync();
                 return BusResponse<string>.Success();
             }
             catch

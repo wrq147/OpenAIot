@@ -32,6 +32,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button icon="el-icon-upload2" plain>导入</el-button>
+        <el-button @click="handlePreviewKb" icon="el-icon-view" plain>预览</el-button>
       </div>
     </div>
 
@@ -39,8 +40,7 @@
     <div class="management-body">
       <div class="tree-sidebar">
         <div class="sidebar-actions">
-          <el-input v-model="filterText" placeholder="搜索..." prefix-icon="el-icon-search" size="small" clearable
-            style="margin-bottom: 12px;">
+          <el-input v-model="filterText" placeholder="搜索..." prefix-icon="el-icon-search" size="small" clearable>
           </el-input>
         </div>
 
@@ -54,10 +54,7 @@
                 <i v-else class="el-icon-document"></i>
               </span>
               <span class="node-label">{{ node.label }}</span>
-              <span v-if="!data.isColumn && data.articleData" class="node-status-tag"
-                :class="{ draft: data.articleData.Status === 0, published: data.articleData.Status === 1 }">
-                {{ data.articleData.Status === 1 ? '已发布' : '草稿' }}
-              </span>
+
               <span class="node-actions">
                 <el-dropdown trigger="click" @click.native.stop>
                   <span class="el-dropdown-link">
@@ -102,7 +99,6 @@
           <div class="editor-header">
             <h3>{{ editingArticle.Id ? '编辑文章' : '新建文章' }}</h3>
             <div class="editor-actions">
-              <el-button @click="cancelEdit">取消</el-button>
               <el-button type="primary" @click="saveDraft">保存</el-button>
             </div>
           </div>
@@ -112,29 +108,22 @@
               <el-form-item label="标题" prop="Title">
                 <el-input v-model="editingArticle.Title" placeholder="请输入文章标题" maxlength="200"></el-input>
               </el-form-item>
-              <el-form-item label="所属栏目">
-                <el-select v-model="editingArticle.ColumnId" placeholder="选择栏目（可选）" clearable style="width: 300px;">
+              <el-form-item label="所属栏目" prop="ColumnId">
+                <el-select v-model="editingArticle.ColumnId" placeholder="选择栏目" clearable style="width: 300px;">
                   <el-option v-for="col in allColumns" :key="col.Id" :label="col.Name" :value="col.Id">
                   </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="正文" prop="Content">
                 <div class="wangeditor-container">
-                  <div class="editor-mode-switch">
-                    <el-button :class="{ active: editorMode === 'edit' }" @click="switchEditorMode('edit')">
-                      编辑
-                    </el-button>
-                    <el-button :class="{ active: editorMode === 'preview' }" @click="switchEditorMode('preview')">
-                      预览
-                    </el-button>
-                  </div>
-                  <div v-show="editorMode === 'edit'" class="editor-wrapper">
+
+                  <div class="editor-wrapper">
                     <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig"
                       :mode="editorModeType" />
-                    <Editor v-model="editorContent" :defaultConfig="editorConfig" :mode="editorModeType" style="height: 350px; overflow-y: hidden;"
-                      @onCreated="handleEditorCreated" />
+                    <Editor v-model="editorContent" :defaultConfig="editorConfig" :mode="editorModeType"
+                      style="height: 350px; overflow-y: hidden;" @onCreated="handleEditorCreated" />
                   </div>
-                  <div v-show="editorMode === 'preview'" class="preview-wrapper" v-html="renderedMarkdown"></div>
+
                 </div>
               </el-form-item>
             </el-form>
@@ -146,7 +135,6 @@
           <div class="editor-header">
             <h3>{{ editingColumn.Id ? '编辑栏目' : '新建栏目' }}</h3>
             <div class="editor-actions">
-              <el-button @click="cancelEdit">取消</el-button>
               <el-button type="primary" @click="saveColumn">保存</el-button>
             </div>
           </div>
@@ -200,11 +188,14 @@
 <script>
 import { getKnowledge } from '@/api/llm/knowledge'
 import { listColumn, addColumn, updateColumn, deleteColumn } from '@/api/llm/column'
-import { getArticleItems, addArticle, updateArticle, deleteArticle } from '@/api/llm/article'
+import { getArticleItems, addArticle, updateArticle, deleteArticle, getArticle } from '@/api/llm/article'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import markdownModule from '@wangeditor/plugin-md'
-import marked from 'marked'
-Boot.registerModule(markdownModule)
+import { marked } from 'marked'
+import TurndownService from 'turndown'
+import { gfm } from 'turndown-plugin-gfm'
+const turndownService = new TurndownService()
+turndownService.use(gfm)
+
 export default {
   name: 'ColumnManagement',
   components: { Editor, Toolbar },
@@ -225,18 +216,26 @@ export default {
       isEditingArticle: false,
       editingColumn: { Id: undefined, Name: '', ParentId: "", SortOrder: 1 },
       editingArticle: { Id: undefined, Title: '', Content: '', ColumnId: null },
-      articleRules: { Title: [{ required: true, message: '请输入文章标题', trigger: 'blur' }] },
+      articleRules: { 
+        Title: [{ required: true, message: '请输入文章标题', trigger: 'blur' }] ,
+        ColumnId: [{ required: true, message: '请选择所属栏目', trigger: 'change' }]
+      },
       columnRules: { Name: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }] },
-      editorMode: 'edit',
-      editorModeType: 'markdown',
+      editorModeType: 'simple',
       editorContent: '',
       editorConfig: {
         placeholder: '开始编写文章内容...',
-        mode: 'markdown',
+        mode: 'simple',
         autoFocus: false,
         maxLength: 50000
       },
-      toolbarConfig: {},
+      toolbarConfig: {
+        excludeKeys: [
+          'fullScreen',
+          'insertVideo',
+          'uploadVideo'
+        ]
+      },
     }
   },
   computed: {
@@ -246,25 +245,37 @@ export default {
     availableParentColumns() {
       return this.allColumns.filter(c => c.Id !== this.editingColumn.Id)
     },
-    renderedMarkdown() {
-      if (!this.editorContent) return '<p>暂无内容</p>'
-      return marked(this.editorContent)
-    }
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
-    },
-    isEditingArticle(val) {
-      if (val && this.editingArticle.Content) {
-        this.editorContent = this.editingArticle.Content
-      }
     }
   },
   created() {
     this.loadKbDetail()
   },
+  beforeDestroy() {
+    const editor = this.editor
+    if (editor == null) return
+    editor.destroy()
+  },
   methods: {
+    handlePreviewKb() {
+      this.$router.push({
+        path: '/report/klg/detail',
+        query: { id: this.currentKb.Id }
+      })
+    },
+    // HTML -> Markdown 保存入库
+    htmlToMarkdown(htmlStr) {
+      if (!htmlStr || htmlStr.trim() === '') return ''
+      return turndownService.turndown(htmlStr)
+    },
+    // Markdown -> HTML 编辑器回显
+    markdownToHtml(mdStr) {
+      if (!mdStr || mdStr.trim() === '') return ''
+      return marked.parse(mdStr)
+    },
     filterNode(value, data) {
       if (!value) return true
       return data.name.indexOf(value) !== -1
@@ -277,6 +288,10 @@ export default {
         getArticleItems(kbId)
       ])
       this.currentKb = kbRes.data
+      if(this.currentKb.Status!=0){
+        this.$modal.msgError('状态错误，无法编辑');
+        return;
+      }
       this.columns = columnsRes.data
       this.articles = articlesRes.data
       this.allColumns = this.columns
@@ -310,19 +325,19 @@ export default {
       })
       this.treeData = tree
     },
-    handleNodeClick(data) {
+    async handleNodeClick(data) {
       if (data.isColumn) {
-        this.editorMode = 'edit'
         this.isEditingArticle = false
         this.isEditingColumn = true
         this.editingColumn = { Id: data.id, Name: data.name, ParentId: this.getParentId(data.id), SortOrder: 1 }
       } else if (data.articleData) {
-        this.editorMode = 'edit'
         this.isEditingColumn = false
         this.isEditingArticle = true
         const article = data.articleData
-        this.editingArticle = { Id: article.Id, Title: article.Title, Content: article.Content || '', ColumnId: article.ColumnId || null }
-        this.editorContent = article.Content || ''
+        let artresp = await getArticle(article.Id);
+        let artdetail = artresp.data;
+        this.editorContent = this.markdownToHtml(artdetail.Content)
+        this.editingArticle = { Id: artdetail.Id, Title: artdetail.Title, Content: this.editorContent, ColumnId: artdetail.ColumnId }
       }
     },
     getParentId(id) {
@@ -340,7 +355,6 @@ export default {
       this.editingColumn = { Id: undefined, Name: '', ParentId: data.id, SortOrder: 1 }
     },
     handleAddArticleUnderColumn(data) {
-      this.editorMode = 'edit'
       this.isEditingColumn = false
       this.isEditingArticle = true
       this.editingArticle = {
@@ -352,7 +366,6 @@ export default {
       this.editorContent = ''
     },
     handleAddArticle() {
-      this.editorMode = 'edit'
       this.isEditingColumn = false
       this.isEditingArticle = true
       this.editingArticle = { Id: undefined, Title: '', Content: '', ColumnId: null }
@@ -381,11 +394,6 @@ export default {
         }).catch(() => { })
       }
     },
-    cancelEdit() {
-      this.isEditingColumn = false
-      this.isEditingArticle = false
-      this.editorMode = 'edit'
-    },
     saveColumn() {
       this.$refs.columnForm.validate(valid => {
         if (!valid) return
@@ -411,11 +419,12 @@ export default {
     submitArticle(status) {
       this.$refs.articleForm.validate(valid => {
         if (!valid) return
+        const markdown = this.htmlToMarkdown(this.editorContent)
         const payload = {
           ...this.editingArticle,
           KbId: this.currentKb.Id,
           Status: status,
-          Content: this.editorContent,
+          Content: markdown,
           DocType: 2
         }
         if (this.editingArticle.Id) {
@@ -433,12 +442,9 @@ export default {
         }
       })
     },
-    switchEditorMode(mode) {
-      this.editorMode = mode
-    },
+
     handleEditorCreated(editor) {
-      this.editor = editor;
-      editor.getConfig().set('markdown', true)
+      this.editor = Object.seal(editor)
     }
   }
 }
@@ -588,23 +594,6 @@ export default {
   white-space: nowrap;
 }
 
-.node-status-tag {
-  font-size: 10px;
-  padding: 1px 6px;
-  border-radius: 3px;
-  margin-left: 6px;
-}
-
-.node-status-tag.draft {
-  background: #f4f4f5;
-  color: #909399;
-}
-
-.node-status-tag.published {
-  background: #f0f9eb;
-  color: #67c23a;
-}
-
 .node-actions {
   opacity: 0;
   transition: opacity 0.2s;
@@ -682,23 +671,6 @@ export default {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
   overflow: hidden;
-}
-
-.editor-mode-switch {
-  display: flex;
-  border-bottom: 1px solid #dcdfe6;
-}
-
-.editor-mode-switch .el-button {
-  border: none;
-  border-radius: 0;
-  margin: 0;
-}
-
-.editor-mode-switch .el-button.active {
-  background: #fff;
-  border-bottom: 2px solid #1890ff;
-  color: #1890ff;
 }
 
 .preview-wrapper {

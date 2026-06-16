@@ -24,6 +24,7 @@ namespace LLMService
             services.AddSingleton<ChatBLL>();
             services.AddSingleton<ShortMemoryBLL>();
             services.AddSingleton<MemoryRagBLL>();
+            services.AddSingleton<KnowledgeRagBLL>();
 
             services.AddBLL<ArticleBLL>();
             services.AddBLL<KnowledgeBLL>();
@@ -37,6 +38,8 @@ namespace LLMService
         {
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
+                var knowragBLL = app.ServiceProvider.GetService<KnowledgeRagBLL>();
+                await knowragBLL.CreateRagCollection();
                 var memoryBLL = app.ServiceProvider.GetService<MemoryRagBLL>();
                 await memoryBLL.CreateRagCollection();
                 if (Constants.General.quick_init != true)

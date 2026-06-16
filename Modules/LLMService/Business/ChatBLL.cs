@@ -99,7 +99,8 @@ namespace LLMService.Business
 请严格遵守以下规则：
 1. 请根据用户身份提供合适的回答。
 2. 优先使用提供的工具回答用户问题，工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
-3. 不知道答案不要猜测，直接告诉用户无法回答。"),
+3. 无法区分信息来源时，直接多工具并行检索，避免信息缺失。
+4. 不知道答案不要猜测，直接告诉用户无法回答。"),
 
             };
             var shortMemorys = await _provider.GetService<ShortMemoryBLL>().GetShortMemoryList(sessionId);

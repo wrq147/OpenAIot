@@ -38,6 +38,10 @@ namespace MyAccess.DB.Builder.UpdateToSql
         {
             switch (node.NodeType)
             {
+                case ExpressionType.Convert:
+                    var unaryConvert = (UnaryExpression)node;
+                    ParseExpressionNode(unaryConvert.Operand, sb);
+                    break;
                 // 处理二元运算（+、-、*、/ 等）
                 case ExpressionType.Add:
                 case ExpressionType.Subtract:

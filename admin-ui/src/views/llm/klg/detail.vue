@@ -31,10 +31,9 @@
           <div class="article-header">
             <h1>{{ selectedArticle.Title }}</h1>
             <div class="article-meta">
-              <span class="author">{{ selectedArticle.createName || '管理员' }}</span>
+              <span class="author">{{ selectedArticle.createName }}</span>
               <span class="dot">·</span>
               <span>{{ parseTime(selectedArticle.createTime) }}</span>
-              <span class="dot">·</span>
               <span>修改</span>
               <span class="dot">·</span>
               <span><i class="el-icon-view"></i> {{ selectedArticle.ViewCount || 0 }} 次阅读</span>
@@ -47,7 +46,6 @@
             <div class="action-buttons">
               <el-button size="small"><i class="el-icon-thumbs-up"></i> 点赞</el-button>
               <el-button size="small"><i class="el-icon-star-off"></i> 收藏</el-button>
-              <el-button size="small"><i class="el-icon-share"></i> 分享</el-button>
             </div>
           </div>
         </div>
@@ -66,9 +64,9 @@
 <script>
 import { getKnowledge } from '@/api/llm/knowledge'
 import { listColumn } from '@/api/llm/column'
-import { getArticle, getArticleItems } from '@/api/llm/article'
+import { getArticle, getArticleItems,viewArticle } from '@/api/llm/article'
 
-import marked from 'marked'
+import { marked } from 'marked'
 
 export default {
   name: 'KnowledgeDetail',
@@ -94,7 +92,7 @@ export default {
       if (!this.selectedArticle?.Content) {
         return '<p style="color: #909399;">暂无内容</p>'
       }
-      return marked(this.selectedArticle.Content)
+      return marked.parse(this.selectedArticle.Content)
     }
   },
   watch: {
@@ -160,11 +158,14 @@ export default {
 
       this.treeData = tree
     },
-    handleNodeClick(data) {
+    async handleNodeClick(data) {
       if (!data.isColumn && data.articleData) {
-        this.selectedArticle = data.articleData
+        let artresp = await getArticle(data.articleData.Id);
+        let artdetail = artresp.data;
+        this.selectedArticle = artdetail
         this.selectedKeys = [data.id]
         this.updatePath(data)
+        viewArticle(data.articleData.Id)
       }
     },
     updatePath(data) {
@@ -193,14 +194,7 @@ export default {
       }
       return null
     },
-    parseTime(time) {
-      if (!time) return '刚刚'
-      const date = new Date(time)
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      return `${year}年${month}月${day}日`
-    }
+
   }
 }
 </script>

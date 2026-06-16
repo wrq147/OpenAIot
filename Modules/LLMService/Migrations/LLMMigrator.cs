@@ -62,7 +62,7 @@ namespace LLMService.Migrations
                     .WithColumn("KbId").AsString(128).Indexed().NotNullable().WithColumnDescription("知识库ID")
                     .WithColumn("ColumnId").AsString(128).Indexed().Nullable().WithColumnDescription("栏目ID")
                     .WithColumn("Title").AsString(200).NotNullable().WithColumnDescription("文章标题")
-                    .WithColumn("Content").AsString(16777215).Nullable().WithColumnDescription("文章内容")
+                    .WithColumn("Content").AsString(100000).Nullable().WithColumnDescription("文章内容")
                     .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("文章关键词")
                     .WithColumn("ViewCount").AsInt32().NotNullable().WithDefaultValue(0).WithColumnDescription("阅读次数")
                     .WithColumn("createId").AsInt64().WithColumnDescription("创建者Id")

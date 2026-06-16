@@ -1,6 +1,7 @@
 using AuthService;
 using Common.IdGenerator;
 using Common.Share;
+using JiebaNet.Segmenter;
 using LLMService.DAL;
 using LLMService.Model;
 using System;
@@ -38,6 +39,16 @@ namespace LLMService.Business
             var article = await _articleDal.Select(id);
             article.KbColumn = await _provider.GetService<KbColumnDAL>().Select(article.ColumnId);
             article.Kb = await _provider.GetService<KnowledgeDAL>().Select(article.KbId);
+            var creator = await _provider.GetService<UserDAL>().GetAdminById(article.createId.Value);
+            if (creator != null)
+            {
+                article.createName = creator.RealName;
+            }
+            var updator = await _provider.GetService<UserDAL>().GetAdminById(article.updateId.Value);
+            if (updator != null)
+            {
+                article.updateName = updator.RealName;
+            }
             return article;
         }
 
@@ -50,9 +61,14 @@ namespace LLMService.Business
                 return BusResponse<string>.Error(111, "知识库不存在或无权操作");
             }
 
+            if (string.IsNullOrEmpty(entity.ColumnId))
+            {
+                return BusResponse<string>.Error(112, "所属栏目不能为空");
+            }
             var snowflake = _provider.GetService<SnowflakeHelper>();
             entity.Id = snowflake.NextId().ToString();
             entity.ViewCount = 0;
+            entity.KeyWords = string.Join(",", new JiebaSegmenter().CutForSearch(entity.Title));
             entity.SetCreateBy(user);
             await _articleDal.Insert(entity);
 
@@ -77,7 +93,10 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(112, "知识库不存在或无权操作");
             }
-
+            if (!string.IsNullOrEmpty(entity.Title))
+            {
+                entity.KeyWords = string.Join(",", new JiebaSegmenter().CutForSearch(entity.Title));
+            }
             entity.SetUpdateBy(user);
             return BusResponse<int>.Success(await _articleDal.Update(entity));
         }
@@ -104,7 +123,7 @@ namespace LLMService.Business
             return BusResponse<int>.Success(rt);
         }
 
-      
+
 
         public virtual async Task<BusResponse<int>> IncrementViewCount(string id)
         {

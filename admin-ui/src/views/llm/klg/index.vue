@@ -25,7 +25,7 @@
       </div>
 
       <!-- 知识库卡片网格 -->
-      <div class="knowledge-grid">
+      <div class="knowledge-grid" v-loading="submitLoading">
         <div v-for="item in knowledgeList" :key="item.Id" class="knowledge-card" @click="goToDetail(item)">
           <div class="card-cover" :style="{ backgroundImage: `url(${item.Cover || defaultCover})` }">
             <!-- 权限标签：左上角 -->
@@ -144,7 +144,7 @@ export default {
   name: 'KnowledgeBase',
   data() {
     return {
-      loading: false,
+      submitLoading: true,
       total: 0,
       knowledgeList: [],
       searchKeyword: '',
@@ -200,12 +200,12 @@ export default {
       return map[status] || ''
     },
     getList() {
-      this.loading = true
+      this.submitLoading = true
       this.queryParams.WithPublic = this.MyOrgId == 1;
       listKnowledge(this.queryParams).then(response => {
         this.knowledgeList = response.data.List
         this.total = response.data.Total
-        this.loading = false
+        this.submitLoading = false
       })
     },
     handleSearch() {
@@ -220,7 +220,7 @@ export default {
       this.getList()
     },
     goToDetail(item) {
-      if(item.OrgId==this.MyOrgId){
+      if(item.OrgId==this.MyOrgId&&item.Status==0){
         this.$router.push({
           path: '/report/klg/column',
           query: { id: item.Id }
@@ -285,9 +285,11 @@ export default {
       })
     },
     async confirmCheck(item) {
+      this.submitLoading=true;
       await agreeKnowledge(item.Id);
       this.getList();
       this.$modal.msgSuccess('审核通过！')
+      this.submitLoading=false;
     },
     async refuseCheck(item) {
       const { value } = await this.$prompt('请输入拒绝原因', '审核拒绝', {
@@ -312,16 +314,20 @@ export default {
       this.$modal.msgSuccess('审核拒绝！')
     },
     async handlePublish(item) {
+      this.submitLoading=true;
       await this.$modal.confirm(`确定要${item.Status === 0 ? '发布' : '重新提交'}该知识库吗？`)
       await enableKnowledge(item.Id);
       this.getList();
       this.$modal.msgSuccess('提交成功！')
+      this.submitLoading=false;
     },
     async handleCancel(item) {
+      this.submitLoading=true;
       await this.$modal.confirm('确定要取消当前状态吗？')
       await disableKnowledge(item.Id);
       this.getList();
       this.$modal.msgSuccess('取消成功！')
+      this.submitLoading=false;
     }
   }
 }

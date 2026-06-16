@@ -56,10 +56,10 @@ namespace LLMService
         }
         private void RegisterSystemTools()
         {
+            _allTools.Add(SearchKnowledge.CreateSearchRelatedKnowledgeTool(_provider));
             _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
             _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
             _allTools.Add(SystemTime.CreateSystemTimeTool(_provider));
-
         }
         /// <summary>
         /// 技能执行回调：外部注入业务逻辑（执行scripts脚本/本地API/自定义逻辑）

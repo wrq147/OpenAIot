@@ -11,18 +11,9 @@
           <h1 class="empty-title">有什么我能帮你的吗？</h1>
           <div class="quick-questions">
             <span class="quick-btn" @click="handleQuickSend('你能干什么？')">你能干什么？</span>
-            <span class="quick-btn" @click="handleQuickSend('什么食物可以帮助缓解拉肚子？')">什么食物可以帮助缓解拉肚子？</span>
-            <span class="quick-btn" @click="handleQuickSend('什么是 AGI 时代？')">什么是 AGI 时代？</span>
-            <span class="quick-btn" @click="handleQuickSend('解释L0、L1、L2范数的区别')">解释L0、L1、L2范数的区别</span>
-            <span class="quick-btn" @click="handleQuickSend('资讯：Meta 智能眼镜人脸识别系统曝光后被紧急移除')">资讯：Meta
-              智能眼镜人脸识别系统曝光后被紧急移除</span>
-            <span class="quick-btn"
-              @click="handleQuickSend('Transformer如何利用多头注意力机制进行学习？')">Transformer如何利用多头注意力机制进行学习？</span>
-            <span class="quick-btn" @click="handleQuickSend('B850M适合搭建什么级别的主机？')">B850M适合搭建什么级别的主机？</span>
-            <span class="quick-btn" @click="handleQuickSend('AGI 和 AI 有什么区别？')">AGI 和 AI 有什么区别？</span>
-            <span class="quick-btn" @click="handleQuickSend('资讯：新一代智能体 OpenClaw 推动 AI 原生组织深度变革')">资讯：新一代智能体 OpenClaw 推动
-              AI
-              原生组织深度变革</span>
+            <span class="quick-btn" @click="handleQuickSend('我有哪些物联网设备？')">我有哪些物联网设备？</span>
+            <span class="quick-btn" @click="handleQuickSend('如何开发新的物联网协议？')">如何开发新的物联网协议？</span>
+            <span class="quick-btn" @click="handleQuickSend('如何使用规则引擎？')">如何使用规则引擎？</span>
           </div>
         </div>
 

@@ -27,6 +27,15 @@
             统计所有参与联查的物理表总数
             </summary>
         </member>
+        <member name="M:LLMService.Business.KnowledgeRagBLL.SplitMarkdownChunk(System.String,System.Int32,System.Double)">
+            <summary>
+            Markdown文本分块，保留完整md格式，无需清洗
+            </summary>
+            <param name="mdContent">原始Markdown内容</param>
+            <param name="chunkSize">单块最大字符，推荐2000</param>
+            <param name="overlapRate">文本重叠比例 0.1~0.15</param>
+            <returns>分块列表（每一块都是完整可渲染的Markdown片段）</returns>
+        </member>
         <member name="T:LLMService.Business.MemoryRagBLL">
             <summary>
             长期记忆
@@ -468,6 +477,11 @@
         <member name="T:LLMService.Tool.LongMemory">
             <summary>
             长期记忆工具
+            </summary>
+        </member>
+        <member name="T:LLMService.Tool.SearchKnowledge">
+            <summary>
+            相关知识搜索
             </summary>
         </member>
     </members>

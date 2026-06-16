@@ -32,6 +32,9 @@ namespace LLMService.Business
                 var exists = await _client.HasCollectionAsync("ChatMemory");
                 if (exists)
                 {
+                    MilvusCollection tmpcollection = _client.GetCollection("ChatMemory");
+                    await tmpcollection.LoadAsync();
+                    await tmpcollection.WaitForCollectionLoadAsync();
                     return BusResponse<string>.Error(111, "AI记忆向量表已存在");
                 }
 
@@ -48,7 +51,8 @@ namespace LLMService.Business
                 await collection.CreateIndexAsync("Embedding", IndexType.Hnsw, SimilarityMetricType.Cosine);
                 await collection.CreateIndexAsync(fieldName: "SessionId", indexType: IndexType.AutoIndex);
                 await collection.CreateIndexAsync(fieldName: "CreateTime", indexType: IndexType.AutoIndex);
-
+                await collection.LoadAsync();
+                await collection.WaitForCollectionLoadAsync();
                 return BusResponse<string>.Success();
             }
             catch

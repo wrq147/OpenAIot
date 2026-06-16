@@ -4,6 +4,7 @@ using Common.IdGenerator;
 using Common.Share;
 using LLMService.DAL;
 using LLMService.Model;
+using NPOI.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,8 +74,9 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(111, "知识库不存在或无权修改");
             }
-
-            return BusResponse<int>.Success(await _kbDal.Delete(id));
+            var rs = await _kbDal.Delete(id);
+            await _provider.GetService<KnowledgeRagBLL>().DelKnowledgeFromMilvus(id);
+            return BusResponse<int>.Success(rs);
         }
 
         public virtual async Task<BusResponse<int>> EnableKnowledge(string id, IUserInfo user)
@@ -88,15 +90,17 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(112, "当前状态无法发布");
             }
+            MZ_Knowledge updateEntity = new MZ_Knowledge();
+            updateEntity.Id = entity.Id;
             if (user.OrgId == 1)
             {
-                entity.Status = 1;
+                updateEntity.Status = 1;
             }
             else
             {
                 if (entity.IsPublic == true)
                 {
-                    entity.Status = 2;
+                    updateEntity.Status = 2;
 
                     var userDAL = _provider.GetService<UserDAL>();
                     var recvList = await userDAL.SelectManUsers(1);
@@ -120,11 +124,20 @@ namespace LLMService.Business
                 }
                 else
                 {
-                    entity.Status = 1;
+                    updateEntity.Status = 1;
                 }
             }
-            entity.SetUpdateBy(user);
-            return BusResponse<int>.Success(await _kbDal.Update(entity));
+            updateEntity.SetUpdateBy(user);
+            var rs = await _kbDal.Update(updateEntity);
+
+            if (updateEntity.Status == 1)
+            {
+                //同步张量数据库
+                var columnList = await _provider.GetService<KbColumnDAL>().SelectList(x => x.KbId == entity.Id);
+                var artList = await _provider.GetService<ArticleDAL>().SelectList(x => x.KbId == entity.Id);
+                await _provider.GetService<KnowledgeRagBLL>().SyncArticleToMilvus(entity, columnList, artList);
+            }
+            return BusResponse<int>.Success(rs);
         }
         public virtual async Task<BusResponse<int>> DisableKnowledge(string id, IUserInfo user)
         {
@@ -133,13 +146,17 @@ namespace LLMService.Business
             {
                 return BusResponse<int>.Error(111, "知识库不存在或无权修改");
             }
-            if (entity.Status != 1 || entity.Status != 2)
+            if (entity.Status != 1 && entity.Status != 2)
             {
                 return BusResponse<int>.Error(112, "当前状态无法取消");
             }
-            entity.Status = 0;
-            entity.SetUpdateBy(user);
-            return BusResponse<int>.Success(await _kbDal.Update(entity));
+            MZ_Knowledge updateEntity = new MZ_Knowledge();
+            updateEntity.Id = entity.Id;
+            updateEntity.Status = 0;
+            updateEntity.SetUpdateBy(user);
+            var rs = await _kbDal.Update(updateEntity);
+            await _provider.GetService<KnowledgeRagBLL>().DelKnowledgeFromMilvus(id);
+            return BusResponse<int>.Success(rs);
         }
         public virtual async Task<BusResponse<int>> AgreeKnowledge(string id, IUserInfo user)
         {
@@ -169,8 +186,18 @@ namespace LLMService.Business
             nt.Label = "知识库发布申请通过";
             await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
 
-            entity.Status = 1;
-            return BusResponse<int>.Success(await _kbDal.Update(entity));
+            MZ_Knowledge updateEntity = new MZ_Knowledge();
+            updateEntity.Id = entity.Id;
+            updateEntity.Status = 1;
+            var rs = await _kbDal.Update(updateEntity);
+            if (entity.Status == 1)
+            {
+                //同步张量数据库
+                var columnList = await _provider.GetService<KbColumnDAL>().SelectList(x => x.KbId == entity.Id);
+                var artList = await _provider.GetService<ArticleDAL>().SelectList(x => x.KbId == entity.Id);
+                await _provider.GetService<KnowledgeRagBLL>().SyncArticleToMilvus(entity, columnList, artList);
+            }
+            return BusResponse<int>.Success(rs);
         }
 
         public virtual async Task<BusResponse<int>> RefuseKnowledge(string id, string reason, IUserInfo user)
@@ -201,8 +228,10 @@ namespace LLMService.Business
             nt.Label = "知识库发布申请被拒";
             await TAEventDispatcher.Instance.Dispatch(NoticeEvent.EventKey, nt);
 
-            entity.Status = 3;
-            return BusResponse<int>.Success(await _kbDal.Update(entity));
+            MZ_Knowledge updateEntity = new MZ_Knowledge();
+            updateEntity.Id = entity.Id;
+            updateEntity.Status = 3;
+            return BusResponse<int>.Success(await _kbDal.Update(updateEntity));
         }
     }
 }

@@ -16,7 +16,7 @@ namespace LLMService.DAL
     {
         public virtual async Task<List<Out_ArticleItem>> SelectArticleItems(string kbId)
         {
-            return await new SqlBuilder(help).Query<Out_ArticleItem>().Where(x => x.KbId == kbId, "Title,ColumnId").ToListAsync();
+            return await new SqlBuilder(help).Query<Out_ArticleItem>().Where(x => x.KbId == kbId, "Id,KbId,Title,ColumnId").ToListAsync();
         }
 
         public virtual async Task<PageObject<MZ_Article>> SelectByPage(In_ArticleQuery query, IUserInfo user)
@@ -37,7 +37,7 @@ namespace LLMService.DAL
             }
 
             var tmpSql = new SqlBuilder(help).Query<MZ_Article>()
-                .Include(a => a.Kb, a => a.KbId)
+                .Include(a => a.Kb, a => a.KbId).Include(a => a.KbColumn, a => a.ColumnId)
                 .Where(expression);
             var pageResult = await tmpSql.GeneratePageObjectAsync(query, "a.create_time desc");
             return pageResult;
