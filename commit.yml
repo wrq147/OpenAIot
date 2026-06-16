@@ -3,36 +3,24 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'c08249f48b6f23f73e33dbb61ef36b8094c6310c'
-    oldFile: !uuid 'ea6263fc969af2f68c5b265c73552bb66d38f57d'
+    newFile: !uuid 'ada0dd09b3d32c7634d8afedd3837f90670087a5'
+    oldFile: !uuid 'c08249f48b6f23f73e33dbb61ef36b8094c6310c'
   /Modules/LLMService:
-    newFile: !uuid '3764ff788d52b113d07b54d2c89eab41616f250f'
-    oldFile: !uuid 'e78a95b36663ece8d6166ebd4b1ae23a4cafd237'
-  /Modules/LLMService/AiSqlValidator.cs:
-    newFile: !uuid 'be06a4804d1fc4c57c674bc373022305dd3e8fea'
-    oldFile: !uuid '7f20affe81b4e494744f18723d1ee75f52d56a16'
+    newFile: !uuid '38de8f49ada7c10d68d8eeadcfede8973627c9c3'
+    oldFile: !uuid '3764ff788d52b113d07b54d2c89eab41616f250f'
   /Modules/LLMService/Business:
-    newFile: !uuid '10981052e29c021f3d0342712be9cc0029ccb081'
-    oldFile: !uuid '766831f53b510749f6a2d9c53cee4fb16e980130'
-  /Modules/LLMService/Business/DbSearchBLL.cs:
-    newFile: !uuid '89abd72ba6dd7ab82d9c5d1ce1ad8cd965e44d01'
-    oldFile: null
-  /Modules/LLMService/Model:
-    newFile: !uuid '380ef5687a8c0945f4a67b5db94455e235674d9b'
-    oldFile: !uuid '044b4ea13b7219913050da5c423ddf4a555ff276'
-  /Modules/LLMService/Model/T_TableField.cs:
-    newFile: !uuid '128dbf57b3f8da0cba29f61055d48328c0902e61'
-    oldFile: null
-  /Modules/LLMService/PluginConfig.cs:
-    newFile: !uuid '02153678231e965d55188eb31edfc1050fab2107'
-    oldFile: !uuid '78c48f204ac181f0c4fda31d2a0c6136d959929b'
+    newFile: !uuid '1613eba447e5694b37ed0f51b2c3fc697374f6ad'
+    oldFile: !uuid '10981052e29c021f3d0342712be9cc0029ccb081'
+  /Modules/LLMService/Business/KnowledgeRagBLL.cs:
+    newFile: !uuid '1e0fd10ea255f42523653970c1f4c5770d466681'
+    oldFile: !uuid 'fc4f66141248a50dbc6ef97a5444932ea8896928'
   /Modules/LLMService/Tool:
-    newFile: !uuid '37623c86f6dd85733b36c731334424b72b8cb022'
-    oldFile: !uuid 'e4cfaac542dd96061ee2bd05caf9c38206089474'
+    newFile: !uuid '97e48f53ce67edccd04821641bbb9a2a06ca394a'
+    oldFile: !uuid '37623c86f6dd85733b36c731334424b72b8cb022'
   /Modules/LLMService/Tool/SearchKnowledge.cs:
-    newFile: !uuid '1ce3472a3070c943ee3d1f619bac2de8b1961360'
-    oldFile: !uuid '924972c6c4c488f264d58e10a9889a1f73090712'
-gitCommitId: !uuid '9f8d37b4e8ffc9257a3367dd7aa8170d41d3f541'
+    newFile: !uuid '4efcf28ddf65c64c04a8c9b064c4c6a704647c4a'
+    oldFile: !uuid '1ce3472a3070c943ee3d1f619bac2de8b1961360'
+gitCommitId: !uuid 'dc4c1abcd2ab9d17cd389bd3ecb5c452233d9c60'
 renames: {
   }
-revisionId: 355
+revisionId: 356
