@@ -1,4 +1,5 @@
-﻿using LLMService.Business;
+﻿using AuthService;
+using LLMService.Business;
 using Microsoft.Extensions.AI;
 using OpenAI.Chat;
 using System;
@@ -19,11 +20,12 @@ namespace LLMService.Tool
         public static AITool CreateSearchRelatedKnowledgeTool(ITAServiceProvider provider)
         {
             return AIFunctionFactory.Create(
-              async ([Description("用户待检索的业务问题，用于向量匹配知识库文档片段")] string query, 
+              async ([Description("用户待检索的业务问题，用于向量匹配知识库文档片段")] string query,
               [Description("文档相关度过滤阈值，仅返回相似度大于该值的文档，默认0.6")] float score = 0.6f) =>
               {
                   var context = FunctionInvokingChatClient.CurrentContext;
-                  return await provider.GetService<KnowledgeRagBLL>().SearchRelatedAsync(context.Options.ConversationId, query, score);
+                  var user = context.Options.AdditionalProperties["UserInfo"] as Data_ServerTokenInfo;
+                  return await provider.GetService<KnowledgeRagBLL>().SearchRelatedAsync(user.OrgId, query, score);
               },
               name: "SearchRelatedAsync",
               description: """
@@ -34,6 +36,6 @@ namespace LLMService.Tool
                 """
             );
         }
-     
+
     }
 }

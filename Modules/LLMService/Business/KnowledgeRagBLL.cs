@@ -189,14 +189,14 @@ namespace LLMService.Business
             return chunks;
         }
 
-        public async Task<string> SearchRelatedAsync(string sessionId, string query, float score = 0.6f)
+        public async Task<string> SearchRelatedAsync(long orgId, string query, float score = 0.6f)
         {
             var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
             MilvusCollection collection = _client.GetCollection("Knowledges");
 
             SearchParameters searchParameters = new();
             searchParameters.OutputFields.Add("Content");
-            searchParameters.Expression = "OrgId==" + sessionId;
+            searchParameters.Expression = "OrgId==" + orgId;
 
             var results = await collection.SearchAsync(
                 vectorFieldName: "Embedding",
