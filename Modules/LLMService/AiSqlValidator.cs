@@ -15,8 +15,7 @@ namespace LLMService
     {
         #region 配置项
         public HashSet<string> TableWhiteList { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-        public int MaxJoinCount { get; set; } = 3;
-        public int MaxLimitRows { get; set; } = 500;
+        public int MaxJoinCount { get; set; } = 10;
         public DbType DbDialect { get; set; } = DbType.MySql;
         #endregion
 
@@ -111,12 +110,7 @@ namespace LLMService
                 errorMsg = "必须显式添加LIMIT限制返回行数";
                 return false;
             }
-            long limitRows = Convert.ToInt64(((SqlNumberExpression)query.Limit.RowCount).Value);
-            if (limitRows <= 0 || limitRows > MaxLimitRows)
-            {
-                errorMsg = $"LIMIT行数必须在1~{MaxLimitRows}之间，当前{limitRows}";
-                return false;
-            }
+
 
             // 规则6：禁止WITH CTE
             if (query.WithSubQuerys != null && query.WithSubQuerys.Any())

@@ -25,6 +25,7 @@ namespace LLMService
             services.AddSingleton<ShortMemoryBLL>();
             services.AddSingleton<MemoryRagBLL>();
             services.AddSingleton<KnowledgeRagBLL>();
+            services.AddSingleton<DbSearchBLL>();
 
             services.AddBLL<ArticleBLL>();
             services.AddBLL<KnowledgeBLL>();

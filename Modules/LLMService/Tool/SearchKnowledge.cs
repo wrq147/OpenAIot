@@ -1,5 +1,6 @@
 ﻿using LLMService.Business;
 using Microsoft.Extensions.AI;
+using OpenAI.Chat;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,5 +34,6 @@ namespace LLMService.Tool
                 """
             );
         }
+     
     }
 }
