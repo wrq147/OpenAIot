@@ -27,7 +27,7 @@ namespace LLMService.Tool
                   var user = context.Options.AdditionalProperties["UserInfo"] as Data_ServerTokenInfo;
                   return await provider.GetService<KnowledgeRagBLL>().SearchRelatedAsync(user.OrgId, query, score);
               },
-              name: "SearchRelatedAsync",
+              name: "知识库检索",
               description: """
                 业务知识库检索工具，根据用户自然语言问题匹配库内相似文档片段。
                 使用场景：

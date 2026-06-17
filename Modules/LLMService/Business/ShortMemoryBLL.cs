@@ -16,9 +16,9 @@ namespace LLMService.Business
     {
         private ILogger<ShortMemoryBLL> _log;
         private GeneralRedisHelper _redis;
-        private IAiClientRegistry _registry;
+        private AiClientRegistry _registry;
         private ITAServiceProvider _provider;
-        public ShortMemoryBLL(IAiClientRegistry registry, ITAServiceProvider provider, GeneralRedisHelper redis, ILoggerFactory logFactory)
+        public ShortMemoryBLL(AiClientRegistry registry, ITAServiceProvider provider, GeneralRedisHelper redis, ILoggerFactory logFactory)
         {
             _registry = registry;
             _provider = provider;

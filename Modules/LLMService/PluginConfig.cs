@@ -20,7 +20,7 @@ namespace LLMService
             var cs = config.GetSection("LLMService");
             services.Configure<LLMOption>(cs);
             var aiOption = cs.Get<LLMOption>();
-            services.AddSingleton<IAiClientRegistry, AiClientRegistry>();
+            services.AddSingleton<AiClientRegistry>();
             services.AddSingleton<ChatBLL>();
             services.AddSingleton<ShortMemoryBLL>();
             services.AddSingleton<MemoryRagBLL>();
@@ -39,6 +39,7 @@ namespace LLMService
         {
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
+                await app.ServiceProvider.GetService<AiClientRegistry>().InitTools();
                 var knowragBLL = app.ServiceProvider.GetService<KnowledgeRagBLL>();
                 await knowragBLL.CreateRagCollection();
                 var memoryBLL = app.ServiceProvider.GetService<MemoryRagBLL>();

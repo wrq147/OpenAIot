@@ -388,7 +388,6 @@ export default {
             let loadingInstance = Loading.service({ fullscreen: true });
             let loginUrl = await loginThemeInfo(this.$store.state.user.orgId)
             if (loginUrl) {
-              // this.$router.replace(`${loginUrl}&redirect=${this.$route.fullPath}`);
               if (loginUrl.indexOf('?') > -1) {
                 window.location.href = `${loginUrl}&redirect=${this.$route.fullPath}`
                 window.location.reload()

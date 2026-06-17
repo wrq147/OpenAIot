@@ -19,9 +19,9 @@ namespace LLMService.Business
 {
     public class KnowledgeRagBLL
     {
-        private IAiClientRegistry _registry;
+        private AiClientRegistry _registry;
         private readonly MilvusClient _client;
-        public KnowledgeRagBLL(IOptions<LLMOption> option, IAiClientRegistry registry)
+        public KnowledgeRagBLL(IOptions<LLMOption> option, AiClientRegistry registry)
         {
             _registry = registry;
             _client = new MilvusClient(new Uri(option.Value.MilvusUrl), database: option.Value.MilvusDatabase);

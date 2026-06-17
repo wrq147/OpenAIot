@@ -5,6 +5,7 @@ using Common.EventBus;
 using LLMService.Model;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace LLMService.Business
 {
     public class ChatBLL
     {
-        private IAiClientRegistry _registry;
+        private AiClientRegistry _registry;
         private ITAServiceProvider _provider;
         private ILogger<ChatBLL> _log;
-        public ChatBLL(IAiClientRegistry registry, ITAServiceProvider provider, ILoggerFactory logFactory)
+        public ChatBLL(AiClientRegistry registry, ITAServiceProvider provider, ILoggerFactory logFactory)
         {
             _registry = registry;
             _provider = provider;
@@ -83,10 +84,7 @@ namespace LLMService.Business
                 deptIds = string.Join(",", userdepts.Select(x => x.dept_id));
                 postStr = string.Join(",", userdepts.Select(x => x.post_name));
             }
-            var msgList = new List<ChatMessage>
-            {
-                new ChatMessage(ChatRole.System, $@"你是一个专业的智能助手。
-当前用户信息：
+            string useridentity = $@"当前用户信息：
 - 企业Id：{companyId}
 - 所属企业：{companyName}
 - 企业地址：{companyAddr}
@@ -94,13 +92,18 @@ namespace LLMService.Business
 - 所在部门Id：{deptIds}
 - 用户职位：{postStr}
 - 用户ID：{user.UserId}
-- 真实姓名或用户名：{user.UserName}
-
+- 真实姓名或用户名：{user.UserName}";
+            StringBuilder sysbuilder = new StringBuilder();
+            sysbuilder.AppendLine(@"你是一个专业的智能助手。
 请严格遵守以下规则：
 1. 请根据用户身份提供合适的回答。
 2. 优先使用提供的工具回答用户问题，工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
 3. 无法区分信息来源时，直接多工具并行检索，避免信息缺失。
-4. 不知道答案不要猜测，直接告诉用户无法回答。"),
+4. 不知道答案不要猜测，直接告诉用户无法回答。");
+            sysbuilder.AppendLine(useridentity);
+            var msgList = new List<ChatMessage>
+            {
+                new ChatMessage(ChatRole.System,sysbuilder.ToString()),
 
             };
             var shortMemorys = await _provider.GetService<ShortMemoryBLL>().GetShortMemoryList(sessionId);
@@ -116,6 +119,7 @@ namespace LLMService.Business
 
             var extInfo = new AdditionalPropertiesDictionary();
             extInfo.Add("UserInfo", user);
+            extInfo.Add("UserStr", useridentity);
             var opt = new ChatOptions
             {
                 ToolMode = ChatToolMode.Auto,
@@ -138,6 +142,7 @@ namespace LLMService.Business
                     {
                         return;
                     }
+
                     if (!string.IsNullOrEmpty(update.Text))
                     {
                         await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>(){
@@ -145,6 +150,41 @@ namespace LLMService.Business
                                 "#llm"+update.Text
                             });
                         aiFullResponse.Append(update.Text);
+                    }
+                    if (update.Contents != null && update.Contents.Any())
+                    {
+                        foreach (var content in update.Contents)
+                        {
+                            if (content is TextContent textContent && !string.IsNullOrEmpty(textContent.Text))
+                            {
+                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                {
+                                    sessionId,
+                                    "#llm" + textContent.Text
+                                });
+                                aiFullResponse.Append(textContent.Text);
+                            }
+                            else if (content is FunctionCallContent toolCall)
+                            {
+                                string calltext = "调用工具 " + toolCall.Name + "\r\n";
+                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                {
+                                    sessionId,
+                                    "#llm" + calltext
+                                });
+                                aiFullResponse.Append(calltext);
+                            }
+                            else if (content is FunctionResultContent toolRes)
+                            {
+                                string rs = toolRes.Result.ToString();
+                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                {
+                                    sessionId,
+                                    "#llm" + rs
+                                });
+                                aiFullResponse.Append(rs);
+                            }
+                        }
                     }
                 }
             }

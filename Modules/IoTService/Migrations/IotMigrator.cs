@@ -84,7 +84,7 @@ namespace IotService.Migrations
             });
 
 
-            Create.Table("mz_iot_device").WithDescription("Iot设备")
+            Create.Table("mz_iot_device").WithDescription("Iot设备表,用户所属企业必需是 来源组织、拥有者组织 或者 使用者组织，否则对设备不可见")
 .WithColumn("Id").AsString(128).PrimaryKey().WithColumnDescription("编码")
 .WithColumn("OrgId").AsInt64().Indexed("IotDeviceOrgId").WithColumnDescription("来源组织ID")
 .WithColumn("OwnerOrgId").AsInt64().Indexed("IotDeviceOwnerOrgId").WithColumnDescription("拥有者组织ID")

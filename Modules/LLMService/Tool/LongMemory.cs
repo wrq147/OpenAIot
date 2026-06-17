@@ -24,7 +24,7 @@ namespace LLMService.Tool
                   var context = FunctionInvokingChatClient.CurrentContext;
                   return await provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(context.Options.ConversationId, query, score);
               },
-              name: "SearchRelatedMemoriesAsync",
+              name: "搜索相关的长期记忆",
               description: "根据用户问题搜索语义相关的蒸馏总结后的历史聊天记忆"
             );
         }
@@ -36,7 +36,7 @@ namespace LLMService.Tool
                     var context = FunctionInvokingChatClient.CurrentContext;
                     return await provider.GetService<MemoryRagBLL>().GetHistoryByDate(context.Options.ConversationId, day);
                 },
-              name: "GetHistoryByDate",
+              name: "搜索聊天历史",
               description: "查询指定日期的蒸馏总结后的聊天历史"
             );
         }

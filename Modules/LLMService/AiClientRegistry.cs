@@ -3,6 +3,7 @@ using LLMService.Tool;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using OpenAI;
+using OpenAI.Responses;
 using System;
 using System.ClientModel;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ using TemplateAction.Core;
 
 namespace LLMService
 {
-    public class AiClientRegistry : IAiClientRegistry
+    public class AiClientRegistry
     {
         private readonly Dictionary<string, IChatClient> _chatMap = new();
         private readonly IEmbeddingGenerator<string, Embedding<float>> _embedding;
@@ -33,9 +34,6 @@ namespace LLMService
             var skillLoader = new SkillLoader(skillRoot);
             _allSkills = skillLoader.LoadAllSkills();
             _allTools = _allSkills.BuildAIFunctions(ExecuteSkill);
-            //注册系统工具
-            RegisterSystemTools();
-
 
             _defChatKey = cfg.Value.DefaultChatModel;
             //循环实例化各个模型（DeepSeek/GPT）
@@ -54,13 +52,15 @@ namespace LLMService
                 _embedding = new BpeLocalEmbeddingGenerator();
             }
         }
-        private void RegisterSystemTools()
+        public async Task InitTools()
         {
             _allTools.Add(SearchKnowledge.CreateSearchRelatedKnowledgeTool(_provider));
             _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
             _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
             _allTools.Add(SystemTime.CreateSystemTimeTool(_provider));
+            _allTools.Add(await SqlTableSearch.CreateSqlTableSearchTool(_provider));
         }
+
         /// <summary>
         /// 技能执行回调：外部注入业务逻辑（执行scripts脚本/本地API/自定义逻辑）
         /// </summary>

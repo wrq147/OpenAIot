@@ -22,10 +22,15 @@
             内部Visitor：提取所有物理表名
             </summary>
         </member>
-        <member name="T:LLMService.AiSqlSecurityValidator.JoinTableCountVisitor">
+        <member name="M:LLMService.Business.DbSearchBLL.GenerateSqlBySchemaAsync(System.String,System.String,System.Int32,System.Int32)">
             <summary>
-            统计所有参与联查的物理表总数
+            根据表结构+用户问题，让LLM生成可执行SELECT SQL
             </summary>
+            <param name="question"></param>
+            <param name="userinfo"></param>
+            <param name="page"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
         </member>
         <member name="M:LLMService.Business.KnowledgeRagBLL.SplitMarkdownChunk(System.String,System.Int32,System.Double)">
             <summary>
@@ -254,11 +259,6 @@
             LLM生成的脚本信息
             </summary>
         </member>
-        <member name="T:LLMService.IAiClientRegistry">
-            <summary>
-            全局模型注册表
-            </summary>
-        </member>
         <member name="P:LLMService.LLMOption.MilvusUrl">
             <summary>
             Milvus的连接地址
@@ -432,6 +432,76 @@
         <member name="P:LLMService.Model.Out_ChatMessage.time">
             <summary>
             时间戳
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.Sql">
+            <summary>
+            执行SQL语句
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.Success">
+            <summary>
+            是否执行成功
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.ErrorMsg">
+            <summary>
+            失败错误信息
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.DataRows">
+            <summary>
+            数据行列表（当前页）
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.Page">
+            <summary>
+            当前页码，从1开始
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.PageSize">
+            <summary>
+            每页条数
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.TotalCount">
+            <summary>
+            符合条件总记录数
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.TotalPage">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.HasNext">
+            <summary>
+            是否还有下一页
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_DbQueryResult.HasPrev">
+            <summary>
+            是否还有上一页
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_TableField.ColumnName">
+            <summary>
+            字段名称
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_TableField.DataType">
+            <summary>
+            字段类型
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_TableField.TableName">
+            <summary>
+            所属表名
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_TableField.ColumnComment">
+            <summary>
+            字段备注
             </summary>
         </member>
         <member name="M:LLMService.OsPlatform.GetSystemPrompt">

@@ -1,0 +1,14 @@
+CREATE USER 'ai_user'@'%' IDENTIFIED BY 'Ai@123456';
+GRANT SELECT ON mz_iot_device TO 'ai_user'@'%';
+GRANT SELECT ON mz_leave_stock TO 'ai_user'@'%';
+GRANT SELECT ON mz_leave_detail TO 'ai_user'@'%';
+GRANT SELECT ON mz_stock_pile TO 'ai_user'@'%';
+GRANT SELECT ON mz_stock_record TO 'ai_user'@'%';
+GRANT SELECT ON mz_store_house TO 'ai_user'@'%';
+GRANT SELECT ON mz_enter_stock TO 'ai_user'@'%';
+GRANT SELECT ON mz_enter_detail TO 'ai_user'@'%';
+GRANT SELECT ON mz_leave_apply TO 'ai_user'@'%';
+GRANT SELECT ON mz_leave_apply_detail TO 'ai_user'@'%';
+GRANT SELECT ON mz_admin TO 'ai_user'@'%';
+GRANT SELECT ON mz_dept TO 'ai_user'@'%';
+FLUSH PRIVILEGES;

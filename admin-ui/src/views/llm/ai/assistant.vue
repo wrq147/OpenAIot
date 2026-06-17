@@ -38,10 +38,9 @@
 
     <div class="chat-input-box">
       <div class="input-wrapper">
-        <el-input v-model="userInput" type="textarea" :autosize="{ minRows: 1, maxRows: 10}" placeholder="请输入你的问题..." @keyup.enter.native="handleSend"
-          :disabled="loading" class="chat-input" />
-        <el-button type="primary" class="send-btn" @click="handleSend" :loading="loading"><span
-            v-if="!loading">发送</span></el-button>
+        <el-input v-model="userInput" type="textarea" :autosize="{ minRows: 1, maxRows: 10}" placeholder="请输入你的问题..." @keyup.enter.native="handleSend" class="chat-input" />
+        <el-button type="primary" class="send-btn" @click="handleSend" :loading="isSending"><span
+            v-if="!isSending">发送</span></el-button>
       </div>
       <!-- 底部工具栏 -->
       <div class="toolbar">
@@ -78,12 +77,25 @@ export default {
   data() {
     return {
       userInput: '',
-      loading: false,
     }
   },
   computed: {
     ChatMessageList: function () {
       return this.$store.state.llm.messageList;
+    },
+    isSending:function(){
+      let msglist=this.$store.state.llm.messageList;
+      for (let i = msglist.length - 1; i >= 0; i--) {
+        if (msglist[i].role == "assistant") {
+          if(msglist[i].status == 1){
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+      }
+      return false;
     }
   },
   methods: {
@@ -101,18 +113,15 @@ export default {
         this.$message.warning('请输入内容')
         return
       }
-      if (this.loading) return
+      if (this.isSending) return
       this.$store.commit("llm/pushUserInput", input);
       this.scrollToBottom()
 
       this.userInput = ''
-      this.loading = true
-
       this.$store.commit("llm/pushmsg", "");
       this.scrollToBottom()
 
       await postMessage(input);
-      this.loading = false
     },
     scrollToBottom() {
       this.$nextTick(() => {
@@ -320,6 +329,7 @@ export default {
 .chat-input {
   flex: 1;
   background: transparent;
+  margin-right: 10px;
 }
 
 .chat-input>>>.el-textarea__inner {

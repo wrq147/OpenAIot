@@ -19,8 +19,8 @@ namespace LLMService.Tool
                     // 格式化时间字符串，清晰易读
                     return currentTime.ToString("yyyy-MM-dd HH:mm:ss");
                 },
-                name: "GetCurrentSystemTime",
-                description: "获取当前系统时间"
+                name: "查询当前时间",
+                description: "根据服务器的时间，获取当前的系统时间"
             );
         }
     }
