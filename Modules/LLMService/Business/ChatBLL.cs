@@ -121,16 +121,20 @@ namespace LLMService.Business
                     }
                     msgList.Add(new ChatMessage(ChatRole.Assistant, $"[{chatItem.Time}] {chatItem.Assistant}"));
                 }
+                msgList.Add(new ChatMessage(ChatRole.User, userInput));
             }
-            StringBuilder userInputBuilder = new StringBuilder();
-            var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
-            if (ragResult.IsSuccess)
+            else
             {
-                userInputBuilder.AppendLine($"【历史对话参考信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题");
-                userInputBuilder.AppendLine();
+                StringBuilder userInputBuilder = new StringBuilder();
+                var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
+                if (ragResult.IsSuccess)
+                {
+                    userInputBuilder.AppendLine($"【历史对话参考信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题");
+                    userInputBuilder.AppendLine();
+                }
+                userInputBuilder.AppendLine(userInput);
+                msgList.Add(new ChatMessage(ChatRole.User, userInputBuilder.ToString()));
             }
-            userInputBuilder.AppendLine(userInput);
-            msgList.Add(new ChatMessage(ChatRole.User, userInputBuilder.ToString()));
 
             var extInfo = new AdditionalPropertiesDictionary();
             extInfo.Add("UserInfo", user);

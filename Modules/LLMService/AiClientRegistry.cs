@@ -56,6 +56,7 @@ namespace LLMService
         public async Task InitTools()
         {
             _allTools.Add(SearchKnowledge.CreateSearchRelatedKnowledgeTool(_provider));
+            _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
             _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
             _allTools.Add(SystemTime.CreateSystemTimeTool(_provider));
             _allTools.Add(await SqlTableSearch.CreateSqlTableSearchTool(_provider));
