@@ -51,13 +51,11 @@
         <div class="toolbar-left">
           <div class="tool-btn"><i class="el-icon-plus"></i></div>
           <span class="split">|</span>
-          <div class="tool-btn">快速</div>
+          <div class="tool-btn" @click="handleQuickSend('检索下一页')">检索下一页</div>
           <span class="split">|</span>
-          <div class="tool-btn">PPT 生成</div>
+          <div class="tool-btn" @click="handleQuickSend('检索上一页')">检索上一页</div>
           <span class="split">|</span>
-          <div class="tool-btn">图像生成</div>
-          <span class="split">|</span>
-          <div class="tool-btn">更多</div>
+          <div class="tool-btn" @click="handleQuickSend('检索首页')">检索首页</div>
         </div>
       </div>
     </div>

@@ -22,7 +22,7 @@ namespace LLMService.Tool
             return AIFunctionFactory.Create(
                async ([Description("用户需要统计/查询的业务需求，自然语言描述，如：查询本月订单明细")] string userQuestion,
         [Description("分页页码，默认第1页")] int page = 1,
-        [Description("每页展示条数，默认20，最大不允许超过100")] int pageSize = 20) =>
+        [Description("每页展示条数，默认30，最大不允许超过100")] int pageSize = 30) =>
                 {
                     try
                     {
