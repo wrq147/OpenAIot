@@ -55,7 +55,8 @@ namespace LLMService.Model
             {
                 return new T_ToolResult()
                 {
-                    Output = "数据库查询失败",
+                    IsSuccess = false,
+                    Output = "数据库查询失败，请重新尝试",
                     LogInfo = $"失败原因：查询语句 {this.Sql}，{this.ErrorMsg}"
                 };
             }
@@ -65,6 +66,7 @@ namespace LLMService.Model
             {
                 return new T_ToolResult()
                 {
+                    IsSuccess = false,
                     Output = "当前无匹配数据",
                     LogInfo = $"查询语句 {this.Sql}"
                 };
@@ -99,6 +101,7 @@ namespace LLMService.Model
             string tmpstr = sb.ToString();
             return new T_ToolResult()
             {
+                IsSuccess = true,
                 Output = tmpstr,
                 LogInfo = $"查询语句 {this.Sql}"
             };

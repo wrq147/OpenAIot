@@ -56,7 +56,6 @@ namespace LLMService
         public async Task InitTools()
         {
             _allTools.Add(SearchKnowledge.CreateSearchRelatedKnowledgeTool(_provider));
-            _allTools.Add(LongMemory.CreateSearchRelatedMemoriesTool(_provider));
             _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
             _allTools.Add(SystemTime.CreateSystemTimeTool(_provider));
             _allTools.Add(await SqlTableSearch.CreateSqlTableSearchTool(_provider));
@@ -78,6 +77,7 @@ namespace LLMService
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = false,
                         Output = $"未找到技能:{context.Function.Name}",
                         LogInfo = string.Empty
                     };
@@ -137,6 +137,7 @@ namespace LLMService
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = false,
                         Output = "脚本格式错误",
                         LogInfo = string.Empty
                     };
@@ -158,6 +159,7 @@ namespace LLMService
                 Directory.Delete(tempDir, true);
                 return new T_ToolResult()
                 {
+                    IsSuccess = true,
                     Output = $"【技能执行完成】\n{resultBuilder}",
                     LogInfo = string.Empty
                 };
@@ -166,6 +168,7 @@ namespace LLMService
             {
                 return new T_ToolResult()
                 {
+                    IsSuccess = false,
                     Output = $"技能执行异常",
                     LogInfo = $"技能执行异常:{ex.Message}"
                 };

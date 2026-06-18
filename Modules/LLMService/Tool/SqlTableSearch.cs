@@ -32,6 +32,7 @@ namespace LLMService.Tool
                         {
                             return new T_ToolResult()
                             {
+                                IsSuccess = false,
                                 Output = "只有企业级用户才能执行数据库查询工具",
                                 LogInfo = string.Empty
                             };
@@ -46,6 +47,7 @@ namespace LLMService.Tool
                     {
                         return new T_ToolResult()
                         {
+                            IsSuccess = false,
                             Output = "工具调用异常",
                             LogInfo = "异常信息：" + ex.Message
                         };

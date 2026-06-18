@@ -103,15 +103,16 @@ namespace LLMService.Business
 
                 bool hasmem = false;
                 var sb = new StringBuilder();
-                sb.AppendLine("【相关历史会话】");
                 // 遍历每一条结果
                 for (int i = 0; i < results.Scores.Count; i++)
                 {
                     float rsscore = results.Scores[i];
                     if (rsscore > score)
                     {
-                        string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
-                        long ttime = (results.FieldsData[1] as FieldData<long>).Data[i];
+                        var contentData = results.FieldsData.FirstOrDefault(f => f.FieldName == "Content");
+                        var timeData = results.FieldsData.FirstOrDefault(f => f.FieldName == "CreateTime");
+                        string tcontent = (contentData as FieldData<string>).Data[i];
+                        long ttime = (timeData as FieldData<long>).Data[i];
                         DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
                         sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
                         hasmem = true;
@@ -122,6 +123,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = true,
                         Output = sb.ToString(),
                         LogInfo = string.Empty
                     };
@@ -130,15 +132,17 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
-                        Output = "没有相关的会话记录",
+                        IsSuccess = false,
+                        Output = "没有相关的历史会话记录",
                         LogInfo = string.Empty
                     };
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new T_ToolResult()
                 {
+                    IsSuccess = false,
                     Output = "工具调用异常",
                     LogInfo = $"异常原因：{ex.Message}"
                 };
@@ -158,6 +162,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = false,
                         Output = $"{day} 日期参数格式错误",
                         LogInfo = string.Empty
                     };
@@ -174,6 +179,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = false,
                         Output = $"{day} 无历史记录",
                         LogInfo = string.Empty
                     };
@@ -197,6 +203,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = true,
                         Output = sb.ToString(),
                         LogInfo = string.Empty
                     };
@@ -205,6 +212,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = false,
                         Output = string.Empty,
                         LogInfo = string.Empty
                     };
@@ -215,6 +223,7 @@ namespace LLMService.Business
             {
                 return new T_ToolResult()
                 {
+                    IsSuccess = false,
                     Output = "工具调用异常",
                     LogInfo = $"异常原因：{ex.Message}"
                 };

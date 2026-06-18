@@ -106,8 +106,9 @@ namespace LLMService.Business
             var msgList = new List<ChatMessage>
             {
                 new ChatMessage(ChatRole.System,sysbuilder.ToString()),
-
             };
+
+
             var shortMemorys = await _provider.GetService<ShortMemoryBLL>().GetShortMemoryList(sessionId);
             if (shortMemorys.Count > 0)
             {
@@ -121,12 +122,15 @@ namespace LLMService.Business
                     msgList.Add(new ChatMessage(ChatRole.Assistant, $"[{chatItem.Time}] {chatItem.Assistant}"));
                 }
             }
-            else
+            StringBuilder userInputBuilder = new StringBuilder();
+            var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
+            if (ragResult.IsSuccess)
             {
-                var toolres = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
-                msgList.Add(new ChatMessage(ChatRole.Tool, toolres.Output));
+                userInputBuilder.AppendLine($"【历史对话参考信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题");
+                userInputBuilder.AppendLine();
             }
-            msgList.Add(new ChatMessage(ChatRole.User, userInput));
+            userInputBuilder.AppendLine(userInput);
+            msgList.Add(new ChatMessage(ChatRole.User, userInputBuilder.ToString()));
 
             var extInfo = new AdditionalPropertiesDictionary();
             extInfo.Add("UserInfo", user);
@@ -135,6 +139,7 @@ namespace LLMService.Business
             {
                 ToolMode = ChatToolMode.Auto,
                 Tools = tools,
+                ConversationId = $"{sessionId}_{Guid.NewGuid():N}",
                 AdditionalProperties = extInfo
             };
             StringBuilder toolResponse = new StringBuilder();

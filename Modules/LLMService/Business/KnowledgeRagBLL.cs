@@ -216,7 +216,7 @@ namespace LLMService.Business
                     float rsscore = results.Scores[i];
                     if (rsscore > score)
                     {
-                        string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
+                        string tcontent = (results.FieldsData.FirstOrDefault(f => f.FieldName == "Content") as FieldData<string>).Data[i];
                         sb.AppendLine(tcontent);
                         hasmem = true;
                     }
@@ -226,6 +226,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = true,
                         Output = sb.ToString(),
                         LogInfo = string.Empty
                     };
@@ -234,6 +235,7 @@ namespace LLMService.Business
                 {
                     return new T_ToolResult()
                     {
+                        IsSuccess = false,
                         Output = "没有相关知识",
                         LogInfo = string.Empty
                     };
@@ -243,6 +245,7 @@ namespace LLMService.Business
             {
                 return new T_ToolResult()
                 {
+                    IsSuccess = false,
                     Output = "查询异常",
                     LogInfo = $"异常原因：{ex.Message}"
                 };

@@ -9,6 +9,10 @@ namespace LLMService.Model
     public class T_ToolResult
     {
         /// <summary>
+        /// 是否成功
+        /// </summary>
+        public bool IsSuccess { get; set; }
+        /// <summary>
         /// 工具输出结果
         /// </summary>
         public string Output { get; set; }

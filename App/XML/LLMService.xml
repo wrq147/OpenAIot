@@ -496,6 +496,11 @@
             字段备注
             </summary>
         </member>
+        <member name="P:LLMService.Model.T_ToolResult.IsSuccess">
+            <summary>
+            是否成功
+            </summary>
+        </member>
         <member name="P:LLMService.Model.T_ToolResult.Output">
             <summary>
             工具输出结果

@@ -20,6 +20,7 @@ namespace LLMService.Tool
                     // 格式化时间字符串，清晰易读
                     return new T_ToolResult()
                     {
+                        IsSuccess = true,
                         Output = currentTime.ToString("yyyy-MM-dd HH:mm:ss"),
                         LogInfo = string.Empty
                     };
