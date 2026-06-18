@@ -145,12 +145,12 @@ namespace LLMService.Business
             promptSb.AppendLine(_allTableSchemaText);
             long offset = (page - 1) * pageSize;
             promptSb.AppendLine("用户查询需求：" + question);
-            promptSb.AppendLine("直接输出唯一一条可执行SELECT SQL：");
+            promptSb.AppendLine("直接输出一条可执行SELECT SQL：");
             var chatClient = _registry.GetDefaultChat();
             var sysStrBuilder = new StringBuilder();
             sysStrBuilder.AppendLine("你是SQL生成器，仅输出纯净SQL，无多余文字、markdown、解释，严格遵守以下规则：");
             sysStrBuilder.AppendLine(userinfo);
-            sysStrBuilder.AppendLine("1. 仅输出完整SELECT语句，查询的字段名需转成中文别名，禁止任何解释、注释、额外文字；");
+            sysStrBuilder.AppendLine("1. 仅输出完整SELECT语句，查询的字段名需转成中文别名，注释为内部用的字段禁止输出显示；");
             sysStrBuilder.AppendLine("2. 需严格按照用户的身份信息过滤用户的查询数据，不能超过用户所属企业的查看范围；");
             sysStrBuilder.AppendLine($"3. 查询末尾强制添加分页 LIMIT " + offset + "," + pageSize + "；");
             sysStrBuilder.AppendLine("4. 禁止DELETE/UPDATE/INSERT/ALTER/DROP等修改语句，禁止UNION、WITH CTE语句；");

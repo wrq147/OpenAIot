@@ -101,15 +101,15 @@ namespace IotService.Migrations
 .WithColumn("Lng").AsDouble().Nullable().WithColumnDescription("经度")
 .WithColumn("Lat").AsDouble().Nullable().WithColumnDescription("纬度")
 .WithColumn("AreaCode").AsString(45).Nullable().WithColumnDescription("设备所在区域代码")
-.WithColumn("GeoHash").AsString(20).Nullable().WithColumnDescription("经纬度对应geohash码值")
+.WithColumn("GeoHash").AsString(20).Nullable().WithColumnDescription("经纬度对应geohash码值(内部用)")
 .WithColumn("CreateOn").AsDateTime().WithColumnDescription("创建时间")
 .WithColumn("LastOnline").AsDateTime().Nullable().WithColumnDescription("最后在线时间")
 .WithColumn("ProductVer").AsInt32().WithDefaultValue(0).WithColumnDescription("协议版本")
                 .WithColumn("Remark").AsString(5000).WithColumnDescription("备注说明")
-                .WithColumn("OwnerOrgPath").AsString(500).WithColumnDescription("设备经过的组织路径")
-                .WithColumn("DeviceUpIdx").AsInt32().Indexed().WithDefaultValue(0).WithColumnDescription("设备所属处理节点索引")
-                .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("设备关键词")
-                .WithColumn("NeedUpdateKey").AsBoolean().Indexed().WithDefaultValue(false).WithColumnDescription("设备是否需要更新关键词")
+                .WithColumn("OwnerOrgPath").AsString(500).WithColumnDescription("设备经过的组织路径(内部用)")
+                .WithColumn("DeviceUpIdx").AsInt32().Indexed().WithDefaultValue(0).WithColumnDescription("设备所属处理节点索引(内部用)")
+                .WithColumn("KeyWords").AsString(2000).WithDefaultValue("").WithColumnDescription("设备关键词(内部用)")
+                .WithColumn("NeedUpdateKey").AsBoolean().Indexed().WithDefaultValue(false).WithColumnDescription("设备是否需要更新关键词(内部用)")
                 .WithColumn("dBm").AsFloat().Nullable().WithDefaultValue(0).WithColumnDescription("信号强度");
 
 
