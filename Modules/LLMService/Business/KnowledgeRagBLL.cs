@@ -189,45 +189,65 @@ namespace LLMService.Business
             return chunks;
         }
 
-        public async Task<string> SearchRelatedAsync(long orgId, string query, float score = 0.6f)
+        public async Task<T_ToolResult> SearchRelatedAsync(long orgId, string query, float score = 0.6f)
         {
-            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
-            MilvusCollection collection = _client.GetCollection("Knowledges");
-
-            SearchParameters searchParameters = new();
-            searchParameters.OutputFields.Add("Content");
-            searchParameters.Expression = "OrgId==" + orgId;
-
-            var results = await collection.SearchAsync(
-                vectorFieldName: "Embedding",
-                vectors: new ReadOnlyMemory<float>[] { vec },
-                SimilarityMetricType.Cosine,
-                limit: 20, searchParameters);
-
-
-            bool hasmem = false;
-            var sb = new StringBuilder();
-            sb.AppendLine("【相关知识】");
-            // 遍历每一条结果
-            for (int i = 0; i < results.Scores.Count; i++)
+            try
             {
-                float rsscore = results.Scores[i];
-                if (rsscore > score)
+                var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
+                MilvusCollection collection = _client.GetCollection("Knowledges");
+
+                SearchParameters searchParameters = new();
+                searchParameters.OutputFields.Add("Content");
+                searchParameters.Expression = "OrgId==" + orgId;
+
+                var results = await collection.SearchAsync(
+                    vectorFieldName: "Embedding",
+                    vectors: new ReadOnlyMemory<float>[] { vec },
+                    SimilarityMetricType.Cosine,
+                    limit: 20, searchParameters);
+
+
+                bool hasmem = false;
+                var sb = new StringBuilder();
+                sb.AppendLine("【相关知识】");
+                // 遍历每一条结果
+                for (int i = 0; i < results.Scores.Count; i++)
                 {
-                    string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
-                    sb.AppendLine(tcontent);
-                    hasmem = true;
+                    float rsscore = results.Scores[i];
+                    if (rsscore > score)
+                    {
+                        string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
+                        sb.AppendLine(tcontent);
+                        hasmem = true;
+                    }
+                }
+
+                if (hasmem)
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = sb.ToString(),
+                        LogInfo = string.Empty
+                    };
+                }
+                else
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = "没有相关知识",
+                        LogInfo = string.Empty
+                    };
                 }
             }
+            catch (Exception ex)
+            {
+                return new T_ToolResult()
+                {
+                    Output = "查询异常",
+                    LogInfo = $"异常原因：{ex.Message}"
+                };
+            }
 
-            if (hasmem)
-            {
-                return sb.ToString();
-            }
-            else
-            {
-                return "没有相关知识";
-            }
         }
     }
 }

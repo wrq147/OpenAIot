@@ -2,9 +2,7 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MyAccess.DB;
 using MySql.Data.MySqlClient;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -112,17 +110,8 @@ namespace LLMService.Business
             }
         }
 
-        public string GetTableDes(List<string> tb)
-        {
-            StringBuilder promptSb = new();
-            promptSb.AppendLine("查询的相关表结构信息：");
-            foreach (var table in _tableCommentDict)
-            {
-                promptSb.AppendLine($"【表】{table.Key} 说明：{table.Value}");
-            }
-            return promptSb.ToString();
-        }
-
+   
+        private string _allTableSchemaText;
         /// <summary>
         /// 根据表结构+用户问题，让LLM生成可执行SELECT SQL
         /// </summary>
@@ -134,20 +123,26 @@ namespace LLMService.Business
         public async Task<string> GenerateSqlBySchemaAsync(string question, string userinfo, int page, int pageSize)
         {
             StringBuilder promptSb = new();
-            promptSb.AppendLine("表结构信息：");
-            // 序列化表结构给LLM阅读
-            foreach (var table in _tbDict)
+            if (string.IsNullOrEmpty(_allTableSchemaText))
             {
-                if (_tableCommentDict.TryGetValue(table.Key, out string tbcomment))
+                StringBuilder tmpb = new StringBuilder();
+                tmpb.AppendLine("表结构信息：");
+                // 序列化表结构给LLM阅读
+                foreach (var table in _tbDict)
                 {
-                    promptSb.AppendLine($"【表】{table.Key} 说明：{tbcomment}");
-                    foreach (var col in table.Value)
+                    if (_tableCommentDict.TryGetValue(table.Key, out string tbcomment))
                     {
-                        promptSb.AppendLine($"  {col.ColumnName}({col.DataType})：{col.ColumnComment}");
+                        tmpb.AppendLine($"【表】{table.Key} 说明：{tbcomment}");
+                        foreach (var col in table.Value)
+                        {
+                            tmpb.AppendLine($"  {col.ColumnName}({col.DataType})：{col.ColumnComment}");
+                        }
+                        tmpb.AppendLine();
                     }
-                    promptSb.AppendLine();
                 }
+                _allTableSchemaText = tmpb.ToString();
             }
+            promptSb.AppendLine(_allTableSchemaText);
             long offset = (page - 1) * pageSize;
             promptSb.AppendLine("用户查询需求：" + question);
             promptSb.AppendLine("直接输出唯一一条可执行SELECT SQL：");
@@ -155,18 +150,16 @@ namespace LLMService.Business
             var sysStrBuilder = new StringBuilder();
             sysStrBuilder.AppendLine("你是SQL生成器，仅输出纯净SQL，无多余文字、markdown、解释，严格遵守以下规则：");
             sysStrBuilder.AppendLine(userinfo);
-            sysStrBuilder.AppendLine("1. 仅输出完整SELECT语句，禁止任何解释、注释、额外文字；");
+            sysStrBuilder.AppendLine("1. 仅输出完整SELECT语句，查询的字段名需转成中文别名，禁止任何解释、注释、额外文字；");
             sysStrBuilder.AppendLine("2. 需严格按照用户的身份信息过滤用户的查询数据，不能超过用户所属企业的查看范围；");
             sysStrBuilder.AppendLine($"3. 查询末尾强制添加分页 LIMIT " + offset + "," + pageSize + "；");
-            sysStrBuilder.AppendLine("4. 禁止DELETE/UPDATE/INSERT/ALTER/DROP等修改语句；");
+            sysStrBuilder.AppendLine("4. 禁止DELETE/UPDATE/INSERT/ALTER/DROP等修改语句，禁止UNION、WITH CTE语句；");
+            sysStrBuilder.AppendLine("5. 字段尽量不要输出关联的ID，而是输出关联对象的名称；");
 
             var response = await chatClient.GetResponseAsync(new List<ChatMessage>
             {
                 new ChatMessage(ChatRole.System,sysStrBuilder.ToString() ),
                 new ChatMessage(ChatRole.User, promptSb.ToString())
-            }, new ChatOptions
-            {
-                ToolMode = ChatToolMode.None // 关闭工具调用，纯文本输出SQL
             });
             var sql = response.Text.Replace("```sql", "").Replace("```", "").Trim();
             return sql;
@@ -187,7 +180,6 @@ namespace LLMService.Business
                 res.ErrorMsg = erromsg;
                 return res;
             }
-
 
             try
             {

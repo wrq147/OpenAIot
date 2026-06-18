@@ -39,11 +39,13 @@ namespace LLMService
         {
             TAEventDispatcher.Instance.RegisterPluginAllLoad(async (evt) =>
             {
+                Console.WriteLine("LLM初始化中...");
                 await app.ServiceProvider.GetService<AiClientRegistry>().InitTools();
                 var knowragBLL = app.ServiceProvider.GetService<KnowledgeRagBLL>();
                 await knowragBLL.CreateRagCollection();
                 var memoryBLL = app.ServiceProvider.GetService<MemoryRagBLL>();
                 await memoryBLL.CreateRagCollection();
+                Console.WriteLine("LLM初始化完成");
                 if (Constants.General.quick_init != true)
                 {
                     //添加定时记忆总结

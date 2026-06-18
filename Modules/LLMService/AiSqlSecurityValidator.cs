@@ -117,7 +117,7 @@ namespace LLMService
             // 规则6：交验OrgId过滤
             if (!tableVisitor.HasValidOrgCondition)
             {
-                errorMsg = "查询语句超过了企业的查询权限";
+                errorMsg = "查询语句必需包含OrgId过滤条件";
                 return false;
             }
             return true;

@@ -26,9 +26,13 @@
           </div>
           <div class="message-content">
             <div v-if="item.role === 'user'">{{ item.data }}</div>
-            <div v-else v-html="renderMarkdown(item.data)" class="md-content"></div>
+            <div v-else v-html="renderMarkdown(item.data)" class="markdown-body"></div>
             <!-- AI 回复加载中动画 -->
-            <span v-if="item.status === 1" class="loading-dot">...</span>
+            <div v-if="item.status === 1" class="loading-pulse-dots">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -66,6 +70,7 @@ import { postMessage } from "@/api/llmchat";
 import marked from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
+import 'github-markdown-css/github-markdown.css';
 marked.setOptions({
   highlight: (code) => hljs.highlightAuto(code).value,
   gfm: true,
@@ -132,12 +137,12 @@ export default {
   }
 }
 </script>
-
 <style scoped>
+
 .ai-chat-container {
   width: 100%;
   height: 100vh;
-  background: #ffffff;
+  background: #fff;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -146,7 +151,6 @@ export default {
 /* 顶部标题栏 */
 .chat-header {
   height: 5px;
-  background: #fff;
   border-bottom: 1px solid #eee;
   flex-shrink: 0;
 }
@@ -256,16 +260,18 @@ export default {
 .message-item.user .avatar {
   background: #67c23a;
 }
-
+.markdown-body>>>table{
+  word-break: keep-all;
+}
 /* 消息内容 */
 .message-content {
   max-width: 70%;
   padding: 10px 14px;
   border-radius: 6px;
-  background: #f5f7fa;
+  background: #fff;
   line-height: 1.5;
   word-break: break-all;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
 }
 
 .message-item.user .message-content {
@@ -273,25 +279,31 @@ export default {
   color: #fff;
 }
 
-/* 加载动画 */
-.loading-dot {
-  color: #909399;
-  animation: dot 1s infinite step-start;
+.loading-pulse-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
 }
+.loading-pulse-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c0c4cc;
+  animation: pulseDot 0.9s ease-in-out infinite;
+}
+.loading-pulse-dots .dot:nth-child(1) { animation-delay: 0s; }
+.loading-pulse-dots .dot:nth-child(2) { animation-delay: 0.15s; }
+.loading-pulse-dots .dot:nth-child(3) { animation-delay: 0.3s; }
 
-@keyframes dot {
-
-  0%,
-  100% {
-    content: '';
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(0.7);
+    opacity: 0.5;
   }
-
-  33% {
-    content: '.';
-  }
-
-  66% {
-    content: '..';
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
   }
 }
 

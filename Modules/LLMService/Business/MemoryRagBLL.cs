@@ -60,7 +60,7 @@ namespace LLMService.Business
                 Console.WriteLine("数据库Milvus未启用，无法初始化ChatMemory");
                 return BusResponse<string>.Error(110, "张量数据库Milvus未启用");
             }
-        
+
         }
 
         public async Task SaveMemoryAsync(string sessionId, string content)
@@ -82,47 +82,66 @@ namespace LLMService.Business
             await collection.FlushAsync();
         }
 
-        public async Task<string> SearchRelatedMemoriesAsync(string sessionId, string query, float score = 0.6f)
+        public async Task<T_ToolResult> SearchRelatedMemoriesAsync(string sessionId, string query, float score = 0.6f)
         {
-            var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
-            MilvusCollection collection = _client.GetCollection("ChatMemory");
-
-            SearchParameters searchParameters = new();
-            searchParameters.OutputFields.Add("Content");
-            searchParameters.OutputFields.Add("CreateTime");
-            searchParameters.Expression = "SessionId==\"" + sessionId + "\"";
-
-            var results = await collection.SearchAsync(
-                vectorFieldName: "Embedding",
-                vectors: new ReadOnlyMemory<float>[] { vec },
-                SimilarityMetricType.Cosine,
-                limit: 20, searchParameters);
-
-
-            bool hasmem = false;
-            var sb = new StringBuilder();
-            sb.AppendLine("【相关历史会话】");
-            // 遍历每一条结果
-            for (int i = 0; i < results.Scores.Count; i++)
+            try
             {
-                float rsscore = results.Scores[i];
-                if (rsscore > score)
+                var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(query);
+                MilvusCollection collection = _client.GetCollection("ChatMemory");
+
+                SearchParameters searchParameters = new();
+                searchParameters.OutputFields.Add("Content");
+                searchParameters.OutputFields.Add("CreateTime");
+                searchParameters.Expression = "SessionId==\"" + sessionId + "\"";
+
+                var results = await collection.SearchAsync(
+                    vectorFieldName: "Embedding",
+                    vectors: new ReadOnlyMemory<float>[] { vec },
+                    SimilarityMetricType.Cosine,
+                    limit: 20, searchParameters);
+
+
+                bool hasmem = false;
+                var sb = new StringBuilder();
+                sb.AppendLine("【相关历史会话】");
+                // 遍历每一条结果
+                for (int i = 0; i < results.Scores.Count; i++)
                 {
-                    string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
-                    long ttime = (results.FieldsData[1] as FieldData<long>).Data[i];
-                    DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
-                    sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
-                    hasmem = true;
+                    float rsscore = results.Scores[i];
+                    if (rsscore > score)
+                    {
+                        string tcontent = (results.FieldsData[0] as FieldData<string>).Data[i];
+                        long ttime = (results.FieldsData[1] as FieldData<long>).Data[i];
+                        DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
+                        sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
+                        hasmem = true;
+                    }
+                }
+
+                if (hasmem)
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = sb.ToString(),
+                        LogInfo = string.Empty
+                    };
+                }
+                else
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = "没有相关的会话记录",
+                        LogInfo = string.Empty
+                    };
                 }
             }
-
-            if (hasmem)
+            catch(Exception ex)
             {
-                return sb.ToString();
-            }
-            else
-            {
-                return "没有相关的会话记录";
+                return new T_ToolResult()
+                {
+                    Output = "工具调用异常",
+                    LogInfo = $"异常原因：{ex.Message}"
+                };
             }
         }
         /// <summary>
@@ -131,47 +150,76 @@ namespace LLMService.Business
         /// <param name="sessionId"></param>
         /// <param name="day">日期格式：yyyy-MM-dd</param>
         /// <returns></returns>
-        public async Task<string> GetHistoryByDate(string sessionId, string day)
+        public async Task<T_ToolResult> GetHistoryByDate(string sessionId, string day)
         {
-            if (!DateTime.TryParse(day, out DateTime searchDT))
+            try
             {
-                return $"{day} 日期参数格式错误";
+                if (!DateTime.TryParse(day, out DateTime searchDT))
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = $"{day} 日期参数格式错误",
+                        LogInfo = string.Empty
+                    };
+                }
+                MilvusCollection collection = _client.GetCollection("ChatMemory");
+                long startll = MyAccess.Core.TypeConvert.Time2Unix(searchDT);
+                long endll = MyAccess.Core.TypeConvert.Time2Unix(searchDT.AddDays(1));
+                string exp = "SessionId==\"" + sessionId + "\" AND CreateTime>=" + startll + " AND CreateTime<=" + endll;
+                QueryParameters searchParameters = new();
+                searchParameters.OutputFields.Add("Content");
+                searchParameters.OutputFields.Add("CreateTime");
+                IReadOnlyList<FieldData> results = await collection.QueryAsync(exp, searchParameters);
+                if (results == null || results.Count == 0)
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = $"{day} 无历史记录",
+                        LogInfo = string.Empty
+                    };
+                }
+
+                var contentField = results.FirstOrDefault(f => f.FieldName == "Content");
+                var createTimeField = results.FirstOrDefault(f => f.FieldName == "CreateTime");
+
+
+                var sb = new StringBuilder();
+                sb.AppendLine($"【{day} 历史会话】");
+                for (int i = 0; i < contentField.RowCount; i++)
+                {
+                    string tcontent = (contentField as FieldData<string>).Data[i];
+                    long ttime = (createTimeField as FieldData<long>).Data[i];
+                    DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
+                    sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
+                }
+
+                if (contentField.RowCount > 0)
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = sb.ToString(),
+                        LogInfo = string.Empty
+                    };
+                }
+                else
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = string.Empty,
+                        LogInfo = string.Empty
+                    };
+                }
+
             }
-            MilvusCollection collection = _client.GetCollection("ChatMemory");
-            long startll = MyAccess.Core.TypeConvert.Time2Unix(searchDT);
-            long endll = MyAccess.Core.TypeConvert.Time2Unix(searchDT.AddDays(1));
-            string exp = "SessionId==\"" + sessionId + "\" AND CreateTime>=" + startll + " AND CreateTime<=" + endll;
-            QueryParameters searchParameters = new();
-            searchParameters.OutputFields.Add("Content");
-            searchParameters.OutputFields.Add("CreateTime");
-            IReadOnlyList<FieldData> results = await collection.QueryAsync(exp, searchParameters);
-            if (results == null || results.Count == 0)
+            catch (Exception ex)
             {
-                return $"{day} 无历史记录";
+                return new T_ToolResult()
+                {
+                    Output = "工具调用异常",
+                    LogInfo = $"异常原因：{ex.Message}"
+                };
             }
 
-            var contentField = results.FirstOrDefault(f => f.FieldName == "Content");
-            var createTimeField = results.FirstOrDefault(f => f.FieldName == "CreateTime");
-
-
-            var sb = new StringBuilder();
-            sb.AppendLine($"【{day} 历史会话】");
-            for (int i = 0; i < contentField.RowCount; i++)
-            {
-                string tcontent = (contentField as FieldData<string>).Data[i];
-                long ttime = (createTimeField as FieldData<long>).Data[i];
-                DateTime dttime = MyAccess.Core.TypeConvert.Unix2Time(ttime);
-                sb.AppendLine(dttime.ToString("yyyy-MM-dd HH:mm:ss") + ";" + tcontent);
-            }
-
-            if (contentField.RowCount > 0)
-            {
-                return sb.ToString();
-            }
-            else
-            {
-                return string.Empty;
-            }
 
         }
     }

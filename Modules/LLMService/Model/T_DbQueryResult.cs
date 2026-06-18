@@ -18,6 +18,7 @@ namespace LLMService.Model
         /// 执行SQL语句
         /// </summary>
         public string Sql { get; set; }
+
         /// <summary>
         /// 是否执行成功
         /// </summary>
@@ -48,35 +49,34 @@ namespace LLMService.Model
         /// 总页数
         /// </summary>
         public long TotalPage { get; set; }
-        /// <summary>
-        /// 是否还有下一页
-        /// </summary>
-        public bool HasNext => Page * PageSize < TotalCount;
-        /// <summary>
-        /// 是否还有上一页
-        /// </summary>
-        public bool HasPrev => Page > 1;
-        public string ToReadableText()
+        public T_ToolResult ToReadableText()
         {
             if (!this.Success)
             {
-                return $"【数据库查询失败】{this.ErrorMsg}\n执行SQL：{this.Sql}";
+                return new T_ToolResult()
+                {
+                    Output = "数据库查询失败",
+                    LogInfo = $"失败原因：查询语句 {this.Sql}，{this.ErrorMsg}"
+                };
             }
 
             StringBuilder sb = new StringBuilder();
             if (this.DataRows.Count == 0)
             {
-                sb.AppendLine("当前分页无匹配数据");
-                return sb.ToString();
+                return new T_ToolResult()
+                {
+                    Output = "当前无匹配数据",
+                    LogInfo = $"查询语句 {this.Sql}"
+                };
             }
 
             // 提取表头
             var columns = this.DataRows[0].Keys.ToList();
 
             // Markdown 表头行
-            sb.AppendLine("|" + string.Join("|", columns) + "|");
+            sb.AppendLine("| " + string.Join(" | ", columns) + " |");
             // Markdown 分隔行
-            sb.AppendLine("|" + string.Join("|", Enumerable.Repeat("---", columns.Count)) + "|");
+            sb.AppendLine("| " + string.Join(" | ", Enumerable.Repeat(":----:", columns.Count)) + " |");
 
             // 逐行拼接 Markdown 数据行
             foreach (var row in this.DataRows)
@@ -90,15 +90,18 @@ namespace LLMService.Model
                     cellText = cellText.Replace("|", "\\|");
                     cells.Add(cellText);
                 }
-                sb.AppendLine("|" + string.Join("|", cells) + "|");
+                sb.AppendLine("| " + string.Join(" | ", cells) + " |");
             }
-
-            sb.AppendLine("===== 数据库查询结果分页数据 =====");
-            sb.AppendLine($"分页信息：第{this.Page}页 / 共{this.TotalPage}页，每页{this.PageSize}条，总数据{this.TotalCount}条");
-            sb.AppendLine($"翻页提示：{(this.HasNext ? "存在下一页，你可回复「下一页」继续查看" : "无下一页")} {(this.HasPrev ? "存在上一页，可回复「上一页」" : "")}");
             sb.AppendLine();
-
-            return sb.ToString();
+            sb.AppendLine("#### 查询结果的分页数据");
+            sb.AppendLine($"分页信息：第{this.Page}页 / 共{this.TotalPage}页，每页{this.PageSize}条，总数据{this.TotalCount}条");
+            sb.AppendLine();
+            string tmpstr = sb.ToString();
+            return new T_ToolResult()
+            {
+                Output = tmpstr,
+                LogInfo = $"查询语句 {this.Sql}"
+            };
         }
     }
 }

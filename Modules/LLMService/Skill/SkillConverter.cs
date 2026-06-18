@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.AI;
+﻿using LLMService.Model;
+using Microsoft.Extensions.AI;
 using Mysqlx.Expr;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace LLMService.Skill
     public static class SkillConverter
     {
         /// <summary>批量转为AI可调用Function工具</summary>
-        public static List<AITool> BuildAIFunctions(this List<SkillMeta> skills, Func<FunctionInvocationContext, string, Task<string>> skillExecuteHandler)
+        public static List<AITool> BuildAIFunctions(this List<SkillMeta> skills, Func<FunctionInvocationContext, string, Task<T_ToolResult>> skillExecuteHandler)
         {
             var funcs = new List<AITool>();
             foreach (var sk in skills)

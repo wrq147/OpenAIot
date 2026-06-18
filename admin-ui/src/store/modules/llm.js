@@ -34,6 +34,9 @@ const mutations = {
     let tmparr = state.messageList;
     for (let i = tmparr.length - 1; i >= 0; i--) {
       if (tmparr[i].role == "assistant" && tmparr[i].status == 1) {
+        if (state.messageList[i].data == "") {
+          state.messageList[i].data = "会话异常，请重新尝试";
+        }
         state.messageList[i].status = 0;
         break;
       }
@@ -42,7 +45,7 @@ const mutations = {
   pushUserInput: (state, info) => {
     state.messageList.push({
       role: "user",
-      status: 1,
+      status: 0,
       data: info,
       time: Date.now()
     });

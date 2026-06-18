@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.AI;
+﻿using log4net;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics.Tensors;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,21 +18,56 @@ namespace LLMService
 {
     public class BpeLocalEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<float>>, IDisposable
     {
+        internal class NFC : Normalizer
+        {
+            public override string Normalize(string original)
+            {
+                return original.Normalize(NormalizationForm.FormC);
+            }
+
+            public override string Normalize(ReadOnlySpan<char> original)
+            {
+                return original.ToString().Normalize(NormalizationForm.FormC);
+            }
+        }
         private readonly Tokenizer _bpeTokenizer;
         private readonly string _onnxModelPath;
         private readonly ObjectPool<InferenceSession> _sessionPool;
-
+        private const string QWEN3_PATTERN = @"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}|[^\s\p{L}\p{N}]+|[\r\n]+|\s+(?!\S)|\s+";
         public BpeLocalEmbeddingGenerator()
         {
             string modelPath = Path.Combine(Directory.GetCurrentDirectory(), "EmbedModel");
 
-            // 加载分词器（线程安全）
             var vocabPath = Path.Combine(modelPath, "vocab.json");
             var mergesPath = Path.Combine(modelPath, "merges.txt");
-            _bpeTokenizer = BpeTokenizer.Create(
-                File.OpenRead(vocabPath),
-                File.OpenRead(mergesPath));
+            var regex = new Regex(QWEN3_PATTERN);
+            var specialTokens = new Dictionary<string, int>
+            {
+                { "<|endoftext|>", 151643 },
+                { "<|im_start|>", 151644 },
+                { "<|im_end|>", 151645 },
+                { "<|object_ref_start|>", 151646 },
+                { "<|object_ref_end|>", 151647 },
+                { "<|box_start|>", 151648 },
+                { "<|box_end|>", 151649 },
+                { "<|quad_start|>", 151650 },
+                { "<|quad_end|>", 151651 },
+                { "<|vision_start|>", 151652 },
+                { "<|vision_end|>", 151653 },
+                { "<|vision_pad|>", 151654 },
+                { "<|image_pad|>", 151655 },
+                { "<|video_pad|>", 151656 },
+            };
 
+            var options = new BpeOptions(vocabPath, mergesPath)
+            {
+                ByteLevel = true,
+                Normalizer = new NFC(),
+                PreTokenizer = new RegexPreTokenizer(regex, specialTokens),
+                SpecialTokens = specialTokens,
+                EndOfSentenceToken = "<|endoftext|>"
+            };
+            _bpeTokenizer = BpeTokenizer.Create(options);
             _onnxModelPath = Path.Combine(modelPath, "model.onnx");
 
             // 初始化会话池（核心：线程安全、高性能）
@@ -55,7 +93,6 @@ namespace LLMService
                     foreach (var text in values)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-
                         var ids = _bpeTokenizer.EncodeToIds(text);
                         int seqLen = ids.Count;
                         if (seqLen > 8192)

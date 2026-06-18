@@ -40,6 +40,10 @@ namespace LLMService.Business
                 await DoChatLock(sessionId, async () =>
                 {
                     var historyText = await GetShortMemoryStr(sessionId);
+                    if (string.IsNullOrEmpty(historyText))
+                    {
+                        return;
+                    }
                     // LLM 总结
                     var prompt = $@"
 请对以下用户对话进行精简总结，字数不能超过2500个字，并且只需要返回总结内容，不要额外说明：
@@ -52,9 +56,6 @@ namespace LLMService.Business
                     {
                         new(ChatRole.System, "你是记忆处理助手，只输出精简总结，无其他内容"),
                         new(ChatRole.User, prompt)
-                    }, new ChatOptions()
-                    {
-                        ToolMode = ChatToolMode.None
                     });
                     string summary = response.Text;
 
@@ -83,13 +84,16 @@ namespace LLMService.Business
                 await _redis.LockReleaseAsync(tkey);
             }
         }
+
         /// <summary>
         /// 保存单轮对话
         /// </summary>
         /// <param name="sessionId"></param>
         /// <param name="userInput"></param>
+        /// <param name="tool"></param>
         /// <param name="aiReply"></param>
-        public async Task SaveChat(string sessionId, string userInput, string aiReply)
+        /// <returns></returns>
+        public async Task SaveChat(string sessionId, string userInput, string tool, string aiReply)
         {
             await DoChatLock(sessionId, async () =>
             {
@@ -97,6 +101,7 @@ namespace LLMService.Business
                 var entry = new T_ShortMemory()
                 {
                     User = userInput,
+                    Tool = tool,
                     Assistant = aiReply,
                     Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -118,7 +123,7 @@ namespace LLMService.Business
             var entries = await _redis.ListRangeAsync<T_ShortMemory>(key);
 
             if (entries.Count == 0)
-                return "无短期记忆";
+                return string.Empty;
 
             var sb = new StringBuilder();
             sb.AppendLine("【最近对话记录】");
@@ -127,7 +132,14 @@ namespace LLMService.Business
             {
                 sb.AppendLine($"时间：{obj.Time}");
                 sb.AppendLine($"用户：{obj.User}");
-                sb.AppendLine($"助手：{obj.Assistant}");
+                if (string.IsNullOrEmpty(obj.Tool))
+                {
+                    sb.AppendLine($"助手：{obj.Assistant}");
+                }
+                else
+                {
+                    sb.AppendLine($"助手：{obj.Tool}\r\n\r\n{obj.Assistant}");
+                }
                 sb.AppendLine();
             }
 

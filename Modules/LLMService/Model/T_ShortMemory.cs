@@ -9,6 +9,7 @@ namespace LLMService.Model
     public class T_ShortMemory
     {
         public string User { get; set; }
+        public string Tool { get; set; }
         public string Assistant { get; set; }
         public string Time { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using LLMService.Skill;
+﻿using LLMService.Model;
+using LLMService.Skill;
 using LLMService.Tool;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
@@ -67,13 +68,20 @@ namespace LLMService
         /// <param name="context"></param>
         /// <param name="userRawInput"></param>
         /// <returns></returns>
-        private async Task<string> ExecuteSkill(FunctionInvocationContext context, string userRawInput)
+        private async Task<T_ToolResult> ExecuteSkill(FunctionInvocationContext context, string userRawInput)
         {
             try
             {
                 //1.查找技能元数据
                 var skill = _allSkills.FirstOrDefault(s => s.Name == context.Function.Name);
-                if (skill == null) return $"未找到技能:{context.Function.Name}";
+                if (skill == null)
+                {
+                    return new T_ToolResult()
+                    {
+                        Output = $"未找到技能:{context.Function.Name}",
+                        LogInfo = string.Empty
+                    };
+                }
 
                 var promptSb = new StringBuilder();
                 promptSb.AppendLine($"# 技能：{skill.Name}");
@@ -121,16 +129,17 @@ namespace LLMService
                 {
                     new(ChatRole.System,"你是代码生成器，仅输出可运行代码块"),
                     new(ChatRole.User,promptSb.ToString())
-                }, new ChatOptions()
-                {
-                    ToolMode = ChatToolMode.None
                 });
 
                 //解析LLM返回的代码块，落地到临时目录
                 var scripts = ParseCodeBlocks(resp.Text);
                 if (scripts == null)
                 {
-                    return "脚本格式错误";
+                    return new T_ToolResult()
+                    {
+                        Output = "脚本格式错误",
+                        LogInfo = string.Empty
+                    };
                 }
                 string tempDir = Path.Combine(Path.GetTempPath(), $"skill_{Guid.NewGuid():N}");
                 Directory.CreateDirectory(tempDir);
@@ -147,12 +156,19 @@ namespace LLMService
                 }
                 //清理临时脚本目录
                 Directory.Delete(tempDir, true);
-
-                return $"【技能执行完成】\n{resultBuilder}";
+                return new T_ToolResult()
+                {
+                    Output = $"【技能执行完成】\n{resultBuilder}",
+                    LogInfo = string.Empty
+                };
             }
             catch (Exception ex)
             {
-                return $"技能执行异常:{ex.Message}";
+                return new T_ToolResult()
+                {
+                    Output = $"技能执行异常",
+                    LogInfo = $"技能执行异常:{ex.Message}"
+                };
             }
         }
         private List<GeneratedTaskScript> ParseCodeBlocks(string llmText)

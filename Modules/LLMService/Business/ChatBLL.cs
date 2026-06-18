@@ -7,9 +7,11 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 
@@ -112,8 +114,17 @@ namespace LLMService.Business
                 foreach (var chatItem in shortMemorys)
                 {
                     msgList.Add(new ChatMessage(ChatRole.User, $"[{chatItem.Time}] {chatItem.User}"));
+                    if (!string.IsNullOrEmpty(chatItem.Tool))
+                    {
+                        msgList.Add(new ChatMessage(ChatRole.Tool, $"[{chatItem.Time}] {chatItem.Tool}"));
+                    }
                     msgList.Add(new ChatMessage(ChatRole.Assistant, $"[{chatItem.Time}] {chatItem.Assistant}"));
                 }
+            }
+            else
+            {
+                var toolres = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
+                msgList.Add(new ChatMessage(ChatRole.Tool, toolres.Output));
             }
             msgList.Add(new ChatMessage(ChatRole.User, userInput));
 
@@ -124,9 +135,9 @@ namespace LLMService.Business
             {
                 ToolMode = ChatToolMode.Auto,
                 Tools = tools,
-                ConversationId = user.UserId.ToString(),
                 AdditionalProperties = extInfo
             };
+            StringBuilder toolResponse = new StringBuilder();
             StringBuilder aiFullResponse = new StringBuilder();
             var bus = _provider.GetService<NatsScope>().Bus;
             var resp = chatClient.GetStreamingResponseAsync(msgList, opt);
@@ -166,23 +177,42 @@ namespace LLMService.Business
                             }
                             else if (content is FunctionCallContent toolCall)
                             {
-                                string calltext = "调用工具 " + toolCall.Name + "\r\n";
+                                string calltext = "正在调用工具 " + toolCall.Name + "\r\n";
                                 await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
                                 {
                                     sessionId,
                                     "#llm" + calltext
                                 });
-                                aiFullResponse.Append(calltext);
+                                toolResponse.Append(calltext);
                             }
                             else if (content is FunctionResultContent toolRes)
                             {
-                                string rs = toolRes.Result.ToString();
-                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                string outputText = string.Empty;
+                                string logText = string.Empty;
+                                if (toolRes.Result is JsonElement jsonEle && jsonEle.ValueKind == JsonValueKind.Object)
                                 {
-                                    sessionId,
-                                    "#llm" + rs
-                                });
-                                aiFullResponse.Append(rs);
+                                    // 安全读取 Output
+                                    if (jsonEle.TryGetProperty("output", out var outputEle))
+                                    {
+                                        outputText = outputEle.GetString() ?? string.Empty;
+                                    }
+                                    // 安全读取 LogInfo
+                                    if (jsonEle.TryGetProperty("logInfo", out var logEle))
+                                    {
+                                        logText = logEle.GetString() ?? string.Empty;
+                                    }
+                                }
+                                else
+                                {
+                                    outputText = toolRes.Result?.ToString() ?? "";
+                                }
+                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                    {
+                                        sessionId,
+                                        "#llm" + outputText
+                                    });
+                                aiFullResponse.AppendLine(outputText);
+                                toolResponse.AppendLine(logText);
                             }
                         }
                     }
@@ -197,7 +227,7 @@ namespace LLMService.Business
                 //将本轮对话保存到短期记忆
                 if (aiFullResponse.Length > 0)
                 {
-                    await _provider.GetService<ShortMemoryBLL>().SaveChat(opt.ConversationId, userInput, aiFullResponse.ToString());
+                    await _provider.GetService<ShortMemoryBLL>().SaveChat(sessionId, userInput, toolResponse.ToString(), aiFullResponse.ToString());
                 }
                 await SetSessionStatus(sessionId, T_ChatStatus.Active);
                 await Task.Delay(100);

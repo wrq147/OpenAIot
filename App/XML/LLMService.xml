@@ -60,13 +60,15 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:LLMService.Business.ShortMemoryBLL.SaveChat(System.String,System.String,System.String)">
+        <member name="M:LLMService.Business.ShortMemoryBLL.SaveChat(System.String,System.String,System.String,System.String)">
             <summary>
             保存单轮对话
             </summary>
             <param name="sessionId"></param>
             <param name="userInput"></param>
+            <param name="tool"></param>
             <param name="aiReply"></param>
+            <returns></returns>
         </member>
         <member name="M:LLMService.Business.ShortMemoryBLL.GetShortMemoryStr(System.String)">
             <summary>
@@ -474,16 +476,6 @@
             总页数
             </summary>
         </member>
-        <member name="P:LLMService.Model.T_DbQueryResult.HasNext">
-            <summary>
-            是否还有下一页
-            </summary>
-        </member>
-        <member name="P:LLMService.Model.T_DbQueryResult.HasPrev">
-            <summary>
-            是否还有上一页
-            </summary>
-        </member>
         <member name="P:LLMService.Model.T_TableField.ColumnName">
             <summary>
             字段名称
@@ -504,6 +496,16 @@
             字段备注
             </summary>
         </member>
+        <member name="P:LLMService.Model.T_ToolResult.Output">
+            <summary>
+            工具输出结果
+            </summary>
+        </member>
+        <member name="P:LLMService.Model.T_ToolResult.LogInfo">
+            <summary>
+            工具的调试信息
+            </summary>
+        </member>
         <member name="M:LLMService.OsPlatform.GetSystemPrompt">
             给AI的系统信息（让AI知道生成什么脚本）
         </member>
@@ -512,7 +514,7 @@
             Skill转换器：把Skill转MEAI标准AIFunction
             </summary>
         </member>
-        <member name="M:LLMService.Skill.SkillConverter.BuildAIFunctions(System.Collections.Generic.List{LLMService.Skill.SkillMeta},System.Func{Microsoft.Extensions.AI.FunctionInvocationContext,System.String,System.Threading.Tasks.Task{System.String}})">
+        <member name="M:LLMService.Skill.SkillConverter.BuildAIFunctions(System.Collections.Generic.List{LLMService.Skill.SkillMeta},System.Func{Microsoft.Extensions.AI.FunctionInvocationContext,System.String,System.Threading.Tasks.Task{LLMService.Model.T_ToolResult}})">
             <summary>批量转为AI可调用Function工具</summary>
         </member>
         <member name="M:LLMService.Skill.SkillLoader.LoadAllSkills">

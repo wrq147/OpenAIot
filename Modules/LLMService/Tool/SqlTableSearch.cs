@@ -1,5 +1,6 @@
 ﻿using AuthService;
 using LLMService.Business;
+using LLMService.Model;
 using Microsoft.Extensions.AI;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,11 @@ namespace LLMService.Tool
                         var user = context.Options.AdditionalProperties["UserInfo"] as Data_ServerTokenInfo;
                         if (user == null || user.OrgId <= 0)
                         {
-                            return "只有企业级用户才能执行数据库查询工具";
+                            return new T_ToolResult()
+                            {
+                                Output = "只有企业级用户才能执行数据库查询工具",
+                                LogInfo = string.Empty
+                            };
                         }
                         var userstr = context.Options.AdditionalProperties["UserStr"] as string;
                         var tmpbll = provider.GetService<DbSearchBLL>();
@@ -39,7 +44,11 @@ namespace LLMService.Tool
                     }
                     catch (Exception ex)
                     {
-                        return "工具调用异常：" + ex.Message;
+                        return new T_ToolResult()
+                        {
+                            Output = "工具调用异常",
+                            LogInfo = "异常信息：" + ex.Message
+                        };
                     }
 
                 },
