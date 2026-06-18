@@ -3,27 +3,36 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'f97f197edf20113590888c1529367ae629397198'
-    oldFile: !uuid 'a0819596a9356d394fe9e9355bbb1624c5a890dc'
+    newFile: !uuid 'c8993d976213117e7005ed469670713e7a367699'
+    oldFile: !uuid 'f97f197edf20113590888c1529367ae629397198'
   /Modules/LLMService:
-    newFile: !uuid 'c3040634be2417a85b3916ae3ecdc82ff7032869'
-    oldFile: !uuid '77ff11b3b6605f36004f9b6e9731f661b4991e17'
-  /Modules/LLMService/AiClientRegistry.cs:
-    newFile: !uuid 'd419f54599d37f09a478ce9156afefcf57cbf90b'
-    oldFile: !uuid '158460aea810c9ab93357035dadb3b7d4d9f80ba'
-  /Modules/LLMService/Business:
-    newFile: !uuid 'cb083cc6da745e9e049b00166c8640c016955328'
-    oldFile: !uuid '3ba5dd0bc96cd4a94d7c4c57e0bdc84877454a9c'
-  /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid 'f1f7f9f670331a7a0b171833a209983630afa6f8'
-    oldFile: !uuid '12a3df89723e394bc5a806f2bc81bb54130a821c'
+    newFile: !uuid '79b38f20f30c738a93c552a18b9feaac69553042'
+    oldFile: !uuid 'c3040634be2417a85b3916ae3ecdc82ff7032869'
   /Modules/LLMService/Tool:
-    newFile: !uuid '41f2b57302e34919b69db671de5eb76c5fb16364'
-    oldFile: !uuid '415512745872e13c1c44327fad72510ea20c0335'
-  /Modules/LLMService/Tool/LongMemory.cs:
-    newFile: !uuid '37569348aed2578b29e1c85719dacf476bf1591a'
-    oldFile: !uuid 'f6d7e4be9474d21f97fabaae59cc980e0a505107'
-gitCommitId: !uuid '884746d3347e6688e19f38c58efbb81e597ea314'
+    newFile: !uuid 'be2cc48a8c9baa7e8a2b5a1ea27ce7005d82bbd6'
+    oldFile: !uuid '41f2b57302e34919b69db671de5eb76c5fb16364'
+  /Modules/LLMService/Tool/SqlTableSearch.cs:
+    newFile: !uuid '854ed7ffbd127b8f92b445a2f501e78f7e439b62'
+    oldFile: !uuid '138d765a099f41a6f0d66977f23439c0323c3cf7'
+  /admin-ui:
+    newFile: !uuid '74b252c14be5c8048dd925d0b90f1056bab7336e'
+    oldFile: !uuid 'cf8e7356d5ac95b952e5f30a084ffd3ac4c5366a'
+  /admin-ui/src:
+    newFile: !uuid 'b6e2305d5a089d50c4b18a43648d02203e9add15'
+    oldFile: !uuid '770ef93f4a406ec0acbc22ac7683c37e5d21b036'
+  /admin-ui/src/views:
+    newFile: !uuid 'eca43b3851a58c14aba5239e978e6cecde07410b'
+    oldFile: !uuid '0eb3913dcd26b65d9abc76dc523e61ffd4558568'
+  /admin-ui/src/views/llm:
+    newFile: !uuid '853c6f86b623b1d01cb7218a0d489eafd6bd1f76'
+    oldFile: !uuid '5ea4a9ecd33a036fdde863bc56a131f8d40a83f2'
+  /admin-ui/src/views/llm/ai:
+    newFile: !uuid 'b8748cf21e8a67987acd5727f22cef6ae3c7cd3d'
+    oldFile: !uuid 'd1d31c578ed06810d94623374ad899741203ea67'
+  /admin-ui/src/views/llm/ai/assistant.vue:
+    newFile: !uuid '49b4f9fc54e6519e6751002a461279e10e2858a6'
+    oldFile: !uuid '9e33210b512d61b55bd30df5d3976bff6dbbdf62'
+gitCommitId: !uuid '91777a71b3eb4bd000241ba5d482dd62f53bbae9'
 renames: {
   }
-revisionId: 361
+revisionId: 362
