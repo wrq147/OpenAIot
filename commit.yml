@@ -2,58 +2,28 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid 'a49a6411eb205bc9d0500792d0ee1dd4dccabca2'
-    oldFile: !uuid '30c562cbd3f171d66013b74babaa37dc5efff472'
-  /App/XML:
-    newFile: !uuid '8ba7e42ce8a1c1661190a6b640ed32925e5b7c49'
-    oldFile: !uuid 'a184bdb69ad780920ff33324f514ad6c836ae175'
-  /App/XML/LLMService.xml:
-    newFile: !uuid 'c9a5c11db764a2151342bd30327f053abc28a8a0'
-    oldFile: !uuid '2a22efb7d3c7dd542cda3629974da1ee0107f4de'
   /Modules:
-    newFile: !uuid 'a0819596a9356d394fe9e9355bbb1624c5a890dc'
-    oldFile: !uuid '79af236af18fce63e8606916570139e2771191ce'
+    newFile: !uuid 'f97f197edf20113590888c1529367ae629397198'
+    oldFile: !uuid 'a0819596a9356d394fe9e9355bbb1624c5a890dc'
   /Modules/LLMService:
-    newFile: !uuid '77ff11b3b6605f36004f9b6e9731f661b4991e17'
-    oldFile: !uuid '3a994968ca3fb5ca4b92db536956581802bfe341'
+    newFile: !uuid 'c3040634be2417a85b3916ae3ecdc82ff7032869'
+    oldFile: !uuid '77ff11b3b6605f36004f9b6e9731f661b4991e17'
   /Modules/LLMService/AiClientRegistry.cs:
-    newFile: !uuid '158460aea810c9ab93357035dadb3b7d4d9f80ba'
-    oldFile: !uuid 'c9be3f62d0e0343417783a0d10e26644d5e587e4'
+    newFile: !uuid 'd419f54599d37f09a478ce9156afefcf57cbf90b'
+    oldFile: !uuid '158460aea810c9ab93357035dadb3b7d4d9f80ba'
   /Modules/LLMService/Business:
-    newFile: !uuid '3ba5dd0bc96cd4a94d7c4c57e0bdc84877454a9c'
-    oldFile: !uuid '00e756482939e1e14fdcff731f95c79b2a2fe1ca'
+    newFile: !uuid 'cb083cc6da745e9e049b00166c8640c016955328'
+    oldFile: !uuid '3ba5dd0bc96cd4a94d7c4c57e0bdc84877454a9c'
   /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid '12a3df89723e394bc5a806f2bc81bb54130a821c'
-    oldFile: !uuid 'd29cf8cb5c0d10a59a2d4c8e4e0daf5bc2b9a549'
-  /Modules/LLMService/Business/KnowledgeRagBLL.cs:
-    newFile: !uuid 'b1d9588ae069957538c0be13a6535857dafbba41'
-    oldFile: !uuid '3d3eecef73dfec6677a0af47d3c32d68517b2dd5'
-  /Modules/LLMService/Business/MemoryRagBLL.cs:
-    newFile: !uuid '649a0d7933a339f945e3cfb38b7e0e5a083238ab'
-    oldFile: !uuid '89ab228370461d50f59c7ee92b3d4c2dbdf683a6'
-  /Modules/LLMService/Model:
-    newFile: !uuid '5b9a3656d6c4db0693f35d2ed2120dd636ecd394'
-    oldFile: !uuid '25cec1f6f6190572c90c0adef86ecb3cf177bf3c'
-  /Modules/LLMService/Model/T_DbQueryResult.cs:
-    newFile: !uuid '7a329695fa6f9165f5a4aa2a5f5dd3c914a32518'
-    oldFile: !uuid '76a16707f5638352fc370bf771ab16deffc97b54'
-  /Modules/LLMService/Model/T_ToolResult.cs:
-    newFile: !uuid 'f66e56035c8328f4459c0804b4ecdb63e25ed338'
-    oldFile: !uuid 'b8227146b0b9e5d8ce2fd799b6f611258341b2ae'
+    newFile: !uuid 'f1f7f9f670331a7a0b171833a209983630afa6f8'
+    oldFile: !uuid '12a3df89723e394bc5a806f2bc81bb54130a821c'
   /Modules/LLMService/Tool:
-    newFile: !uuid '415512745872e13c1c44327fad72510ea20c0335'
-    oldFile: !uuid 'fb546421c1a3c19290543b9aa14f171bfe452162'
+    newFile: !uuid '41f2b57302e34919b69db671de5eb76c5fb16364'
+    oldFile: !uuid '415512745872e13c1c44327fad72510ea20c0335'
   /Modules/LLMService/Tool/LongMemory.cs:
-    newFile: !uuid 'f6d7e4be9474d21f97fabaae59cc980e0a505107'
-    oldFile: !uuid '35747a3a9e3a1d038922716f0b2fd0fc37f63136'
-  /Modules/LLMService/Tool/SqlTableSearch.cs:
-    newFile: !uuid '138d765a099f41a6f0d66977f23439c0323c3cf7'
-    oldFile: !uuid '2e0a798eaa0514f305d5f5d8df17ef95fd852bfe'
-  /Modules/LLMService/Tool/SystemTime.cs:
-    newFile: !uuid 'fec1917e4eb79357a826edfb7a12c13cc6058415'
-    oldFile: !uuid '97999d64a1bcd30be558ef4f441cfcdbc101c77b'
-gitCommitId: !uuid '3d2ed4961676c715d86827a22946d99728242f5c'
+    newFile: !uuid '37569348aed2578b29e1c85719dacf476bf1591a'
+    oldFile: !uuid 'f6d7e4be9474d21f97fabaae59cc980e0a505107'
+gitCommitId: !uuid '884746d3347e6688e19f38c58efbb81e597ea314'
 renames: {
   }
-revisionId: 360
+revisionId: 361
