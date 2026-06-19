@@ -143,7 +143,7 @@ namespace LLMService.Business
             StringBuilder toolResponse = new StringBuilder();
             StringBuilder aiFullResponse = new StringBuilder();
             var bus = _provider.GetService<NatsScope>().Bus;
-            int maxTryCount = 3;
+            int maxTryCount = 10;
             bool needRetry;
             do
             {
@@ -153,7 +153,12 @@ namespace LLMService.Business
                 {
                     await foreach (var update in resp)
                     {
-                        if (update == null || await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
+                        if (await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
+                        {
+                            needRetry = false;
+                            break;
+                        }
+                        if (update == null)
                         {
                             break;
                         }
@@ -183,11 +188,12 @@ namespace LLMService.Business
                                 {
                                     string calltext = "正在调用工具 " + toolCall.Name + "\r\n";
                                     await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
-                                {
-                                    sessionId,
-                                    "#llm" + calltext
-                                });
+                                    {
+                                        sessionId,
+                                        "#llm" + calltext
+                                    });
                                     toolResponse.Append(calltext);
+                                    msgList.Add(new ChatMessage(ChatRole.Tool, calltext));
                                 }
                                 else if (content is FunctionResultContent toolRes)
                                 {
@@ -220,20 +226,12 @@ namespace LLMService.Business
                                         sessionId,
                                         "#llm" + outputText
                                     });
-                                    aiFullResponse.AppendLine(outputText);
-                                    toolResponse.AppendLine(logText);
-                                    if(!string.IsNullOrEmpty(logText))
-                                    {
-                                        msgList.Add(new ChatMessage(ChatRole.Tool, logText));
-                                    }
-                                    if (!isSuccess)
-                                    {
-                                        needRetry = true;
-                                        break;
-                                    }
+                                    string tmptoolstr = $"{outputText}\r\n{logText}";
+                                    toolResponse.AppendLine(tmptoolstr);
+                                    msgList.Add(new ChatMessage(ChatRole.Tool, tmptoolstr));
+                                    needRetry = true;
                                 }
                             }
-                            if (needRetry) break;
                         }
                     }
                 }
