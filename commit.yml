@@ -3,36 +3,27 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'c8993d976213117e7005ed469670713e7a367699'
-    oldFile: !uuid 'f97f197edf20113590888c1529367ae629397198'
+    newFile: !uuid 'de6a7788944d512e469b6168fe1c158602459ce3'
+    oldFile: !uuid 'c8993d976213117e7005ed469670713e7a367699'
   /Modules/LLMService:
-    newFile: !uuid '79b38f20f30c738a93c552a18b9feaac69553042'
-    oldFile: !uuid 'c3040634be2417a85b3916ae3ecdc82ff7032869'
+    newFile: !uuid 'e11387e576dd9d412641c71b9d2a692a28a821d8'
+    oldFile: !uuid '79b38f20f30c738a93c552a18b9feaac69553042'
+  /Modules/LLMService/Business:
+    newFile: !uuid '5b3c9e481b501375ff0e9b70fef823d22b3bcc1f'
+    oldFile: !uuid 'cb083cc6da745e9e049b00166c8640c016955328'
+  /Modules/LLMService/Business/ChatBLL.cs:
+    newFile: !uuid 'fea32fc73f7e0f725b9eec7d32da14bf8571b532'
+    oldFile: !uuid 'f1f7f9f670331a7a0b171833a209983630afa6f8'
+  /Modules/LLMService/Business/MemoryRagBLL.cs:
+    newFile: !uuid 'f97e5e86b410f5dc3150841f6c6172f7bcea08c0'
+    oldFile: !uuid '649a0d7933a339f945e3cfb38b7e0e5a083238ab'
   /Modules/LLMService/Tool:
-    newFile: !uuid 'be2cc48a8c9baa7e8a2b5a1ea27ce7005d82bbd6'
-    oldFile: !uuid '41f2b57302e34919b69db671de5eb76c5fb16364'
-  /Modules/LLMService/Tool/SqlTableSearch.cs:
-    newFile: !uuid '854ed7ffbd127b8f92b445a2f501e78f7e439b62'
-    oldFile: !uuid '138d765a099f41a6f0d66977f23439c0323c3cf7'
-  /admin-ui:
-    newFile: !uuid '74b252c14be5c8048dd925d0b90f1056bab7336e'
-    oldFile: !uuid 'cf8e7356d5ac95b952e5f30a084ffd3ac4c5366a'
-  /admin-ui/src:
-    newFile: !uuid 'b6e2305d5a089d50c4b18a43648d02203e9add15'
-    oldFile: !uuid '770ef93f4a406ec0acbc22ac7683c37e5d21b036'
-  /admin-ui/src/views:
-    newFile: !uuid 'eca43b3851a58c14aba5239e978e6cecde07410b'
-    oldFile: !uuid '0eb3913dcd26b65d9abc76dc523e61ffd4558568'
-  /admin-ui/src/views/llm:
-    newFile: !uuid '853c6f86b623b1d01cb7218a0d489eafd6bd1f76'
-    oldFile: !uuid '5ea4a9ecd33a036fdde863bc56a131f8d40a83f2'
-  /admin-ui/src/views/llm/ai:
-    newFile: !uuid 'b8748cf21e8a67987acd5727f22cef6ae3c7cd3d'
-    oldFile: !uuid 'd1d31c578ed06810d94623374ad899741203ea67'
-  /admin-ui/src/views/llm/ai/assistant.vue:
-    newFile: !uuid '49b4f9fc54e6519e6751002a461279e10e2858a6'
-    oldFile: !uuid '9e33210b512d61b55bd30df5d3976bff6dbbdf62'
-gitCommitId: !uuid '91777a71b3eb4bd000241ba5d482dd62f53bbae9'
+    newFile: !uuid '2da5e96a069bd5e5559dc4b732518897226a5360'
+    oldFile: !uuid 'be2cc48a8c9baa7e8a2b5a1ea27ce7005d82bbd6'
+  /Modules/LLMService/Tool/LongMemory.cs:
+    newFile: !uuid 'cb3141f6c86a61bffa350f50bddea1a7328f697d'
+    oldFile: !uuid '37569348aed2578b29e1c85719dacf476bf1591a'
+gitCommitId: !uuid '1a1ef68329245a52815176a83864f41403d8b54a'
 renames: {
   }
-revisionId: 362
+revisionId: 363
