@@ -121,19 +121,13 @@ namespace LLMService.Business
                     }
                     msgList.Add(new ChatMessage(ChatRole.Assistant, $"[{chatItem.Time}] {chatItem.Assistant}"));
                 }
-                msgList.Add(new ChatMessage(ChatRole.User, userInput));
             }
-            else
+
+            msgList.Add(new ChatMessage(ChatRole.User, userInput));
+            var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
+            if (ragResult.IsSuccess)
             {
-                StringBuilder userInputBuilder = new StringBuilder();
-                var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
-                if (ragResult.IsSuccess)
-                {
-                    userInputBuilder.AppendLine($"【历史对话参考信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题");
-                    userInputBuilder.AppendLine();
-                }
-                userInputBuilder.AppendLine(userInput);
-                msgList.Add(new ChatMessage(ChatRole.User, userInputBuilder.ToString()));
+                msgList.Add(new ChatMessage(ChatRole.Tool, $"【相关的历史对话信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题"));
             }
 
             var extInfo = new AdditionalPropertiesDictionary();
@@ -143,106 +137,124 @@ namespace LLMService.Business
             {
                 ToolMode = ChatToolMode.Auto,
                 Tools = tools,
-                ConversationId = $"{sessionId}_{Guid.NewGuid():N}",
+                ConversationId = sessionId,
                 AdditionalProperties = extInfo
             };
             StringBuilder toolResponse = new StringBuilder();
             StringBuilder aiFullResponse = new StringBuilder();
             var bus = _provider.GetService<NatsScope>().Bus;
-            var resp = chatClient.GetStreamingResponseAsync(msgList, opt);
-            try
+            int maxTryCount = 3;
+            bool needRetry;
+            do
             {
-                await foreach (var update in resp)
+                needRetry = false;
+                var resp = chatClient.GetStreamingResponseAsync(msgList, opt);
+                try
                 {
-                    if (update == null)
+                    await foreach (var update in resp)
                     {
-                        return;
-                    }
-                    if (await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
-                    {
-                        return;
-                    }
+                        if (update == null || await GetSessionStatus(sessionId) == T_ChatStatus.Stoped)
+                        {
+                            break;
+                        }
 
-                    if (!string.IsNullOrEmpty(update.Text))
-                    {
-                        await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>(){
+                        if (!string.IsNullOrEmpty(update.Text))
+                        {
+                            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>(){
                                 sessionId,
                                 "#llm"+update.Text
                             });
-                        aiFullResponse.Append(update.Text);
-                    }
-                    if (update.Contents != null && update.Contents.Any())
-                    {
-                        foreach (var content in update.Contents)
+                            aiFullResponse.Append(update.Text);
+                        }
+                        if (update.Contents != null && update.Contents.Any())
                         {
-                            if (content is TextContent textContent && !string.IsNullOrEmpty(textContent.Text))
+                            foreach (var content in update.Contents)
                             {
-                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                if (content is TextContent textContent && !string.IsNullOrEmpty(textContent.Text))
                                 {
-                                    sessionId,
-                                    "#llm" + textContent.Text
-                                });
-                                aiFullResponse.Append(textContent.Text);
-                            }
-                            else if (content is FunctionCallContent toolCall)
-                            {
-                                string calltext = "正在调用工具 " + toolCall.Name + "\r\n";
-                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                    await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                    {
+                                        sessionId,
+                                        "#llm" + textContent.Text
+                                    });
+                                    aiFullResponse.Append(textContent.Text);
+                                }
+                                else if (content is FunctionCallContent toolCall)
+                                {
+                                    string calltext = "正在调用工具 " + toolCall.Name + "\r\n";
+                                    await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
                                 {
                                     sessionId,
                                     "#llm" + calltext
                                 });
-                                toolResponse.Append(calltext);
-                            }
-                            else if (content is FunctionResultContent toolRes)
-                            {
-                                string outputText = string.Empty;
-                                string logText = string.Empty;
-                                if (toolRes.Result is JsonElement jsonEle && jsonEle.ValueKind == JsonValueKind.Object)
-                                {
-                                    // 安全读取 Output
-                                    if (jsonEle.TryGetProperty("output", out var outputEle))
-                                    {
-                                        outputText = outputEle.GetString() ?? string.Empty;
-                                    }
-                                    // 安全读取 LogInfo
-                                    if (jsonEle.TryGetProperty("logInfo", out var logEle))
-                                    {
-                                        logText = logEle.GetString() ?? string.Empty;
-                                    }
+                                    toolResponse.Append(calltext);
                                 }
-                                else
+                                else if (content is FunctionResultContent toolRes)
                                 {
-                                    outputText = toolRes.Result?.ToString() ?? "";
-                                }
-                                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                    string outputText = string.Empty;
+                                    string logText = string.Empty;
+                                    bool isSuccess = true;
+                                    if (toolRes.Result is JsonElement jsonEle && jsonEle.ValueKind == JsonValueKind.Object)
+                                    {
+                                        // 安全读取 Output
+                                        if (jsonEle.TryGetProperty("output", out var outputEle))
+                                        {
+                                            outputText = outputEle.GetString() ?? string.Empty;
+                                        }
+                                        // 安全读取 LogInfo
+                                        if (jsonEle.TryGetProperty("logInfo", out var logEle))
+                                        {
+                                            logText = logEle.GetString() ?? string.Empty;
+                                        }
+                                        if (jsonEle.TryGetProperty("isSuccess", out var ifsuccess))
+                                        {
+                                            isSuccess = ifsuccess.GetBool();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        outputText = toolRes.Result?.ToString() ?? "";
+                                    }
+                                    await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
                                     {
                                         sessionId,
                                         "#llm" + outputText
                                     });
-                                aiFullResponse.AppendLine(outputText);
-                                toolResponse.AppendLine(logText);
+                                    aiFullResponse.AppendLine(outputText);
+                                    toolResponse.AppendLine(logText);
+                                    if(!string.IsNullOrEmpty(logText))
+                                    {
+                                        msgList.Add(new ChatMessage(ChatRole.Tool, logText));
+                                    }
+                                    if (!isSuccess)
+                                    {
+                                        needRetry = true;
+                                        break;
+                                    }
+                                }
                             }
+                            if (needRetry) break;
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                _log.LogError(ex.Message);
-            }
-            finally
-            {
-                //将本轮对话保存到短期记忆
-                if (aiFullResponse.Length > 0)
+                catch (Exception ex)
                 {
-                    await _provider.GetService<ShortMemoryBLL>().SaveChat(sessionId, userInput, toolResponse.ToString(), aiFullResponse.ToString());
+                    _log.LogError(ex.Message);
                 }
-                await SetSessionStatus(sessionId, T_ChatStatus.Active);
-                await Task.Delay(100);
-                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>() { sessionId, "#llm" });
-            }
+                finally
+                {
+                    --maxTryCount;
+                }
+            } while (needRetry && maxTryCount > 0);
 
+            //将本轮对话保存到短期记忆
+            if (aiFullResponse.Length > 0)
+            {
+                await _provider.GetService<ShortMemoryBLL>().SaveChat(sessionId, userInput, toolResponse.ToString(), aiFullResponse.ToString());
+            }
+            await SetSessionStatus(sessionId, T_ChatStatus.Active);
+            await Task.Delay(100);
+            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>() { sessionId, "#llm" });
         }
     }
 }

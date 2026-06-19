@@ -30,13 +30,13 @@ namespace LLMService.Tool
         public static AITool CreateGetHistoryByDateTool(ITAServiceProvider provider)
         {
             return AIFunctionFactory.Create(
-                async ([Description("查询日期（格式：yyyy-MM-dd）")] string day) =>
+                async ([Description("开始时间（格式：yyyy-MM-dd HH:mm:ss）")] string start, [Description("结束时间（格式：yyyy-MM-dd HH:mm:ss）")] string end) =>
                 {
                     var context = FunctionInvokingChatClient.CurrentContext;
-                    return await provider.GetService<MemoryRagBLL>().GetHistoryByDate(context.Options.ConversationId, day);
+                    return await provider.GetService<MemoryRagBLL>().GetHistoryByDate(context.Options.ConversationId, start, end);
                 },
               name: "搜索聊天历史",
-              description: "查询指定日期的蒸馏总结后的聊天历史"
+              description: "查询指定日期范围的蒸馏总结后的聊天历史，时间范围不能超过2天。"
             );
         }
 

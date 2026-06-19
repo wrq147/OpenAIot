@@ -148,28 +148,48 @@ namespace LLMService.Business
                 };
             }
         }
+
         /// <summary>
         /// 查询指定日期的历史会话
         /// </summary>
         /// <param name="sessionId"></param>
-        /// <param name="day">日期格式：yyyy-MM-dd</param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         /// <returns></returns>
-        public async Task<T_ToolResult> GetHistoryByDate(string sessionId, string day)
+        public async Task<T_ToolResult> GetHistoryByDate(string sessionId, string start, string end)
         {
             try
             {
-                if (!DateTime.TryParse(day, out DateTime searchDT))
+                if (!DateTime.TryParse(start, out DateTime searchStartDT))
                 {
                     return new T_ToolResult()
                     {
                         IsSuccess = false,
-                        Output = $"{day} 日期参数格式错误",
+                        Output = $"{start} 开始时间参数格式错误",
+                        LogInfo = string.Empty
+                    };
+                }
+                if (!DateTime.TryParse(end, out DateTime searchEndDT))
+                {
+                    return new T_ToolResult()
+                    {
+                        IsSuccess = false,
+                        Output = $"{end} 结束时间参数格式错误",
+                        LogInfo = string.Empty
+                    };
+                }
+                if (end < start)
+                {
+                    return new T_ToolResult()
+                    {
+                        IsSuccess = false,
+                        Output = $"结束时间不能小于开始时间",
                         LogInfo = string.Empty
                     };
                 }
                 MilvusCollection collection = _client.GetCollection("ChatMemory");
-                long startll = MyAccess.Core.TypeConvert.Time2Unix(searchDT);
-                long endll = MyAccess.Core.TypeConvert.Time2Unix(searchDT.AddDays(1));
+                long startll = MyAccess.Core.TypeConvert.Time2Unix(start);
+                long endll = MyAccess.Core.TypeConvert.Time2Unix(end);
                 string exp = "SessionId==\"" + sessionId + "\" AND CreateTime>=" + startll + " AND CreateTime<=" + endll;
                 QueryParameters searchParameters = new();
                 searchParameters.OutputFields.Add("Content");
