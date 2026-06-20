@@ -96,15 +96,15 @@ namespace LLMService.Business
 - 用户ID：{user.UserId}
 - 真实姓名或用户名：{user.UserName}";
             StringBuilder sysbuilder = new StringBuilder();
-            //
             sysbuilder.AppendLine(@"你是一个专业的智能助手。
 请严格遵守以下规则：
 1. 请根据用户身份提供合适的回答。
 2. 如果工具所需参数未知，应该先调用其它工具获取参数数据。
 3. 请结合之前的工具执行结果回答后续问题。
-4. 不知道答案不要猜测，直接告诉用户无法回答。
+4. 不知道答案不要猜测，优先调用知识库检索工具查询；如最终还是不知道答案，则直接告诉用户无法回答。
 5. 工具执行结果应该整理后，由助手用自然语言回答。
-6. 工具执行失败的应该分析异常原因，重新尝试执行。");
+6. 工具执行失败的应该分析异常原因，重新尝试执行。
+7. 近期有重复或近似提问时，必须主动调用长期记忆检索工具追溯历史上下文");
             sysbuilder.AppendLine(useridentity);
 
             var msgList = new List<ChatMessage>
@@ -112,6 +112,14 @@ namespace LLMService.Business
                 new ChatMessage(ChatRole.System,sysbuilder.ToString()),
             };
 
+            var startTime = DateTime.Now.AddHours(-24);
+            var endTime = DateTime.Now;
+            var ragResult = await _provider.GetService<MemoryRagBLL>().GetHistoryByDate(sessionId, startTime, endTime);
+            if (ragResult.IsSuccess)
+            {
+                msgList.Add(new ChatMessage(ChatRole.User, $"查询 {startTime.ToString("yyyy-MM-dd HH:mm:ss")}到{endTime.ToString("yyyy-MM-dd HH:mm:ss")} 的历史对话信息"));
+                msgList.Add(new ChatMessage(ChatRole.Assistant, ragResult.Output));
+            }
 
             var shortMemorys = await _provider.GetService<ShortMemoryBLL>().GetShortMemoryList(sessionId);
             if (shortMemorys.Count > 0)
@@ -127,14 +135,8 @@ namespace LLMService.Business
                 }
             }
 
-            var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
-            if (ragResult.IsSuccess)
-            {
-                msgList.Add(new ChatMessage(ChatRole.User, $"查询 {userInput} 相关的历史对话信息"));
-                msgList.Add(new ChatMessage(ChatRole.Assistant, $"【相关的历史对话信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题"));
-            }
 
-            msgList.Add(new ChatMessage(ChatRole.User, userInput));
+            msgList.Add(new ChatMessage(ChatRole.User, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {userInput}"));
 
             var extInfo = new AdditionalPropertiesDictionary();
             extInfo.Add("UserInfo", user);

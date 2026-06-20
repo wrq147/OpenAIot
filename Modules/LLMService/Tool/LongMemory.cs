@@ -23,8 +23,8 @@ namespace LLMService.Tool
                   var context = FunctionInvokingChatClient.CurrentContext;
                   return await provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(context.Options.ConversationId, query, score);
               },
-              name: "搜索相关的长期记忆",
-              description: "根据用户问题搜索语义相关的历史聊天记忆，在无法回答用户问题时应该使用该工具来搜索相关记录"
+              name: "长期记忆检索工具",
+              description: "根据用户问题搜索语义相关的历史聊天记忆，用户最近有重复提问、询问往期业务、提及之前对话内容时使用"
             );
         }
         public static AITool CreateGetHistoryByDateTool(ITAServiceProvider provider)
@@ -33,7 +33,25 @@ namespace LLMService.Tool
                 async ([Description("开始时间（格式：yyyy-MM-dd HH:mm:ss）")] string start, [Description("结束时间（格式：yyyy-MM-dd HH:mm:ss）")] string end) =>
                 {
                     var context = FunctionInvokingChatClient.CurrentContext;
-                    return await provider.GetService<MemoryRagBLL>().GetHistoryByDate(context.Options.ConversationId, start, end);
+                    if (!DateTime.TryParse(start, out DateTime searchStartDT))
+                    {
+                        return new T_ToolResult()
+                        {
+                            IsSuccess = false,
+                            Output = $"{start} 开始时间参数格式错误",
+                            LogInfo = string.Empty
+                        };
+                    }
+                    if (!DateTime.TryParse(end, out DateTime searchEndDT))
+                    {
+                        return new T_ToolResult()
+                        {
+                            IsSuccess = false,
+                            Output = $"{end} 结束时间参数格式错误",
+                            LogInfo = string.Empty
+                        };
+                    }
+                    return await provider.GetService<MemoryRagBLL>().GetHistoryByDate(context.Options.ConversationId, searchStartDT, searchEndDT);
                 },
               name: "搜索聊天历史",
               description: "查询指定日期范围的蒸馏总结后的聊天历史，时间范围不能超过2天。"

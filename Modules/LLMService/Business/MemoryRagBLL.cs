@@ -156,28 +156,10 @@ namespace LLMService.Business
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public async Task<T_ToolResult> GetHistoryByDate(string sessionId, string start, string end)
+        public async Task<T_ToolResult> GetHistoryByDate(string sessionId, DateTime searchStartDT, DateTime searchEndDT)
         {
             try
             {
-                if (!DateTime.TryParse(start, out DateTime searchStartDT))
-                {
-                    return new T_ToolResult()
-                    {
-                        IsSuccess = false,
-                        Output = $"{start} 开始时间参数格式错误",
-                        LogInfo = string.Empty
-                    };
-                }
-                if (!DateTime.TryParse(end, out DateTime searchEndDT))
-                {
-                    return new T_ToolResult()
-                    {
-                        IsSuccess = false,
-                        Output = $"{end} 结束时间参数格式错误",
-                        LogInfo = string.Empty
-                    };
-                }
                 if (searchEndDT < searchStartDT)
                 {
                     return new T_ToolResult()
