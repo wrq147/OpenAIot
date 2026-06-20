@@ -5,7 +5,7 @@
 
     <!-- 消息列表区域 -->
     <div class="chat-message-wrapper">
-      <div class="chat-message-box" ref="messageBox">
+      <div class="chat-message-box" ref="messageBox" @scroll="onChatScroll">
         <!-- 空状态：居中显示标题 + 快捷提问按钮 -->
         <div v-if="ChatMessageList.length === 0" class="empty-state">
           <h1 class="empty-title">有什么我能帮你的吗？</h1>
@@ -47,6 +47,9 @@
         </div>
       </div>
       <div class="scroll-fade-mask"></div>
+      <div v-if="showScrollBottomBtn" class="scroll-bottom-btn" @click="scrollToBottom">
+        <svg class="scroll-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18.7071 14.0313C19.0976 14.4218 19.0976 15.0548 18.7071 15.4453L13.4161 20.7363C12.6375 21.5147 11.3695 21.5217 10.586 20.7383L5.29301 15.4453C4.90265 15.0548 4.90265 14.4218 5.29301 14.0313C5.68349 13.6408 6.31654 13.6409 6.70707 14.0313L11.0001 18.3242L11.0001 3.23828C11.0001 2.68608 11.4479 2.23842 12.0001 2.23828C12.5523 2.23828 13.0001 2.686 13.0001 3.23828L13.0001 18.3242L17.293 14.0313C17.6835 13.6408 18.3166 13.6409 18.7071 14.0313Z" fill="currentColor"></path></svg>
+      </div>
     </div>
 
 
@@ -115,6 +118,7 @@ export default {
   name: 'AiChat',
   data() {
     return {
+      showScrollBottomBtn: false,
       userInput: '',
       showModePopover: false,
       thinkMode: 'fast',
@@ -137,6 +141,11 @@ export default {
   },
   computed: {
     ChatMessageList: function () {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.onChatScroll()
+        }, 80)
+      })
       return this.$store.state.llm.messageList;
     },
     isSending: function () {
@@ -166,11 +175,22 @@ export default {
     else {
       this.thinkMode = tmpmode;
     }
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.onChatScroll()
+      }, 100)
+    })
   },
-  beforeDestroy(){
+  beforeDestroy() {
     document.removeEventListener('click', this.closePopoverByDoc)
   },
   methods: {
+    onChatScroll() {
+      const box = this.$refs.messageBox;
+      // 距离底部小于20px视为已到底部，隐藏按钮
+      const isBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 20;
+      this.showScrollBottomBtn = !isBottom;
+    },
     closePopoverByDoc() {
       this.showModePopover = false
     },
@@ -262,6 +282,32 @@ export default {
   z-index: 10;
   pointer-events: none;
 }
+
+.scroll-bottom-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 60px;
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 11;
+  transition: opacity .1s ease;
+}
+.scroll-icon{
+  color: #333;
+  font-size: 18px;
+  padding: 3px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
 
 /* 空状态居中 */
 .empty-state {
