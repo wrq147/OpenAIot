@@ -3,18 +3,18 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'e88b006ad9d836083eea3df849add9109e7cf07d'
-    oldFile: !uuid '068e417ef1d656da7a919bc8c9beb0e47d9ad6e8'
+    newFile: !uuid 'd2d8e919d1aa92d9e6c483a402804f15a6429c91'
+    oldFile: !uuid 'e88b006ad9d836083eea3df849add9109e7cf07d'
   /Modules/LLMService:
-    newFile: !uuid '7d57e0108894d460ee7ee47dac28b3f2dc02570b'
-    oldFile: !uuid 'afea600fbfacd05da1cb378830e8d80e2b553fd6'
+    newFile: !uuid 'a087cedc08d3e3ab24a1a335caa4c0c0887949d0'
+    oldFile: !uuid '7d57e0108894d460ee7ee47dac28b3f2dc02570b'
   /Modules/LLMService/Business:
-    newFile: !uuid '170bb4f35996ff643490ffbb49996f33a5edbc0e'
-    oldFile: !uuid 'fcb85480dc47461149e05239edce2018f95bdf98'
-  /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid '39d4f416ecd60099b5ee10ef353db5fc4804e5b5'
-    oldFile: !uuid 'be991342d52d5aaf3864c2504174b44b92d7cf49'
-gitCommitId: !uuid '16f89a20f72225889ebe24112f9f80283ae26347'
+    newFile: !uuid '2d2b2af90c01831efb13ea243046a75e180fcfa8'
+    oldFile: !uuid '170bb4f35996ff643490ffbb49996f33a5edbc0e'
+  /Modules/LLMService/Business/ShortMemoryBLL.cs:
+    newFile: !uuid 'd4f6d009b297fac786e52905a1556d2cc6d9c184'
+    oldFile: !uuid 'bef5302d38b028c9097c552b4ace2ce1d368333a'
+gitCommitId: !uuid '54cfad08f8976dbe400280cf936e612fefadf395'
 renames: {
   }
-revisionId: 368
+revisionId: 369
