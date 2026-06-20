@@ -3,27 +3,18 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid '068e417ef1d656da7a919bc8c9beb0e47d9ad6e8'
-    oldFile: !uuid '45291829c2437e948deac11040306e199f5d2425'
+    newFile: !uuid 'e88b006ad9d836083eea3df849add9109e7cf07d'
+    oldFile: !uuid '068e417ef1d656da7a919bc8c9beb0e47d9ad6e8'
   /Modules/LLMService:
-    newFile: !uuid 'afea600fbfacd05da1cb378830e8d80e2b553fd6'
-    oldFile: !uuid '77aed8d95858d180f5391370137f8d173b5ad168'
+    newFile: !uuid '7d57e0108894d460ee7ee47dac28b3f2dc02570b'
+    oldFile: !uuid 'afea600fbfacd05da1cb378830e8d80e2b553fd6'
   /Modules/LLMService/Business:
-    newFile: !uuid 'fcb85480dc47461149e05239edce2018f95bdf98'
-    oldFile: !uuid '6bfd40b539ba1e8b69bb1f1d17dfd63e8ffabe64'
+    newFile: !uuid '170bb4f35996ff643490ffbb49996f33a5edbc0e'
+    oldFile: !uuid 'fcb85480dc47461149e05239edce2018f95bdf98'
   /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid 'be991342d52d5aaf3864c2504174b44b92d7cf49'
-    oldFile: !uuid '944017592ca9ed8b7856149d9b2fa431a8ade27f'
-  /Modules/LLMService/Business/MemoryRagBLL.cs:
-    newFile: !uuid 'd5e77111b404a7637f44885f59e5a632a712efb8'
-    oldFile: !uuid 'f7618f4b1d51570be07de854141a80ca4d31c6d5'
-  /Modules/LLMService/Tool:
-    newFile: !uuid '70db2f944afb10c176955243627452e237b03d68'
-    oldFile: !uuid '6b377c17a126ed81735b67c53d4fc58067c5d8e9'
-  /Modules/LLMService/Tool/LongMemory.cs:
-    newFile: !uuid '86e0af202006b4dcc83a1ae4fb848c25d17b927e'
-    oldFile: !uuid 'cb3141f6c86a61bffa350f50bddea1a7328f697d'
-gitCommitId: !uuid '1571ad007ae59965eadb6712db837eba6daaa1a2'
+    newFile: !uuid '39d4f416ecd60099b5ee10ef353db5fc4804e5b5'
+    oldFile: !uuid 'be991342d52d5aaf3864c2504174b44b92d7cf49'
+gitCommitId: !uuid '16f89a20f72225889ebe24112f9f80283ae26347'
 renames: {
   }
-revisionId: 367
+revisionId: 368
