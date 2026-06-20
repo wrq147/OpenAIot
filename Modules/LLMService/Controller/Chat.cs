@@ -20,11 +20,12 @@ namespace LLMService.Controller
         /// 用户输入提问
         /// </summary>
         /// <param name="userInput"></param>
+        /// <param name="thinkMode"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<DefaultAjaxResult<string>> Message(string userInput)
+        public async Task<DefaultAjaxResult<string>> Message(string userInput, string thinkMode = "fast")
         {
-            await this.ServiceProvider.GetService<ChatBLL>().ChatAsync(GetUser(), userInput);
+            await this.ServiceProvider.GetService<ChatBLL>().ChatAsync(GetUser(), userInput, thinkMode);
             return this.Success(string.Empty);
         }
 

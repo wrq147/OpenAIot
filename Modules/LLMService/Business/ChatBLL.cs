@@ -38,7 +38,7 @@ namespace LLMService.Business
             var redis = _provider.GetService<GeneralRedisHelper>();
             await redis.StringSetAsync<T_ChatStatus>($"ChatStatus:{sessionId}", status, TimeSpan.FromMinutes(10));
         }
-        public async Task ChatAsync(Data_ServerTokenInfo user, string userInput)
+        public async Task ChatAsync(Data_ServerTokenInfo user, string userInput, string thinkMode)
         {
             string sessionId = user.UserId.ToString();
             var status = await GetSessionStatus(sessionId);
@@ -59,10 +59,10 @@ namespace LLMService.Business
             }
             await SetSessionStatus(sessionId, T_ChatStatus.Pending);
 
-            _ = StartChart(user, userInput);
+            _ = StartChart(user, userInput, thinkMode);
         }
 
-        private async Task StartChart(Data_ServerTokenInfo user, string userInput)
+        private async Task StartChart(Data_ServerTokenInfo user, string userInput, string thinkMode)
         {
             var sessionId = user.UserId.ToString();
             var tools = _registry.GetSkillTools();
@@ -96,13 +96,17 @@ namespace LLMService.Business
 - 用户ID：{user.UserId}
 - 真实姓名或用户名：{user.UserName}";
             StringBuilder sysbuilder = new StringBuilder();
+            //
             sysbuilder.AppendLine(@"你是一个专业的智能助手。
 请严格遵守以下规则：
 1. 请根据用户身份提供合适的回答。
-2. 优先使用提供的工具回答用户问题，工具返回结果后，用自然语言整理回答，不要暴露工具调用细节。
-3. 无法区分信息来源时，直接多工具并行检索，避免信息缺失。
-4. 不知道答案不要猜测，直接告诉用户无法回答。");
+2. 如果工具所需参数未知，应该先调用其它工具获取参数数据。
+3. 请结合之前的工具执行结果回答后续问题。
+4. 不知道答案不要猜测，直接告诉用户无法回答。
+5. 工具执行结果应该整理后，由助手用自然语言回答。
+6. 工具执行失败的应该分析异常原因，重新尝试执行。");
             sysbuilder.AppendLine(useridentity);
+
             var msgList = new List<ChatMessage>
             {
                 new ChatMessage(ChatRole.System,sysbuilder.ToString()),
@@ -117,28 +121,48 @@ namespace LLMService.Business
                     msgList.Add(new ChatMessage(ChatRole.User, $"[{chatItem.Time}] {chatItem.User}"));
                     if (!string.IsNullOrEmpty(chatItem.Tool))
                     {
-                        msgList.Add(new ChatMessage(ChatRole.Tool, $"[{chatItem.Time}] {chatItem.Tool}"));
+                        msgList.Add(new ChatMessage(ChatRole.Assistant, $"[{chatItem.Time}] {chatItem.Tool}"));
                     }
                     msgList.Add(new ChatMessage(ChatRole.Assistant, $"[{chatItem.Time}] {chatItem.Assistant}"));
                 }
             }
 
-            msgList.Add(new ChatMessage(ChatRole.User, userInput));
             var ragResult = await _provider.GetService<MemoryRagBLL>().SearchRelatedMemoriesAsync(sessionId, userInput);
             if (ragResult.IsSuccess)
             {
-                msgList.Add(new ChatMessage(ChatRole.Tool, $"【相关的历史对话信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题"));
+                msgList.Add(new ChatMessage(ChatRole.User, $"查询 {userInput} 相关的历史对话信息"));
+                msgList.Add(new ChatMessage(ChatRole.Assistant, $"【相关的历史对话信息】：\r\n{ragResult.Output}\r\n请结合以上历史信息回答后续问题"));
             }
+
+            msgList.Add(new ChatMessage(ChatRole.User, userInput));
 
             var extInfo = new AdditionalPropertiesDictionary();
             extInfo.Add("UserInfo", user);
             extInfo.Add("UserStr", useridentity);
+            ReasoningOptions reasoning;
+            if (thinkMode == "deep")
+            {
+                reasoning = new ReasoningOptions()
+                {
+                    Effort = ReasoningEffort.Medium,
+                    Output = ReasoningOutput.Full
+                };
+            }
+            else
+            {
+                reasoning = new ReasoningOptions()
+                {
+                    Effort = ReasoningEffort.None,
+                    Output = ReasoningOutput.None
+                };
+            }
             var opt = new ChatOptions
             {
                 ToolMode = ChatToolMode.Auto,
                 Tools = tools,
                 ConversationId = sessionId,
-                AdditionalProperties = extInfo
+                AdditionalProperties = extInfo,
+                Reasoning = reasoning
             };
             StringBuilder toolResponse = new StringBuilder();
             StringBuilder aiFullResponse = new StringBuilder();
@@ -163,14 +187,6 @@ namespace LLMService.Business
                             break;
                         }
 
-                        if (!string.IsNullOrEmpty(update.Text))
-                        {
-                            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>(){
-                                sessionId,
-                                "#llm"+update.Text
-                            });
-                            aiFullResponse.Append(update.Text);
-                        }
                         if (update.Contents != null && update.Contents.Any())
                         {
                             foreach (var content in update.Contents)
@@ -178,11 +194,28 @@ namespace LLMService.Business
                                 if (content is TextContent textContent && !string.IsNullOrEmpty(textContent.Text))
                                 {
                                     await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
-                                    {
-                                        sessionId,
-                                        "#llm" + textContent.Text
-                                    });
+                                        {
+                                            sessionId,
+                                            "#llma" + textContent.Text
+                                        });
                                     aiFullResponse.Append(textContent.Text);
+                                }
+                                else if (content is TextReasoningContent reasonInfo)
+                                {
+                                    //模型思考、推理过程文本
+                                    if (!string.IsNullOrEmpty(reasonInfo.Text))
+                                    {
+                                        await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                        {
+                                            sessionId,
+                                            "#llmt" + reasonInfo.Text
+                                        });
+                                        toolResponse.Append(reasonInfo.Text);
+                                    }
+                                }
+                                else if (content is UsageContent useInfo)
+                                {
+                                    //获取Token使用信息
                                 }
                                 else if (content is FunctionCallContent toolCall)
                                 {
@@ -190,10 +223,11 @@ namespace LLMService.Business
                                     await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
                                     {
                                         sessionId,
-                                        "#llm" + calltext
+                                        "#llmt" + calltext
                                     });
-                                    toolResponse.Append(calltext);
-                                    msgList.Add(new ChatMessage(ChatRole.Tool, calltext));
+                                    string newtoolcall = $"[ToolCallId:{toolCall.CallId}]" + calltext;
+                                    toolResponse.Append(newtoolcall);
+                                    msgList.Add(new ChatMessage(ChatRole.Assistant, newtoolcall));
                                 }
                                 else if (content is FunctionResultContent toolRes)
                                 {
@@ -214,21 +248,34 @@ namespace LLMService.Business
                                         }
                                         if (jsonEle.TryGetProperty("isSuccess", out var ifsuccess))
                                         {
-                                            isSuccess = ifsuccess.GetBool();
+                                            isSuccess = ifsuccess.GetBoolean();
                                         }
                                     }
                                     else
                                     {
                                         outputText = toolRes.Result?.ToString() ?? "";
                                     }
-                                    await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
-                                    {
-                                        sessionId,
-                                        "#llm" + outputText
-                                    });
-                                    string tmptoolstr = $"{outputText}\r\n{logText}";
+
+                                    string tmptoolstr = $"[ToolCallId:{toolRes.CallId}的执行结果] {outputText}\r\n{logText}\r\n";
                                     toolResponse.AppendLine(tmptoolstr);
-                                    msgList.Add(new ChatMessage(ChatRole.Tool, tmptoolstr));
+                                    msgList.Add(new ChatMessage(ChatRole.Assistant, tmptoolstr));
+                                    if (isSuccess)
+                                    {
+                                        await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                        {
+                                            sessionId,
+                                            "#llmt正在分析工具执行结果\r\n"
+                                        });
+                                    }
+                                    else
+                                    {
+                                        await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>()
+                                        {
+                                            sessionId,
+                                            "#llmt正在分析工具执行异常原因，并重新尝试\r\n"
+                                        });
+                                        msgList.Add(new ChatMessage(ChatRole.User, $"需要分析异常原因，重新尝试回答 {userInput}"));
+                                    }
                                     needRetry = true;
                                 }
                             }
@@ -244,7 +291,14 @@ namespace LLMService.Business
                     --maxTryCount;
                 }
             } while (needRetry && maxTryCount > 0);
-
+            if (needRetry && maxTryCount <= 0)
+            {
+                await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>(){
+                                        sessionId,
+                                        "#llma\r\n任务中断，超过了最大执行轮数\r\n"
+                                    });
+                aiFullResponse.Clear();
+            }
             //将本轮对话保存到短期记忆
             if (aiFullResponse.Length > 0)
             {
@@ -252,7 +306,7 @@ namespace LLMService.Business
             }
             await SetSessionStatus(sessionId, T_ChatStatus.Active);
             await Task.Delay(100);
-            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>() { sessionId, "#llm" });
+            await TAEventDispatcher.Instance.Dispatch("Mqtt.User.New", new List<string>() { sessionId, "#llma" });
         }
     }
 }

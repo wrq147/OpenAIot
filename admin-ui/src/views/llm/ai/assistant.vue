@@ -26,7 +26,17 @@
           </div>
           <div class="message-content">
             <div v-if="item.role === 'user'">{{ item.data }}</div>
-            <div v-else v-html="renderMarkdown(item.data)" class="markdown-body"></div>
+            <div v-else class="ai-content-wrap">
+              <!-- 思考折叠块 -->
+              <div v-if="item.think != null && item.think != ''" class="think-block">
+                <details open>
+                  <summary>🤔 AI思考过程</summary>
+                  <div class="think-body markdown-body" v-html="renderMarkdown(item.think)"></div>
+                </details>
+              </div>
+              <!-- 正式回答 -->
+              <div class="answer-body markdown-body" v-html="renderMarkdown(item.data)"></div>
+            </div>
             <!-- AI 回复加载中动画 -->
             <div v-if="item.status === 1" class="loading-pulse-dots">
               <span class="dot"></span>
@@ -42,21 +52,46 @@
 
     <div class="chat-input-box">
       <div class="input-wrapper">
-        <el-input v-model="userInput" type="textarea" :autosize="{ minRows: 1, maxRows: 10}" placeholder="请输入你的问题..." @keyup.enter.native="handleSend" class="chat-input" />
+        <el-input v-model="userInput" type="textarea" :autosize="{ minRows: 1, maxRows: 10 }" placeholder="请输入你的问题..."
+          @keyup.enter.native="handleSend" class="chat-input" />
         <el-button type="primary" class="send-btn" @click="handleSend" :loading="isSending"><span
             v-if="!isSending">发送</span></el-button>
       </div>
       <!-- 底部工具栏 -->
       <div class="toolbar">
         <div class="toolbar-left">
-          <div class="tool-btn"><i class="el-icon-plus"></i></div>
-          <span class="split">|</span>
           <div class="tool-btn" @click="handleQuickSend('检索下一页')">检索下一页</div>
           <span class="split">|</span>
           <div class="tool-btn" @click="handleQuickSend('检索上一页')">检索上一页</div>
           <span class="split">|</span>
           <div class="tool-btn" @click="handleQuickSend('检索首页')">检索首页</div>
         </div>
+        <div class="mode-select-wrap" @click.stop="toggleModePopover">
+          <!-- 底部显示当前选中按钮 -->
+          <div class="current-mode-btn" :class="{ disabled: isSending }">
+            <span class="mode-icon">{{ currentModeItem.icon }}</span>
+            <span class="mode-name">{{ currentModeItem.label }}</span>
+          </div>
+          <!-- 下拉弹窗 -->
+          <div v-if="showModePopover" class="mode-popover" @click.stop>
+            <div v-for="item in modeList" :key="item.value" class="mode-option"
+              :class="{ active: thinkMode === item.value }" @click="selectMode(item.value)">
+              <div class="option-left">
+                <span class="opt-icon">{{ item.icon }}</span>
+                <div class="opt-text">
+                  <div class="opt-title">
+                    {{ item.label }}
+                    <span v-if="item.tag" class="opt-tag">{{ item.tag }}</span>
+                  </div>
+                  <div class="opt-desc">{{ item.desc }}</div>
+                </div>
+              </div>
+              <span v-if="thinkMode === item.value" class="check-mark">✓</span>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
 
@@ -64,6 +99,7 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 import { postMessage } from "@/api/llmchat";
 import marked from 'marked'
 import hljs from 'highlight.js'
@@ -80,28 +116,73 @@ export default {
   data() {
     return {
       userInput: '',
+      showModePopover: false,
+      thinkMode: 'fast',
+      modeList: [
+        {
+          value: 'fast',
+          icon: '⚡',
+          label: '快速',
+          desc: '适用于大部分情况'
+        },
+        {
+          value: 'expert',
+          icon: '⦿',
+          label: '专家',
+          tag: '深度思考',
+          desc: '研究级智能模型'
+        }
+      ]
     }
   },
   computed: {
     ChatMessageList: function () {
       return this.$store.state.llm.messageList;
     },
-    isSending:function(){
-      let msglist=this.$store.state.llm.messageList;
+    isSending: function () {
+      let msglist = this.$store.state.llm.messageList;
       for (let i = msglist.length - 1; i >= 0; i--) {
         if (msglist[i].role == "assistant") {
-          if(msglist[i].status == 1){
+          if (msglist[i].status == 1) {
             return true;
           }
-          else{
+          else {
             return false;
           }
         }
       }
       return false;
+    },
+    currentModeItem() {
+      return this.modeList.find(item => item.value === this.thinkMode)
     }
   },
+  mounted() {
+    document.addEventListener('click', this.closePopoverByDoc)
+    let tmpmode = Cookies.get("ThinkMode");
+    if (tmpmode == null) {
+      this.thinkMode = "fast";
+    }
+    else {
+      this.thinkMode = tmpmode;
+    }
+  },
+  beforeDestroy(){
+    document.removeEventListener('click', this.closePopoverByDoc)
+  },
   methods: {
+    closePopoverByDoc() {
+      this.showModePopover = false
+    },
+    toggleModePopover() {
+      if (this.isSending) return
+      this.showModePopover = !this.showModePopover
+    },
+    selectMode(val) {
+      this.thinkMode = val
+      this.showModePopover = false
+      Cookies.set("ThinkMode", val)
+    },
     renderMarkdown(content) {
       if (!content) return '';
       return marked.parse(content);
@@ -121,10 +202,10 @@ export default {
       this.scrollToBottom()
 
       this.userInput = ''
-      this.$store.commit("llm/pushmsg", "");
+      this.$store.commit("llm/pushmsg", { data: "", isthink: true });
       this.scrollToBottom()
 
-      await postMessage(input);
+      await postMessage(input, this.thinkMode);
     },
     scrollToBottom() {
       this.$nextTick(() => {
@@ -136,7 +217,6 @@ export default {
 }
 </script>
 <style scoped>
-
 .ai-chat-container {
   width: 100%;
   height: 100vh;
@@ -258,9 +338,11 @@ export default {
 .message-item.user .avatar {
   background: #67c23a;
 }
-.markdown-body>>>table{
+
+.markdown-body>>>table {
   word-break: keep-all;
 }
+
 /* 消息内容 */
 .message-content {
   max-width: 70%;
@@ -277,12 +359,55 @@ export default {
   color: #fff;
 }
 
+.ai-content-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.think-block {
+  width: 100%;
+}
+
+.think-block details {
+  background: #f6f8fb;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.think-block summary {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6b7280;
+  background: #f0f4f9;
+  user-select: none;
+}
+
+.think-block summary:hover {
+  background: #e6edf7;
+}
+
+.think-body {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #4b5563;
+  border-left: 3px solid #94a3b8;
+}
+
+.answer-body {
+  width: 100%;
+}
+
+
 .loading-pulse-dots {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 4px 0;
 }
+
 .loading-pulse-dots .dot {
   width: 8px;
   height: 8px;
@@ -290,15 +415,27 @@ export default {
   background: #c0c4cc;
   animation: pulseDot 0.9s ease-in-out infinite;
 }
-.loading-pulse-dots .dot:nth-child(1) { animation-delay: 0s; }
-.loading-pulse-dots .dot:nth-child(2) { animation-delay: 0.15s; }
-.loading-pulse-dots .dot:nth-child(3) { animation-delay: 0.3s; }
+
+.loading-pulse-dots .dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-pulse-dots .dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.loading-pulse-dots .dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 @keyframes pulseDot {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(0.7);
     opacity: 0.5;
   }
+
   50% {
     transform: scale(1.1);
     opacity: 1;
@@ -397,5 +534,112 @@ export default {
   color: #e0e3e9;
   font-size: 12px;
   user-select: none;
+}
+
+
+
+.mode-select-wrap {
+  position: relative;
+}
+
+/* 底部当前模式按钮 */
+.current-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f3f4f6;
+  border-radius: 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.current-mode-btn:hover:not(.disabled) {
+  background: #e5e7eb;
+}
+
+.current-mode-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mode-icon {
+  font-size: 16px;
+}
+
+/* 下拉弹窗 */
+.mode-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  z-index: 99;
+}
+
+/* 下拉选项 */
+.mode-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.mode-option:hover {
+  background: #f3f4f6;
+}
+
+.mode-option.active {
+  background: #f0f4f9;
+}
+
+.option-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.opt-icon {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.opt-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.opt-title {
+  font-size: 15px;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.opt-tag {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  color: #555;
+}
+
+.opt-desc {
+  font-size: 13px;
+  color: #999;
+}
+
+.check-mark {
+  font-size: 16px;
+  color: #222;
+  font-weight: 500;
 }
 </style>

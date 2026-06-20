@@ -178,7 +178,7 @@ namespace LLMService.Business
                         LogInfo = string.Empty
                     };
                 }
-                if (end < start)
+                if (searchEndDT < searchStartDT)
                 {
                     return new T_ToolResult()
                     {
@@ -188,8 +188,8 @@ namespace LLMService.Business
                     };
                 }
                 MilvusCollection collection = _client.GetCollection("ChatMemory");
-                long startll = MyAccess.Core.TypeConvert.Time2Unix(start);
-                long endll = MyAccess.Core.TypeConvert.Time2Unix(end);
+                long startll = MyAccess.Core.TypeConvert.Time2Unix(searchStartDT);
+                long endll = MyAccess.Core.TypeConvert.Time2Unix(searchEndDT);
                 string exp = "SessionId==\"" + sessionId + "\" AND CreateTime>=" + startll + " AND CreateTime<=" + endll;
                 QueryParameters searchParameters = new();
                 searchParameters.OutputFields.Add("Content");
@@ -200,7 +200,7 @@ namespace LLMService.Business
                     return new T_ToolResult()
                     {
                         IsSuccess = false,
-                        Output = $"{day} 无历史记录",
+                        Output = $"{start}-{end} 无历史记录",
                         LogInfo = string.Empty
                     };
                 }
@@ -210,7 +210,7 @@ namespace LLMService.Business
 
 
                 var sb = new StringBuilder();
-                sb.AppendLine($"【{day} 历史会话】");
+                sb.AppendLine($"【{start}-{end} 历史会话】");
                 for (int i = 0; i < contentField.RowCount; i++)
                 {
                     string tcontent = (contentField as FieldData<string>).Data[i];
@@ -233,7 +233,7 @@ namespace LLMService.Business
                     return new T_ToolResult()
                     {
                         IsSuccess = false,
-                        Output = string.Empty,
+                        Output = $"{start}-{end} 无历史记录",
                         LogInfo = string.Empty
                     };
                 }

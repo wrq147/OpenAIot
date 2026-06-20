@@ -242,17 +242,17 @@ export default {
                   return;
                 }
                 let msgcont = message.toString();
-                if(msgcont== ""){
+                if (msgcont == "") {
                   this.getNoReadCount();
                   this.getNoReadList();
                 }
-                else
-                {
+                else {
                   if (msgcont.startsWith("#llm")) {
+                    let isThink = msgcont.startsWith("#llmt");
                     //接收到AI助手回复
-                    msgcont = msgcont.substring(4);
+                    msgcont = msgcont.substring(5);
                     if (msgcont != "") {
-                      this.$store.commit("llm/pushmsg", msgcont);
+                      this.$store.commit("llm/pushmsg", { data: msgcont, isthink: isThink });
                     }
                     else {
                       this.$store.commit("llm/finishmsg", "");

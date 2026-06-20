@@ -46,12 +46,13 @@
             长期记忆
             </summary>
         </member>
-        <member name="M:LLMService.Business.MemoryRagBLL.GetHistoryByDate(System.String,System.String)">
+        <member name="M:LLMService.Business.MemoryRagBLL.GetHistoryByDate(System.String,System.String,System.String)">
             <summary>
             查询指定日期的历史会话
             </summary>
             <param name="sessionId"></param>
-            <param name="day">日期格式：yyyy-MM-dd</param>
+            <param name="start"></param>
+            <param name="end"></param>
             <returns></returns>
         </member>
         <member name="M:LLMService.Business.ShortMemoryBLL.ProcessExpiredSessions">
@@ -137,11 +138,12 @@
             AI会话接口
             </summary>
         </member>
-        <member name="M:LLMService.Controller.Chat.Message(System.String)">
+        <member name="M:LLMService.Controller.Chat.Message(System.String,System.String)">
             <summary>
             用户输入提问
             </summary>
             <param name="userInput"></param>
+            <param name="thinkMode"></param>
             <returns></returns>
         </member>
         <member name="M:LLMService.Controller.Chat.RecentHistory">

@@ -21,7 +21,7 @@ namespace LLMService.Tool
                     return new T_ToolResult()
                     {
                         IsSuccess = true,
-                        Output = currentTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Output = $"当前时间：{currentTime.ToString("yyyy-MM-dd HH:mm:ss")}",
                         LogInfo = string.Empty
                     };
                 },

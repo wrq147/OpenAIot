@@ -12,20 +12,28 @@ const mutations = {
       state.messageList.push({
         role: "assistant",
         status: 1,
-        data: info,
+        data: info.isthink ? "" : info.data,
+        think: info.isthink ? info.data : "",
         time: Date.now()
       });
       return;
     }
 
     if (tmparr[tmparr.length - 1].role == "assistant" && tmparr[tmparr.length - 1].status == "1") {
-      tmparr[tmparr.length - 1].data += info;
+      let topres = tmparr[tmparr.length - 1];
+      if (info.isthink) {
+        topres.think += info.data;
+      }
+      else {
+        topres.data += info.data;
+      }
     }
     else {
       state.messageList.push({
         role: "assistant",
         status: 1,
-        data: info,
+        data: info.isthink ? "" : info.data,
+        think: info.isthink ? info.data : "",
         time: Date.now()
       });
     }
