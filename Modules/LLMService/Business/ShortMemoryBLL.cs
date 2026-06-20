@@ -106,7 +106,7 @@ namespace LLMService.Business
                     Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
                 await _redis.ListRightPushAsync(dataKey, entry);
-                long expireTimestamp = DateTimeOffset.Now.AddHours(1).ToUnixTimeSeconds();
+                long expireTimestamp = DateTimeOffset.Now.AddMinutes(30).ToUnixTimeSeconds();
                 await _redis.SortedSetAddAsync("short_memory_expires", sessionId, expireTimestamp);
             });
         }
