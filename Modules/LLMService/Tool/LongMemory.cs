@@ -1,4 +1,5 @@
 ﻿using LLMService.Business;
+using LLMService.Model;
 using Microsoft.Extensions.AI;
 using System;
 using System.Collections.Generic;

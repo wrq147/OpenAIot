@@ -100,11 +100,12 @@ namespace LLMService.Business
 请严格遵守以下规则：
 1. 请根据用户身份提供合适的回答。
 2. 如果工具所需参数未知，应该先调用其它工具获取参数数据。
-3. 请结合之前的工具执行结果回答后续问题。
+3. 请结合之前的工具执行结果回答问题。
 4. 不知道答案不要猜测，优先调用工具查询；如最终还是不知道答案，则直接告诉用户无法回答。
 5. 工具执行结果应该整理后，由助手用自然语言回答。
-6. 工具执行失败的应该分析异常原因，重新尝试执行。
-7. 近期有重复或近似提问时，必须主动调用长期记忆检索工具追溯历史上下文");
+6. 如果提问与近期有重复或近似时，必须主动调用长期记忆检索工具追溯历史上下文。
+7. 禁止暴露数据库表名信息。
+8. 调用工具时，只能输出标准FunctionCall结构，禁止纯文本描述要调用什么工具；");
             sysbuilder.AppendLine(useridentity);
 
             var msgList = new List<ChatMessage>
@@ -173,7 +174,7 @@ namespace LLMService.Business
             bool needRetry;
             do
             {
-                needRetry = false;
+                needRetry = true;
                 var resp = chatClient.GetStreamingResponseAsync(msgList, opt);
                 try
                 {
@@ -201,6 +202,7 @@ namespace LLMService.Business
                                             "#llma" + textContent.Text
                                         });
                                     aiFullResponse.Append(textContent.Text);
+                                    needRetry = false;
                                 }
                                 else if (content is TextReasoningContent reasonInfo)
                                 {
@@ -278,7 +280,6 @@ namespace LLMService.Business
                                         });
                                         msgList.Add(new ChatMessage(ChatRole.User, $"需要分析异常原因，重新尝试回答 {userInput}"));
                                     }
-                                    needRetry = true;
                                 }
                             }
                         }

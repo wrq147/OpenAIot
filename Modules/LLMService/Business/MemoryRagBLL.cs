@@ -182,7 +182,7 @@ namespace LLMService.Business
                     return new T_ToolResult()
                     {
                         IsSuccess = false,
-                        Output = $"{start}-{end} 无历史记录",
+                        Output = $"{searchStartDT.ToString("yyyy-MM-dd HH:mm:ss")}-{searchEndDT.ToString("yyyy-MM-dd HH:mm:ss")} 无历史记录",
                         LogInfo = string.Empty
                     };
                 }
@@ -192,7 +192,7 @@ namespace LLMService.Business
 
 
                 var sb = new StringBuilder();
-                sb.AppendLine($"【{start}-{end} 历史会话】");
+                sb.AppendLine($"【{searchStartDT.ToString("yyyy-MM-dd HH:mm:ss")}-{searchEndDT.ToString("yyyy-MM-dd HH:mm:ss")} 历史会话】");
                 for (int i = 0; i < contentField.RowCount; i++)
                 {
                     string tcontent = (contentField as FieldData<string>).Data[i];
@@ -215,7 +215,7 @@ namespace LLMService.Business
                     return new T_ToolResult()
                     {
                         IsSuccess = false,
-                        Output = $"{start}-{end} 无历史记录",
+                        Output = $"{searchStartDT.ToString("yyyy-MM-dd HH:mm:ss")}-{searchEndDT.ToString("yyyy-MM-dd HH:mm:ss")} 无历史记录",
                         LogInfo = string.Empty
                     };
                 }
