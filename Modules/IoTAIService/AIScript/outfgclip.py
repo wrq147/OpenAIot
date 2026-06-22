@@ -14,7 +14,7 @@ from transformers import (
 )
 from typing import List
 
-imgsize = 512
+imgsize = 640
 featuresize = imgsize // 16
 maxnumpatches = featuresize * featuresize
 
@@ -168,20 +168,22 @@ class CNCLIPFeatureExtractor:
             box_tensor = pred_box[grid_idx]
             dx = torch.sigmoid(box_tensor[0])
             dy = torch.sigmoid(box_tensor[1])
-            bw = torch.sigmoid(box_tensor[2])
-            bh = torch.sigmoid(box_tensor[3])
+            bw = box_tensor[2]
+            bh = box_tensor[3]
+            w = torch.clamp(torch.exp(bw) * 0.2, 0.0, 1.0)
+            h = torch.clamp(torch.exp(bh) * 0.2, 0.0, 1.0)
 
             gy = grid_idx // featuresize
             gx = grid_idx % featuresize
 
-            cx = (gx + dx * 3 - 1.5)/featuresize
-            cy = (gy + dy * 3 - 1.5)/featuresize
+            cx = (gx + dx * 2 - 0.5)/featuresize
+            cy = (gy + dy * 2 - 0.5)/featuresize
 
             # 映射到 padded 图尺度
             cx_pad = cx * imgsize
             cy_pad = cy * imgsize
-            bw_pad = bw * imgsize
-            bh_pad = bh * imgsize
+            bw_pad = w * imgsize
+            bh_pad = h * imgsize
 
             # 去除padding偏移
             cx_raw = cx_pad - pad_x
