@@ -3,27 +3,21 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid 'bd8aaf407b8d928c00fb97c825b39750b186b692'
-    oldFile: !uuid 'd2d8e919d1aa92d9e6c483a402804f15a6429c91'
-  /Modules/LLMService:
-    newFile: !uuid '22f0f9f645c2e6cb25cabfb082163008bae010b6'
-    oldFile: !uuid 'a087cedc08d3e3ab24a1a335caa4c0c0887949d0'
-  /Modules/LLMService/Business:
-    newFile: !uuid 'fd5d966f51764f40fd3266d06edc6a0af58f2093'
-    oldFile: !uuid '2d2b2af90c01831efb13ea243046a75e180fcfa8'
-  /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid 'acb743614fbd34abbb7d9a416bca29e6cb489abc'
-    oldFile: !uuid '39d4f416ecd60099b5ee10ef353db5fc4804e5b5'
-  /Modules/LLMService/Business/MemoryRagBLL.cs:
-    newFile: !uuid '8033cb9a1478c870ce6d9c2f82db6d01bca69223'
-    oldFile: !uuid 'd5e77111b404a7637f44885f59e5a632a712efb8'
-  /Modules/LLMService/Tool:
-    newFile: !uuid '0e6930676621ad31f09bb8dde6c2115f4951f27d'
-    oldFile: !uuid '70db2f944afb10c176955243627452e237b03d68'
-  /Modules/LLMService/Tool/LongMemory.cs:
-    newFile: !uuid '69affe3b79831d3bd82c7e24b0229a1e25035d70'
-    oldFile: !uuid '86e0af202006b4dcc83a1ae4fb848c25d17b927e'
-gitCommitId: !uuid '1c0a92945b7cbde77a5a6cf7afc9a8b273d5c36b'
+    newFile: !uuid 'c41e9605f4c40a55fb74129d1dac2fe1be9d8731'
+    oldFile: !uuid 'bd8aaf407b8d928c00fb97c825b39750b186b692'
+  /Modules/IoTAIService:
+    newFile: !uuid '6849d112a5eb6d7a18c85f3b05eb8b5b8284adcd'
+    oldFile: !uuid '3bf2d72665a8ee9ed2bbfd2d0a6cd3cbf9648cdd'
+  /Modules/IoTAIService/AIScript:
+    newFile: !uuid '949f234cf266a2d81a26d89ded89fa9d7f76fcac'
+    oldFile: !uuid 'd96f810b6a96976f751b4a4195190b7699f5a8e3'
+  /Modules/IoTAIService/AIScript/outfgclip.py:
+    newFile: !uuid '2ba8d7f2ab154b2001d3ab895cf55e7f7174d12e'
+    oldFile: !uuid '1974e5e8c5a0de5044d77f8303e46bf7418a6bec'
+  /docker-compose.yml:
+    newFile: !uuid '11bc8c833967e1ba049616ed09595c17d6af6448'
+    oldFile: !uuid 'c8cf34b0cd167319f10302561db12a2223394ab4'
+gitCommitId: !uuid '9b521f0a825ad3b528d99ed6bec2fb4475447acf'
 renames: {
   }
-revisionId: 370
+revisionId: 371
