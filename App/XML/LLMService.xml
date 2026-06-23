@@ -46,7 +46,7 @@
             长期记忆
             </summary>
         </member>
-        <member name="M:LLMService.Business.MemoryRagBLL.GetHistoryByDate(System.String,System.String,System.String)">
+        <member name="M:LLMService.Business.MemoryRagBLL.GetHistoryByDate(System.String,System.DateTime,System.DateTime)">
             <summary>
             查询指定日期的历史会话
             </summary>

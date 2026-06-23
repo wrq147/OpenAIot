@@ -40,10 +40,15 @@ namespace TemplateAction.NetCore
         public const string WORK_PATH = "TA_WorkPath";
 
         private ILogger<TANetCoreHttpHost> _log;
-        public TANetCoreHttpHost(IConfiguration config, ServiceCollection services)
+        public TANetCoreHttpHost(IConfiguration config)
         {
             _workroot = config[WORK_PATH];
             _config = config;
+        
+        }
+
+        public TANetCoreHttpHost Init(ServiceCollection services)
+        {
             _servicecollection = services;
 
             //初始化主机环境
@@ -85,9 +90,9 @@ namespace TemplateAction.NetCore
             });
             _app = new TANetCoreHttpApplication(_appBuilder, _kestrelOptions, services);
             _app.Init(_workroot, Assembly.GetEntryAssembly());
+
+            return this;
         }
-
-
         public void Run()
         {
             RunAsync().ConfigureAwait(false).GetAwaiter().GetResult();

@@ -130,7 +130,7 @@ namespace TemplateAction.NetCore
             }
             _serviceAC?.Invoke(_services);
 
-            return new TANetCoreHttpHost(_config, _services);
+            return new TANetCoreHttpHost(_config).Init(_services);
         }
     }
 }

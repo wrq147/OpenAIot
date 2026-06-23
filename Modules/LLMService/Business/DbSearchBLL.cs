@@ -67,6 +67,10 @@ namespace LLMService.Business
                     string colName = dr["COLUMN_NAME"].ToString();
                     string dataType = dr["DATA_TYPE"].ToString();
                     string colComment = dr["COLUMN_COMMENT"].ToString();
+                    if (colComment.Contains("内部用"))
+                    {
+                        continue;
+                    }
                     colComment = colComment.Replace("Description:", string.Empty);
                     T_TableField tmpfield = new T_TableField();
                     tmpfield.DataType = dataType;
@@ -110,7 +114,7 @@ namespace LLMService.Business
             }
         }
 
-   
+
         private string _allTableSchemaText;
         /// <summary>
         /// 根据表结构+用户问题，让LLM生成可执行SELECT SQL
@@ -150,7 +154,7 @@ namespace LLMService.Business
             var sysStrBuilder = new StringBuilder();
             sysStrBuilder.AppendLine("你是SQL生成器，仅输出纯净SQL，无多余文字、markdown、解释，严格遵守以下规则：");
             sysStrBuilder.AppendLine(userinfo);
-            sysStrBuilder.AppendLine("1. 仅输出完整SELECT语句，查询的字段名需转成中文别名，注释为内部用的字段禁止输出显示；");
+            sysStrBuilder.AppendLine("1. 仅输出完整SELECT语句，查询的字段名需转成中文别名；");
             sysStrBuilder.AppendLine("2. 需严格按照用户的身份信息过滤用户的查询数据，不能超过用户所属企业的查看范围；");
             sysStrBuilder.AppendLine($"3. 查询末尾强制添加分页 LIMIT " + offset + "," + pageSize + "；");
             sysStrBuilder.AppendLine("4. 禁止DELETE/UPDATE/INSERT/ALTER/DROP等修改语句，禁止UNION、WITH CTE语句；");
