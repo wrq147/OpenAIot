@@ -3,39 +3,33 @@ branches: {
   }
 fileChange:
   /App:
-    newFile: !uuid 'd038d8f0cc0ad255ad5a56a23dd5670356c1c9c7'
-    oldFile: !uuid '15817b2bdd3c4b5a40ca5d996fd47293999ec705'
-  /App/XML:
-    newFile: !uuid '860fad5caea84b0e73ae16abf691728ed5adb6fa'
-    oldFile: !uuid 'f9e02b5b61da2ac3e5c745a9a47e61a5c4f37ac1'
-  /App/XML/LLMService.xml:
-    newFile: !uuid '36c22d2c434444e83d7b400399da55a5416f38f8'
-    oldFile: !uuid '2818ad26f72fdd34220b90b15614d7ed94860dac'
-  /App/appsettings.json:
-    newFile: !uuid 'ca5a7fb124b020a3ec1c1b41a4a546de0f37ed91'
-    oldFile: !uuid 'c3165c7d3e2b1e5cf09bec147c1f661d52987da7'
-  /Modules:
-    newFile: !uuid '7f3e4fc155ee3c776b12737f446cce4ed933c958'
-    oldFile: !uuid 'c41e9605f4c40a55fb74129d1dac2fe1be9d8731'
-  /Modules/LLMService:
-    newFile: !uuid '00ef6455bfbeba66efe4f39d1b24919b95094776'
-    oldFile: !uuid '22f0f9f645c2e6cb25cabfb082163008bae010b6'
-  /Modules/LLMService/Business:
-    newFile: !uuid '1000db581c5358af59f46f1326f24cf883b863b0'
-    oldFile: !uuid 'fd5d966f51764f40fd3266d06edc6a0af58f2093'
-  /Modules/LLMService/Business/DbSearchBLL.cs:
-    newFile: !uuid '59c644b11fd69a5116183dbb10bdadf192ef22a8'
-    oldFile: !uuid 'e883fb468bbe80ab3ed753d8cd325d05c1455640'
+    newFile: !uuid '228ac3f27b973e760acaafd96e556f3768462c53'
+    oldFile: !uuid 'd038d8f0cc0ad255ad5a56a23dd5670356c1c9c7'
+  /App/Program.cs:
+    newFile: !uuid '0715a70c851a78f0fdb109c23e4d9f9d912f27c6'
+    oldFile: !uuid '5abdf3595ddcc30f1586a2dc39f1c9f0fd08aaf5'
   /TemplateAction.NetCore:
-    newFile: !uuid 'fdf1846ed53371ff742fd2c62b24c02c34da6670'
-    oldFile: !uuid '6ea782305aa8caf50ee5714e2fee901a8fb7a823'
+    newFile: !uuid 'b8aa737736174938e312147afd6196399dd62e3a'
+    oldFile: !uuid 'fdf1846ed53371ff742fd2c62b24c02c34da6670'
+  /TemplateAction.NetCore/TANetConfigLoader.cs:
+    newFile: !uuid '8591fe27ab056d2f319f7c6a13da393f868a06ef'
+    oldFile: !uuid '481efb81b9aa56d1b43c2d5cff10020494da98ad'
+  /TemplateAction.NetCore/TANetCoreHttpApplication.cs:
+    newFile: !uuid 'e73d1d7f0456c2462313606872dcbe480e3d89bb'
+    oldFile: !uuid '1058c239f9804ee6bf41f51b243e37df8db7f8bd'
   /TemplateAction.NetCore/TANetCoreHttpHost.cs:
-    newFile: !uuid 'e07d773d5c861c79755c8d24468950d91362edd7'
-    oldFile: !uuid 'e57e1628424d8a8a4f56fac123b1bd5e8c96f781'
+    newFile: !uuid 'eb4ffd5381e9736d4783b17ef0df2a2da0ba877d'
+    oldFile: !uuid 'e07d773d5c861c79755c8d24468950d91362edd7'
   /TemplateAction.NetCore/TANetCoreHttpHostBuilder.cs:
-    newFile: !uuid 'd8f95feedcc2d51c12b8f886494769700812b0ae'
-    oldFile: !uuid '42c7716fc9093c7f6412f7cf9aed2d5b9198293e'
-gitCommitId: !uuid 'e6a7f331366004523f1fd532d358f5f2b062a6a8'
+    newFile: !uuid '0b856b7182211dfdcea554656f057ec4af8d86f4'
+    oldFile: !uuid 'd8f95feedcc2d51c12b8f886494769700812b0ae'
+  /TemplateAction.NetCore/TANetCoreHttpMiddleware.cs:
+    newFile: !uuid 'bf1f50829e7295d56d882d5dd8bdec4e721a1cac'
+    oldFile: null
+  /docker-compose.yml:
+    newFile: !uuid 'c2e81d940ac0868711686375ddab2e987afa6e53'
+    oldFile: !uuid '11bc8c833967e1ba049616ed09595c17d6af6448'
+gitCommitId: !uuid 'bf67717086368d4df35f644158039db3c4f21a12'
 renames: {
   }
-revisionId: 372
+revisionId: 373
