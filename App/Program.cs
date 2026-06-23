@@ -95,7 +95,7 @@ namespace App
 
             }).ConfigureLogging((config, logginbuilder) =>
             {
-                logginbuilder.AddConfiguration(config.GetSection("Logging")).AddLog4Net().AddConsole();
+                logginbuilder.AddConfiguration(config.GetSection("Logging")).AddLog4Net();
             }).Build().Run();
         }
     }

@@ -12,7 +12,7 @@ namespace TemplateAction.NetCore
     public static class TANetConfigLoader
     {
 
-        public static KestrelServerOptions CreateKestrelOptionsFrom(IConfiguration configuration, ServiceProvider serviceProvider)
+        public static KestrelServerOptions CreateKestrelOptionsFrom(IConfiguration configuration, IServiceProvider serviceProvider)
         {
             var kestrelOptions = new KestrelServerOptions();
             kestrelOptions.ApplicationServices = serviceProvider;

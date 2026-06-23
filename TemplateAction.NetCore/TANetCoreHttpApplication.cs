@@ -1,37 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
-using TemplateAction.Common;
 using TemplateAction.Core;
 
 namespace TemplateAction.NetCore
 {
-    public class TANetCoreHttpApplication : TASiteApplication, IHttpApplication<HttpContext>
+    public class TANetCoreHttpApplication : TASiteApplication
     {
-        private RequestDelegate _requestDelegate;
-        private Microsoft.Extensions.DependencyInjection.ServiceCollection _service;
         private IApplicationBuilder _appBuilder;
         public IApplicationBuilder AppBuilder
         {
             get { return _appBuilder; }
         }
-        private KestrelServerOptions _kestrelServerOptions;
-        public KestrelServerOptions KestrelOptions
+
+        private Microsoft.Extensions.DependencyInjection.IServiceCollection _sc;
+        public TANetCoreHttpApplication(IApplicationBuilder appBuilder, Microsoft.Extensions.DependencyInjection.IServiceCollection sc)
         {
-            get { return _kestrelServerOptions; }
-        }
-        public TANetCoreHttpApplication(IApplicationBuilder appbuilder, KestrelServerOptions kestrelServerOptions, Microsoft.Extensions.DependencyInjection.ServiceCollection services)
-        {
-            _service = services;
-            _appBuilder = appbuilder;
-            _kestrelServerOptions = kestrelServerOptions;
+            _appBuilder = appBuilder;
+            _sc = sc;
             SetLoaderFactory(new TANetLoaderFactory());
         }
 
@@ -46,21 +33,9 @@ namespace TemplateAction.NetCore
             return this;
         }
 
-        public HttpContext CreateContext(IFeatureCollection contextFeatures)
+        public IServiceProvider GetServiceProvider()
         {
-            contextFeatures.Set<TANetCoreHttpApplication>(this);
-            DefaultHttpContext df = new DefaultHttpContext(contextFeatures);
-            df.RequestServices = this.ServiceProvider.GetService<IServiceProvider>();
-            return df;
-        }
-
-        public void DisposeContext(HttpContext context, Exception exception)
-        {
-        }
-
-        public async Task ProcessRequestAsync(HttpContext context)
-        {
-            await _requestDelegate(context);
+            return this.ServiceProvider.GetService<IServiceProvider>();
         }
 
         protected override void PluginLoad(PluginObject plg)
@@ -84,7 +59,7 @@ namespace TemplateAction.NetCore
             });
             Services.TryAddSingleton<IServiceProvider, TANetServiceProvider>();
             Services.TryAddSingleton<IServiceProviderIsService, TANetServiceProvider>();
-            Services.CopyServicesFrom(_service);
+            Services.CopyServicesFrom(_sc);
             Services.AddScope<ITAContext>();
             Services.AddSingleton<IServiceScopeFactory, TANetCoreScopeFactory>();
             base.BeforeInit();
@@ -92,10 +67,6 @@ namespace TemplateAction.NetCore
 
         protected override void AfterInit()
         {
-            TAAsyncHelper.RunSync(async () => {
-                await TAEventDispatcher.Instance.DispatchInternal(_kestrelServerOptions).ConfigureAwait(false);
-            });
-            _requestDelegate = _appBuilder.Build();
             base.AfterInit();
         }
     }

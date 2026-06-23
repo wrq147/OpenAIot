@@ -15,7 +15,6 @@ namespace TemplateAction.NetCore
         private DefaultMultiHandler<IApplicationBuilder> _appBuilderEvents;
         private DefaultMultiHandler<KestrelServerOptions> _middlewareEvents;
         private IConfiguration _config;
-        private Microsoft.Extensions.DependencyInjection.ServiceCollection _services;
 
         private Action<IApplicationBuilder> _configAC;
         private Action<KestrelServerOptions> _middleAC;
@@ -27,7 +26,6 @@ namespace TemplateAction.NetCore
         public IConfiguration Config { get { return _config; } }
         public TANetCoreHttpHostBuilder()
         {
-            _services = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
             _appBuilderEvents = new DefaultMultiHandler<IApplicationBuilder>();
             _middlewareEvents = new DefaultMultiHandler<KestrelServerOptions>();
             string rootpath = AppContext.BaseDirectory;
@@ -124,13 +122,17 @@ namespace TemplateAction.NetCore
                 });
                 TAEventDispatcher.Instance.RegisterInternal<KestrelServerOptions>(_middlewareEvents);
             }
-            if (_loggingAC != null)
-            {
-                _services.AddLogging(loggingbuilder => _loggingAC(_config, loggingbuilder));
-            }
-            _serviceAC?.Invoke(_services);
 
-            return new TANetCoreHttpHost(_config).Init(_services);
+            
+
+            return new TANetCoreHttpHost(_config).Init((sv) =>
+            {
+                if (_loggingAC != null)
+                {
+                    sv.AddLogging(loggingbuilder => _loggingAC(_config, loggingbuilder));
+                }
+                _serviceAC?.Invoke(sv);
+            });
         }
     }
 }

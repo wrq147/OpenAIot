@@ -124,24 +124,24 @@ services:
   #   networks:
   #     mynetwork:
   #       ipv4_address: 172.18.0.7
-  milvus-standalone:
-    container_name: milvus-standalone
-    command: ["milvus", "run", "standalone"]
-    environment:
-      - ETCD_USE_EMBED=true
-      - ETCD_DATA_DIR=/var/lib/milvus/etcd
-      - COMMON_STORAGETYPE=local
-      - DEPLOY_MODE=STANDALONE
-    volumes:
-      - ./milvus/data:/var/lib/milvus
-    ports:
-      - '7530:19530'
-      - '7091:9091'
-    image: milvusdb/milvus:v2.6.4
-    restart: always
-    networks:
-      mynetwork:
-        ipv4_address: 172.18.0.13
+  # milvus-standalone:
+  #   container_name: milvus-standalone
+  #   command: ["milvus", "run", "standalone"]
+  #   environment:
+  #     - ETCD_USE_EMBED=true
+  #     - ETCD_DATA_DIR=/var/lib/milvus/etcd
+  #     - COMMON_STORAGETYPE=local
+  #     - DEPLOY_MODE=STANDALONE
+  #   volumes:
+  #     - ./milvus/data:/var/lib/milvus
+  #   ports:
+  #     - '7530:19530'
+  #     - '7091:9091'
+  #   image: milvusdb/milvus:v2.6.4
+  #   restart: always
+  #   networks:
+  #     mynetwork:
+  #       ipv4_address: 172.18.0.13
 networks:
   mynetwork:
     ipam:
