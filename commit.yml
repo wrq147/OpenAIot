@@ -2,34 +2,19 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '228ac3f27b973e760acaafd96e556f3768462c53'
-    oldFile: !uuid 'd038d8f0cc0ad255ad5a56a23dd5670356c1c9c7'
-  /App/Program.cs:
-    newFile: !uuid '0715a70c851a78f0fdb109c23e4d9f9d912f27c6'
-    oldFile: !uuid '5abdf3595ddcc30f1586a2dc39f1c9f0fd08aaf5'
-  /TemplateAction.NetCore:
-    newFile: !uuid 'b8aa737736174938e312147afd6196399dd62e3a'
-    oldFile: !uuid 'fdf1846ed53371ff742fd2c62b24c02c34da6670'
-  /TemplateAction.NetCore/TANetConfigLoader.cs:
-    newFile: !uuid '8591fe27ab056d2f319f7c6a13da393f868a06ef'
-    oldFile: !uuid '481efb81b9aa56d1b43c2d5cff10020494da98ad'
-  /TemplateAction.NetCore/TANetCoreHttpApplication.cs:
-    newFile: !uuid 'e73d1d7f0456c2462313606872dcbe480e3d89bb'
-    oldFile: !uuid '1058c239f9804ee6bf41f51b243e37df8db7f8bd'
-  /TemplateAction.NetCore/TANetCoreHttpHost.cs:
-    newFile: !uuid 'eb4ffd5381e9736d4783b17ef0df2a2da0ba877d'
-    oldFile: !uuid 'e07d773d5c861c79755c8d24468950d91362edd7'
-  /TemplateAction.NetCore/TANetCoreHttpHostBuilder.cs:
-    newFile: !uuid '0b856b7182211dfdcea554656f057ec4af8d86f4'
-    oldFile: !uuid 'd8f95feedcc2d51c12b8f886494769700812b0ae'
-  /TemplateAction.NetCore/TANetCoreHttpMiddleware.cs:
-    newFile: !uuid 'bf1f50829e7295d56d882d5dd8bdec4e721a1cac'
-    oldFile: null
-  /docker-compose.yml:
-    newFile: !uuid 'c2e81d940ac0868711686375ddab2e987afa6e53'
-    oldFile: !uuid '11bc8c833967e1ba049616ed09595c17d6af6448'
-gitCommitId: !uuid 'bf67717086368d4df35f644158039db3c4f21a12'
+  /Modules:
+    newFile: !uuid '637aea61460fb99c2efc75b6b646f53b339d01ce'
+    oldFile: !uuid '7f3e4fc155ee3c776b12737f446cce4ed933c958'
+  /Modules/LLMService:
+    newFile: !uuid 'a5a72a1d1df1905558d5c96de6085b7155243dee'
+    oldFile: !uuid '00ef6455bfbeba66efe4f39d1b24919b95094776'
+  /Modules/LLMService/Business:
+    newFile: !uuid '130641babb7b0c3c37c8ef23910b999f594127b5'
+    oldFile: !uuid '1000db581c5358af59f46f1326f24cf883b863b0'
+  /Modules/LLMService/Business/ChatBLL.cs:
+    newFile: !uuid 'cc31473bc05d6d3f0adc860168ac5f9436801280'
+    oldFile: !uuid 'acb743614fbd34abbb7d9a416bca29e6cb489abc'
+gitCommitId: !uuid '4b2dad5f28c21bd50418d0b84b1f6809b9324783'
 renames: {
   }
-revisionId: 373
+revisionId: 374
