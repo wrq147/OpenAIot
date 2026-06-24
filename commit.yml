@@ -2,22 +2,55 @@
 branches: {
   }
 fileChange:
-  /admin-ui:
-    newFile: !uuid '1c974af44bef5a4fd9555705367757a6099b7185'
-    oldFile: !uuid '3bde004e33d53b2cece668cb2baf3f5ab1c36ff7'
-  /admin-ui/src:
-    newFile: !uuid '127ca74472a59c1d8a7e3295c1d5e95fb4a0c8a4'
-    oldFile: !uuid '24c9703b5a44c20f39ff51af6d1c37683a70e70f'
-  /admin-ui/src/store:
-    newFile: !uuid 'f568bea65327e3454984e0dfc3e30ad1e238709a'
-    oldFile: !uuid '7a3b92c53bf301e6af48e74ffa6eedab1c2bc55c'
-  /admin-ui/src/store/modules:
-    newFile: !uuid '9ad5562397e271be7337fd87a4a59dbc5168d37e'
-    oldFile: !uuid '19dabb31c671580abeff0b128dcec50e9b3b8bcc'
-  /admin-ui/src/store/modules/mqttclient.js:
-    newFile: !uuid '5d6661470cee9f79f4037768863076996c4c0fa4'
-    oldFile: !uuid '0d5de1a97b741e0dad0131ca1f6353792d35e4b0'
-gitCommitId: !uuid 'd781753ab6f7e55f88f8aa70a103cc2bc2f66a34'
+  /Channel:
+    newFile: !uuid 'dfefb30cb638ae70ad8f7a976ad0c605d0aa053e'
+    oldFile: !uuid '761d3eccf6db3fa99142dc84d6be6278470b5335'
+  /Channel/ChannelUtility:
+    newFile: !uuid 'dab089b5b5fcc24ec7a7374bd584f0bc609a4a22'
+    oldFile: !uuid '51666ee2a0b6d5f9fbdc74d32c90bc6ca50a4037'
+  /Channel/ChannelUtility/Tsl:
+    newFile: !uuid '786266957588b77617d14f925a43c7358d237c69'
+    oldFile: !uuid '4cd49686fe94d77cb2c66c28b9881cd53d779974'
+  /Channel/ChannelUtility/Tsl/FloatOption.cs:
+    newFile: !uuid '0d5b6d08402568f68cfee5f29cb0594586952b26'
+    oldFile: !uuid '9df75c000862cca17505a4b0a0d3bc1255c98a63'
+  /Channel/ChannelUtility/Tsl/IntOption.cs:
+    newFile: !uuid 'cc66b0bc50360f06f6f880ba1a989c7ccf096667'
+    oldFile: !uuid 'aaedee059877b34b54ad7c0ebc2de2d9befc6175'
+  /Channel/MqttChannel:
+    newFile: !uuid '676c54f0e2f5fa630d43392187ae9d26632cc9f8'
+    oldFile: !uuid 'd05d8d33664e4cbcb9a230543786566f73dcc27b'
+  /Channel/MqttChannel/appsettings.json:
+    newFile: !uuid 'f0cc39f77cf792581822d74b8e9e249f73dd6f1e'
+    oldFile: !uuid '446444f3035228c2a55b0ce293f82644f3d2f936'
+  /Modules:
+    newFile: !uuid 'c929d1f0b773dd7898bbc7634e85dc947cd7bec0'
+    oldFile: !uuid 'b393c7d108672a180c576bc2dbd7392a1daa425e'
+  /Modules/IoTRulesService:
+    newFile: !uuid 'b5f6c9fae528148367ac3b9f6ef20e4ad055bc6d'
+    oldFile: !uuid 'c643b84563e8cab93e9ac4fb68e9464ea4b72747'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid 'ce0198e635a8a94040893ee8448c230c7ab17fb3'
+    oldFile: !uuid 'aeb3fe228d363a79d56f4b25fbc9fb7680bba9c5'
+  /Modules/IoTRulesService/DataParser/DeviceMessageHandler.cs:
+    newFile: !uuid 'e9216a069ae3e9c430e477db862cd02d23c55179'
+    oldFile: !uuid '34daf16f0c6cf631619977f4b28c4dabae9c0a9e'
+  /Modules/IoTRulesService/DataParser/Js:
+    newFile: !uuid 'f812727bb699c44c481e8e1b3836d67033e1d1d0'
+    oldFile: !uuid '76784e3cba8494225569a1bbac64121562d9bee7'
+  /Modules/IoTRulesService/DataParser/Js/DataContext.cs:
+    newFile: !uuid '5ef0f836849337ab0a21aaf7e1a8a40fd921547e'
+    oldFile: !uuid 'b74677cc6d953336ac5528fef14033d7dc928a00'
+  /Modules/IoTRulesService/DataParser/PackParser.cs:
+    newFile: !uuid '7132369ab608ffb4dcb55bf3f69880ff3aedb89b'
+    oldFile: !uuid '4746f11942431c9d4175be5eaa5f27908129537c'
+  /Modules/IoTService:
+    newFile: !uuid '25d3380ff3da8c1b33465acca95edb7d2d61636f'
+    oldFile: !uuid '31e5aef8004a4933fed09b58e62a404368404eed'
+  /Modules/IoTService/TslExtensions.cs:
+    newFile: !uuid '46b88a1a51d2897716bc16528e7732e52baa8013'
+    oldFile: !uuid '5d531f2f8466fae2259ff1f2c28d590a29f61c87'
+gitCommitId: !uuid '2b27cd6d6981c0bdb75c7a33c4849969d4079c6b'
 renames: {
   }
-revisionId: 376
+revisionId: 377
