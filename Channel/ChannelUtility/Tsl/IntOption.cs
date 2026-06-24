@@ -31,8 +31,14 @@ namespace ChannelUtility.Tsl
                 {
                     case string sinput:
                         {
-                            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(sinput);
-                            tmpval = BitConverter.ToInt64(bytes);
+                            if (long.TryParse(sinput, out long dv))
+                            {
+                                tmpval = dv;
+                            }
+                            else
+                            {
+                                tmpval = min;
+                            }
                         }
                         break;
                     case short hinput:
@@ -56,8 +62,14 @@ namespace ChannelUtility.Tsl
                 {
                     case string sinput:
                         {
-                            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(sinput);
-                            tmpval = BitConverter.ToInt64(bytes);
+                            if (long.TryParse(sinput, out long dv))
+                            {
+                                tmpval = dv;
+                            }
+                            else
+                            {
+                                tmpval = min;
+                            }
                         }
                         break;
                     case short hinput:

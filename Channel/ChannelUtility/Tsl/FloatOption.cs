@@ -27,8 +27,14 @@ namespace ChannelUtility.Tsl
             double val;
             if (input is string sinput)
             {
-                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(sinput);
-                val = BitConverter.ToDouble(bytes);
+                if (double.TryParse(sinput, out double dv))
+                {
+                    val = dv;
+                }
+                else
+                {
+                    val = min;
+                }
             }
             else if (input is float finput)
             {
@@ -57,8 +63,14 @@ namespace ChannelUtility.Tsl
             {
                 case string sinput:
                     {
-                        byte[] bytes = ASCIIEncoding.ASCII.GetBytes(sinput);
-                        val = BitConverter.ToDouble(bytes);
+                        if (double.TryParse(sinput, out double dv))
+                        {
+                            val = dv;
+                        }
+                        else
+                        {
+                            val = min;
+                        }
                     }
                     break;
                 case float finput:
@@ -73,14 +85,12 @@ namespace ChannelUtility.Tsl
                     break;
                 case int iinput:
                     {
-                        byte[] bytes = BitConverter.GetBytes(iinput);
-                        val = BitConverter.ToSingle(bytes);
+                        val = Convert.ToSingle(iinput);
                     }
                     break;
                 case long linput:
                     {
-                        byte[] bytes = BitConverter.GetBytes(linput);
-                        val = BitConverter.ToDouble(bytes);
+                        val = Convert.ToDouble(linput);
                     }
                     break;
                 default:

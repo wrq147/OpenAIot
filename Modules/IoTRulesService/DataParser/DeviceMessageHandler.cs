@@ -316,6 +316,11 @@ namespace IoTRulesService.DataParser
                     case "PropReply":
                         {
                             ReadPropertyMessageReply rdmsg = (ReadPropertyMessageReply)rs;
+                            if (rdmsg.Properties == null)
+                            {
+                                await _provider.GetService<ServerBusProxy>().Print(rs.DeviceId, "设备属性消息异常", "上报的属性键值对不能为null");
+                                return;
+                            }
                             //根据物模型转换设备属性
                             if (string.IsNullOrEmpty(rdmsg.ProductId))
                             {
@@ -413,6 +418,7 @@ namespace IoTRulesService.DataParser
                         
                             if (rdmsg.Properties.Count == 0)
                             {
+                                await _provider.GetService<ServerBusProxy>().Print(rs.DeviceId, "设备属性消息异常", "上报的属性键值对不能为空");
                                 return;
                             }
 

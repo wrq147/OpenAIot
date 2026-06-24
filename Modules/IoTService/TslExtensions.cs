@@ -106,9 +106,19 @@ namespace IoTService
         {
             try
             {
-                var linput = Convert.ToInt32(input);
-                byte[] bytes = BitConverter.GetBytes(linput);
-                return BitConverter.ToSingle(bytes);
+                if (input is float tmpf)
+                {
+                    return tmpf;
+                }
+                else if (input is double tmpd)
+                {
+                    return Convert.ToSingle(tmpd);
+                }
+                else
+                {
+                    var linput = Convert.ToInt32(input);
+                    return BitConverter.ToSingle(BitConverter.GetBytes(linput));
+                }
             }
             catch
             {
