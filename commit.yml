@@ -2,19 +2,55 @@
 branches: {
   }
 fileChange:
+  /App:
+    newFile: !uuid 'f4714f2b1666629c5a52ebfb5111414bcf7bc842'
+    oldFile: !uuid '228ac3f27b973e760acaafd96e556f3768462c53'
+  /App/Program.cs:
+    newFile: !uuid '5abdf3595ddcc30f1586a2dc39f1c9f0fd08aaf5'
+    oldFile: !uuid '0715a70c851a78f0fdb109c23e4d9f9d912f27c6'
+  /App/appsettings.json:
+    newFile: !uuid 'a4e12a75b2e27ce04653172eebbf8ea4c321e129'
+    oldFile: !uuid 'ca5a7fb124b020a3ec1c1b41a4a546de0f37ed91'
   /Modules:
-    newFile: !uuid '637aea61460fb99c2efc75b6b646f53b339d01ce'
-    oldFile: !uuid '7f3e4fc155ee3c776b12737f446cce4ed933c958'
-  /Modules/LLMService:
-    newFile: !uuid 'a5a72a1d1df1905558d5c96de6085b7155243dee'
-    oldFile: !uuid '00ef6455bfbeba66efe4f39d1b24919b95094776'
-  /Modules/LLMService/Business:
-    newFile: !uuid '130641babb7b0c3c37c8ef23910b999f594127b5'
-    oldFile: !uuid '1000db581c5358af59f46f1326f24cf883b863b0'
-  /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid 'cc31473bc05d6d3f0adc860168ac5f9436801280'
-    oldFile: !uuid 'acb743614fbd34abbb7d9a416bca29e6cb489abc'
-gitCommitId: !uuid '4b2dad5f28c21bd50418d0b84b1f6809b9324783'
+    newFile: !uuid 'b393c7d108672a180c576bc2dbd7392a1daa425e'
+    oldFile: !uuid '637aea61460fb99c2efc75b6b646f53b339d01ce'
+  /Modules/MqttService:
+    newFile: !uuid '76cc14834823584df993e01011c28157a6b5d680'
+    oldFile: !uuid 'f1a0bc9faa57e3e2fd933b25e86b72797f9537a6'
+  /Modules/MqttService/MqttController.cs:
+    newFile: !uuid 'e7fa50b5608c1b7f5d2fab6d3eb22540226b9574'
+    oldFile: !uuid 'c4e965f8d4fda3d6948233f20d49fc0fe0c56e37'
+  /Modules/MqttService/PluginConfig.cs:
+    newFile: !uuid 'b5f9c80ef60aa1bbdbaf058734d209e50ed55a64'
+    oldFile: !uuid 'ca887216e39b4d8fdcef840e6c2793e47064fbe8'
+  /TemplateAction.NetCore:
+    newFile: !uuid '502027489c28d3826463eb5c4b527da5ac9dde64'
+    oldFile: !uuid 'b8aa737736174938e312147afd6196399dd62e3a'
+  /TemplateAction.NetCore/TANetConfigLoader.cs:
+    newFile: !uuid '421e54f2e46d2254b934fbd38a3c5a1774e201e1'
+    oldFile: !uuid '8591fe27ab056d2f319f7c6a13da393f868a06ef'
+  /TemplateAction.NetCore/TANetCoreHttpHost.cs:
+    newFile: !uuid 'fa524536d18b4d326ba3692b9d067add2929bdea'
+    oldFile: !uuid 'eb4ffd5381e9736d4783b17ef0df2a2da0ba877d'
+  /TemplateAction.NetCore/TANetWebApiDescriptionGroupCollectionProvider.cs:
+    newFile: !uuid '4ea73d9373ba4647ca934cfabf3af9c755f7bf0a'
+    oldFile: !uuid 'babc945b8c8f078d4c490fe0104f804ff1eafb82'
+  /admin-ui:
+    newFile: !uuid '3bde004e33d53b2cece668cb2baf3f5ab1c36ff7'
+    oldFile: !uuid '01f6fb75376a673a716b90dedc2062d006abb55d'
+  /admin-ui/src:
+    newFile: !uuid '24c9703b5a44c20f39ff51af6d1c37683a70e70f'
+    oldFile: !uuid 'a68d29ba4add4f5ae3005fda3e20d0286258e5ce'
+  /admin-ui/src/store:
+    newFile: !uuid '7a3b92c53bf301e6af48e74ffa6eedab1c2bc55c'
+    oldFile: !uuid '60e76157d6db82701f11a2be794a352affbb1ac7'
+  /admin-ui/src/store/modules:
+    newFile: !uuid '19dabb31c671580abeff0b128dcec50e9b3b8bcc'
+    oldFile: !uuid 'af9df6001179fd0bcefa983fc83e49dc5b17380f'
+  /admin-ui/src/store/modules/mqttclient.js:
+    newFile: !uuid '0d5de1a97b741e0dad0131ca1f6353792d35e4b0'
+    oldFile: !uuid '59b1dc9a37befc0f575d25076a14ce262361d3ad'
+gitCommitId: !uuid 'c8c8992da6bd6ab2244df0e2c27a6939c20ec817'
 renames: {
   }
-revisionId: 374
+revisionId: 375
