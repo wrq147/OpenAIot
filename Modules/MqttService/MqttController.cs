@@ -75,7 +75,6 @@ namespace MqttService
                     return;
                 }
             };
-
         }
         private async Task<IMqttClient> GetSystemClient()
         {
@@ -120,10 +119,11 @@ namespace MqttService
         {
             var client = await GetSystemClient();
             var applicationMessage = new MqttApplicationMessageBuilder()
-    .WithTopic("user/" + uid + "/new")
-    .WithPayload(data)
-    .Build();
+.WithTopic("user/" + uid + "/new")
+.WithPayload(data)
+.Build();
             await client.PublishAsync(applicationMessage);
+
         }
     }
 }

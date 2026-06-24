@@ -1,20 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Common.EventBus;
+using Common.Share;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MQTTnet.AspNetCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using TemplateAction.NetCore;
-using MQTTnet.AspNetCore;
-using MQTTnet.Adapter;
-using MQTTnet.Implementations;
-using MQTTnet.Diagnostics;
-using Microsoft.Extensions.Hosting;
-using MQTTnet.Server;
-using Microsoft.AspNetCore.Builder;
-using Common.Share;
-using Common.EventBus;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
 
 namespace MqttService
 {
@@ -29,33 +24,16 @@ namespace MqttService
             if (!option.enable_emqx)
             {
                 services.AddSingleton<MqttController>();
-                services.AddSingleton<MqttServerOptions>((object[] constructorArguments, ITAServiceProvider provider) =>
+                services.AddServices(ac =>
                 {
-                    var serverOptionsBuilder = new MqttServerOptionsBuilder();
-                    serverOptionsBuilder.WithDefaultEndpoint();
-                    serverOptionsBuilder.WithDefaultEndpointPort(option.mqtt_tcp_port);
-                    return serverOptionsBuilder.Build();
-                });
+                    ac.AddMqttServer(options =>
+                    {
+                        options.WithDefaultEndpoint();
+                        options.WithDefaultEndpointPort(option.mqtt_tcp_port);
+                    });
 
-                services.AddSingleton<IMqttNetLogger>(new MqttNetEventLogger());
-                services.AddSingleton<MqttHostedServer>();
-                services.AddSingleton<IHostedService>((object[] constructorArguments, ITAServiceProvider provider) => provider.GetService<MqttHostedServer>());
-                services.AddSingleton<MqttServer>((object[] constructorArguments, ITAServiceProvider provider) => provider.GetService<MqttHostedServer>());
-
-                services.AddSingleton<MqttConnectionHandler>();
-                services.AddSingleton<IMqttServerAdapter>((object[] constructorArguments, ITAServiceProvider provider) => provider.GetService<MqttConnectionHandler>());
-
-                //添加MqttTcpServerAdapter
-                services.AddSingleton<MqttTcpServerAdapter>();
-                services.AddSingleton<IMqttServerAdapter>((object[] constructorArguments, ITAServiceProvider provider) =>
-                {
-                    return provider.GetService<MqttTcpServerAdapter>();
-                });
-                //添加MqttWebSocketServerAdapter
-                services.AddSingleton<MqttWebSocketServerAdapter>();
-                services.AddSingleton<IMqttServerAdapter>((object[] constructorArguments, ITAServiceProvider provider) =>
-                {
-                    return provider.GetService<MqttWebSocketServerAdapter>();
+                    ac.AddMqttTcpServerAdapter();
+                    ac.AddMqttWebSocketServerAdapter();
                 });
             }
             else
@@ -88,7 +66,6 @@ namespace MqttService
                         {
                             subProtocol = MqttSubProtocolSelector.SelectSubProtocol(requestedSubProtocolValues);
                         }
-
                         var adapter = app.ServiceProvider.GetService<MqttWebSocketServerAdapter>();
                         using (var webSocket = await context.WebSockets.AcceptWebSocketAsync(subProtocol).ConfigureAwait(false))
                         {

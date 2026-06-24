@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using TemplateAction.Core;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
-using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
+using TemplateAction.Core;
 
 namespace TemplateAction.NetCore
 {
@@ -103,7 +104,11 @@ namespace TemplateAction.NetCore
                             rp.ApiResponseFormats = new List<ApiResponseFormat>();
                             ApiResponseFormat format = new ApiResponseFormat();
                             format.MediaType = "application/json";
-                            format.Formatter = new SystemTextJsonOutputFormatter(new JsonSerializerOptions());
+                            var jsonOpts = new JsonSerializerOptions
+                            {
+                                TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+                            };
+                            format.Formatter = new SystemTextJsonOutputFormatter(jsonOpts);
                             rp.ApiResponseFormats.Add(format);
                             apiDes.SupportedResponseTypes.Add(rp);
                         }
@@ -127,7 +132,11 @@ namespace TemplateAction.NetCore
                                 rp.ApiResponseFormats = new List<ApiResponseFormat>();
                                 ApiResponseFormat format = new ApiResponseFormat();
                                 format.MediaType = "application/json";
-                                format.Formatter = new SystemTextJsonOutputFormatter(new JsonSerializerOptions());
+                                var jsonOpts = new JsonSerializerOptions
+                                {
+                                    TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+                                };
+                                format.Formatter = new SystemTextJsonOutputFormatter(jsonOpts);
                                 rp.ApiResponseFormats.Add(format);
                                 apiDes.SupportedResponseTypes.Add(rp);
                             }

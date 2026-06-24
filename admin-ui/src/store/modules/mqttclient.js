@@ -72,6 +72,7 @@ const mqttclient = {
                     xclient.on("connect", (frame) => {
                         resolve(xclient);
                     });
+
                     xclient.__proto__._reconnect = function() {
                         const next = () => {
                             xclient.emit('reconnect')
@@ -92,6 +93,7 @@ const mqttclient = {
                     });
                     commit('CHANGE_CLIENT', xclient);
                 }).catch(error => {
+                    console.info(error)
                     // console.log(mqttclient.state.mqclient, 'mqttclient.state.mqclient');
                     if (mqttclient.state.mqclient && error.code && error.code == 400 || error.code && error.code == 401 || error.code && error.code == 50012) {
                         mqttclient.state.mqclient.end()
