@@ -2,88 +2,43 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '40cda4d78895a601188012af6b126ca19c931cd6'
-    oldFile: !uuid 'f4714f2b1666629c5a52ebfb5111414bcf7bc842'
-  /App/XML:
-    newFile: !uuid 'e75ebb6cd162afafad34ac1a4b09aaab91765abc'
-    oldFile: !uuid '860fad5caea84b0e73ae16abf691728ed5adb6fa'
-  /App/XML/IoTService.xml:
-    newFile: !uuid '912bd15947a5ecc1dfb4bfb95617dc2023304b6e'
-    oldFile: !uuid '37a54a038776931f1c89e7cab595b6fa0cfdd22f'
   /Modules:
-    newFile: !uuid 'f8265444ca73bb23088a10facba9841798408ecb'
-    oldFile: !uuid 'c929d1f0b773dd7898bbc7634e85dc947cd7bec0'
+    newFile: !uuid 'dbb4e3962754096e48cbf688f8a1cc738a0f0e33'
+    oldFile: !uuid 'f8265444ca73bb23088a10facba9841798408ecb'
   /Modules/IoTRulesService:
-    newFile: !uuid 'a2ce83e0a8e8ed167f39a16d0cadfb2795c14fcd'
-    oldFile: !uuid 'b5f6c9fae528148367ac3b9f6ef20e4ad055bc6d'
+    newFile: !uuid '4aa60ad1e7e346e280f80d10a6865e3e400a20ee'
+    oldFile: !uuid 'a2ce83e0a8e8ed167f39a16d0cadfb2795c14fcd'
   /Modules/IoTRulesService/DataParser:
-    newFile: !uuid '418c447980e045193283eb027777967ce34c9725'
-    oldFile: !uuid 'ce0198e635a8a94040893ee8448c230c7ab17fb3'
-  /Modules/IoTRulesService/DataParser/PackParser.cs:
-    newFile: !uuid '803281038a5bf1284dd8d8d7a0d667c5382f13f1'
-    oldFile: !uuid '7132369ab608ffb4dcb55bf3f69880ff3aedb89b'
+    newFile: !uuid 'e6e7c376916cd2f8bee12a0b0490a0cf15e2acf7'
+    oldFile: !uuid '418c447980e045193283eb027777967ce34c9725'
+  /Modules/IoTRulesService/DataParser/DeviceMessageHandler.cs:
+    newFile: !uuid '13bbfad5759551601da1eea00ed21ebb52206a74'
+    oldFile: !uuid 'e9216a069ae3e9c430e477db862cd02d23c55179'
   /Modules/IoTService:
-    newFile: !uuid 'afcd255fa33516f68c8969fe6ea4a00c67a13978'
-    oldFile: !uuid '25d3380ff3da8c1b33465acca95edb7d2d61636f'
-  /Modules/IoTService/Business:
-    newFile: !uuid '10de2e03aad25142b348ca855d2deafedea6bf09'
-    oldFile: !uuid '7e9e0283a06648a97e15f0c8e49e95f4e9217c0b'
-  /Modules/IoTService/Business/IotInfluxBLL.cs:
-    newFile: !uuid 'c1eec4ee0c236c2564c637b6eabfa751577d2f7b'
-    oldFile: !uuid 'c0ca5b780dc9f788b7fe05b5c78616edbee20d9c'
-  /Modules/IoTService/Controller:
-    newFile: !uuid '3a76e870a341d83e98ae5d796eb9568df31e24aa'
-    oldFile: !uuid 'ea0ad9e292b15076b23154fa8ee175d66bebdfa8'
-  /Modules/IoTService/Controller/IotSource.cs:
-    newFile: !uuid '44eceda127da30ef2ad7d39b0301ed96f3266223'
-    oldFile: !uuid 'f6cc0c82d873dc782ee88ea462d91ef7a0ca1fd2'
-  /Modules/IoTService/Models:
-    newFile: !uuid '0ec4340dbdbeaf61ea25623fbcbf38e93dd0dd3f'
-    oldFile: !uuid '2df8361c919115b7ed905731d5ae39dbba8857b2'
-  /Modules/IoTService/Models/In_HistoryDelete.cs:
-    newFile: !uuid '4c0197af9d7bfabd6efee5f0918e6339cb75193d'
-    oldFile: !uuid '3f8da72800d460ce12cb43a867ced43d00cd2b28'
-  /Modules/LLMService:
-    newFile: !uuid 'acd4cd4dc01d12a92e763249c79b7989235e16dc'
-    oldFile: !uuid 'a5a72a1d1df1905558d5c96de6085b7155243dee'
-  /Modules/LLMService/AiSqlSecurityValidator.cs:
-    newFile: !uuid 'bf088e70a23f7b97392004ac4b378d8666aeda34'
-    oldFile: !uuid 'd94074f05ff8f7a30295406eae56f156c88e2556'
+    newFile: !uuid '64a719f1ae5b11258c60dd3a308197dbc76e96ae'
+    oldFile: !uuid 'afcd255fa33516f68c8969fe6ea4a00c67a13978'
+  /Modules/IoTService/TslExtensions.cs:
+    newFile: !uuid '292b2cdc0f24f8bf5e11fb3d7c52352657aff668'
+    oldFile: !uuid '46b88a1a51d2897716bc16528e7732e52baa8013'
   /admin-ui:
-    newFile: !uuid '5204c795d9657d4c7bab27271e2e28b2531d36cc'
-    oldFile: !uuid '1c974af44bef5a4fd9555705367757a6099b7185'
+    newFile: !uuid '34cda3eb65530e649730f2ebde22dcda84b02d59'
+    oldFile: !uuid '5204c795d9657d4c7bab27271e2e28b2531d36cc'
   /admin-ui/src:
-    newFile: !uuid '6275a61aa9624fafea85ec9e033f9007b50d923d'
-    oldFile: !uuid '127ca74472a59c1d8a7e3295c1d5e95fb4a0c8a4'
-  /admin-ui/src/api:
-    newFile: !uuid 'c10d27e97c2265f9d44286cc9fe335ed8c6f195a'
-    oldFile: !uuid '97262c471777461faff05af94ac70e11a73599d8'
-  /admin-ui/src/api/rules:
-    newFile: !uuid '76d9a30eb3d7cab18a7c80a1b793a86609ac7a18'
-    oldFile: !uuid '5e5175cf556b31ca9cb6435e5da1997610d57adb'
-  /admin-ui/src/api/rules/historysource.js:
-    newFile: !uuid '6dccf45144b065f627dd0562327d57ed282a4c8e'
-    oldFile: !uuid '651555a83e6148e8c621a6707061ef1f1742f122'
+    newFile: !uuid 'f20276bdd7ab9d6412ee9683ed883a36058b065c'
+    oldFile: !uuid '6275a61aa9624fafea85ec9e033f9007b50d923d'
   /admin-ui/src/views:
-    newFile: !uuid '1218be45565fb9efb4f7825446e855c889dacf79'
-    oldFile: !uuid '69d0b050237516ccee2ef52a342b523c2068698c'
+    newFile: !uuid '3397037b687b288842e4e8ee9e920f5cbaa01484'
+    oldFile: !uuid '1218be45565fb9efb4f7825446e855c889dacf79'
   /admin-ui/src/views/iot:
-    newFile: !uuid '5c1b39dc9ddc637c45464fe705891c93fdc57a47'
-    oldFile: !uuid '741a56285e7e3bf321e10d67aed09e931feb83d8'
+    newFile: !uuid '28101d725b9395d1b187a8a0b6833bed7a6b1b26'
+    oldFile: !uuid '5c1b39dc9ddc637c45464fe705891c93fdc57a47'
   /admin-ui/src/views/iot/HistorySource:
-    newFile: !uuid '8e7698edbae86284e163fe80413c7d3a4bbba833'
-    oldFile: !uuid 'ee551f545c865bdec63e90eb6130702296d74d77'
+    newFile: !uuid '5df65a283372029238103df1dc9545ed4ede7c53'
+    oldFile: !uuid '8e7698edbae86284e163fe80413c7d3a4bbba833'
   /admin-ui/src/views/iot/HistorySource/List.vue:
-    newFile: !uuid 'f70b20c7ae953a2220a66a71ab214520819d70cd'
-    oldFile: !uuid '14dbc283d88ed6676e9443259b07bda40340313d'
-  /admin-ui/src/views/iot/deviceManage:
-    newFile: !uuid '6b9fe6d10bec3f1e0ccec2e1b4ab1656311c5a6a'
-    oldFile: !uuid 'f578ff34838fb8eb8fbe4a9cd918352751685b98'
-  /admin-ui/src/views/iot/deviceManage/onlineDebug.vue:
-    newFile: !uuid '4824a706190a69d050f398cbfc358a98f4781255'
-    oldFile: !uuid '87894e954419ffac3fe2394de6f9f6145858eb9c'
-gitCommitId: !uuid '8f626d8ed70028d692e42832c2f6c01c0cd65101'
+    newFile: !uuid '2c62045778a4f3980c4ddf54fb3876af7327e4e2'
+    oldFile: !uuid 'f70b20c7ae953a2220a66a71ab214520819d70cd'
+gitCommitId: !uuid '8e471a7c47af51d8505a1a82080e47a31e0560eb'
 renames: {
   }
-revisionId: 378
+revisionId: 379
