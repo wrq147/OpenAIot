@@ -247,6 +247,36 @@ namespace IoTService.Business
             }
 
         }
+        public virtual async Task<BusResponse<string>> DeleteAllHistory(In_HistoryAllDelete query, IUserInfo user)
+        {
+            var hisSourceDAL = _provider.GetService<IotHisSourceDAL>();
+            var info = await hisSourceDAL.Select(query.SourceId);
+            if (info == null)
+            {
+                return BusResponse<string>.Error(131, "数据源不存在");
+            }
+            if (user.OrgId != 1 && user.OrgId != info.OrgId)
+            {
+                return BusResponse<string>.Error(132, "无权删除数据源的历史数据");
+            }
+            var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(info.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
+            if (string.IsNullOrEmpty(storageConfig.url))
+            {
+                return BusResponse<string>.Error(103, "请配置协议的存储方式");
+            }
+            string pred = "_measurement=\"device\"";
+            using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
+            try
+            {
+                var delApi = client.GetDeleteApi();
+                await delApi.Delete(TimeZoneInfo.ConvertTime(query.BeginTime.Value, TimeZoneInfo.Utc), TimeZoneInfo.ConvertTime(query.EndTime.Value, TimeZoneInfo.Utc), pred, storageConfig.bucket.Replace("\"", ""), storageConfig.org);
+                return BusResponse<string>.Success();
+            }
+            catch (Exception ex)
+            {
+                return BusResponse<string>.Error(111, ex.Message);
+            }
+        }
         public virtual async Task<BusResponse<string>> DeleteHistory(In_HistoryDelete query)
         {
             IotDeviceDAL deviceDAL = _provider.GetService<IotDeviceDAL>();
@@ -254,7 +284,7 @@ namespace IoTService.Business
             MZ_IotDevice device = await deviceDAL.Select(query.Id);
             if (device == null)
             {
-                return BusResponse<string>.Error(101, "设备不存在");
+                return BusResponse<string>.Error(101, "请选择需要删除的设备");
             }
             var product = await productDAL.Select(device.ProductId);
             if (string.IsNullOrEmpty(product.StorageConfig))
@@ -279,6 +309,7 @@ namespace IoTService.Business
                 return BusResponse<string>.Error(111, ex.Message);
             }
         }
+
 
         public virtual async Task<BusResponse<List<Out_MergeItem>>> SelectMergeList(In_HistoryMergeBase query, MZ_IotProduct prod = null, List<MZ_IotDevice> devices = null, TslModel model = null, InfluxOption storageConfig = null)
         {
@@ -624,7 +655,7 @@ namespace IoTService.Business
 
                 return BusResponse<List<Out_MergeItem>>.Success(mergeList);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BusResponse<List<Out_MergeItem>>.Error(411, ex.Message);
             }

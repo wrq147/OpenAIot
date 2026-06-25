@@ -21,4 +21,19 @@ namespace IoTService.Models
         /// </summary>
         public DateTime? EndTime { get; set; }
     }
+    public class In_HistoryAllDelete
+    {
+        /// <summary>
+        /// 需要删除的数据源Id
+        /// </summary>
+        public string SourceId { get; set; }
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime? BeginTime { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime? EndTime { get; set; }
+    }
 }

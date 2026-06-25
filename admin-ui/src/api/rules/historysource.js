@@ -42,3 +42,11 @@ export function editHistorySource(data) {
         data: data
     })
 }
+
+export function delAllHistory(data) {
+    return request({
+        url: '/IoTService/IotSource/RemoveHistory',
+        method: 'post',
+        data: data
+    })
+}

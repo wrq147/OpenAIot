@@ -1,4 +1,5 @@
-﻿using Mysqlx.Expr;
+﻿using Minio.DataModel;
+using Mysqlx.Expr;
 using NPOI.SS.Formula.Functions;
 using SqlParser.Net;
 using SqlParser.Net.Ast;
@@ -78,12 +79,16 @@ namespace LLMService
             {
                 if (!tableWhiteList.ContainsKey(tbl))
                 {
-                    errorMsg = $"数据表[{tbl}]不在访问白名单，禁止访问";
+                    errorMsg = $"数据表[{tbl}]不存在或禁止访问";
                     return false;
                 }
             }
             tbs = tableNames;
-
+            if (tableVisitor.HasAllColumn)
+            {
+                errorMsg = "禁止使用*查询所有字段";
+                return false;
+            }
             // 规则2：统计JOIN表数量
             if (tableVisitor.TableTotal > MaxJoinCount)
             {
@@ -141,8 +146,10 @@ namespace LLMService
             public int TableTotal { get; private set; }
             public HashSet<string> TableNames { get; } = new(StringComparer.OrdinalIgnoreCase);
             public bool HasValidOrgCondition { get; private set; } = false;
+            public bool HasAllColumn { get; private set; } = false;
             public SqlExpression VisitSqlAllColumnExpression(SqlAllColumnExpression sqlAllColumnExpression, VisitContext context = null)
             {
+                HasAllColumn = true;
                 return sqlAllColumnExpression;
             }
 
@@ -510,7 +517,6 @@ namespace LLMService
 
             public SqlExpression VisitSqlSelectExpression(SqlSelectExpression sqlSelectExpression, VisitContext context = null)
             {
-
                 sqlSelectExpression.Alias?.Accept(this);
 
                 sqlSelectExpression.Query?.Accept(this);
@@ -531,6 +537,28 @@ namespace LLMService
 
             public SqlExpression VisitSqlSelectQueryExpression(SqlSelectQueryExpression sqlSelectQueryExpression, VisitContext context = null)
             {
+                if (sqlSelectQueryExpression.Columns != null)
+                {
+                    foreach (var tmpitem in sqlSelectQueryExpression.Columns)
+                    {
+                        tmpitem.Accept(this);
+                    }
+                }
+                if (sqlSelectQueryExpression.Hints != null)
+                {
+                    foreach (var tmpHint in sqlSelectQueryExpression.Hints)
+                    {
+                        tmpHint.Accept(this);
+                    }
+                }
+                if (sqlSelectQueryExpression.WithSubQuerys != null)
+                {
+                    foreach (var tmpsub in sqlSelectQueryExpression.WithSubQuerys)
+                    {
+                        tmpsub.Accept(this);
+                    }
+                }
+
                 sqlSelectQueryExpression.Into?.Accept(this);
                 sqlSelectQueryExpression.Where?.Accept(this);
                 sqlSelectQueryExpression.ConnectBy?.Accept(this);

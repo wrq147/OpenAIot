@@ -79,5 +79,16 @@ namespace IoTService.Controller
         {
             return (await _iotHisSourceBLL.Delete(ids, GetUser())).ToAjaxResult();
         }
+        /// <summary>
+        /// 删除历史数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<DefaultAjaxResult<string>> RemoveHistory(In_HistoryAllDelete data)
+        {
+            var rsp = await this.ServiceProvider.GetService<IotInfluxBLL>().DeleteAllHistory(data, GetUser());
+            return rsp.ToAjaxResult();
+        }
     }
 }

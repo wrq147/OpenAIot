@@ -33,13 +33,18 @@
                             :show-overflow-tooltip="true" />
                         <el-table-column label="操作" align="center" width="248" class-name="small-padding fixed-width">
                             <template slot-scope="scope">
-                                <el-button type="text" icon="el-icon-edit"  @click="handleUpdate(scope.row)">修改</el-button>
-                                <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                                <el-button type="text" icon="el-icon-edit"
+                                    @click="handleUpdate(scope.row)">修改</el-button>
+                                <el-button type="text" icon="el-icon-delete"
+                                    @click="handleDelete(scope.row)">删除</el-button>
+                                <el-button type="text" icon="el-icon-close"
+                                    @click="handleDelHis(scope.row)">清除历史数据</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
+                    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
+                        :limit.sync="queryParams.pageSize" @pagination="getList" />
                 </div>
             </el-col>
         </el-row>
@@ -57,20 +62,25 @@
 
                 <div v-if="form.StorageType == 'influx'">
                     <el-form-item label="存储组织" prop="org">
-                        <el-input type="text" style="width:400px" v-model="DBConfig.org" placeholder="请输入存储组织"></el-input>
+                        <el-input type="text" style="width:400px" v-model="DBConfig.org"
+                            placeholder="请输入存储组织"></el-input>
                     </el-form-item>
                     <el-form-item label="连接的url" prop="url">
-                        <el-input type="text" style="width:400px" v-model="DBConfig.url" placeholder="请输入连接的url"></el-input>
+                        <el-input type="text" style="width:400px" v-model="DBConfig.url"
+                            placeholder="请输入连接的url"></el-input>
                     </el-form-item>
                     <el-form-item label="连接令牌" prop="token">
-                        <el-input type="text" style="width:400px" v-model="DBConfig.token" placeholder="请输入连接令牌"></el-input>
+                        <el-input type="text" style="width:400px" v-model="DBConfig.token"
+                            placeholder="请输入连接令牌"></el-input>
                     </el-form-item>
                     <el-form-item label="数据库名(bucket)" prop="bucket">
-                        <el-input type="text" style="width:400px" v-model="DBConfig.bucket" placeholder="请输入存储的数据库名"></el-input>
+                        <el-input type="text" style="width:400px" v-model="DBConfig.bucket"
+                            placeholder="请输入存储的数据库名"></el-input>
                     </el-form-item>
                 </div>
                 <el-form-item label="备注" prop="Remark">
-                    <el-input style="width:370px" type="textarea" :rows="2" v-model="form.Remark" placeholder="请输入备注"></el-input>
+                    <el-input style="width:370px" type="textarea" :rows="2" v-model="form.Remark"
+                        placeholder="请输入备注"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -79,12 +89,26 @@
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="执行删除历史数据" :visible.sync="deldlgvis" width="600px">
+            <el-form ref="form" :model="delform" label-width="80px">
+                <el-form-item label="时间范围">
+                    <el-date-picker v-model="deldateRange" :picker-options="pickerOptions"
+                        value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至"
+                        start-placeholder="开始日期" end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submitDelForm">执 行</el-button>
+                <el-button @click="deldlgvis = false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { resizeTableCon } from "@/mixins/resizeTableCon";
-import { historySourceList, delHistorySource, historySourceInfo, addHistorySource, editHistorySource } from "@/api/rules/historysource";
+import { historySourceList, delHistorySource, historySourceInfo, addHistorySource, editHistorySource,delAllHistory } from "@/api/rules/historysource";
 export default {
     name: "HistoryList",
     mixins: [resizeTableCon],
@@ -113,6 +137,17 @@ export default {
             },
             editId: "",
             open: false,
+            deldlgvis: false,
+            delform: {
+            },
+            deldateRange: [],
+            pickerOptions: {
+                disabledDate(time) {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    return time.getTime() > tomorrow.getTime();
+                }
+            },
         };
     },
     mounted() {
@@ -173,7 +208,7 @@ export default {
             this.DBConfig = JSON.parse(res.data.StorageConfig);
         },
         handleDelete(row) {
-            let that=this;
+            let that = this;
             //删除
             this.$modal
                 .confirm('是否确认删除存储数据源"' + row.Name + '"？')
@@ -187,6 +222,24 @@ export default {
                 .catch((err) => {
                     console.log("错误", err);
                 });
+        },
+        handleDelHis(row) {
+            this.$set(this, "delform", {"SourceId":row.Id});
+            this.$set(this, "deldateRange", []);
+            this.deldlgvis = true;
+        },
+        submitDelForm() {
+            if (this.deldateRange.length < 2) {
+                this.$message({
+                    message: "请选择删除的日期范围",
+                    type: "error",
+                });
+                return;
+            }
+            this.addDateRange(this.delform, this.deldateRange, ['BeginTime', 'EndTime']);
+            delAllHistory(this.delform).then((rsp) => {
+                this.$modal.msgSuccess("发送成功");
+            });
         },
         async submitForm() {
             const loading = this.$loading({

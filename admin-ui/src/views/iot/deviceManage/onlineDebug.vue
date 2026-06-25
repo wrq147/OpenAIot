@@ -274,11 +274,6 @@
               end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
-          <!-- <el-form-item label="属性">
-            <el-select v-model="delform.code" filterable remote reserve-keyword placeholder="请选择属性" clearable>
-                <el-option v-for="item in propertieslist" :key="item.code" :label="item.name" :value="item.code"></el-option>
-              </el-select>
-          </el-form-item> -->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitDelForm">执 行</el-button>
