@@ -52,7 +52,7 @@ namespace AuthService.Controller
         [About()]
         public async Task<AjaxResult> Remove(long[] id)
         {
-            return this.Success(await _loginLogBLL.DeleteLoginLogByIds(id));
+            return (await _loginLogBLL.DeleteLoginLogByIds(id)).ToAjaxResult();
         }
         [HttpGet]
         [About("Remove")]

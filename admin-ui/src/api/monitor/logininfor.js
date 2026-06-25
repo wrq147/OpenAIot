@@ -10,10 +10,11 @@ export function list(query) {
 }
 
 // 删除登录日志
-export function delLogininfor(infoId) {
+export function delLogininfor(query) {
   return request({
-    url: '/AuthService/LoginiLog/Remove/' + infoId,
-    method: 'get'
+    url: '/AuthService/LoginiLog/Remove',
+    method: 'get',
+    params: query
   })
 }
 

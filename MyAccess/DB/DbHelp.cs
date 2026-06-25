@@ -170,10 +170,6 @@ namespace MyAccess.DB
                         Sql = null
                     });
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
                 finally
                 {
                     ClearDbParamters();
@@ -197,10 +193,6 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = null
                     });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -237,10 +229,6 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
                 finally
                 {
                     ClearDbParamters();
@@ -264,10 +252,6 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = sql
                     });
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -387,10 +371,6 @@ namespace MyAccess.DB
                         Sql = null
                     });
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
                 finally
                 {
                     ClearDbParamters();
@@ -414,10 +394,6 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = null
                     });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -447,10 +423,6 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
                 finally
                 {
                     ClearDbParamters();
@@ -474,10 +446,6 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = sql
                     });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {

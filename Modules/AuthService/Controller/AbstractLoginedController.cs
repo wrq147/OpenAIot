@@ -5,13 +5,14 @@ using TemplateAction.NetCore;
 using System.Threading.Tasks;
 using TemplateAction.Core;
 using Common.Share;
+using Microsoft.Extensions.Logging;
 
 namespace AuthService.Controller
 {
     /// <summary>
     /// 已登录接口处理需要继承此控制器
     /// </summary>
-    public abstract class AbstractLoginedController: TANetController, ILoginController
+    public abstract class AbstractLoginedController : TANetController, ILoginController
     {
         /// <summary>
         /// 异常处理
@@ -22,6 +23,7 @@ namespace AuthService.Controller
         public override IResult Exception(int code, Exception ex)
         {
             Context.Items["OperException"] = ex;
+            this.ServiceProvider.GetService<ILoggerFactory>().CreateLogger("AbstractLoginedController").LogError(ex.Message + ":" + ex.StackTrace);
             return this.Error<string>(code, ex.Message);
         }
         public override async Task<IResult> CallAction(TAAction ac, object[] parameters)

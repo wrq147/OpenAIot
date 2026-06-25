@@ -42,9 +42,13 @@ namespace AuthService
         /// </summary>
         /// <param name="infoIds"></param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteLoginLogByIds(long[] ids)
+        public virtual async Task<BusResponse<int>> DeleteLoginLogByIds(long[] ids)
         {
-            return await _loginLog.DeleteLoginLogByIds(ids);
+            if (ids.Length == 0)
+            {
+                return BusResponse<int>.Error(111, "请选择需要删除的日志");
+            }
+            return BusResponse<int>.Success(await _loginLog.DeleteLoginLogByIds(ids));
         }
 
 

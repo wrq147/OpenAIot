@@ -262,7 +262,7 @@ export default {
       this.$modal
         .confirm('是否确认删除访问编号为"' + infoIds + '"的数据项？')
         .then(function() {
-          return delLogininfor(infoIds);
+          return delLogininfor({id:infoIds});
         })
         .then(() => {
           this.getList();

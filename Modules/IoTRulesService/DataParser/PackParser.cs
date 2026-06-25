@@ -1010,23 +1010,14 @@ namespace IoTRulesService.DataParser
                                                             {
                                                                 tmps = body.ReadInt16LE();
                                                             }
-                                                            object tmpobj;
-                                                            if (prpitem.option.type == "float")
-                                                            {
-                                                                byte[] bytes = BitConverter.GetBytes(tmps);
-                                                                tmpobj = BitConverter.ToSingle(bytes);
-                                                            }
-                                                            else
-                                                            {
-                                                                tmpobj = tmps;
-                                                            }
+          
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
-                                                                propsDict[prop.PropertyCode] = tmpobj;
+                                                                propsDict[prop.PropertyCode] = tmps;
                                                             }
                                                             else
                                                             {
-                                                                propsDict.Add(prop.PropertyCode, tmpobj);
+                                                                propsDict.Add(prop.PropertyCode, tmps);
                                                             }
                                                         }
                                                         else if (datalen == 4)
@@ -1047,23 +1038,14 @@ namespace IoTRulesService.DataParser
                                                                     tmpi = body.ReadInt32BE();
                                                                     break;
                                                             }
-                                                            object tmpobj;
-                                                            if (prpitem.option.type == "float")
-                                                            {
-                                                                byte[] bytes = BitConverter.GetBytes(tmpi);
-                                                                tmpobj = BitConverter.ToSingle(bytes);
-                                                            }
-                                                            else
-                                                            {
-                                                                tmpobj = tmpi;
-                                                            }
+                                                     
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
-                                                                propsDict[prop.PropertyCode] = tmpobj;
+                                                                propsDict[prop.PropertyCode] = tmpi;
                                                             }
                                                             else
                                                             {
-                                                                propsDict.Add(prop.PropertyCode, tmpobj);
+                                                                propsDict.Add(prop.PropertyCode, tmpi);
                                                             }
 
                                                         }
@@ -1079,23 +1061,14 @@ namespace IoTRulesService.DataParser
                                                                     tmpi = body.ReadInt64BE();
                                                                     break;
                                                             }
-                                                            object tmpobj;
-                                                            if (prpitem.option.type == "float")
-                                                            {
-                                                                byte[] bytes = BitConverter.GetBytes(tmpi);
-                                                                tmpobj = BitConverter.ToDouble(bytes);
-                                                            }
-                                                            else
-                                                            {
-                                                                tmpobj = tmpi;
-                                                            }
+                                  
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
-                                                                propsDict[prop.PropertyCode] = tmpobj;
+                                                                propsDict[prop.PropertyCode] = tmpi;
                                                             }
                                                             else
                                                             {
-                                                                propsDict.Add(prop.PropertyCode, tmpobj);
+                                                                propsDict.Add(prop.PropertyCode, tmpi);
                                                             }
 
                                                         }

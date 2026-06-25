@@ -225,7 +225,6 @@ namespace IoTService.Controller
         /// 获取协议信息
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="notsl"></param>
         /// <returns></returns>
         [HttpGet]
         [ShareCheck]

@@ -51,7 +51,8 @@ namespace ThirdPartyService.Controller
                             string tmpkey = weather_option["key"];
                             var rt = await HttpHelper.Instance.GetAsync("https://restapi.amap.com/v3/weather/weatherInfo?city=" + code + "&key=" + tmpkey);
                             dynamic cardrs = System.Text.Json.JsonSerializer.Deserialize<object>(rt, MyDefaultTextJsonConfig.DefaultOptions) as ExpandoObject;
-                            if (cardrs.status != 1)
+                            string status = cardrs.status?.ToString() ?? "0";
+                            if (status != "1")
                             {
                                 return this.Error<string>(12, (string)cardrs.info);
                             }
