@@ -102,17 +102,13 @@ namespace IoTService
                 return string.Empty;
             }
         }
-        private static float ObjToFloat(object input)
+        private static float ObjToFloat(object input, Type t)
         {
             try
             {
-                if (input is float tmpf)
+                if (t == typeof(float) || t == typeof(double))
                 {
-                    return tmpf;
-                }
-                else if (input is double tmpd)
-                {
-                    return Convert.ToSingle(tmpd);
+                    return Convert.ToSingle(input);
                 }
                 else
                 {
@@ -125,13 +121,13 @@ namespace IoTService
                 return 0;
             }
         }
-        private static uint ObjToUnsigned(object input)
+        private static uint ObjToUnsigned(object input, Type t)
         {
             try
             {
-                if (input is short sval)
+                if (t == typeof(short))
                 {
-                    return (ushort)sval;
+                    return (ushort)input;
                 }
                 else
                 {
@@ -160,13 +156,19 @@ namespace IoTService
             {
                 try
                 {
+                    Type t = typeof(int);
+                    if (input != null)
+                    {
+                        t = input.GetType();
+                    }
                     var eng = new Engine()
-                    .SetValue("toFloat", new Func<object, float>(ObjToFloat))
-                    .SetValue("toUnsigned", new Func<object, uint>(ObjToUnsigned))
-                    .SetValue("data", input)
+                    .SetValue("toFloat", new Func<object, float>(val => ObjToFloat(val, t)))
+                    .SetValue("toUnsigned", new Func<object, uint>(val => ObjToUnsigned(val, t)))
                     .SetValue("byteTo", new ByteTrueToDelegate(ByteTrueTo))
                     .SetValue("byteAllTo", new ByteTrueToDelegate(ByteAllTo))
-                    .SetValue("prop", getProp);
+                    .SetValue("prop", getProp)
+                    .SetValue("data", input);
+               
                     var res = eng.Evaluate(bv.express);
                     return bv.InnerRawTo(res.ToObject());
                 }

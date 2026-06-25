@@ -38,7 +38,7 @@
                                 <el-button type="text" icon="el-icon-delete"
                                     @click="handleDelete(scope.row)">删除</el-button>
                                 <el-button type="text" icon="el-icon-close"
-                                    @click="handleDelHis(scope.row)">清除历史数据</el-button>
+                                    @click="handleDelHis(scope.row)">清除数据</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
