@@ -2,52 +2,16 @@
 branches: {
   }
 fileChange:
-  /Common:
-    newFile: !uuid '45956cfa6ef47850fa0e486025c77a2c4ec4c63f'
-    oldFile: !uuid '44a87ab6855189d87bcb466157ac58598f1dd08a'
-  /Common/EventBus:
-    newFile: !uuid '8e7ecb1b108be7ee682b1527063d81c6d11eafa7'
-    oldFile: !uuid 'a8ef4ffdd1c2274158cdc41f6f45df20e67842e8'
-  /Common/EventBus/NatsScope.cs:
-    newFile: !uuid '8901d7638fae81ae5efcb39eb1e6b08e8b0ff945'
-    oldFile: !uuid 'fc81c8819c487f50f37b0e0a115a709f1b964982'
-  /Modules:
-    newFile: !uuid '27284de203456098abad34b15ab23a299fc5606e'
-    oldFile: !uuid 'eb06a5c575d031a0712ead4451f92ad07afc8030'
-  /Modules/LLMService:
-    newFile: !uuid 'afdffacd8e328b0bd6d88a9ff27b2ea0e765bdcd'
-    oldFile: !uuid 'fb0cf9d8cc7a239d77ab1444e4f3bf7e2ce818ab'
-  /Modules/LLMService/Business:
-    newFile: !uuid '8fe56bba0feaedb52e38a29bc440e01666108cf4'
-    oldFile: !uuid '3bdd1ffc05857817bf454a88c9a1ec746487c9f4'
-  /Modules/LLMService/Business/ChatBLL.cs:
-    newFile: !uuid '8a4f49ef5f8af9f7ae26530048a5d9a756a509d4'
-    oldFile: !uuid '6c0ecb229b0be5873c3c12a8bf1f3b1dabe45f60'
-  /Modules/MonitorService:
-    newFile: !uuid '7fcba181df615648b533925f55030843087da685'
-    oldFile: !uuid 'f1b9ce09885178cc0658ee6586dcc7c9012e7239'
-  /Modules/MonitorService/PluginConfig.cs:
-    newFile: !uuid '3fb21b5ebfdb25353e885bac2d5c9c76f8fc73da'
-    oldFile: !uuid '411903cd23f2c1c85c0de35d709cc33b30606448'
-  /admin-ui:
-    newFile: !uuid '11b33571363fb4014cf328217dd04f077bccd424'
-    oldFile: !uuid '552a11d4ef1eb821769c35aa8727f6c0183ddbbd'
-  /admin-ui/src:
-    newFile: !uuid 'dc00405410ee2f302699179d15ecca681ad23660'
-    oldFile: !uuid '5053875f2ef2500c46e6f51b5191fbe111d1168f'
-  /admin-ui/src/views:
-    newFile: !uuid '067ec85516dc32431be21c7d33a1a084680aa552'
-    oldFile: !uuid '779fa66c9defb31ba33c870a62f6fbf36a49df6f'
-  /admin-ui/src/views/iot:
-    newFile: !uuid 'f05dd1950d52321b06a54ddc91b26a8e956c8146'
-    oldFile: !uuid '28101d725b9395d1b187a8a0b6833bed7a6b1b26'
-  /admin-ui/src/views/iot/rulesEngine:
-    newFile: !uuid '11371df86b059336ab01120fa4cd8f6f18456b25'
-    oldFile: !uuid 'eed28da226f768428900bf47264c6308f806fbbd'
-  /admin-ui/src/views/iot/rulesEngine/add.vue:
-    newFile: !uuid '06af05071680253c8f0fd98b83076bf62d815afb'
-    oldFile: !uuid '1f3bf19b78cc10113a0d3f36ecd465364302b0c0'
-gitCommitId: !uuid 'efa417164b73612d42966463fb619cf8051ba91f'
+  /MyAccess:
+    newFile: !uuid 'dea11ded07c81a9dabd1fedc92e14b819888f813'
+    oldFile: !uuid '2b2184ead1cbb3d67ea392a9217d83ce80fe0040'
+  /MyAccess/DB:
+    newFile: !uuid '7f2dc5664fb6c9c5e257212b61b6899400c66033'
+    oldFile: !uuid 'dbf451af88b97913e9e93a7efd9440245eaa8987'
+  /MyAccess/DB/DbHelp.cs:
+    newFile: !uuid '0ecb4197818977c29f9341945a98087875c1f251'
+    oldFile: !uuid '2b0363d6e5839a39c181eecbbbe4b8246f32273b'
+gitCommitId: !uuid 'b04a480daee00a1dc471a395c781d4fb6714f7d9'
 renames: {
   }
-revisionId: 382
+revisionId: 383
