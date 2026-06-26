@@ -49,14 +49,16 @@ namespace LLMService.Business
             _tbDict = new Dictionary<string, List<T_TableField>>();
             _tableCommentDict = new Dictionary<string, string>();
 
-            MySqlConnection con = new MySqlConnection(_option.Value.DBConnectionString);
+            using MySqlConnection con = new MySqlConnection(_option.Value.DBConnectionString);
             await con.OpenAsync();
-            string exesql = $"SELECT COLUMN_NAME,DATA_TYPE,TABLE_NAME,COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{con.Database}'";
+            string exesql = "SELECT COLUMN_NAME,DATA_TYPE,TABLE_NAME,COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = @dbName";
             DataSet ds = new DataSet();
-            MySqlCommand cmd = new MySqlCommand(exesql, con);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-            adapter.Fill(ds);
-            await con.CloseAsync();
+            using (MySqlCommand cmd = new MySqlCommand(exesql, con))
+            using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+            {
+                cmd.Parameters.AddWithValue("@dbName", con.Database);
+                adapter.Fill(ds);
+            }
 
 
             if (ds.Tables.Count > 0)
@@ -92,16 +94,16 @@ namespace LLMService.Business
             }
 
             DataSet tableDs = new DataSet();
-            await con.OpenAsync();
             string tableSql = @"
         SELECT TABLE_NAME, TABLE_COMMENT 
         FROM INFORMATION_SCHEMA.TABLES 
         WHERE TABLE_SCHEMA = @dbName AND TABLE_TYPE = 'BASE TABLE'";
-            using MySqlCommand tableCmd = new MySqlCommand(tableSql, con);
-            tableCmd.Parameters.AddWithValue("@dbName", con.Database);
-            MySqlDataAdapter tableAdapter = new MySqlDataAdapter(tableCmd);
-            await tableAdapter.FillAsync(tableDs);
-            await con.CloseAsync();
+            using (MySqlCommand tableCmd = new MySqlCommand(tableSql, con))
+            using (MySqlDataAdapter tableAdapter = new MySqlDataAdapter(tableCmd))
+            {
+                tableCmd.Parameters.AddWithValue("@dbName", con.Database);
+                await tableAdapter.FillAsync(tableDs);
+            }
 
             if (tableDs.Tables.Count > 0)
             {
@@ -200,14 +202,14 @@ namespace LLMService.Business
                 }
                 res.TotalCount = totalCount;
                 res.TotalPage = totalCount == 0 ? 0 : (totalCount + pageSize - 1) / pageSize;
-                await con.CloseAsync();
+
 
                 // 2. 查询当前页数据
-                await con.OpenAsync();
-                MySqlDataAdapter adapter = new MySqlDataAdapter(pageSql, con);
                 DataTable dt = new DataTable();
-                await adapter.FillAsync(dt);
-                await con.CloseAsync();
+                using (MySqlDataAdapter adapter = new MySqlDataAdapter(pageSql, con))
+                {
+                    await adapter.FillAsync(dt);
+                }
 
                 foreach (DataRow row in dt.Rows)
                 {
