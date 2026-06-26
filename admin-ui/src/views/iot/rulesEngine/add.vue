@@ -581,6 +581,9 @@ export default {
 
       if (rulse.TriggerWay == 0) {
         this.topicMsgList.map((its) => {
+          if(rulse.TriggerList==null||rulse.TriggerList.length==0){
+            return;
+          }
           if (rulse.TriggerList[0].TopicMsg == its.value) {
             rulse.TopicMsg = its;
           } else {

@@ -8,7 +8,6 @@ using MonitorService.DAL;
 using MonitorService.Model;
 using MonitorService.Util;
 using Quartz;
-using SQLitePCL;
 using System;
 using System.Threading.Tasks;
 using TemplateAction.Common;
@@ -54,7 +53,7 @@ namespace MonitorService
                 var factory = SchedulerBuilder.Create()
                  .WithId(instanceId)
                  .WithName(instanceName)
-                 .UseDefaultThreadPool(x => x.MaxConcurrency = 5)
+                 .UseDefaultThreadPool(x => x.MaxConcurrency = 10)
                  .WithMisfireThreshold(TimeSpan.FromSeconds(60))
                  .UsePersistentStore(x =>
                  {

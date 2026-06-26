@@ -90,10 +90,6 @@ namespace Common.EventBus
             where Z : EvtResponse, new()
         {
             var requestTimeout = TimeSpan.FromSeconds(8);
-            if (evt is QuartzExeEvent)
-            {
-                requestTimeout = TimeSpan.FromSeconds(60);
-            }
             try
             {
                 var replyMsg = await Bus.RequestAsync<T, Z>(key, evt, null, DefalutNatsJsonSerializer<T>.Default, DefalutNatsJsonSerializer<Z>.Default, null, new NatsSubOpts()

@@ -240,7 +240,7 @@ namespace LLMService.Business
                                             "#llmt正文里包含了工具调用，将重新尝试\r\n"
                                         });
                                 msgList.Add(new ChatMessage(ChatRole.Assistant, rawText));
-                                msgList.Add(new ChatMessage(ChatRole.User, $"正文里包含了工具调用ToolCallId:call，因此需要重新尝试回答 {userInput}"));
+                                msgList.Add(new ChatMessage(ChatRole.User, $"非标准FunctionCall结构，因此重新尝试回答 {userInput}"));
                                 needRetry = true;
                                 return needRetry;
                             }
