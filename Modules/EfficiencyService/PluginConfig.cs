@@ -49,7 +49,7 @@ namespace EfficiencyService
                         job.invoke_target = typeof(ProductionBLL).FullName + ".ExecuteEnergy($context)";
                         job.job_group = jhgroup;
                         job.job_name = jhjobname;
-                        job.misfire_policy = "1";
+                        job.misfire_policy = "2";
                         job.status = "0";
 
                         await jobBLL.InsertJob(job);

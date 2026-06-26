@@ -196,7 +196,6 @@
             获取协议信息
             </summary>
             <param name="id"></param>
-            <param name="notsl"></param>
             <returns></returns>
         </member>
         <member name="M:IoTService.Controller.HttpSync.AddDevice(IoTService.Models.In_SyncDevice)">

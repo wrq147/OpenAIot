@@ -105,7 +105,7 @@ namespace IoTVideoService
             INatsSub<T> resSub = null;
             try
             {
-                var requestTimeout = TimeSpan.FromSeconds(8);
+                var requestTimeout = TimeSpan.FromSeconds(5);
                 resSub = await scope.Bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,

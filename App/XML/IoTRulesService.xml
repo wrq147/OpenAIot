@@ -707,13 +707,14 @@
             <param name="msgId">如果msgId为null,则自动取系统保存的第一条msgId</param>
             <returns></returns>
         </member>
-        <member name="M:IoTRulesService.DataParser.PackParser.PublicWait(System.String,System.String,System.Func{System.Threading.Tasks.Task})">
+        <member name="M:IoTRulesService.DataParser.PackParser.PublicWait(System.String,System.String,System.Func{System.Threading.Tasks.Task},System.Action{System.String})">
             <summary>
             获取设备指定类型的返回值
             </summary>
             <param name="deviceId"></param>
             <param name="msgId"></param>
             <param name="ac"></param>
+            <param name="callback"></param>
             <returns></returns>
         </member>
         <member name="M:IoTRulesService.DataParser.PackParser.PublicMessage(ChannelUtility.Message.BaseDeviceMessage,ChannelUtility.TslReturn)">

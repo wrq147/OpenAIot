@@ -120,7 +120,7 @@ namespace IoTService
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
-                var requestTimeout = TimeSpan.FromSeconds(8);
+                var requestTimeout = TimeSpan.FromSeconds(5);
                 resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
@@ -646,7 +646,7 @@ namespace IoTService
             msg.DeviceId = deviceId;
             if (indate == null)
             {
-                msg.Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+                msg.Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             }
             else
             {

@@ -31,8 +31,15 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button icon="el-icon-upload2" plain>导入</el-button>
+        <el-button icon="el-icon-upload2" @click="triggerMdImport" plain>导入Markdown</el-button>
         <el-button @click="handlePreviewKb" icon="el-icon-view" plain>预览</el-button>
+          <input
+          ref="mdFileInput"
+          type="file"
+          accept=".md"
+          style="display: none"
+          @change="handleMdFileSelect"
+        />
       </div>
     </div>
 
@@ -445,7 +452,40 @@ export default {
 
     handleEditorCreated(editor) {
       this.editor = Object.seal(editor)
-    }
+    },
+    triggerMdImport() {
+      this.$refs.mdFileInput.value = '';
+      this.$refs.mdFileInput.click();
+    },
+    handleMdFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      // 校验后缀
+      if (!file.name.endsWith('.md')) {
+        this.$modal.msgError('仅支持导入 .md 格式Markdown文件');
+        return;
+      }
+      // 截取文件名（去掉后缀.md作为标题）
+      let fileName = file.name.replace(/\.md$/i, '');
+      // 文件读取器
+      const reader = new FileReader();
+      reader.onload = (res) => {
+        const mdRaw = res.target.result;
+        // 切换到新建文章页面
+        this.isEditingColumn = false;
+        this.isEditingArticle = true;
+        // 初始化文章数据
+        this.editingArticle = {
+          Id: undefined,
+          Title: fileName,
+          Content: mdRaw,
+          ColumnId: null
+        };
+        // Markdown转HTML回填富文本编辑器
+        this.editorContent = this.markdownToHtml(mdRaw);
+      };
+      reader.readAsText(file, 'utf-8');
+    },
   }
 }
 </script>

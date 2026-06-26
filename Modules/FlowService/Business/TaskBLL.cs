@@ -180,7 +180,7 @@ namespace FlowService.Business
                         job.invoke_target = typeof(TaskBLL).FullName + ".ScheduleNotice(L" + nodeId + ",0," + (++count) + ")";
                         job.job_group = group;
                         job.job_name = jobname;
-                        job.misfire_policy = "1";
+                        job.misfire_policy = "2";
                         job.status = "0";
                         await _provider.GetService<JobBLL>().InsertJob(job);
                     }
@@ -238,7 +238,7 @@ namespace FlowService.Business
                         job.invoke_target = typeof(TaskBLL).FullName + ".ScheduleNotice(L" + nodeId + ",1," + (++count) + ")";
                         job.job_group = group;
                         job.job_name = jobname;
-                        job.misfire_policy = "1";
+                        job.misfire_policy = "2";
                         job.status = "0";
                         await _provider.GetService<JobBLL>().InsertJob(job);
                     }

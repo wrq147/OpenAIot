@@ -191,7 +191,7 @@ namespace IoTRulesService.DataParser
                 }
 
                 var bus = _provider.GetService<NatsScope>().Bus;
-                var requestTimeout = TimeSpan.FromSeconds(8);
+                var requestTimeout = TimeSpan.FromSeconds(5);
                 resSub = await bus.SubscribeCoreAsync<T>(msg.MessageId, null, DefalutNatsJsonSerializer<T>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
@@ -227,11 +227,11 @@ namespace IoTRulesService.DataParser
                 }
             }
         }
-        public async Task<ReadPropertyMessageReply> PublicWaitReadProperty(ReadPropertyMessage msg)
+        public async Task PublicWaitReadProperty(ReadPropertyMessage msg, Func<ReadPropertyMessageReply, Task> ac)
         {
             await StartReadAllMessage(msg.ProductId, msg.DeviceId, msg.Properties);
             var reply = await WaitDownPackage<ReadPropertyMessage, ReadPropertyMessageReply>(msg).ConfigureAwait(false);
-            return reply;
+            await ac.Invoke(reply);
         }
 
         public async Task<FunctionInvokeMessageReply> PublicWaitFuncReply(FunctionInvokeMessage msg)
@@ -360,7 +360,7 @@ namespace IoTRulesService.DataParser
             await _iotRedis.ListRightPushAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
             try
             {
-                var requestTimeout = TimeSpan.FromSeconds(8);
+                var requestTimeout = TimeSpan.FromSeconds(5);
                 var bus = _provider.GetService<NatsScope>().Bus;
                 await foreach (var msg in bus.SubscribeAsync(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
                 {
@@ -398,8 +398,9 @@ namespace IoTRulesService.DataParser
         /// <param name="deviceId"></param>
         /// <param name="msgId"></param>
         /// <param name="ac"></param>
+        /// <param name="callback"></param>
         /// <returns></returns>
-        public async Task<string> PublicWait(string deviceId, string msgId, Func<Task> ac)
+        public async Task<string> PublicWait(string deviceId, string msgId, Func<Task> ac, Action<string> callback = null)
         {
             if (msgId == null)
             {
@@ -411,7 +412,7 @@ namespace IoTRulesService.DataParser
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
-                var requestTimeout = TimeSpan.FromSeconds(8);
+                var requestTimeout = TimeSpan.FromSeconds(5);
                 resSub = await bus.SubscribeCoreAsync<string>(msgId, null, DefalutNatsJsonSerializer<string>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
@@ -425,6 +426,7 @@ namespace IoTRulesService.DataParser
                 {
                     //清除系统消息Id
                     await _iotRedis.ListRemoveAsync($"DeviceMsgId:{deviceId}", msgId).ConfigureAwait(false);
+                    callback?.Invoke(responseMsg.Data);
                     return responseMsg.Data;
                 }
                 throw new TimeoutException($"等待 {requestTimeout.TotalSeconds} 秒后未收到回复");
@@ -443,6 +445,7 @@ namespace IoTRulesService.DataParser
                 }
                 await Print(deviceId, "异常", "下发的消息无回复").ConfigureAwait(false);
                 _log.LogError(ex.Message);
+                callback?.Invoke(null);
                 return null;
             }
             finally
@@ -1010,7 +1013,7 @@ namespace IoTRulesService.DataParser
                                                             {
                                                                 tmps = body.ReadInt16LE();
                                                             }
-          
+
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
                                                                 propsDict[prop.PropertyCode] = tmps;
@@ -1038,7 +1041,7 @@ namespace IoTRulesService.DataParser
                                                                     tmpi = body.ReadInt32BE();
                                                                     break;
                                                             }
-                                                     
+
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
                                                                 propsDict[prop.PropertyCode] = tmpi;
@@ -1061,7 +1064,7 @@ namespace IoTRulesService.DataParser
                                                                     tmpi = body.ReadInt64BE();
                                                                     break;
                                                             }
-                                  
+
                                                             if (propsDict.ContainsKey(prop.PropertyCode))
                                                             {
                                                                 propsDict[prop.PropertyCode] = tmpi;
@@ -1296,7 +1299,7 @@ namespace IoTRulesService.DataParser
                         string callkey = "Func#" + tmmm.SlaveId + "#" + tmmm.FuncCode + "#" + tmmm.StartAddress + "#" + funModel.prefixcode;
                         if (funModel.waitreturn == true)
                         {
-                            string rs = await this.PublicWait(funcMessage.DeviceId, callkey, async () =>
+                            _ = this.PublicWait(funcMessage.DeviceId, callkey, async () =>
                             {
                                 //未发布打印
                                 if (ret.Status == "0")
@@ -1305,14 +1308,18 @@ namespace IoTRulesService.DataParser
                                 }
 
                                 await this.PublicMessage(rawdata, ret);
+                            },async (rss) =>
+                            {
+                                await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, null, string.Empty, funcMessage.MessageId);
                             });
                         }
                         else
                         {
                             await this.PublicMessage(rawdata, ret);
+                            await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, null, string.Empty, funcMessage.MessageId);
                         }
 
-                        await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, null, string.Empty, funcMessage.MessageId);
+
                         return null;
                     }
                     else
@@ -1351,17 +1358,18 @@ namespace IoTRulesService.DataParser
                     newmsg.ProductId = msg.ProductId;
                     newmsg.Properties = propslist;
                     newmsg.MessageId = $"Rd{msg.DeviceId}-{propslist.Count}-{UtilityTool.MD5(string.Join('#', props))}";
-                    var rt = await PublicWaitReadProperty(newmsg);
-                    if (rt == null)
+                    _ = PublicWaitReadProperty(newmsg, async rpm =>
                     {
-                        await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, false, null, "直接读属性执行失败", funcMessage.MessageId);
-                        return null;
-                    }
-                    else
-                    {
-                        await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, rt.Properties, string.Empty, funcMessage.MessageId);
-                        return null;
-                    }
+                        if (rpm == null)
+                        {
+                            await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, false, null, "直接读属性执行失败", funcMessage.MessageId);
+                        }
+                        else
+                        {
+                            await this.ConfirmFuncReply(funcMessage.ProductId, funcMessage.DeviceId, true, rpm.Properties, string.Empty, funcMessage.MessageId);
+                        }
+                    });
+                    return null;
                 }
                 else if (funModel.downway == 4)
                 {

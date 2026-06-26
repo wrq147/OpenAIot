@@ -256,23 +256,21 @@ namespace IoTRulesService.DataParser.Js
         /// <param name="bytes">推送的字节数组</param>
         public void PublicCallback(Action<string> ac, string msgId, byte[] bytes)
         {
-            Task.Run(() =>
+            _ = _client.PublicWait(_msg.DeviceId, msgId, async () =>
             {
-                var res = _client.PublicWait(_msg.DeviceId, msgId, async () =>
-                {
-                    RawDataMessage rawdata = new RawDataMessage();
-                    rawdata.Data = bytes;
-                    rawdata.DeviceId = _msg.DeviceId;
-                    rawdata.MessageId = msgId;
-                    rawdata.ProductId = _msg.ProductId;
-                    rawdata.prefix = this._prefix;
-                    await _client.PublicMessage(rawdata, null);
-                });
+                RawDataMessage rawdata = new RawDataMessage();
+                rawdata.Data = bytes;
+                rawdata.DeviceId = _msg.DeviceId;
+                rawdata.MessageId = msgId;
+                rawdata.ProductId = _msg.ProductId;
+                rawdata.prefix = this._prefix;
+                await _client.PublicMessage(rawdata, null);
+            }, (sss) =>
+            {
                 _client.Provider.GetService<RuleWheelRuner>().PushConcurrentTask(_msg.DeviceId, () =>
                 {
-                    ac(res.Result);
+                    ac(sss);
                 });
-         
             });
         }
 

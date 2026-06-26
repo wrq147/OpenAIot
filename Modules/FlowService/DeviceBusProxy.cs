@@ -108,7 +108,7 @@ namespace FlowService
             try
             {
                 var bus = _provider.GetService<NatsScope>().Bus;
-                var requestTimeout = TimeSpan.FromSeconds(8);
+                var requestTimeout = TimeSpan.FromSeconds(5);
                 resSub = await bus.SubscribeCoreAsync(msg.MessageId, null, DefalutNatsJsonSerializer<FunctionInvokeMessageReply>.Default, new NatsSubOpts
                 {
                     MaxMsgs = 1,
