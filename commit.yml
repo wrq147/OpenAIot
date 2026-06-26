@@ -2,16 +2,19 @@
 branches: {
   }
 fileChange:
-  /MyAccess:
-    newFile: !uuid 'dea11ded07c81a9dabd1fedc92e14b819888f813'
-    oldFile: !uuid '2b2184ead1cbb3d67ea392a9217d83ce80fe0040'
-  /MyAccess/DB:
-    newFile: !uuid '7f2dc5664fb6c9c5e257212b61b6899400c66033'
-    oldFile: !uuid 'dbf451af88b97913e9e93a7efd9440245eaa8987'
-  /MyAccess/DB/DbHelp.cs:
-    newFile: !uuid '0ecb4197818977c29f9341945a98087875c1f251'
-    oldFile: !uuid '2b0363d6e5839a39c181eecbbbe4b8246f32273b'
-gitCommitId: !uuid 'b04a480daee00a1dc471a395c781d4fb6714f7d9'
+  /Modules:
+    newFile: !uuid 'ae2a2f84dc2b9db56f078f47455b97c47ed471bb'
+    oldFile: !uuid '27284de203456098abad34b15ab23a299fc5606e'
+  /Modules/LLMService:
+    newFile: !uuid '161892fc06a6cb64ea85741b03fd93f9ae109ea9'
+    oldFile: !uuid 'afdffacd8e328b0bd6d88a9ff27b2ea0e765bdcd'
+  /Modules/LLMService/Business:
+    newFile: !uuid '7b6f61cd310c8641e6247895fd2773765e06eafe'
+    oldFile: !uuid '8fe56bba0feaedb52e38a29bc440e01666108cf4'
+  /Modules/LLMService/Business/DbSearchBLL.cs:
+    newFile: !uuid '570a97cea10fcf04c3377813557b79e777f27c79'
+    oldFile: !uuid '59c644b11fd69a5116183dbb10bdadf192ef22a8'
+gitCommitId: !uuid '99fb6e975be21ec6fc9e8b23bbfffc43615a5c74'
 renames: {
   }
-revisionId: 383
+revisionId: 384
