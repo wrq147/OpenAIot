@@ -104,17 +104,16 @@ namespace ReportService.Business
             DataSet ds = new DataSet();
             if (type == "sqlserver")
             {
-                SqlConnection con = new SqlConnection(string.Format("server={0},{1};User Id={2};Password={3};Database={4};", ipAddress, port, username, password, "master"));
+                using SqlConnection con = new SqlConnection(string.Format("server={0},{1};User Id={2};Password={3};Database={4};", ipAddress, port, username, password, "master"));
                 await con.OpenAsync();
                 SqlCommand cmd = new SqlCommand("SELECT name FROM sys.databases", con);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(ds);
-                await con.CloseAsync();
                 return BusResponse<DataTable>.Success(ds.Tables[0]);
             }
             else if (type == "mysql")
             {
-                MySqlConnection con = new MySqlConnection(string.Format("server={0};port={1};user={2};password={3};database={4};Pooling=false", ipAddress, port, username, password, "mysql"));
+                using MySqlConnection con = new MySqlConnection(string.Format("server={0};port={1};user={2};password={3};database={4};Pooling=false", ipAddress, port, username, password, "mysql"));
                 await con.OpenAsync();
                 DataTable dt = con.GetSchema("Databases");
                 DataTable newdt = new DataTable();
@@ -137,21 +136,19 @@ namespace ReportService.Business
             DataSet ds = new DataSet();
             if (type == "sqlserver")
             {
-                SqlConnection con = new SqlConnection(string.Format("server={0},{1};User Id={2};Password={3};Database={4};", ipAddress, port, username, password, baseName));
+                using SqlConnection con = new SqlConnection(string.Format("server={0},{1};User Id={2};Password={3};Database={4};", ipAddress, port, username, password, baseName));
                 await con.OpenAsync();
                 SqlCommand cmd = new SqlCommand(executeSql, con);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(ds);
-                await con.CloseAsync();
             }
             else if (type == "mysql")
             {
-                MySqlConnection con = new MySqlConnection(string.Format("server={0};port={1};user={2};password={3};database={4};Pooling=false", ipAddress, port, username, password, baseName));
+                using MySqlConnection con = new MySqlConnection(string.Format("server={0};port={1};user={2};password={3};database={4};Pooling=false", ipAddress, port, username, password, baseName));
                 await con.OpenAsync();
                 MySqlCommand cmd = new MySqlCommand(executeSql, con);
                 MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                 adapter.Fill(ds);
-                await con.CloseAsync();
             }
             else
             {
