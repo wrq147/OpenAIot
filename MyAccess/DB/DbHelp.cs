@@ -170,6 +170,11 @@ namespace MyAccess.DB
                         Sql = null
                     });
                 }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -193,6 +198,11 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = null
                     });
+                }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -229,6 +239,11 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -252,6 +267,11 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = sql
                     });
+                }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -371,6 +391,11 @@ namespace MyAccess.DB
                         Sql = null
                     });
                 }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -394,6 +419,11 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = null
                     });
+                }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -423,6 +453,11 @@ namespace MyAccess.DB
                         Sql = sql
                     });
                 }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
+                }
                 finally
                 {
                     ClearDbParamters();
@@ -446,6 +481,11 @@ namespace MyAccess.DB
                         Db = this,
                         Sql = sql
                     });
+                }
+                catch (Exception ex)
+                {
+                    //不能删除，防止抛异常导致未关闭sql连接
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {
