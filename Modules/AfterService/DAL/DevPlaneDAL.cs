@@ -82,7 +82,7 @@ namespace AfterService.DAL
         }
         public virtual async Task<PageObject<MZ_IotDevice>> DevListPage(In_PlaneDevList query)
         {
-            var tsql = new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,p.Name as ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId");
+            var tsql = new SqlBuilder(help).Query<MZ_IotDevice>().Append("select d.*,p.ProductName,rd.Name as RoomName from mz_iot_device d inner join mz_product_batch b on d.Id=b.Id left join mz_product p on b.ProductId=p.Id left join mz_room_device_v rd on d.Id=rd.TargetId");
             tsql = tsql.Append(" where (");
             var targets = await QueryPlaneTargets(query.Id);
             var tdevIds = targets.Where(x => x.TargetType == 0).Select(x => x.TargetId).ToList();
