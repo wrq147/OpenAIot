@@ -172,7 +172,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -201,7 +200,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -241,7 +239,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -270,7 +267,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -393,7 +389,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -422,7 +417,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -455,7 +449,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally
@@ -484,7 +477,6 @@ namespace MyAccess.DB
                 }
                 catch (Exception ex)
                 {
-                    //不能删除，防止抛异常导致未关闭sql连接
                     Console.WriteLine(ex.Message);
                 }
                 finally

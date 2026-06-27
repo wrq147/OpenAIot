@@ -1,6 +1,8 @@
 ﻿using ChannelUtility;
 using Common;
 using IoTService;
+using IoTService.DAL;
+using IoTService.Models;
 using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,7 @@ namespace IoTRulesService
             _provider = provider;
             _cacheHelper = cacheHelper;
         }
+      
         public async Task<IDictionary<string, DevicePropertyValue>> GetDevice(string deviceId)
         {
             string tkey = "mem#" + deviceId;

@@ -161,6 +161,7 @@ namespace LLMService.Business
             sysStrBuilder.AppendLine($"3. 查询末尾强制添加分页 LIMIT " + offset + "," + pageSize + "；");
             sysStrBuilder.AppendLine("4. 禁止DELETE/UPDATE/INSERT/ALTER/DROP等修改语句，禁止UNION、WITH CTE语句；");
             sysStrBuilder.AppendLine("5. 字段尽量不要输出关联的ID，而是输出关联对象的名称；");
+            sysStrBuilder.AppendLine("6. 查询的字段如果是枚举值，应该用case语句转成对应的中文；");
 
             var response = await chatClient.GetResponseAsync(new List<ChatMessage>
             {

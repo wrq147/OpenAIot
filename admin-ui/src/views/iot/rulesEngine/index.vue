@@ -376,11 +376,7 @@ export default {
           let lists = [];
           lists = JSON.parse(JSON.stringify(res.data));
           this.groupTreeList = lists;
-          this.groupTreeListArr=[{
-            Id:'',
-            GroupName:'全部',
-            Children:lists
-          }]
+          this.groupTreeListArr = lists;
           this.tableDataLoading = false;
         }
       });

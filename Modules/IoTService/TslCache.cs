@@ -26,28 +26,13 @@ namespace IoTService
                     if (sendconn)
                     {
                         await serverBus.SendConnect(string.Empty, dtuId);
-                        int tcount = 0;
-                        while (tcount < 5)
-                        {
-                            await Task.Delay(50).ConfigureAwait(false);
-                            productId = await redis.HashGetAsync<string>("Device:" + dtuId, "$ProductId").ConfigureAwait(false);
-                            if (!string.IsNullOrEmpty(productId))
-                            {
-                                break;
-                            }
-                            ++tcount;
-                        }
                     }
-                    else
+                    var deviceDAL = provider.GetService<IotDeviceDAL>();
+                    var devicelist = await deviceDAL.SelectList(x => x.DeviceId == dtuId);
+                    if (devicelist.Count > 0)
                     {
-                        var deviceDAL = provider.GetService<IotDeviceDAL>();
-                        var devicelist = await deviceDAL.SelectList(x => x.DeviceId == dtuId);
-                        if (devicelist.Count > 0)
-                        {
-                            productId = devicelist[0].ProductId;
-                        }
+                        productId = devicelist[0].ProductId;
                     }
-
 
                     if (productId == null)
                     {
