@@ -25,12 +25,12 @@ namespace IoTService
                 {
                     if (sendconn)
                     {
-                        //改成2分钟才能尝试重连一次
+                        //改成1分钟才能尝试重连一次
                         string recckey = "TslReconnect:" + dtuId;
                         var hasrecc = cache.GetCache<string>(recckey);
                         if (string.IsNullOrEmpty(hasrecc))
                         {
-                            cache.SetCache(recckey, "1", DateTime.Now.AddSeconds(180));
+                            cache.SetCache(recckey, "1", DateTime.Now.AddSeconds(60));
                             await serverBus.SendConnect(string.Empty, dtuId);
                         }
                     }
