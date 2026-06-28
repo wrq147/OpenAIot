@@ -25,7 +25,14 @@ namespace IoTService
                 {
                     if (sendconn)
                     {
-                        await serverBus.SendConnect(string.Empty, dtuId);
+                        //改成2分钟才能尝试重连一次
+                        string recckey = "TslReconnect:" + dtuId;
+                        var hasrecc = cache.GetCache<string>(recckey);
+                        if (string.IsNullOrEmpty(hasrecc))
+                        {
+                            cache.SetCache(recckey, "1", DateTime.Now.AddSeconds(180));
+                            await serverBus.SendConnect(string.Empty, dtuId);
+                        }
                     }
                     var deviceDAL = provider.GetService<IotDeviceDAL>();
                     var devicelist = await deviceDAL.SelectList(x => x.DeviceId == dtuId);
