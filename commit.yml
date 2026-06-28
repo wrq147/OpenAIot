@@ -3,18 +3,15 @@ branches: {
   }
 fileChange:
   /Modules:
-    newFile: !uuid '1743a91290b22cdf080bde5cb95f486da101b774'
-    oldFile: !uuid 'bc5c239a957061aa1a27b58ef196718a092776ec'
-  /Modules/AfterService:
-    newFile: !uuid '3a7fe1730ac7045d2dbad666086b8f85ace47d6d'
-    oldFile: !uuid '40e612319fb40d8f12ea949745bed92ca809c10a'
-  /Modules/AfterService/DAL:
-    newFile: !uuid '9c49473038deaab3a682ef047b3a0bccd09909b3'
-    oldFile: !uuid 'a9c40436833813c0bc84caf4b7b1ab7d81eaa68e'
-  /Modules/AfterService/DAL/DevPlaneDAL.cs:
-    newFile: !uuid '1708bd9adb301475e1a38cf8f84e41f12a704176'
-    oldFile: !uuid '40257b5e314cc8437c5842427adcecbd6889c69c'
-gitCommitId: !uuid '1fe96cfbafe9f5110580df09e2001fdbbad01f15'
+    newFile: !uuid '53bafbb474bb09de3fae2e68d246f6e65c42e90b'
+    oldFile: !uuid '1743a91290b22cdf080bde5cb95f486da101b774'
+  /Modules/IoTService:
+    newFile: !uuid '852badcf591823d4d0a8f26e520ff88b1f22be23'
+    oldFile: !uuid '5ac097dba5589832b1de2f0e0ae21d5cd78a89c0'
+  /Modules/IoTService/TslCache.cs:
+    newFile: !uuid 'ea9f5ab9beac912f3d57371ca508382869e1a671'
+    oldFile: !uuid 'd10d1217f8fd01b869acfb9e5660638810c4e6a4'
+gitCommitId: !uuid '2d9fb25e4b1a0e4bfb6dd20ac97ac4f73c883422'
 renames: {
   }
-revisionId: 387
+revisionId: 388
