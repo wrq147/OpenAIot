@@ -86,6 +86,9 @@ namespace IoTRulesService.Flow.Builder
                 case "WARN":
                     BuildWarn((WarnNode)node, stepBuilder);
                     break;
+                case "NOTICE":
+                    BuildNotice((NoticeNode)node, stepBuilder);
+                    break;
                 case "METRONOME":
                     BuildCount((CountNode)node, stepBuilder);
                     break;
@@ -202,6 +205,16 @@ namespace IoTRulesService.Flow.Builder
         private void BuildWarn<T>(WarnNode node, StepBuilder<T> stepBuilder) where T : RuleflowStep
         {
             var builder = stepBuilder.Then<WarnStep>(x =>
+            {
+                x.Step.Id = node.id;
+                x.Step.Name = node.name;
+                x.Step.props = node.props;
+            });
+            BuildRuleflowNode(node.children, builder);
+        }
+        private void BuildNotice<T>(NoticeNode node, StepBuilder<T> stepBuilder) where T : RuleflowStep
+        {
+            var builder = stepBuilder.Then<NoticeStep>(x =>
             {
                 x.Step.Id = node.id;
                 x.Step.Name = node.name;

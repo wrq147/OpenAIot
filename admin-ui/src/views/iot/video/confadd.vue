@@ -142,7 +142,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="180" fixed="right" align="center">
+              <el-table-column label="操作" width="180" align="center">
                 <template slot-scope="scope">
                   <el-link type="primary" icon="el-icon-setting" class="config-btn"
                     @click="openParamConfigDialog(scope.$index)"

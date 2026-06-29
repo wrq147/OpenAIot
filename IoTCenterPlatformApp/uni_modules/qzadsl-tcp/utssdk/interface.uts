@@ -21,6 +21,13 @@ export interface ITcpConnector {
 	writeString(data : string) : void;
 }
 
+export type MyApiErrorCode = 9010001 | 9010002;
+/**
+ * myApi 的错误回调参数
+ */
+export interface MyApiFail extends IUniError {
+  errCode : MyApiErrorCode
+};
 
 
 /* 异步函数定义 */

@@ -6,7 +6,7 @@
     </div>
     <div class="device_sum">
       <div class="sum_li" v-for="item in deviceInfo" :key="item.name" @click="deviceInfoClick(item.name)" 
-         :style="{ cursor: item.name !== '报警事件' ? 'pointer' : 'default' }">
+         :style="{ cursor: 'pointer' }">
         <div class="li_left">
           <img
             src="@/assets/images/shebeizongshu.png"
@@ -197,6 +197,8 @@ export default {
         this.$router.push({ path: '/after/dev/list', query: { id: 1, name: '在线' } })
       }else if(info == '离线数量'){
         this.$router.push({ path: '/after/dev/list', query: { id: 0, name: '离线' } })
+      }else if(info == '报警事件'){
+        this.$router.push({ path: '/after/deviceManage/physicalModel/warnList' })
       }
     }
   },

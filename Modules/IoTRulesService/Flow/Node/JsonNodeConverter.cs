@@ -25,6 +25,7 @@ namespace IoTRulesService.Flow.Node
     { "TRIGGER", typeof(HttpNode) },
     { "FUNC", typeof(FuncNode) },
     { "WARN", typeof(WarnNode) },
+    { "NOTICE", typeof(NoticeNode) },
     { "METRONOME", typeof(CountNode) },
     { "EXCEPT", typeof(ExceptNode) },
     { "CLEARDELTA", typeof(ClearDeltaNode) },
