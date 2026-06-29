@@ -2,16 +2,85 @@
 branches: {
   }
 fileChange:
+  /App:
+    newFile: !uuid '7288d70533b9428863d46ee46a6ec01bddd4dc18'
+    oldFile: !uuid '7cfb86a70e72ce4b6e618bca8922c3569a13ae8f'
+  /App/XML:
+    newFile: !uuid '283052d0d07f9db75498dac99f424a3133a1c71b'
+    oldFile: !uuid 'c2561f9fb776639e481a433a1becb71a2be10846'
+  /App/XML/IoTRulesService.xml:
+    newFile: !uuid 'f63e5802accab644449a410b362c5259cbaa5feb'
+    oldFile: !uuid '560b4ec7dab281c66cfd2d8cce3bfceb68d34b94'
+  /IoTCenterPlatformApp:
+    newFile: !uuid '42032084aed0d1c0472bf63a23d44ca46f99496c'
+    oldFile: !uuid 'aca3116661d34d06e483ff0d03335cb24ae7b40a'
+  /IoTCenterPlatformApp/uni_modules:
+    newFile: !uuid 'bb058e60a1df7af87820f9d3f15bddfa3829c1e2'
+    oldFile: !uuid 'd8deaa5601359dac4f5ce842d522fe1d892e11b5'
+  /IoTCenterPlatformApp/uni_modules/qzadsl-tcp:
+    newFile: !uuid 'a8826b4ca9159c9d77623805cb01670a5622562f'
+    oldFile: !uuid '6e6772a14aaf73dab4fe1af957b69b606da8a0be'
+  /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk:
+    newFile: !uuid 'e63f2458a2e98c2f8f3ccaeb3ded9dd95d7d940c'
+    oldFile: !uuid '508bd35f6444c1aaef4b2da22fa780299a9d6bbc'
+  /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk/interface.uts:
+    newFile: !uuid '486000662abe18a95151421c79d03196c054652f'
+    oldFile: !uuid 'b29a4e98a9d01476447bed6c0f5381a341c35cd8'
   /Modules:
-    newFile: !uuid 'ce2f6340a762ee83d710e51f4773296344652617'
-    oldFile: !uuid '53bafbb474bb09de3fae2e68d246f6e65c42e90b'
-  /Modules/IoTService:
-    newFile: !uuid 'a83e870fc25977ba35dba19b0460e7b0f2104453'
-    oldFile: !uuid '852badcf591823d4d0a8f26e520ff88b1f22be23'
-  /Modules/IoTService/TslCache.cs:
-    newFile: !uuid '97dad6ec160048acc7100464328acb4c3ceb1b28'
-    oldFile: !uuid 'ea9f5ab9beac912f3d57371ca508382869e1a671'
-gitCommitId: !uuid '5f14ca6f5c70742894e647b6780fab4f30c3751c'
+    newFile: !uuid 'cedd995e6a0f0febe56ce2c37ee0b7a7ab28a99c'
+    oldFile: !uuid 'ce2f6340a762ee83d710e51f4773296344652617'
+  /Modules/IoTRulesService:
+    newFile: !uuid 'faff64a6436078bb498628f75488707048a6df23'
+    oldFile: !uuid '96257548f58ebace5c76065e30a11ce3c70a3025'
+  /Modules/IoTRulesService/Flow:
+    newFile: !uuid '1acc78de0e804153e5b5fc81544ed4b7d15191d1'
+    oldFile: !uuid '6022e8fb0302d8462b475f05f7efe06fce74c8fb'
+  /Modules/IoTRulesService/Flow/Builder:
+    newFile: !uuid '0757f5598b9dcdefd9de950f7341486c4be865e3'
+    oldFile: !uuid '509c93cfe059121bd98bb9dc2acfb5ed584a78c3'
+  /Modules/IoTRulesService/Flow/Builder/RuleExecutorBuilder.cs:
+    newFile: !uuid '863fe98bb383ef2670a8bd69981816c38f36169c'
+    oldFile: !uuid 'efb653176ec78479520536c5fefb5ab9e2183a2c'
+  /Modules/IoTRulesService/Flow/Builder/Step:
+    newFile: !uuid '7bf67b32b7acacb880e876c9a95f8ca85d58d111'
+    oldFile: !uuid 'e8cda0894b5e5d71d085887aa487c3f3d1f3be21'
+  /Modules/IoTRulesService/Flow/Builder/Step/NoticeStep.cs:
+    newFile: !uuid '93da375e7e2bdc14781586cac20126ff0efa0e11'
+    oldFile: null
+  /Modules/IoTRulesService/Flow/Node:
+    newFile: !uuid '7bc5851a7cce43a99a69a182938cba69b3d7fc58'
+    oldFile: !uuid '853e1e2770ca11a8969760a57a7ef28c93560107'
+  /Modules/IoTRulesService/Flow/Node/JsonNodeConverter.cs:
+    newFile: !uuid '3f0bde606b097b6fce277c77a30d95f79d4b1929'
+    oldFile: !uuid '20039797d26dc058be6d9d0235b05b58c0c73f29'
+  /Modules/IoTRulesService/Flow/Node/NoticeNode.cs:
+    newFile: !uuid '0f5730d554e12f00bce95359526a05ea7425c3d8'
+    oldFile: null
+  /admin-ui:
+    newFile: !uuid 'd41c123e10ec9e66154bdfe724b209afc6a62708'
+    oldFile: !uuid '75bc077b062fd3d37e32ed73c3ced719859bc092'
+  /admin-ui/src:
+    newFile: !uuid '064a1be308e713504f8e1085708c084346ecef9c'
+    oldFile: !uuid '81babf777c12135492ac378522fccf83a3273576'
+  /admin-ui/src/views:
+    newFile: !uuid '865d78b62043a57c7fee2678274eb0a3af802403'
+    oldFile: !uuid '749d005a642e56eb0644652fdff2da7fcf14e04a'
+  /admin-ui/src/views/homeModules:
+    newFile: !uuid '355478a2b3b4ce0abaea955d12b9638e8be8d4c6'
+    oldFile: !uuid '8177aeaf5eece737453a76978b8435fc0381e3db'
+  /admin-ui/src/views/homeModules/deviceInfo.vue:
+    newFile: !uuid '3f3556bdd2a4b373e78ec836ed29499aca2b660c'
+    oldFile: !uuid '52018164d698208f94ca457991f41ad9f00cdd5d'
+  /admin-ui/src/views/iot:
+    newFile: !uuid '6a0245142bad6b855963cf9bdfc97a4534df53ae'
+    oldFile: !uuid '9d0cdf597a5fe91fd9ffeb570540044f7e8e9d77'
+  /admin-ui/src/views/iot/video:
+    newFile: !uuid 'bed3292d432b0773d4f6a8cd85c06db52982edbf'
+    oldFile: !uuid '4c76030078c57305e72037d0325976f61c1733fe'
+  /admin-ui/src/views/iot/video/confadd.vue:
+    newFile: !uuid '34d2b161c75e3a19504a10e521584ff352469236'
+    oldFile: !uuid 'e24a94f5688cdb6b155c57006599abbfbdf19df1'
+gitCommitId: !uuid '471df48b51fe31bc66ec348c8f20c148da848477'
 renames: {
   }
-revisionId: 389
+revisionId: 390
