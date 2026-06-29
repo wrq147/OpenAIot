@@ -106,20 +106,18 @@ class AndroidTcpClient implements ITcpConnector {
  */
 
 export const qzTcp : TcpConnector = function (options : ConnectorOptions) {
-	const client : AndroidTcpClient = new AndroidTcpClient(options.address, options.port);
-	UTSAndroid.getDispatcher(null).async((_) => {
-		try{
+	const client = new AndroidTcpClient(options.address, null);
+	client.onClose = () => { };
+	client.onMessage = () => { };
+	UTSAndroid.getDispatcher(null).async(() => {
+		try {
 			client.connect();
-			if (options.success != null) {
-				options.success(client);
-			}
-		}
-		catch(err){
-			if (options.fail != null) {
-				options.fail(err);
-			}
+			// 空安全调用回调，解决nullable报错
+			options.success?.invoke(client);
+		} catch (err) {
+			options.fail?.invoke(err);
+			client.close();
 		}
 	}, null);
-	Promise.resolve(syncMethod(value));
 	return client;
 }
