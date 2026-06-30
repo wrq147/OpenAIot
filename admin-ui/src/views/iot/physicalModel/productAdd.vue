@@ -9,7 +9,7 @@
           <el-menu-item index="physicalModel" @click="to('physicalModel')">物模型</el-menu-item>
           <el-menu-item index="deviceManagement" @click="to('deviceManagement')">设备管理</el-menu-item>
           <el-menu-item index="onlineDebug" @click="to('onlineDebug')">在线调试</el-menu-item>
-          <el-menu-item index="dataAnalysis" @click="to('dataAnalysis')">数据解析</el-menu-item>
+          <el-menu-item index="dataAnalysis" @click="to('dataAnalysis')" v-if="ChannelData!=NULL&&(ChannelData.CanModbus||ChannelData.CanScript)">数据解析</el-menu-item>
           <el-menu-item index="warning" @click="to('warning')">报警工单</el-menu-item>
           <el-menu-item index="notice" @click="to('notice')">配置事件通知</el-menu-item>
           <el-menu-item v-show="NetworkWayName != ''" index="protocolList"

@@ -131,7 +131,6 @@ function toRawData(context) {
                 Remark = "银尔达",
                 KeyWords = "银尔达 DTU",
                 ScriptContent = @"
-var cmdarr = [];
 /**
  * 原数据转平台消息
  * @param {DataContext} context
@@ -149,14 +148,6 @@ function rawDataTo(context) {
         for (let i = 3; i < tmparr.length; i++) {
           tmpreturnval = tmpreturnval + "","" + tmparr[i];
         }
-      }
-      let reqcmd = cmdarr.pop();
-      if (reqcmd == ""iccid"") {
-        let aarr = replyccid.split("","");
-        let tmprs = aarr[aarr.length - 1].replace(/\r\n/g, """");
-        let replyccid = context.CreateICCIDReply();
-        replyccid.iccid = tmprs;
-        context.ConfirmReply(null, replyccid);
       }
       context.ReplyMsgId(tmparr[1], tmpreturnval);
       return null;
@@ -207,9 +198,15 @@ function toRawData(context) {
     return context.Payload();
   }
   else if (curmsg.MsgType == ""QueryICCID"") {
-    cmdarr.length = 0;
-    cmdarr.push(""iccid"");
-    context.PublicStr(""config,get,iccid\r\n"", false);
+    context.PublicStrCallback((tmprsss)=>{
+      if (tmprsss != null && tmprsss.indexOf(""ok"") == 0) {
+        let aarr = tmprsss.split("","");
+        let tmprs = aarr[aarr.length - 1].replace(/\r\n/g, """");
+        let replyccid = context.CreateICCIDReply();
+        replyccid.iccid = tmprs;
+        context.ConfirmReply(null, replyccid);
+      }
+    },""iccid"", ""config,get,iccid\r\n"", false);
     return context.Payload();
   }
   return null;
