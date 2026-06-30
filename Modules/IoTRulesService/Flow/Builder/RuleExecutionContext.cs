@@ -4,7 +4,9 @@ using ChannelUtility.Tsl;
 using Common;
 using Common.EventBus;
 using Common.Json;
+using IoTRulesService.DAL;
 using IoTRulesService.Flow.Builder.Step;
+using IoTRulesService.Model;
 using IoTService;
 using IoTService.Business;
 using IoTService.DAL;
@@ -39,6 +41,7 @@ namespace IoTRulesService.Flow.Builder
         private BaseDeviceMessage _source;
         private int _exeIndex;
         private List<StreamData> _dataList;
+        private MZ_RuleTemplate _rule;
         /// <summary>
         /// 并行执行栈
         /// </summary>
@@ -222,6 +225,14 @@ namespace IoTRulesService.Flow.Builder
         private Dictionary<string, MZ_IotDevice> _devices = new Dictionary<string, MZ_IotDevice>();
         private Dictionary<string, IDictionary<string, DevicePropertyValue>> _deviceProps = new Dictionary<string, IDictionary<string, DevicePropertyValue>>();
         private Dictionary<string, IDictionary<string, object>> _deviceTags = new Dictionary<string, IDictionary<string, object>>();
+        public async Task<MZ_RuleTemplate> GetRuleTemplate()
+        {
+            if (this._rule == null)
+            {
+                this._rule = await this._provider.GetService<RuleTemplateDAL>().Select(this.RuleId);
+            }
+            return this._rule;
+        }
         public async Task<MZ_IotDevice> GetDevice(string id)
         {
             MZ_IotDevice device;

@@ -37,16 +37,16 @@ class AndroidTcpClient implements ITcpConnector {
 	_client : Socket | null;
 	_dataOutputStream : DataOutputStream | null;
 	_bufferedReader : BufferedReader | null;
-	onClose : () => void;
-	onMessage : (data : ArrayBuffer) => void;
+	onClose: (() => void) | null;
+	onMessage: ((data: ArrayBuffer) => void) | null;
 	constructor(ip : string, port : number) {
 		this._ip = ip;
 		this._port = port;
 		this._client = null;
 		this._dataOutputStream = null;
 		this._bufferedReader = null;
-		this.onClose = () => { };
-		this.onMessage = (data : ArrayBuffer) => { };
+		this.onClose = null;
+		this.onMessage = null;
 	}
 	connect() {
 		this._client = new Socket(this._ip, this._port.toInt());
@@ -74,9 +74,9 @@ class AndroidTcpClient implements ITcpConnector {
 				let sourceByteArray : Uint8Array = new Uint8Array(ArrayBuffer.fromByteBuffer(buffer));
 				let targetByteArray : Uint8Array = new Uint8Array(sourceByteArray.slice(0, bytesRead));
 				let receivedData : ArrayBuffer = targetByteArray.buffer ?? new ArrayBuffer(0);
-				this.onMessage(receivedData);
+				this.onMessage?.invoke(receivedData);
 			}
-			this.onClose();
+			this.onClose?.invoke();
 		}, null);
 	}
 }
@@ -106,16 +106,19 @@ class AndroidTcpClient implements ITcpConnector {
  */
 
 export const qzTcp : TcpConnector = function (options : ConnectorOptions) {
-	const client = new AndroidTcpClient(options.address, null);
+	const client = new AndroidTcpClient(options.address, options.port);
 	client.onClose = () => { };
 	client.onMessage = () => { };
-	UTSAndroid.getDispatcher(null).async(() => {
+	UTSAndroid.getDispatcher(null).async((_) => {
 		try {
 			client.connect();
 			// 空安全调用回调，解决nullable报错
 			options.success?.invoke(client);
 		} catch (err) {
-			options.fail?.invoke(err);
+			const failErr = err instanceof ConnectorFail
+				? err
+				: new ConnectorFailImpl(902001, "TCP连接失败:" + err.toString());
+			options.fail?.invoke(failErr);
 			client.close();
 		}
 	}, null);

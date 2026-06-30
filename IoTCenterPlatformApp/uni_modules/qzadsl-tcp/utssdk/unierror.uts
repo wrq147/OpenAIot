@@ -14,6 +14,6 @@ export class ConnectorFailImpl extends UniError implements ConnectorFail {
 		super();
 		this.errSubject = UniErrorSubject;
 		this.errCode = errCode;
-		this.errMsg = msg ?? ConnectorErrors.get(err) ?? "";
+		this.errMsg = msg ?? ConnectorErrors.get(errCode) ?? "";
 	}
 }
