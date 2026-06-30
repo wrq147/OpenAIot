@@ -3,30 +3,48 @@ branches: {
   }
 fileChange:
   /IoTCenterPlatformApp:
-    newFile: !uuid '139fe89c47ab829f720ecc05cc805b2a82955e8c'
-    oldFile: !uuid '42032084aed0d1c0472bf63a23d44ca46f99496c'
+    newFile: !uuid '426ecd482d8799d540fddd37087e36857703402b'
+    oldFile: !uuid '139fe89c47ab829f720ecc05cc805b2a82955e8c'
   /IoTCenterPlatformApp/uni_modules:
-    newFile: !uuid '84a8ca5b31a164249bdb8eb4f2b34ac76544e1d2'
-    oldFile: !uuid 'bb058e60a1df7af87820f9d3f15bddfa3829c1e2'
+    newFile: !uuid 'c8be1939d069301e7f8dd92bac27f671d5a48282'
+    oldFile: !uuid '84a8ca5b31a164249bdb8eb4f2b34ac76544e1d2'
   /IoTCenterPlatformApp/uni_modules/qzadsl-tcp:
-    newFile: !uuid 'e932c86feec142373399903d5a91201fd804d36a'
-    oldFile: !uuid 'a8826b4ca9159c9d77623805cb01670a5622562f'
+    newFile: !uuid 'ea79a404221295a877a74b64ccad0a455ad38c61'
+    oldFile: !uuid 'e932c86feec142373399903d5a91201fd804d36a'
   /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk:
-    newFile: !uuid '4fe5ff52f852fd045a8df15110baa0689ae6c02c'
-    oldFile: !uuid 'e63f2458a2e98c2f8f3ccaeb3ded9dd95d7d940c'
+    newFile: !uuid 'f162c0a7a61429d953c5505ac44cea3d789394ca'
+    oldFile: !uuid '4fe5ff52f852fd045a8df15110baa0689ae6c02c'
   /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk/app-android:
-    newFile: !uuid 'fea1282244a3f6b8dd5b2f70f90568e5beffa9e8'
-    oldFile: !uuid '76dbd185f4060d4cf0745da4fd1d7f75090d48bb'
+    newFile: !uuid 'fcd7ad5751e040e81568ef31a0cdade6b52f0967'
+    oldFile: !uuid 'fea1282244a3f6b8dd5b2f70f90568e5beffa9e8'
   /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk/app-android/index.uts:
-    newFile: !uuid '313d6564f9795cc17a826ab585e226dea0eb97b8'
-    oldFile: !uuid 'a568e6542371f67ed7d777cc0e926e7234030a40'
-  /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk/interface.uts:
-    newFile: !uuid '79d847eccbbf22b389d79d02c1aafd424af805ad'
-    oldFile: !uuid '486000662abe18a95151421c79d03196c054652f'
+    newFile: !uuid '5dc6d6ee75d2fe1341f9e2f92e1f4dd35ce1c8e5'
+    oldFile: !uuid '313d6564f9795cc17a826ab585e226dea0eb97b8'
   /IoTCenterPlatformApp/uni_modules/qzadsl-tcp/utssdk/unierror.uts:
-    newFile: !uuid '163f359ffc8e13245b2350deceae51356c86cf54'
-    oldFile: !uuid 'f1260001704e95293abc77b1b0e209677b5d6525'
-gitCommitId: !uuid 'a56ac7cd0a44a6435a860d15ed150b30854a7b04'
+    newFile: !uuid '883f795ab9169763d68c03c571e8462d9903989d'
+    oldFile: !uuid '163f359ffc8e13245b2350deceae51356c86cf54'
+  /Modules:
+    newFile: !uuid 'c48674588e4bab89979143689c5e825a3076c5fb'
+    oldFile: !uuid 'cedd995e6a0f0febe56ce2c37ee0b7a7ab28a99c'
+  /Modules/IoTRulesService:
+    newFile: !uuid '0225c641c33a689c28e2a31961242cbbee3892a9'
+    oldFile: !uuid 'faff64a6436078bb498628f75488707048a6df23'
+  /Modules/IoTRulesService/Flow:
+    newFile: !uuid '8fd21c2f00c6ad2f5e8820bb50dda10443e09681'
+    oldFile: !uuid '1acc78de0e804153e5b5fc81544ed4b7d15191d1'
+  /Modules/IoTRulesService/Flow/Builder:
+    newFile: !uuid '7ad0b51e7201b3072ce05ef1868274a305244c5b'
+    oldFile: !uuid '0757f5598b9dcdefd9de950f7341486c4be865e3'
+  /Modules/IoTRulesService/Flow/Builder/RuleExecutionContext.cs:
+    newFile: !uuid '26042dea61904b80eb568cd2aa8927f793076554'
+    oldFile: !uuid '6f9035354032b863d4d785e7043da40eb6bd1c81'
+  /Modules/IoTRulesService/Flow/Builder/Step:
+    newFile: !uuid '37bdc98fe2fee84ce94723bf179f426f3a86fd42'
+    oldFile: !uuid '7bf67b32b7acacb880e876c9a95f8ca85d58d111'
+  /Modules/IoTRulesService/Flow/Builder/Step/NoticeStep.cs:
+    newFile: !uuid '2eb1b84fcb5abe224f6b37516aea6cf09b2c971e'
+    oldFile: !uuid '93da375e7e2bdc14781586cac20126ff0efa0e11'
+gitCommitId: !uuid '7e366cff66893d46e23ff8431e84403baa4fab49'
 renames: {
   }
-revisionId: 391
+revisionId: 392
