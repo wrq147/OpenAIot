@@ -1,22 +1,22 @@
 <template>
   <div style="padding: 20px 20px 0 20px" id="big_con">
-    <div
-      class="elbiaoge_elform"
-      :style="{ 'min-height': 'calc(100vh - 136px)' }"
-      v-loading="configLoading"
-    >
+    <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 136px)' }" v-loading="configLoading">
       <div>
         <div class="header" style="border-top: none; padding: 0; border-bottom: 1px solid #dadada">
-          <el-menu :default-active="activeDevice" active-text-color="#409eff" class="el-menu-demo shejiqi" mode="horizontal">
-            <el-menu-item index="instanceInformation" @click="deviceSelect('instanceInformation')" >实例信息</el-menu-item>
-            <el-menu-item v-if="ishasIot" index="runningState" @click="deviceSelect('runningState')" >运行状态</el-menu-item>
-            <el-menu-item index="equipmentLocation" @click="deviceSelect('equipmentLocation')" v-if="positionInfo && positionInfo.enable" >设备位置</el-menu-item>
+          <el-menu :default-active="activeDevice" active-text-color="#409eff" class="el-menu-demo shejiqi"
+            mode="horizontal">
+            <el-menu-item index="instanceInformation" @click="deviceSelect('instanceInformation')">实例信息</el-menu-item>
+            <el-menu-item v-if="ishasIot" index="runningState" @click="deviceSelect('runningState')">运行状态</el-menu-item>
+            <el-menu-item index="equipmentLocation" @click="deviceSelect('equipmentLocation')"
+              v-if="positionInfo && positionInfo.enable">设备位置</el-menu-item>
             <el-menu-item index="warning" @click="deviceSelect('warning')">报警工单</el-menu-item>
-            <el-menu-item index="func" @click="deviceSelect('func')" v-if="ishasIot" >设备功能</el-menu-item>
-            <el-menu-item index="abnormalData" @click="deviceSelect('abnormalData')" v-if="ishasIot" >异常数据</el-menu-item>
-            <el-menu-item index="devicePlane" @click="deviceSelect('devicePlane')" v-if="isShowPlane">设备计划</el-menu-item>
-            <el-menu-item index="onLineDebug" @click="deviceSelect('onLineDebug')" v-if="productInfos.Status == '0'&&isCheckPermi(['/IoTService/IotProduct/ListPage'])">在线调试</el-menu-item>
-            
+            <el-menu-item index="func" @click="deviceSelect('func')" v-if="ishasIot">设备功能</el-menu-item>
+            <el-menu-item index="abnormalData" @click="deviceSelect('abnormalData')" v-if="ishasIot">异常数据</el-menu-item>
+            <el-menu-item index="devicePlane" @click="deviceSelect('devicePlane')"
+              v-if="isShowPlane">设备计划</el-menu-item>
+            <el-menu-item index="onLineDebug" @click="deviceSelect('onLineDebug')"
+              v-if="productInfos.Status == '0' && isCheckPermi(['/IoTService/IotProduct/ListPage'])">在线调试</el-menu-item>
+
 
           </el-menu>
           <div class="name_text">
@@ -24,27 +24,21 @@
           </div>
         </div>
         <div>
-          <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-show="activeDevice == 'instanceInformation'">
-            <deviceBasic
-              ref="devBasicInfo"
-              :deviceInfos="deviceInfos"
-              :productInfos="productInfos"
-              :canChangeDevice="canChangeDevice"
-              @cancelSave="cancelSave"
-              @changeDeviceProduct="changeDeviceProduct"
-              @reloadDevice="getDeviceInfos"
-            ></deviceBasic>
-            <device-tags-info
-              ref="tagsinfo"
-              :deviceStorageConfig="deviceStorageConfig"
-              :deviceInfos="deviceInfos"
-              @labelInfoVisible="labelInfoVisible"
-            ></device-tags-info>
+          <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }"
+            v-show="activeDevice == 'instanceInformation'">
+            <deviceBasic ref="devBasicInfo" :deviceInfos="deviceInfos" :productInfos="productInfos"
+              :canChangeDevice="canChangeDevice" @cancelSave="cancelSave" @changeDeviceProduct="changeDeviceProduct"
+              @reloadDevice="getDeviceInfos"></deviceBasic>
+            <device-tags-info ref="tagsinfo" :deviceStorageConfig="deviceStorageConfig" :deviceInfos="deviceInfos"
+              @labelInfoVisible="labelInfoVisible"></device-tags-info>
           </div>
-          <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-show="ishasIot && activeDevice === 'runningState'">
-            <device-live ref="deviceLive" :deviceInfos="deviceInfos" :deviceStorageConfig="deviceStorageConfig" @openDeviceRunMap="openDeviceRunMap" @openInfoVisible="openInfoVisible"></device-live>
+          <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }"
+            v-show="ishasIot && activeDevice === 'runningState'">
+            <device-live ref="deviceLive" :deviceInfos="deviceInfos" :deviceStorageConfig="deviceStorageConfig"
+              @openDeviceRunMap="openDeviceRunMap" @openInfoVisible="openInfoVisible"></device-live>
           </div>
-          <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" v-if="showMap && activeDevice == 'equipmentLocation'">
+          <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }"
+            v-if="showMap && activeDevice == 'equipmentLocation'">
             <div>
               <div class="guiji_div" v-if="deviceStorageConfig && positionInfo && positionInfo.mapcode">
                 <el-button type="primary" @click="labelInfoVisible(positionInfo, true)">查看运行轨迹</el-button>
@@ -52,9 +46,11 @@
               <div id="allmaptt" style="width: 100%; height: 500px"></div>
             </div>
           </div>
-          <warn-list v-if="activeDevice == 'warning'" :isComponent="true" ref="warning-list" :filDeviceId="deviceInfos.Id"></warn-list>
+          <warn-list v-if="activeDevice == 'warning'" :isComponent="true" ref="warning-list"
+            :filDeviceId="deviceInfos.Id"></warn-list>
           <div v-if="ishasIot && activeDevice == 'func'">
-            <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" style="margin-top: 20px" v-if="productInfos.MonitorReportToken">
+            <div class="elbiaoge_elform" :style="{ 'min-height': 'calc(100vh - 194px' }" style="margin-top: 20px"
+              v-if="productInfos.MonitorReportToken">
               <customFunc :deviceInfos="deviceInfos" :productInfos="productInfos"></customFunc>
             </div>
             <el-row style="margin-top: 20px;display: flex;justify-content: flex-start;flex-wrap: wrap;" v-else>
@@ -69,13 +65,15 @@
                     </div>
                   </div>
                   <div class="func_btn">
-                    <el-button type="primary" :disabled="row.disabled" :icon="matchesLoading ? '' : 'el-icon-video-play'" :loading="matchesLoading" @click="openFuncDia(row, index)">{{ matchesLoading ? "执行中" : "执 行" }}</el-button>
+                    <el-button type="primary" :disabled="row.disabled"
+                      :icon="matchesLoading ? '' : 'el-icon-video-play'" :loading="matchesLoading"
+                      @click="openFuncDia(row, index)">{{ matchesLoading ? "执行中" : "执 行" }}</el-button>
                   </div>
                 </div>
               </div>
             </el-row>
           </div>
-          <div style="margin-top: 20px" v-if="ishasIot&&activeDevice == 'abnormalData'">
+          <div style="margin-top: 20px" v-if="ishasIot && activeDevice == 'abnormalData'">
             <abnormalData :deviceInfos="deviceInfos" :productInfos="productInfos"></abnormalData>
           </div>
           <div style="margin-top: 20px" v-show="activeDevice == 'devicePlane'" v-if="isShowPlane">
@@ -91,25 +89,18 @@
             <sequenceChart :deviceInfos="deviceInfos" />
           </div> -->
         </div>
-        <el-dialog title="位置" :visible.sync="deviceRunMap" :destroy-on-close="true" @close="deviceRunMap = false" :close-on-click-modal="false" width="60%">
+        <el-dialog title="位置" :visible.sync="deviceRunMap" :destroy-on-close="true" @close="deviceRunMap = false"
+          :close-on-click-modal="false" width="60%">
           <div style="padding: 0 20px 20px">
             <div id="deviceRunMapId" style="width: 100%; height: 500px"></div>
           </div>
         </el-dialog>
-        <!-- <el-dialog title="历史数据" :visible.sync="infoVisible" width="60%" @close="infoVisible = false" :close-on-click-modal="false"> -->
-        <oldHistory
-          ref="oldInfoCom"
-          @closeHistoryDialog="closeHistoryDialog"
-          :visible="infoVisible"
-          :productInfos="productInfos"
-          :activeAttr="activeAttr"
-          :deviceInfos="deviceInfos"
-          v-if="infoVisible"
-          :isOnlyTable="isOnlyTable"
-        ></oldHistory>
-        <!-- </el-dialog> -->
+        <oldHistory ref="oldInfoCom" @closeHistoryDialog="closeHistoryDialog" :visible="infoVisible"
+          :productInfos="productInfos" :activeAttr="activeAttr" :deviceInfos="deviceInfos" v-if="infoVisible"
+          :isOnlyTable="isOnlyTable"></oldHistory>
         <el-dialog title="执行属性设置" :visible.sync="implementParams">
-          <el-form ref="implementParamsForm" :model="implementParamsForm" label-width="100px" label-position="top" :rules="implementParamsForm.paramsRules">
+          <el-form ref="implementParamsForm" :model="implementParamsForm" label-width="100px" label-position="top"
+            :rules="implementParamsForm.paramsRules">
             <el-table :data="implementParamsForm.inputsData" class="data_table">
               <el-table-column property="name" label="参数名称" width="200"></el-table-column>
               <el-table-column property="remark" label="备注" width="210">
@@ -121,14 +112,17 @@
               </el-table-column>
               <el-table-column label="值">
                 <template slot-scope="scope">
-                  <param-item :Item="scope.row" :disabled="scope.row.readOnly" @change="scope.row.codeVal = $event"></param-item>
+                  <param-item :Item="scope.row" :disabled="scope.row.readOnly"
+                    @change="scope.row.codeVal = $event"></param-item>
                 </template>
               </el-table-column>
             </el-table>
           </el-form>
           <div class="demo-drawer__footer" style="text-align: right; margin-top: 40px">
             <el-button @click="closeMatchesDrawer">取 消</el-button>
-            <el-button type="primary" @click="carryAction" :loading="matchesLoading">{{ matchesLoading ? "执行中 ..." : "执 行" }}</el-button>
+            <el-button type="primary" @click="carryAction" :loading="matchesLoading">{{ matchesLoading ? "执行中 ..." : "执
+              行"
+              }}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -153,7 +147,7 @@ import devicePlane from "./devicePlane.vue";
 import customFunc from "./customFunc.vue";
 import deviceOnlineDebug from "./deviceOnlineDebug.vue";
 import { getConfigKey } from "@/api/system/config.js";
-import { checkPermi } from "@/utils/permission"; 
+import { checkPermi } from "@/utils/permission";
 export default {
   mixins: [resizeTableCon],
   components: {
@@ -230,6 +224,20 @@ export default {
       }
     });
   },
+  watch: {
+    "$route.query.id"(newId, oldId) {
+      if (!newId || newId === oldId) return;
+      this.unsubscribe();
+      this.id = newId;
+      this.activeDevice = "instanceInformation";
+      this.issubscribeDevicefunc = false;
+      this.getDeviceInfos().then(() => {
+        if (this.ishasIot) {
+          this.getdeviceFuncList();
+        }
+      });
+    }
+  },
   async mounted() {
     // sessionStorage.removeItem("map.key");
     let pars = this.$route.query;
@@ -249,9 +257,26 @@ export default {
       this.isExcuteWatch = true;
     });
   },
+  beforeDestroy() {
+    this.unsubscribe();
+  },
   methods: {
     isCheckPermi(val) {
       return checkPermi(val)
+    },
+    unsubscribe() {
+      if (this.ishasIot) {
+        var tmpxdevid = this.deviceInfos.DeviceId;
+        this.$store.dispatch("mqttclient/getClient").then((client) => {
+          if(tmpxdevid==this.deviceInfos.DeviceId){
+            let tkey = "newfun/" + this.deviceInfos.DeviceId;
+            client.unsubscribe(tkey, (error) => {
+              console.log("取消订阅", error);
+              this.$store.commit("mqttclient/Del_Handler", tkey);
+            });
+          }
+        });
+      }
     },
     subscribeFunc() {
       //订阅设备功能信息
@@ -394,7 +419,7 @@ export default {
                 if (err.message) {
                   this.$msgbox.alert(err.message, "系统提示", {
                     confirmButtonText: "确定",
-                    callback: () => {},
+                    callback: () => { },
                   });
                 }
               });
@@ -426,7 +451,7 @@ export default {
           if (err.message) {
             this.$msgbox.alert(err.message, "系统提示", {
               confirmButtonText: "确定",
-              callback: () => {},
+              callback: () => { },
             });
           }
         });
@@ -438,7 +463,7 @@ export default {
         this.init(lat, lng, "deviceRunMapId");
       });
     },
-    
+
     init(lat, lng, dom = "allmaptt") {
       let map = new AMap.Map(dom, {
         zoom: 15,
@@ -480,10 +505,10 @@ export default {
           '<span class="cancle bot"></span><span class="cancle top"></span></div>',
       });
       // console.log(marker,'markermarker');
-      this.infoWindow.open(map,marker.getPosition());
+      this.infoWindow.open(map, marker.getPosition());
       marker.on("click", function (e) {
-        console.log(e,'eeeeeeeeeeeee');
-        _this.infoWindow.open(map,marker.getPosition());
+        console.log(e, 'eeeeeeeeeeeee');
+        _this.infoWindow.open(map, marker.getPosition());
       });
       document.getElementById("map_close_img").addEventListener("click", function () {
         //点击id为div_link时调用的处理函数
@@ -574,14 +599,14 @@ export default {
       // console.log(this.productInfos, 'this.productInfos')
     },
 
-   deviceSelect(path, isfirst) {
+    deviceSelect(path, isfirst) {
       //切换设备管理
       this.configLoading = true;
       this.activeDevice = path;
       if (this.activeDevice == "runningState") {
         if (!isfirst) {
           this.$refs.deviceLive.subscribeDeviceLive(true);
-        } 
+        }
       } else if (this.activeDevice == "func") {
         if (!this.issubscribeDevicefunc) {
           this.subscribeFunc();
@@ -596,7 +621,7 @@ export default {
           }
         });
         this.$nextTick(() => {
-          console.log(this.isShowMap,'this.isShowMapthis.isShowMap');
+          console.log(this.isShowMap, 'this.isShowMapthis.isShowMap');
           if (this.isShowMap) {
             this.init(this.deviceInfos.Lat, this.deviceInfos.Lng, "allmaptt");
           }
@@ -612,7 +637,6 @@ export default {
 };
 </script>
 <style lang="less">
-
 .info_card {
   display: inline-block;
   margin: 50px auto;
@@ -724,6 +748,7 @@ export default {
   justify-content: flex-end;
   margin-bottom: 10px;
 }
+
 #map_track {
   display: flex;
   justify-content: center;
@@ -772,16 +797,19 @@ export default {
     margin: 0 auto;
     padding: 0 auto;
     padding: 25px 20px;
+
     &.func_li {
       min-height: 150px;
       font-size: 16px;
       color: #333;
       position: relative;
+
       .params_con {
         margin-top: 10px;
         font-size: 12px;
         color: #999999;
         width: calc(100% - 90px);
+
         .params_li {
           line-height: 22px;
           //flex-wrap: wrap;
@@ -790,20 +818,24 @@ export default {
           align-items: flex-start;
           // word-warp:break-word;
           word-break: keep-all;
+
           .params_lable {
             word-break: break-all;
+
             &.jump {
               cursor: pointer;
             }
           }
         }
       }
+
       .func_btn {
         position: absolute;
         right: 20px;
         bottom: 20px;
         width: 80px;
         box-sizing: border-box;
+
         .el-button {
           width: 80px;
           box-sizing: border-box;
@@ -946,6 +978,7 @@ export default {
       width: 50px;
     }
   }
+
   .name_text {
     display: flex;
     justify-content: center;

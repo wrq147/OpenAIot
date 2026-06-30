@@ -206,6 +206,7 @@ export default {
       this.monacoContent = this.content;
     }
     const fact = `
+    type CallbackFunc = (data: string) => void;
     declare class DataContext{
         /**
          * 上报的扩展信息
@@ -420,7 +421,7 @@ export default {
            * @param {String} msgId - 消息标识
            * @param {ArrayBuffer} bytes - 推送的字节数组
            */
-           PublicCallback(ac:Function,msgId:String,bytes:ArrayBuffer):void;
+           PublicCallback(ac:CallbackFunc,msgId:String,bytes:ArrayBuffer):void;
            /**
            * 推送字符串数据并返回复的消息
            * @param {Function} ac - 结果回调函数
@@ -428,7 +429,7 @@ export default {
            * @param {String} input - 输入字符串
            * @param {Boolean} hex - 是否为hex字符串
            */
-           PublicStrCallback(ac:Function,msgId:String,input:String,hex:Boolean):void;
+           PublicStrCallback(ac:CallbackFunc,msgId:String,input:String,hex:Boolean):void;
       }
 
       declare class FastReader
