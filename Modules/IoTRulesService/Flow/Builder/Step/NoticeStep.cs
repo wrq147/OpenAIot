@@ -46,10 +46,12 @@ namespace IoTRulesService.Flow.Builder.Step
                 await context.ExcuteNext(RuleResult.Next());
                 return;
             }
+            List<string> waylist = new List<string>();
             switch (props.NoticeWay)
             {
                 case "APP":
                     {
+                        waylist.Add("APP");
                         var recvUser = await context.Provider.GetService<UserDAL>().GetAdminById(Convert.ToInt64(props.TargetValue));
                         targets.Add(new TargetUser()
                         {
@@ -61,6 +63,7 @@ namespace IoTRulesService.Flow.Builder.Step
                     break;
                 case "EMAIL":
                     {
+                        waylist.Add("EMAIL");
                         targets.Add(new TargetUser()
                         {
                             uid = 2,
@@ -71,6 +74,7 @@ namespace IoTRulesService.Flow.Builder.Step
                     break;
                 case "SMS":
                     {
+                        waylist.Add("SMS");
                         targets.Add(new TargetUser()
                         {
                             uid = 2,
@@ -85,7 +89,7 @@ namespace IoTRulesService.Flow.Builder.Step
                     return;
             }
 
-            var nt = new NoticeEvent(2, targets.ToArray(), new string[] { "APP" });
+            var nt = new NoticeEvent(2, targets.ToArray(), waylist.ToArray());
             nt.OrgId = template.OrgId.Value;
             nt.TargetType = "规则通知";
             nt.TargetUrl = string.Empty;
