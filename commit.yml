@@ -2,19 +2,19 @@
 branches: {
   }
 fileChange:
-  /Third:
-    newFile: !uuid '1693ad1a2c7da8338c5304f28ec88ecba850244c'
-    oldFile: !uuid 'c11ae2d89eed474c7aa6c79331141f6b8b63b6f3'
-  /Third/jieba.NET:
-    newFile: !uuid 'd41a62a9b02b7fbde671282e1693f4c641712379'
-    oldFile: !uuid 'fd24566cda6171463ee65d7a704988f865a5f872'
-  /Third/jieba.NET/Segmenter:
-    newFile: !uuid '3deebe08d6ce5bbefd76d4d58338fd9b77c34a43'
-    oldFile: !uuid '7e8b4e11bf8059d6c6acb4cff430f7a02cd11b67'
-  /Third/jieba.NET/Segmenter/Segmenter.csproj:
-    newFile: !uuid '8da5a69a27ca35e11a018657c124c25ed302890c'
-    oldFile: !uuid 'c3eb24b524a958ce365c358cf00019d940484593'
-gitCommitId: !uuid '6e8ae6aa5db8058ee92aff7cd8c04df58af2704c'
+  /Modules:
+    newFile: !uuid 'd7b6252733376ffb0a2b5742633c91b47c8c4c0f'
+    oldFile: !uuid 'f9fce012b44567be47bf62cf5879189e1d80b5ab'
+  /Modules/IoTService:
+    newFile: !uuid '848531d736cc728aceb0a86dcb22d0dd20605904'
+    oldFile: !uuid 'd713bf5503b3bb9bd868d6a066897d3d1ea02e76'
+  /Modules/IoTService/Controller:
+    newFile: !uuid '6c19f04b627a0274d4b96bbd265d026c0d8efbcb'
+    oldFile: !uuid 'ef9716bcfd7f69f30f2977a51df951ff5e2700fd'
+  /Modules/IoTService/Controller/IotProduct.cs:
+    newFile: !uuid '550a0b0b071ce9153422004604c02473a975db35'
+    oldFile: !uuid '6e42d97ea1faadd8974ec06a9f05a2785568c956'
+gitCommitId: !uuid '7eed846830e447eed95e7fb8712115129bee7553'
 renames: {
   }
-revisionId: 396
+revisionId: 397
