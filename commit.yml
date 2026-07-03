@@ -2,37 +2,19 @@
 branches: {
   }
 fileChange:
-  /admin-ui:
-    newFile: !uuid '81a5e6e1e73b96292d036f6afab93b62183ecf4f'
-    oldFile: !uuid '1d9b836033c0fcc0197e7ff63dbee98b005fd696'
-  /admin-ui/src:
-    newFile: !uuid 'c2ee21f868d233df1d4469738baf16f06df27402'
-    oldFile: !uuid 'e7e640ef1866291f748d310817f0f0578ecfcdf8'
-  /admin-ui/src/views:
-    newFile: !uuid 'dd285043361292a5687cc707b5d3504b57f49a90'
-    oldFile: !uuid '07d0fd1b5cf34cb75c1078c54c6d657edc8e6889'
-  /admin-ui/src/views/iot:
-    newFile: !uuid 'd22dd8e47c8b277e44f453c5cbe6466728d3a172'
-    oldFile: !uuid '4153eb0eaad7842c36d9e65c2c41aa8bfd23f82a'
-  /admin-ui/src/views/iot/rulesFlowable:
-    newFile: !uuid '159334d9b31e6b20428842d81ca5d183e4ef274c'
-    oldFile: !uuid '104ccef368a7396c0f00427efe6a4a2c0902619f'
-  /admin-ui/src/views/iot/rulesFlowable/common:
-    newFile: !uuid '80148ff50ff2a6de4681a319cab9b040454c6de0'
-    oldFile: !uuid '0f92d9e2a16f276df8d83a56e451ad304c6eb447'
-  /admin-ui/src/views/iot/rulesFlowable/common/InsertButton.vue:
-    newFile: !uuid '07ccdd7e0915fc15bfa33b40343402a05026a3ac'
-    oldFile: !uuid 'b86e1c825e279e6d65fedfab83260b91f6beaaf0'
-  /admin-ui/src/views/iot/rulesFlowable/common/process:
-    newFile: !uuid '1878dfd0ba1340ed591db7f140bf0f0ae66d6ad4'
-    oldFile: !uuid '8f82644fa35b27d681ecff10af5fe061e6d8907b'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/nodes:
-    newFile: !uuid '6ca363242b52673c64502a5f34af00b49ae32997'
-    oldFile: !uuid '0faa2da420206818156df4ff30618a3b78ab26cf'
-  /admin-ui/src/views/iot/rulesFlowable/common/process/nodes/NoticeNode.vue:
-    newFile: !uuid 'bcf4a18111117de8911fe29982542e483811158d'
-    oldFile: !uuid 'de8ac0d37b5a182920e1047b4f8182fc8a4da779'
-gitCommitId: !uuid 'd9089e4eab897676bcf5ac9cd5fcbc69462b3a46'
+  /图1.png:
+    newFile: !uuid 'dcd0f5a94ce4566a6e110a2782b8232293996011'
+    oldFile: null
+  /图2.png:
+    newFile: !uuid '90f53682bbfa208d39c7f7562c2d085a6da88558'
+    oldFile: null
+  /图3.png:
+    newFile: !uuid 'c7e5de5f7adbc4a36a7fe2aab9acb25e56ecf16a'
+    oldFile: null
+  /图4.png:
+    newFile: !uuid 'fbd432ef38d8592ad6d8aaed6b7f25cadab5edf4'
+    oldFile: null
+gitCommitId: !uuid 'cc305cc20485743ba3b580f66db63bb93603747f'
 renames: {
   }
-revisionId: 401
+revisionId: 402
