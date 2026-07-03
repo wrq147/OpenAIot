@@ -140,6 +140,6 @@ systemctl restart docker
 
 ## 八、服务支持
 
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=dHXu51C6p20eWQUhI0OnlCDjnekFpZhq&jump_from=webapi&authKey=hS5MEHqSZdFEk4/4pxxUnYeMvX7sQiL7L0Xi5G5xyEeeSH26K1HyS/I1izCcS+yD"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="AIOT物联网中台交流群" title="AIOT物联网中台交流群"></a>
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=dHXu51C6p20eWQUhI0OnlCDjnekFpZhq&jump_from=webapi&authKey=hS5MEHqSZdFEk4/4pxxUnYeMvX7sQiL7L0Xi5G5xyEeeSH26K1HyS/I1izCcS+yD"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="AIOT物联网中台交流群" title="AIOT物联网中台交流群">1046865293</a>
 
 回复：重新读取  就可加群
