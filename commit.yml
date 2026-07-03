@@ -2,28 +2,22 @@
 branches: {
   }
 fileChange:
-  /admin-ui:
-    newFile: !uuid '1d9b836033c0fcc0197e7ff63dbee98b005fd696'
-    oldFile: !uuid 'aa056a8ddc50e0a47fc2e3cfa9c49491620e178e'
-  /admin-ui/src:
-    newFile: !uuid 'e7e640ef1866291f748d310817f0f0578ecfcdf8'
-    oldFile: !uuid '63924ead455971a793ab021b1dc0ce7d1481dd7a'
-  /admin-ui/src/views:
-    newFile: !uuid '07d0fd1b5cf34cb75c1078c54c6d657edc8e6889'
-    oldFile: !uuid 'ffad12937822869b9505fe64eba200d2e93a080e'
-  /admin-ui/src/views/iot:
-    newFile: !uuid '4153eb0eaad7842c36d9e65c2c41aa8bfd23f82a'
-    oldFile: !uuid 'ec7c9f9fe3ceade758cb8c5d5094d6e938d5129a'
-  /admin-ui/src/views/iot/physicalModel:
-    newFile: !uuid 'ecc3cd617ddcb79fce75d816b891dc46d3931536'
-    oldFile: !uuid '3b5194a07180ab7183c3efbd69e07d5a6a499db9'
-  /admin-ui/src/views/iot/physicalModel/productAdd.vue:
-    newFile: !uuid 'cf5d2cd4ddbb95964c47616d43371a350c974689'
-    oldFile: !uuid '23b8e7c838b45d393f7cee69d9794c2859474862'
-  /admin-ui/src/views/iot/physicalModel/productList.vue:
-    newFile: !uuid '0f30574f9e0a1c1371905df61bcde0867063f8f2'
-    oldFile: !uuid 'f7d1fcd1f5a1caf8b929131e4fede2c77902b2d2'
-gitCommitId: !uuid '1e3b75e80ad07273bf432437d023e98f22b65bd9'
+  /Modules:
+    newFile: !uuid 'cd956ea100fe55a742bbf8bbb4372c63d4af14a8'
+    oldFile: !uuid 'f24d2ad339b2469f5722c4003c05c1fceb5fde8d'
+  /Modules/IoTRulesService:
+    newFile: !uuid '2235147362bde120bc0f5611f7188036ac190f7e'
+    oldFile: !uuid 'f3fbccba3a750146ca10926d7499f0246e5244c9'
+  /Modules/IoTRulesService/DataParser:
+    newFile: !uuid 'bf39274d612b0fc3a01e72be662e9927462e70b4'
+    oldFile: !uuid 'dd63e03b4832621f4b24ccb4a5110f53e6b61576'
+  /Modules/IoTRulesService/DataParser/Js:
+    newFile: !uuid '54571529308f08f709b9dcfd120baee44acfb276'
+    oldFile: !uuid '4cceb2b45959e3129326e0244fbf7cb417cda20c'
+  /Modules/IoTRulesService/DataParser/Js/MessageContext.cs:
+    newFile: !uuid 'be1af04ceed8173db304e01fc9eca0897c6c4851'
+    oldFile: !uuid 'd19f3a6783da6b74d48a1d11d7012463a773271b'
+gitCommitId: !uuid '9278dc5de8c2328b6a242899d4ca10a0c4bc50d8'
 renames: {
   }
-revisionId: 399
+revisionId: 400
