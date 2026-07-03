@@ -7,8 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace IoTRulesService.DataParser.Js
 {
@@ -244,7 +243,6 @@ namespace IoTRulesService.DataParser.Js
         public virtual string PublicStrWait(string msgId, string input, bool hex = false)
         {
             this.PublicStr(input, hex);
-            Thread.Sleep(100);
             return "ok";
         }
 
