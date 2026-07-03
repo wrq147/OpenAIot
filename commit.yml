@@ -2,22 +2,37 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid 'cd956ea100fe55a742bbf8bbb4372c63d4af14a8'
-    oldFile: !uuid 'f24d2ad339b2469f5722c4003c05c1fceb5fde8d'
-  /Modules/IoTRulesService:
-    newFile: !uuid '2235147362bde120bc0f5611f7188036ac190f7e'
-    oldFile: !uuid 'f3fbccba3a750146ca10926d7499f0246e5244c9'
-  /Modules/IoTRulesService/DataParser:
-    newFile: !uuid 'bf39274d612b0fc3a01e72be662e9927462e70b4'
-    oldFile: !uuid 'dd63e03b4832621f4b24ccb4a5110f53e6b61576'
-  /Modules/IoTRulesService/DataParser/Js:
-    newFile: !uuid '54571529308f08f709b9dcfd120baee44acfb276'
-    oldFile: !uuid '4cceb2b45959e3129326e0244fbf7cb417cda20c'
-  /Modules/IoTRulesService/DataParser/Js/MessageContext.cs:
-    newFile: !uuid 'be1af04ceed8173db304e01fc9eca0897c6c4851'
-    oldFile: !uuid 'd19f3a6783da6b74d48a1d11d7012463a773271b'
-gitCommitId: !uuid '9278dc5de8c2328b6a242899d4ca10a0c4bc50d8'
+  /admin-ui:
+    newFile: !uuid '81a5e6e1e73b96292d036f6afab93b62183ecf4f'
+    oldFile: !uuid '1d9b836033c0fcc0197e7ff63dbee98b005fd696'
+  /admin-ui/src:
+    newFile: !uuid 'c2ee21f868d233df1d4469738baf16f06df27402'
+    oldFile: !uuid 'e7e640ef1866291f748d310817f0f0578ecfcdf8'
+  /admin-ui/src/views:
+    newFile: !uuid 'dd285043361292a5687cc707b5d3504b57f49a90'
+    oldFile: !uuid '07d0fd1b5cf34cb75c1078c54c6d657edc8e6889'
+  /admin-ui/src/views/iot:
+    newFile: !uuid 'd22dd8e47c8b277e44f453c5cbe6466728d3a172'
+    oldFile: !uuid '4153eb0eaad7842c36d9e65c2c41aa8bfd23f82a'
+  /admin-ui/src/views/iot/rulesFlowable:
+    newFile: !uuid '159334d9b31e6b20428842d81ca5d183e4ef274c'
+    oldFile: !uuid '104ccef368a7396c0f00427efe6a4a2c0902619f'
+  /admin-ui/src/views/iot/rulesFlowable/common:
+    newFile: !uuid '80148ff50ff2a6de4681a319cab9b040454c6de0'
+    oldFile: !uuid '0f92d9e2a16f276df8d83a56e451ad304c6eb447'
+  /admin-ui/src/views/iot/rulesFlowable/common/InsertButton.vue:
+    newFile: !uuid '07ccdd7e0915fc15bfa33b40343402a05026a3ac'
+    oldFile: !uuid 'b86e1c825e279e6d65fedfab83260b91f6beaaf0'
+  /admin-ui/src/views/iot/rulesFlowable/common/process:
+    newFile: !uuid '1878dfd0ba1340ed591db7f140bf0f0ae66d6ad4'
+    oldFile: !uuid '8f82644fa35b27d681ecff10af5fe061e6d8907b'
+  /admin-ui/src/views/iot/rulesFlowable/common/process/nodes:
+    newFile: !uuid '6ca363242b52673c64502a5f34af00b49ae32997'
+    oldFile: !uuid '0faa2da420206818156df4ff30618a3b78ab26cf'
+  /admin-ui/src/views/iot/rulesFlowable/common/process/nodes/NoticeNode.vue:
+    newFile: !uuid 'bcf4a18111117de8911fe29982542e483811158d'
+    oldFile: !uuid 'de8ac0d37b5a182920e1047b4f8182fc8a4da779'
+gitCommitId: !uuid 'd9089e4eab897676bcf5ac9cd5fcbc69462b3a46'
 renames: {
   }
-revisionId: 400
+revisionId: 401
