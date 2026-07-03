@@ -87,6 +87,7 @@ systemctl restart docker
 |IoTRulesService|物联规则引擎模块|
 |IoTService|物联核心模块|
 |IoTVideoService|视频监控模块|
+|LLMService|AI助手模块|
 |MessageService|站内消息模块|
 |MESService|制造执行系统模块|
 |MonitorService|系统监控、定时任务模块|
