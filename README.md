@@ -124,3 +124,14 @@ systemctl restart docker
 3. `RegisterBus`：**支持多个模块同时处理同一类事件**
 
 4. 调用方式：使用 `BusUtility.Call` 或 `BusUtility.Dispatch` 触发其他模块的监听事件
+
+
+## 七、预览图片
+
+![输入图片说明](%E5%9B%BE1.png)
+
+![输入图片说明](%E5%9B%BE2.png)
+
+![输入图片说明](%E5%9B%BE3.png)
+
+![输入图片说明](%E5%9B%BE4.png)
