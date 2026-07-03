@@ -3,18 +3,9 @@ branches: {
   }
 fileChange:
   /图1.png:
-    newFile: !uuid 'dcd0f5a94ce4566a6e110a2782b8232293996011'
-    oldFile: null
-  /图2.png:
-    newFile: !uuid '90f53682bbfa208d39c7f7562c2d085a6da88558'
-    oldFile: null
-  /图3.png:
-    newFile: !uuid 'c7e5de5f7adbc4a36a7fe2aab9acb25e56ecf16a'
-    oldFile: null
-  /图4.png:
-    newFile: !uuid 'fbd432ef38d8592ad6d8aaed6b7f25cadab5edf4'
-    oldFile: null
-gitCommitId: !uuid 'cc305cc20485743ba3b580f66db63bb93603747f'
+    newFile: !uuid '022d83298f2c69807eb5b02315dbed0577645363'
+    oldFile: !uuid 'dcd0f5a94ce4566a6e110a2782b8232293996011'
+gitCommitId: !uuid 'c6e616e702bfa508e3504cdc6e0c03bafdf3dcc9'
 renames: {
   }
-revisionId: 402
+revisionId: 403
