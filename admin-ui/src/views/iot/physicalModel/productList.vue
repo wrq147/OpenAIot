@@ -58,12 +58,6 @@
                     <span style="margin-left:6px">协议分类</span>
                   </el-button>
                 </el-col>
-                <el-col :span="1.5">
-                  <el-button type="primary" plain @click="handleAddProp">
-                    <i class="el-icon-coin"></i>
-                    <span style="margin-left:6px">生成规则属性数据</span>
-                  </el-button>
-                </el-col>
               </div>
               <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
             </el-row>
@@ -197,27 +191,6 @@
     </div>
 
 
-    <el-dialog
-      title="选择生成时间"
-      :visible.sync="propDialogVisible"
-      width="400px"
-      center
-    >
-      <div style="text-align: center;padding: 20px 0;">
-        <el-date-picker
-          v-model="propDateTime"
-          type="datetime"
-          placeholder="请选择日期时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          style="width: 100%;"
-        >
-        </el-date-picker>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="propDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitPropData">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -285,8 +258,6 @@ export default {
         { key: 7, label: `创建时间`, visible: true },
       ],
       proClassTree:[],//协议分类列表
-      propDialogVisible: false, // 弹窗显示隐藏
-      propDateTime: "", // 选中的时间
     };
   },
   mounted() {
@@ -297,16 +268,12 @@ export default {
   },
   watch: {
     $route(to, from) {
-      //再次进入页面，如果路由发生改变则重新创建规则
-      // console.log('路由信息',to,from);
       if (
         from.path.indexOf("productAddSteps") ||
         from.path.indexOf("productAdd")
       ) {
-        //进入添加页面获取链接参数，判断是添加还是修改
         this.getList();
       } else if (from.path.indexOf("productClass")) {
-        //进入添加页面获取链接参数，判断是添加还是修改
         this.getClassList();
         this.getList();
       }
@@ -509,25 +476,6 @@ export default {
     },
     handleClsAdd(){
       this.$router.push({ path: "/iot/physicalModel/productClass" });
-    },
-    handleAddProp(){
-      this.propDateTime = this.parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}');
-      this.propDialogVisible = true;
-
-    },
-    submitPropData(){
-      if(!this.propDateTime){
-        this.$modal.msgWarning("请选择时间");
-        return;
-      }
-      
-      this.$modal.loading("正在生成属性数据...");
-      noticeCalProp(this.propDateTime).then(() => {
-        this.$modal.closeLoading();
-        this.propDialogVisible = false;
-        this.$modal.msgSuccess(`生成成功！时间：${this.propDateTime}`);
-      })
-    
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
