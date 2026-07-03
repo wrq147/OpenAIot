@@ -2,8 +2,10 @@
 export type ConnectorOptions = {
 	address : string,
 	port : number,
-	success ?: (res : ITcpConnector) => void
+	success ?: () => void
 	fail ?: (res : any) => void
+	onMessage ?: (data : string) => void
+	onClose ?: () => void
 }
 
 // TCP错误码定义
@@ -14,14 +16,8 @@ export interface ConnectorFail extends IUniError {
 	errCode: ConnectorErrorCode
 }
 
-// TCP客户端对外标准接口
-export interface ITcpConnector {
-	onClose: (() => void) | null;
-	onMessage: ((data: ArrayBuffer) => void) | null;
-	close(): void;
-	write(data: ArrayBuffer): void;
-	writeString(data: string): void;
-}
+// 创建TCP工厂函数类型，返回连接ID
+export type TcpConnector = (options: ConnectorOptions) => number;
 
-// 创建TCP工厂函数类型
-export type TcpConnector = (options: ConnectorOptions) => ITcpConnector
+// 写入二进制数据（data 为 base64 编码字符串）
+export type TcpWriter = (id: number, data: string) => void;

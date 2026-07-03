@@ -12,6 +12,7 @@ import { chartApi } from '@/api/report/chartApi'
 import { getApiSource } from '@/api/report/apisource'
 //模板打印开始
 import PrintDesigner from '@/components/print/index.js'
+import 'vxe-table/lib/style.css'; 
 // import 'remixicon/fonts/remixicon.css'
 // import VXETable from 'vxe-table'
 // import '@/components/print/css/vxevarible.scss'

@@ -28,6 +28,8 @@ let Timescheduler = () =>
     import ('./TimeSchedulerNodeConfig.vue')
 let Pid = () =>
     import ('./PIDNodeConfig.vue')
+let Notice = () =>
+    import ('./NoticeNodeConfig.vue')
 let Tag = () =>
     import ('./TagNodeConfig.vue')
 let Setprop = () =>
@@ -47,6 +49,7 @@ export default {
     Cleardelta,
     Timescheduler,
     Pid,
+    Notice,
     Tag,
     Setprop,
     FormAuthorityConfig

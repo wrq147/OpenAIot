@@ -1,6 +1,7 @@
 <script>
 //导入所有节点组件
 import Pid from '../../../common/process/nodes/PIDNode.vue'
+import Notice from '../../../common/process/nodes/NoticeNode.vue'
 import Timescheduler from '../../../common/process/nodes/TimeSchedulerNode.vue'
 import Cleardelta from '../../../common/process/nodes/ClearDeltaNode.vue'
 import Concurrent from '../../../common/process/nodes/ConcurrentNode.vue'
@@ -24,7 +25,7 @@ import {deepCopy} from '../../../common/utlity.js'
 
 export default {
   name: "ProcessTree",
-  components: {Node, Root, Trigger,Conversion,Datawrite,Metronome,Warn,Func, Concurrent,Cleardelta,Timescheduler,Pid, Condition, Delay, Empty,Except,Redirect,Setprop,Tag},
+  components: {Node, Root, Trigger,Conversion,Datawrite,Metronome,Warn,Func, Concurrent,Cleardelta,Timescheduler,Pid,Notice, Condition, Delay, Empty,Except,Redirect,Setprop,Tag},
   data() {
     return {
       valid: true
@@ -156,7 +157,7 @@ export default {
       return node &&
           (node.type === 'ROOT' || node.type === 'DELAY'
               || node.type === 'TRIGGER' || node.type==='CONVERSION' || node.type==='DATAWRITE' 
-              || node.type==='METRONOME'|| node.type==='WARN' ||node.type==='FUNC'||node.type==='EXCEPT'||node.type==='REDIRECT'||node.type==='CLEARDELTA'||node.type==='TIMESCHEDULER'||node.type==='PID'||node.type==='TAG'||node.type==='SETPROP');
+              || node.type==='METRONOME'|| node.type==='WARN' ||node.type==='NOTICE'||node.type==='FUNC'||node.type==='EXCEPT'||node.type==='REDIRECT'||node.type==='CLEARDELTA'||node.type==='TIMESCHEDULER'||node.type==='PID'||node.type==='TAG'||node.type==='SETPROP');
     },
     isBranchNode(node){
       return node && (node.type === 'CONDITIONS' || node.type === 'CONCURRENTS');
@@ -215,6 +216,7 @@ export default {
         case 'CLEARDELTA':this.insertClearDeltaNode(parentNode); break;
         case 'TIMESCHEDULER': this.insertTimeSchedulerNode(parentNode); break;
         case 'PID': this.insertPidNode(parentNode); break;
+        case 'NOTICE': this.insertNoticeNode(parentNode); break;
         case 'TAG': this.insertTagNode(parentNode); break;
         case 'SETPROP': this.insertSetPropNode(parentNode); break;
         default: break;
@@ -291,6 +293,10 @@ export default {
     insertPidNode(parentNode){
       this.$set(parentNode.children, "name", "PID控制")
       this.$set(parentNode.children, "props", deepCopy(DefaultProps.PID_PROPS))
+    },
+    insertNoticeNode(parentNode){
+      this.$set(parentNode.children, "name", "触发通知")
+      this.$set(parentNode.children, "props", deepCopy(DefaultProps.NOTICE_PROPS))
     },
     insertConditionsNode(parentNode){
       this.$set(parentNode.children, "name", "条件分支")

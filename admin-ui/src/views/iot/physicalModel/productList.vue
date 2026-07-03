@@ -229,8 +229,7 @@ import {
   copyProduct,
   productList,
   removeProduct,
-  productInfo,
-  noticeCalProp
+  productInfo
 } from "@/api/rules/productModel";
 
 import { resizeTableCon } from "@/mixins/resizeTableCon";

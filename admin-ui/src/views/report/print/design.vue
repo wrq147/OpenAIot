@@ -33,6 +33,7 @@ import {chartApi} from '@/api/report/chartApi'
 
 //模板打印开始
 import PrintDesigner from '@/components/print/index.js'
+import 'vxe-table/lib/style.css'; 
 // import 'remixicon/fonts/remixicon.css'
 // import 'xe-utils'
 // import VXETable from 'vxe-table'

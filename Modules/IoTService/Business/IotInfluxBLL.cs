@@ -934,6 +934,177 @@ namespace IoTService.Business
             }
             return rt;
         }
+
+
+        /// <summary>
+        /// 将源设备指定时间段device表时序数据复制到目标（同产品、同InfluxDB实例）
+        /// </summary>
+        /// <param name="sourceId">源设备Id</param>
+        /// <param name="targetId">目标设备Id</param>
+        /// <param name="map">数据映射</param>
+        /// <param name="startTime">起始时间（本地时间）</param>
+        /// <param name="endTime">结束时间（本地时间）</param>
+        /// <returns>成功/失败，返回拷贝总条数</returns>
+        public virtual async Task<BusResponse<int>> CopyDeviceHistory(string sourceId, string targetId, Dictionary<string, string> map, DateTime startTime, DateTime endTime)
+        {
+            try
+            {
+                int batchSize = 2000;
+                // 1. 参数基础校验
+                if (string.IsNullOrWhiteSpace(sourceId) || string.IsNullOrWhiteSpace(targetId))
+                    return BusResponse<int>.Error(501, "源设备ID/目标设备ID不能为空");
+                if (sourceId == targetId)
+                    return BusResponse<int>.Error(502, "源设备与目标设备不能相同");
+                if (startTime >= endTime)
+                    return BusResponse<int>.Error(503, "起始时间不能大于等于结束时间");
+                if (batchSize <= 0) batchSize = 2000;
+                var deviceDAL = _provider.GetService<IotDeviceDAL>();
+                MZ_IotDevice sourceDevice = await deviceDAL.Select(sourceId);
+                MZ_IotDevice destDevice = await deviceDAL.Select(targetId);
+                if (sourceDevice == null || destDevice == null)
+                {
+                    return BusResponse<int>.Error(504, "源设备与目标设备不存在");
+                }
+                // 2. 获取产品存储配置
+                IotProductDAL productDAL = _provider.GetService<IotProductDAL>();
+                var product = await productDAL.Select(sourceDevice.ProductId);
+                if (product == null)
+                    return BusResponse<int>.Error(505, "源产品不存在");
+                if (string.IsNullOrEmpty(product.StorageConfig))
+                    return BusResponse<int>.Error(506, "源产品未配置InfluxDB存储");
+
+                var destProduct = await productDAL.Select(destDevice.ProductId);
+                if (destProduct == null)
+                    return BusResponse<int>.Error(507, "目标产品不存在");
+                if (string.IsNullOrEmpty(destProduct.StorageConfig))
+                    return BusResponse<int>.Error(508, "目标产品未配置InfluxDB存储");
+
+
+                var storageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(product.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
+                if (string.IsNullOrWhiteSpace(storageConfig.url) || string.IsNullOrWhiteSpace(storageConfig.token))
+                    return BusResponse<int>.Error(509, "源InfluxDB存储配置不完整");
+
+                var deststorageConfig = System.Text.Json.JsonSerializer.Deserialize<InfluxOption>(destProduct.StorageConfig, MyDefaultTextJsonConfig.DefaultOptions);
+                if (string.IsNullOrWhiteSpace(deststorageConfig.url) || string.IsNullOrWhiteSpace(deststorageConfig.token))
+                    return BusResponse<int>.Error(510, "目标InfluxDB存储配置不完整");
+
+                // 3. 构建Flux查询：读取源设备全量device测量数据
+                var sbFlux = new StringBuilder();
+                sbFlux.Append($"from(bucket:\"{storageConfig.bucket.Replace("\"", "")}\")");
+                var utcStart = TimeZoneInfo.ConvertTime(startTime, TimeZoneInfo.Utc);
+                var utcEnd = TimeZoneInfo.ConvertTime(endTime, TimeZoneInfo.Utc);
+                sbFlux.Append($" |> range(start: {utcStart:yyyy-MM-ddTHH:mm:ssZ}, stop: {utcEnd:yyyy-MM-ddTHH:mm:ssZ})");
+                sbFlux.Append(" |> filter(fn: (r) => r[\"_measurement\"] == \"device\")");
+                sbFlux.Append($" |> filter(fn: (r) => r[\"DxId\"] == \"{sourceId}\")");
+                sbFlux.Append(" |> sort(columns: [\"_time\"])");
+
+                // 4. 查询源数据
+                long copyTotal = 0;
+                using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
+                var queryApi = client.GetQueryApi();
+                var fluxTables = await queryApi.QueryAsync(sbFlux.ToString(), storageConfig.org);
+
+                using var destclient = new InfluxDBClient(deststorageConfig.url, deststorageConfig.token);
+                var writeApi = destclient.GetWriteApiAsync();
+                List<PointData> batchPoints = new List<PointData>(batchSize);
+                var destmodel = TslModel.CreateFrom(destProduct.ModelTSL);
+                foreach (var table in fluxTables)
+                {
+                    foreach (var record in table.Records)
+                    {
+                        try
+                        {
+                            // 读取原始标签、字段、时间
+                            var dtUtc = record.GetTimeInDateTime().Value;
+                            string fieldKey = record.GetField();
+
+                            string tmpsskey = fieldKey.Split("#")[1];
+                            if (!map.TryGetValue(tmpsskey, out string targetkey))
+                            {
+                                continue;
+                            }
+                            var bp = destmodel.properties.Where(x => x.code == targetkey).FirstOrDefault();
+                            if (bp == null)
+                            {
+                                continue;
+                            }
+                            object fieldValue = record.GetValue();
+
+                            var pointBuilder = PointData.Measurement("device")
+                                .Tag("DeviceId", destDevice.DeviceId).Tag("DxId", destDevice.Id);
+
+                            string saveTargetKey = bp.option.type + "#" + targetkey;
+                            switch (bp.option.type)
+                            {
+                                case "date":
+                                    {
+                                        long tmpv = Convert.ToInt64(fieldValue);
+                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                    }
+                                    break;
+                                case "float":
+                                    {
+                                        double tmpv = Convert.ToDouble(fieldValue);
+                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                    }
+                                    break;
+                                case "int":
+                                    {
+                                        int tmpv = Convert.ToInt32(fieldValue);
+                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                    }
+                                    break;
+                                case "enum":
+                                    {
+                                        var tmpv = Convert.ToString(fieldValue);
+                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                    }
+                                    break;
+                                case "geo":
+                                    {
+                                        var tmpv = Convert.ToString(fieldValue);
+                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                    }
+                                    break;
+                                default:
+                                    continue;
+                            }
+
+                            pointBuilder.Timestamp(dtUtc, WritePrecision.Ns);
+                            batchPoints.Add(pointBuilder);
+                            copyTotal++;
+
+                            // 批量写入
+                            if (batchPoints.Count >= batchSize)
+                            {
+                                await writeApi.WritePointsAsync(batchPoints, storageConfig.bucket, storageConfig.org);
+                                batchPoints.Clear();
+                                _log.LogInformation($"已批量写入 {batchSize} 条拷贝数据，累计已拷贝：{copyTotal}");
+                            }
+                        }
+                        catch (Exception exRecord)
+                        {
+                            _log.LogError(exRecord, "单条源数据转换Point失败，跳过本条");
+                        }
+                    }
+                }
+
+                // 写入剩余不足一批的数据
+                if (batchPoints.Count > 0)
+                {
+                    await writeApi.WritePointsAsync(batchPoints, storageConfig.bucket, storageConfig.org);
+                    batchPoints.Clear();
+                    _log.LogInformation($"剩余 {batchPoints.Count} 条拷贝数据写入完成，总拷贝条数：{copyTotal}");
+                }
+
+                return BusResponse<int>.Success();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "拷贝设备时序数据发生异常");
+                return BusResponse<int>.Error(508, $"拷贝失败：{ex.Message}");
+            }
+        }
     }
 
 }

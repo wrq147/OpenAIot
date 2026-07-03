@@ -12,7 +12,7 @@ import { chartApi } from '@/api/report/chartApi'
 import { getApiSource } from '@/api/report/apisource'
 //模板打印开始
 import PrintDesigner from '@/components/print/index.js'
-
+import 'vxe-table/lib/style.css'; 
 
 //模板打印结束
 import Vue from 'vue'

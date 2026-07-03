@@ -55,6 +55,17 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:IoTService.Business.IotInfluxBLL.CopyDeviceHistory(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.DateTime,System.DateTime)">
+            <summary>
+            将源设备指定时间段device表时序数据复制到目标（同产品、同InfluxDB实例）
+            </summary>
+            <param name="sourceId">源设备Id</param>
+            <param name="targetId">目标设备Id</param>
+            <param name="map">数据映射</param>
+            <param name="startTime">起始时间（本地时间）</param>
+            <param name="endTime">结束时间（本地时间）</param>
+            <returns>成功/失败，返回拷贝总条数</returns>
+        </member>
         <member name="M:IoTService.Business.IotTagBLL.ToTagItem(System.String,ChannelUtility.Tsl.BaseTagInfo,System.Object)">
             <summary>
             存储的标签转显示用数据
@@ -381,6 +392,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:IoTService.Controller.IotData">
+            <summary>
+            数据修正接口
+            </summary>
+        </member>
+        <member name="M:IoTService.Controller.IotData.NoticeCalProp(IoTService.Models.In_CalProp)">
+            <summary>
+            重新计算属性规则
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IoTService.Controller.IotData.CopyData(IoTService.Models.In_CopyHis)">
+            <summary>
+            从一台设备拷贝数据到另一台设备
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="M:IoTService.Controller.IotDevice.IsOnline(System.String)">
             <summary>
             获取设备离在线状态
@@ -569,12 +598,6 @@
             <summary>
             物联协议接口
             </summary>
-        </member>
-        <member name="M:IoTService.Controller.IotProduct.NoticeCalProp(IoTService.Models.In_CalProp)">
-            <summary>
-            重新计算属性规则
-            </summary>
-            <returns></returns>
         </member>
         <member name="M:IoTService.Controller.IotProduct.ProductNames(IoTService.Models.In_ProductNamePage)">
             <summary>
@@ -1039,6 +1062,11 @@
         <member name="P:IoTService.Models.In_CalProp.Time">
             <summary>
             计算时间
+            </summary>
+        </member>
+        <member name="P:IoTService.Models.In_CopyHis.Mapping">
+            <summary>
+            源属性标识与目标属性标识的映射
             </summary>
         </member>
         <member name="P:IoTService.Models.In_DebugEvent.DeviceId">

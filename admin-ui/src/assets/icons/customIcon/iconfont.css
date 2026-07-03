@@ -1,909 +1,949 @@
 @font-face {
-    font-family: "zhongtaiiconfont";
-    /* Project id 4538642 */
-    src: url('iconfont.ttf?t=1751595272713') format('truetype');
+  font-family: "zhongtaiiconfont"; /* Project id 4538642 */
+  src: url('iconfont.ttf?t=1783046537761') format('truetype');
 }
 
 .zhongtaiiconfont {
-    font-family: "zhongtaiiconfont" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: "zhongtaiiconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.zhongtai-icon-chufatongzhi:before {
+  content: "\e7f4";
+}
+
+.zhongtai-icon-qiyetubiao:before {
+  content: "\e7b0";
+}
+
+.zhongtai-icon-shouqicebianlan:before {
+  content: "\e7b2";
+}
+
+.zhongtai-icon-zhankaicebianlan1:before {
+  content: "\e7b1";
+}
+
+.zhongtai-icon-duankailianjie:before {
+  content: "\e7a5";
+}
+
+.zhongtai-icon-lianjie:before {
+  content: "\e7a4";
+}
+
+.zhongtai-icon-wifi:before {
+  content: "\e7a3";
+}
+
+.zhongtai-icon-a-jinru1:before {
+  content: "\e6d3";
+}
+
+.zhongtai-icon-jinru:before {
+  content: "\e6d4";
+}
+
+.zhongtai-icon-zhuye:before {
+  content: "\e7a6";
 }
 
 .zhongtai-icon-shebeiguanli:before {
-    content: "\e7a1";
+  content: "\e7a1";
 }
 
 .zhongtai-icon-fuwuguanli:before {
-    content: "\e7a2";
+  content: "\e7a2";
 }
 
 .zhongtai-icon-shebeizhongxin:before {
-    content: "\e7a0";
+  content: "\e7a0";
 }
 
 .zhongtai-icon-xitongshezhi:before {
-    content: "\e79b";
+  content: "\e79b";
 }
 
 .zhongtai-icon-shebeizhizaoguochengguanli:before {
-    content: "\e79f";
+  content: "\e79f";
 }
 
 .zhongtai-icon-zhuanjiaguanli:before {
-    content: "\e79e";
+  content: "\e79e";
 }
 
 .zhongtai-icon-dangqianpaidan:before {
-    content: "\e79d";
+  content: "\e79d";
 }
 
 .zhongtai-icon-yonghuzhongxin:before {
-    content: "\e79a";
+  content: "\e79a";
 }
 
 .zhongtai-icon-appguanli:before {
-    content: "\e799";
+  content: "\e799";
 }
 
 .zhongtai-icon-zutaizhongxin:before {
-    content: "\e79c";
+  content: "\e79c";
 }
 
 .zhongtai-icon-kaigong:before {
-    content: "\e796";
+  content: "\e796";
 }
 
 .zhongtai-icon-lishipaidan:before {
-    content: "\e797";
+  content: "\e797";
 }
 
 .zhongtai-icon-sucaiku:before {
-    content: "\e794";
+  content: "\e794";
 }
 
 .zhongtai-icon-zhengli:before {
-    content: "\e791";
+  content: "\e791";
 }
 
 .zhongtai-icon-xitongrizhi:before {
-    content: "\e793";
+  content: "\e793";
 }
 
 .zhongtai-icon-beipinbeijianguanli:before {
-    content: "\e792";
+  content: "\e792";
 }
 
 .zhongtai-icon-fuwurenyuan:before {
-    content: "\e790";
+  content: "\e790";
 }
 
 .zhongtai-icon-fuwurenyuanliebiao:before {
-    content: "\e78a";
+  content: "\e78a";
 }
 
 .zhongtai-icon-waiguan:before {
-    content: "\e78f";
+  content: "\e78f";
 }
 
 .zhongtai-icon-neibuguanli:before {
-    content: "\e78e";
+  content: "\e78e";
 }
 
 .zhongtai-icon-yonghuguanli:before {
-    content: "\e78d";
+  content: "\e78d";
 }
 
 .zhongtai-icon-wodemoban:before {
-    content: "\e789";
+  content: "\e789";
 }
 
 .zhongtai-icon-waibuguanli:before {
-    content: "\e78c";
+  content: "\e78c";
 }
 
 .zhongtai-icon-yonghucaozuorizhi:before {
-    content: "\e78b";
+  content: "\e78b";
 }
 
 .zhongtai-icon-zhuanjiazhishiku:before {
-    content: "\e788";
+  content: "\e788";
 }
 
 .zhongtai-icon-zhuangpei:before {
-    content: "\e787";
+  content: "\e787";
 }
 
 .zhongtai-icon-zhuanjiazhidao:before {
-    content: "\e786";
+  content: "\e786";
 }
 
 .zhongtai-icon-chuku:before {
-    content: "\e785";
+  content: "\e785";
 }
 
 .zhongtai-icon-APPkehushebeiguanli:before {
-    content: "\e784";
+  content: "\e784";
 }
 
 .zhongtai-icon-APPkehuguanli:before {
-    content: "\e783";
+  content: "\e783";
 }
 
 .zhongtai-icon-baojingguanli:before {
-    content: "\e781";
+  content: "\e781";
 }
 
 .zhongtai-icon-ruku:before {
-    content: "\e782";
+  content: "\e782";
 }
 
 .zhongtai-icon-dingdanguanli:before {
-    content: "\e780";
+  content: "\e780";
 }
 
 .zhongtai-icon-shiche:before {
-    content: "\e77f";
+  content: "\e77f";
 }
 
 .zhongtai-icon-guzhangguanli:before {
-    content: "\e77e";
+  content: "\e77e";
 }
 
 .zhongtai-icon-kongyajiguanli:before {
-    content: "\e77a";
+  content: "\e77a";
 }
 
 .zhongtai-icon-shujutongji:before {
-    content: "\e77d";
+  content: "\e77d";
 }
 
 .zhongtai-icon-zutaimoban:before {
-    content: "\e77c";
+  content: "\e77c";
 }
 
 .zhongtai-icon-xitongshezhi2:before {
-    content: "\e77b";
+  content: "\e77b";
 }
 
 .zhongtai-icon-jiaoseguanli:before {
-    content: "\e798";
+  content: "\e798";
 }
 
 .zhongtai-icon-baobiaotongji:before {
-    content: "\e795";
+  content: "\e795";
 }
 
 .zhongtai-icon-shebeitixing:before {
-    content: "\e778";
+  content: "\e778";
 }
 
 .zhongtai-icon-baoyangzhuangtai:before {
-    content: "\e779";
+  content: "\e779";
 }
 
 .zhongtai-icon-shebeizhuangtai:before {
-    content: "\e777";
+  content: "\e777";
 }
 
 .zhongtai-icon-baoyang:before {
-    content: "\e774";
+  content: "\e774";
 }
 
 .zhongtai-icon-guzhang1:before {
-    content: "\e775";
+  content: "\e775";
 }
 
 .zhongtai-icon-baojing:before {
-    content: "\e776";
+  content: "\e776";
 }
 
 .zhongtai-icon-weibao:before {
-    content: "\e773";
+  content: "\e773";
 }
 
 .zhongtai-icon-guzhang:before {
-    content: "\e772";
+  content: "\e772";
 }
 
 .zhongtai-icon-ditufenbu:before {
-    content: "\e771";
+  content: "\e771";
 }
 
 .zhongtai-icon-fenbuzongshu:before {
-    content: "\e770";
+  content: "\e770";
 }
 
 .zhongtai-icon-lixian1:before {
-    content: "\e76f";
+  content: "\e76f";
 }
 
 .zhongtai-icon-yunhang:before {
-    content: "\e76e";
+  content: "\e76e";
 }
 
 .zhongtai-icon-weizhi:before {
-    content: "\e76d";
+  content: "\e76d";
 }
 
 .zhongtai-icon-zhiwei:before {
-    content: "\e768";
+  content: "\e768";
 }
 
 .zhongtai-icon-PIDjiedian:before {
-    content: "\e762";
+  content: "\e762";
 }
 
 .zhongtai-icon-lizaixianjilu:before {
-    content: "\e752";
+  content: "\e752";
 }
 
 .zhongtai-icon-shaixuan:before {
-    content: "\e6d2";
+  content: "\e6d2";
 }
 
 .zhongtai-icon-tishi:before {
-    content: "\e6d1";
+  content: "\e6d1";
 }
 
 .zhongtai-icon-a-tishi:before {
-    content: "\e6d0";
+  content: "\e6d0";
 }
 
 .zhongtai-icon-caosongwode:before {
-    content: "\e6cf";
+  content: "\e6cf";
 }
 
 .zhongtai-icon-suoshujuese:before {
-    content: "\e6a4";
+  content: "\e6a4";
 }
 
 .zhongtai-icon-qiyedizhi1:before {
-    content: "\e676";
+  content: "\e676";
 }
 
 .zhongtai-icon-a-shouye:before {
-    content: "\e6b4";
+  content: "\e6b4";
 }
 
 .zhongtai-icon-a-huancunjiankong:before {
-    content: "\e69b";
+  content: "\e69b";
 }
 
 .zhongtai-icon-a-lingpaihuoqu:before {
-    content: "\e6b2";
+  content: "\e6b2";
 }
 
 .zhongtai-icon-a-dengluriji:before {
-    content: "\e6b7";
+  content: "\e6b7";
 }
 
 .zhongtai-icon-a-fuwujiankong:before {
-    content: "\e6a5";
+  content: "\e6a5";
 }
 
 .zhongtai-icon-a-dingshirenwu:before {
-    content: "\e6b1";
+  content: "\e6b1";
 }
 
 .zhongtai-icon-a-caozuoriji:before {
-    content: "\e6b8";
+  content: "\e6b8";
 }
 
 .zhongtai-icon-a-bumenguanli:before {
-    content: "\e6bb";
+  content: "\e6bb";
 }
 
 .zhongtai-icon-a-canshushezhi:before {
-    content: "\e6b9";
+  content: "\e6b9";
 }
 
 .zhongtai-icon-a-sousuoxiao:before {
-    content: "\e6ce";
+  content: "\e6ce";
 }
 
 .zhongtai-icon-exit-fullscreen:before {
-    content: "\e6a0";
+  content: "\e6a0";
 }
 
 .zhongtai-icon-a-zidianguanli:before {
-    content: "\e69d";
+  content: "\e69d";
 }
 
 .zhongtai-icon-a-yibanrenwu:before {
-    content: "\e6cc";
+  content: "\e6cc";
 }
 
 .zhongtai-icon-a-yonghuguanli:before {
-    content: "\e6cd";
+  content: "\e6cd";
 }
 
 .zhongtai-icon-a-xitonggongju:before {
-    content: "\e6cb";
+  content: "\e6cb";
 }
 
 .zhongtai-icon-a-liuchengguanli:before {
-    content: "\e6ac";
+  content: "\e6ac";
 }
 
 .zhongtai-icon-a-tongjibaobiao:before {
-    content: "\e6ca";
+  content: "\e6ca";
 }
 
 .zhongtai-icon-a-liuchengdingyi:before {
-    content: "\e6c9";
+  content: "\e6c9";
 }
 
 .zhongtai-icon-monitor:before {
-    content: "\e6c8";
+  content: "\e6c8";
 }
 
 .zhongtai-icon-dict:before {
-    content: "\e6bc";
+  content: "\e6bc";
 }
 
 .zhongtai-icon-tree-table:before {
-    content: "\e6bd";
+  content: "\e6bd";
 }
 
 .zhongtai-icon-swagger:before {
-    content: "\e6be";
+  content: "\e6be";
 }
 
 .zhongtai-icon-edit:before {
-    content: "\e6bf";
+  content: "\e6bf";
 }
 
 .zhongtai-icon-wechat:before {
-    content: "\e6c0";
+  content: "\e6c0";
 }
 
 .zhongtai-icon-online:before {
-    content: "\e6c1";
+  content: "\e6c1";
 }
 
 .zhongtai-icon-job:before {
-    content: "\e6c2";
+  content: "\e6c2";
 }
 
 .zhongtai-icon-server:before {
-    content: "\e6c3";
+  content: "\e6c3";
 }
 
 .zhongtai-icon-redis:before {
-    content: "\e6c4";
+  content: "\e6c4";
 }
 
 .zhongtai-icon-form:before {
-    content: "\e6c5";
+  content: "\e6c5";
 }
 
 .zhongtai-icon-logininfor:before {
-    content: "\e6c6";
+  content: "\e6c6";
 }
 
 .zhongtai-icon-system:before {
-    content: "\e6c7";
+  content: "\e6c7";
 }
 
 .zhongtai-icon-a-kaifachanpin:before {
-    content: "\e6a8";
+  content: "\e6a8";
 }
 
 .zhongtai-icon-a-guizeyinqing:before {
-    content: "\e6aa";
+  content: "\e6aa";
 }
 
 .zhongtai-icon-a-guizeliebiao:before {
-    content: "\e6ae";
+  content: "\e6ae";
 }
 
 .zhongtai-icon-a-chaosongwode:before {
-    content: "\e6ba";
+  content: "\e6ba";
 }
 
 .zhongtai-icon-a-yibanrenwuqianse:before {
-    content: "\e6a6";
+  content: "\e6a6";
 }
 
 .zhongtai-icon-a-wodeliuchengqianse:before {
-    content: "\e6a7";
+  content: "\e6a7";
 }
 
 .zhongtai-icon-a-qiyeguanli:before {
-    content: "\e6a9";
+  content: "\e6a9";
 }
 
 .zhongtai-icon-a-liuchengdingyiqianse:before {
-    content: "\e6ab";
+  content: "\e6ab";
 }
 
 .zhongtai-icon-a-sousuodinglan:before {
-    content: "\e6ad";
+  content: "\e6ad";
 }
 
 .zhongtai-icon-a-guanbihui:before {
-    content: "\e6af";
+  content: "\e6af";
 }
 
 .zhongtai-icon-a-chanpinfenlei:before {
-    content: "\e6b0";
+  content: "\e6b0";
 }
 
 .zhongtai-icon-a-xiajiantou:before {
-    content: "\e6b3";
+  content: "\e6b3";
 }
 
 .zhongtai-icon-a-qiehuan-icon:before {
-    content: "\e6b5";
+  content: "\e6b5";
 }
 
 .zhongtai-icon-a-guanlixiao:before {
-    content: "\e6b6";
+  content: "\e6b6";
 }
 
 .zhongtai-icon-chuangjianriqi:before {
-    content: "\e699";
+  content: "\e699";
 }
 
 .zhongtai-icon-chukujilu:before {
-    content: "\e69a";
+  content: "\e69a";
 }
 
 .zhongtai-icon-a-zhankaizhedie:before {
-    content: "\e69c";
+  content: "\e69c";
 }
 
 .zhongtai-icon-a-zhuanfajiedian:before {
-    content: "\e69e";
+  content: "\e69e";
 }
 
 .zhongtai-icon-a-yonghuguanliqianse:before {
-    content: "\e69f";
+  content: "\e69f";
 }
 
 .zhongtai-icon-a-xiajiantouda:before {
-    content: "\e6a1";
+  content: "\e6a1";
 }
 
 .zhongtai-icon-a-tongjibaobiaoqianse:before {
-    content: "\e6a2";
+  content: "\e6a2";
 }
 
 .zhongtai-icon-a-xitongguanlishense:before {
-    content: "\e6a3";
+  content: "\e6a3";
 }
 
 .zhongtai-icon-haocaifenlei:before {
-    content: "\e686";
+  content: "\e686";
 }
 
 .zhongtai-icon-hangyeleixing:before {
-    content: "\e687";
+  content: "\e687";
 }
 
 .zhongtai-icon-gonghaichi:before {
-    content: "\e688";
+  content: "\e688";
 }
 
 .zhongtai-icon-fabu:before {
-    content: "\e689";
+  content: "\e689";
 }
 
 .zhongtai-icon-flow-duoxuankuang:before {
-    content: "\e68a";
+  content: "\e68a";
 }
 
 .zhongtai-icon-a-zhongzhixiao:before {
-    content: "\e68b";
+  content: "\e68b";
 }
 
 .zhongtai-icon-baojingliebiao:before {
-    content: "\e68c";
+  content: "\e68c";
 }
 
 .zhongtai-icon-a-zhongzhida:before {
-    content: "\e68d";
+  content: "\e68d";
 }
 
 .zhongtai-icon-gengduo:before {
-    content: "\e68e";
+  content: "\e68e";
 }
 
 .zhongtai-icon-dailishang:before {
-    content: "\e68f";
+  content: "\e68f";
 }
 
 .zhongtai-icon-documentation:before {
-    content: "\e690";
+  content: "\e690";
 }
 
 .zhongtai-icon-daochu:before {
-    content: "\e691";
+  content: "\e691";
 }
 
 .zhongtai-icon-bumen:before {
-    content: "\e692";
+  content: "\e692";
 }
 
 .zhongtai-icon-dashboard:before {
-    content: "\e693";
+  content: "\e693";
 }
 
 .zhongtai-icon-chuliwancheng:before {
-    content: "\e694";
+  content: "\e694";
 }
 
 .zhongtai-icon-a-xinzenghui:before {
-    content: "\e695";
+  content: "\e695";
 }
 
 .zhongtai-icon-daoru:before {
-    content: "\e696";
+  content: "\e696";
 }
 
 .zhongtai-icon-a-xitongjiankongqianse:before {
-    content: "\e697";
+  content: "\e697";
 }
 
 .zhongtai-icon-a-zidianguanliqianse:before {
-    content: "\e698";
+  content: "\e698";
 }
 
 .zhongtai-icon-shangji:before {
-    content: "\e678";
+  content: "\e678";
 }
 
 .zhongtai-icon-daishengjishebei:before {
-    content: "\e679";
+  content: "\e679";
 }
 
 .zhongtai-icon-jinxiaocun:before {
-    content: "\e67a";
+  content: "\e67a";
 }
 
 .zhongtai-icon-link:before {
-    content: "\e67b";
+  content: "\e67b";
 }
 
 .zhongtai-icon-a-caidanguanli:before {
-    content: "\e62a";
+  content: "\e62a";
 }
 
 .zhongtai-icon-qiyedizhi:before {
-    content: "\e67c";
+  content: "\e67c";
 }
 
 .zhongtai-icon-a-shebeiguanli:before {
-    content: "\e62c";
+  content: "\e62c";
 }
 
 .zhongtai-icon-cangkuguanli:before {
-    content: "\e67d";
+  content: "\e67d";
 }
 
 .zhongtai-icon-jiepaiqi:before {
-    content: "\e67e";
+  content: "\e67e";
 }
 
 .zhongtai-icon-flow-bumenxuanze:before {
-    content: "\e67f";
+  content: "\e67f";
 }
 
 .zhongtai-icon-huifu:before {
-    content: "\e680";
+  content: "\e680";
 }
 
 .zhongtai-icon-mima:before {
-    content: "\e681";
+  content: "\e681";
 }
 
 .zhongtai-icon-baojingjiedian:before {
-    content: "\e62e";
+  content: "\e62e";
 }
 
 .zhongtai-icon-kucunchaxun:before {
-    content: "\e682";
+  content: "\e682";
 }
 
 .zhongtai-icon-haocaiguanli:before {
-    content: "\e683";
+  content: "\e683";
 }
 
 .zhongtai-icon-daichuli:before {
-    content: "\e684";
+  content: "\e684";
 }
 
 .zhongtai-icon-baobiaoguanli:before {
-    content: "\e62d";
+  content: "\e62d";
 }
 
 .zhongtai-icon-dayinmoban:before {
-    content: "\e685";
+  content: "\e685";
 }
 
 .zhongtai-icon-fanhui1:before {
-    content: "\e62f";
+  content: "\e62f";
 }
 
 .zhongtai-icon-cascader:before {
-    content: "\e677";
+  content: "\e677";
 }
 
 .zhongtai-icon-gongzuotai:before {
-    content: "\e66a";
+  content: "\e66a";
 }
 
 .zhongtai-icon-richengtixing:before {
-    content: "\e66b";
+  content: "\e66b";
 }
 
 .zhongtai-icon-fanhui:before {
-    content: "\e66c";
+  content: "\e66c";
 }
 
 .zhongtai-icon-shoujihaoma1:before {
-    content: "\e66d";
+  content: "\e66d";
 }
 
 .zhongtai-icon-jinyong:before {
-    content: "\e66e";
+  content: "\e66e";
 }
 
 .zhongtai-icon-guide:before {
-    content: "\e66f";
+  content: "\e66f";
 }
 
 .zhongtai-icon-liucheng:before {
-    content: "\e670";
+  content: "\e670";
 }
 
 .zhongtai-icon-flow-riqishijianqujian:before {
-    content: "\e671";
+  content: "\e671";
 }
 
 .zhongtai-icon-rizhi:before {
-    content: "\e672";
+  content: "\e672";
 }
 
 .zhongtai-icon-gengxinriqi:before {
-    content: "\e673";
+  content: "\e673";
 }
 
 .zhongtai-icon-lianxiren:before {
-    content: "\e674";
+  content: "\e674";
 }
 
 .zhongtai-icon-gongsi:before {
-    content: "\e675";
+  content: "\e675";
 }
 
 .zhongtai-icon-peoples:before {
-    content: "\e658";
+  content: "\e658";
 }
 
 .zhongtai-icon-yonghuyouxiang:before {
-    content: "\e659";
+  content: "\e659";
 }
 
 .zhongtai-icon-quanping:before {
-    content: "\e65a";
+  content: "\e65a";
 }
 
 .zhongtai-icon-xiansuochi:before {
-    content: "\e65b";
+  content: "\e65b";
 }
 
 .zhongtai-icon-daibanrenwu:before {
-    content: "\e65c";
+  content: "\e65c";
 }
 
 .zhongtai-icon-shebeigaojing:before {
-    content: "\e65d";
+  content: "\e65d";
 }
 
 .zhongtai-icon-qiyeguimo:before {
-    content: "\e65e";
+  content: "\e65e";
 }
 
 .zhongtai-icon-tianjia:before {
-    content: "\e65f";
+  content: "\e65f";
 }
 
 .zhongtai-icon-genjinjilu:before {
-    content: "\e630";
+  content: "\e630";
 }
 
 .zhongtai-icon-kucunxinxi:before {
-    content: "\e660";
+  content: "\e660";
 }
 
 .zhongtai-icon-shujuhuancun:before {
-    content: "\e661";
+  content: "\e661";
 }
 
 .zhongtai-icon-kucunpandian:before {
-    content: "\e662";
+  content: "\e662";
 }
 
 .zhongtai-icon-qingkong:before {
-    content: "\e663";
+  content: "\e663";
 }
 
 .zhongtai-icon-wodepinglun:before {
-    content: "\e664";
+  content: "\e664";
 }
 
 .zhongtai-icon-kehu:before {
-    content: "\e665";
+  content: "\e665";
 }
 
 .zhongtai-icon-message:before {
-    content: "\e666";
+  content: "\e666";
 }
 
 .zhongtai-icon-flow-jineshuru:before {
-    content: "\e667";
+  content: "\e667";
 }
 
 .zhongtai-icon-weichushihua:before {
-    content: "\e668";
+  content: "\e668";
 }
 
 .zhongtai-icon-genjinjihua:before {
-    content: "\e669";
+  content: "\e669";
 }
 
 .zhongtai-icon-wodeshebei:before {
-    content: "\e647";
+  content: "\e647";
 }
 
 .zhongtai-icon-wodekehu:before {
-    content: "\e648";
+  content: "\e648";
 }
 
 .zhongtai-icon-xinzeng:before {
-    content: "\e649";
+  content: "\e649";
 }
 
 .zhongtai-icon-shoujihaoma:before {
-    content: "\e64a";
+  content: "\e64a";
 }
 
 .zhongtai-icon-rukujilu:before {
-    content: "\e64b";
+  content: "\e64b";
 }
 
 .zhongtai-icon-qiyexinxi:before {
-    content: "\e64c";
+  content: "\e64c";
 }
 
 .zhongtai-icon-table:before {
-    content: "\e64d";
+  content: "\e64d";
 }
 
 .zhongtai-icon-shanchu:before {
-    content: "\e64e";
+  content: "\e64e";
 }
 
 .zhongtai-icon-qiyedizhibeifen:before {
-    content: "\e64f";
+  content: "\e64f";
 }
 
 .zhongtai-icon-qiangtui:before {
-    content: "\e650";
+  content: "\e650";
 }
 
 .zhongtai-icon-xiugai:before {
-    content: "\e651";
+  content: "\e651";
 }
 
 .zhongtai-icon-lixian:before {
-    content: "\e631";
+  content: "\e631";
 }
 
 .zhongtai-icon-user:before {
-    content: "\e652";
+  content: "\e652";
 }
 
 .zhongtai-icon-yulan:before {
-    content: "\e653";
+  content: "\e653";
 }
 
 .zhongtai-icon-time-range:before {
-    content: "\e654";
+  content: "\e654";
 }
 
 .zhongtai-icon-shebeixinxi:before {
-    content: "\e655";
+  content: "\e655";
 }
 
 .zhongtai-icon-shixucunchu:before {
-    content: "\e656";
+  content: "\e656";
 }
 
 .zhongtai-icon-shenhetongguo:before {
-    content: "\e638";
+  content: "\e638";
 }
 
 .zhongtai-icon-riqi:before {
-    content: "\e639";
+  content: "\e639";
 }
 
 .zhongtai-icon-zihao:before {
-    content: "\e63a";
+  content: "\e63a";
 }
 
 .zhongtai-icon-zhuyi:before {
-    content: "\e63b";
+  content: "\e63b";
 }
 
 .zhongtai-icon-qiyemingcheng:before {
-    content: "\e632";
+  content: "\e632";
 }
 
 .zhongtai-icon-shenhebohui:before {
-    content: "\e633";
+  content: "\e633";
 }
 
 .zhongtai-icon-shouhuicebianlan:before {
-    content: "\e635";
+  content: "\e635";
 }
 
 .zhongtai-icon-yiwen:before {
-    content: "\e63c";
+  content: "\e63c";
 }
 
 .zhongtai-icon-wodegongchang:before {
-    content: "\e63d";
+  content: "\e63d";
 }
 
 .zhongtai-icon-yanzhengma:before {
-    content: "\e63e";
+  content: "\e63e";
 }
 
 .zhongtai-icon-zaixian:before {
-    content: "\e63f";
+  content: "\e63f";
 }
 
 .zhongtai-icon-zhankaicebianlan:before {
-    content: "\e640";
+  content: "\e640";
 }
 
 .zhongtai-icon-zhanghao:before {
-    content: "\e641";
+  content: "\e641";
 }
 
 .zhongtai-icon-yonghumingcheng:before {
-    content: "\e642";
+  content: "\e642";
 }
 
 .zhongtai-icon-xiaoxizhongxin:before {
-    content: "\e643";
+  content: "\e643";
 }
 
 .zhongtai-icon-wochuangjiande:before {
-    content: "\e644";
+  content: "\e644";
 }
 
 .zhongtai-icon-xiaoxijiedian:before {
-    content: "\e645";
+  content: "\e645";
 }
 
 .zhongtai-icon-xiansuo:before {
-    content: "\e646";
+  content: "\e646";
 }
 
 .zhongtai-icon-wodeshouquan:before {
-    content: "\e636";
+  content: "\e636";
 }
 
 .zhongtai-icon-tree:before {
-    content: "\e637";
+  content: "\e637";
 }
 
 .zhongtai-icon-shujuzhuanhuan:before {
-    content: "\e634";
+  content: "\e634";
 }
+

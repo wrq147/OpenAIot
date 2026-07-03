@@ -1,126 +1,459 @@
-/**
- * 引用 Android 系统库，示例如下：
- * import { Context } from "android.content.Context";
- * [可选实现，按需引入]
- */
-import { Socket } from "java.net";
-import { InputStreamReader, DataOutputStream, BufferedReader } from "java.io"
-import { Charset } from "java.nio.charset"
-import { ByteBuffer } from "java.nio"
+// ==================== 模块导入 ====================
+// Java 标准网络库：Socket 连接、InetSocketAddress 地址封装
+import { Socket, InetSocketAddress } from "java.net";
+// Java IO 流：OutputStream 写数据、InputStream 读数据
+import { OutputStream, InputStream } from "java.io";
+// Android 工具库：Base64 编解码，用于 JS 层传二进制数据的桥梁
+import { Base64 } from "android.util";
+// Android 消息机制：Handler 负责线程间通信，Looper 获取主线程消息循环
+import { Handler, Looper } from "android.os";
+// Java 多线程：Thread 用于后台网络操作，避免阻塞主线程(UI)
+import { Thread } from "java.lang";
 
-/* 引入 interface.uts 文件中定义的变量 */
-import { ConnectorOptions, ITcpConnector, TcpConnector } from '../interface.uts';
-
-/* 引入 unierror.uts 文件中定义的变量 */
+// 插件接口定义：连接配置类型、连接工厂类型等
+import { ConnectorOptions, TcpConnector } from '../interface.uts';
+// 统一错误处理：封装失败回调的错误对象
 import { ConnectorFailImpl } from '../unierror';
-import Option from 'android.app.VoiceInteractor.PickOptionRequest.Option';
+
+// ==================== 全局变量 ====================
 
 /**
- * 引入三方库
- * [可选实现，按需引入]
- *
- * 在 Android 平台引入三方库有以下两种方式：
- * 1、[推荐] 通过 仓储 方式引入，将 三方库的依赖信息 配置到 config.json 文件下的 dependencies 字段下。详细配置方式[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#dependencies)
- * 2、直接引入，将 三方库的aar或jar文件 放到libs目录下。更多信息[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#android%E5%B9%B3%E5%8F%B0%E5%8E%9F%E7%94%9F%E9%85%8D%E7%BD%AE)
- *
- * 在通过上述任意方式依赖三方库后，使用时需要在文件中 import，如下示例：
- * import { LottieAnimationView } from 'com.airbnb.lottie.LottieAnimationView'
+ * 主线程 Handler
+ * 作用：后台线程不能直接操作 UI 或回调 JS，必须通过 Handler 把任务投递到主线程执行
+ * Looper.getMainLooper() 获取 Android 主线程的消息循环
  */
+const mainHandler = new Handler(Looper.getMainLooper());
 
 /**
- * UTSAndroid 为平台内置对象，不需要 import 可直接调用其API，[详见](https://uniapp.dcloud.net.cn/uts/utsandroid.html#utsandroid)
+ * TcpState - 单个 TCP 连接的完整状态
+ * 
+ * 为什么不放在函数内部？
+ * Gson 序列化 uts 插件内部状态时可能出问题，
+ * 存到外部 Map 中由 id 索引，可以避免序列化问题，也更清晰。
  */
+class TcpState {
+    /** 目标地址（IP或域名） */
+    address: string = "";
+    /** 目标端口 */
+    port: number = 0;
+    /** Java Socket 实例 */
+    socket: Socket | null = null;
+    /** 发送流，write() 写数据到对端 */
+    outputStream: OutputStream | null = null;
+    /** 接收流，read() 从对端读数据 */
+    inputStream: InputStream | null = null;
+    /** 标记是否正在运行 */
+    isRunning: boolean = false;
+    /** 标记是否已关闭（防止重复关闭） */
+    isClosed: boolean = false;
+    /** 消息回调，参数为 base64 编码字符串 */
+    onMessage: ((data: string) => void) | null = null;
+    /** 连接关闭回调 */
+    onClose: (() => void) | null = null;
 
-class AndroidTcpClient implements ITcpConnector {
-	_ip : string;
-	_port : number;
-	_client : Socket | null;
-	_dataOutputStream : DataOutputStream | null;
-	_bufferedReader : BufferedReader | null;
-	onClose: (() => void) | null;
-	onMessage: ((data: ArrayBuffer) => void) | null;
-	constructor(ip : string, port : number) {
-		this._ip = ip;
-		this._port = port;
-		this._client = null;
-		this._dataOutputStream = null;
-		this._bufferedReader = null;
-		this.onClose = null;
-		this.onMessage = null;
-	}
-	connect() {
-		this._client = new Socket(this._ip, this._port.toInt());
-		this._dataOutputStream = new DataOutputStream(this._client?.getOutputStream());
-		this._bufferedReader = new BufferedReader(new InputStreamReader(this._client?.getInputStream()));
-		startReceivingMessages();
-	}
-	write(data : ArrayBuffer) {
-		this._dataOutputStream?.write(data.toByteBuffer().array());
-	}
-	writeString(data : string) {
-		const encoder = new TextEncoder();
-		const byteArray : Uint8Array = encoder.encode(data);
-		this._dataOutputStream?.write(byteArray.buffer?.toByteBuffer().array());
-	}
-	close() {
-		this._client?.close();
-	}
-	async startReceivingMessages() {
-		UTSAndroid.getDispatcher(null).async((_) => {
-			let buffer = ByteBuffer.allocate(1024);
-			while (this._client?.isConnected == true && this._bufferedReader != null) {
-				let bytesRead : Int | null = this._bufferedReader?.read(Charset.forName("UTF-8").decode(buffer));
-				if (bytesRead == -1) break;
-				let sourceByteArray : Uint8Array = new Uint8Array(ArrayBuffer.fromByteBuffer(buffer));
-				let targetByteArray : Uint8Array = new Uint8Array(sourceByteArray.slice(0, bytesRead));
-				let receivedData : ArrayBuffer = targetByteArray.buffer ?? new ArrayBuffer(0);
-				this.onMessage?.invoke(receivedData);
-			}
-			this.onClose?.invoke();
-		}, null);
-	}
+    constructor() {}
 }
-/**
- * 异步方法
- *
- * uni-app项目中（vue/nvue）调用示例：
- * 1、引入方法声明 import { myApi } from "@/uni_modules/uts-api"
- * 2、方法调用
- * myApi({
- *   paramA: false,
- *   complete: (res) => {
- *      console.log(res)
- *   }
- * });
- * uni-app x项目（uvue）中调用示例：
- * 1、引入方法及参数声明 import { myApi, MyApiOptions } from "@/uni_modules/uts-api";
- * 2、方法调用
- * let options = {
- *   paramA: false,
- *   complete: (res : any) => {
- *     console.log(res)
- *   }
- * } as MyApiOptions;
- * myApi(options);
- *
- */
 
-export const qzTcp : TcpConnector = function (options : ConnectorOptions) {
-	const client = new AndroidTcpClient(options.address, options.port);
-	client.onClose = () => { };
-	client.onMessage = () => { };
-	UTSAndroid.getDispatcher(null).async((_) => {
-		try {
-			client.connect();
-			// 空安全调用回调，解决nullable报错
-			options.success?.invoke(client);
-		} catch (err) {
-			const failErr = err instanceof ConnectorFail
-				? err
-				: new ConnectorFailImpl(902001, "TCP连接失败:" + err.toString());
-			options.fail?.invoke(failErr);
-			client.close();
-		}
-	}, null);
-	return client;
+/**
+ * 全局连接状态表
+ * key: 连接 id（自增整数）
+ * value: 对应的 TcpState
+ */
+const stateMap = new Map<number, TcpState>();
+/** 自增 id 计数器，每次创建连接 +1 */
+let nextId: number = 0;
+
+// ==================== 核心函数 ====================
+
+/**
+ * connectInBackground - 在后台线程中执行实际的 Socket 连接
+ * 
+ * @param id      连接 id，用于从 stateMap 中取出对应的 state
+ * @param address 目标 IP/域名
+ * @param port    目标端口
+ * 
+ * 流程：
+ * 1. 创建 Java Socket 实例
+ * 2. 调用 socket.connect()，超时 8 秒
+ * 3. 设置读超时为 30 秒（read() 最长阻塞 30 秒）
+ * 4. 保存 socket、输入流、输出流到 state
+ * 5. 设置 isRunning = true，表示连接就绪
+ * 
+ * 注意：此函数在 ConnectRunnable 所在的后台线程中执行，不会阻塞 UI
+ */
+function connectInBackground(id: number, address: string, port: number): void {
+    const state = stateMap.get(id);
+    if (state == null) return;
+    // 1. 创建 TCP Socket
+    const socket = new Socket();
+    // 2. 连接服务器，8000ms 连接超时
+    socket.connect(new InetSocketAddress(address, port.toInt()), 8000);
+    // 3. 设置读超时 30 秒（read() 若 30 秒无数据则抛 SocketTimeoutException）
+    socket.setSoTimeout(30000);
+    // 4. 保存 Socket 和 IO 流到 state
+    state.socket = socket;
+    state.outputStream = socket.getOutputStream();
+    state.inputStream = socket.getInputStream();
+    // 5. 标记连接已就绪
+    state.isRunning = true;
+    console.log("[TCP] 连接已建立, outputStream=", state.outputStream != null ? "有效" : "空", "inputStream=", state.inputStream != null ? "有效" : "空");
 }
+
+/**
+ * readLoop - 后台线程中的读取循环
+ * 
+ * 核心数据流：
+ *   TCP 服务器 → InputStream.read() → ByteArray → 复制数据 →
+ *   mainHandler.post(MessageRunnable) → 主线程 → Base64 编码 → onMessage 回调 → JS 层
+ * 
+ * 为什么需要 mainHandler.post？
+ *   readLoop 在后台线程运行，不能直接调用 JS 回调（线程安全问题），
+ *   必须通过 Handler 把消息投递到主线程执行。
+ * 
+ * 退出机制：
+ *   1. 读取成功 → success=true，不调用 tcpClose，让 MessageRunnable 能取到 state 完成回调
+ *   2. 读取失败（state为null/连接关闭/对端断开/异常）→ success=false → 调用 tcpClose 清理资源
+ * 
+ * @param id 连接 id
+ */
+function readLoop(id: number): void {
+    // 读缓冲区，每次最多读 4096 字节
+    const buffer = new ByteArray(4096);
+    // success 标记：true=本次读取成功，false=异常退出
+    // 用于循环结束后判断是否需要清理连接
+    let success = false;
+    console.log("[TCP] readLoop 开始, id=", id);
+
+    // 循环等待数据
+    while (true) {
+        // 检查1：state 是否还存在（可能已被 tcpClose 清理）
+        const state = stateMap.get(id);
+        if (state == null) {
+            console.log("[TCP] readLoop 退出: state为null");
+            break;
+        }
+        // 检查2：连接是否仍在运行且未关闭
+        if (!state.isRunning || state.isClosed) {
+            console.log("[TCP] readLoop 退出: isRunning=", state.isRunning, " isClosed=", state.isClosed);
+            break;
+        }
+        try {
+            // 检查3：输入流是否存在
+            const input = state.inputStream;
+            if (input == null) {
+                console.log("[TCP] readLoop 退出: inputStream为null");
+                break;
+            }
+
+            // ============ 核心：阻塞读取 ============
+            // input.read(buffer) 会阻塞当前线程直到：
+            //   - 有数据到达 → 返回读取的字节数
+            //   - 对端关闭连接 → 返回 -1
+            //   - 超时(30秒) → 抛出 SocketTimeoutException
+            //   - 发生其他错误 → 抛出异常
+            const len = input.read(buffer);
+            console.log("[TCP] readLoop 读取结果: len=", len);
+
+            // 对端正常关闭了连接
+            if (len == -1) {
+                console.log("[TCP] readLoop 退出: len=-1(对端关闭)");
+                break;
+            }
+            // 没有数据（正常情况下不会出现，保留兼容）
+            if (len == 0) continue;
+
+            // 将读取到的数据复制一份（buffer 可能被下次 read 覆盖）
+            const dataCopy = new ByteArray(len);
+            for (let i = 0; i < len; i++) {
+                dataCopy[i.toInt()] = buffer[i.toInt()];
+            }
+
+            console.log("[TCP] 收到数据, 长度=", len);
+            // 投递到主线程：MessageRunnable 会将数据 base64 编码后回调给 JS
+            mainHandler.post(new MessageRunnable(id, dataCopy));
+            // 标记成功，并退出循环
+            success = true;
+            console.log("[TCP] readLoop 读取成功，停止循环");
+            break;
+        } catch (e) {
+            // 异常处理：可能是超时(SocketTimeoutException)或其他网络错误
+            console.log("[TCP] readLoop 异常:", e);
+            const st = stateMap.get(id);
+            // 如果 state 已被清理或连接已停止，退出循环
+            if (st == null || !st.isRunning) break;
+            // 否则继续循环等待
+            continue;
+        }
+    }
+
+    // 循环结束后的处理：
+    //   success=true  → 数据已读到，不关闭，保留 state 让 onMessage 能回调成功
+    //   success=false → 异常退出，关闭连接释放资源
+    if (!success) {
+        tcpClose(id);
+    }
+}
+
+// ==================== Runnable 类 ====================
+// 所有 Runnable 都通过 mainHandler.post() 投递到主线程执行
+// 原因：UTS 的 JS 回调必须在主线程调用，后台线程直接 invoke 会导致崩溃
+
+/**
+ * SuccessRunnable - 连接成功的回调
+ * 在主线程中调用 options.success()，通知 JS 层连接已建立
+ */
+class SuccessRunnable implements Runnable {
+    options: ConnectorOptions;
+    constructor(options: ConnectorOptions) { this.options = options; }
+    override run(): void { this.options.success?.invoke(); }
+}
+
+/**
+ * FailRunnable - 连接失败的回调
+ * 在主线程中调用 options.fail()，传递错误信息给 JS 层
+ */
+class FailRunnable implements Runnable {
+    options: ConnectorOptions;
+    err: any;
+    constructor(options: ConnectorOptions, err: any) {
+        this.options = options;
+        this.err = err;
+    }
+    override run(): void {
+        // 封装为统一的错误对象，错误码 902001
+        const failErr = new ConnectorFailImpl(902001, "TCP连接失败: " + this.err);
+        this.options.fail?.invoke(failErr);
+    }
+}
+
+/**
+ * MessageRunnable - 消息到达的回调
+ * 
+ * 关键步骤：
+ * 1. 从 stateMap 取出对应的 state（必须在主线程执行，因为 tcpClose 也在主线程修改 stateMap）
+ * 2. 将 ByteArray 数据用 Android Base64 编码为字符串
+ * 3. 调用 onMessage 回调，把 base64 字符串传给 JS 层
+ * 
+ * 为什么用 Base64 而不是直接传 ArrayBuffer？
+ *   UTS Android 平台 ArrayBuffer 跨层传递有兼容性问题（byteLength 丢失），
+ *   所以采用 base64 字符串作为中间格式，JS 端用 atob() 解码即可。
+ */
+class MessageRunnable implements Runnable {
+    id: number;
+    dataCopy: ByteArray;
+    constructor(id: number, dataCopy: ByteArray) {
+        this.id = id;
+        this.dataCopy = dataCopy;
+    }
+    override run(): void {
+        const state = stateMap.get(this.id);
+        if (state == null) return;
+        const cb = state.onMessage;
+        if (cb == null) {
+            console.log("[TCP] onMessage 回调为 null，消息被丢弃");
+            return;
+        }
+        // 将字节数组编码为 base64 字符串
+        const base64Str = Base64.encodeToString(this.dataCopy, Base64.DEFAULT) as string;
+        console.log("[TCP] 投递消息到JS, base64长度=", base64Str.length);
+        // 回调 JS 层
+        cb.invoke(base64Str);
+    }
+}
+
+/**
+ * CloseRunnable - 连接关闭的回调
+ * 在主线程中调用 options.onClose()，通知 JS 层连接已断开
+ */
+class CloseRunnable implements Runnable {
+    id: number;
+    constructor(id: number) { this.id = id; }
+    override run(): void {
+        const state = stateMap.get(this.id);
+        if (state != null) {
+            const cb = state.onClose;
+            if (cb != null) cb.invoke();
+        }
+    }
+}
+
+/**
+ * ConnectRunnable - 连接任务
+ * 
+ * 执行线程：后台线程（由 qzTcp 创建）
+ * 
+ * 流程：
+ *   1. 调用 connectInBackground() 建立 TCP 连接
+ *   2. 连接成功 → 主线程回调 success()
+ *   3. 启动新的后台线程执行 ReadRunnable → readLoop() 开始等待数据
+ * 
+ * 异常处理：
+ *   连接过程中抛出异常 → 主线程回调 fail(err) → 调用 tcpClose 清理资源
+ */
+class ConnectRunnable implements Runnable {
+    id: number;
+    options: ConnectorOptions;
+    constructor(id: number, options: ConnectorOptions) {
+        this.id = id;
+        this.options = options;
+    }
+    override run(): void {
+        try {
+            const state = stateMap.get(this.id);
+            if (state == null) return;
+
+            // 步骤1：执行实际的 TCP 连接
+            connectInBackground(this.id, state.address, state.port);
+            // 步骤2：连接成功，主线程回调 success
+            mainHandler.post(new SuccessRunnable(this.options));
+            state.isRunning = true;
+
+            // 步骤3：启动读取线程，开始等待服务端数据
+            const st = stateMap.get(this.id);
+            if (st != null) {
+                new Thread(new ReadRunnable(this.id)).start();
+            }
+        } catch (err) {
+            // 连接过程异常 → 通知 JS 失败，关闭连接
+            mainHandler.post(new FailRunnable(this.options, err));
+            tcpClose(this.id);
+        }
+    }
+}
+
+/**
+ * ReadRunnable - 读取任务
+ * 只是一个简单的包装，在后台线程中调用 readLoop()
+ */
+class ReadRunnable implements Runnable {
+    id: number;
+    constructor(id: number) { this.id = id; }
+    override run(): void { readLoop(this.id); }
+}
+
+// ==================== 导出的 API（供 JS 层调用） ====================
+
+/**
+ * qzTcp - 创建 TCP 连接并返回连接 id
+ * 
+ * 调用路径：
+ *   JS: qzTcp({address, port, success, fail, onMessage, onClose})
+ *   → Android: 创建 state、启动后台线程 ConnectRunnable
+ *   → 后台线程: 连接 → 回调 success → 启动 readLoop
+ *   → readLoop: 读到数据 → mainHandler.post → MessageRunnable → onMessage
+ * 
+ * @param options 连接配置（地址、端口、回调）
+ * @return 连接 id（用于后续 tcpWrite/tcpClose 操作）
+ */
+export const qzTcp: TcpConnector = function (options: ConnectorOptions): number {
+    // 生成唯一连接 id
+    nextId = nextId + 1;
+    const id = nextId;
+
+    // 创建并保存连接状态
+    const state = new TcpState();
+    state.address = options.address;
+    state.port = options.port;
+    state.onMessage = options.onMessage as ((data: string) => void) | null;
+    state.onClose = options.onClose as (() => void) | null;
+    stateMap.set(id, state);
+
+    // 启动后台线程执行连接
+    new Thread(new ConnectRunnable(id, options)).start();
+
+    // 立即返回 id，JS 端保存此 id 用于后续操作
+    return id;
+};
+
+/**
+ * tcpWrite - 发送二进制数据
+ * 
+ * @param id   连接 id
+ * @param data base64 编码的二进制数据
+ * 
+ * 说明：JS 端先把二进制数据用 btoa() 转为 base64 字符串传入，
+ *       这里再用 Base64.decode() 还原为 byte[] 发送。
+ */
+export const tcpWrite = function (id: number, data: string): void {
+    const state = stateMap.get(id);
+    if (state == null) return;
+    const out = state.outputStream;
+    // 输出流为空或已关闭，直接返回
+    if (out == null || state.isClosed) return;
+    try {
+        // 将 base64 字符串解码为字节数组
+        const byteArr = Base64.decode(data, Base64.DEFAULT);
+        // 写入输出流发送到服务端
+        out.write(byteArr);
+        // 立即刷新，确保数据发出
+        out.flush();
+    } catch (e) {
+        // 发送失败 → 关闭连接
+        tcpClose(id);
+    }
+};
+
+/**
+ * tcpWriteString - 发送 UTF-8 字符串
+ * 
+ * @param id   连接 id
+ * @param data 要发送的文本字符串
+ * 
+ * 与 tcpWrite 的区别：tcpWriteString 直接将字符串编码为 UTF-8 字节发送，
+ * 不需要 JS 端预先 base64 编码，适用于发送纯文本。
+ */
+export const tcpWriteString = function (id: number, data: string): void {
+    const state = stateMap.get(id);
+    if (state == null) return;
+    const out = state.outputStream;
+    if (out == null || state.isClosed) {
+        console.log("[TCP] tcpWriteString 失败: outputStream=null, isClosed=", state.isClosed);
+        return;
+    }
+    try {
+        // 将 JS 字符串转为 Java String，以便正确进行 UTF-8 编码
+        const jstr = new java.lang.String(data);
+        // 获取 UTF-8 编码的字节数组
+        const byteArr = jstr.getBytes("UTF-8");
+        out.write(byteArr);
+        out.flush();
+        console.log("[TCP] 发送成功:", data);
+    } catch (e) {
+        console.log('[TCP] 发送异常', e);
+        tcpClose(id);
+    }
+};
+
+/**
+ * tcpClose - 关闭指定连接
+ * 
+ * 清理步骤：
+ *   1. 设置 isClosed = true, isRunning = false（终止 readLoop）
+ *   2. 依次关闭 inputStream、outputStream、socket
+ *   3. 从 stateMap 中移除 state
+ *   4. 主线程回调 onClose() 通知 JS 层
+ * 
+ * 注意：每步 close 都包在 try-catch 中，任何一步失败不影响后续步骤
+ *       防止重复关闭（state.isClosed 判断）
+ */
+export const tcpClose = function (id: number): void {
+    const state = stateMap.get(id);
+    if (state == null) return;
+    // 防止重复关闭
+    if (state.isClosed) return;
+
+    // 标记关闭状态，让 readLoop 检测到后自动退出
+    state.isClosed = true;
+    state.isRunning = false;
+
+    // 依次关闭 IO 流和 Socket
+    try { state.inputStream?.close(); } catch (e) {}
+    try { state.outputStream?.close(); } catch (e) {}
+    try { state.socket?.close(); } catch (e) {}
+
+    // 从全局 Map 中移除，释放引用
+    stateMap.remove(id);
+
+    // 主线程回调 JS 层 onClose
+    mainHandler.post(new CloseRunnable(id));
+};

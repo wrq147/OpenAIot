@@ -67,6 +67,10 @@
         <i class="zhongtaiiconfont zhongtai-icon-PIDjiedian" style="color:#2FCAEB;"></i>
         <span>PID控制</span>
       </div>
+      <div @click="addNoticeNode">
+        <i class="zhongtaiiconfont zhongtai-icon-chufatongzhi" style="color:#DC362E;"></i>
+        <span>触发通知</span>
+      </div>
     </div>
   </div>
 </template>
@@ -128,6 +132,9 @@ export default {
     },
     addPIDNode(){
       this.$emit("insertNode", "PID");
+    },
+    addNoticeNode(){
+      this.$emit("insertNode", "NOTICE");
     },
     addTagNode(){
       this.$emit("insertNode", "TAG");
@@ -194,6 +201,15 @@ export default {
       padding: 5px;
       border: 1px solid #dedfdf;
       border-radius: 14px;
+      &.zhongtaiiconfont{
+        font-style: normal;font-weight: 400;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        vertical-align: baseline;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+      }
     }
     .svg-icon {
       width: 37px;
