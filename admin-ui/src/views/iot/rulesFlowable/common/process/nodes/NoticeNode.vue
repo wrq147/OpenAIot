@@ -1,7 +1,7 @@
 <template>
   <node :title="config.name" :currentNode='config' :show-error="showError" :content="content" :error-info="errorInfo"
         @selected="$emit('selected')" @delNode="$emit('delNode')" @insertNode="type => $emit('insertNode', type)"
-        placeholder="请设置通知触发方式" header-bgc="#DC362E" :is-svgicon='true' header-icon="chufatongzhi" />
+        placeholder="请设置通知触发方式" header-bgc="#f25100" :is-svgicon='true' header-icon="chufatongzhi" />
 </template>
 
 <script>

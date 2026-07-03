@@ -68,7 +68,7 @@
         <span>PID控制</span>
       </div>
       <div @click="addNoticeNode">
-        <i class="zhongtaiiconfont zhongtai-icon-chufatongzhi" style="color:#DC362E;"></i>
+        <i class="zhongtaiiconfont zhongtai-icon-chufatongzhi" style="color:#f25100;"></i>
         <span>触发通知</span>
       </div>
     </div>
