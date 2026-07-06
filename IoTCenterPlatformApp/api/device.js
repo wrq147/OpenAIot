@@ -119,6 +119,7 @@ export function editDevice(data) {
         data: data
     })
 }
+
 //清除单条报警列表
 export function clearEachWarning(data) {
     return request.post({
@@ -243,6 +244,13 @@ export function roomListRemove(data) {
 export function roomListDevAdd(data) {
     return request.post({
         url: '/AfterService/RoomDevice/Add',
+        data: data
+    })
+}
+//编辑设备标签
+export function saveDeviceTag(data) {
+    return request.post({
+        url: '/IoTService/IotDevice/SaveTags',
         data: data
     })
 }

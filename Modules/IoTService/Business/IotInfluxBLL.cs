@@ -999,7 +999,7 @@ namespace IoTService.Business
                 sbFlux.Append(" |> sort(columns: [\"_time\"])");
 
                 // 4. 查询源数据
-                long copyTotal = 0;
+                int copyTotal = 0;
                 using var client = new InfluxDBClient(storageConfig.url, storageConfig.token);
                 var queryApi = client.GetQueryApi();
                 var fluxTables = await queryApi.QueryAsync(sbFlux.ToString(), storageConfig.org);
@@ -1097,7 +1097,7 @@ namespace IoTService.Business
                     _log.LogInformation($"剩余 {batchPoints.Count} 条拷贝数据写入完成，总拷贝条数：{copyTotal}");
                 }
 
-                return BusResponse<int>.Success();
+                return BusResponse<int>.Success(copyTotal);
             }
             catch (Exception ex)
             {

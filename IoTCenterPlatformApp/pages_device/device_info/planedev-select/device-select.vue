@@ -13,7 +13,7 @@
 					<view class="li_top">
 						<image class="image" :src="row.PhotoUrl+'?wh=500x500'" mode="aspectFill" v-if="row.PhotoUrl">
 						</image>
-						<image class="image" :src="getSerVerUrl()+'/appimg/device_default.png'" mode="aspectFill" v-else></image>
+						<image class="image" src="/static/device_default.png" mode="aspectFill" v-else></image>
 						<view class="device_state">
 							<view class="online_status" :class="{'offline':row.Online==0,'unKnow':row.Online==2}">
 								<view class="dot"></view>
@@ -145,7 +145,6 @@
 				querydata: {
 					pageNum: 1,
 					pageSize: 30,
-					Name: ""
 				}, //过滤参数
 				statusList: [{
 						text: "离线",
@@ -166,6 +165,7 @@
 			}
 		},
 		mounted() {
+			console.log('有没有来',this.isCustomList);
 			if(!this.isCustomList){
 				if (this.ProductId) {
 					this.querydata.ProductId = this.ProductId
@@ -202,13 +202,18 @@
 			},
 			reachDevice(){
 				if(!this.isCustomList){
+					
 					if (this.status != 'noMore') {
 						this.querydata.pageNum++;
 						this.status = "loading";
 						this.getDeviceList();
 					}
 				}else{
-					
+					if (this.status != 'noMore') {
+						this.querydata.pageNum++;
+						this.status = "loading";
+						this.getplaneDevList();
+					}
 				}
 				
 			},
@@ -238,16 +243,29 @@
 				this.getDeviceList()
 			},
 			searching(val) {
+				this.key = val
 				if(this.isCustomList){
-					if(val){
-						this.deviceTableData=this.allDeviceList.filter(row=>row.Name&&row.Name.indexOf(val)>-1||row.DeviceNumber&&row.DeviceNumber.indexOf(val)>-1||row.DeviceId&&row.DeviceId.indexOf(val)>-1)
-					}else{
-						this.deviceTableData=this.allDeviceList
+					// if(val){
+					// 	this.deviceTableData=this.allDeviceList.filter(row=>row.Name&&row.Name.indexOf(val)>-1||row.DeviceNumber&&row.DeviceNumber.indexOf(val)>-1||row.DeviceId&&row.DeviceId.indexOf(val)>-1)
+					// }else{
+					// 	this.deviceTableData=this.allDeviceList
+					// }
+					if (this.key) {
+						this.querydata.Key = this.key
+						this.querydata.pageNum = 1
+						this.status = 'loading'
+						this.deviceTableData = []
+						this.getplaneDevList()
+					} else {
+						delete this.querydata.Key
+						this.querydata.pageNum = 1
+						this.status = 'loading'
+						this.deviceTableData = []
+						this.getplaneDevList()
 					}
-					
 					return
 				}
-				this.key = val
+				
 				if (this.isEnterDev) {
 					if (this.key) {
 						this.querydata.Key = this.key
@@ -282,6 +300,8 @@
 				if(this.planeId){
 					this.querydata.id=this.planeId
 				}
+				console.log(this.querydata,'this.querydatathis.querydata');
+				delete this.querydata.Name
 			  	planeDevList(this.querydata).then(res=>{
 					if (this.querydata.pageNum == 1) {
 						this.deviceTableData = []

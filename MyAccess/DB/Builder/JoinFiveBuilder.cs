@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder
 {
-    public class JoinFiveBuilder<A, B, C, D, E> : AbstractQueryBuilder<QueryOneBuilder<A>>
+    public class JoinFiveBuilder<A, B, C, D, E> : QueryOneBuilder<A>
     {
         public JoinFiveBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
         }
-        protected override QueryOneBuilder<A> This()
-        {
-            return new QueryOneBuilder<A>(this._sqlBuilder);
-        }
+
 
         /// <summary>
         /// 将e映射到指定成员

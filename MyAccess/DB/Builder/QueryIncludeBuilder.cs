@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder
 {
-    public class QueryIncludeBuilder<A> : AbstractQueryBuilder<QueryOneBuilder<A>>
+    public class QueryIncludeBuilder<A> : QueryOneBuilder<A>
     {
         public QueryIncludeBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
@@ -153,7 +153,7 @@ namespace MyAccess.DB.Builder
 
         protected override QueryOneBuilder<A> This()
         {
-            return new QueryOneBuilder<A>(this._sqlBuilder);
+            return this;
         }
     }
 }

@@ -133,7 +133,8 @@ export default {
 			return `width:${this.offscreenWidth}px;height: ${this.offscreenHeight}px; position: fixed; left: 99999px; background: red`
 		},
 		canvasStyle() {
-			return  this.width && this.height ? ('width:' + this.width + 'px;height:' + this.height + 'px') : ''
+			// return  this.width && this.height ? ('width:' + this.width + 'px;height:' + this.height + 'px') : ''
+			return  this.width && this.height ? ('width:' + 100 + '%;height:' + 100 + '%') : ''
 		}
 	},
 	beforeDestroy() {

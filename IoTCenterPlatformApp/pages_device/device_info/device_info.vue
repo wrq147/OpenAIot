@@ -1,7 +1,7 @@
 <template>
 	<view class="pages_bgcon" @click="hideEditDiv">
-		<top :isRightSlot="true" :title="topTitle" leftWidth="157rpx" leftIcon="icon-fanhui" rightWidth="157rpx" :isleftBack="true"
-			backgroundColor="rgba(255, 255, 255, 1)" :key="componentKey">
+		<top :isRightSlot="true" :title="topTitle" leftWidth="157rpx" leftIcon="icon-fanhui" rightWidth="157rpx"
+			:isleftBack="true" backgroundColor="rgba(255, 255, 255, 1)" :key="componentKey">
 			<template v-slot:top_right>
 				<view class="right_top relative_right" @click.stop="changeMoreHandle">
 					<custom-icons iconsName="icon-gengduo1" iconsSize="36rpx"></custom-icons>
@@ -37,8 +37,10 @@
 							<image class="image" :src="deviceBasicInfo.PhotoUrl+'?wh=500x500'" mode="aspectFill">
 							</image>
 						</view>
-						<view class="info_left" @click.stop="preViewImg(getSerVerUrl()+'/appimg/device_default.png')" v-else>
-							<image class="image" :src="getSerVerUrl()+'/appimg/device_default.png'" mode="aspectFill"></image>
+						<view class="info_left" @click.stop="preViewImg(getSerVerUrl()+'/appimg/device_default.png')"
+							v-else>
+							<image class="image" :src="getSerVerUrl()+'/appimg/device_default.png'" mode="aspectFill">
+							</image>
 						</view>
 						<view class="info_right">
 							<view class="info_title">
@@ -53,10 +55,23 @@
 									{{deviceBasicInfo.ProductName}}
 								</text>
 							</view>
-							<view class="info_status"
-								:class="{'offline':deviceBasicInfo.Online==0,'unKnow':deviceBasicInfo.Online==2}">
-								<view class="dot" v-if="deviceBasicInfo.Online!=2"></view>
-								<view class="status_text">{{getOnlineInfo(deviceBasicInfo.Online)}}</view>
+							<view class="info_status_con">
+								<view class="info_status"
+									:class="{'offline':deviceBasicInfo.Online==0,'unKnow':deviceBasicInfo.Online==2}">
+									<view class="dot" v-if="deviceBasicInfo.Online!=2"></view>
+									<view class="status_text">{{getOnlineInfo(deviceBasicInfo.Online)}}</view>
+								</view>
+								<view class="info_status default"
+									style="display: flex; align-items: center;margin-left: 20rpx;"
+									:class="{ maintenance: deviceBasicInfo.DState == '保养',normal: deviceBasicInfo.DState == '正常', repair: deviceBasicInfo.DState == '维修' }">
+									<view class="text" v-if="deviceBasicInfo.DState=='正常'">{{deviceBasicInfo.DState}}
+									</view>
+									<view class="text" v-else-if="deviceBasicInfo.DState=='维修'">
+										{{deviceBasicInfo.DState}}</view>
+									<view class="text" v-else-if="deviceBasicInfo.DState=='保养'">
+										{{deviceBasicInfo.DState}}</view>
+									<view class="text" v-else>{{deviceBasicInfo.DState}}</view>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -99,13 +114,15 @@
 				<image class="image" :src="getSerVerUrl()+'/appimg/no_data.png'" mode=""></image>
 				<view class="text">暂无数据</view>
 			</view>
-			<device-iot v-if="isHasIotData" v-show="tabArr[current]=='状态'" @setDeviceOnline='setDeviceOnline' :deviceId="deviceBasicInfo.DeviceId"
-				:deviceBasic="deviceBasicInfo" :properties="properties"></device-iot>
+			<device-iot v-if="isHasIotData" v-show="tabArr[current]=='状态'" @setDeviceOnline='setDeviceOnline'
+				:deviceId="deviceBasicInfo.DeviceId" :deviceBasic="deviceBasicInfo"
+				:properties="properties"></device-iot>
 			<device-plane ref="devplane" v-if="tabArr[current]=='计划'" :deviceBasic="deviceBasicInfo"></device-plane>
-			<device-func v-if="isHasIotData" v-show="tabArr[current]=='功能'" :id="deviceId" :deviceBasic="deviceBasicInfo"
-				:deviceId="deviceBasicInfo.DeviceId"></device-func>
-			<device-alarm :isHasIotData="isHasIotData" :ararmList="alarmList" v-show="tabArr[current]=='报警'" :isShowDevice="false" :status="alarmStatus"
-				:properties="properties" :id="deviceBasicInfo.Id"></device-alarm>
+			<device-func v-if="isHasIotData" v-show="tabArr[current]=='功能'" :id="deviceId"
+				:deviceBasic="deviceBasicInfo" :deviceId="deviceBasicInfo.DeviceId"></device-func>
+			<device-alarm :isHasIotData="isHasIotData" :ararmList="alarmList" v-show="tabArr[current]=='报警'"
+				:isShowDevice="false" :status="alarmStatus" :properties="properties"
+				:id="deviceBasicInfo.Id"></device-alarm>
 			<devicePosition v-if="tabArr[current]=='位置'" :deviceBasic="deviceBasicInfo" :positionInfo="positionInfo">
 			</devicePosition>
 
@@ -132,7 +149,9 @@
 	import {
 		setPagesParam
 	} from '@/common/utillib.js'
-
+	import {
+		checkPermi
+	} from '@/common/permission.js';
 
 	// import BMap from 'baidumap-sdk';
 
@@ -147,7 +166,7 @@
 		},
 		data() {
 			return {
-				vtabsKey:1,
+				vtabsKey: 1,
 				topTitle: '设备详情',
 				isShowMoreHandle: false, //是否显示更多的操作
 				isAlarm: false,
@@ -184,7 +203,7 @@
 				componentKey: 1, //头部组件的key值
 				properties: [], //产品属性列表
 				stateInfo: {},
-				isHasIotData:false,//是否有物联网数据
+				isHasIotData: false, //是否有物联网数据
 			};
 		},
 		async onLoad(options) {
@@ -192,9 +211,11 @@
 				await this.$store.dispatch('GetInfo')
 			}
 			// this.$store.dispatch('GetInfo').then(() => {})
-			setTimeout(() => {
-				this.getTopNavHei()
-			}, 300)
+			this.$nextTick(()=>{
+				setTimeout(() => {
+					this.getTopNavHei()
+				}, 500)
+			})
 			if (options.id) {
 				//设备id
 				this.deviceId = options.id
@@ -230,7 +251,7 @@
 		},
 		onReachBottom() { //上拉触底
 			// console.log("现在的状态是什么", this.status);
-			if (this.tabArr[this.current]=='报警') {
+			if (this.tabArr[this.current] == '报警') {
 				if (this.alarmStatus != 'noMore') {
 					this.alarmQuery.pageNum++;
 					this.alarmStatus = "loading";
@@ -246,18 +267,18 @@
 			// 		// console.log("现在是第几页", this.page);
 			// 	}
 			// }
-			if(this.tabArr[this.current]=='计划'){
+			if (this.tabArr[this.current] == '计划') {
 				this.$refs.devplane.planeReachBottom()
 			}
 		},
 		methods: {
-			loadTaskList(){
+			loadTaskList() {
 				this.$refs.devplane.getdevPlaneList()
 			},
-			jumpAlarm(){
+			jumpAlarm() {
 				let index = this.tabArr.findIndex(item => item === '报警');
-				if(index&&index>-1){
-					this.current=index
+				if (index && index > -1) {
+					this.current = index
 				}
 			},
 			showNetWorkUrl() {
@@ -334,12 +355,12 @@
 						} else {
 							this.alarmStatus = 'more';
 						}
-						if(this.alarmList&&this.alarmList.length>0){
-							this.isAlarm=true
-							this.newAlarmInfo=this.alarmList[0]
-						}else{
-							this.isAlarm=false
-							this.newAlarmInfo={}
+						if (this.alarmList && this.alarmList.length > 0) {
+							this.isAlarm = true
+							this.newAlarmInfo = this.alarmList[0]
+						} else {
+							this.isAlarm = false
+							this.newAlarmInfo = {}
 						}
 					}
 				);
@@ -411,20 +432,20 @@
 						notsl: false
 					})
 					this.deviceProductInfo = rsp.data
-					if(this.deviceProductInfo.NetworkWay!=''){
-						this.isHasIotData=true
-						this.tabArr=['详情', '状态', '计划', '功能', '报警']
+					if (this.deviceProductInfo.NetworkWay != '') {
+						this.isHasIotData = true
+						this.tabArr = ['详情', '状态', '计划', '功能', '报警']
 						this.vtabsKey++
 						this.current = 0;
-					}else{
-						this.isHasIotData=false
-						this.tabArr=['详情', '计划', '报警',]
+					} else {
+						this.isHasIotData = false
+						this.tabArr = ['详情', '计划', '报警', ]
 						this.current = 0;
 						this.vtabsKey++
 					}
-					setTimeout(()=>{
+					setTimeout(() => {
 						this.$refs.devicetabs.update()
-					},1000)
+					}, 1000)
 					setTimeout(() => {
 						this.positionInfo = {}
 						let mds = JSON.parse(this.deviceProductInfo.ModelTSL);
@@ -433,8 +454,9 @@
 						tags.map((row) => {
 							if (row.code == "position") {
 								this.positionInfo = row;
-								if (this.positionInfo && this.positionInfo.enable && this.deviceBasicInfo.Lat && this.deviceBasicInfo.Lng) {
-									this.tabArr = [...this.tabArr,...['位置']]
+								if (this.positionInfo && this.positionInfo.enable && this
+									.deviceBasicInfo.Lat && this.deviceBasicInfo.Lng) {
+									this.tabArr = [...this.tabArr, ...['位置']]
 									this.current = 0;
 									this.vtabsKey++
 								} else {
@@ -443,7 +465,7 @@
 									this.vtabsKey++
 								}
 								this.$forceUpdate()
-							}else {
+							} else {
 								this.current = 0;
 								this.vtabsKey++
 							}
@@ -504,10 +526,32 @@
 				crmDeviceTagInfo({
 					id: this.deviceId
 				}).then(res => {
+					// console.log('标签数据', res);
+					res.data = res.data.map(row => {
+						row.isEdit = false
+						if(row.Option.type=='enum'){
+							let elements=[]
+							for(let key in row.Option.elements){
+								let eleRow={
+									text:key,
+									value:row.Option.elements[key]
+								}
+								elements.push(eleRow)
+							}
+							row.Option.elements=JSON.parse(JSON.stringify(elements))
+						}
+						return row
+					})
 					this.deviceBasicInfoObj.Tag = {
 						name: '标签信息',
 						type: 2,
+						canEdit: false,
 						value: res.data
+					}
+					if (checkPermi(['/IoTService/IotProduct/ListPage'])) {
+						this.deviceBasicInfoObj.Tag.canEdit=true
+					}else{
+						this.deviceBasicInfoObj.Tag.canEdit=false
 					}
 				}).catch(e => {
 					this.setMsgTop(e)
@@ -516,7 +560,7 @@
 
 			changeTab() {
 				// tab切换
-				console.log("切换了吗？");
+				// console.log("切换了吗？");
 				if (this.current == 4) {
 
 				}
@@ -528,13 +572,25 @@
 				// this.zhanweiHeiNumber = dataHeight * 2
 				const query = uni.createSelectorQuery().in(this);
 				query.select('#detail_top').boundingClientRect(data => {
+					// console.log(data,'datadata');
 					data.height = data.height
 					this.zhanweiHei = data.height
 					this.zhanweiHeiNumber = data.height * 2
+					setTimeout(()=>{
+						const query = uni.createSelectorQuery().in(this);
+						query.select('#detail_top').boundingClientRect(data => {
+							// console.log(data,'datadata');
+							data.height = data.height
+							this.zhanweiHei = data.height
+							this.zhanweiHeiNumber = data.height * 2
+							// console.log("this.zhanweiHei", this.zhanweiHei, this.zhanweiHeiNumber);
+							this.$forceUpdate()
+						}).exec();
+					},500)
 					// console.log("this.zhanweiHei", this.zhanweiHei, this.zhanweiHeiNumber);
 					this.$forceUpdate()
 				}).exec();
-
+			
 			},
 		}
 	}

@@ -58,7 +58,7 @@
 					if(this.dataType=='event'){
 						this.topTitle='选择事件'
 					}else if(this.dataType=='attribute'){
-						this.topTitle='选择属性'
+						this.topTitle='选择属性或参数'
 					}else if(this.dataType=='function'){
 						this.topTitle='选择功能'
 					}
@@ -129,7 +129,12 @@
 								let selCode = ''
 								if (rulesAdForm.attrInfo && rulesAdForm.attrInfo[Number(options.inx)]) {
 									let arr1 = rulesAdForm.attrInfo[Number(options.inx)].code.split('.')
-									selCode = arr1[2]
+									if(arr1[0]==='$devprop'){
+										selCode = arr1[2]
+									}else if(arr1[0]==='$input'){
+										selCode = arr1[1]
+									}
+									
 									this.alReadChoice = selCode
 								}
 								this.proEvt.map(row => {
@@ -179,10 +184,34 @@
 					if (pinfo.ModelTSL) {
 						let tsl = JSON.parse(pinfo.ModelTSL);
 						// console.log("tsl: ", tsl);
+						
 						if (this.dataType == 'event') {
 							this.proEvt = tsl.events;
 						} else if (this.dataType == 'attribute') {
 							this.proEvt = tsl.properties;
+							// console.log(tsl,'tsltsl');
+							let rulesAdForm = this.$store.state.rulesAddForm
+							// console.log(rulesAdForm, '规则');
+							if(rulesAdForm.eventDevice&&rulesAdForm.eventDevice[0]&&rulesAdForm.eventDevice[0].Id===this.deviceInfo.Id){
+								if(rulesAdForm.triggerWay===0&&rulesAdForm.eventinfo||rulesAdForm.triggerWay==='0'&&rulesAdForm.eventinfo){
+									let needParams=tsl.events.filter(rw=>rw.code===rulesAdForm.eventinfo.code)
+									let otherArr=needParams.map(row=>{
+										row.outputs=row.outputs.map(ro=>{
+											ro.option.type=ro.type
+											if(ro.elements){
+												ro.option.elements=ro.elements
+											}
+											ro.isEventParams=true
+											this.proEvt.push(ro)
+											return ro
+										})
+										return row
+									})
+								}
+							}
+							
+							
+							// console.log(otherArr,'事件参数处理');
 						} else if (this.dataType == 'function') {
 							this.proEvt = tsl.functions;
 						}

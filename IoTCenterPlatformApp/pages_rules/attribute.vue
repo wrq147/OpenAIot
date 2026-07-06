@@ -305,7 +305,12 @@
 				this.attrForm = this.otherRulesForm.attrVal
 				this.attrForm.title = newitem.name;
 				this.attrForm.gname = this.otherRulesForm.deviceInfo.Name;
-				this.attrForm.code = "$devprop." + this.otherRulesForm.deviceInfo.Id + "." + newitem.code;
+				if(newitem.isEventParams){
+					this.attrForm.code = "$input." + newitem.code;
+				}else{
+					this.attrForm.code = "$devprop." + this.otherRulesForm.deviceInfo.Id + "." + newitem.code;
+				}
+				
 				this.attrFormOptions = this.attrForm.option ? this.attrForm.option : {}
 				this.valType = this.attrForm.option ? this.attrForm.option.type : ''
 				this.attrForm.valueType = this.valType

@@ -50,7 +50,7 @@
 						<image class="ava_image" :src="row.avatar" mode=""
 							v-if="row.type=='user'&&$isNotEmpty(row.avatar)"></image>
 						<view class="ava_image" v-if="row.type=='user'&&!$isNotEmpty(row.avatar)">
-							{{getShortName(org.name)}}
+							{{getShortName(row.name)}}
 						</view>
 						<!-- <view class="bumenicons_con t-icon-bumenguanli-bumentubiao" v-if="row.type=='dept'"></view> -->
 						<view class="bumenicons_con" v-if="row.type=='dept'">
@@ -76,18 +76,18 @@
 			<view class="alselect_con_con" v-if="multiple&&type=='user'">
 				<view class="alselect_con">
 					<scroll-view class="alselect_ul" scroll-x="true">
-						<!-- <view class="alselect_ul"> -->
-						<view class="select_li" v-for="item in select">
-							<image class="avatar_image" :src="item.avatar" mode=""
-								v-if="item.type=='user'&&$isNotEmpty(item.avatar)"></image>
-							<view class="avatar_image" v-if="item.type=='user'&&!$isNotEmpty(item.avatar)">
-								{{getShortName(item.name)}}
+						<view class="alselect_ul_con">
+							<view class="select_li" v-for="item in select">
+								<image class="avatar_image" :src="item.avatar" mode=""
+									v-if="item.type=='user'&&$isNotEmpty(item.avatar)"></image>
+								<view class="avatar_image" v-if="item.type=='user'&&!$isNotEmpty(item.avatar)">
+									{{getShortName(item.name)}}
+								</view>
+							</view>
+							<view class="btn_zhanwei">
+
 							</view>
 						</view>
-						<view class="btn_zhanwei">
-
-						</view>
-						<!-- </view> -->
 					</scroll-view>
 					<view class="com_btn_con">
 						<view class="com_btn" @click="finishMulSelect">
@@ -426,9 +426,11 @@
 			.alselect_ul {
 				white-space: nowrap;
 				width: 100%;
-
+				.alselect_ul_con{
+					vertical-align: top;
+				}
 				.select_li {
-					display: inline-block;
+					display: inline-flex;
 					margin-right: 10rpx;
 					width: 60rpx;
 					height: 60rpx;

@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder
 {
-    public class JoinFourBuilder<A, B, C, D> : AbstractQueryBuilder<QueryOneBuilder<A>>
+    public class JoinFourBuilder<A, B, C, D> : QueryOneBuilder<A>
     {
         public JoinFourBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
         }
-        protected override QueryOneBuilder<A> This()
-        {
-            return new QueryOneBuilder<A>(this._sqlBuilder);
-        }
+
 
         /// <summary>
         /// A、B、C、D、E左链接

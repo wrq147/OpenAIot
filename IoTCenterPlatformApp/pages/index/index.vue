@@ -65,9 +65,14 @@
 					<view class="name">
 						<text>我的设备</text>
 					</view>
-					<view class="alarm" @click.stop="toAlarmList">
-						<custom-icons iconsName="icon-baojingjilu" iconsSize="36rpx"></custom-icons>
-						<view class="dot" v-if="aralmTotal > 0">{{ aralmTotal }}</view>
+					<view class="search_alarm">
+						<view class="icon_con" @click.stop="openDeviceSearch">
+							<custom-icons iconsName="icon-sousuo" iconsSize="36rpx" iconsColor="#333"></custom-icons>
+						</view>
+						<view class="alarm" @click.stop="toAlarmList">
+							<custom-icons iconsName="icon-baojingjilu" iconsSize="36rpx"></custom-icons>
+							<view class="dot" v-if="aralmTotal > 0">{{ aralmTotal }}</view>
+						</view>
 					</view>
 				</view>
 				<view class="nav">
@@ -92,7 +97,7 @@
 						</image>
 						<image class="image" :src="getSerVerUrl()+'/appimg/device_default.png'" mode="aspectFill" v-else-if="getSerVerUrl()"></image>
 						<view class="device_state">
-							<view class="online_status" :class="{ offline: row.Online == 0, unKnow: row.Online == 2 }">
+							<view class="online_status">
 								<view v-if="isPerss">
 									<view v-if="row.isSelect" class="icons_con t-icon-gouxuan1"
 										style="width: 36rpx; height: 36rpx"></view>
@@ -100,13 +105,17 @@
 										iconsColor="#EAEAEA"></custom-icons>
 								</view>
 								<view v-if="!isPerss" style="display: flex; align-items: center">
-									<view class="dot"></view>
-									<view class="text" v-if="row.Online == 0">离线</view>
-									<view class="text" v-if="row.Online == 1">
-										{{ row.DState === '' ? '在线' : row.DState }}
+									<view style="display: flex; align-items: center" :class="{ offline: row.Online == 0, unKnow: row.Online == 2 }">
+										<view class="dot"></view>
+										<view class="text" v-if="row.Online == 0">离线</view>
+										<view class="text" v-if="row.Online == 1">在线</view>
+										<view class="text" v-if="row.Online == 2">未知</view>
 									</view>
-									<view class="text" v-if="row.Online == 2">
-										{{ row.DState === '' ? '未知' : row.DState }}
+									<view class="default" style="display: flex; align-items: center;margin-left: 20rpx;" :class="{ maintenance: row.DState == '保养',normal: row.DState == '正常', repair: row.DState == '维修' }">
+										<view class="text" v-if="row.DState=='正常'">{{row.DState}}</view>
+										<view class="text" v-else-if="row.DState=='维修'">{{row.DState}}</view>
+										<view class="text" v-else-if="row.DState=='保养'">{{row.DState}}</view>
+										<view class="text" v-else>{{row.DState}}</view>
 									</view>
 								</view>
 							</view>
@@ -287,6 +296,7 @@
 			}catch(err){
 				if(err.code==400||err.code==50009){
 					this.$refs.promptMsg.open(err.cusMsg, 3000)
+					// #ifndef MP-WEIXIN
 					var iptcode = this.getUrlParam('code') || "";
 					if(iptcode){
 						uni.reLaunch({
@@ -300,7 +310,10 @@
 					}else{
 						jumpLogin()
 					}
-					
+					// #endif
+					// #ifdef MP-WEIXIN
+					jumpLogin()
+					// #endif
 				}
 			}
 		},
@@ -762,7 +775,14 @@
 			justify-content: space-between;
 			align-items: flex-start;
 			line-height: 36rpx;
-
+			.search_alarm{
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				.icon_con{
+					margin-right: 30rpx;
+				}
+			}
 			.name {
 				font-size: 36rpx;
 				color: #333333;

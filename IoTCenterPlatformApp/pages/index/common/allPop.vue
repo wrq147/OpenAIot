@@ -94,6 +94,8 @@
 		border-radius: 10rpx;
 		margin-left: 30rpx;
 		margin-top: 370rpx;
+		max-height: calc(100% - 450rpx);
+		overflow-y: auto;
 	}
 	.contianer{
 		padding: 0 30rpx;

@@ -176,7 +176,12 @@
 					this.tabbar[index2].visible = false
 				}else{
 					this.tabbar[index].visible = false
-					this.tabbar[index2].visible = true
+					
+					if (this.isCheckPermi(["/IoTRulesService/Ruleflow/ListPage"])) {
+						this.tabbar[index2].visible = true
+					} else {
+						this.tabbar[index2].visible = false
+					}
 				}
 				
 				if (this.isCheckPermi(["/AfterService/Dev/List"])) {
@@ -264,8 +269,30 @@
 										key: tkey,
 										func: message => {
 											// console.log("消息中心",message);
-											this.getNoReadCount();
-											this.$store.commit('SET_MESSAGELIST_INFO', true)
+											if (message == null) {
+											  this.getNoReadCount();
+											  this.$store.commit('SET_MESSAGELIST_INFO', true)
+											  return;
+											}
+											let msgcont = message.toString();
+											if (msgcont == "") {
+											  this.getNoReadCount();
+											  this.$store.commit('SET_MESSAGELIST_INFO', true)
+											}
+											else {
+											  if (msgcont.startsWith("#llm")) {
+												let isThink = msgcont.startsWith("#llmt");
+												//接收到AI助手回复
+												msgcont = msgcont.substring(5);
+												if (msgcont != "") {
+												  this.$store.commit("llm/pushmsg", { data: msgcont, isthink: isThink });
+												}
+												else {
+												  this.$store.commit("llm/finishmsg", "");
+												}
+											  }
+											}
+											
 										}
 									});
 								}

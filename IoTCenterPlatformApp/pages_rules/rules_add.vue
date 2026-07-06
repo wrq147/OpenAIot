@@ -17,7 +17,8 @@
 				<view class="type_title">
 					当以下情况发生
 				</view>
-				<view :key="returnConditionKey(ruleTypeKey,inx)" class="type_li" v-for="(ite,inx) in allRulesList" @click="viewRulesInfo(ite,ite.attrInx,inx,'condition')"
+				<view :key="returnConditionKey(ruleTypeKey,inx)" class="type_li" v-for="(ite,inx) in allRulesList"
+					@click="viewRulesInfo(ite,ite.attrInx,inx,'condition')"
 					:style="{'opacity':rulesAdForm.id&&ite.isEvent?0.6:1}"
 					v-if="ite.isAttr||!ite.isFunc&&ite.isEvent||ite.isFixedTime">
 					<view class="li_left">
@@ -55,8 +56,8 @@
 				<view class="type_title">
 					将设备调整到
 				</view>
-				<view :key="returnConditionKey(ruleTypeKey,inx)" class="type_li" v-for="(ite,inx) in allRulesList" @click="viewRulesInfo(ite,ite.funcInx,inx,'function')"
-					v-if="ite.isFunc">
+				<view :key="returnConditionKey(ruleTypeKey,inx)" class="type_li" v-for="(ite,inx) in allRulesList"
+					@click="viewRulesInfo(ite,ite.funcInx,inx,'function')" v-if="ite.isFunc">
 					<view class="li_left">
 						<view class="image t-icon-gongneng11" v-if="ite.isFunc&&!ite.isEvent"></view>
 						<view class="image t-icon-shijian1" v-else-if="ite.isFunc&&ite.isEvent"></view>
@@ -100,8 +101,8 @@
 					:style="{'opacity':isLoading||isdisable||isLoad?0.5:1}" :loading="isLoading" v-if="isCouldEditInfo">
 					{{rulesId?'保存':'创建'}}
 				</button>
-				<button class="submit_button huise_btn" @click="delrule" :disabled="isLoading||isdisable||isLoad"
-					:style="{'opacity':isLoading||isdisable||isLoad?0.5:1}" :loading="isLoading"
+				<button class="submit_button huise_btn" @click="delrule" :disabled="isLoading||isLoad"
+					:style="{'opacity':isLoading||isLoad?0.5:1}" :loading="isLoading"
 					v-if="!isCouldEditInfo">
 					删除规则
 				</button>
@@ -191,7 +192,7 @@
 	export default {
 		data() {
 			return {
-				ruleTypeKey:1,
+				ruleTypeKey: 1,
 				isCouldEditInfo: true,
 				styles: {
 					color: '#333',
@@ -261,8 +262,8 @@
 			}
 		},
 		methods: {
-			returnConditionKey(key,inx){
-				return key+inx
+			returnConditionKey(key, inx) {
+				return key + inx
 			},
 			setStatus(val) {
 				//设置规则启用状态
@@ -430,33 +431,35 @@
 			},
 			deleteAttr(item, attrInx, allinx) {
 				this.allRulesList.splice(Number(allinx), 1)
-				this.conditionRulesList.splice(Number(attrInx - 1), 1)
-				this.attrInx = this.attrInx - 1
+				this.conditionRulesList.splice(Number(attrInx), 1)
+				this.attrInx = this.attrInx-1
 				let rulesAdForm = this.$store.state.rulesAddForm
-				rulesAdForm.attrDevice.splice(Number(attrInx - 1), 1)
-				rulesAdForm.attrInfo.splice(Number(attrInx - 1), 1)
+				rulesAdForm.attrDevice.splice(Number(attrInx), 1)
+				rulesAdForm.attrInfo.splice(Number(attrInx), 1)
 				this.$store.commit('SET_RULESADD_INFO', rulesAdForm)
 
 			},
-			viewRulesInfo(item, inx, inx2,addType) { //inx表示在触发条件中的序号，inx2表示在执行动作中的序号
+			viewRulesInfo(item, inx, inx2, addType) { //inx表示在触发条件中的序号，inx2表示在执行动作中的序号
 				try {
 					let proAttrType = ''
 					if (item.isEvent) {
 						proAttrType = 'event'
-						let eventInx=0
-						if(addType=='function'){//如果是功能执行的设备事件，需要赋值序号
-							eventInx=inx
+						let eventInx = 0
+						if (addType == 'function') { //如果是功能执行的设备事件，需要赋值序号
+							eventInx = inx
 						}
 						if (item.cannotEdit) {
 							if (this.isCouldEditInfo) {
 								uni.navigateTo({
 									url: '/pages_device/select_list?dataType=' + proAttrType +
-										'&isDisable=true&inx='+eventInx + '&allInx=' + inx2+'&rulesType='+addType
+										'&isDisable=true&inx=' + eventInx + '&allInx=' + inx2 + '&rulesType=' +
+										addType
 								})
 							} else {
 								uni.navigateTo({
 									url: '/pages_device/select_list?dataType=' + proAttrType +
-										'&isDisable=true&inx='+eventInx + '&allInx=' + inx2 + '&isOnlyRead=true'+'&rulesType='+addType
+										'&isDisable=true&inx=' + eventInx + '&allInx=' + inx2 +
+										'&isOnlyRead=true' + '&rulesType=' + addType
 								})
 							}
 
@@ -464,12 +467,14 @@
 							if (this.isCouldEditInfo) {
 								uni.navigateTo({
 									url: '/pages_device/select_list?isNotReturn=' + true + '&dataType=' +
-										proAttrType + '&inx='+eventInx + '&allInx=' + inx2+'&rulesType='+addType
+										proAttrType + '&inx=' + eventInx + '&allInx=' + inx2 + '&rulesType=' +
+										addType
 								})
 							} else {
 								uni.navigateTo({
 									url: '/pages_device/select_list?isNotReturn=' + true + '&dataType=' +
-										proAttrType + '&inx='+eventInx + '&allInx=' + inx2 + '&isOnlyRead=true'+'&rulesType='+addType
+										proAttrType + '&inx=' + eventInx + '&allInx=' + inx2 + '&isOnlyRead=true' +
+										'&rulesType=' + addType
 								})
 							}
 						}
@@ -481,7 +486,7 @@
 							if (this.isCouldEditInfo) {
 								uni.navigateTo({
 									url: '/pages_device/select_list?dataType=' + proAttrType + '&inx=' + Number(
-										inx) + '&allInx=' + inx2+ '&isNotReturn=true' 
+										inx) + '&allInx=' + inx2 + '&isNotReturn=true'
 								})
 							} else {
 								uni.navigateTo({
@@ -494,7 +499,7 @@
 							if (this.isCouldEditInfo) {
 								uni.navigateTo({
 									url: '/pages_device/select_list?dataType=' + proAttrType + '&inx=' + Number(
-										inx) + '&allInx=' + inx2 + '&isNotReturn=true' 
+										inx) + '&allInx=' + inx2 + '&isNotReturn=true'
 								})
 							} else {
 								uni.navigateTo({
@@ -510,7 +515,7 @@
 						if (this.isCouldEditInfo) {
 							uni.navigateTo({
 								url: '/pages_device/select_list?dataType=' + proAttrType + '&inx=' + Number(inx) +
-									'&allInx=' + inx2 + '&isNotReturn=true' 
+									'&allInx=' + inx2 + '&isNotReturn=true'
 							})
 						} else {
 							uni.navigateTo({
@@ -587,8 +592,7 @@
 							let tmpeeee = tmptsl.events.filter(x => x.code == tmpccc);
 							// console.log("设备",tmpeeee);
 							let firstObj = {
-								deviceName: this.deviceDtuIdmap.get(this.deviceDtuId[0]) ? this.deviceDtuIdmap
-									.get(this.deviceDtuId[0]).Name : '没有获取到设备信息',
+								deviceName: this.deviceDtuIdmap.get(this.deviceDtuId[0]) ? this.deviceDtuIdmap.get(this.deviceDtuId[0]).Name : '没有获取到设备信息',
 								eventName: tmpeeee[0].name,
 								cannotEdit: true,
 								isEvent: true,
@@ -658,8 +662,7 @@
 						// this.attrInx = this.attrInx + 1
 						this.$store.commit('SET_RULESADD_INFO', rulse)
 					}
-
-					this.setOtherConditionRles(rulse.ruleJson)
+					await this.setOtherConditionRles(rulse.ruleJson)
 
 					this.rulesAdForm = JSON.parse(JSON.stringify(rulse))
 					this.$forceUpdate();
@@ -677,19 +680,31 @@
 			},
 			async setOtherConditionRles(Process) {
 				try {
+					let rulesAdForm = this.$store.state.rulesAddForm
+					// console.log(rulesAdForm,'rulesAdForm');
 					if (Process.type == "CONDITIONS") {
 						this.conditionsNodeId = Process.id //条件总节点id
-						Process.branchs.map(row => {
+						await Promise.all(Process.branchs.map(async row => {
 							this.conditionNodeId = row.id //条件分支节点id
-							row.props.groups.map(it => {
-								it.conditions.map(async item => {
+							await Promise.all(row.props.groups.map(async it => {
+								await Promise.all(it.conditions.map(async item => {
 									// console.log("条件", item);
 									let arr = item.code.split('.')
-									let deviceObj = {
-										Id: arr[1],
-										Name: item.gname
+									let deviceObj = {}
+									let deviceInfo = {}
+									if(arr[0]==='$devprop'){
+										deviceObj={
+											Id: arr[1],
+											Name: item.gname
+										}
+										deviceInfo=this.devicemap.get(deviceObj.Id)
+									}else if(arr[0]==='$input'&&rulesAdForm.triggerWay===0&&rulesAdForm.eventDevice&&rulesAdForm.eventDevice[0]){
+										deviceObj={
+											Id: rulesAdForm.eventDevice[0].Id,
+											Name: item.gname
+										}
+										deviceInfo=this.devicemap.get(deviceObj.Id)
 									}
-									let deviceInfo = this.devicemap.get(deviceObj.Id)
 									if (deviceInfo) {
 
 									} else {
@@ -709,7 +724,7 @@
 									this.allRulesList.push(obj)
 									this.conditionRulesList.push(obj)
 									this.attrInx = this.attrInx + 1
-									let rulesAdForm = this.$store.state.rulesAddForm
+									
 									if (rulesAdForm.attrDevice) {
 										rulesAdForm.attrDevice.push(deviceObj)
 									} else {
@@ -722,10 +737,10 @@
 										rulesAdForm.attrInfo = []
 										rulesAdForm.attrInfo.push(item)
 									}
-									this.$store.commit('SET_RULESADD_INFO', rulesAdForm)
-								})
-							})
-						})
+									this.$store.commit('SET_RULESADD_INFO',rulesAdForm)
+								}));
+							}));
+						}));
 					} else if (Process.type == "FUNC") { //功能节点
 						let jsonLis = {}
 						let deviceInfo = {};
@@ -784,7 +799,7 @@
 								}
 							}
 						}
-					}else if (Process.type == "WARN") { //设备事件节点
+					} else if (Process.type == "WARN") { //设备事件节点
 						let jsonLis = {}
 						let deviceInfo = {};
 						if (Process.props && Process.props.TargetId) {
@@ -847,7 +862,7 @@
 						this.emptyNodeId = Process.id
 					}
 					if (Process.children && Process.children != {}) {
-						this.setOtherConditionRles(Process.children)
+						await this.setOtherConditionRles(Process.children)
 					} else {
 						if (this.isLoad) {
 							this.isLoad = false
@@ -858,6 +873,7 @@
 					// console.log('整理后的规则', this.allRulesList);
 				} catch (e) {
 					//TODO handle the exception
+					console.log("规则处理报错了", e);
 					if (this.isLoad) {
 						this.isLoad = false
 						uni.hideLoading()
@@ -970,7 +986,7 @@
 			},
 			finshSelectAttr(form) {
 				//选择完比较属性后
-				console.log("属性选择返回",form);
+				// console.log("属性选择返回",form);
 				if (form.infoIndex && form.allInx) {
 					let rulesAdForm = this.$store.state.rulesAddForm
 					let deviceObj = {
@@ -1103,9 +1119,10 @@
 					obj.info.model = form.rulesAdForm.funcValue
 					this.allRulesList[Number(form.allInx)] = JSON.parse(JSON.stringify(obj))
 					this.functionRulesList[Number(form.infoIndex)] = JSON.parse(JSON.stringify(obj))
-					rulesAdForm.funcDevice[Number(form.infoIndex)] = JSON.parse(JSON.stringify(form.rulesAdForm.deviceInfo))
+					rulesAdForm.funcDevice[Number(form.infoIndex)] = JSON.parse(JSON.stringify(form.rulesAdForm
+						.deviceInfo))
 					rulesAdForm.funcInfo[Number(form.infoIndex)] = JSON.parse(JSON.stringify(form.rulesAdForm.funcValue))
-			
+
 					this.$store.commit('SET_RULESADD_INFO', rulesAdForm)
 					this.$forceUpdate()
 				} else {
@@ -1142,24 +1159,25 @@
 				}
 				this.ruleTypeKey++
 			},
-			choiceDevice(type,addtype) {
+			choiceDevice(type, addtype) {
 				//选择设备
 				this.closePup()
 				let proAttrType = ''
-				if (this.addType == 'condition'&& this.conditionRulesList.length == 0) {
+				if (this.addType == 'condition' && this.conditionRulesList.length == 0) {
 					proAttrType = 'event'
 				} else if (this.addType == 'condition') {
 					proAttrType = 'attribute'
 				} else if (this.addType == 'function') {
-					if(type&&type=='function'){
+					if (type && type == 'function') {
 						proAttrType = 'function'
-					}else if(type&&type=='event'){
+					} else if (type && type == 'event') {
 						proAttrType = 'event'
 					}
-					
+
 				}
 				uni.navigateTo({
-					url: '/pages_device/select_list?isNotReturn=' + true + '&dataType=' + proAttrType+'&rulesType='+addtype
+					url: '/pages_device/select_list?isNotReturn=' + true + '&dataType=' + proAttrType +
+						'&rulesType=' + addtype
 				})
 			},
 			closePup() {
@@ -1280,7 +1298,7 @@
 								} else {
 									parId = hasCondition ? jsonStr.children.children.id : jsonStr.id
 								}
-								if(this.functionRulesList[e].isFunc&&!this.functionRulesList[e].isEvent){
+								if (this.functionRulesList[e].isFunc && !this.functionRulesList[e].isEvent) {
 									funObj = {
 										children: {},
 										id: this.functionRulesList[e].nodeId,
@@ -1289,7 +1307,7 @@
 										props: {},
 										type: "FUNC"
 									}
-								}else if(this.functionRulesList[e].isFunc&&this.functionRulesList[e].isEvent){
+								} else if (this.functionRulesList[e].isFunc && this.functionRulesList[e].isEvent) {
 									funObj = {
 										children: {},
 										id: this.functionRulesList[e].nodeId,
@@ -1299,14 +1317,14 @@
 										type: "WARN"
 									}
 								}
-								
+
 							} else {
 								if (arr.length > 0) {
 									parId = arr[arr.length - 1].id
 								} else {
 									parId = hasCondition ? jsonStr.children.children.id : jsonStr.id
 								}
-								if(this.functionRulesList[e].isFunc&&!this.functionRulesList[e].isEvent){
+								if (this.functionRulesList[e].isFunc && !this.functionRulesList[e].isEvent) {
 									funObj = {
 										children: {},
 										id: this.getRandomId(),
@@ -1315,7 +1333,7 @@
 										props: {},
 										type: "FUNC"
 									}
-								}else if(this.functionRulesList[e].isFunc&&this.functionRulesList[e].isEvent){
+								} else if (this.functionRulesList[e].isFunc && this.functionRulesList[e].isEvent) {
 									funObj = {
 										children: {},
 										id: this.getRandomId(),
@@ -1326,7 +1344,7 @@
 									}
 								}
 							}
-							if(this.functionRulesList[e].isFunc&&!this.functionRulesList[e].isEvent){
+							if (this.functionRulesList[e].isFunc && !this.functionRulesList[e].isEvent) {
 								funObj.props = {
 									EventInput: true,
 									FunctionId: rulesAdForm.funcInfo[e].code,
@@ -1334,7 +1352,7 @@
 									TargetId: rulesAdForm.funcDevice[e].Id,
 									TargetType: 1
 								}
-							}else if(this.functionRulesList[e].isFunc&&this.functionRulesList[e].isEvent){
+							} else if (this.functionRulesList[e].isFunc && this.functionRulesList[e].isEvent) {
 								funObj.props = {
 									EventId: rulesAdForm.funcInfo[e].code,
 									TargetId: rulesAdForm.funcDevice[e].Id,
@@ -1480,7 +1498,7 @@
 							} else {
 								parId = hasCondition ? jsonStr.children.children.id : jsonStr.id
 							}
-							if(this.functionRulesList[e].isFunc&&!this.functionRulesList[e].isEvent){
+							if (this.functionRulesList[e].isFunc && !this.functionRulesList[e].isEvent) {
 								funObj = {
 									children: {},
 									id: this.getRandomId(),
@@ -1496,7 +1514,7 @@
 									TargetId: rulesAdForm.funcDevice[e].Id,
 									TargetType: 1
 								}
-							}else if(this.functionRulesList[e].isFunc&&this.functionRulesList[e].isEvent){
+							} else if (this.functionRulesList[e].isFunc && this.functionRulesList[e].isEvent) {
 								funObj = {
 									children: {},
 									id: this.getRandomId(),
@@ -1511,8 +1529,8 @@
 									TargetType: 1
 								}
 							}
-							
-							
+
+
 							arr.push(funObj)
 						}
 						if (hasCondition) {

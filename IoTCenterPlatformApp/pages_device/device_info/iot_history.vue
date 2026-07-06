@@ -1,5 +1,5 @@
 <template>
-	<view class="pages_bgcon" style="background-color: rgba(255, 255, 255, 1);">
+	<view class="pages_bgcon" style="background-color: rgba(255, 255, 255, 1);min-height: 100vh;height: auto;">
 		<top :title="topTitle" leftWidth="60rpx" leftIcon="icon-fanhui" rightWidth="60rpx" :isleftBack="true"
 			backgroundColor="#ffffff"></top>
 
@@ -83,8 +83,11 @@
 							</view>
 						</view>
 						<view class="history_li" v-for="(item,inx) in oldInfoList" v-if="activeAttr.OptionType&&activeAttr.OptionType!='onLine'" :key="'t'+inx+item.Code">
-							<view class="li_val">
+							<view class="li_val" v-if="activeAttr.OptionType!='enum'">
 								{{item.Value.toFixed(2)+' '+item.Unit}}
+							</view>
+							<view class="li_val" v-if="activeAttr.OptionType==='enum'">
+								{{item.Value?item.Value:''}}
 							</view>
 							<view class="li_time">
 								{{item.UpdatedOn}}
@@ -97,9 +100,10 @@
 					<!-- <qiun-data-charts type="line" :opts="{extra:{line:{type:'curve'}},legend:{show: false}}"
 						:eopts="echartOpts" :chartData="chartsDataLine1" :echartsH5="true" :echartsApp="true"
 						:loadingType="0"></qiun-data-charts> -->
-						<view class="" :style="{width: '100%', height: 'calc(100vh - 566rpx - '+statusBarHeight+')'}">
+						<view v-show="activeAttr.OptionType!='enum'" class="" :style="{width: '100%', height: 'calc(100vh - 566rpx - '+statusBarHeight+')'}">
 							<l-echart class="line-chart" uid="history1" ref="lineChart"></l-echart>
 						</view>
+						<gantt_chart :activeOldAttr="activeAttr" :oldInfoList="oldInfoList" v-if="activeAttr.OptionType=='enum'" ref="gantt_chart"></gantt_chart>
 				</view>
 			</view>
 		</view>
@@ -118,7 +122,11 @@
 	import {
 		parseTime
 	} from '@/common/utillib.js'
+	import gantt_chart from './gantt_chart.vue'
 	export default {
+		components:{
+			gantt_chart
+		},
 		data() {
 			return {
 				statusBarHeight: Number(uni.getSystemInfoSync().statusBarHeight) * 2 + 'rpx',
@@ -305,13 +313,16 @@
 				const eventChannel = this.getOpenerEventChannel();
 				// 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
 				eventChannel.on('acceptDataFromOpenerPage', (data) => {
+					// console.log(data.properties,data.properties.length,'data.properties');
 					this.properties = data.properties.filter(
 						(item) =>
 						item.option.type == "date" ||
 						item.option.type == "float" ||
 						item.option.type == "int" ||
-						item.option.type == "geo"
+						item.option.type == "enum"
 					);
+					
+					// item.option.type == "geo" ||
 					this.properties=this.properties.map(row => {
 						row.text = row.name
 						row.value = row.code
@@ -566,41 +577,60 @@
 						if (this.activeAttr.OptionType == "geo") {
 
 						} else {
-							let mydata = [];
-							// console.log("历史数据", this.oldInfoList);
-							let xData = [];
-							for (let i = 0; i < this.oldInfoList.length; i++) {
-								// mydata = [
-								//   ...mydata,
-								//   ...[[this.oldInfoList[i].UpdatedOn, this.oldInfoList[i].Value]]
-								// ];
-								this.oldInfoList[i].value = this.oldInfoList[i].Value;
-								this.oldInfoList[i].name = this.oldInfoList[i].UpdatedOn;
-								// console.log("刚加载完数据", mydata);
-								let rowUpDate = dayjs(this.oldInfoList[i].UpdatedOn).format('YYYY-MM-DD') + '\n' +
-									dayjs(this.oldInfoList[i].UpdatedOn).format('HH:mm:ss')
-								xData = [...[
-									[rowUpDate, Number(this.oldInfoList[i].Value.toFixed(2))]
-								],...xData];
-								// console.log("xData", xData);
-							}
-							this.echartOpts.title[0].text = this.activeAttr.Name
-							if(this.activeAttr.Unit){
-								this.echartOpts.title[1].text = '（' + this.activeAttr.Unit + '）'
-								this.echartOpts.title[1].left = this.activeAttr.Name.length*14
+							if(this.activeAttr.OptionType == "enum"){
+								for (let i = 0; i < this.oldInfoList.length; i++) {
+									// mydata = [
+									//   ...mydata,
+									//   ...[[this.oldInfoList[i].UpdatedOn, this.oldInfoList[i].Value]]
+									// ];
+									this.oldInfoList[i].value = this.oldInfoList[i].Value;
+									this.oldInfoList[i].name = this.oldInfoList[i].UpdatedOn;
+									// console.log("刚加载完数据", mydata);
+									// let rowUpDate = dayjs(this.oldInfoList[i].UpdatedOn).format('YYYY-MM-DD') + '\n' +
+									// 	dayjs(this.oldInfoList[i].UpdatedOn).format('HH:mm:ss')
+									// xData = [...[
+									// 	[rowUpDate, Number(this.oldInfoList[i].Value.toFixed(2))]
+									// ],...xData];
+									// console.log("xData", xData);
+								}
 							}else{
-								this.echartOpts.title[1].text = ''
-								this.echartOpts.title[1].left = this.activeAttr.Name.length*14
+								let mydata = [];
+								// console.log("历史数据", this.oldInfoList);
+								let xData = [];
+								for (let i = 0; i < this.oldInfoList.length; i++) {
+									// mydata = [
+									//   ...mydata,
+									//   ...[[this.oldInfoList[i].UpdatedOn, this.oldInfoList[i].Value]]
+									// ];
+									this.oldInfoList[i].value = this.oldInfoList[i].Value;
+									this.oldInfoList[i].name = this.oldInfoList[i].UpdatedOn;
+									// console.log("刚加载完数据", mydata);
+									let rowUpDate = dayjs(this.oldInfoList[i].UpdatedOn).format('YYYY-MM-DD') + '\n' +
+										dayjs(this.oldInfoList[i].UpdatedOn).format('HH:mm:ss')
+									xData = [...[
+										[rowUpDate, Number(this.oldInfoList[i].Value.toFixed(2))]
+									],...xData];
+									// console.log("xData", xData);
+								}
+								this.echartOpts.title[0].text = this.activeAttr.Name
+								if(this.activeAttr.Unit){
+									this.echartOpts.title[1].text = '（' + this.activeAttr.Unit + '）'
+									this.echartOpts.title[1].left = this.activeAttr.Name.length*14
+								}else{
+									this.echartOpts.title[1].text = ''
+									this.echartOpts.title[1].left = this.activeAttr.Name.length*14
+								}
+								// this.chartsDataLine1.series[0].name = this.activeAttr.Name
+								// this.chartsDataLine1.series[0].data = JSON.parse(JSON.stringify(xData))
+								this.echartOpts.series.name = this.activeAttr.Name
+								this.echartOpts.series.data = JSON.parse(JSON.stringify(xData))
+								// console.log(this.echartOpts,'this.echartOptsthis.echartOpts');
+								this.$refs.lineChart.init(echarts, chart => {
+									// console.log("chart",chart);
+									chart.setOption(this.echartOpts);
+								});
 							}
-							// this.chartsDataLine1.series[0].name = this.activeAttr.Name
-							// this.chartsDataLine1.series[0].data = JSON.parse(JSON.stringify(xData))
-							this.echartOpts.series.name = this.activeAttr.Name
-							this.echartOpts.series.data = JSON.parse(JSON.stringify(xData))
-							// console.log(this.echartOpts,'this.echartOptsthis.echartOpts');
-							this.$refs.lineChart.init(echarts, chart => {
-								// console.log("chart",chart);
-								chart.setOption(this.echartOpts);
-							});
+							
 							// if (this.oldInfoList.length > 0) {
 							// 	this.echartsHei = 338.5;
 							// }

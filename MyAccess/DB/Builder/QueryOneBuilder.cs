@@ -1,6 +1,10 @@
 ﻿using MyAccess.Core;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder
@@ -11,7 +15,7 @@ namespace MyAccess.DB.Builder
     /// <typeparam name="X"></typeparam>
     public class QueryOneBuilder<X> : AbstractQueryBuilder<QueryOneBuilder<X>>
     {
-        public QueryOneBuilder(SqlBuilder sqlBuilder):base(sqlBuilder)
+        public QueryOneBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
         }
         protected override QueryOneBuilder<X> This()
@@ -19,9 +23,6 @@ namespace MyAccess.DB.Builder
             return this;
         }
 
-
-
-      
         public QueryTwoBulider<X, T> Query<T>()
         {
             _sqlBuilder.AppendDiv();
@@ -106,6 +107,61 @@ namespace MyAccess.DB.Builder
             total.Value = pagert.Second.ToFirst();
             return pagert.First.ToList();
         }
+        private bool _hasOrderBy = false;
+        public QueryOneBuilder<X> OrderBy(Expression<Func<X, object>> orderExp, OrderByType t)
+        {
+            if (_hasOrderBy)
+            {
+                _sqlBuilder.Append(",");
+            }
+            else
+            {
+                _sqlBuilder.Append(" order by ");
+            }
+            string torderby = BuildOrderBySql(orderExp, t);
+            _sqlBuilder.Append(torderby);
+            return this;
+        }
+        protected string BuildOrderBySql(LambdaExpression exp, OrderByType t)
+        {
+            string prefix = string.Empty;
 
+            Expression body = exp.Body;
+            if (body is UnaryExpression un)
+            {
+                body = un.Operand;
+            }
+            if (body is not MemberExpression member)
+            {
+                return string.Empty;
+            }
+            ParameterExpression paramNode = member.Expression as ParameterExpression;
+            string fieldName = member.Member.Name;
+            int paramIndex = -1;
+            if (_sqlBuilder.SubMaps != null && _sqlBuilder.SubMaps.Count > 0)
+            {
+                for (int i = 0; i < exp.Parameters.Count; i++)
+                {
+                    if (ReferenceEquals(exp.Parameters[i], paramNode))
+                    {
+                        paramIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (paramIndex != -1)
+            {
+                if (paramIndex == 0)
+                {
+                    prefix = "a.";
+                }
+                else
+                {
+                    prefix = DBMapping.GetSubPrefix(paramIndex - 1) + ".";
+                }
+            }
+            string sort = t == OrderByType.Asc ? "ASC" : "DESC";
+            return $"{prefix}{fieldName} {sort}";
+        }
     }
 }

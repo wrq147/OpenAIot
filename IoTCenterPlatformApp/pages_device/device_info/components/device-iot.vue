@@ -171,6 +171,7 @@
 						this.deviceBasic.DeviceId + '&oldType=online',
 					success: (res1) => {
 						// 通过eventChannel向被打开页面传送数据
+						// console.log(this.properties,this.properties.length,'this.properties');
 						res1.eventChannel.emit('acceptDataFromOpenerPage', {
 							properties: this.properties,
 						})
@@ -324,13 +325,13 @@
 					if (client) {
 						let tkey = "newprop/" + this.deviceId;
 						client.subscribe(tkey, (error) => {
-							// console.log("订阅",error);
+							console.log("订阅",error);
 							if (!error) {
 								that.$store.commit("mqttclient/Add_Handler", {
 									key: tkey,
 									func: function(message) {
 										let msgtxt = message.toString();
-										// console.log("msgtxt设备数据mqtt返回", msgtxt);
+										console.log("msgtxt设备数据mqtt返回", msgtxt);
 										if (msgtxt == "online") {
 											that.deviceBasic.Online = 1;
 										} else if (msgtxt == "Offline") {
