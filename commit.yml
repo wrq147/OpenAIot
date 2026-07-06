@@ -3,15 +3,15 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '51bd6f408dc8b98f040ade70424bf6b2a8f0713a'
-    oldFile: !uuid 'e998f2436f0f4a636cc5462c2966fe8ff11b11e5'
-  /Channel/GB28181Channel:
-    newFile: !uuid 'b2a23bd59934a19adba9d03641f1486c89e1c722'
-    oldFile: !uuid 'ded147e06328befbca268d2f73d46c2149c436e3'
-  /Channel/GB28181Channel/appsettings.json:
-    newFile: !uuid '8ae7c8eed0feca6247f3531baea5b245bdff8520'
-    oldFile: !uuid 'c3c92db42cf3589289407fec23a5d43bd14f2b57'
-gitCommitId: !uuid '4959e0fc6df999c8bdc2250fc1b158121a1ec835'
+    newFile: !uuid '091680167ac99a529e0da604faad1759452652df'
+    oldFile: !uuid '51bd6f408dc8b98f040ade70424bf6b2a8f0713a'
+  /Channel/FixVideoChannel:
+    newFile: !uuid '96c3aa8e12d0c53664e7252751c0a719973ba36a'
+    oldFile: !uuid '64ccb3e82f2ac3f475ac6b9915826fd5b0b74a19'
+  /Channel/FixVideoChannel/appsettings.json:
+    newFile: !uuid '9bfc4d48b2c1fdc7832dcea1f30e07b96cfacbdc'
+    oldFile: !uuid '0d64f9122c6a1fddbbfc1598766feef50ea75575'
+gitCommitId: !uuid '1de031a0da72f1d1b2d6f0b4a33dfd966edbcdb0'
 renames: {
   }
-revisionId: 424
+revisionId: 425
