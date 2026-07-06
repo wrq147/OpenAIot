@@ -2,13 +2,10 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '3aca8b3b43d87d3299b1f11aa0c92b3b262f1f41'
-    oldFile: !uuid 'c39ded70e12a6fa803c65d246ad046a9df5fe4d1'
-  /App/appsettings.json:
-    newFile: !uuid 'fb4cdee7483626bd5b2f342ebc7f1d5f03ada4d3'
-    oldFile: !uuid 'eadd3e0254a317d3722b3bbb80e6c1074a0b713f'
-gitCommitId: !uuid '39fca2183fa180b21725cf462c0e411fe3577bad'
+  /.env:
+    newFile: !uuid '3c9906c14c06bdac8d0edc4d6a2a4c82b6002bc6'
+    oldFile: !uuid '3481406788a37afc00f52f756fe8f43504ba678e'
+gitCommitId: !uuid '31a1fc233742f6a4b4a6d3226f6a657134c34563'
 renames: {
   }
-revisionId: 420
+revisionId: 421
