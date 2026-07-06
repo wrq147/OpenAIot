@@ -2,13 +2,16 @@
 branches: {
   }
 fileChange:
-  /App:
-    newFile: !uuid '285d2a11d6b9d45c99e37fffce7b789190131c6b'
-    oldFile: !uuid '3aca8b3b43d87d3299b1f11aa0c92b3b262f1f41'
-  /App/appsettings.json:
-    newFile: !uuid '4d3ef1923691dd1c10f1ac0368da95eafc4e41fd'
-    oldFile: !uuid 'fb4cdee7483626bd5b2f342ebc7f1d5f03ada4d3'
-gitCommitId: !uuid 'e4b16850de6dd3051e35d8f3d13daf4b06dfe142'
+  /Channel:
+    newFile: !uuid 'e998f2436f0f4a636cc5462c2966fe8ff11b11e5'
+    oldFile: !uuid 'dfefb30cb638ae70ad8f7a976ad0c605d0aa053e'
+  /Channel/MqttChannel:
+    newFile: !uuid '062d1c442d13cc30a452130fd801bae8f3204475'
+    oldFile: !uuid '676c54f0e2f5fa630d43392187ae9d26632cc9f8'
+  /Channel/MqttChannel/appsettings.json:
+    newFile: !uuid '26917852600da2a684ee2026149007442d266b80'
+    oldFile: !uuid 'f0cc39f77cf792581822d74b8e9e249f73dd6f1e'
+gitCommitId: !uuid '3e7ff57be09a8993233ea00305e1f18b1f90e23f'
 renames: {
   }
-revisionId: 422
+revisionId: 423
