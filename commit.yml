@@ -3,15 +3,15 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid 'e998f2436f0f4a636cc5462c2966fe8ff11b11e5'
-    oldFile: !uuid 'dfefb30cb638ae70ad8f7a976ad0c605d0aa053e'
-  /Channel/MqttChannel:
-    newFile: !uuid '062d1c442d13cc30a452130fd801bae8f3204475'
-    oldFile: !uuid '676c54f0e2f5fa630d43392187ae9d26632cc9f8'
-  /Channel/MqttChannel/appsettings.json:
-    newFile: !uuid '26917852600da2a684ee2026149007442d266b80'
-    oldFile: !uuid 'f0cc39f77cf792581822d74b8e9e249f73dd6f1e'
-gitCommitId: !uuid '3e7ff57be09a8993233ea00305e1f18b1f90e23f'
+    newFile: !uuid '51bd6f408dc8b98f040ade70424bf6b2a8f0713a'
+    oldFile: !uuid 'e998f2436f0f4a636cc5462c2966fe8ff11b11e5'
+  /Channel/GB28181Channel:
+    newFile: !uuid 'b2a23bd59934a19adba9d03641f1486c89e1c722'
+    oldFile: !uuid 'ded147e06328befbca268d2f73d46c2149c436e3'
+  /Channel/GB28181Channel/appsettings.json:
+    newFile: !uuid '8ae7c8eed0feca6247f3531baea5b245bdff8520'
+    oldFile: !uuid 'c3c92db42cf3589289407fec23a5d43bd14f2b57'
+gitCommitId: !uuid '4959e0fc6df999c8bdc2250fc1b158121a1ec835'
 renames: {
   }
-revisionId: 423
+revisionId: 424
