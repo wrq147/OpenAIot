@@ -2,184 +2,31 @@
 branches: {
   }
 fileChange:
-  /IoTCenterPlatformApp:
-    newFile: !uuid '0c0851d90972589f082e691d2b1b9d37d7aa04b9'
-    oldFile: !uuid '081a9a5f937f04b5cb256ba0868cc60ef62eae1b'
-  /IoTCenterPlatformApp/api:
-    newFile: !uuid '2ff160a3f1afdb0501dc581f19869d06860b0bb3'
-    oldFile: !uuid '05d16e0a3c80bad754d4be2c9d2459285cb938b2'
-  /IoTCenterPlatformApp/api/device.js:
-    newFile: !uuid '070aadf28a81a6fd92536e3776e0766ac7e57339'
-    oldFile: !uuid '4c1482d6ad51ef7359a7be5f4794c310884e9e95'
-  /IoTCenterPlatformApp/components:
-    newFile: !uuid 'a63de20d29ceae20491f90ba514ec3a01ae743bf'
-    oldFile: !uuid '97aa1bfc5aaa556e5fd9b897b4238c12118938ac'
-  /IoTCenterPlatformApp/components/l-echart:
-    newFile: !uuid '0fb2d193690714a6253ac3a758fcf74408a5fd02'
-    oldFile: !uuid '487eef6d8d03e001a51e7d6bbf44198122bbcb86'
-  /IoTCenterPlatformApp/components/l-echart/l-echart.vue:
-    newFile: !uuid '56a33816b3d164f4202f03d9b9d66a322c700855'
-    oldFile: !uuid 'fd06d4c9e3407956e62ebc26ea213ed02530096f'
-  /IoTCenterPlatformApp/components/my-tab-bar:
-    newFile: !uuid 'ba8ba8c3b94507a8df7b2544bac2eeb4aee8af62'
-    oldFile: !uuid '1fc7ac7b74ed3308801c48883998caf81716da30'
-  /IoTCenterPlatformApp/components/my-tab-bar/my-tab-bar.vue:
-    newFile: !uuid 'ede3d612573233389a3d17e35e030c395dc03f79'
-    oldFile: !uuid 'f3b40ddf052b0e290e9b16688eb9e6b8de03fd90'
-  /IoTCenterPlatformApp/manifest.json:
-    newFile: !uuid 'f5ed503f0c6f179361c31c7d5370a7b5361e2aa8'
-    oldFile: !uuid '9a96883e733c1d11e5429d8964436e8862b36d9e'
-  /IoTCenterPlatformApp/pages:
-    newFile: !uuid 'b034a7a6b4bacf3cae60568eb5b3d857afee376f'
-    oldFile: !uuid '22b020bb7dc0361594d9f252cbb94f5d73e2ca08'
-  /IoTCenterPlatformApp/pages/index:
-    newFile: !uuid 'ccb471604f1dd71ceaa1d6f767b9c340294c9ed2'
-    oldFile: !uuid '59e20b63ef6e6db1bf9a999b8ea8b4ab11f53751'
-  /IoTCenterPlatformApp/pages/index/common:
-    newFile: !uuid '3a7239a3b959cfb7aa46768f57f7ff66be117468'
-    oldFile: !uuid 'db38c3700207f6b40f2a6dc329b55098e189f619'
-  /IoTCenterPlatformApp/pages/index/common/allPop.vue:
-    newFile: !uuid '25cc595df9004e5adf92fe1018b5ef33bdfbfaa1'
-    oldFile: !uuid '575764411b3d0cdc8a2797b67c1a7e8426eea3e0'
-  /IoTCenterPlatformApp/pages/index/common/roomManage.vue:
-    newFile: !uuid '1243581bf7172a5138899ea351db97edaab99d23'
-    oldFile: !uuid '5c33f37c74f659784fced6f4ab115ffbe6996325'
-  /IoTCenterPlatformApp/pages/index/index.vue:
-    newFile: !uuid '2f00f6af22a2b15632452abdd3c1232cf9e78504'
-    oldFile: !uuid 'dc7259fafabdd6742b57679cfb439c360d735122'
-  /IoTCenterPlatformApp/pages_device:
-    newFile: !uuid '34884e095080cf969006a971b033f2842751b003'
-    oldFile: !uuid 'efa5dc203ab54127ca7d49709841a5096233f60f'
-  /IoTCenterPlatformApp/pages_device/device_info:
-    newFile: !uuid 'c71729b6b4daf52fb746af12bb4bb42f90f76569'
-    oldFile: !uuid '2d7c603a5a96beb548bbac1dc5af43ef1fbc57e8'
-  /IoTCenterPlatformApp/pages_device/device_info/components:
-    newFile: !uuid 'dcbcdc1413bb07db672841416debacc49c946282'
-    oldFile: !uuid 'd59ee8a97a5edf826019a68df8dad7053b12cef4'
-  /IoTCenterPlatformApp/pages_device/device_info/components/device-basic.vue:
-    newFile: !uuid 'f39cda4f1e12c1af0ceb6c4375e874fbb3b5a022'
-    oldFile: !uuid 'b99d2727c94c586a069b75baac70b9bcd69ae86c'
-  /IoTCenterPlatformApp/pages_device/device_info/components/device-iot.vue:
-    newFile: !uuid '923942e1d1d1be30e20889e8f064fd32c4d1fdb3'
-    oldFile: !uuid '797305fb530532efc924ee1791205f23764a904b'
-  /IoTCenterPlatformApp/pages_device/device_info/device_info.vue:
-    newFile: !uuid '533521529af96be91f0eeeb04d0798dbb73b5dba'
-    oldFile: !uuid 'be882cef2b601ac2135cf17d7cbeee474d099523'
-  /IoTCenterPlatformApp/pages_device/device_info/echartOpts.js:
-    newFile: !uuid '1eedbca2f4821d4714165c9c3cf3c2923b25c653'
-    oldFile: null
-  /IoTCenterPlatformApp/pages_device/device_info/gantt_chart.vue:
-    newFile: !uuid '68cfa751f453f88a11ea74fbf97d03c782c20bca'
-    oldFile: null
-  /IoTCenterPlatformApp/pages_device/device_info/iot_history.vue:
-    newFile: !uuid '684cdeb61ffa27a0368ec113494c4dd822ba6b62'
-    oldFile: !uuid 'a09dc7f99d7b2751b5179f6701eb7b93d7a39e15'
-  /IoTCenterPlatformApp/pages_device/device_info/planedev-select:
-    newFile: !uuid 'bd2612ceeec07a6e4500135f2208dac34427ccef'
-    oldFile: !uuid '10f65aef682d74d316df9f24f11c16920a07f70e'
-  /IoTCenterPlatformApp/pages_device/device_info/planedev-select/device-select.vue:
-    newFile: !uuid '29d1ef1350c42dca26c58e95cd1b933ab4810f1e'
-    oldFile: !uuid 'be2687951755a4a6900c89f94c6a22403d6639be'
-  /IoTCenterPlatformApp/pages_device/echarts.min.js:
-    newFile: !uuid '5a758c2cd6edc4ed20ed81d75ae1792f3f08c5c1'
-    oldFile: !uuid '9a247f0105608c3cceda42e53ab50c2c0abdb913'
-  /IoTCenterPlatformApp/pages_flow:
-    newFile: !uuid '400072ef77440feb2f88c6e2163c5cfe38e977d5'
-    oldFile: !uuid 'be6f655fff86e0290ddb66b16d5bbe41f3634cc8'
-  /IoTCenterPlatformApp/pages_flow/components:
-    newFile: !uuid '9a547be1e9a0f6446e90582ab13a93ab98a8b6df'
-    oldFile: !uuid '9b248b43ea469f56043b581c2df247988cd8d8b6'
-  /IoTCenterPlatformApp/pages_flow/components/planedev-select:
-    newFile: !uuid '9498cd09a30d64081fdcadd517b1b7edeb5543b7'
-    oldFile: !uuid '10f65aef682d74d316df9f24f11c16920a07f70e'
-  /IoTCenterPlatformApp/pages_flow/components/planedev-select/device-select.vue:
-    newFile: !uuid 'e4bdb15b71d5cd4027e10cc92ac687c3a830eb0c'
-    oldFile: !uuid 'be2687951755a4a6900c89f94c6a22403d6639be'
-  /IoTCenterPlatformApp/pages_flow/inventory:
-    newFile: !uuid 'c3e335e3a61fc26484c35fd42e27c95c4ecc07a7'
-    oldFile: !uuid 'e08068d25dc0bc84934f726681b6eeb1d025e7fd'
-  /IoTCenterPlatformApp/pages_flow/inventory/employee_select.vue:
-    newFile: !uuid '6fa2634c71b362948fff846b4223d97e8e0866f6'
-    oldFile: !uuid '993e70a41eb010d8d0e8ce9bf4f2bf87b64dc191'
-  /IoTCenterPlatformApp/pages_rules:
-    newFile: !uuid 'f539b1a31f271ad5bff1e52f718d20d4f9319d08'
-    oldFile: !uuid 'f28a2faacfb49df1f7d96de351f27cdff2c5122f'
-  /IoTCenterPlatformApp/pages_rules/attribute.vue:
-    newFile: !uuid 'a81ba2ad4ee7579b80f88d568adcc334c785b402'
-    oldFile: !uuid 'c59cf8523847e74d13b68ec633c7c2f34058751a'
-  /IoTCenterPlatformApp/pages_rules/fun_select.vue:
-    newFile: !uuid '3bb538c9aad114ef875018449bb2db0bc5f9d849'
-    oldFile: !uuid '4d575e02ba114b72566fd7cdc49c38bf6dfe7367'
-  /IoTCenterPlatformApp/pages_rules/rules_add.vue:
-    newFile: !uuid '6102352f031b6244e405f0d7605be69b403ab1f4'
-    oldFile: !uuid 'b96f92d3f1e8889049853846f5e7792074722df8'
-  /IoTCenterPlatformApp/store:
-    newFile: !uuid '57fd8377d2389f95f687d64da77d2d09f0e7b8a5'
-    oldFile: !uuid '161c801c844ba18e1ce6f4c180c341615cff34e5'
-  /IoTCenterPlatformApp/store/index.js:
-    newFile: !uuid '8ff3219f4a096375aeebb732b80757f7a657597b'
-    oldFile: !uuid '7d662e1d393a4633d7e633a2f2fd1f5484b1460f'
-  /IoTCenterPlatformApp/store/modules:
-    newFile: !uuid '5ee857dcc24b1e563748c2f22524f3d11afb3573'
-    oldFile: !uuid '7007cf5bd8dc081151afcd01e68148583b826cdd'
-  /IoTCenterPlatformApp/store/modules/llm.js:
-    newFile: !uuid '2e362d4d6294041f19cc7926847e0dd676d48a4c'
-    oldFile: null
-  /IoTCenterPlatformApp/style:
-    newFile: !uuid '7ba420edef45367fe4bd0c755a765048c82ae9a6'
-    oldFile: !uuid '65352e706ddc5d04dea7836b76e24b0d73b08131'
-  /IoTCenterPlatformApp/style/common.scss:
-    newFile: !uuid 'a3bc57f99fb7ddcee6ce7de89220db663425ec00'
-    oldFile: !uuid '942aedd2e538fa5935bdc1b972debd26291c779a'
   /Modules:
-    newFile: !uuid '687a7b878b8dc06ce4c7d490c0471cc1435e148f'
-    oldFile: !uuid 'cd956ea100fe55a742bbf8bbb4372c63d4af14a8'
+    newFile: !uuid 'a47d59161e7f568e019dfe7e96dd8b08d7161906'
+    oldFile: !uuid '687a7b878b8dc06ce4c7d490c0471cc1435e148f'
   /Modules/IoTService:
-    newFile: !uuid 'be23cfd2ce01d8212c8b1e6af50171c516ea8fc8'
-    oldFile: !uuid '5cff6b193851e4bf8d266a7be7a47e12ac98663b'
+    newFile: !uuid 'cbe586ae8f7f7195ab0772faa3d21de89c98b979'
+    oldFile: !uuid 'be23cfd2ce01d8212c8b1e6af50171c516ea8fc8'
   /Modules/IoTService/Business:
-    newFile: !uuid 'b314e0370a60cb9c620f8c920567d5f80008601d'
-    oldFile: !uuid 'ac82255cc0a391a874966243c1e54e35e1204f04'
+    newFile: !uuid 'e2408255e9f6861200c785f4a9990e0dcf48894e'
+    oldFile: !uuid 'b314e0370a60cb9c620f8c920567d5f80008601d'
   /Modules/IoTService/Business/IotInfluxBLL.cs:
-    newFile: !uuid '8cfd9b2e5b41030fbc86d62245507994f4e5c152'
-    oldFile: !uuid '2c648671dce398b85971c09515f31992376fc0c3'
-  /Modules/IoTService/Controller:
-    newFile: !uuid 'b5742ccd4f3bf28616aaab39abc00ddf974566db'
-    oldFile: !uuid '8ca391bc7a94c42663a748c5c681802cbe70c367'
-  /Modules/IoTService/Controller/IotData.cs:
-    newFile: !uuid 'ae0deeecf30362078b3f70e81801ef224bf29417'
-    oldFile: !uuid '51a1895b9676a2dc5fce2be8cb154b6583d0f130'
+    newFile: !uuid '9c7cb30acf7b2d5b9a8a748e3175ed9cd08a3a9c'
+    oldFile: !uuid '8cfd9b2e5b41030fbc86d62245507994f4e5c152'
   /MyAccess:
-    newFile: !uuid '6dc0191396a08e1d2c26e2114b3c404c6f818c22'
-    oldFile: !uuid 'abb23f7ea9f63d3fd08bd8070d3e82be2b95a4f5'
+    newFile: !uuid '0c3149e9cd74c58104f865b23bfb85ef8657cd97'
+    oldFile: !uuid '6dc0191396a08e1d2c26e2114b3c404c6f818c22'
   /MyAccess/DB:
-    newFile: !uuid '492a7aa5496065dd8454d9a8ad388e6010db521c'
-    oldFile: !uuid 'ca6063ee5089b31f962ea1f90a2e21929e719a5d'
+    newFile: !uuid 'f23a83fc4181ebcf97263d112a9f4aad289d2a6b'
+    oldFile: !uuid '492a7aa5496065dd8454d9a8ad388e6010db521c'
   /MyAccess/DB/Builder:
-    newFile: !uuid '9906654f234d44c06ba0f0e987294ac07ecd0ea3'
-    oldFile: !uuid '60b6f5c3d0d72ca7764fd46845ec2ca0ab06c56c'
-  /MyAccess/DB/Builder/JoinFiveBuilder.cs:
-    newFile: !uuid 'db0bf1e367d5a09dc1b0ee16ede9fe10462ee858'
-    oldFile: !uuid 'd8ab0e09723076fc555fb52b51c22c43bfdd0332'
-  /MyAccess/DB/Builder/JoinFourBuilder.cs:
-    newFile: !uuid 'db699da1d79103fd84ba3b60af52fc553fe184ea'
-    oldFile: !uuid '8d9178c0bec15c8006ebfab3cf21124e363ca14d'
-  /MyAccess/DB/Builder/JoinThreeBuilder.cs:
-    newFile: !uuid 'ca982a6db48235f06c57e12b474c45ab495fdcf0'
-    oldFile: !uuid 'be974485a76ff4f90056c7b4148f12f5475b6c0e'
-  /MyAccess/DB/Builder/JoinTwoBuilder.cs:
-    newFile: !uuid '3efbf770322ba98831a9179597af0c8a198fec99'
-    oldFile: !uuid '9453a0996de2082dba71f2ce87fdcd1a3b145e2d'
-  /MyAccess/DB/Builder/QueryIncludeBuilder.cs:
-    newFile: !uuid '93951448daeb9c50ac25dcb0c390dc908bfb3e6c'
-    oldFile: !uuid 'b26a038d4826cbe60a343c8400053c37bb8a4f1a'
+    newFile: !uuid '78e6f5712f2f373e4e300025f5002649515d2e22'
+    oldFile: !uuid '9906654f234d44c06ba0f0e987294ac07ecd0ea3'
   /MyAccess/DB/Builder/QueryOneBuilder.cs:
-    newFile: !uuid '74f87bfec5b159e96361973fa9161a26533d2c1a'
-    oldFile: !uuid '30c567582268d387f305bee69d9de34a51661bb7'
-  /MyAccess/DB/OrderByType.cs:
-    newFile: !uuid 'f3861a72e3a10cb6fac099429261e21dfe1c8a82'
-    oldFile: null
-gitCommitId: !uuid '930c70f9ed7c57601a9ca446d15508fddb545801'
+    newFile: !uuid '961a2492b5be6b81dad03c04949371d3587fd0d3'
+    oldFile: !uuid '74f87bfec5b159e96361973fa9161a26533d2c1a'
+gitCommitId: !uuid '934508ab23f2bde58830a715e9913107451b7f78'
 renames: {
   }
-revisionId: 411
+revisionId: 412
