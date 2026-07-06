@@ -12,7 +12,7 @@
 
 4. 将redis的连接字符串配置在 `appsettings.json` 的 `redisconn` 节点
 
-5. 将rabbitmq的连接字符串配置在 `appsettings.json` 的 `event_bus_conn` 节点
+5. 将nats的连接字符串配置在 `appsettings.json` 的 `event_bus_conn` 节点，并在event_bus_user和event_bus_pass填上账号、密码
 
 6. 修改 `appsettings.json` 的 `General=>url` 为对应域名
 
