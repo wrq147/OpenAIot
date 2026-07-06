@@ -2,10 +2,13 @@
 branches: {
   }
 fileChange:
-  /README.md:
-    newFile: !uuid '94557c7545f69f2290dc1ebc60638cbe74703299'
-    oldFile: !uuid '3ba5e6a0b19c556b140d1df898b25a59ec5bc87e'
-gitCommitId: !uuid '105862943795930c743b6c4274ce73afd9adbfc0'
+  /App:
+    newFile: !uuid 'c39ded70e12a6fa803c65d246ad046a9df5fe4d1'
+    oldFile: !uuid 'fdbf392e9c9f37c127dd076b867964e3b25123b4'
+  /App/appsettings.json:
+    newFile: !uuid 'eadd3e0254a317d3722b3bbb80e6c1074a0b713f'
+    oldFile: !uuid 'a4e12a75b2e27ce04653172eebbf8ea4c321e129'
+gitCommitId: !uuid 'd8df264568ff6993ffe23148460182b832b90641'
 renames: {
   }
-revisionId: 414
+revisionId: 415
