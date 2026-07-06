@@ -143,7 +143,7 @@ namespace MyAccess.DB.Builder
         /// <param name="expression"></param>
         /// <param name="fields">表别名固定a、b</param>
         /// <returns></returns>
-        public QueryOneBuilder<A> Where(Expression<Func<A, B, bool>> expression, string fields = null)
+        public JoinTwoBuilder<A, B> Where(Expression<Func<A, B, bool>> expression, string fields = null)
         {
             Type EntityType = typeof(A);
             string table = GenerateTable(EntityType);
@@ -152,8 +152,19 @@ namespace MyAccess.DB.Builder
                 fields = GenerateFields(EntityType);
             }
             this.Append(string.Format("select {0} from {1} where ", fields, table)).Append(this._sqlBuilder.GetWhereByLambda<A, B>(expression));
-            return This();
+            return this;
         }
 
+        /// <summary>
+        /// 排序
+        /// </summary>
+        /// <param name="orderExp"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public QueryOneBuilder<A> OrderBy(Expression<Func<A, B, object>> orderExp, OrderByType t)
+        {
+            BuildOrderBySql(orderExp, t);
+            return this;
+        }
     }
 }

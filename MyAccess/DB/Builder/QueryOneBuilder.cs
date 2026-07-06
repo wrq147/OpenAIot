@@ -114,22 +114,13 @@ namespace MyAccess.DB.Builder
             total.Value = pagert.Second.ToFirst();
             return pagert.First.ToList();
         }
-        private bool _hasOrderBy = false;
+        protected bool _hasOrderBy = false;
         public QueryOneBuilder<X> OrderBy(Expression<Func<X, object>> orderExp, OrderByType t)
         {
-            if (_hasOrderBy)
-            {
-                _sqlBuilder.Append(",");
-            }
-            else
-            {
-                _sqlBuilder.Append(" order by ");
-            }
-            string torderby = BuildOrderBySql(orderExp, t);
-            _sqlBuilder.Append(torderby);
+            BuildOrderBySql(orderExp, t);
             return this;
         }
-        protected string BuildOrderBySql(LambdaExpression exp, OrderByType t)
+        protected void BuildOrderBySql(LambdaExpression exp, OrderByType t)
         {
             string prefix = string.Empty;
 
@@ -140,7 +131,7 @@ namespace MyAccess.DB.Builder
             }
             if (current is not MemberExpression member)
             {
-                return string.Empty;
+                return;
             }
 
             int paramIndex = -1;
@@ -150,7 +141,7 @@ namespace MyAccess.DB.Builder
                 int tidx = _sqlBuilder.SubMaps.IndexOf(fieldName);
                 if (tidx == -1)
                 {
-                    return string.Empty;
+                    return;
                 }
                 paramIndex = tidx + 1;
                 fieldName = tmpmem.Member.Name;
@@ -182,8 +173,16 @@ namespace MyAccess.DB.Builder
                     prefix = DBMapping.GetSubPrefix(paramIndex - 1) + ".";
                 }
             }
+            if (_hasOrderBy)
+            {
+                _sqlBuilder.Append(",");
+            }
+            else
+            {
+                _sqlBuilder.Append(" order by ");
+            }
             string sort = t == OrderByType.Asc ? "ASC" : "DESC";
-            return $"{prefix}{fieldName} {sort}";
+            _sqlBuilder.Append($"{prefix}{fieldName} {sort}");
         }
     }
 }
