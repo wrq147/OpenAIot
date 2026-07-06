@@ -138,7 +138,7 @@
     </el-dialog>
     <!--  底部  -->
     <!-- <div class="el-invite_register-footer">
-      <span>Copyright © 2021 悟空云 All Rights Reserved.</span>
+      <span>Copyright © 2021 OpenAIot All Rights Reserved.</span>
     </div>-->
   </div>
 </template>
