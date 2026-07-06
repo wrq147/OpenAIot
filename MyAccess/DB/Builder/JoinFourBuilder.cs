@@ -1,4 +1,5 @@
-﻿using MyAccess.DB.Builder.WhereToSql;
+﻿using MyAccess.Core;
+using MyAccess.DB.Builder.WhereToSql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,8 +153,72 @@ namespace MyAccess.DB.Builder
         /// <returns></returns>
         public QueryOneBuilder<A> OrderBy(Expression<Func<A, B, C, D, object>> orderExp, OrderByType t)
         {
-            BuildOrderBySql(orderExp, t);
+            var torderstr = BuildOrderBySql(orderExp, t);
+            if (!string.IsNullOrEmpty(torderstr))
+            {
+                this._sqlBuilder.Append(torderstr);
+            }
             return this;
+        }
+        public List<A> ToPage(int page, int size, params OrderByModel<A, B, C, D>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPage(page, size, tmporder.ToString());
+            return _sqlBuilder.Do<DoQuerySql<A>>().ToList();
+        }
+        public List<A> ToPage(int page, int size, ref int total, params OrderByModel<A, B, C, D>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPageTotal(page, size, tmporder.ToString());
+            var pagert = _sqlBuilder.Do<DoQueryTwo<DoQuerySql<A>, DoQuerySql<int>>>();
+            total = pagert.Second.ToFirst();
+            return pagert.First.ToList();
+        }
+        public async Task<List<A>> ToPageAsync(int page, int size, params OrderByModel<A, B, C, D>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPage(page, size, tmporder.ToString());
+            return (await _sqlBuilder.DoAsync<DoQuerySql<A>>()).ToList();
+        }
+        public async Task<List<A>> ToPageAsync(int page, int size, RefAsync<int> total, params OrderByModel<A, B, C, D>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPageTotal(page, size, tmporder.ToString());
+            var pagert = (await _sqlBuilder.DoAsync<DoQueryTwo<DoQuerySql<A>, DoQuerySql<int>>>());
+            total.Value = pagert.Second.ToFirst();
+            return pagert.First.ToList();
         }
     }
 }

@@ -68,6 +68,20 @@ namespace MyAccess.DB.Builder
             _sqlBuilder.Comparable.SqlPage(page, size, orderby);
             return _sqlBuilder.Do<DoQuerySql<X>>().ToList();
         }
+        public List<X> ToPage(int page, int size, params OrderByModel<X>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPage(page, size, tmporder.ToString());
+            return _sqlBuilder.Do<DoQuerySql<X>>().ToList();
+        }
         /// <summary>
         /// 分页并返回总数
         /// </summary>
@@ -80,6 +94,22 @@ namespace MyAccess.DB.Builder
         {
             _hasOrderBy = true;
             _sqlBuilder.Comparable.SqlPageTotal(page, size, orderby);
+            var pagert = _sqlBuilder.Do<DoQueryTwo<DoQuerySql<X>, DoQuerySql<int>>>();
+            total = pagert.Second.ToFirst();
+            return pagert.First.ToList();
+        }
+        public List<X> ToPage(int page, int size, ref int total, params OrderByModel<X>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPageTotal(page, size, tmporder.ToString());
             var pagert = _sqlBuilder.Do<DoQueryTwo<DoQuerySql<X>, DoQuerySql<int>>>();
             total = pagert.Second.ToFirst();
             return pagert.First.ToList();
@@ -97,7 +127,20 @@ namespace MyAccess.DB.Builder
             _sqlBuilder.Comparable.SqlPage(page, size, orderby);
             return (await _sqlBuilder.DoAsync<DoQuerySql<X>>()).ToList();
         }
-
+        public async Task<List<X>> ToPageAsync(int page, int size, params OrderByModel<X>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPage(page, size, tmporder.ToString());
+            return (await _sqlBuilder.DoAsync<DoQuerySql<X>>()).ToList();
+        }
         /// <summary>
         /// 分页并返回总数（异步）
         /// </summary>
@@ -114,13 +157,33 @@ namespace MyAccess.DB.Builder
             total.Value = pagert.Second.ToFirst();
             return pagert.First.ToList();
         }
+        public async Task<List<X>> ToPageAsync(int page, int size, RefAsync<int> total, params OrderByModel<X>[] orders)
+        {
+            StringBuilder tmporder = new StringBuilder();
+            foreach (var todm in orders)
+            {
+                var tmpss = BuildOrderBySql(todm.Expression, todm.OrderType);
+                if (!string.IsNullOrEmpty(tmpss))
+                {
+                    tmporder.Append(tmpss);
+                }
+            }
+            _sqlBuilder.Comparable.SqlPageTotal(page, size, tmporder.ToString());
+            var pagert = (await _sqlBuilder.DoAsync<DoQueryTwo<DoQuerySql<X>, DoQuerySql<int>>>());
+            total.Value = pagert.Second.ToFirst();
+            return pagert.First.ToList();
+        }
         protected bool _hasOrderBy = false;
         public QueryOneBuilder<X> OrderBy(Expression<Func<X, object>> orderExp, OrderByType t)
         {
-            BuildOrderBySql(orderExp, t);
+            var torderstr = BuildOrderBySql(orderExp, t);
+            if (!string.IsNullOrEmpty(torderstr))
+            {
+                this._sqlBuilder.Append(torderstr);
+            }
             return this;
         }
-        protected void BuildOrderBySql(LambdaExpression exp, OrderByType t)
+        protected string BuildOrderBySql(LambdaExpression exp, OrderByType t)
         {
             string prefix = string.Empty;
 
@@ -131,7 +194,7 @@ namespace MyAccess.DB.Builder
             }
             if (current is not MemberExpression member)
             {
-                return;
+                return null;
             }
 
             int paramIndex = -1;
@@ -141,7 +204,7 @@ namespace MyAccess.DB.Builder
                 int tidx = _sqlBuilder.SubMaps.IndexOf(fieldName);
                 if (tidx == -1)
                 {
-                    return;
+                    return null;
                 }
                 paramIndex = tidx + 1;
                 fieldName = tmpmem.Member.Name;
@@ -173,16 +236,19 @@ namespace MyAccess.DB.Builder
                     prefix = DBMapping.GetSubPrefix(paramIndex - 1) + ".";
                 }
             }
+
+            string odpr;
             if (_hasOrderBy)
             {
-                _sqlBuilder.Append(",");
+                odpr = ",";
             }
             else
             {
-                _sqlBuilder.Append(" order by ");
+                odpr = " order by ";
+                _hasOrderBy = true;
             }
             string sort = t == OrderByType.Asc ? "ASC" : "DESC";
-            _sqlBuilder.Append($"{prefix}{fieldName} {sort}");
+            return $"{odpr}{prefix}{fieldName} {sort}";
         }
     }
 }
