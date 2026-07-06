@@ -2,16 +2,10 @@
 branches: {
   }
 fileChange:
-  /Channel:
-    newFile: !uuid '9f0c9392ca665a31fabcab586f8b0ce5774ab02e'
-    oldFile: !uuid '7584eac84fc25486568e68289be074a49809e862'
-  /Channel/OnvifChannel:
-    newFile: !uuid '02d8a8ad7b4deaeb42257a7fef099195a4a27cd6'
-    oldFile: !uuid '798bb7cb15a0f7ac5c1e9901f95fc2913e2a2e11'
-  /Channel/OnvifChannel/appsettings.json:
-    newFile: !uuid '5d8509975c7f15a4931429446a7159b87a653a6a'
-    oldFile: !uuid 'cec22068b28ca901469553a8e514610a6c672641'
-gitCommitId: !uuid 'a9563db2b4fd5dd99bcb9fabbc70e8aad7101ce1'
+  /悟空云开发者接口.doc:
+    newFile: null
+    oldFile: !uuid 'd9e9741c8d4544b2a594552057f01de626c672a8'
+gitCommitId: !uuid '400c931afba31236233d1d2137636ae4def806e6'
 renames: {
   }
-revisionId: 427
+revisionId: 428
