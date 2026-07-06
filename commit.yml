@@ -2,10 +2,13 @@
 branches: {
   }
 fileChange:
-  /悟空云开发者接口.doc:
+  /AIOT平台架构.docx:
+    newFile: !uuid '6d0d68316723aaebcfb9a2f314016fd43f597208'
+    oldFile: null
+  /悟空云中心平台.docx:
     newFile: null
-    oldFile: !uuid 'd9e9741c8d4544b2a594552057f01de626c672a8'
-gitCommitId: !uuid '400c931afba31236233d1d2137636ae4def806e6'
-renames: {
-  }
-revisionId: 428
+    oldFile: !uuid '1f41a41cb5fb8050bd0bfdef769d30a834463673'
+gitCommitId: !uuid '4fab6c345c4fe67c9bf91ebc3e71f80e2ed0e398'
+renames:
+  /AIOT平台架构.docx: /悟空云中心平台.docx
+revisionId: 429
