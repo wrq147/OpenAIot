@@ -3,15 +3,15 @@ branches: {
   }
 fileChange:
   /Channel:
-    newFile: !uuid '7584eac84fc25486568e68289be074a49809e862'
-    oldFile: !uuid '091680167ac99a529e0da604faad1759452652df'
-  /Channel/ModbusChannel:
-    newFile: !uuid '5e2e0ead140c1fe8bb97136256af37886de5af2a'
-    oldFile: !uuid '429c3d4521596f39f433b76776abdf72e6bbafd1'
-  /Channel/ModbusChannel/appsettings.json:
-    newFile: !uuid '261f2607c23d7d0085cfb0af1f4d763d3a9eb9f8'
-    oldFile: !uuid 'b20eb291e16032143345b882de37c5d74c00f627'
-gitCommitId: !uuid '528c60b0ceb8e748847b7f87cf0a199b8789753b'
+    newFile: !uuid '9f0c9392ca665a31fabcab586f8b0ce5774ab02e'
+    oldFile: !uuid '7584eac84fc25486568e68289be074a49809e862'
+  /Channel/OnvifChannel:
+    newFile: !uuid '02d8a8ad7b4deaeb42257a7fef099195a4a27cd6'
+    oldFile: !uuid '798bb7cb15a0f7ac5c1e9901f95fc2913e2a2e11'
+  /Channel/OnvifChannel/appsettings.json:
+    newFile: !uuid '5d8509975c7f15a4931429446a7159b87a653a6a'
+    oldFile: !uuid 'cec22068b28ca901469553a8e514610a6c672641'
+gitCommitId: !uuid 'a9563db2b4fd5dd99bcb9fabbc70e8aad7101ce1'
 renames: {
   }
-revisionId: 426
+revisionId: 427
