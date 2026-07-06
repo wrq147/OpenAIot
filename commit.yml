@@ -2,19 +2,100 @@
 branches: {
   }
 fileChange:
-  /admin-ui:
-    newFile: !uuid 'd92194eb666d4ab3ebc911325fd24519b579f449'
-    oldFile: !uuid '81a5e6e1e73b96292d036f6afab93b62183ecf4f'
-  /admin-ui/src:
-    newFile: !uuid 'f4422483f402fdfefd17c86df7cbdfec4b307cb1'
-    oldFile: !uuid 'c2ee21f868d233df1d4469738baf16f06df27402'
-  /admin-ui/src/views:
-    newFile: !uuid 'aed58aee103658c5291a828f36477e89b46e6476'
-    oldFile: !uuid 'dd285043361292a5687cc707b5d3504b57f49a90'
-  /admin-ui/src/views/InviteRegister.vue:
-    newFile: !uuid 'c838b34b15a84cb7b14ebeaf5ffa829bbc3364d9'
-    oldFile: !uuid 'be4365bea4c9225ce1a5d50d53666d628566b6ed'
-gitCommitId: !uuid 'df622d0f510ca8f95c420f269bdb9bb3f23202df'
+  /MyAccess:
+    newFile: !uuid '70ed1099ba1659ebb2ef5ebf9d5d565a457d41b9'
+    oldFile: !uuid '32ccf8b81f135944dd7f12e0250319b98acc7bff'
+  /MyAccess/DB:
+    newFile: !uuid 'bcee0b391fcb331f7fb8d6660bd6968934163be9'
+    oldFile: !uuid 'e52fba75f19ed1a858dab483e80022e522fe3bd1'
+  /MyAccess/DB/Builder:
+    newFile: !uuid '58b2a8f0ff16c5bd3fd74dd6815676b5678a35bb'
+    oldFile: !uuid 'aed705c094e779ce5375f581ebb4fc7013388252'
+  /MyAccess/DB/Builder/AbstractBuilder.cs:
+    newFile: !uuid 'e7841f1ef368b32110027f37918f03791848c3d2'
+    oldFile: !uuid 'a17bca8eb50c4f062422262f79d05f49f7557005'
+  /MyAccess/DB/Builder/AbstractQueryBuilder.cs:
+    newFile: !uuid '76d7bb2c42257eac404d329e5a8fc891e5ff6bf1'
+    oldFile: !uuid '19b2714722f904aad39d47b045635a447b8a3e18'
+  /MyAccess/DB/Builder/CreateOrUpdateBuilder.cs:
+    newFile: !uuid '2275ee1b8095823ef0da04072baf5c772bbb858d'
+    oldFile: !uuid '8b9adf787716066678ef66f7e6f7fecea5e4498a'
+  /MyAccess/DB/Builder/DeleteBuilder.cs:
+    newFile: !uuid '580479f8216a114a9ac3364aceaa804a7383c6fb'
+    oldFile: !uuid '50700bd7a79f1aa7c8d0e104575760cef91294ae'
+  /MyAccess/DB/Builder/DeleteTwoBuilder.cs:
+    newFile: !uuid '4853e1ec9bdd116f0e2532a3873c866796eb7a10'
+    oldFile: !uuid '94f9befe1bb36d242595da798b1cae7be5c01856'
+  /MyAccess/DB/Builder/ExpressionTool.cs:
+    newFile: !uuid '5be6304ac28e5b2bfeb9516150e8179f3ab97c3d'
+    oldFile: !uuid '5ed7c6fba3f5025d102f58391c57c085736d4c68'
+  /MyAccess/DB/Builder/InsertBuilder.cs:
+    newFile: !uuid 'b02060f1fa45665e384fdaa0ef7151504de3ea96'
+    oldFile: !uuid '0f80a3d1d00f9a1c13df36a2a9d6c8e0e664c8e8'
+  /MyAccess/DB/Builder/JoinFiveBuilder.cs:
+    newFile: !uuid 'eba07c828a33fbf507f24aa1c5aec05b99acc325'
+    oldFile: !uuid '6613d58613b6aff4d98c13c88e0b40d363c1b501'
+  /MyAccess/DB/Builder/JoinFourBuilder.cs:
+    newFile: !uuid '7bd82a5ca32b0a6706edace7ea3ec3c9cea80ba6'
+    oldFile: !uuid '6e5886363a8e0980e8ac1bd606d93ef20f5ce285'
+  /MyAccess/DB/Builder/JoinThreeBuilder.cs:
+    newFile: !uuid 'c08f4c2adf1d2c25f42a99c1e4d1ba631b4ed915'
+    oldFile: !uuid '0b3ae7621d501f74b9161acbb2bead16fdc9a725'
+  /MyAccess/DB/Builder/JoinTwoBuilder.cs:
+    newFile: !uuid '664cb3fc40b0b700b0462650350198bb471826e9'
+    oldFile: !uuid '4ec6dced9b3f32ff67f7251a746523fb36cd8dc6'
+  /MyAccess/DB/Builder/QueryBuilder.cs:
+    newFile: !uuid 'e60dc4ff644d4f90afaed54901dea49d599e695b'
+    oldFile: !uuid 'b927ddc041e9a7fab3aa1c62fe6c6e3197613543'
+  /MyAccess/DB/Builder/QueryIncludeBuilder.cs:
+    newFile: !uuid 'b2a7d81ce69afb6aadc6cd0830e1cd2805dde62f'
+    oldFile: !uuid '93951448daeb9c50ac25dcb0c390dc908bfb3e6c'
+  /MyAccess/DB/Builder/QueryOneBuilder.cs:
+    newFile: !uuid 'af7d8c1213c740d48f392abb63a81dc46b22174a'
+    oldFile: !uuid 'd2e737934276234dbd9f62403c2f7a1898d287c0'
+  /MyAccess/DB/Builder/QueryTwoBulider.cs:
+    newFile: !uuid '79802c1878db55503f0268d19258b90e70e59ef6'
+    oldFile: !uuid '1687a08d3432a15a7173d17f9365a81c45c2759f'
+  /MyAccess/DB/Builder/UpdateBuilder.cs:
+    newFile: !uuid '59cda27c554e0d49fd90a183571031516a4bb705'
+    oldFile: !uuid '9845666e44e90bff4b59ef373b0f826d0bb69c69'
+  /MyAccess/DB/Builder/UpdateColumnsBuilder.cs:
+    newFile: !uuid '74e64b49c8a5d5b2b897a6a2f1bb06fbf8e152c2'
+    oldFile: !uuid '4a0428bc3b795e1f4831ee09588a2c0ea03ef1fa'
+  /MyAccess/DB/Builder/UpdateToSql:
+    newFile: !uuid '830850e0f68dfaaf648656a732e344250ce60092'
+    oldFile: !uuid '8db8eeb273ffa820abfe156e4f6c22018f5bed11'
+  /MyAccess/DB/Builder/UpdateToSql/UpdateExpressionToString.cs:
+    newFile: !uuid '7778cf444e805d0b9534772bfa27486b08595053'
+    oldFile: !uuid '8342845d6a3ac256b6c36a18c249f39df8638d67'
+  /MyAccess/DB/Builder/WhereToSql:
+    newFile: !uuid 'fc671ac230085668b0b70373d6612ffe410793bf'
+    oldFile: !uuid '681723e73704c4a0032fca594e0850bd63526137'
+  /MyAccess/DB/Builder/WhereToSql/ConditionBuilder.cs:
+    newFile: !uuid '7b663fc7aeea6b4a9e71eb57f1d4c19ad8359a94'
+    oldFile: !uuid '1fb357fa04e1893611ee78263fad9b8b879a6c61'
+  /MyAccess/DB/Builder/WhereToSql/ExpressionBuilderExtends.cs:
+    newFile: !uuid '2670c98e580794a0b7606514402617a9c8846e3b'
+    oldFile: !uuid '4d40bed8e84239fc159c4aa1de31561f5e5b41bc'
+  /MyAccess/DB/Builder/WhereToSql/Nominator.cs:
+    newFile: !uuid '5945fb753c9a58a874524eadd8c2bdcc0c03942c'
+    oldFile: !uuid '05930b5baa8e56fc63b4460edf85aa8c74d40b67'
+  /MyAccess/DB/Builder/WhereToSql/ParameterRebinder.cs:
+    newFile: !uuid 'e66dd301e3f33aa0399d0b734ac1371235e50431'
+    oldFile: !uuid '9f76c06b4d88934cd924324d990ffa342327b60a'
+  /MyAccess/DB/Builder/WhereToSql/PartialEvaluator.cs:
+    newFile: !uuid 'bd2863a913d4c76a8dd32b1d8fe120b7a81e4ac8'
+    oldFile: !uuid '8d4c04c15ba3c196cd4158882a35631973ec3641'
+  /MyAccess/DB/Builder/WhereToSql/SonSqlFun.cs:
+    newFile: !uuid 'd7834a43288aa2295e0ed81d4f01809fb39ee34b'
+    oldFile: !uuid 'dd1ff7c73741864a09ff7a78c95379b3a20886c8'
+  /MyAccess/DB/Builder/WhereToSql/SqlGenerateExtensions.cs:
+    newFile: !uuid '956123892b7a697095e54dd56ad7d5b7b03208a1'
+    oldFile: !uuid 'aa38f60d06b31181200f79c9caeb093b96fb148e'
+  /MyAccess/DB/OrderByModel.cs:
+    newFile: !uuid '4d0be4ad34902586cebc316ceb65b88317bf1015'
+    oldFile: null
+gitCommitId: !uuid 'b4f6593afa6d4eeef1a1aa27f64cf38845bf45d3'
 renames: {
   }
-revisionId: 430
+revisionId: 431
