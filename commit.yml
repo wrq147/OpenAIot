@@ -2,31 +2,31 @@
 branches: {
   }
 fileChange:
-  /Modules:
-    newFile: !uuid 'a47d59161e7f568e019dfe7e96dd8b08d7161906'
-    oldFile: !uuid '687a7b878b8dc06ce4c7d490c0471cc1435e148f'
-  /Modules/IoTService:
-    newFile: !uuid 'cbe586ae8f7f7195ab0772faa3d21de89c98b979'
-    oldFile: !uuid 'be23cfd2ce01d8212c8b1e6af50171c516ea8fc8'
-  /Modules/IoTService/Business:
-    newFile: !uuid 'e2408255e9f6861200c785f4a9990e0dcf48894e'
-    oldFile: !uuid 'b314e0370a60cb9c620f8c920567d5f80008601d'
-  /Modules/IoTService/Business/IotInfluxBLL.cs:
-    newFile: !uuid '9c7cb30acf7b2d5b9a8a748e3175ed9cd08a3a9c'
-    oldFile: !uuid '8cfd9b2e5b41030fbc86d62245507994f4e5c152'
   /MyAccess:
-    newFile: !uuid '0c3149e9cd74c58104f865b23bfb85ef8657cd97'
-    oldFile: !uuid '6dc0191396a08e1d2c26e2114b3c404c6f818c22'
+    newFile: !uuid '32ccf8b81f135944dd7f12e0250319b98acc7bff'
+    oldFile: !uuid '0c3149e9cd74c58104f865b23bfb85ef8657cd97'
   /MyAccess/DB:
-    newFile: !uuid 'f23a83fc4181ebcf97263d112a9f4aad289d2a6b'
-    oldFile: !uuid '492a7aa5496065dd8454d9a8ad388e6010db521c'
+    newFile: !uuid 'e52fba75f19ed1a858dab483e80022e522fe3bd1'
+    oldFile: !uuid 'f23a83fc4181ebcf97263d112a9f4aad289d2a6b'
   /MyAccess/DB/Builder:
-    newFile: !uuid '78e6f5712f2f373e4e300025f5002649515d2e22'
-    oldFile: !uuid '9906654f234d44c06ba0f0e987294ac07ecd0ea3'
+    newFile: !uuid 'aed705c094e779ce5375f581ebb4fc7013388252'
+    oldFile: !uuid '78e6f5712f2f373e4e300025f5002649515d2e22'
+  /MyAccess/DB/Builder/JoinFiveBuilder.cs:
+    newFile: !uuid '6613d58613b6aff4d98c13c88e0b40d363c1b501'
+    oldFile: !uuid 'db0bf1e367d5a09dc1b0ee16ede9fe10462ee858'
+  /MyAccess/DB/Builder/JoinFourBuilder.cs:
+    newFile: !uuid '6e5886363a8e0980e8ac1bd606d93ef20f5ce285'
+    oldFile: !uuid 'db699da1d79103fd84ba3b60af52fc553fe184ea'
+  /MyAccess/DB/Builder/JoinThreeBuilder.cs:
+    newFile: !uuid '0b3ae7621d501f74b9161acbb2bead16fdc9a725'
+    oldFile: !uuid 'ca982a6db48235f06c57e12b474c45ab495fdcf0'
+  /MyAccess/DB/Builder/JoinTwoBuilder.cs:
+    newFile: !uuid '4ec6dced9b3f32ff67f7251a746523fb36cd8dc6'
+    oldFile: !uuid '3efbf770322ba98831a9179597af0c8a198fec99'
   /MyAccess/DB/Builder/QueryOneBuilder.cs:
-    newFile: !uuid '961a2492b5be6b81dad03c04949371d3587fd0d3'
-    oldFile: !uuid '74f87bfec5b159e96361973fa9161a26533d2c1a'
-gitCommitId: !uuid '934508ab23f2bde58830a715e9913107451b7f78'
+    newFile: !uuid 'd2e737934276234dbd9f62403c2f7a1898d287c0'
+    oldFile: !uuid '961a2492b5be6b81dad03c04949371d3587fd0d3'
+gitCommitId: !uuid 'e5e42916b65889f5b580aa7a568212407dfb7ee2'
 renames: {
   }
-revisionId: 412
+revisionId: 413
