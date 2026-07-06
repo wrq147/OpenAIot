@@ -1,11 +1,14 @@
 ﻿using MyAccess.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MyAccess.DB.Builder
 {
@@ -61,6 +64,7 @@ namespace MyAccess.DB.Builder
         /// <returns></returns>
         public List<X> ToPage(int page, int size, string orderby = "")
         {
+            _hasOrderBy = true;
             _sqlBuilder.Comparable.SqlPage(page, size, orderby);
             return _sqlBuilder.Do<DoQuerySql<X>>().ToList();
         }
@@ -74,6 +78,7 @@ namespace MyAccess.DB.Builder
         /// <returns></returns>
         public List<X> ToPage(int page, int size, ref int total, string orderby = "")
         {
+            _hasOrderBy = true;
             _sqlBuilder.Comparable.SqlPageTotal(page, size, orderby);
             var pagert = _sqlBuilder.Do<DoQueryTwo<DoQuerySql<X>, DoQuerySql<int>>>();
             total = pagert.Second.ToFirst();
@@ -88,6 +93,7 @@ namespace MyAccess.DB.Builder
         /// <returns></returns>
         public async Task<List<X>> ToPageAsync(int page, int size, string orderby = "")
         {
+            _hasOrderBy = true;
             _sqlBuilder.Comparable.SqlPage(page, size, orderby);
             return (await _sqlBuilder.DoAsync<DoQuerySql<X>>()).ToList();
         }
@@ -102,6 +108,7 @@ namespace MyAccess.DB.Builder
         /// <returns></returns>
         public async Task<List<X>> ToPageAsync(int page, int size, RefAsync<int> total, string orderby = "")
         {
+            _hasOrderBy = true;
             _sqlBuilder.Comparable.SqlPageTotal(page, size, orderby);
             var pagert = (await _sqlBuilder.DoAsync<DoQueryTwo<DoQuerySql<X>, DoQuerySql<int>>>());
             total.Value = pagert.Second.ToFirst();
@@ -126,29 +133,44 @@ namespace MyAccess.DB.Builder
         {
             string prefix = string.Empty;
 
-            Expression body = exp.Body;
-            if (body is UnaryExpression un)
+            Expression current = exp.Body;
+            if (current is UnaryExpression un)
             {
-                body = un.Operand;
+                current = un.Operand;
             }
-            if (body is not MemberExpression member)
+            if (current is not MemberExpression member)
             {
                 return string.Empty;
             }
-            ParameterExpression paramNode = member.Expression as ParameterExpression;
-            string fieldName = member.Member.Name;
+
             int paramIndex = -1;
-            if (_sqlBuilder.SubMaps != null && _sqlBuilder.SubMaps.Count > 0)
+            string fieldName = member.Member.Name;
+            if (member.Expression is MemberExpression tmpmem)
             {
-                for (int i = 0; i < exp.Parameters.Count; i++)
+                int tidx = _sqlBuilder.SubMaps.IndexOf(fieldName);
+                if (tidx == -1)
                 {
-                    if (ReferenceEquals(exp.Parameters[i], paramNode))
+                    return string.Empty;
+                }
+                paramIndex = tidx + 1;
+                fieldName = tmpmem.Member.Name;
+            }
+            else
+            {
+                ParameterExpression paramNode = member.Expression as ParameterExpression;
+                if (_sqlBuilder.SubMaps != null && _sqlBuilder.SubMaps.Count > 0)
+                {
+                    for (int i = 0; i < exp.Parameters.Count; i++)
                     {
-                        paramIndex = i;
-                        break;
+                        if (ReferenceEquals(exp.Parameters[i], paramNode))
+                        {
+                            paramIndex = i;
+                            break;
+                        }
                     }
                 }
             }
+
             if (paramIndex != -1)
             {
                 if (paramIndex == 0)

@@ -1039,45 +1039,45 @@ namespace IoTService.Business
                                 case "date":
                                     {
                                         long tmpv = Convert.ToInt64(fieldValue);
-                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                        pointBuilder = pointBuilder.Field(saveTargetKey, tmpv);
                                     }
                                     break;
                                 case "float":
                                     {
                                         double tmpv = Convert.ToDouble(fieldValue);
-                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                        pointBuilder = pointBuilder.Field(saveTargetKey, tmpv);
                                     }
                                     break;
                                 case "int":
                                     {
                                         int tmpv = Convert.ToInt32(fieldValue);
-                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                        pointBuilder = pointBuilder.Field(saveTargetKey, tmpv);
                                     }
                                     break;
                                 case "enum":
                                     {
                                         var tmpv = Convert.ToString(fieldValue);
-                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                        pointBuilder = pointBuilder.Field(saveTargetKey, tmpv);
                                     }
                                     break;
                                 case "geo":
                                     {
                                         var tmpv = Convert.ToString(fieldValue);
-                                        pointBuilder.Field(saveTargetKey, tmpv);
+                                        pointBuilder = pointBuilder.Field(saveTargetKey, tmpv);
                                     }
                                     break;
                                 default:
                                     continue;
                             }
 
-                            pointBuilder.Timestamp(dtUtc, WritePrecision.Ns);
+                            pointBuilder = pointBuilder.Timestamp(dtUtc, WritePrecision.Ns);
                             batchPoints.Add(pointBuilder);
                             copyTotal++;
 
                             // 批量写入
                             if (batchPoints.Count >= batchSize)
                             {
-                                await writeApi.WritePointsAsync(batchPoints, storageConfig.bucket, storageConfig.org);
+                                await writeApi.WritePointsAsync(batchPoints, deststorageConfig.bucket, deststorageConfig.org);
                                 batchPoints.Clear();
                                 _log.LogInformation($"已批量写入 {batchSize} 条拷贝数据，累计已拷贝：{copyTotal}");
                             }
@@ -1092,7 +1092,7 @@ namespace IoTService.Business
                 // 写入剩余不足一批的数据
                 if (batchPoints.Count > 0)
                 {
-                    await writeApi.WritePointsAsync(batchPoints, storageConfig.bucket, storageConfig.org);
+                    await writeApi.WritePointsAsync(batchPoints, deststorageConfig.bucket, deststorageConfig.org);
                     batchPoints.Clear();
                     _log.LogInformation($"剩余 {batchPoints.Count} 条拷贝数据写入完成，总拷贝条数：{copyTotal}");
                 }
