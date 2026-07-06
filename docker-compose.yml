@@ -55,7 +55,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE
-      - MYSQL_USER
     image: mysql:8.0.29
     ports:
     - mode: ingress
