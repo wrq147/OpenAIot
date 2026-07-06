@@ -2,13 +2,19 @@
 branches: {
   }
 fileChange:
-  /AIOT平台架构.docx:
-    newFile: !uuid '6d0d68316723aaebcfb9a2f314016fd43f597208'
-    oldFile: null
-  /悟空云中心平台.docx:
-    newFile: null
-    oldFile: !uuid '1f41a41cb5fb8050bd0bfdef769d30a834463673'
-gitCommitId: !uuid '4fab6c345c4fe67c9bf91ebc3e71f80e2ed0e398'
-renames:
-  /AIOT平台架构.docx: /悟空云中心平台.docx
-revisionId: 429
+  /admin-ui:
+    newFile: !uuid 'd92194eb666d4ab3ebc911325fd24519b579f449'
+    oldFile: !uuid '81a5e6e1e73b96292d036f6afab93b62183ecf4f'
+  /admin-ui/src:
+    newFile: !uuid 'f4422483f402fdfefd17c86df7cbdfec4b307cb1'
+    oldFile: !uuid 'c2ee21f868d233df1d4469738baf16f06df27402'
+  /admin-ui/src/views:
+    newFile: !uuid 'aed58aee103658c5291a828f36477e89b46e6476'
+    oldFile: !uuid 'dd285043361292a5687cc707b5d3504b57f49a90'
+  /admin-ui/src/views/InviteRegister.vue:
+    newFile: !uuid 'c838b34b15a84cb7b14ebeaf5ffa829bbc3364d9'
+    oldFile: !uuid 'be4365bea4c9225ce1a5d50d53666d628566b6ed'
+gitCommitId: !uuid 'df622d0f510ca8f95c420f269bdb9bb3f23202df'
+renames: {
+  }
+revisionId: 430
