@@ -2,31 +2,10 @@
 branches: {
   }
 fileChange:
-  /MyAccess:
-    newFile: !uuid '32ccf8b81f135944dd7f12e0250319b98acc7bff'
-    oldFile: !uuid '0c3149e9cd74c58104f865b23bfb85ef8657cd97'
-  /MyAccess/DB:
-    newFile: !uuid 'e52fba75f19ed1a858dab483e80022e522fe3bd1'
-    oldFile: !uuid 'f23a83fc4181ebcf97263d112a9f4aad289d2a6b'
-  /MyAccess/DB/Builder:
-    newFile: !uuid 'aed705c094e779ce5375f581ebb4fc7013388252'
-    oldFile: !uuid '78e6f5712f2f373e4e300025f5002649515d2e22'
-  /MyAccess/DB/Builder/JoinFiveBuilder.cs:
-    newFile: !uuid '6613d58613b6aff4d98c13c88e0b40d363c1b501'
-    oldFile: !uuid 'db0bf1e367d5a09dc1b0ee16ede9fe10462ee858'
-  /MyAccess/DB/Builder/JoinFourBuilder.cs:
-    newFile: !uuid '6e5886363a8e0980e8ac1bd606d93ef20f5ce285'
-    oldFile: !uuid 'db699da1d79103fd84ba3b60af52fc553fe184ea'
-  /MyAccess/DB/Builder/JoinThreeBuilder.cs:
-    newFile: !uuid '0b3ae7621d501f74b9161acbb2bead16fdc9a725'
-    oldFile: !uuid 'ca982a6db48235f06c57e12b474c45ab495fdcf0'
-  /MyAccess/DB/Builder/JoinTwoBuilder.cs:
-    newFile: !uuid '4ec6dced9b3f32ff67f7251a746523fb36cd8dc6'
-    oldFile: !uuid '3efbf770322ba98831a9179597af0c8a198fec99'
-  /MyAccess/DB/Builder/QueryOneBuilder.cs:
-    newFile: !uuid 'd2e737934276234dbd9f62403c2f7a1898d287c0'
-    oldFile: !uuid '961a2492b5be6b81dad03c04949371d3587fd0d3'
-gitCommitId: !uuid 'e5e42916b65889f5b580aa7a568212407dfb7ee2'
+  /README.md:
+    newFile: !uuid '94557c7545f69f2290dc1ebc60638cbe74703299'
+    oldFile: !uuid '3ba5e6a0b19c556b140d1df898b25a59ec5bc87e'
+gitCommitId: !uuid '105862943795930c743b6c4274ce73afd9adbfc0'
 renames: {
   }
-revisionId: 413
+revisionId: 414
