@@ -18,7 +18,7 @@ namespace EmailService
                 config_id = 70,
                 config_name = "邮箱配置参数",
                 config_key = "system.email",
-                config_value = "{\r\n    \"email_from_name\": \"悟空云官方邮箱\",\r\n    \"email_from\": \"wookongcloud@126.com\",\r\n    \"email_password\": \"CXJCQKQTBNEUGWEJ\",\r\n    \"ssl\": 1,\r\n    \"email_host\": \"smtp.126.com\",\r\n    \"email_post\": 25,\r\n    \"email_bind_title\": \"悟空云 - 邮箱验证\"\r\n  }",
+                config_value = "{\r\n    \"email_from_name\": \"OpenAIot官方邮箱\",\r\n    \"email_from\": \"OpenAIot@126.com\",\r\n    \"email_password\": \"CXJCQKQTBNEUGWEJ\",\r\n    \"ssl\": 1,\r\n    \"email_host\": \"smtp.126.com\",\r\n    \"email_post\": 25,\r\n    \"email_bind_title\": \"OpenAIot - 邮箱验证\"\r\n  }",
                 config_type = "Y",
                 remark = "配置服务端使用的邮箱服务器信息",
                 create_time = DateTime.Now,
