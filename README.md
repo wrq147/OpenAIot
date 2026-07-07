@@ -2,7 +2,15 @@
 
 项目完全开源，开源目标只为卷死其它物联网相关平台！有意向加入的，可以加最底部的Q群。
 
-## 一、项目使用说明
+## 一、开发环境前置要求
+
+Windows 开发环境：Visual Studio 2022，安装.NET 9 SDK 运行时与开发组件
+
+Linux 部署环境：CentOS 7+/Ubuntu，Docker & Docker Compose
+
+数据库 / 中间件依赖：MySQL、Redis、NATS（统一通过 docker compose 一键拉起）
+
+## 二、项目使用说明
 
 1. 安装docker
 
@@ -16,7 +24,7 @@
 
 6. 修改 `appsettings.json` 的 `General=>url` 为对应域名
 
-## 二、国内CentOS系统安装Docker
+## 三、国内CentOS系统安装Docker
 
 ### 步骤1：获取 docker-ce 软件源的 yum repo
 
@@ -55,7 +63,8 @@ sudo systemctl enable docker
 ```
 systemctl daemon-reload
 systemctl restart docker
-## 三、项目目录结构说明
+
+## 四、项目目录结构说明
 
 |目录/文件|说明|
 |---|---|
@@ -71,7 +80,8 @@ systemctl restart docker
 |TemplateAction、TemplateAction.NetCore|中台后端模块化MVC框架|
 |Third|第三方模板|
 |autoexe.sh|Linux环境自启动脚本|
-## 四、后端模块功能说明
+
+## 五、后端模块功能说明
 
 |模块名称|功能描述|
 |---|---|
@@ -101,7 +111,8 @@ systemctl restart docker
 |StorageService|数智仓储模块|
 |ThirdPartyService|天气等第三方接口服务|
 |WeiXinService|微信与企业微信集成模块|
-## 五、模块开发规范
+
+## 六、模块开发规范
 
 1. 每个模块需在 `Modules` 目录下创建独立文件夹管理
 
@@ -113,7 +124,7 @@ systemctl restart docker
 
 5. 需要使用定时任务的模块，在 `Configure` 方法中添加 `plg.RegisterQuartzTask();`
 
-## 六、模块间通信规范
+## 七、模块间通信规范
 
 > 注意：模块间除上下级关系外，**禁止直接调用**，统一通过以下方式通信
 > 
@@ -128,7 +139,7 @@ systemctl restart docker
 4. 调用方式：使用 `BusUtility.Call` 或 `BusUtility.Dispatch` 触发其他模块的监听事件
 
 
-## 七、预览图片
+## 八、预览图片
 
 ![输入图片说明](%E5%9B%BE1.png)
 
@@ -140,7 +151,7 @@ systemctl restart docker
 
 
 
-## 八、服务支持
+## 九、服务支持
 
 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=dHXu51C6p20eWQUhI0OnlCDjnekFpZhq&jump_from=webapi&authKey=hS5MEHqSZdFEk4/4pxxUnYeMvX7sQiL7L0Xi5G5xyEeeSH26K1HyS/I1izCcS+yD"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="AIOT物联网中台交流群" title="AIOT物联网中台交流群">1046865293</a>
 
