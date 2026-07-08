@@ -21,6 +21,3 @@ WeiXinService
 ThirdPartyService
 PayService
 MESService
-IoTAIService
-IoTVideoService
-LLMService
