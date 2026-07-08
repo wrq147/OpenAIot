@@ -24,6 +24,24 @@ Linux 部署环境：CentOS 7+/Ubuntu，Docker & Docker Compose
 
 6. 修改 `appsettings.json` 的 `General=>url` 为对应域名
 
+### 物联网配置说明
+
+Channel目录存放着所有可使用的设备接入方式，其中MqttChannel为当前主流的mqtt接入方式。以下是mqtt接入方式的配置：
+
+1、将MqttChannel发布到指定服务器。
+
+2、修改MqttChannel里的appsettings.json，按下面修改配置
+    "event_conn": "nas总线地址",
+    "event_user": "nas总线用户名",
+    "event_pass": "nas总线密码",
+    "redis_conn": "redis连接串",
+    "mqtt_server": "emqx服务地址",
+    "mqtt_port": emqx服务端口,
+    "mqtt_username": "emqx服务连接用户名",
+    "mqtt_password": "emqx服务连接密码"
+
+3、./MqttChannel &  启动服务
+
 ## 三、国内CentOS系统安装Docker
 
 ### 步骤1：获取 docker-ce 软件源的 yum repo
