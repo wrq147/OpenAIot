@@ -6,7 +6,7 @@
 
 Windows 开发环境：Visual Studio 2022，安装.NET 9 SDK 运行时与开发组件
 
-Linux 部署环境：CentOS 7+/Ubuntu，Docker & Docker Compose
+Linux 部署环境：CentOS 8+/Ubuntu，Docker & Docker Compose
 
 数据库 / 中间件依赖：MySQL、Redis、NATS（统一通过 docker compose 一键拉起）
 
