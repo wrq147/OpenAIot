@@ -64,11 +64,7 @@ namespace Common.Share
     {
         public static async Task<PageObject<T>> GeneratePageObjectAsync<T>(this QueryOneBuilder<T> sql, BaseQueryParam query, string defualtOrderBy = "")
         {
-            string orderby = defualtOrderBy;
-            if (!string.IsNullOrEmpty(query.orderByColumn))
-            {
-                orderby = query.orderByColumn + " " + (query.isAsc.ToLower().StartsWith("asc") ? string.Empty : "desc");
-            }
+            string orderby = query.GetOrderBy(defualtOrderBy);
             if (query.pageSize > 0)
             {
                 if (query.showAll)
@@ -108,11 +104,7 @@ namespace Common.Share
         }
         public static PageObject<T> GeneratePageObject<T>(this QueryOneBuilder<T> sql, BaseQueryParam query, string defualtOrderBy = "")
         {
-            string orderby = defualtOrderBy;
-            if (!string.IsNullOrEmpty(query.orderByColumn))
-            {
-                orderby = query.orderByColumn + " " + (query.isAsc.ToLower().StartsWith("asc") ? string.Empty : "desc");
-            }
+            string orderby = query.GetOrderBy(defualtOrderBy);
             if (query.pageSize > 0)
             {
                 if (query.showAll)
