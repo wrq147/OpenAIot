@@ -24,6 +24,8 @@ Linux 部署环境：CentOS 8+/Ubuntu，Docker & Docker Compose
 
 6. 修改 `appsettings.json` 的 `General=>url` 为对应域名
 
+7. 发布前端项目admin-ui，这里是标准的vue2前端发布方式，不再进行说明。
+
 #### 物联网配置说明
 
 Channel目录存放着所有可使用的设备接入方式，其中MqttChannel为当前主流的mqtt接入方式。以下是mqtt接入方式的配置：
