@@ -24,7 +24,7 @@ Linux 部署环境：CentOS 7+/Ubuntu，Docker & Docker Compose
 
 6. 修改 `appsettings.json` 的 `General=>url` 为对应域名
 
-### 物联网配置说明
+#### 物联网配置说明
 
 Channel目录存放着所有可使用的设备接入方式，其中MqttChannel为当前主流的mqtt接入方式。以下是mqtt接入方式的配置：
 
