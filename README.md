@@ -24,7 +24,7 @@ Linux 部署环境：CentOS 8+/Ubuntu，Docker & Docker Compose
 
 6. 修改 `appsettings.json` 的 `General=>url` 为对应域名
 
-7. 发布前端项目admin-ui，这里是标准的vue2前端发布方式，不再进行说明。
+7. 发布前端项目admin-ui，将生成的文件放到web后端项目的www目录下即可。
 
 #### 物联网配置说明
 
