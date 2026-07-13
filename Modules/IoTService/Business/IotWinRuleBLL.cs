@@ -1,4 +1,4 @@
-﻿using ChannelUtility.Tsl;
+using ChannelUtility.Tsl;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Json;
@@ -6,6 +6,7 @@ using Common.Share;
 using IoTService.DAL;
 using IoTService.Models;
 using Microsoft.Extensions.Logging;
+using NPOI.SS.Formula.Eval;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -120,13 +121,19 @@ namespace IoTService.Business
                 var nodeIdx = serverBus.GetNodeIdx();
                 var fireTime = context.ScheduledFireTimeUtc.Value.LocalDateTime;
 
+
+                Dictionary<string, Dictionary<string, object>> propDict = new Dictionary<string, Dictionary<string, object>>();
+                Dictionary<string, string> proidDict = new Dictionary<string, string>();
+
                 #region 触发统计每小时属性
                 var winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 0, "Priority asc");
+                List<string> tproIds = winrules.Select(x => x.ProductId).Distinct().ToList();
+                var allProducts = await productDAL.SelectList(x => tproIds.Contains(x.Id));
+                var productDict = allProducts.ToDictionary(x => x.Id);
                 var winruleGroup = winrules.GroupBy(x => x.ProductId);
                 foreach (var wingk in winruleGroup)
                 {
-                    var pro = await productDAL.Select(wingk.Key);
-                    if (pro == null)
+                    if (!productDict.TryGetValue(wingk.Key, out MZ_IotProduct pro))
                     {
                         await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                         continue;
@@ -145,13 +152,14 @@ namespace IoTService.Business
                         continue;
                     }
 
+
                     var model = TslModel.CreateFrom(pro.ModelTSL);
                     if (model == null)
                     {
                         continue;
                     }
 
-                    int pageSize = 100;
+                    int pageSize = 30;
                     int totalCount = deviceList.Count;
                     int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
@@ -183,6 +191,8 @@ namespace IoTService.Business
                                 var currentPageData = deviceList.GetRange(startIndex, endIndex - startIndex);
                                 var currentPageDict = currentPageData.ToDictionary(x => x.Id);
                                 var rsp = await iotInfluxBLL.SelectMergeList(query, pro, currentPageData, model, storageConfig);
+
+
                                 if (rsp.IsSuccess())
                                 {
                                     var rangeGroup = rsp.Data.GroupBy(x => x.Id);
@@ -199,40 +209,64 @@ namespace IoTService.Business
 
                                         if (firstitem != null && lastitem != null)
                                         {
-                                            Dictionary<string, object> props = new Dictionary<string, object>();
-                                            if (curprop.option.type == "int")
+                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
                                             {
-                                                IntOption intOp = (IntOption)curprop.option;
-                                                var maxval = Convert.ToInt32(lastitem.Val);
-                                                var minval = Convert.ToInt32(firstitem.Val);
-                                                int rangeval = maxval - minval;
-                                                if (intOp.min >= 0 && maxval < minval)
+                                                if (!propDict.TryGetValue(dev.DeviceId, out Dictionary<string, object> props))
                                                 {
-                                                    rangeval = maxval - intOp.min;
+                                                    props = new Dictionary<string, object>();
+                                                    propDict.Add(dev.DeviceId, props);
+                                                    if (!proidDict.ContainsKey(dev.DeviceId))
+                                                    {
+                                                        proidDict.Add(dev.DeviceId, pro.Id);
+                                                    }
                                                 }
 
-                                                props.Add(winrule.PropCode, rangeval);
-                                            }
-                                            else if (curprop.option.type == "float")
-                                            {
-                                                FloatOption floatOp = (FloatOption)curprop.option;
-                                                var maxval = Convert.ToDouble(lastitem.Val);
-                                                var minval = Convert.ToDouble(firstitem.Val);
-                                                double rangeval = maxval - minval;
-                                                if (floatOp.min >= 0 && maxval < minval)
+                                                if (curprop.option.type == "int")
                                                 {
-                                                    rangeval = maxval - floatOp.min;
+                                                    IntOption intOp = (IntOption)curprop.option;
+                                                    var maxval = Convert.ToInt32(lastitem.Val);
+                                                    var minval = Convert.ToInt32(firstitem.Val);
+                                                    int rangeval = maxval - minval;
+                                                    if (intOp.min >= 0 && maxval < minval)
+                                                    {
+                                                        rangeval = maxval - intOp.min;
+                                                    }
+                                                    if (props.ContainsKey(winrule.PropCode))
+                                                    {
+                                                        props[winrule.PropCode] = rangeval;
+                                                    }
+                                                    else
+                                                    {
+                                                        props.Add(winrule.PropCode, rangeval);
+                                                    }
                                                 }
-                                                props.Add(winrule.PropCode, rangeval);
+                                                else if (curprop.option.type == "float")
+                                                {
+                                                    FloatOption floatOp = (FloatOption)curprop.option;
+                                                    var maxval = Convert.ToDouble(lastitem.Val);
+                                                    var minval = Convert.ToDouble(firstitem.Val);
+                                                    double rangeval = maxval - minval;
+                                                    if (floatOp.min >= 0 && maxval < minval)
+                                                    {
+                                                        rangeval = maxval - floatOp.min;
+                                                    }
+                                                    if (props.ContainsKey(winrule.PropCode))
+                                                    {
+                                                        props[winrule.PropCode] = rangeval;
+                                                    }
+                                                    else
+                                                    {
+                                                        props.Add(winrule.PropCode, rangeval);
+                                                    }
+                                                }
                                             }
-                                            if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
-                                            {
-                                                await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
-                                            }
+
+               
                                         }
 
                                     }
                                 }
+
                             }
                         }
                         else
@@ -252,31 +286,50 @@ namespace IoTService.Business
                                 {
                                     foreach (var mitem in rsp.Data)
                                     {
-                                        Dictionary<string, object> props = new Dictionary<string, object>();
-                                        props.Add(winrule.PropCode, mitem.Val);
                                         if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                         {
-                                            await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
+                                            if (!propDict.TryGetValue(dev.DeviceId, out Dictionary<string, object> props))
+                                            {
+                                                props = new Dictionary<string, object>();
+                                                propDict.Add(dev.DeviceId, props);
+                                                if (!proidDict.ContainsKey(dev.DeviceId))
+                                                {
+                                                    proidDict.Add(dev.DeviceId, pro.Id);
+                                                }
+                                            }
+                                            if (props.ContainsKey(winrule.PropCode))
+                                            {
+                                                props[winrule.PropCode] = mitem.Val;
+                                            }
+                                            else
+                                            {
+                                                props.Add(winrule.PropCode, mitem.Val);
+                                            }
                                         }
+
                                     }
                                 }
+ 
                             }
                         }
 
 
                     }
                 }
+
                 #endregion
 
                 #region 触发统计每天属性
                 if (fireTime.Hour == 0)
                 {
                     winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 1, "Priority asc");
+                    tproIds = winrules.Select(x => x.ProductId).Distinct().ToList();
+                    allProducts = await productDAL.SelectList(x => tproIds.Contains(x.Id));
+                    productDict = allProducts.ToDictionary(x => x.Id);
                     winruleGroup = winrules.GroupBy(x => x.ProductId);
                     foreach (var wingk in winruleGroup)
                     {
-                        var pro = await productDAL.Select(wingk.Key);
-                        if (pro == null)
+                        if (!productDict.TryGetValue(wingk.Key, out MZ_IotProduct pro))
                         {
                             await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                             continue;
@@ -295,13 +348,14 @@ namespace IoTService.Business
                             continue;
                         }
 
+
                         var model = TslModel.CreateFrom(pro.ModelTSL);
                         if (model == null)
                         {
                             continue;
                         }
 
-                        int pageSize = 100;
+                        int pageSize = 30;
                         int totalCount = deviceList.Count;
                         int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
@@ -348,40 +402,65 @@ namespace IoTService.Business
                                             }
                                             if (firstitem != null && lastitem != null)
                                             {
-                                                Dictionary<string, object> props = new Dictionary<string, object>();
-                                                if (curprop.option.type == "int")
+                                                if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
                                                 {
-                                                    IntOption intOp = (IntOption)curprop.option;
-                                                    var maxval = Convert.ToInt32(lastitem.Val);
-                                                    var minval = Convert.ToInt32(firstitem.Val);
-                                                    int rangeval = maxval - minval;
-                                                    if (intOp.min >= 0 && maxval < minval)
+                                                    if (!propDict.TryGetValue(dev.DeviceId, out Dictionary<string, object> props))
                                                     {
-                                                        rangeval = maxval - intOp.min;
+                                                        props = new Dictionary<string, object>();
+                                                        propDict.Add(dev.DeviceId, props);
+                                                        if (!proidDict.ContainsKey(dev.DeviceId))
+                                                        {
+                                                            proidDict.Add(dev.DeviceId, pro.Id);
+                                                        }
                                                     }
-                                                    props.Add(winrule.PropCode, rangeval);
-                                                }
-                                                else if (curprop.option.type == "float")
-                                                {
-                                                    FloatOption floatOp = (FloatOption)curprop.option;
-                                                    var maxval = Convert.ToDouble(lastitem.Val);
-                                                    var minval = Convert.ToDouble(firstitem.Val);
-                                                    double rangeval = maxval - minval;
-                                                    if (floatOp.min >= 0 && maxval < minval)
+                                                    if (curprop.option.type == "int")
                                                     {
-                                                        rangeval = maxval - floatOp.min;
-                                                    }
+                                                        IntOption intOp = (IntOption)curprop.option;
+                                                        var maxval = Convert.ToInt32(lastitem.Val);
+                                                        var minval = Convert.ToInt32(firstitem.Val);
+                                                        int rangeval = maxval - minval;
+                                                        if (intOp.min >= 0 && maxval < minval)
+                                                        {
+                                                            rangeval = maxval - intOp.min;
+                                                        }
+                                                        if (props.ContainsKey(winrule.PropCode))
+                                                        {
+                                                            props[winrule.PropCode] = rangeval;
+                                                        }
+                                                        else
+                                                        {
+                                                            props.Add(winrule.PropCode, rangeval);
+                                                        }
 
-                                                    props.Add(winrule.PropCode, rangeval);
+                                                    }
+                                                    else if (curprop.option.type == "float")
+                                                    {
+                                                        FloatOption floatOp = (FloatOption)curprop.option;
+                                                        var maxval = Convert.ToDouble(lastitem.Val);
+                                                        var minval = Convert.ToDouble(firstitem.Val);
+                                                        double rangeval = maxval - minval;
+                                                        if (floatOp.min >= 0 && maxval < minval)
+                                                        {
+                                                            rangeval = maxval - floatOp.min;
+                                                        }
+                                                        if (props.ContainsKey(winrule.PropCode))
+                                                        {
+                                                            props[winrule.PropCode] = rangeval;
+                                                        }
+                                                        else
+                                                        {
+                                                            props.Add(winrule.PropCode, rangeval);
+                                                        }
+
+                                                    }
                                                 }
-                                                if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
-                                                {
-                                                    await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, true, null, null, fireTime);
-                                                }
+
+
                                             }
 
                                         }
                                     }
+
                                 }
                             }
                             else
@@ -401,20 +480,38 @@ namespace IoTService.Business
                                     {
                                         foreach (var mitem in rsp.Data)
                                         {
-                                            Dictionary<string, object> props = new Dictionary<string, object>();
-                                            props.Add(winrule.PropCode, mitem.Val);
                                             if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                             {
-                                                await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
+                                                if (!propDict.TryGetValue(dev.DeviceId, out Dictionary<string, object> props))
+                                                {
+                                                    props = new Dictionary<string, object>();
+                                                    propDict.Add(dev.DeviceId, props);
+                                                    if (!proidDict.ContainsKey(dev.DeviceId))
+                                                    {
+                                                        proidDict.Add(dev.DeviceId, pro.Id);
+                                                    }
+                                                }
+                                                if (props.ContainsKey(winrule.PropCode))
+                                                {
+                                                    props[winrule.PropCode] = mitem.Val;
+                                                }
+                                                else
+                                                {
+                                                    props.Add(winrule.PropCode, mitem.Val);
+                                                }
                                             }
+
+
                                         }
                                     }
+           
                                 }
                             }
 
 
                         }
                     }
+
                 }
                 #endregion
 
@@ -422,11 +519,13 @@ namespace IoTService.Business
                 if (fireTime.Day == 1 && fireTime.Hour == 0)
                 {
                     winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 2, "Priority asc");
+                    tproIds = winrules.Select(x => x.ProductId).Distinct().ToList();
+                    allProducts = await productDAL.SelectList(x => tproIds.Contains(x.Id));
+                    productDict = allProducts.ToDictionary(x => x.Id);
                     winruleGroup = winrules.GroupBy(x => x.ProductId);
                     foreach (var wingk in winruleGroup)
                     {
-                        var pro = await productDAL.Select(wingk.Key);
-                        if (pro == null)
+                        if (!productDict.TryGetValue(wingk.Key, out MZ_IotProduct pro))
                         {
                             await _iotWinRuleDAL.Delete(x => x.ProductId == wingk.Key);
                             continue;
@@ -445,13 +544,14 @@ namespace IoTService.Business
                             continue;
                         }
 
+
                         var model = TslModel.CreateFrom(pro.ModelTSL);
                         if (model == null)
                         {
                             continue;
                         }
 
-                        int pageSize = 20;
+                        int pageSize = 30;
                         int totalCount = deviceList.Count;
                         int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
@@ -498,40 +598,64 @@ namespace IoTService.Business
                                             }
                                             if (firstitem != null && lastitem != null)
                                             {
-                                                Dictionary<string, object> props = new Dictionary<string, object>();
-                                                if (curprop.option.type == "int")
+                                                if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev))
                                                 {
-                                                    IntOption intOp = (IntOption)curprop.option;
-                                                    var maxval = Convert.ToInt32(lastitem.Val);
-                                                    var minval = Convert.ToInt32(firstitem.Val);
-                                                    int rangeval = maxval - minval;
-                                                    if (intOp.min >= 0 && maxval < minval)
+                                                    if (!propDict.TryGetValue(dev.DeviceId, out Dictionary<string, object> props))
                                                     {
-                                                        rangeval = maxval - intOp.min;
+                                                        props = new Dictionary<string, object>();
+                                                        propDict.Add(dev.DeviceId, props);
+                                                        if (!proidDict.ContainsKey(dev.DeviceId))
+                                                        {
+                                                            proidDict.Add(dev.DeviceId, pro.Id);
+                                                        }
                                                     }
+                                                    if (curprop.option.type == "int")
+                                                    {
+                                                        IntOption intOp = (IntOption)curprop.option;
+                                                        var maxval = Convert.ToInt32(lastitem.Val);
+                                                        var minval = Convert.ToInt32(firstitem.Val);
+                                                        int rangeval = maxval - minval;
+                                                        if (intOp.min >= 0 && maxval < minval)
+                                                        {
+                                                            rangeval = maxval - intOp.min;
+                                                        }
+                                                        if (props.ContainsKey(winrule.PropCode))
+                                                        {
+                                                            props[winrule.PropCode] = rangeval;
+                                                        }
+                                                        else
+                                                        {
+                                                            props.Add(winrule.PropCode, rangeval);
+                                                        }
+                                                    }
+                                                    else if (curprop.option.type == "float")
+                                                    {
+                                                        FloatOption floatOp = (FloatOption)curprop.option;
+                                                        var maxval = Convert.ToDouble(lastitem.Val);
+                                                        var minval = Convert.ToDouble(firstitem.Val);
+                                                        double rangeval = maxval - minval;
+                                                        if (floatOp.min >= 0 && maxval < minval)
+                                                        {
+                                                            rangeval = maxval - floatOp.min;
+                                                        }
+                                                        if (props.ContainsKey(winrule.PropCode))
+                                                        {
+                                                            props[winrule.PropCode] = rangeval;
+                                                        }
+                                                        else
+                                                        {
+                                                            props.Add(winrule.PropCode, rangeval);
+                                                        }
 
-                                                    props.Add(winrule.PropCode, rangeval);
-                                                }
-                                                else if (curprop.option.type == "float")
-                                                {
-                                                    FloatOption floatOp = (FloatOption)curprop.option;
-                                                    var maxval = Convert.ToDouble(lastitem.Val);
-                                                    var minval = Convert.ToDouble(firstitem.Val);
-                                                    double rangeval = maxval - minval;
-                                                    if (floatOp.min >= 0 && maxval < minval)
-                                                    {
-                                                        rangeval = maxval - floatOp.min;
                                                     }
-                                                    props.Add(winrule.PropCode, rangeval);
                                                 }
-                                                if (currentPageDict.TryGetValue(mitemGroup.Key, out MZ_IotDevice dev) && props.Keys.Count > 0)
-                                                {
-                                                    await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
-                                                }
+
+
                                             }
 
                                         }
                                     }
+          
                                 }
                             }
                             else
@@ -551,14 +675,31 @@ namespace IoTService.Business
                                     {
                                         foreach (var mitem in rsp.Data)
                                         {
-                                            Dictionary<string, object> props = new Dictionary<string, object>();
-                                            props.Add(winrule.PropCode, mitem.Val);
                                             if (currentPageDict.TryGetValue(mitem.Id, out MZ_IotDevice dev))
                                             {
-                                                await busProxy.SendPropertyReply(pro.Id, dev.DeviceId, props, null, false, null, null, fireTime);
+                                                if (!propDict.TryGetValue(dev.DeviceId, out Dictionary<string, object> props))
+                                                {
+                                                    props = new Dictionary<string, object>();
+                                                    propDict.Add(dev.DeviceId, props);
+                                                    if (!proidDict.ContainsKey(dev.DeviceId))
+                                                    {
+                                                        proidDict.Add(dev.DeviceId, pro.Id);
+                                                    }
+                                                }
+                                                if (props.ContainsKey(winrule.PropCode))
+                                                {
+                                                    props[winrule.PropCode] = mitem.Val;
+                                                }
+                                                else
+                                                {
+                                                    props.Add(winrule.PropCode, mitem.Val);
+                                                }
                                             }
+
+
                                         }
                                     }
+   
                                 }
                             }
 
@@ -569,12 +710,35 @@ namespace IoTService.Business
                 #endregion
 
 
+                #region 触发存储
+                int afterpageSize = 30;
+                int aftertotalCount = proidDict.Keys.Count;
+                int aftertotalPages = (int)Math.Ceiling(aftertotalCount / (double)afterpageSize);
+                var tmpkeylist = proidDict.Keys.ToList();
+                for (int pageIndex = 0; pageIndex < aftertotalPages; pageIndex++)
+                {
+                    int startIndex = pageIndex * afterpageSize;
+                    int endIndex = Math.Min(startIndex + afterpageSize, aftertotalCount);
+                    var currentPageData = tmpkeylist.GetRange(startIndex, endIndex - startIndex);
+                    foreach (var devid in currentPageData)
+                    {
+                        if (propDict.TryGetValue(devid, out var props))
+                        {
+                            if (proidDict.TryGetValue(devid, out var proid))
+                            {
+                                await busProxy.SendPropertyReply(proid, devid, props, null, true, null, null, fireTime);
+                            }
+                        }
+                    }
+                    await Task.Delay(50);
+                }
+                #endregion
             }
             catch (Exception ex)
             {
                 _log.LogError(ex.Message);
             }
-      
+
 
 
         }
