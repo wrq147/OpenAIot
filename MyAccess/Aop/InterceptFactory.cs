@@ -1,4 +1,4 @@
-﻿using AspectCore.Configuration;
+using AspectCore.Configuration;
 using AspectCore.DynamicProxy;
 using MyAccess.Aop.Attribute;
 using System;
@@ -28,7 +28,7 @@ namespace MyAccess.Aop
             {
                 options.Interceptors.AddTyped<DALAopAttr>(method =>
                 {
-                    return method.ReflectedType == typeof(T) && method.IsPublic && !method.IsStatic && !method.IsConstructor;
+                    return method.IsPublic && !method.IsStatic && !method.IsConstructor;
                 });
             });
             return tpg.CreateClassProxy<T>(constructorArguments);
