@@ -40,10 +40,31 @@
     <div style="background: #f5f6f6" id="con_div" class="con_div">
       <div v-show="activeSelect == 'baseSetting'" style="padding: 20px 20px 0 20px">
         <div class="basic elbiaoge_elform3" id="elbiaoge_elform3">
-          <addForm ref="addForm" @editParams="editParams" @openParamsDrawer="openParamsDrawer" @handleShowCron="handleShowCron" @setAddForm="setAddForm" :groupTreeList="groupTreeList" :setup="setup" :productmap="productmap" :device="device" :product="product" :devicemap="devicemap"></addForm>
+          <addForm style="margin:0px 30px;" ref="addForm" @editParams="editParams" @openParamsDrawer="openParamsDrawer" @handleShowCron="handleShowCron" @setAddForm="setAddForm" :groupTreeList="groupTreeList" :setup="setup" :productmap="productmap" :device="device" :product="product" :devicemap="devicemap"></addForm>
           <div class="outline" :style="{ height: scrollHei + 80 + 'px', 'margin-left': '12px' }">
             <div class="content_con">
               <h1>1.概述</h1>
+              <p>规则引擎用于实现设备消息、定时任务的自动化业务逻辑编排，支持可视化拖拽流程节点配置执行动作，实现设备数据自动处理、告警推送、指令下发、数据转发等能力。</p>
+
+              <h2>2.触发方式说明</h2>
+              <h3>2.1 设备事件触发（物联网设备数据源）</h3>
+              <ul>
+                <li><strong>设备在线/离线</strong>：设备上下线状态变更时自动触发规则，可用于设备在线登记、离线告警、离线缓存数据补发等场景。</li>
+                <li><strong>属性上报</strong>：设备定时/主动上报物模型属性（温度、湿度、开关状态、电量等）时触发，适合阈值判断、数据存储、联动控制。</li>
+                <li><strong>设备事件</strong>：设备上报自定义事件（故障、报警、任务完成等）触发，可绑定对应事件编码，精准匹配业务场景做后续处理。</li>
+              </ul>
+              <h3>2.2 定时任务触发（Cron定时）</h3>
+              <p>基于标准Cron表达式配置周期执行规则，支持按分钟、小时、日、周、月循环执行，适用于定时统计报表、定时下发采集指令、定时清理缓存、定时巡检设备等无需设备消息驱动的定时业务。</p>
+
+              <h2>3.执行参数作用</h2>
+              <p>参数用于在整条规则流程中全局复用变量，支持 <strong>int、float、string、date、boolean、枚举</strong> 六种数据类型。</p>
+              <h3>3.1 HTTP请求参数</h3>
+              <p>规则中调用第三方HTTP接口时，统一配置请求头、请求参数、请求Body、鉴权信息，一处定义全流程节点复用；修改参数无需逐个修改流程节点，简化维护。</p>
+              <h2>4.执行流程说明</h2>
+              <p>切换至【执行动作】标签页，可拖拽条件判断、设备指令、消息推送、数据存储、分支循环等节点编排业务流程；支持缩放、拖拽画布，调试控制台可实时查看消息流转日志，验证规则逻辑是否符合预期。</p>
+
+              <h2>5.导入/导出规则</h2>
+              <p>导出规则可将当前触发配置、流程节点、自定义参数打包为JSON文件备份；导入规则支持复用已有规则模板，快速新建同类型业务流程，减少重复配置工作量。</p>
             </div>
           </div>
         </div>
@@ -399,11 +420,9 @@ export default {
       //设置规则设计中表单部分的样式
       if (this.activeSelect == "baseSetting") {
         let div = document.getElementById("from_ul");
-        // let div2 = document.getElementById("elbiaoge_elform3");
         let div3 = document.getElementById("app-main");
         this.bodyConHei = div3.offsetHeight - 120;
         this.scrollHei = div.offsetHeight + 30;
-        // console.log(div2.offsetHeight,div.offsetHeight,this.scrollHei,'div.offsetHeight');
         this.$forceUpdate();
       }
     },
@@ -882,7 +901,7 @@ export default {
   }
   
   .outline {
-    width: 30%;
+    width: 40%;
     height: 100%;
 
     padding: 24px;
@@ -901,8 +920,6 @@ export default {
   
 }
 .action_con {
-  // display: flex;
-  // justify-content: flex-start;
   width: 100%;
   height: 100%;
   position: relative;
@@ -910,18 +927,7 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    // overflow-y: scroll;
     position: relative;
-    // ::-webkit-scrollbar {
-    //   width: 4px;
-    //   height: 2px;
-    //   background-color: white;
-    // }
-
-    // ::-webkit-scrollbar-thumb {
-    //   border-radius: 16px;
-    //   background-color: #e8e8e8;
-    // }
   }
 
   .action {
@@ -937,15 +943,6 @@ export default {
   /deep/ .el-drawer__body {
     overflow-y: auto;
   }
-  // ::-webkit-scrollbar {
-  //   width: 4px;
-  //   height: 2px;
-  //   background-color: white;
-  // }
 
-  // ::-webkit-scrollbar-thumb {
-  //   border-radius: 16px;
-  //   background-color: #e8e8e8;
-  // }
 }
 </style>

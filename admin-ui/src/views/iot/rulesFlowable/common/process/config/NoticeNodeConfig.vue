@@ -9,7 +9,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="推送内容：" prop="Title">
-        <el-input type="textarea" placeholder="请输入推送的内容" autosize v-model="config.Title"></el-input>
+        <el-input type="textarea" placeholder="请输入推送的内容" autosize v-model="config.Title" maxlength="80"></el-input>
       </el-form-item>
       <el-form-item label="用户：" prop="TargetValue" v-if="config.NoticeWay==='APP'">
         <el-select clearable @clear="handleClear" class="form_input_style" v-model="config.userName" ref="selectUsers" placeholder="请选择通知的用户" @focus="getUsersFocus" style="width: 100%"></el-select>

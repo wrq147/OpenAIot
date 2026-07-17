@@ -49,11 +49,11 @@ export function editClass(data) {
     })
 }
 //拷贝协议
-export function copyProduct(id){
+export function copyProduct(id) {
     return request({
         url: '/IoTService/IotProduct/Copy',
         method: 'get',
-        params: {id}
+        params: { id }
     })
 }
 //添加协议
@@ -100,7 +100,7 @@ export function tslList(ids) {
     return request({
         url: '/IoTService/IotProduct/TSLList',
         method: 'get',
-        params: {ids}
+        params: { ids }
     })
 }
 //获取单个协议信息
@@ -170,7 +170,7 @@ export function implementMsg(data) {
 }
 
 //册除指定设备的历史信息
-export function implementDelHis(data){
+export function implementDelHis(data) {
     return request({
         url: '/IoTService/IotProduct/DebugDelHistory',
         method: 'post',
@@ -183,7 +183,7 @@ export function getCodeListTree(t) {
     return request({
         url: '/IoTService/IotProduct/CodeListTree',
         method: 'get',
-        params: {t}
+        params: { t }
     })
 }
 
@@ -192,7 +192,15 @@ export function getPropRuleList(id) {
     return request({
         url: '/IoTService/IotProduct/PropRuleList',
         method: 'get',
-        params: {id}
+        params: { id }
+    })
+}
+
+export function getPropRules(id, code) {
+    return request({
+        url: '/IoTService/IotProduct/PropRules',
+        method: 'get',
+        params: { "id": id, "code": code }
     })
 }
 
@@ -201,12 +209,20 @@ export function getPropRuleInfo(id) {
     return request({
         url: '/IoTService/IotProduct/PropRuleInfo',
         method: 'get',
-        params: {id}
+        params: { id }
+    })
+}
+
+export function savePropRules(data) {
+    return request({
+        url: '/IoTService/IotProduct/SavePropRules',
+        method: 'post',
+        data: data
     })
 }
 
 //添加统计规则
-export function addPropRule(data){
+export function addPropRule(data) {
     return request({
         url: '/IoTService/IotProduct/AddPropRule',
         method: 'post',
@@ -215,7 +231,7 @@ export function addPropRule(data){
 }
 
 //修改统计规则
-export function editPropRule(data){
+export function editPropRule(data) {
     return request({
         url: '/IoTService/IotProduct/EditPropRule',
         method: 'post',
@@ -224,7 +240,7 @@ export function editPropRule(data){
 }
 
 //删除统计规则
-export function removePropRule(delid){
+export function removePropRule(delid) {
     return request({
         url: '/IoTService/IotProduct/RemovePropRule',
         method: 'get',
@@ -245,15 +261,15 @@ export function getWarnInfo(warnid) {
     return request({
         url: '/IoTService/IotWarning/Info',
         method: 'get',
-        params: {id:warnid}
+        params: { id: warnid }
     })
 }
 //通过工单编号获取报警信息
-export function getWarnInfoByNumber(number){
+export function getWarnInfoByNumber(number) {
     return request({
         url: '/IoTService/IotWarning/InfoByNumber',
         method: 'get',
-        params: {number}
+        params: { number }
     })
 }
 
@@ -276,7 +292,7 @@ export function clearEachWarning(data) {
 }
 
 //保存报警配置信息
-export function saveWarnConfig(data){
+export function saveWarnConfig(data) {
     return request({
         url: '/IoTService/IotWarning/SaveConfig',
         method: 'post',
@@ -285,11 +301,11 @@ export function saveWarnConfig(data){
 }
 
 //获取报警配置信息
-export function getWarnConfig(pid){
+export function getWarnConfig(pid) {
     return request({
         url: '/IoTService/IotWarning/ConfigInfo',
         method: 'get',
-        params: {pid}
+        params: { pid }
     })
 }
 

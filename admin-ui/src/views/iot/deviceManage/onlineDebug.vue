@@ -408,10 +408,12 @@ export default {
     clearRecords() {
       this.$refs["mq-console"].clear();
     },
-    choiceDeviceVal(val) {
+    async choiceDeviceVal(val) {
       let valDeviceId=null
       if (!val) {
         this.deviceOption = this.deviceOptionList;
+        delete this.deviceForm.key
+        await this.getDeviceList()
       }
       if(val==null||val==""){
         if(this.debugFrom.debugDevice){
@@ -637,9 +639,7 @@ export default {
       this.deviceForm.ProductId = this.productInfos.Id;
       if(this.deviceForm.ProductId==null){return;}
       let response=await DeviceList(this.deviceForm);
-      if(!this.deviceForm.key){
-        this.deviceOptionList = response.data.List;
-      }
+      this.deviceOptionList = JSON.parse(JSON.stringify(response.data.List));
       
       this.deviceOption = JSON.parse(JSON.stringify(response.data.List));
       this.initClassMap(response.data.List);

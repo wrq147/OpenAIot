@@ -60,6 +60,7 @@ namespace LLMService
             _allTools.Add(LongMemory.CreateGetHistoryByDateTool(_provider));
             _allTools.Add(SystemTime.CreateSystemTimeTool(_provider));
             _allTools.Add(await SqlTableSearch.CreateSqlTableSearchTool(_provider));
+            _allTools.Add(HttpWebSearch.CreateHttpWebSearchTool(_provider));
         }
 
         /// <summary>

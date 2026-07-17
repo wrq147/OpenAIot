@@ -355,6 +355,17 @@ namespace IoTService.Controller
         {
             return this.Success(await _winRule.SelectList(id, GetUser()));
         }
+        /// <summary>
+        /// 获取指定协议指定属性的属性规则
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<DefaultAjaxResult<List<MZ_IotWinRule>>> PropRules(string id, string code)
+        {
+            return this.Success(await _winRule.PropRules(id, code, GetUser()));
+        }
 
         /// <summary>
         /// 获取属性规则信息
@@ -365,6 +376,17 @@ namespace IoTService.Controller
         public async Task<DefaultAjaxResult<MZ_IotWinRule>> PropRuleInfo(string id)
         {
             return (await _winRule.Info(id)).ToAjaxResult();
+        }
+
+        /// <summary>
+        /// 批量保存属性规则
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<DefaultAjaxResult<int>> SavePropRules(In_SavePropRules data)
+        {
+            return (await _winRule.Save(data, GetUser())).ToAjaxResult();
         }
 
         /// <summary>

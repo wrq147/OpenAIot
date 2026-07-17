@@ -1,5 +1,5 @@
 <template>
-  <div :style="{'width': isEdit?'68%':'100%'}">
+  <div style="width:100%;">
     <el-form
       :model="setup"
       :rules="rules"

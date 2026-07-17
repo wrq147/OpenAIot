@@ -40,7 +40,7 @@ namespace IoTService.Models
         /// </summary>
         public string MergeCode { get; set; }
         /// <summary>
-        /// 优先级：值越小越先统计
+        /// 0占位，暂无用处
         /// </summary>
         public int? Priority { get; set; }
     }

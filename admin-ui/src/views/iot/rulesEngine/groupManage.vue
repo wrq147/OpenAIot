@@ -20,7 +20,7 @@
         <!-- 空白占位 -->
         <div v-if="!catetoryTableData.length" class="tree-empty">
           <i class="el-icon-folder-opened empty-icon"></i>
-          <p>暂无规则分组，点击上方新增一级分组</p>
+          <p>暂无规则分组，点击上方新增分组</p>
         </div>
 
         <el-tree v-else ref="categoryTree" :data="catetoryTableData" node-key="Id" default-expand-all

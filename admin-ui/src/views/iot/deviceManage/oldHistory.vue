@@ -3,7 +3,7 @@
     <el-dialog title="历史数据" :visible.sync="infoVisible" top="2vh" width="60%" @close="closeDialog" :close-on-click-modal="false">
       <div slot="title">
         <span style="margin-right:20px">历史数据</span>
-        <template v-if="showEdit">
+        <div style="display: inline-block;" v-hasPermi="['/IoTService/IotData/Update']">
           <el-button type="text" plain @click="handleHistoryEdit" v-if="!isEditHistory" class="text_button">
             <i class="el-icon-edit-outline"></i>
             <span style="margin-left: 6px">编辑</span>
@@ -12,7 +12,7 @@
             <i class="el-icon-circle-close"></i>
             <span style="margin-left: 6px">取消编辑</span>
           </el-button>
-        </template>
+        </div>
       </div>
       <div v-if="isEditHistory">
         <el-input-number v-model="editValue" ></el-input-number>
@@ -248,7 +248,7 @@ export default {
     initMap();
   },
   mounted() {
-    if(this.$store.state.user.orgId==1){
+    if(this.$store.state.user.Id==1){
       this.showEdit=true;
     }
   },

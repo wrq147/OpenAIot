@@ -632,11 +632,13 @@ namespace IoTRulesService.DataParser
                 {
                     var location = ex.Location;
                     Print(msg.DeviceId, "toRawData执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message)).ConfigureAwait(false);
+                    _scriptEngine.TryRemove(msg.DeviceId, out CacheJsEngine tmpcache);
                     return null;
                 }
                 catch (Exception ex)
                 {
                     Print(msg.DeviceId, "toRawData异常", "脚本未知错误" + ex.Message).ConfigureAwait(false);
+                    _scriptEngine.TryRemove(msg.DeviceId, out CacheJsEngine tmpcache);
                     return null;
                 }
             }
@@ -765,11 +767,13 @@ namespace IoTRulesService.DataParser
             {
                 var location = ex.Location;
                 Print(deviceId, "rawDataTo执行错误", string.Format("在行{0}至行{1}发生异常:{2}", location.Start.Line, location.End.Line, ex.Message)).ConfigureAwait(false);
+                _scriptEngine.TryRemove(deviceId, out CacheJsEngine tmpcache);
                 return false;
             }
             catch (Exception ex)
             {
                 Print(deviceId, "rawDataTo异常", "脚本未知错误" + ex.Message).ConfigureAwait(false);
+                _scriptEngine.TryRemove(deviceId, out CacheJsEngine tmpcache);
                 return false;
             }
         }

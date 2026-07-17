@@ -1,5 +1,4 @@
-﻿using AuthService;
-using AuthService.Controller;
+﻿using AuthService.Controller;
 using Common;
 using Common.Share;
 using IoTService.Business;

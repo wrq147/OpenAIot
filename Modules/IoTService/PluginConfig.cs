@@ -406,18 +406,7 @@ namespace IoTService
             {
                 GeneralRedisHelper tmpredis = app.ServiceProvider.GetService<GeneralRedisHelper>();
                 var quartzContext = bs.To<QuartzContext>();
-                string calnode = "xxcalkey_" + option.Value.node_name;
-                if (await tmpredis.WaitLockTakeAsync(calnode))
-                {
-                    try
-                    {
-                        await app.ServiceProvider.GetService<IotWinRuleBLL>().CalDevice(quartzContext);
-                    }
-                    finally
-                    {
-                        await tmpredis.LockReleaseAsync(calnode);
-                    }
-                }
+                await app.ServiceProvider.GetService<IotWinRuleBLL>().CalDevice(quartzContext);
 
             });
 

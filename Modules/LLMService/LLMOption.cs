@@ -22,6 +22,10 @@ namespace LLMService
         /// LLM的数据库查询连接字符串
         /// </summary>
         public string DBConnectionString { get; set; }
+        /// <summary>
+        /// SearXNG的API地址，例子：http://127.0.0.1:8061
+        /// </summary>
+        public string SearXNGUrl { get; set; }
     }
     public class ModelOption
     {

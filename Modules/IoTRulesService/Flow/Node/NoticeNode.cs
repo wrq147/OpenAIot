@@ -18,7 +18,7 @@ namespace IoTRulesService.Flow.Node
         public string NoticeWay { get; set; }
      
         /// <summary>
-        /// 推送的内容（长度不超过50字符）
+        /// 推送的内容（长度不超过80字符）
         /// </summary>
         public string Title { get; set; }
         /// <summary>

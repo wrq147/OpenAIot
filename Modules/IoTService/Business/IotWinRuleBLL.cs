@@ -1,4 +1,4 @@
-using ChannelUtility.Tsl;
+﻿using ChannelUtility.Tsl;
 using Common.EventBus;
 using Common.IdGenerator;
 using Common.Json;
@@ -35,6 +35,12 @@ namespace IoTService.Business
             var rsp = await _iotWinRuleDAL.SelectList(expression);
             return rsp;
         }
+        public virtual async Task<List<MZ_IotWinRule>> PropRules(string pid, string code, IUserInfo user)
+        {
+            Expression<Func<MZ_IotWinRule, bool>> expression = x => x.OrgId == user.OrgId && x.ProductId == pid && x.PropCode == code;
+            var rsp = await _iotWinRuleDAL.SelectList(expression);
+            return rsp;
+        }
         public virtual async Task<BusResponse<MZ_IotWinRule>> Info(string id)
         {
             var info = await _iotWinRuleDAL.Select(id);
@@ -44,7 +50,48 @@ namespace IoTService.Business
             }
             return BusResponse<MZ_IotWinRule>.Success(info);
         }
+        public virtual async Task<BusResponse<int>> Save(In_SavePropRules data, IUserInfo user)
+        {
+            if (string.IsNullOrEmpty(data.ProductId))
+            {
+                return BusResponse<int>.Error(111, "ProductId不能为空");
+            }
+            if (string.IsNullOrEmpty(data.PropCode))
+            {
+                return BusResponse<int>.Error(112, "PropCode不能为空");
+            }
 
+            //先删除不需要的
+            var updateRules = data.Rules.Where(x => !string.IsNullOrEmpty(x.Id));
+            var ruleIds = updateRules.Select(x => x.Id);
+            if (ruleIds.Any())
+            {
+                await _iotWinRuleDAL.Delete(x => x.ProductId == data.ProductId && x.PropCode == data.PropCode && x.OrgId == user.OrgId && !ruleIds.Contains(x.Id));
+
+                foreach (var upitem in updateRules)
+                {
+                    upitem.OrgId = null;
+                    await _iotWinRuleDAL.Update(upitem, x => x.Id == upitem.Id && x.OrgId == user.OrgId);
+                }
+            }
+            else
+            {
+                await _iotWinRuleDAL.Delete(x => x.ProductId == data.ProductId && x.PropCode == data.PropCode && x.OrgId == user.OrgId);
+            }
+
+            //再添加新的
+            var newRules = data.Rules.Where(x => string.IsNullOrEmpty(x.Id)).ToList();
+            if (newRules.Count > 0)
+            {
+                foreach (var newitem in newRules)
+                {
+                    newitem.OrgId = user.OrgId;
+                }
+                await _iotWinRuleDAL.Insert(newRules);
+            }
+
+            return BusResponse<int>.Success();
+        }
         public virtual async Task<BusResponse<int>> Update(MZ_IotWinRule data, IUserInfo user)
         {
             if (user.OrgId <= 0)
@@ -124,9 +171,10 @@ namespace IoTService.Business
 
                 Dictionary<string, Dictionary<string, object>> propDict = new Dictionary<string, Dictionary<string, object>>();
                 Dictionary<string, string> proidDict = new Dictionary<string, string>();
+                Dictionary<string, string> idsDict = new Dictionary<string, string>();
 
                 #region 触发统计每小时属性
-                var winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 0, "Priority asc");
+                var winrules = await _iotWinRuleDAL.SelectList(x => x.WindowWay == 0);
                 List<string> tproIds = winrules.Select(x => x.ProductId).Distinct().ToList();
                 var allProducts = await productDAL.SelectList(x => tproIds.Contains(x.Id));
                 var productDict = allProducts.ToDictionary(x => x.Id);
@@ -219,6 +267,10 @@ namespace IoTService.Business
                                                     {
                                                         proidDict.Add(dev.DeviceId, pro.Id);
                                                     }
+                                                    if (!idsDict.ContainsKey(dev.DeviceId))
+                                                    {
+                                                        idsDict.Add(dev.DeviceId, dev.Id);
+                                                    }
                                                 }
 
                                                 if (curprop.option.type == "int")
@@ -261,7 +313,7 @@ namespace IoTService.Business
                                                 }
                                             }
 
-               
+
                                         }
 
                                     }
@@ -296,6 +348,10 @@ namespace IoTService.Business
                                                 {
                                                     proidDict.Add(dev.DeviceId, pro.Id);
                                                 }
+                                                if (!idsDict.ContainsKey(dev.DeviceId))
+                                                {
+                                                    idsDict.Add(dev.DeviceId, dev.Id);
+                                                }
                                             }
                                             if (props.ContainsKey(winrule.PropCode))
                                             {
@@ -309,7 +365,7 @@ namespace IoTService.Business
 
                                     }
                                 }
- 
+
                             }
                         }
 
@@ -412,6 +468,10 @@ namespace IoTService.Business
                                                         {
                                                             proidDict.Add(dev.DeviceId, pro.Id);
                                                         }
+                                                        if (!idsDict.ContainsKey(dev.DeviceId))
+                                                        {
+                                                            idsDict.Add(dev.DeviceId, dev.Id);
+                                                        }
                                                     }
                                                     if (curprop.option.type == "int")
                                                     {
@@ -490,6 +550,10 @@ namespace IoTService.Business
                                                     {
                                                         proidDict.Add(dev.DeviceId, pro.Id);
                                                     }
+                                                    if (!idsDict.ContainsKey(dev.DeviceId))
+                                                    {
+                                                        idsDict.Add(dev.DeviceId, dev.Id);
+                                                    }
                                                 }
                                                 if (props.ContainsKey(winrule.PropCode))
                                                 {
@@ -504,7 +568,7 @@ namespace IoTService.Business
 
                                         }
                                     }
-           
+
                                 }
                             }
 
@@ -608,6 +672,10 @@ namespace IoTService.Business
                                                         {
                                                             proidDict.Add(dev.DeviceId, pro.Id);
                                                         }
+                                                        if (!idsDict.ContainsKey(dev.DeviceId))
+                                                        {
+                                                            idsDict.Add(dev.DeviceId, dev.Id);
+                                                        }
                                                     }
                                                     if (curprop.option.type == "int")
                                                     {
@@ -655,7 +723,7 @@ namespace IoTService.Business
 
                                         }
                                     }
-          
+
                                 }
                             }
                             else
@@ -685,6 +753,10 @@ namespace IoTService.Business
                                                     {
                                                         proidDict.Add(dev.DeviceId, pro.Id);
                                                     }
+                                                    if (!idsDict.ContainsKey(dev.DeviceId))
+                                                    {
+                                                        idsDict.Add(dev.DeviceId, dev.Id);
+                                                    }
                                                 }
                                                 if (props.ContainsKey(winrule.PropCode))
                                                 {
@@ -699,7 +771,7 @@ namespace IoTService.Business
 
                                         }
                                     }
-   
+
                                 }
                             }
 
@@ -726,7 +798,11 @@ namespace IoTService.Business
                         {
                             if (proidDict.TryGetValue(devid, out var proid))
                             {
-                                await busProxy.SendPropertyReply(proid, devid, props, null, true, null, null, fireTime);
+                                if (idsDict.TryGetValue(devid, out var ttid))
+                                {
+                                    props.Add("$Id", ttid);
+                                }
+                                await busProxy.SendPropertyReply(proid, devid, props, null, true, new HashSet<long>() { -1 }, null, fireTime);
                             }
                         }
                     }

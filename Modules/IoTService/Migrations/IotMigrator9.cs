@@ -166,7 +166,7 @@ namespace IoTService.Migrations
             .WithColumn("WindowWay").AsByte().WithColumnDescription("统计时间：0每时、1每日、2每月")
             .WithColumn("MergeWay").AsString(50).WithColumnDescription("统计方式：最大值:max，最小值：min，平均值：mean，合计：sum，期初值：first，期末值：last")
             .WithColumn("MergeCode").AsString(50).WithColumnDescription("统计属性")
-            .WithColumn("Priority").AsInt32().WithDefaultValue(0).Indexed().WithColumnDescription("优先级：值越小越先统计");
+            .WithColumn("Priority").AsInt32().WithDefaultValue(0).Indexed().WithColumnDescription("0占位，暂无用处");
 
 
             Create.Index().OnTable("mz_iot_win_rule").WithOptions().Unique().OnColumn("ProductId").Ascending().OnColumn("PropCode").Ascending();

@@ -377,6 +377,7 @@
               <el-select placeholder="判断符" v-model="ccitem.compare" style="width: 100px;margin-right: 10px;">
                 <el-option label="等于" value="=" v-if="ccitem.valtype != 'Date'"></el-option>
                 <el-option label="不等于" value="!=" v-if="ccitem.valtype != 'Date'"></el-option>
+                <el-option label="包含" value="IN" v-if="ccitem.valtype == 'String'"></el-option>
                 <el-option label="大于" value=">"
                   v-if="ccitem.valtype == 'Double' || ccitem.valtype == 'Long' || ccitem.valtype == 'Date'"></el-option>
                 <el-option label="小于" value="<"
@@ -461,8 +462,6 @@
         <type-form ref="typeFormAssembly" v-if="activeDefinition == 'attribute' || activeDefinition == 'expands'"
           :activeDefinition="activeDefinition" :enumKeyList="enumKeyList" :paramsForm="paramsForm"
           :attrTableData="attrTableData" @changeMapcode="changeMapcode" @setCurType="setCurType"></type-form>
-        <el-alert v-if="activeDefinition == 'expands' && expandsForm.code == 'state'" title="只有设备运行状态在枚举值里时，属性才能变更设备的运行状态"
-          type="warning" :closable="false"></el-alert>
         <div v-if="activeDefinition == 'function'">
           <span style="color: #72767b;line-height: 45px;margin-top: 10px;">功能执行</span>
           <div style="padding: 10px 10px;">
@@ -501,6 +500,112 @@
             </div>
           </div>
         </div>
+        <div v-if="enableStore == true&&activeDefinition == 'attribute'" class="attr-rule-section">
+          <div class="section-header">
+            <div class="section-title-group">
+              <i class="el-icon-data-line section-icon"></i>
+              <span class="section-title">属性统计规则</span>
+            </div>
+            <div class="section-actions">
+              <el-button type="primary" plain size="small" @click="addNewPropRule">
+                <i class="el-icon-plus"></i> 添加规则
+              </el-button>
+              <el-button 
+                v-if="rulePropItems.length > 0" 
+                type="danger" 
+                plain 
+                size="small"
+                @click="clearAllPropRule"
+              >
+                清空全部
+              </el-button>
+            </div>
+          </div>
+
+          <el-alert
+            type="info"
+            :closable="false"
+            class="rule-alert"
+            title="仅整型 / 浮点型属性可配置聚合统计；对数值型属性进行聚合统计，支持最大值、最小值、平均值、合计值等。"
+          />
+
+          <div v-if="rulePropItems.length === 0" class="rule-empty-state">
+            <div class="empty-icon">
+              <i class="el-icon-document-copy"></i>
+            </div>
+            <div class="empty-text">暂无统计规则</div>
+            <div class="empty-desc">点击“添加规则”，为当前属性配置统计逻辑</div>
+          </div>
+
+          <div v-else class="rule-card-list">
+            <div 
+              class="rule-card" 
+              v-for="(rule, rIdx) in rulePropItems" 
+              :key="rule.ruleId"
+            >
+              <div class="card-header">
+                <div class="card-index">规则 {{ rIdx + 1 }}</div>
+                <div class="card-actions">
+                  <el-button 
+                    type="text" 
+                    icon="el-icon-delete" 
+                    class="del-btn"
+                    @click="delSingleRule(rIdx)"
+                  >
+                    删除
+                  </el-button>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-item">
+                    <label class="form-label">统计目标属性</label>
+                    <el-select
+                      v-model="rule.MergeCode"
+                      placeholder="请选择属性"
+                      size="small"
+                    >
+                      <el-option
+                        v-for="item in rulePropList"
+                        :key="item.code"
+                        :label="`${item.name}（${item.code}）`"
+                        :value="item.code"
+                        v-show="item.code !== attrFrom.code"
+                      />
+                    </el-select>
+                  </div>
+
+                  <div class="form-item">
+                    <label class="form-label">统计周期</label>
+                    <el-select v-model="rule.WindowWay" placeholder="请选择周期" size="small">
+                      <el-option label="每时" :value="0" />
+                      <el-option label="每日" :value="1" />
+                      <el-option label="每月" :value="2" />
+                    </el-select>
+                  </div>
+
+                  <div class="form-item">
+                    <label class="form-label">聚合方式</label>
+                    <el-select v-model="rule.MergeWay" placeholder="请选择方式" size="small">
+                      <el-option label="最大值" value="max" />
+                      <el-option label="最小值" value="min" />
+                      <el-option label="平均值" value="mean" />
+                      <el-option label="合计值" value="sum" />
+                      <el-option label="期初值" value="first" />
+                      <el-option label="期末值" value="last" />
+                      <el-option label="区间值" value="range" />
+                      <el-option label="计数" value="count" />
+                    </el-select>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </el-form>
       <div class="demo-drawer__footer" style="text-align: center;margin-top:40p;padding-bottom:20px">
         <el-button @click="attrDrawer = false">取 消</el-button>
@@ -569,8 +674,11 @@ import {
   classInfo,
   editProduct,
   productInfo,
-  channelInfo
+  channelInfo,
+  getPropRules,
+  savePropRules
 } from "@/api/rules/productModel";
+
 
 let topicList = () => import("@/views/iot/deviceManage/topicList.vue")
 let deviceManage = () => import("@/views/iot/deviceManage/deviceCom.vue")
@@ -851,6 +959,8 @@ export default {
       showsort: false,
       searchTxt: "",
       enumArr: [],
+      rulePropList:[],
+      rulePropItems:[]
     };
   },
 
@@ -1388,6 +1498,10 @@ export default {
       this.isEdit = true;
       this.isEditCode = true;
       if (this.activeDefinition == "attribute") {
+        //初始化属性规则
+        getPropRules(this.productInfos.Id,row.code).then(res=>{
+          this.rulePropItems=res.data;
+        });
         this.attrFrom = JSON.parse(JSON.stringify(row));
         if (this.attrFrom.showway == null) {
           this.attrFrom.showway = "org,own,use,person";
@@ -1581,6 +1695,7 @@ export default {
     },
     openAttrDrawer() {
       //打开属性定义弹出层
+      this.rulePropItems=[];
       this.attrDrawer = true;
       this.isEditCode = false;
       this.showarr = ['org', 'own', 'use', 'person'];
@@ -1638,7 +1753,7 @@ export default {
       this.resetForm("attrFrom");
       this.resetForm("paramsForm");
     },
-    saveSetData(params, editInfo) {
+    async saveSetData(params, editInfo) {
       //修改和添加数据对数据进行处理
       let proModelTSL = JSON.parse(this.productInfos.ModelTSL)
       let modelTSL = JSON.parse(JSON.stringify(proModelTSL));
@@ -1658,6 +1773,16 @@ export default {
             modelTSL.properties[this.activeModelLine] = JSON.parse(
               JSON.stringify(this.attrFrom)
             );
+
+            //保存规则
+            try{
+              let ruleform={"ProductId":this.productInfos.Id,"PropCode":this.attrFrom.code,"Rules":this.rulePropItems};
+              await savePropRules(ruleform);
+            }
+            catch(err){
+              this.saveLoading = false;
+              return;
+            }
           }
           if (this.activeDefinition == "expands") {
             let option = this.$refs["typeFormAssembly"].setOptionsData();
@@ -1715,21 +1840,24 @@ export default {
 
       let proModelTSLStr = JSON.stringify(modelTSL);
       this.saveLoading = true;
-      editProduct({
-        id: this.productInfos.Id,
-        ModelTSL: proModelTSLStr
-      }).then(rsp => {
-        // console.log("数据更新后返回", rsp);
+      try{
+        let rsp= await editProduct({
+          id: this.productInfos.Id,
+          ModelTSL: proModelTSLStr
+        });
         if (rsp.code == 0) {
           this.$modal.msgSuccess("操作成功");
           this.attrDrawer = false;
           this.saveLoading = false;
           this.getProductInfo();
-          // console.log("新增修改后表格数据", this.tableData);
         }
-      }).catch(err => {
+        else{
+          this.saveLoading = false;
+        }
+      }
+      catch(err){
         this.saveLoading = false;
-      });
+      }
     },
     saveProductInfo() {
       //保存协议信息
@@ -1787,13 +1915,16 @@ export default {
           }
 
           let jsonLis = JSON.parse(this.productInfos.ModelTSL);
-
           if (jsonLis.properties) {
+            this.rulePropList=jsonLis.properties.filter(x=>x.option.type=="float"||x.option.type=="int");
             this.attrTableData = jsonLis.properties;
             this.attrCodeList = Array.from(
               jsonLis.properties,
               ({ code }) => code
             );
+          }
+          else{
+            this.rulePropList=[];
           }
           if (jsonLis.functions) {
             this.funcTableData = jsonLis.functions;
@@ -2048,7 +2179,33 @@ export default {
     getCondName(idx) {
       var tarrnames = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
       return tarrnames[idx];
-    }
+    },
+    addNewPropRule(){
+      const newRule = {
+        Id: "",
+        ProductId:this.productInfos.Id,
+        PropCode:this.attrFrom.code,
+        WindowWay: 0,
+        MergeWay: "sum",
+        MergeCode: "",
+        Priority: 0
+      }
+      this.rulePropItems.push(newRule);
+    },
+    clearAllPropRule(){
+      this.$modal.confirm("确定清空当前属性全部统计规则？").then(res=>{
+        if(res === 'confirm'){
+          this.rulePropItems = [];
+        }
+      })
+    },
+    delSingleRule(idx){
+      this.$modal.confirm("确定删除这条统计规则？").then(res=>{
+        if(res === 'confirm'){
+          this.rulePropItems.splice(idx,1);
+        }
+      })
+    },
   }
 };
 </script>
@@ -2250,5 +2407,151 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+}
+
+
+.attr-rule-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e8e8e8;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .section-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .section-icon {
+        font-size: 18px;
+        color: #409eff;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #303133;
+      }
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .rule-alert {
+    margin-bottom: 16px;
+    border-radius: 8px;
+  }
+
+  .rule-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: #fafafa;
+    border: 1px dashed #dcdfe6;
+    border-radius: 8px;
+    color: #909399;
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      color: #c0c4cc;
+    }
+
+    .empty-text {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .empty-desc {
+      font-size: 13px;
+    }
+  }
+
+  .rule-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rule-card {
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+
+    &:hover {
+      border-color: #409eff;
+      box-shadow: 0 4px 12px rgba(64, 158, 255, 0.08);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px 16px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e8e8e8;
+
+      .card-index {
+        font-size: 14px;
+        font-weight: 600;
+        color: #409eff;
+      }
+
+      .card-actions {
+        .del-btn {
+          color: #f56c6c;
+
+          &:hover {
+            color: #f78989;
+          }
+        }
+      }
+    }
+
+    .card-body {
+      padding: 16px;
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+
+        .form-item {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          .form-label {
+            font-size: 13px;
+            color: #606266;
+            font-weight: 500;
+          }
+
+          .form-tip {
+            font-size: 12px;
+            color: #909399;
+            margin-top: 2px;
+          }
+
+          .el-select,
+          .el-input-number {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

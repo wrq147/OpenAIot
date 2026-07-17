@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.DataAc;
 using Common.EventBus;
 using LLMService.Business;
 using LLMService.DAL;
@@ -26,6 +27,7 @@ namespace LLMService
             services.AddSingleton<MemoryRagBLL>();
             services.AddSingleton<KnowledgeRagBLL>();
             services.AddSingleton<DbSearchBLL>();
+            services.AddSingleton<WebSearchBLL>();
 
             services.AddBLL<ArticleBLL>();
             services.AddBLL<KnowledgeBLL>();
@@ -74,7 +76,14 @@ namespace LLMService
 
             plg.RegisterQuartzTask();
 
-
+            //创建大模型的内部调用接口
+            plg.RegisterCall("AIResponse", async (evt) =>
+            {
+                var inputdata = evt.GetDict("Input");
+                var systip = evt.GetValue("Prompt");
+                var outdata = evt.GetDict("Output");
+                return CallResponse.Success("");
+            });
         }
 
     }

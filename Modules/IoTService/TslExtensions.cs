@@ -168,7 +168,7 @@ namespace IoTService
                     .SetValue("byteAllTo", new ByteTrueToDelegate(ByteAllTo))
                     .SetValue("prop", getProp)
                     .SetValue("data", input);
-               
+
                     var res = eng.Evaluate(bv.express);
                     return bv.InnerRawTo(res.ToObject());
                 }
@@ -188,29 +188,6 @@ namespace IoTService
             }
         }
 
-
-
-
-
-        /// <summary>
-        /// 原数据转换成显示数据
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="getProp"></param>
-        /// <returns></returns>
-        public static Dictionary<string, object> RawToProp(this TslModel model, IDictionary<string, object> input, Func<string, object> getProp)
-        {
-            Dictionary<string, object> newout = new Dictionary<string, object>();
-            foreach (var bp in model.properties)
-            {
-                object val;
-                if (input.TryGetValue(bp.code, out val))
-                {
-                    newout.Add(bp.code, bp.option.RawTo(val, getProp));
-                }
-            }
-            return newout;
-        }
 
 
 

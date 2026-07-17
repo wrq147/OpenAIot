@@ -25,7 +25,26 @@ namespace IoTRulesService
             _provider = provider;
             _cacheHelper = cacheHelper;
         }
-      
+        public async Task<string> GetId(string deviceId)
+        {
+            string tkey = "idxmem#" + deviceId;
+            string tid = _cacheHelper.GetCache<string>(tkey);
+            if (string.IsNullOrEmpty(tid))
+            {
+                var deviceDAL = _provider.GetService<IotDeviceDAL>();
+                var devicelist = await deviceDAL.SelectList(x => x.DeviceId == deviceId, string.Empty, "Id");
+                if (devicelist.Count > 0)
+                {
+                    tid = devicelist[0].Id;
+                    _cacheHelper.SetCache(tkey, tid, DateTime.Now.AddMinutes(5));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            return tid;
+        }
         public async Task<IDictionary<string, DevicePropertyValue>> GetDevice(string deviceId)
         {
             string tkey = "mem#" + deviceId;

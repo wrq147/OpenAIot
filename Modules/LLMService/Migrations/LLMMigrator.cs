@@ -129,6 +129,8 @@ namespace LLMService.Migrations
                 updateId = 0
             });
 
+            //创建ai助手的数据库查询用户
+            this.Execute.Sql("CREATE USER 'ai_user'@'%' IDENTIFIED BY 'Ai@123456';\r\nGRANT SELECT ON mz_iot_device TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_leave_stock TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_leave_detail TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_stock_pile TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_stock_record TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_store_house TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_enter_stock TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_enter_detail TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_leave_apply TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_leave_apply_detail TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_admin TO 'ai_user'@'%';\r\nGRANT SELECT ON mz_dept TO 'ai_user'@'%';\r\nFLUSH PRIVILEGES;");
         }
         public override void Down()
         {

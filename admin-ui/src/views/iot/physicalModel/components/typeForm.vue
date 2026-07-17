@@ -32,14 +32,10 @@
           <el-option :label="ite.label" :value="ite.value" v-for="ite in decimalsList" :key="ite.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="间距" prop="spacing" v-if="(typeForm.type == 'int' || typeForm.type == 'float') &&
-      activeDefinition != 'expands'
-      ">
+      <el-form-item label="间距" prop="spacing" v-if="(typeForm.type == 'int' || typeForm.type == 'float') && activeDefinition == 'attribute'">
         <el-input type="number" v-model="typeForm.spacing" placeholder="请输入间距" @blur="typeForm.spacing=parseFloat(typeForm.spacing)"></el-input>
       </el-form-item>
-      <el-form-item label="倍数" prop="multiple" v-if="(typeForm.type == 'int' || typeForm.type == 'float') &&
-      activeDefinition != 'expands'
-      ">
+      <el-form-item label="倍数" prop="multiple" v-if="(typeForm.type == 'int' || typeForm.type == 'float') && activeDefinition == 'attribute'">
         <el-input type="number" v-model="typeForm.multiple" placeholder="请输入倍数" @blur="typeForm.multiple=parseFloat(typeForm.multiple)"></el-input>
       </el-form-item>
       <el-form-item label="单位" prop="unit" v-if="typeForm.type == 'int' || typeForm.type == 'float'">
@@ -53,7 +49,7 @@
       <el-form-item label="时间格式" prop="format" v-if="typeForm.type == 'date'">
         <el-input v-model="typeForm.format" placeholder="请输入日期格式化字符串" />
       </el-form-item>
-      <el-form-item label="坐标系转换" prop="format" v-if="typeForm.type == 'geo'&&activeDefinition == 'attribute'||typeForm.type == 'geo'">
+      <el-form-item label="坐标系转换" prop="format" v-if="typeForm.type == 'geo'&&activeDefinition == 'attribute'">
         <el-switch
           v-model="typeForm.usingGCJTo"
           active-color="#13ce66"
@@ -674,18 +670,7 @@ export default {
               this.typeForm.elementsLis.push(obj);
             }
           }
-          // const jsonData = JSON.parse(str)
-          // for (let key in jsonData) {
-          //   if (key && jsonData[key]) {
-          //     this.enumKeyList.push(key);
-          //     let obj = {
-          //       key: key,
-          //       value: jsonData[key],
-          //     };
-          //     this.typeForm.elements[key]=jsonData[key]
-          //     this.typeForm.elementsLis.push(obj);
-          //   }
-          // }
+
           this.upload.open=false
           this.$forceUpdate()
           tmploading.close();

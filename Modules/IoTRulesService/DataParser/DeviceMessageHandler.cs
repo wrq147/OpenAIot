@@ -14,8 +14,6 @@ using IoTService.DAL;
 using IoTService.Models;
 using Jint;
 using Microsoft.Extensions.Logging;
-using NPOI.SS.Formula.Atp;
-using Quartz.Impl.AdoJobStore.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -340,50 +338,59 @@ namespace IoTRulesService.DataParser
                             //获取所有旧属性数据
                             var allDict = await deviceCahce.GetDevice(rdmsg.DeviceId);
                             string id = null;
-                            if (allDict == null)
+                            if (rdmsg.Properties.TryGetValue("$Id", out object tmpidid))
                             {
-                                var deviceDAL = _provider.GetService<IotDeviceDAL>();
-                                var devicelist = await deviceDAL.SelectList(x => x.DeviceId == rs.DeviceId);
-                                if (devicelist.Count > 0)
-                                {
-                                    id = devicelist[0].Id;
-                                }
+                                id = Convert.ToString(tmpidid);
+                                rdmsg.Properties.Remove("$Id");
                             }
                             else
                             {
-                                id = (string)allDict["$Id"].val;
+                                if (allDict == null)
+                                {
+                                    id = await deviceCahce.GetId(rdmsg.DeviceId);
+                                }
+                                else
+                                {
+                                    if (allDict.TryGetValue("$Id", out var tmpidval))
+                                    {
+                                        id = (string)tmpidval.val;
+                                    }
+                                    else
+                                    {
+                                        id = await deviceCahce.GetId(rdmsg.DeviceId);
+                                    }
+                                }
+                            }
+                        
+                            if (string.IsNullOrEmpty(id))
+                            {
+                                return;
                             }
 
                             //触发计算当前属性
+                            HashSet<string> noPropPropHS = new HashSet<string>();
                             if (string.IsNullOrEmpty(rdmsg.RedirectFromProductId))
                             {
                                 if (!rdmsg.IsTagSync)
                                 {
-                                    rdmsg.Properties = model.Model.RawToProp(rdmsg.Properties, (tmpkk) =>
+                                    //先计算所有未引用其它属性的
+                                    foreach (var bp in model.Model.properties)
                                     {
-                                        object tmpnewval = null;
-                                        if (allDict != null)
+                                        object val;
+                                        if (rdmsg.Properties.TryGetValue(bp.code, out val))
                                         {
-                                            if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
+                                            var outval = bp.option.RawTo(val, (tmpkk) =>
                                             {
-                                                tmpnewval = newcalpop.val;
+                                                noPropPropHS.Add(bp.code);
+                                                return 0;
+                                            });
+                                            if (!noPropPropHS.Contains(bp.code))
+                                            {
+                                                rdmsg.Properties[bp.code] = outval;
                                             }
                                         }
-                                        else
-                                        {
-                                            var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == tmpkk).Select(x => x.code).ToList();
-                                            if (maptags.Count > 0)
-                                            {
-                                                var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
-                                                if (initTags.Count > 0)
-                                                {
-                                                    tmpnewval = initTags.First().Value;
-                                                }
-                                            }
-                                        }
+                                    }
 
-                                        return tmpnewval;
-                                    });
                                 }
                             }
                             else
@@ -424,62 +431,104 @@ namespace IoTRulesService.DataParser
                             }
 
                             //触发其它计算属性
-                            var propcals = model.Model.properties.Where(x => !string.IsNullOrEmpty(x.option.express) && x.option.express.Contains("prop") && !rdmsg.Properties.ContainsKey(x.code));
-                            foreach (var propcalitem in propcals)
+                            HashSet<string> newcalhs = new HashSet<string>();
+                            bool isFirst = true;
+                            int calcount = 0;
+                            do
                             {
-                                if (rdmsg.Properties.Keys.Any(x => propcalitem.option.express.Contains(x)))
+                                ++calcount;
+                                newcalhs.Clear();
+                                IEnumerable<BaseProperty> propcals;
+                                if (isFirst)
+                                {
+                                    propcals = model.Model.properties.Where(x => !string.IsNullOrEmpty(x.option.express) && x.option.express.Contains("prop") && (!rdmsg.Properties.ContainsKey(x.code) || noPropPropHS.Contains(x.code)));
+                                }
+                                else
+                                {
+                                    propcals = model.Model.properties.Where(x => !string.IsNullOrEmpty(x.option.express) && x.option.express.Contains("prop") && noPropPropHS.Contains(x.code));
+                                }
+                                foreach (var propcalitem in propcals)
                                 {
                                     object tmpval = null;
-                                    if (allDict != null)
+                                    if (noPropPropHS.Contains(propcalitem.code))
                                     {
-                                        if (allDict.TryGetValue(propcalitem.code, out DevicePropertyValue calpop))
+                                        tmpval = rdmsg.Properties[propcalitem.code];
+                                    }
+                                    else if (rdmsg.Properties.Keys.Any(x => propcalitem.option.express.Contains(x)))
+                                    {
+                                        if (allDict != null)
                                         {
-                                            tmpval = calpop.val;
+                                            if (allDict.TryGetValue(propcalitem.code, out DevicePropertyValue calpop))
+                                            {
+                                                tmpval = calpop.val;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == propcalitem.code).Select(x => x.code).ToList();
+                                            if (maptags.Count > 0)
+                                            {
+                                                var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
+                                                if (initTags.Count > 0)
+                                                {
+                                                    tmpval = initTags.First().Value;
+                                                }
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == propcalitem.code).Select(x => x.code).ToList();
-                                        if (maptags.Count > 0)
-                                        {
-                                            var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
-                                            if (initTags.Count > 0)
-                                            {
-                                                tmpval = initTags.First().Value;
-                                            }
-                                        }
+                                        continue;
                                     }
-
-
-                                    rdmsg.Properties[propcalitem.code] = propcalitem.option.RawTo(tmpval, (tmpkk) =>
+                                    var tmpoutval = propcalitem.option.RawTo(tmpval, (tmpkk) =>
                                     {
                                         object tmpnewval = null;
-                                        if (!rdmsg.Properties.TryGetValue(tmpkk, out tmpnewval))
+                                        if (noPropPropHS.Contains(tmpkk))
                                         {
-                                            if (allDict != null)
+                                            newcalhs.Add(propcalitem.code);
+                                            return 0;
+                                        }
+                                        else
+                                        {
+                                            if (rdmsg.Properties.TryGetValue(tmpkk, out tmpnewval))
                                             {
-                                                if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
-                                                {
-                                                    tmpnewval = newcalpop.val;
-                                                }
+                                                return tmpnewval;
                                             }
-                                            else
+                                        }
+
+                                        if (allDict != null)
+                                        {
+                                            if (allDict.TryGetValue(tmpkk, out DevicePropertyValue newcalpop))
                                             {
-                                                var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == tmpkk).Select(x => x.code).ToList();
-                                                if (maptags.Count > 0)
+                                                tmpnewval = newcalpop.val;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var maptags = model.Model.tags.Where(x => !string.IsNullOrEmpty(x.mapcode) && x.mapcode == tmpkk).Select(x => x.code).ToList();
+                                            if (maptags.Count > 0)
+                                            {
+                                                var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
+                                                if (initTags.Count > 0)
                                                 {
-                                                    var initTags = _provider.GetService<IotDeviceBLL>().SelectTagsDict(id, model.Model, maptags).Result;
-                                                    if (initTags.Count > 0)
-                                                    {
-                                                        tmpval = initTags.First().Value;
-                                                    }
+                                                    tmpval = initTags.First().Value;
                                                 }
                                             }
                                         }
                                         return tmpnewval;
                                     });
+                                    if (!newcalhs.Contains(propcalitem.code))
+                                    {
+                                        rdmsg.Properties[propcalitem.code] = tmpoutval;
+                                    }
                                 }
-                            }
+                                isFirst = false;
+                                noPropPropHS.Clear();
+                                foreach (var s in newcalhs)
+                                {
+                                    noPropPropHS.Add(s);
+                                }
+                            } while (newcalhs.Count > 0 && calcount < 6);
 
                             if (allDict == null)
                             {
@@ -1076,6 +1125,10 @@ namespace IoTRulesService.DataParser
                 }
 
 
+                if (rs.RuleIds != null && rs.RuleIds.Contains(-1))
+                {
+                    return;
+                }
                 //异步执行规则
                 await ExecuteRules(rs, model, nowTime, _provider, redis);
             }
@@ -1091,8 +1144,6 @@ namespace IoTRulesService.DataParser
                 }
             }
         }
-
-
 
         /// <summary>
         /// 执行规则

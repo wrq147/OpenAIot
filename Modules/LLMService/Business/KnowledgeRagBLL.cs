@@ -1,11 +1,9 @@
 ﻿using Common.Share;
-using FluentMigrator.Runner.Generators.Base;
 using LLMService.Controller;
 using LLMService.Model;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using Milvus.Client;
-using MySqlX.XDevAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -75,6 +73,45 @@ namespace LLMService.Business
                 return BusResponse<int>.Error(122, ex.Message);
             }
         }
+        public async Task<BusResponse<int>> SyncPublicToMilvus(string rawQuery, string summaryText)
+        {
+            try
+            {
+                MilvusCollection collection = _client.GetCollection("Knowledges");
+                var chunks = SplitMarkdownChunk(summaryText);
+                var embedGen = _registry.GetDefaultEmbed();
+                long targetOrgId = 0;
+                string kbId = $"web_{Guid.NewGuid():N}";
+                foreach (var item in chunks)
+                {
+                    StringBuilder chunkSb = new StringBuilder();
+                    chunkSb.AppendLine($"【知识库数据来自全网网络搜索】");
+                    chunkSb.AppendLine($"检索关键词：{rawQuery}");
+                    chunkSb.AppendLine($"内容片段：{item}");
+                    string chunkText = chunkSb.ToString();
+                    var vector = await embedGen.GenerateVectorAsync(chunkText);
+
+                    // 插入Milvus
+                    List<ReadOnlyMemory<float>> embedVector = new();
+                    embedVector.Add(vector);
+                    await collection.InsertAsync(
+                        new FieldData[]
+                        {
+                            FieldData.Create<long>("OrgId", new[] { targetOrgId }),
+                            FieldData.CreateVarChar("KbId",  new[] { kbId }),
+                            FieldData.CreateVarChar("Content",  new[] { chunkText }),
+                            FieldData.CreateFloatVector("Embedding", embedVector)
+                        });
+                }
+
+                await collection.FlushAsync();
+                return BusResponse<int>.Success();
+            }
+            catch (Exception ex)
+            {
+                return BusResponse<int>.Error(122, ex.Message);
+            }
+        }
         public async Task<BusResponse<int>> SyncArticleToMilvus(MZ_Knowledge knowledge, List<MZ_KbColumn> columns, List<MZ_Article> articles)
         {
             try
@@ -83,21 +120,22 @@ namespace LLMService.Business
                 MilvusCollection collection = _client.GetCollection("Knowledges");
 
                 await collection.DeleteAsync("KbId=='" + knowledge.Id + "'");
-
+                long targetOrgId = knowledge.IsPublic == true ? 0 : knowledge.OrgId.Value;
                 //同步新的数据
                 var coldict = columns.ToDictionary(x => x.Id);
+                var embedGen = _registry.GetDefaultEmbed();
                 foreach (var art in articles)
                 {
                     var tlist = GenerateChunks(knowledge.Name, art.Title, art.Title, art.Content);
                     foreach (var tstr in tlist)
                     {
-                        var vec = await _registry.GetDefaultEmbed().GenerateVectorAsync(tstr);
+                        var vec = await embedGen.GenerateVectorAsync(tstr);
                         List<ReadOnlyMemory<float>> embedVector = new();
                         embedVector.Add(vec);
                         await collection.InsertAsync(
                             new FieldData[]
                             {
-                            FieldData.Create<long>("OrgId", new[] { knowledge.OrgId.Value }),
+                            FieldData.Create<long>("OrgId", new[] { targetOrgId }),
                             FieldData.CreateVarChar("KbId",  new[] { knowledge.Id }),
                             FieldData.CreateVarChar("Content",  new[] { tstr }),
                             FieldData.CreateFloatVector("Embedding", embedVector)
@@ -198,7 +236,7 @@ namespace LLMService.Business
 
                 SearchParameters searchParameters = new();
                 searchParameters.OutputFields.Add("Content");
-                searchParameters.Expression = "OrgId==" + orgId;
+                searchParameters.Expression = "OrgId==" + orgId + " or OrgId==0";
 
                 var results = await collection.SearchAsync(
                     vectorFieldName: "Embedding",

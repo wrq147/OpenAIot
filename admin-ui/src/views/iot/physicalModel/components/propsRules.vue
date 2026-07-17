@@ -53,20 +53,6 @@
             <el-option v-for="item in propList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="优先级">
-          <template slot="label">
-            <span>
-              优先级
-              <el-tooltip effect="dark" placement="right">
-                <i class="el-icon-question" style="font-size: 16px; vertical-align: middle;"></i>
-                <div slot="content">
-                  <p>值越小越先统计</p>
-                </div>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-input-number v-model="ruleForm.Priority" :min="0" :max="9999"></el-input-number>
-        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -101,7 +87,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="MergePropName" label="统计属性" align="center"></el-table-column>
-      <el-table-column prop="Priority" label="优先级" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="248" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" @click="openDialog(scope.row.Id)">修改</el-button>

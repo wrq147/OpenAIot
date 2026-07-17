@@ -21,7 +21,7 @@ namespace LLMService.DAL
 
             var tmpSql = new SqlBuilder(help).Query<MZ_KbColumn>()
                 .Include(x => x.Kb, x => x.KbId)
-                .Where(expression).Append(" order by a.SortOrder asc,a.create_time desc");
+                .Where(expression).OrderBy(a => a.SortOrder, OrderByType.Asc).OrderBy(a => a.create_time, OrderByType.Desc);
             var listResult = await tmpSql.ToListAsync();
             return listResult;
         }
