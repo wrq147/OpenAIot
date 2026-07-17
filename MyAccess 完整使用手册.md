@@ -1,4 +1,4 @@
-# MyAccess\.DB 完整使用手册
+# MyAccess 完整使用手册
 
 ---
 
@@ -40,7 +40,7 @@
 
 # 1\. 框架概述
 
-MyAccess\.DB 是一套**面向 \.NET 平台的轻量级 ORM 框架**，基于 [ADO\.NET](https://ADO.NET) 封装，支持：
+MyAccess.DB 是一套**面向 .NET 平台的轻量级 ORM 框架**，基于 [ADO.NET](https://ADO.NET) 封装，支持：
 
 - 强类型 Lambda 生成 SQL
 
@@ -72,7 +72,7 @@ using MyAccess.DB.Builder;
 
 # 3\. 实体映射特性（完整版）
 
-所有特性均在 `MyAccess\.DB\.Attr` 下。
+所有特性均在 `MyAccess.DB.Attr` 下。
 
 ## 3\.1 TableNameAttribute（表名映射）
 
@@ -434,21 +434,17 @@ int rows = await sql.Delete<SysUser>().DoAsync(1);
 
 框架自动将以下方法转为 SQL：
 
-- Contains → LIKE \&\#39;%xxx%\&\#39;
+- Contains → LIKE '%xxx%'
 
-- StartsWith → LIKE \&\#39;xxx%\&\#39;
+- StartsWith → LIKE 'xxx%'
 
-- EndsWith → LIKE \&\#39;%xxx\&\#39;
+- EndsWith → LIKE '%xxx'
 
 - == → =
 
-- 
+-  \> \< =  !=→ 对应 SQL 大于、小于、等于、不等于
 
-    > \&lt; \&gt;= \&lt;= → 对应 SQL
-    > 
-    > 
-
-- \&amp;\&amp; → AND
+- && → AND
 
 - \|\| → OR
 
@@ -486,7 +482,7 @@ byte / char / short / double / float 均支持
 
 # 16\. 最佳实践
 
-1. 所有实体必须标记 `\[TableName\]` 与 `\[ID\]`
+1. 所有实体必须标记 `[TableName]` 与 `[ID]`
 
 2. 不使用字符串拼接 SQL，一律用 `AppendParam`
 
@@ -498,6 +494,6 @@ byte / char / short / double / float 均支持
 
 6. 优先使用异步方法提高吞吐量
 
-7. 加 `\[DataIgnore\]` 忽略非数据库字段
+7. 加 `[DataIgnore]` 忽略非数据库字段
 
 ---
