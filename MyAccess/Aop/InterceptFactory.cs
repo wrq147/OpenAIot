@@ -1,4 +1,4 @@
-using AspectCore.Configuration;
+﻿using AspectCore.Configuration;
 using AspectCore.DynamicProxy;
 using MyAccess.Aop.Attribute;
 using System;

@@ -4,8 +4,17 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>5.0.1</Version>
+	<Version>5.0.3</Version>
+	<Description>This is an ORM processing framework，The source address：https://gitee.com/reread_x/openaiot。 This software package is a Sqlite driver for the MyAccess framework，Usage Guide https://www.nuget.org/packages/MyAccess。</Description>
+	<PackageReadmeFile>MyAccess 完整使用手册.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\MyAccess 完整使用手册.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.8" />

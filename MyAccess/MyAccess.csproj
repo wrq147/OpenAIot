@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Description>This is an ORM processing framework，The source address：https://gitee.com/mz-cn/MZFrame.
-HOW TO USE： new SqlBuilder(new MySqlHelp("conn")).AppendInsert(model, "table").Do&lt;DoExecSql&gt;().RowCount;</Description>
+    <Description>This is an ORM processing framework，The source address：https://gitee.com/reread_x/openaiot
+The MyAccess has been split into MyAccess、MyAccess.MSSql、MyAccess.MySql、MyAccess.Oracle、MyAccess.Sqlite， When using a MySQL database, simply reference MyAccess and MyAccess. MySQL.</Description>
     <Authors>重新读取</Authors>
-    <Version>5.0.1</Version>
+    <Version>5.0.3</Version>
     <Copyright>Copyright © 重新读取 2021</Copyright>
+    <PackageReadmeFile>MyAccess 完整使用手册.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,6 +18,13 @@ HOW TO USE： new SqlBuilder(new MySqlHelp("conn")).AppendInsert(model, "table")
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\MyAccess 完整使用手册.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Core" Version="2.4.0" />

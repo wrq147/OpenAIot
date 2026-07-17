@@ -247,7 +247,7 @@ namespace MyAccess.DB.Builder
                 odpr = " order by ";
                 _hasOrderBy = true;
             }
-            string sort = t == OrderByType.Asc ? "ASC" : "DESC";
+            string sort = t == OrderByType.Asc ? "asc" : "desc";
             return $"{odpr}{prefix}{fieldName} {sort}";
         }
     }
