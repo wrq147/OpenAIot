@@ -192,7 +192,7 @@ namespace MyAccess.DB.Builder
             {
                 current = un.Operand;
             }
-            if (current is not MemberExpression member)
+            if (!(current is MemberExpression member))
             {
                 return null;
             }

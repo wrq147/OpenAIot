@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder
 {
-    public class DeleteBuilder<X> : DeleteTwoBuilder<X>
+    public class DeleteBuilder<X> : AbstractBuilder<DeleteBuilder<X>>
     {
         public DeleteBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
@@ -15,7 +15,6 @@ namespace MyAccess.DB.Builder
         {
             return this;
         }
-
         private void AppendIn<T>(T[] ids)
         {
             string idName = string.Empty;
@@ -69,6 +68,15 @@ namespace MyAccess.DB.Builder
         public async Task<int> DoAsync<T>(T[] ids)
         {
             AppendIn(ids);
+            return (await _sqlBuilder.DoAsync<DoExecSql>()).RowCount;
+        }
+
+        public int Do()
+        {
+            return _sqlBuilder.Do<DoExecSql>().RowCount;
+        }
+        public async Task<int> DoAsync()
+        {
             return (await _sqlBuilder.DoAsync<DoExecSql>()).RowCount;
         }
     }

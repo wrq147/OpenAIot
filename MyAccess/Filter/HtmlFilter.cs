@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AspectCore.DynamicProxy;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,10 +153,8 @@ namespace MyAccess.Filter
                 for (int i = 0; i < attrMatches.Count; i++)
                 {
                     string name = attrMatches[i].Groups["name"].Value;
-
-                    Regex regex;
-                    Group group;
-                    if (attrMatches[i].Groups.TryGetValue("value", out group))
+                    Group group = attrMatches[i].Groups["value"];
+                    if (group.Success)
                     {
                         item.PropName.Add(name);
                         item.PropVal.Add(group.Value);
@@ -186,8 +185,8 @@ namespace MyAccess.Filter
             Regex regex;
             if (!tagConfig.TryGetValue(name, out regex)) return "";
 
-            Group group;
-            if (attrMatch.Groups.TryGetValue("value", out group))
+            Group group = attrMatch.Groups["value"];
+            if (group.Success)
             {
                 string value = group.Value;
 

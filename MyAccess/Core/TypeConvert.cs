@@ -9,8 +9,16 @@ namespace MyAccess.Core
     {
         public static List<Dictionary<string, object>> DataTableToDict(DataTable dataTable)
         {
-            var list = dataTable.AsEnumerable().Select(row => row.Table.Columns.Cast<DataColumn>()
-                .ToDictionary(column => column.ColumnName, column => row[column])).ToList();
+            var list = new List<Dictionary<string, object>>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var dict = new Dictionary<string, object>();
+                foreach (DataColumn col in dataTable.Columns)
+                {
+                    dict[col.ColumnName] = row[col];
+                }
+                list.Add(dict);
+            }
             return list;
         }
         public static string DictToUrl(Dictionary<string, object> dict)

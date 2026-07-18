@@ -19,7 +19,7 @@ namespace MyAccess.DB
         InsertBuilder<T> Insert<T>(T[] inserted);
 
         UpdateBuilder<T> Update<T>(T updated, string where = "");
-        DeleteTwoBuilder<T> Delete<T>(string where);
+        DeleteBuilder<T> Delete<T>(string where);
         DeleteBuilder<T> Delete<T>();
 
 

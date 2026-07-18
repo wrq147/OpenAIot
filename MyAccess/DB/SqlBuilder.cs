@@ -394,11 +394,11 @@ namespace MyAccess.DB
             _comparable.CreateOrUpdate(entity);
             return new CreateOrUpdateBuilder<T>(this);
         }
-        public DeleteTwoBuilder<T> Delete<T>(string where)
+        public DeleteBuilder<T> Delete<T>(string where)
         {
             return Delete<T>().Append(string.Format(" where {0}", where));
         }
-        public DeleteTwoBuilder<T> Delete<T>(Expression<Func<T, bool>> expression)
+        public DeleteBuilder<T> Delete<T>(Expression<Func<T, bool>> expression)
         {
             return Delete<T>(this.GetWhereByLambda(expression));
         }

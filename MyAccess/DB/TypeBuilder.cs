@@ -30,9 +30,7 @@ namespace MyAccess.DB
                 }
 
                 // 2. 引用类型：校验无参构造函数并构建Expression委托
-                ConstructorInfo? ctor = type.GetConstructor(
-                    BindingFlags.Public | BindingFlags.Instance,
-                    Type.EmptyTypes);
+                ConstructorInfo? ctor = type.GetConstructor(Type.EmptyTypes);
 
                 if (ctor == null)
                 {

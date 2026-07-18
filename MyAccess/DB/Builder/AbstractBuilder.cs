@@ -85,11 +85,11 @@ namespace MyAccess.DB.Builder
         {
             return _sqlBuilder.Update(updated, expression);
         }
-        public DeleteTwoBuilder<T> Delete<T>(string where = "")
+        public DeleteBuilder<T> Delete<T>(string where = "")
         {
             return _sqlBuilder.Delete<T>(where);
         }
-        public DeleteTwoBuilder<T> Delete<T>(Expression<Func<T, bool>> expression)
+        public DeleteBuilder<T> Delete<T>(Expression<Func<T, bool>> expression)
         {
             return _sqlBuilder.Delete<T>(expression);
         }
