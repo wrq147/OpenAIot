@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyAccess.DB.Builder
 {
-    public class DeleteBuilder<X> : AbstractBuilder<DeleteBuilder<X>>
+    public class DeleteBuilder<X> : DeleteBuilderWithWhere<X>
     {
         public DeleteBuilder(SqlBuilder sqlBuilder) : base(sqlBuilder)
         {
-        }
-        protected override DeleteBuilder<X> This()
-        {
-            return this;
         }
         private void AppendIn<T>(T[] ids)
         {
@@ -71,13 +67,5 @@ namespace MyAccess.DB.Builder
             return (await _sqlBuilder.DoAsync<DoExecSql>()).RowCount;
         }
 
-        public int Do()
-        {
-            return _sqlBuilder.Do<DoExecSql>().RowCount;
-        }
-        public async Task<int> DoAsync()
-        {
-            return (await _sqlBuilder.DoAsync<DoExecSql>()).RowCount;
-        }
     }
 }

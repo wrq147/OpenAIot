@@ -5,7 +5,7 @@
     <Description>This is an ORM processing framework，The source address：https://gitee.com/reread_x/openaiot
 The MyAccess has been split into MyAccess、MyAccess.MSSql、MyAccess.MySql、MyAccess.Oracle、MyAccess.Sqlite， When using a MySQL database, simply reference MyAccess and MyAccess. MySQL.</Description>
     <Authors>重新读取</Authors>
-    <Version>5.0.4</Version>
+    <Version>5.0.5</Version>
     <Copyright>Copyright © 重新读取 2021</Copyright>
     <PackageReadmeFile>MyAccess 完整使用手册.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

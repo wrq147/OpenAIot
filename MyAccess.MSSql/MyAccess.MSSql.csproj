@@ -4,7 +4,7 @@
 	<TargetFrameworks>net9.0;netstandard2.1;</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>5.0.4</Version>
+	<Version>5.0.5</Version>
 	<Description>This is an ORM processing framework，The source address：https://gitee.com/reread_x/openaiot。 This software package is a MSSQL driver for the MyAccess framework，Usage Guide https://www.nuget.org/packages/MyAccess。</Description>
 	<PackageReadmeFile>MyAccess 完整使用手册.md</PackageReadmeFile>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
